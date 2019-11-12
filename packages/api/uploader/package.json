@@ -1,0 +1,9 @@
+{
+  "name": "@rupy/uploader",
+  "version": "0.1.0",
+  "author": "yoav niran (https://github.com/yoavniran",
+  "description": "",
+  "peerDependencies": {
+
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "root",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "lerna exec --parallel -- babel --root-mode upward src -d lib --ignore **/*.story.js,**/*.test.js",
+    "bootstrap": "lerna bootstrap --use-workspaces",
+    "ssb": "start-storybook -p 9111",
+    "jest": "NODE_ENV=test jest",
+    "jest:cov": "yarn jest --coverage"
+  },
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.7.0",
+    "@babel/core": "^7.7.2",
+    "@babel/plugin-proposal-function-bind": "^7.2.0",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-react": "^7.7.0",
+    "@storybook/addon-knobs": "^5.2.6",
+    "@storybook/react": "^5.2.6",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-styled-components": "^1.10.6",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.15.1",
+    "eslint": "^6.6.0",
+    "eslint-config-react-app": "^5.0.2",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^2.2.0",
+    "jest": "^24.9.0",
+    "jest-styled-components": "^6.3.3",
+    "lerna": "^3.18.4",
+    "storybook-readme": "^5.0.8",
+    "storybook-styled-components": "^1.1.4",
+    "webpack": "^4.41.2"
+  },
+  "dependencies": {
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0"
+  }
+}

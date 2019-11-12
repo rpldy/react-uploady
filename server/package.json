@@ -1,0 +1,9 @@
+{
+  "name": "test-server",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "smocker": "^1.0.1"
+  }
+}

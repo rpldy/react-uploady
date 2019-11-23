@@ -1,0 +1,7 @@
+{
+  "name": "@rupy/life-events",
+  "version": "0.1.0",
+  "dependencies": {
+    "is-promise": "^2.1.0"
+  }
+}

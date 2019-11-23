@@ -1,0 +1,7 @@
+{
+  "name": "@rupy/chunked-uploader",
+  "version": "0.1.0",
+  "dependencies": {
+    "@rupy/shared": "^0.1.0"
+  }
+}

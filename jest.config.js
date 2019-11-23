@@ -21,7 +21,7 @@ module.exports = {
 		"!src/**/*.json"
 	],
 	testPathIgnorePatterns: ["<rootDir>/packages/(?:.+?)/lib/"],
-	// "setupFilesAfterEnv": ["<rootDir>/test/jestSetup.js"],
+	"setupFilesAfterEnv": ["<rootDir>/jestSetup.js"],
 	// "testEnvironment": "<rootDir>/test/jsdomEnv.js",
 	// "testURL": "https://www.somthing.com/test.html"
 };

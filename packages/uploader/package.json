@@ -1,0 +1,16 @@
+{
+  "name": "@rupy/uploader",
+  "version": "0.1.0",
+  "main": "build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoavniran/react-uploady.git",
+    "directory": "packages/uploader"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@rupy/life-events": "^0.1.0",
+    "@rupy/shared": "^0.1.0",
+    "lodash": "^4.17.15"
+  }
+}

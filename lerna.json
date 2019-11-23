@@ -1,5 +1,5 @@
 {
-  "version": "0.0.0",
+  "version": "0.1.0",
   "npmClient": "yarn",
   "command": {
     "publish": {
@@ -10,6 +10,7 @@
   "useWorkspaces": true,
 
   "packages": [
-    "packages/*"
+    "packages/*",
+    "packages/ui/*"
   ]
 }

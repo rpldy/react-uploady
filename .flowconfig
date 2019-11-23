@@ -1,0 +1,16 @@
+[ignore]
+.*/node_modules/config-chain/.*
+.*/node_modules/eslint-plugin-jsx-a11y/.*
+.*/node_modules/eslint-plugin-react/.*
+.*/node_modules/enzyme-matchers/.*
+.*/node_modules/jest-enzyme/.*
+.*/node_modules/react-tap-event-plugin/.*
+
+[include]
+
+[libs]
+
+[options]
+module.name_mapper='^~\/\(.*\)$' -> '<PROJECT_ROOT>/\1'
+module.ignore_non_literal_requires=true
+

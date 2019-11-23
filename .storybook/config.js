@@ -1,6 +1,9 @@
 import { configure } from "@storybook/react";
 
-configure(require.context(
-	"../packages",
+configure(require.context("../packages",
 	true,
-	/src\/\*\*\/\*\.story\.js$/), module);
+	/\.story\.js/), module);
+
+// console.log("!!!!!!!!!!!!! CONTEXT",
+// 	require.context("../packages", true, /\.story\.js/ ).keys());
+///src\/\*\*\/\*\.story\.js$/

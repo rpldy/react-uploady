@@ -6,17 +6,26 @@
     "bootstrap": "lerna bootstrap --use-workspaces",
     "ssb": "start-storybook -p 9111",
     "jest": "NODE_ENV=test jest",
-    "jest:cov": "yarn jest --coverage"
+    "jest:cov": "yarn jest --coverage",
+    "flow": "flow --show-all-errors"
   },
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "packages/ui/*"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoavniran/react-uploady"
+  },
+  "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.7.2",
     "@babel/plugin-proposal-function-bind": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.7.1",
+    "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.7.0",
     "@storybook/addon-knobs": "^5.2.6",
     "@storybook/react": "^5.2.6",
@@ -29,6 +38,8 @@
     "eslint-config-react-app": "^5.0.2",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^2.2.0",
+    "flow-bin": "^0.111.3",
+    "flow-mono-cli": "^1.5.0",
     "jest": "^24.9.0",
     "jest-styled-components": "^6.3.3",
     "lerna": "^3.18.4",

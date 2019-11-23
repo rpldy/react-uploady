@@ -1,0 +1,12 @@
+{
+  "name": "@rupy/uploadButton",
+  "version": "0.1.0",
+  "author": "yoav niran (https://github.com/yoavniran",
+  "description": "",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "module": "src/index.js",
+  "dependencies": {
+    "@rupy/uploady": "^0.1.0"
+  }
+}

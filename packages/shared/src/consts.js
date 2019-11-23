@@ -1,0 +1,8 @@
+// @flow
+export const BATCH_STATES = {
+	ADDED: 1,
+	PROCESSING: 2,
+	UPLOADING: 3,
+	CANCELLED: 4,
+	FINISHED: 5,
+};

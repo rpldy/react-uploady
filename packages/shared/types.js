@@ -1,16 +1,20 @@
 // @flow
-import { BATCH_STATES } from "./src/consts";
+import { BATCH_STATES, FILE_STATES } from "./src/consts";
+
+export type NonMaybeTypeFunc = <T>(param: T) => $NonMaybeType<T>;
 
 export type Destination = {
 	//upload URL
 	url: string,
 	//The name of the param in the upload request (default: input element's name)
-	filesParam?: string,
+	filesParamName?: string,
+	//collection of params to pass along with the upload
+	params?: Object,
 };
 
 export type UploaderType = {
 	id: string,
-	setDestination: Function,
+	// setDestination: Function,
 	add: Function,
 	upload: Function,
 	abort: Function,
@@ -20,6 +24,7 @@ export type UploaderType = {
 export type UploadInfo = string | Object;
 
 export type BatchState = $Keys<typeof BATCH_STATES>;
+export type FileState = $Keys<typeof FILE_STATES>;
 
 export type ProgressInfo = {
 	done: boolean,
@@ -30,7 +35,7 @@ export type ProgressInfo = {
 	metadata: ?Object,
 };
 
-export UploadOptions = {
+export type UploadOptions = {
 	//whether to automatically upload files when they are added (default: true)
 	autoUpload?: boolean,
 	//destination properties related to the server files will be uploaded to
@@ -51,6 +56,12 @@ export UploadOptions = {
 	fileFilter?: RegExp | Function,
 	//The accept value to pass the file input
 	inputAccept?: string,
+	//the upload encoding (default: "multipart/form-data")
+	encoding?: string,
+	//HTTP method (default: POST)
+	method: string,
+	//collection of params to pass along with the upload (Destination params take precedence)
+	params?: Object,
 };
 
 export type CreateOptions = UploadOptions & {
@@ -60,9 +71,9 @@ export type CreateOptions = UploadOptions & {
 	maxConcurrent?: number,
 };
 
-export type AddOptions = UploadOptions & {
-
-};
+// export type AddOptions = UploadOptions & {
+//
+// };
 
 export type UploadyProps = CreateOptions & {
 	uploader?: UploaderType,

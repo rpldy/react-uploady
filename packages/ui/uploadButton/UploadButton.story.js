@@ -4,18 +4,26 @@ import Uploady from "@rupy/uploady";
 
 // import readme from '../README.md';
 
+
+const uploadUrl = "https://api.cloudinary.com/v1_1/yoav-cloud/upload";
+
+const uploadParams = {
+	upload_preset: "uw_unsigned",
+	folder: "rupy-tests"
+};
+
 export const Simple = () => <>
-	<Uploady>
+	<Uploady destination={{url: uploadUrl, params: uploadParams}}>
 		<UploadButton/>
 	</Uploady>
 </>;
 
-const UploadProgress = () => {
-	const []
-};
+// const UploadProgress = () => {
+// 	const []
+// };
 
 export const WithProgress = () => <>
-	<Uploady>
+	<Uploady destination={{url: uploadUrl, params: uploadParams}}>
 		<UploadButton/>
 	</Uploady>
 </>;

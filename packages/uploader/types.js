@@ -1,14 +1,20 @@
-import type { BatchState } from "@rupy/shared";
+import type {
+	BatchState,
+	FileState,
+	CreateOptions,
+	NonMaybeTypeFunc,} from "@rupy/shared";
 
-type BatchUrl = {
+type BatchItemBase  = {
 	id: string,
 	batchId: string,
+	state: FileState,
+};
+
+type BatchUrl = BatchItemBase & {
 	url: string,
 };
 
-type BatchFile = {
-	id: string,
-	batchId: string,
+type BatchFile = BatchItemBase & {
 	file: Object,
 };
 
@@ -20,3 +26,5 @@ export type Batch = {
 	items: BatchItem[],
 	state: BatchState
 };
+
+export type MandatoryCreateOptions = $Exact<$ObjMap<CreateOptions, NonMaybeTypeFunc>>;

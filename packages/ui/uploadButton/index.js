@@ -4,6 +4,6 @@ import type {UploadButtonProps} from "./types";
 
 export default UploadButton;
 
-export {
-	UploadButtonProps
+export type {
+	UploadButtonProps,
 };

@@ -4,36 +4,38 @@ import { BATCH_STATES } from "@rupy/shared";
 import createBatch from "./batch";
 import getProcessor from "./processor";
 import { UPLOADER_EVENTS } from "./consts";
-import { DEFAULT_OPTIONS } from "./defaults";
+// import { DEFAULT_OPTIONS } from "./defaults";
 import triggerCancellable from "./triggerCancellable";
 
 import type {
 	UploaderType,
 	UploadInfo,
 	// Destination,
-	AddOptions,
+	// AddOptions,
+	UploadOptions,
 	CreateOptions,
 	UploaderEnhancer,
 } from "@rupy/shared";
+import { getMandatoryOptions } from "./utils";
 
 const EVENT_NAMES = Object.values(UPLOADER_EVENTS);
 
 let counter = 0;
 
-export default (options: ?CreateOptions, enhancer: UploaderEnhancer): UploaderType => {
+export default (options: ?UploadOptions, enhancer?: UploaderEnhancer): UploaderType => {
 	counter += 1;
 
 	const pendingUploads = [];
 
 	console.log("!!!!!!!!!!!! CREATING UPLOADER !!!!!!!!! ", { options, enhancer, counter });
 
-	options = options ? { ...options } : { ...DEFAULT_OPTIONS };
+	options = getMandatoryOptions(options);
 
 	const update = (updateOptions: CreateOptions) => {
 		options = updateOptions;
 	};
 
-	const add = async (files: UploadInfo[], addOptions: AddOptions): Promise<void> => {
+	const add = async (files: UploadInfo[], addOptions: UploadOptions): Promise<void> => {
 		const batch = createBatch(files, uploader.id);
 
 		const isCancelled = await cancellable(UPLOADER_EVENTS.BATCH_ADD, batch);
@@ -69,22 +71,14 @@ export default (options: ?CreateOptions, enhancer: UploaderEnhancer): UploaderTy
 				processor.process(batch, processOptions));
 	};
 
-	let uploader = {
-		id: `uploader-${counter}`,
-		update,
-		add,
-		upload,
-		abort,
-	};
-
-	// const instance = {
-	// 	base: uploader,
-	// 	...uploader,
-	// 	// ...overrides
-	// };
-
-	const { trigger } = addLife(
-		uploader,
+	let { trigger, target: uploader } = addLife(
+		{
+			id: `uploader-${counter}`,
+			update,
+			add,
+			upload,
+			abort,
+		},
 		EVENT_NAMES,
 		{ canAddEvents: false, canRemoveEvents: false }
 	);

@@ -6,3 +6,11 @@ export const BATCH_STATES = {
 	CANCELLED: 4,
 	FINISHED: 5,
 };
+
+export const FILE_STATES = {
+	ADDED: 1,
+	UPLOADING: 2,
+	CANCELLED: 3,
+	FINISHED: 4,
+	ERROR: 5,
+};

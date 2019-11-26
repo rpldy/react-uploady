@@ -2,7 +2,7 @@
 import React, { useMemo, useRef, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
 import createUploader from "@rupy/uploader";
-import type { UploaderType } from "@rupy/shared/types";
+import type { UploaderType } from "@rupy/shared";
 import UploadyContext from "./UploadyContext";
 
 const FileInputFieldPortal = ({ container, children }) =>
@@ -44,11 +44,10 @@ const Uploady = (props: UploadyProps) => {
 	const onFileInputChange = useCallback((e) => {
 
 		console.log("!!!!!!!!!! UPLOADY - FILE INPUT CHANGE !!!!", e);
-
 		
-		uploader.on("")
+		// uploader.on("")
 
-		uploader.add(); //TODO !!!!!!!!!!!!!! add selected files to uploader
+		uploader.add(e.target.files); //TODO !!!!!!!!!!!!!! add selected files to uploader
 
 	}, []);
 

@@ -1,5 +1,7 @@
 // @flow
 
+export const DEFAULT_PARAM_NAME = "file";
+
 export const DEFAULT_OPTIONS = {
 	autoUpload: true,
 	multiple: true,
@@ -10,4 +12,6 @@ export const DEFAULT_OPTIONS = {
 	preview: false,
 	maxPreviewImageSize: 2e+7,
 	maxPreviewVideoSize: 1e+8,
+	encoding: "multipart/form-data",
+	method: "POST",
 };

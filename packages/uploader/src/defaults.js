@@ -12,6 +12,10 @@ export const DEFAULT_OPTIONS = {
 	preview: false,
 	maxPreviewImageSize: 2e+7,
 	maxPreviewVideoSize: 1e+8,
-	encoding: "multipart/form-data",
+	// encoding: "multipart/form-data",
 	method: "POST",
+	params: {},
+	inputAccept: "",
+	fileFilter: () => true,
+	forceJsonResponse: false,
 };

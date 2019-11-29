@@ -15,3 +15,5 @@ storybook-static
 npm-debug.log
 lerna-debug.log
 yarn-error.log
+
+jsexample.js

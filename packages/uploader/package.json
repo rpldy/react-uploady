@@ -1,7 +1,8 @@
 {
   "name": "@rupy/uploader",
   "version": "0.1.0",
-  "main": "build/index.js",
+  "main": "lib/index.js",
+  "module": "src/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/yoavniran/react-uploady.git",

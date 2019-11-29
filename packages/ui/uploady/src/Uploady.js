@@ -2,18 +2,21 @@
 import React, { useMemo, useRef, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
 import createUploader from "@rupy/uploader";
-import type { UploaderType } from "@rupy/shared";
-import UploadyContext from "./UploadyContext";
+import { logger } from "@rupy/shared";
+import { UploadyContext, createContextApi } from "@rupy/shared-ui";
+
+import type { Destination, UploaderType } from "@rupy/shared";
+import type { UploadyProps } from "../types";
 
 const FileInputFieldPortal = ({ container, children }) =>
-	ReactDOM.createPortal(children, container);
+	container && ReactDOM.createPortal(children, container);
 
 const Uploady = (props: UploadyProps) => {
 
 	console.log("!!!!!!!!!!!!! RENDERING UPLOADY !!!!!!!!!!!");
 
 	const inputFieldContainer = document.body;
-	const inputFieldRef = useRef<HTMLInputElement>();
+	const inputFieldRef = useRef<?HTMLInputElement>(null);
 
 	const uploader = useMemo<UploaderType>(() => {
 		return props.uploader || createUploader({
@@ -24,16 +27,14 @@ const Uploady = (props: UploadyProps) => {
 	//TODO: ALLOW TO CHANGE DESTINATION USING PROPS !!!!!!!!!!
 	//TODO: ALLOW TO SET INPUT FIELD CONTAINER : props.inputFieldContainer
 
-	const getInputField = () => {
+	// const getInputField = () => {
+	// 	console.log("!!!!!!!!! UPLOADY - INPUT FIELD REF = ", inputFieldRef.current);
+	// 	return inputFieldRef.current;
+	// };
+	// const showFileUpload =
 
-		console.log("!!!!!!!!! UPLOADY - INPUT FIELD REF = ", inputFieldRef.current);
-		return inputFieldRef.current;
-	};
-
-	const api = useMemo(() => ({
-		uploader,
-		getInputField,
-	}), [uploader]);
+	const api = useMemo(() =>
+		createContextApi(uploader, inputFieldRef), [uploader, inputFieldRef]);
 
 	//TODO: FILE INPUT ATTRS  TO USE !!!!!!!!!
 	// accept - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept
@@ -42,29 +43,39 @@ const Uploady = (props: UploadyProps) => {
 	// webkitdirectory - https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory
 
 	const onFileInputChange = useCallback((e) => {
-
-		console.log("!!!!!!!!!! UPLOADY - FILE INPUT CHANGE !!!!", e);
-		
-		// uploader.on("")
-
+		logger.debugLog("!!!!!!!!!! UPLOADY - FILE INPUT CHANGE !!!!", e);
 		uploader.add(e.target.files); //TODO !!!!!!!!!!!!!! add selected files to uploader
-
 	}, []);
 
 	useEffect(() => {
-		//
-		console.log("!!!!!!!!!!! UPLOADY USE EFFECT CALLED ", inputFieldRef.current);
-		//
-		// 	if (inputFieldRef.current){
-		// 		inputFieldRef.current.addEventListener("change", )
-		// 	}
-		//
-		//
-		// 	return ()=> {
-		// 		console.log("!!!!!!!!!!! UPLOADY USE EFFECT DESTRUCTOR CALLED");
-		// 	};
-		//
-	}, [inputFieldRef.current]);
+		logger.setDebug(!!props.debug);
+	}, [props.debug]);
+
+	const registerEventListener = (([name, cb]) => {
+		uploader.on(name, cb);
+	});
+
+	const unregisterEventListener = (([name, cb]) => {
+		uploader.off(name, cb);
+	});
+
+	useEffect(() => {
+		const listeners: Object = props.listeners;
+
+		if (props.listeners) {
+			logger.debugLog("settings listeners", listeners);
+
+			Object.entries(listeners)
+				.forEach(registerEventListener);
+		}
+
+		return () => {
+			if (props.listeners) {
+				Object.entries(props.listeners)
+					.forEach(unregisterEventListener);
+			}
+		}
+	}, [props.listeners]);
 
 	return <UploadyContext.Provider value={api}>
 		<FileInputFieldPortal container={inputFieldContainer}>
@@ -74,7 +85,6 @@ const Uploady = (props: UploadyProps) => {
 			       style={{ display: "none" }}
 			       ref={inputFieldRef}/>
 		</FileInputFieldPortal>
-
 
 		{props.children}
 	</UploadyContext.Provider>;

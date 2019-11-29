@@ -1,7 +1,12 @@
 // @flow
-import type {UploaderType} from "@rupy/shared";
+import * as React from "react";
+import type { Destination, UploaderType } from "@rupy/shared";
 
-type UploadyContext = {
-	uploader: UploaderType,
-	getInputField: Function,
+export type UploadyProps = {
+	destination?: Destination,
+	uploader?: UploaderType,
+	inputFieldName?: string,
+	debug?: boolean,
+	listeners?: { [string]: Function },
+	children: React.Node,
 };

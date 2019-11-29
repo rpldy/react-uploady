@@ -4,14 +4,11 @@ import { BATCH_STATES } from "@rupy/shared";
 import createBatch from "./batch";
 import getProcessor from "./processor";
 import { UPLOADER_EVENTS } from "./consts";
-// import { DEFAULT_OPTIONS } from "./defaults";
 import triggerCancellable from "./triggerCancellable";
 
 import type {
 	UploaderType,
 	UploadInfo,
-	// Destination,
-	// AddOptions,
 	UploadOptions,
 	CreateOptions,
 	UploaderEnhancer,
@@ -37,6 +34,9 @@ export default (options: ?UploadOptions, enhancer?: UploaderEnhancer): UploaderT
 
 	const add = async (files: UploadInfo[], addOptions: UploadOptions): Promise<void> => {
 		const batch = createBatch(files, uploader.id);
+
+		const value = await triggerCancellable(trigger, "test", 1);
+		console.log(value);
 
 		const isCancelled = await cancellable(UPLOADER_EVENTS.BATCH_ADD, batch);
 

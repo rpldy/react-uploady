@@ -2,12 +2,16 @@ import type {
 	BatchState,
 	FileState,
 	CreateOptions,
-	NonMaybeTypeFunc,} from "@rupy/shared";
+	NonMaybeTypeFunc,
+	Destination,
+} from "@rupy/shared";
 
 type BatchItemBase  = {
 	id: string,
 	batchId: string,
 	state: FileState,
+	uploadResponse: any,
+	abort: () => void,
 };
 
 type BatchUrl = BatchItemBase & {
@@ -28,3 +32,5 @@ export type Batch = {
 };
 
 export type MandatoryCreateOptions = $Exact<$ObjMap<CreateOptions, NonMaybeTypeFunc>>;
+
+export type MandatoryDestination = $Exact<$ObjMap<Destination, NonMaybeTypeFunc>>;

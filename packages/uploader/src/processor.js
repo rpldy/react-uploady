@@ -1,18 +1,11 @@
 // @flow
-import { BATCH_STATES, FILE_STATES } from "@rupy/shared";
+import { logger, BATCH_STATES, FILE_STATES } from "@rupy/shared";
 import triggerCancellable from "./triggerCancellable";
 import { UPLOADER_EVENTS } from "./consts";
 import send from "./sender";
 
-import type {
-	CreateOptions,
-	// AddOptions,
-	// FileState,
-	// Destination,
-	// UploadInfo
-} from "@rupy/shared";
-
-import type { Batch, BatchItem, MandatoryAddOptions } from "../types";
+import type { CreateOptions, } from "@rupy/shared";
+import type { Batch, BatchItem, MandatoryCreateOptions } from "../types";
 import type { UploadData } from "./sender";
 
 //TODO: need a way to augment batch data at any point !!!!!!!!!
@@ -22,14 +15,14 @@ import type { UploadData } from "./sender";
 
 type State = {
 	currentBatch: ?string,
-	batches: { [string]: { batch: Batch, addOptions: MandatoryAddOptions } },
+	batches: { [string]: { batch: Batch, addOptions: MandatoryCreateOptions } },
 	items: { [string]: BatchItem },
-	activeIds: string[], //{ [string]: Object },
+	activeIds: string[],
 };
 
-const initUploadQueue = (
+export const initUploadQueue = (
 	state: State,
-	options: MandatoryAddOptions,
+	options: MandatoryCreateOptions,
 	cancellable: Function,
 	trigger: Function
 ) => {
@@ -44,20 +37,23 @@ const initUploadQueue = (
 	const cancelBatchForItem = (itemId: string) => {
 		const batch = getBatchFromItemId(itemId);
 
-		batch.items.forEach((bi: BatchItem) => {
-			delete state.items[bi.id];
+		if (batch) {
+			logger.debugLog("uploady.uploader.processor: cancelling batch: ", { batch });
+			batch.items.forEach((bi: BatchItem) => {
+				delete state.items[bi.id];
 
-			const index = itemQueue.indexOf(bi.id);
+				const index = itemQueue.indexOf(bi.id);
 
-			if (~index) {
-				itemQueue.splice(index, 1);
-			}
-		});
+				if (~index) {
+					itemQueue.splice(index, 1);
+				}
+			});
 
-		delete state.batches[batch.id];
+			delete state.batches[batch.id];
 
-		batch.state = BATCH_STATES.CANCELLED;
-		trigger(UPLOADER_EVENTS.BATCH_CANCEL, batch);
+			batch.state = BATCH_STATES.CANCELLED;
+			trigger(UPLOADER_EVENTS.BATCH_CANCEL, batch);
+		}
 	};
 
 	const isNewBatchStarting = (itemId: string): boolean => {
@@ -66,9 +62,6 @@ const initUploadQueue = (
 	};
 
 	const loadNewBatchForItem = async (itemId: string) => {
-		// const previousBatch = state.batches[state.currentBatch].batch;
-		// trigger(UPLOADER_EVENTS.BATCH_FINISH, previousBatch);
-
 		const batch = getBatchFromItemId(itemId);
 
 		const isCancelled = await cancellable(UPLOADER_EVENTS.BATCH_START, batch);
@@ -80,9 +73,9 @@ const initUploadQueue = (
 		return !isCancelled;
 	};
 
-	const sendFiles = (items: BatchItem[], addOptions: AddOptions) => {
+	const sendFiles = (items: BatchItem[], addOptions: MandatoryCreateOptions) => {
 
-		//TODO: consider grouping of files
+		//TODO: need to apply grouping of files
 
 		const url = addOptions.destination.url;
 
@@ -93,8 +86,8 @@ const initUploadQueue = (
 				...addOptions.params,
 				...addOptions.destination.params,
 			},
-			encoding: addOptions.encoding,
-
+			// encoding: addOptions.encoding,
+			forceJsonResponse: addOptions.forceJsonResponse,
 		});
 	};
 
@@ -107,7 +100,11 @@ const initUploadQueue = (
 		if (!isCancelled) {
 			state.activeIds.push(id);
 
-			sendFiles([item], batchData.addOptions)
+			const sendResult = sendFiles([item], batchData.addOptions);
+
+			item.abort = sendResult.abort;
+
+			sendResult.request
 				.then((info) => onRequestFinished(id, info));
 
 			processNext(); //needed for concurrent is allowed
@@ -126,13 +123,17 @@ const initUploadQueue = (
 			!~state.activeIds.indexOf(id)) { //if valid id and not already being uploaded
 			const currentCount = state.activeIds.length;
 
-			console.log("Processing - !!!!!!!!!!! ", { id, itemQueue, currentCount });
+			logger.debugLog("uploady.uploader.processor: Processing next upload - ", {
+				id,
+				itemQueue,
+				currentCount
+			});
 
 			if (!currentCount || (concurrent && currentCount < maxConcurrent)) {
 				if (isNewBatchStarting(id)) {
-					const continueBatch = await loadNewBatchForItem(id);
+					const allowBatch = await loadNewBatchForItem(id);
 
-					if (continueBatch) {
+					if (allowBatch) {
 						processBatchItem(id);
 					} else {
 						cancelBatchForItem(id);
@@ -143,29 +144,32 @@ const initUploadQueue = (
 		}
 	};
 
-	const cleanFinishedBatch = () => {
-		if (state.currentBatch && itemQueue.length &&
-			isNewBatchStarting(itemQueue[0])) {
-			trigger(UPLOADER_EVENTS.BATCH_FINISH, state.batches[state.currentBatch]);
+	const cleanUpFinishedBatch = () => {
+		const batchId = state.currentBatch;
 
-			delete state.batches[state.currentBatch];
+		if (batchId && (!itemQueue.length ||
+			(isNewBatchStarting(itemQueue[0])))) {
+			delete state.batches[batchId];
+			trigger(UPLOADER_EVENTS.BATCH_FINISH, state.batches[batchId]);
 		}
 	};
 
 	const onRequestFinished = (id: string, uploadInfo: UploadData) => {
 		const item = state.items[id];
 
-		console.log("!!!!!!!!!! REQUEST FINISHED ", {id, uploadInfo})
+		logger.debugLog("uploady.uploader.processor: request finished - ", { id, uploadInfo });
 
 		if (item) {
 			item.state = uploadInfo.state;
-			item.uploadData = uploadInfo.data;
+			item.uploadResponse = uploadInfo.response;
 
 			const fileEvent = item.state === FILE_STATES.ERROR ?
 				UPLOADER_EVENTS.FILE_ERROR : UPLOADER_EVENTS.FILE_FINISH;
 
 			trigger(fileEvent, item);
 		}
+
+		cleanUpFinishedBatch();
 
 		const index = itemQueue.indexOf(id);
 
@@ -178,8 +182,6 @@ const initUploadQueue = (
 			}
 		}
 
-		cleanFinishedBatch();
-
 		processNext();
 	};
 
@@ -188,13 +190,20 @@ const initUploadQueue = (
 		itemQueue.push(item.id);
 	};
 
-	const onBatchItemsAdded = () => { //needed to support grouping into single request
+	const uploadItems = () => { //needed to support grouping into single request
 		processNext();
 	};
 
 	return {
 		add,
-		onBatchItemsAdded,
+		uploadItems,
+
+		//exported for testing:
+		processBatchItem,
+		sendFiles,
+		loadNewBatchForItem,
+		cancelBatchForItem,
+		onRequestFinished
 	};
 };
 
@@ -205,16 +214,15 @@ export default (trigger: Function, options: CreateOptions) => {
 		currentBatch: null,
 		batches: {},
 		items: {},
-		// requests: {},
 		activeIds: [],
 	};
 
 	const queue = initUploadQueue(state, options, cancellable, trigger);
 
-	const process = (batch: Batch, addOptions: MandatoryAddOptions) => {
+	const process = (batch: Batch, addOptions: MandatoryCreateOptions) => {
 		state.batches[batch.id] = { batch, addOptions };
 		batch.items.forEach(queue.add);
-		queue.onBatchItemsAdded();
+		queue.uploadItems();
 	};
 
 	return {

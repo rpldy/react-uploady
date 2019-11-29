@@ -1,4 +1,4 @@
-import triggerCancellable from "./triggerCancellable";
+import triggerCancellable from "../triggerCancellable";
 
 describe("triggerCancellable tests", () => {
 

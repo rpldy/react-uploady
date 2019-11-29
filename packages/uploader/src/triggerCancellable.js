@@ -1,9 +1,13 @@
 // @flow
 
-export default (trigger: Function, event?: string, ...args?: any[]) : Function | Promise<boolean> => {
-	const doTrigger = async (event: string, ...args?: any[]): Promise<boolean> => {
+type Trigger = (event: string, ...args: mixed[]) => Promise<mixed>[];
+type Cancellable = (event: string, ...args: mixed[]) => Promise<boolean>;
+type Outcome = Promise<boolean> | Cancellable;
+
+export default (trigger: Trigger, event?: string, ...args?: mixed[]): Outcome => {
+	const doTrigger = async (event: string, ...args?: mixed[]): Promise<boolean> => {
 		let cancelled = false;
-		const results = trigger(event, ...args);
+		const results: Promise<any>[] = trigger(event, ...args);
 
 		if (results && results.length) {
 			const resolved = await Promise.all(results);
@@ -12,6 +16,7 @@ export default (trigger: Function, event?: string, ...args?: any[]) : Function |
 
 		return cancelled;
 	};
+
 
 	return event ? doTrigger(event, ...args) : doTrigger;
 };

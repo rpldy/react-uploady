@@ -13,31 +13,31 @@ import type { Batch, BatchItem } from "../types";
 let bCounter = 0,
 	fCounter = 0;
 
+const noOp = () => {
+};
+
 const processFiles = (batchId, files: UploadInfo): BatchItem[] =>
 	Array.prototype.map.call(files, (f: UploadInfo): BatchItem => {
 		fCounter += 1;
 		const id = `${batchId}.file-${fCounter}`;
 		const state = FILE_STATES.ADDED;
 
+		const batchItem = {
+			id,
+			batchId,
+			state,
+			abort: noOp,
+		};
+
 		if (isString(f)) {
-			f = {
-				id,
-				batchId,
-				state,
-				url: f
-			}
+			(batchItem: BatchItem).url = f;
 		} else if (isObjectLike(f)) {
-			f = {
-				id,
-				batchId,
-				state,
-				file: f,
-			};
+			(batchItem: BatchItem).file = f;
 		} else {
 			throw new Error(`Unknown type of file added: ${typeof (f)}`);
 		}
 
-		return f;
+		return batchItem;
 	});
 
 export default (files: UploadInfo[], uploaderId: string): Batch => {

@@ -3,14 +3,14 @@ import { BATCH_STATES, FILE_STATES } from "./src/consts";
 
 export type NonMaybeTypeFunc = <T>(param: T) => $NonMaybeType<T>;
 
-export type Destination = {
+export type Destination = {|
 	//upload URL
 	url: string,
 	//The name of the param in the upload request (default: input element's name)
 	filesParamName?: string,
 	//collection of params to pass along with the upload
 	params?: Object,
-};
+|};
 
 export type UploaderType = {
 	id: string,
@@ -19,12 +19,13 @@ export type UploaderType = {
 	upload: Function,
 	abort: Function,
 	on: Function,
+	off: Function,
 };
 
 export type UploadInfo = string | Object;
 
-export type BatchState = $Keys<typeof BATCH_STATES>;
-export type FileState = $Keys<typeof FILE_STATES>;
+export type BatchState = $Values<typeof BATCH_STATES>;
+export type FileState = $Values<typeof FILE_STATES>;
 
 export type ProgressInfo = {
 	done: boolean,
@@ -35,7 +36,7 @@ export type ProgressInfo = {
 	metadata: ?Object,
 };
 
-export type UploadOptions = {
+export type UploadOptions = {|
 	//whether to automatically upload files when they are added (default: true)
 	autoUpload?: boolean,
 	//destination properties related to the server files will be uploaded to
@@ -56,20 +57,22 @@ export type UploadOptions = {
 	fileFilter?: RegExp | Function,
 	//The accept value to pass the file input
 	inputAccept?: string,
-	//the upload encoding (default: "multipart/form-data")
-	encoding?: string,
+	// //the upload encoding (default: "multipart/form-data")
+	// encoding?: string,
 	//HTTP method (default: POST)
-	method: string,
+	method?: string,
 	//collection of params to pass along with the upload (Destination params take precedence)
 	params?: Object,
-};
+	//whether to parse server response as json even if no json content type header found (default: false)
+	forceJsonResponse?: boolean,
+|};
 
-export type CreateOptions = UploadOptions & {
+export type CreateOptions = UploadOptions & {|
 	//whether multiple upload requests can be issued simultaneously (default: false)
 	concurrent?: boolean,
 	//the maximum allowed for simultaneous requests (default: 2)
 	maxConcurrent?: number,
-};
+|};
 
 // export type AddOptions = UploadOptions & {
 //

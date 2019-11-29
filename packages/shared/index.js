@@ -1,6 +1,7 @@
 // @flow
 
 import { BATCH_STATES, FILE_STATES } from "./src/consts";
+import * as logger from "./src/logger";
 
 import type {
 	CreateOptions,
@@ -17,7 +18,9 @@ import type {
 
 export {
 	BATCH_STATES,
-	FILE_STATES
+	FILE_STATES,
+
+	logger,
 };
 
 export type {

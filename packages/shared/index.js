@@ -5,14 +5,12 @@ import * as logger from "./src/logger";
 
 import type {
 	CreateOptions,
-	UploaderType,
 	Destination,
 	UploadOptions,
 	UploadInfo,
 	ProgressInfo,
 	BatchState,
 	FileState,
-	UploaderEnhancer,
 	NonMaybeTypeFunc,
 } from "./types";
 
@@ -24,15 +22,12 @@ export {
 };
 
 export type {
-	UploaderType,
 	CreateOptions,
 	Destination,
-	// AddOptions,
 	UploadOptions,
 	UploadInfo,
 	ProgressInfo,
 	BatchState,
 	FileState,
-	UploaderEnhancer,
 	NonMaybeTypeFunc,
 };

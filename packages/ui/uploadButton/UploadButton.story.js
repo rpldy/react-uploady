@@ -56,6 +56,7 @@ const HookedUploadButton = () => {
 export const withEventHooks = () => {
 	return <>
 		<Uploady debug
+		         multiple
 		         destination={cloudinaryDestination}>
 			<HookedUploadButton/>
 		</Uploady>
@@ -91,6 +92,7 @@ const UploadProgress = () => {
 
 export const WithProgress = () => <>
 	<Uploady debug
+	         multiple={false}
 	         destination={cloudinaryDestination}>
 		<UploadProgress/>
 		<UploadButton/>

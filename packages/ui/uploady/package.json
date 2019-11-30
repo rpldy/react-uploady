@@ -6,9 +6,15 @@
   "license": "MIT",
   "main": "lib/index.js",
   "module": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoavniran/react-uploady.git",
+    "directory": "packages/ui/uploady"
+  },
   "dependencies": {
     "@rupy/shared": "^0.1.0",
     "@rupy/shared-ui": "^0.1.0",
-    "@rupy/uploader": "^0.1.0"
+    "@rupy/uploader": "^0.1.0",
+    "lodash": "^4.17.15"
   }
 }

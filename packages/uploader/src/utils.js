@@ -12,14 +12,11 @@ const getMandatoryDestination = (dest: ?Destination): MandatoryDestination => {
 };
 
 const getMandatoryOptions = (options: ?CreateOptions | ?UploadOptions): MandatoryCreateOptions => {
-	//TODO: improve this hack for flow
-	const defaultsCopy = {
+	return {
 		...DEFAULT_OPTIONS,
 		...options,
 		destination: getMandatoryDestination(options ? options.destination : null)
 	};
-
-	return defaultsCopy;
 };
 
 export {

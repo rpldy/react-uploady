@@ -1,38 +1,47 @@
 // @flow
+import { cloneDeep } from "lodash";
 import addLife from "@rupy/life-events";
-import { BATCH_STATES } from "@rupy/shared";
+import { BATCH_STATES, logger } from "@rupy/shared";
 import createBatch from "./batch";
 import getProcessor from "./processor";
 import { UPLOADER_EVENTS } from "./consts";
 import triggerCancellable from "./triggerCancellable";
 
 import type {
-	UploaderType,
 	UploadInfo,
 	UploadOptions,
 	CreateOptions,
-	UploaderEnhancer,
 } from "@rupy/shared";
+
+import type  {
+	UploaderType,
+	UploaderEnhancer,
+} from "../types";
+
 import { getMandatoryOptions } from "./utils";
+import type { MandatoryCreateOptions } from "../types";
 
 const EVENT_NAMES = Object.values(UPLOADER_EVENTS);
 
 let counter = 0;
 
-export default (options: ?UploadOptions, enhancer?: UploaderEnhancer): UploaderType => {
+export default (options?: UploadOptions, enhancer?: UploaderEnhancer): UploaderType => {
 	counter += 1;
 
 	const pendingUploads = [];
 
-	console.log("!!!!!!!!!!!! CREATING UPLOADER !!!!!!!!! ", { options, enhancer, counter });
+	logger.debugLog("uploady.uploader: creating new instance", { options, enhancer, counter });
 
 	options = getMandatoryOptions(options);
 
 	const update = (updateOptions: CreateOptions) => {
-		options = updateOptions;
+		options = {
+			...options,
+			...updateOptions,
+		};
 	};
 
-	const add = async (files: UploadInfo[], addOptions: UploadOptions): Promise<void> => {
+	const add = async (files: UploadInfo | UploadInfo[], addOptions: UploadOptions): Promise<void> => {
 		const batch = createBatch(files, uploader.id);
 
 		const isCancelled = await cancellable(UPLOADER_EVENTS.BATCH_ADD, batch);
@@ -54,7 +63,11 @@ export default (options: ?UploadOptions, enhancer?: UploaderEnhancer): UploaderT
 		}
 	};
 
-	const abort = (): void => {
+	const abort = (id?: string): void => {
+
+		//need access to processor queue
+
+		//TODO: implement abort
 
 	};
 
@@ -68,6 +81,10 @@ export default (options: ?UploadOptions, enhancer?: UploaderEnhancer): UploaderT
 				processor.process(batch, processOptions));
 	};
 
+	const getOptions = (): MandatoryCreateOptions => {
+		return cloneDeep(options);
+	};
+
 	let { trigger, target: uploader } = addLife(
 		{
 			id: `uploader-${counter}`,
@@ -75,6 +92,7 @@ export default (options: ?UploadOptions, enhancer?: UploaderEnhancer): UploaderT
 			add,
 			upload,
 			abort,
+			getOptions,
 		},
 		EVENT_NAMES,
 		{ canAddEvents: false, canRemoveEvents: false }

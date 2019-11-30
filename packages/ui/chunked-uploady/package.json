@@ -1,11 +1,14 @@
 {
   "name": "@rupy/chunked-uploady",
   "version": "0.1.0",
-  "author": "yoav niran (https://github.com/yoavniran",
-  "description": "",
   "main": "lib/index.js",
   "module": "src/index.js",
-  "peerDependencies": {
-
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoavniran/react-uploady.git",
+    "directory": "packages/ui/chunked-uploady"
+  },
+  "license": "MIT",
+  "dependencies": {
   }
 }

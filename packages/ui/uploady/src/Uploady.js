@@ -1,50 +1,48 @@
 // @flow
 import React, { useMemo, useRef, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
-import createUploader from "@rupy/uploader";
+import { pick } from "lodash";
+import createUploader, { DEFAULT_OPTIONS } from "@rupy/uploader";
 import { logger } from "@rupy/shared";
 import { UploadyContext, createContextApi } from "@rupy/shared-ui";
 
-import type { Destination, UploaderType } from "@rupy/shared";
+import type { UploaderType } from "@rupy/uploader";
 import type { UploadyProps } from "../types";
+import type { UploadOptions } from "@rupy/shared";
 
 const FileInputFieldPortal = ({ container, children }) =>
 	container && ReactDOM.createPortal(children, container);
 
+const getUploaderOptions = (props: UploadyProps): UploadOptions =>
+	pick(props, Object.keys(DEFAULT_OPTIONS));
+
 const Uploady = (props: UploadyProps) => {
 
-	console.log("!!!!!!!!!!!!! RENDERING UPLOADY !!!!!!!!!!!");
+	console.log("!!!!!!!!!!!!! RENDERING UPLOADY !!!!!!!!!!!", props);
 
 	const inputFieldContainer = document.body;
 	const inputFieldRef = useRef<?HTMLInputElement>(null);
 
 	const uploader = useMemo<UploaderType>(() => {
 		return props.uploader || createUploader({
-			destination: props.destination,
+			// destination: props.destination,
+			...getUploaderOptions(props),
 		});
 	}, [props.uploader]);
 
 	//TODO: ALLOW TO CHANGE DESTINATION USING PROPS !!!!!!!!!!
 	//TODO: ALLOW TO SET INPUT FIELD CONTAINER : props.inputFieldContainer
 
-	// const getInputField = () => {
-	// 	console.log("!!!!!!!!! UPLOADY - INPUT FIELD REF = ", inputFieldRef.current);
-	// 	return inputFieldRef.current;
-	// };
-	// const showFileUpload =
-
 	const api = useMemo(() =>
 		createContextApi(uploader, inputFieldRef), [uploader, inputFieldRef]);
 
 	//TODO: FILE INPUT ATTRS  TO USE !!!!!!!!!
 	// accept - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept
-	// multiple
 	// capture - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture
 	// webkitdirectory - https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory
 
 	const onFileInputChange = useCallback((e) => {
-		logger.debugLog("!!!!!!!!!! UPLOADY - FILE INPUT CHANGE !!!!", e);
-		uploader.add(e.target.files); //TODO !!!!!!!!!!!!!! add selected files to uploader
+		uploader.add(e.target.files);
 	}, []);
 
 	useEffect(() => {
@@ -77,11 +75,14 @@ const Uploady = (props: UploadyProps) => {
 		}
 	}, [props.listeners]);
 
+	const uploaderOptions = uploader.getOptions();
+
 	return <UploadyContext.Provider value={api}>
 		<FileInputFieldPortal container={inputFieldContainer}>
 			<input type="file"
 			       onChange={onFileInputChange}
-			       name={props.inputFieldName || "file"}
+			       name={uploaderOptions.inputFieldName}
+			       multiple={uploaderOptions.multiple}
 			       style={{ display: "none" }}
 			       ref={inputFieldRef}/>
 		</FileInputFieldPortal>

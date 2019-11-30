@@ -42,10 +42,12 @@ const processFiles = (batchId, files: UploadInfo): BatchItem[] =>
 		return batchItem;
 	});
 
-export default (files: UploadInfo[], uploaderId: string): Batch => {
+export default (files: UploadInfo | UploadInfo[], uploaderId: string): Batch => {
 	bCounter += 1;
 	const id = `batch-${bCounter}`;
 
+	files = Array.isArray(files) ? files : [files];
+	
 	return {
 		id,
 		uploaderId,

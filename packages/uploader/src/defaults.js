@@ -2,9 +2,10 @@
 
 export const DEFAULT_PARAM_NAME = "file";
 
-export const DEFAULT_OPTIONS = {
+export const DEFAULT_OPTIONS = Object.freeze({
 	autoUpload: true,
 	multiple: true,
+	inputFieldName: "file",
 	concurrent: false,
 	maxConcurrent: 2,
 	grouped: false,
@@ -19,4 +20,4 @@ export const DEFAULT_OPTIONS = {
 	fileFilter: () => true,
 	forceJsonResponse: false,
 	withCredentials: false,
-};
+});

@@ -1,5 +1,6 @@
 // @flow
 import { BATCH_STATES, FILE_STATES } from "./src/consts";
+import type { MandatoryCreateOptions } from "@rupy/uploader/types";
 
 export type NonMaybeTypeFunc = <T>(param: T) => $NonMaybeType<T>;
 
@@ -11,16 +12,6 @@ export type Destination = {|
 	//collection of params to pass along with the upload
 	params?: Object,
 |};
-
-export type UploaderType = {
-	id: string,
-	// setDestination: Function,
-	add: Function,
-	upload: Function,
-	abort: Function,
-	on: Function,
-	off: Function,
-};
 
 export type UploadInfo = string | Object;
 
@@ -41,6 +32,8 @@ export type UploadOptions = {|
 	autoUpload?: boolean,
 	//destination properties related to the server files will be uploaded to
 	destination?: Destination,
+	//name (attribute) of the file input field (default: "file")
+	inputFieldName?: string,
 	//whether to allow more than one file to be selected for upload (default: true)
 	multiple?: boolean,
 	//whether to group multiple files in a single request (default: false)
@@ -75,27 +68,3 @@ export type CreateOptions = UploadOptions & {|
 	//the maximum allowed for simultaneous requests (default: 2)
 	maxConcurrent?: number,
 |};
-
-// export type AddOptions = UploadOptions & {
-//
-// };
-
-export type UploadyProps = CreateOptions & {
-	uploader?: UploaderType,
-	//the container element the file input field will be render to (default: document.body)
-	inputFieldContainer?: string | HTMLElement,
-	//the name of the file input field to use (default: "file")
-	inputFieldName?: string,
-	children?: any,
-};
-
-
-export type ChunkedUploadyProps = UploadyProps & {
-	//whether to divide the uploaded file into chunks (default: true)
-	chunked?: boolean,
-	//the maximum chunk size (default: 5000000 bytes)
-	chunkSize?: number,
-
-}
-
-export type UploaderEnhancer = (uploader: UploaderType, trigger: Function) => UploaderType;

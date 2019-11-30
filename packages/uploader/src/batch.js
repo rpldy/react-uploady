@@ -27,6 +27,8 @@ const processFiles = (batchId, files: UploadInfo): BatchItem[] =>
 			batchId,
 			state,
 			abort: noOp,
+			completed: 0,
+			loaded: 0,
 		};
 
 		if (isString(f)) {

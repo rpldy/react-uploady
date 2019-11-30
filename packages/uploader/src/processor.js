@@ -1,7 +1,8 @@
 // @flow
+import { throttle } from "lodash";
 import { logger, BATCH_STATES, FILE_STATES } from "@rupy/shared";
 import triggerCancellable from "./triggerCancellable";
-import { UPLOADER_EVENTS } from "./consts";
+import { UPLOADER_EVENTS, PROGRESS_DELAY } from "./consts";
 import send from "./sender";
 
 import type { CreateOptions, } from "@rupy/shared";
@@ -73,11 +74,27 @@ export const initUploadQueue = (
 		return !isCancelled;
 	};
 
+	const onItemUploadProgress = (items: BatchItem[], e: ProgressEvent) => {
+		const completed = (e.loaded / e.total) * 100,
+			completedPerItem = completed / items.length,
+			loadedPerItem = e.loaded / items.length;
+
+		items.forEach((i: BatchItem) => {
+			logger.debugLog(`uploady.uploader.processor: file: ${i.id} progress event: loaded(${loadedPerItem}) - completed(${completedPerItem})`);
+			i.completed = completedPerItem;
+			i.loaded = loadedPerItem;
+			trigger(UPLOADER_EVENTS.FILE_PROGRESS, i);
+		});
+	};
+
 	const sendFiles = (items: BatchItem[], addOptions: MandatoryCreateOptions) => {
 
 		//TODO: need to apply grouping of files
 
 		const url = addOptions.destination.url;
+
+		const throttledProgress = throttle(
+			(e: ProgressEvent) => onItemUploadProgress(items, e), PROGRESS_DELAY);
 
 		return send(items[0], url, {
 			method: addOptions.method,
@@ -88,7 +105,8 @@ export const initUploadQueue = (
 			},
 			// encoding: addOptions.encoding,
 			forceJsonResponse: addOptions.forceJsonResponse,
-		});
+			withCredentials: addOptions.withCredentials,
+		}, throttledProgress);
 	};
 
 	const processBatchItem = async (id: string) => {

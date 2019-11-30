@@ -8,6 +8,7 @@ import {
 
 	useFileStartListener,
 	useFileFinishListener,
+	useFileProgressListener,
 	useFileCancelListener,
 	useFileErrorListener,
 } from "./src/eventListenerHooks";
@@ -32,6 +33,7 @@ export {
 
 	useFileStartListener,
 	useFileFinishListener,
+	useFileProgressListener,
 	useFileCancelListener,
 	useFileErrorListener,
 };

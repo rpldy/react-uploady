@@ -65,6 +65,8 @@ export type UploadOptions = {|
 	params?: Object,
 	//whether to parse server response as json even if no json content type header found (default: false)
 	forceJsonResponse?: boolean,
+	//whether to set XHR withCredentials to true (default: false)
+	withCredentials?: boolean,
 |};
 
 export type CreateOptions = UploadOptions & {|

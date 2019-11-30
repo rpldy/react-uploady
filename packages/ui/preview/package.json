@@ -12,8 +12,5 @@
     "directory": "packages/ui/preview"
   },
   "dependencies": {
-    "@rupy/shared": "^0.1.0",
-    "@rupy/shared-ui": "^0.1.0",
-    "@rupy/uploader": "^0.1.0"
   }
 }

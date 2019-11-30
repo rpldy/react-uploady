@@ -35,9 +35,6 @@ export default (options: ?UploadOptions, enhancer?: UploaderEnhancer): UploaderT
 	const add = async (files: UploadInfo[], addOptions: UploadOptions): Promise<void> => {
 		const batch = createBatch(files, uploader.id);
 
-		const value = await triggerCancellable(trigger, "test", 1);
-		console.log(value);
-
 		const isCancelled = await cancellable(UPLOADER_EVENTS.BATCH_ADD, batch);
 
 		if (!isCancelled) {

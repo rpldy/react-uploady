@@ -12,7 +12,8 @@ export type SendOptions = {
 	params: Object,
 	// encoding: string,
 	headers?: Object,
-	forceJsonResponse: ?boolean
+	forceJsonResponse: ?boolean,
+	withCredentials: ?boolean,
 };
 
 export type UploadData = {
@@ -21,6 +22,8 @@ export type UploadData = {
 };
 
 export type SendResult = { request: Promise<UploadData>, abort: () => void };
+
+type OnProgress = (e: Event) => void;
 
 type Headers = { [string]: string };
 
@@ -54,7 +57,7 @@ const getFormData = (item: BatchItem, options: SendOptions) => {
 	return fd;
 };
 
-const makeRequest = (item: BatchItem, url: string, options: SendOptions): { pXhr: Promise<XMLHttpRequest>, xhr: XMLHttpRequest } => {
+const makeRequest = (item: BatchItem, url: string, options: SendOptions, onProgress: OnProgress): { pXhr: Promise<XMLHttpRequest>, xhr: XMLHttpRequest } => {
 	const req = new XMLHttpRequest();
 
 	const pXhr = new Promise((resolve, reject) => {
@@ -65,20 +68,19 @@ const makeRequest = (item: BatchItem, url: string, options: SendOptions): { pXhr
 		req.ontimeout = () => reject(req);
 		req.onload = () => resolve(req);
 
+		req.upload.onprogress = (e) => {
+			if (e.lengthComputable) {
+				onProgress(e);
+			}
+		};
+
 		req.open(options.method, url);
 
 		setHeaders(req, options);
 
-		//TODO: onprogress
-		// req.onprogress = function(e) {
-		// 	if (e.lengthComputable) {
-		// 		var percentComplete = (e.loaded / e.total) * 100;
-		// 		console.log(percentComplete + '% uploaded');
-		// 	}
-		// };
-
-		//TODO: Support withCredentials param
-
+		if (options.withCredentials) {
+			req.withCredentials = true;
+		}
 
 		req.send(formData);
 	});
@@ -151,10 +153,10 @@ const processResponse = async (pXhr: Promise<XMLHttpRequest>, options: SendOptio
 	};
 };
 
-export default (item: BatchItem, url: string, options: SendOptions): SendResult => {
+export default (item: BatchItem, url: string, options: SendOptions, onProgress: OnProgress): SendResult => {
 	logger.debugLog("uploady.uploader.sender: sending file: ", { item, url, options, });
 
-	const request = makeRequest(item, url, options);
+	const request = makeRequest(item, url, options, onProgress);
 
 	return {
 		request: processResponse(request.pXhr, options),

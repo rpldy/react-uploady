@@ -6,12 +6,16 @@ import type {
 	Destination,
 } from "@rupy/shared";
 
-type BatchItemBase  = {
+type BatchItemBase = {
 	id: string,
 	batchId: string,
 	state: FileState,
 	uploadResponse: any,
 	abort: () => void,
+	//percentage of upload completed
+	completed: number,
+	//bytes uploaded
+	loaded: number,
 };
 
 type BatchUrl = BatchItemBase & {

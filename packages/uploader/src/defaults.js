@@ -18,4 +18,5 @@ export const DEFAULT_OPTIONS = {
 	inputAccept: "",
 	fileFilter: () => true,
 	forceJsonResponse: false,
+	withCredentials: false,
 };

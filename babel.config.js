@@ -13,6 +13,7 @@ module.exports = {
 		"babel-plugin-styled-components",
 		"@babel/plugin-proposal-function-bind",
 		"@babel/plugin-proposal-class-properties",
+		"lodash",
 	],
 	env: {
 		test: {

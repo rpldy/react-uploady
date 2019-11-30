@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import UploadButton from "./UploadButton";
-import Uploady, { UPLOADER_EVENTS, useFileFinishListener } from "@rupy/uploady";
-import { useBatchStartListeneer } from "@rupy/shared-ui";
+import Uploady, {
+	UPLOADER_EVENTS,
+	useFileFinishListener,
+	useBatchStartListeneer,
+	useFileProgressListener
+} from "@rupy/uploady";
 
 // import readme from '../README.md';
 
@@ -43,7 +47,7 @@ const HookedUploadButton = () => {
 	});
 
 	useBatchStartListeneer((batch) => {
-		console.log(">>>>> BATCH START - ", batch);
+		console.log(">>>>> (hook) BATCH START - ", batch);
 	});
 
 	return <UploadButton/>;
@@ -58,16 +62,40 @@ export const withEventHooks = () => {
 	</>;
 };
 
-// const UploadProgress = () => {
-// 	const []
-// };
+const UploadProgress = () => {
+	const [completed, setCompleted] = useState({});
+	const fileProgress = useFileProgressListener((item) => {
+		console.log(">>>>> (hook) File Progress - ", item);
+	});
+
+	if (fileProgress && fileProgress.completed) {
+		const item = completed[fileProgress.id] || [0];
+
+		if (!~item.indexOf(fileProgress.completed)) {
+			item.push(fileProgress.completed);
+
+			setCompleted({
+				...completed,
+				[fileProgress.id]: item,
+			});
+		}
+	}
+
+	return <div>
+		Upload Completed:<br/>
+		{Object.entries(completed)
+			.map(([id, progress]) =>
+				<p key={id}>{id} - {progress.join(", ")}</p>)}
+	</div>;
+};
 
 export const WithProgress = () => <>
-	<Uploady destination={cloudinaryDestination}>
+	<Uploady debug
+	         destination={cloudinaryDestination}>
+		<UploadProgress/>
 		<UploadButton/>
 	</Uploady>
 </>;
-
 
 export default {
 	component: UploadButton,

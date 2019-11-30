@@ -2,7 +2,9 @@
   "name": "test-server",
   "private": true,
   "version": "1.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^4.17.15"
+  },
   "devDependencies": {
     "smocker": "^1.0.1"
   }

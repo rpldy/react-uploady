@@ -1,9 +1,14 @@
 {
-  "private": true,
   "name": "@rupy/shared",
   "version": "0.1.0",
+  "author": "yoav niran (https://github.com/yoavniran",
+  "description": "",
+  "license": "MIT",
   "main": "lib/index.js",
   "module": "src/index.js",
-  "dependencies": {
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoavniran/react-uploady.git",
+    "directory": "packages/shared"
   }
 }

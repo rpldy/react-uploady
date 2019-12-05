@@ -3,7 +3,7 @@ import { UPLOADER_EVENTS } from "@rupy/uploader";
 import {
 	UploadyContext,
 	
-	useBatchStartListeneer,
+	useBatchStartListener,
 	useBatchFinishListener,
 	useBatchCancelledListener,
 	useFileStartListener,
@@ -30,7 +30,7 @@ export {
 	UploadyContext,
 	UPLOADER_EVENTS,
 
-	useBatchStartListeneer,
+	useBatchStartListener,
 	useBatchFinishListener,
 	useBatchCancelledListener,
 	useFileStartListener,

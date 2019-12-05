@@ -18,7 +18,7 @@ const useEventEffect = (event: string, fn: Callback) => {
 	}, [fn]);
 };
 
-const generateUploaderEventHookWithState = (event: string, stateCalculator: (state: mixed) => any) => {
+const generateUploaderEventHookWithState = (event: string, stateCalculator: (state: any) => any) => {
 	return (fn?: Callback) => {
 		const [eventState, setEventState] = useState(null);
 

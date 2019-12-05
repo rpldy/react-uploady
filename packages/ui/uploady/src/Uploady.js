@@ -7,16 +7,18 @@ import { logger } from "@rupy/shared";
 import { UploadyContext, createContextApi } from "@rupy/shared-ui";
 
 import type { UploaderType } from "@rupy/uploader";
+import type { CreateOptions } from "@rupy/shared";
 import type { UploadyProps } from "../types";
-import type { UploadOptions } from "@rupy/shared";
 
 const FileInputFieldPortal = ({ container, children }) =>
 	container && ReactDOM.createPortal(children, container);
 
-const getUploaderOptions = (props: UploadyProps): UploadOptions =>
+const getUploaderOptions = (props: UploadyProps): CreateOptions =>
 	pick(props, Object.keys(DEFAULT_OPTIONS));
 
 const Uploady = (props: UploadyProps) => {
+
+	logger.setDebug(!!props.debug);
 
 	console.log("!!!!!!!!!!!!! RENDERING UPLOADY !!!!!!!!!!!", props);
 
@@ -24,10 +26,7 @@ const Uploady = (props: UploadyProps) => {
 	const inputFieldRef = useRef<?HTMLInputElement>(null);
 
 	const uploader = useMemo<UploaderType>(() => {
-		return props.uploader || createUploader({
-			// destination: props.destination,
-			...getUploaderOptions(props),
-		});
+		return props.uploader || createUploader(getUploaderOptions(props));
 	}, [props.uploader]);
 
 	//TODO: ALLOW TO CHANGE DESTINATION USING PROPS !!!!!!!!!!
@@ -44,10 +43,6 @@ const Uploady = (props: UploadyProps) => {
 	const onFileInputChange = useCallback((e) => {
 		uploader.add(e.target.files);
 	}, []);
-
-	useEffect(() => {
-		logger.setDebug(!!props.debug);
-	}, [props.debug]);
 
 	const registerEventListener = (([name, cb]) => {
 		uploader.on(name, cb);

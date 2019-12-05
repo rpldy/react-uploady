@@ -2,6 +2,7 @@
 
 import { BATCH_STATES, FILE_STATES } from "./src/consts";
 import * as logger from "./src/logger";
+import * as utils from "./src/utils";
 
 import type {
 	CreateOptions,
@@ -12,6 +13,8 @@ import type {
 	BatchState,
 	FileState,
 	NonMaybeTypeFunc,
+	Batch,
+	BatchItem,
 } from "./types";
 
 export {
@@ -19,6 +22,7 @@ export {
 	FILE_STATES,
 
 	logger,
+	utils,
 };
 
 export type {
@@ -30,4 +34,6 @@ export type {
 	BatchState,
 	FileState,
 	NonMaybeTypeFunc,
+	Batch,
+	BatchItem,
 };

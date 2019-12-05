@@ -1,5 +1,5 @@
 // @flow
-import { cloneDeep } from "lodash";
+import { cloneDeep, merge } from "lodash";
 import addLife from "@rupy/life-events";
 import { BATCH_STATES, logger } from "@rupy/shared";
 import createBatch from "./batch";
@@ -25,7 +25,7 @@ const EVENT_NAMES = Object.values(UPLOADER_EVENTS);
 
 let counter = 0;
 
-export default (options?: UploadOptions, enhancer?: UploaderEnhancer): UploaderType => {
+export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderType => {
 	counter += 1;
 
 	const pendingUploads = [];
@@ -35,10 +35,10 @@ export default (options?: UploadOptions, enhancer?: UploaderEnhancer): UploaderT
 	options = getMandatoryOptions(options);
 
 	const update = (updateOptions: CreateOptions) => {
-		options = {
-			...options,
-			...updateOptions,
-		};
+
+		//TODO: updating concurrent and maxConcurrent means we need to update the processor!!!!!
+
+		options = merge({}, options, updateOptions); //need deep merge for destination
 	};
 
 	const add = async (files: UploadInfo | UploadInfo[], addOptions: UploadOptions): Promise<void> => {
@@ -47,10 +47,7 @@ export default (options?: UploadOptions, enhancer?: UploaderEnhancer): UploaderT
 		const isCancelled = await cancellable(UPLOADER_EVENTS.BATCH_ADD, batch);
 
 		if (!isCancelled) {
-			const processOptions = {
-				...options,
-				...addOptions
-			};
+			const processOptions = merge({}, options, addOptions);
 
 			if (processOptions.autoUpload) {
 				processor.process(batch, processOptions)

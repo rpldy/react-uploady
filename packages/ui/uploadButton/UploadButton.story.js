@@ -1,44 +1,40 @@
-import React, { useState } from "react";
-import UploadButton from "./UploadButton";
+// @flow
+import * as React from "react";
+import UploadButton from "./src/UploadButton";
 import Uploady, {
 	UPLOADER_EVENTS,
 	useFileFinishListener,
-	useBatchStartListeneer,
+	useBatchStartListener,
 	useFileProgressListener
 } from "@rupy/uploady";
 
 // import readme from '../README.md';
 
-
-const uploadUrl = "https://api.cloudinary.com/v1_1/yoav-cloud/upload";
-// const uploadUrl = "https://api-dev.cloudinary.com/v1_1/yoav/upload";
+// $FlowFixMe
+const uploadUrl = `https://api.cloudinary.com/v1_1/${process.env.CLD_CLOUD}/upload`;
 
 const uploadParams = {
-	upload_preset: "uw_unsigned",
-	folder: "rupy-tests"
+	upload_preset: process.env.CLD_PRESET, //"uw_unsigned",
+	folder: process.env.CLD_TEST_FOLDER, //"rupy-tests"
 };
 
 const cloudinaryDestination = { url: uploadUrl, params: uploadParams };
 
-export const Simple = () => <>
-	<Uploady debug
-	         destination={cloudinaryDestination}>
-		<UploadButton/>
-	</Uploady>
-</>;
+export const Simple = () => <Uploady debug
+                                     destination={cloudinaryDestination}>
+	<UploadButton/>
+</Uploady>;
 
-export const WithEventListeners = () => <>
-	<Uploady debug
-	         destination={cloudinaryDestination}
-	         listeners={{
-		         [UPLOADER_EVENTS.BATCH_START]: (batch) => console.log(">>>>> BATCH START - ", batch),
-		         [UPLOADER_EVENTS.BATCH_FINISH]: (batch) => console.log(">>>>> BATCH FINISH - ", batch),
-		         [UPLOADER_EVENTS.FILE_START]: (file) => console.log(">>>>>> FILE START - ", file),
-		         [UPLOADER_EVENTS.FILE_FINISH]: (file) => console.log(">>>>>> FILE FINISH - ", file),
-	         }}>
-		<UploadButton/>
-	</Uploady>
-</>;
+export const WithEventListeners = () => <Uploady debug
+                                                 destination={cloudinaryDestination}
+                                                 listeners={{
+	                                                 [UPLOADER_EVENTS.BATCH_START]: (batch) => console.log(">>>>> BATCH START - ", batch),
+	                                                 [UPLOADER_EVENTS.BATCH_FINISH]: (batch) => console.log(">>>>> BATCH FINISH - ", batch),
+	                                                 [UPLOADER_EVENTS.FILE_START]: (file) => console.log(">>>>>> FILE START - ", file),
+	                                                 [UPLOADER_EVENTS.FILE_FINISH]: (file) => console.log(">>>>>> FILE FINISH - ", file),
+                                                 }}>
+	<UploadButton/>
+</Uploady>;
 
 const HookedUploadButton = () => {
 
@@ -46,25 +42,22 @@ const HookedUploadButton = () => {
 		console.log(">>>>>> (hook) FILE FINISH - ", file);
 	});
 
-	useBatchStartListeneer((batch) => {
+	useBatchStartListener((batch) => {
 		console.log(">>>>> (hook) BATCH START - ", batch);
 	});
 
 	return <UploadButton/>;
 };
 
-export const withEventHooks = () => {
-	return <>
-		<Uploady debug
-		         multiple
-		         destination={cloudinaryDestination}>
-			<HookedUploadButton/>
-		</Uploady>
-	</>;
-};
+export const withEventHooks = () =>
+	<Uploady debug
+	         multiple
+	         destination={cloudinaryDestination}>
+		<HookedUploadButton/>
+	</Uploady>;
 
 const UploadProgress = () => {
-	const [completed, setCompleted] = useState({});
+	const [completed, setCompleted] = React.useState({});
 	const fileProgress = useFileProgressListener((item) => {
 		console.log(">>>>> (hook) File Progress - ", item);
 	});
@@ -85,7 +78,8 @@ const UploadProgress = () => {
 	return <div>
 		Upload Completed:<br/>
 		{Object.entries(completed)
-			.map(([id, progress]) =>
+			.map(([id, progress: number[]]): React.Element<'p'> =>
+				// $FlowFixMe
 				<p key={id}>{id} - {progress.join(", ")}</p>)}
 	</div>;
 };
@@ -101,5 +95,5 @@ export const WithProgress = () => <>
 
 export default {
 	component: UploadButton,
-	title: "UploadButton"
+	title: "Upload Button"
 };

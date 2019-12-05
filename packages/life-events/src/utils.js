@@ -1,9 +1,8 @@
 // @flow
-
-const isFunction = (f: any) => typeof (f) === "function";
+import { utils } from "@rupy/shared";
 
 const validateFunction = (f: any, name: string) => {
-	if (!isFunction(f)) {
+	if (!utils.isFunction(f)) {
 		throw new Error(`${name} is not a valid function`);
 	}
 };
@@ -11,7 +10,6 @@ const validateFunction = (f: any, name: string) => {
 const isUndefined = (val: any) => typeof (val) === "undefined";
 
 export {
-	isFunction,
 	validateFunction,
 	isUndefined,
 }

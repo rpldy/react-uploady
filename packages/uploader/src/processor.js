@@ -62,6 +62,12 @@ export const initUploadQueue = (
 		return state.currentBatch !== batch.id;
 	};
 
+	const isBatchFinished = (): boolean => {
+		//TODO: need to consider group size here!
+		return itemQueue.length < 2 ||
+			isNewBatchStarting(itemQueue[1]);
+	};
+
 	const loadNewBatchForItem = async (itemId: string) => {
 		const batch = getBatchFromItemId(itemId);
 
@@ -165,10 +171,10 @@ export const initUploadQueue = (
 	const cleanUpFinishedBatch = () => {
 		const batchId = state.currentBatch;
 
-		if (batchId && (!itemQueue.length ||
-			(isNewBatchStarting(itemQueue[0])))) {
+		if (batchId && isBatchFinished()) {
+			const batch = state.batches[batchId].batch;
 			delete state.batches[batchId];
-			trigger(UPLOADER_EVENTS.BATCH_FINISH, state.batches[batchId]);
+			trigger(UPLOADER_EVENTS.BATCH_FINISH, batch);
 		}
 	};
 
@@ -216,12 +222,14 @@ export const initUploadQueue = (
 		add,
 		uploadItems,
 
-		//exported for testing:
+		//exported for testing purposes:
 		processBatchItem,
 		sendFiles,
 		loadNewBatchForItem,
 		cancelBatchForItem,
-		onRequestFinished
+		onRequestFinished,
+		cleanUpFinishedBatch,
+		getItemQueue: () => itemQueue,
 	};
 };
 

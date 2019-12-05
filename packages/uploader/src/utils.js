@@ -11,7 +11,7 @@ const getMandatoryDestination = (dest: ?Destination): MandatoryDestination => {
 	};
 };
 
-const getMandatoryOptions = (options: ?CreateOptions | ?UploadOptions): MandatoryCreateOptions => {
+const getMandatoryOptions = (options: ?CreateOptions): MandatoryCreateOptions => {
 	return {
 		...DEFAULT_OPTIONS,
 		...options,

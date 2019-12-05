@@ -2,6 +2,7 @@
 import React from "react";
 import type { UploaderType } from "@rupy/uploader";
 import type { UploadyContextType } from "../types";
+import type { UploadInfo, UploadOptions } from "@rupy/shared";
 
 const UploadyContext = React.createContext<?UploadyContextType>(null);
 
@@ -16,10 +17,15 @@ const createContextApi = (uploader: UploaderType, inputRef: { current: ?HTMLInpu
 		}
 	};
 
+	const upload = (files: UploadInfo | UploadInfo[], addOptions: UploadOptions) => {
+		uploader.add(files, addOptions);
+	};
+
 	return {
 		uploader,
 		getInputField,
 		showFileUpload,
+		upload,
 	};
 };
 

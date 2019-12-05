@@ -2,7 +2,7 @@
 import UploadyContext, { createContextApi } from "./src/UploadyContext";
 
 import {
-	useBatchStartListeneer,
+	useBatchStartListener,
 	useBatchFinishListener,
 	useBatchCancelledListener,
 
@@ -27,7 +27,7 @@ export {
 
 	assertContext,
 
-	useBatchStartListeneer,
+	useBatchStartListener,
 	useBatchFinishListener,
 	useBatchCancelledListener,
 

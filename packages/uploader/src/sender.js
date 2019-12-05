@@ -3,8 +3,8 @@
 //TODO: need to support grouping of files into single request
 
 import { logger, FILE_STATES } from "@rupy/shared";
-import type { BatchItem } from "../types";
 import type { FileState } from "@rupy/shared";
+import type { BatchItem } from "../types";
 
 export type SendOptions = {
 	method: string,
@@ -49,7 +49,11 @@ const getFormData = (item: BatchItem, options: SendOptions) => {
 	const fd = new FormData(),
 		fileName = item.file ? item.file.name : undefined;
 
-	fd.set(options.paramName, item.file || item.url, fileName);
+	if (item.file) {
+		fd.set(options.paramName, item.file, fileName);
+	} else if (item.url) {
+		fd.set(options.paramName, item.url);
+	}
 
 	Object.entries(options.params)
 		.forEach(([key, val]: [string, any]) => fd.set(key, val));

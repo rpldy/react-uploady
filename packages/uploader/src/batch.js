@@ -4,11 +4,11 @@ import isString from "lodash/isString";
 import isObjectLike from "lodash/isObjectLike"
 import type {
 	UploadInfo,
+	BatchItem,
+	Batch,
 	// BatchState,
 	// AddOptions
 } from "@rupy/shared";
-
-import type { Batch, BatchItem } from "../types";
 
 let bCounter = 0,
 	fCounter = 0;
@@ -16,13 +16,24 @@ let bCounter = 0,
 const noOp = () => {
 };
 
+const getBatchItemWithUrl = (batchItem: Object, url: string): BatchItem => {
+	batchItem.url = url;
+	return batchItem;
+};
+
+const getBatchItemWithFile = (batchItem: Object, file: Object): BatchItem => {
+	batchItem.file = file;
+	return batchItem;
+};
+
+
 const processFiles = (batchId, files: UploadInfo): BatchItem[] =>
 	Array.prototype.map.call(files, (f: UploadInfo): BatchItem => {
 		fCounter += 1;
 		const id = `${batchId}.file-${fCounter}`;
 		const state = FILE_STATES.ADDED;
 
-		const batchItem = {
+		let batchItem = {
 			id,
 			batchId,
 			state,
@@ -32,9 +43,11 @@ const processFiles = (batchId, files: UploadInfo): BatchItem[] =>
 		};
 
 		if (isString(f)) {
-			(batchItem: BatchItem).url = f;
+			batchItem = getBatchItemWithUrl(batchItem, f);
+			// (batchItem: BatchItem).url = f;
 		} else if (isObjectLike(f)) {
-			(batchItem: BatchItem).file = f;
+			batchItem = getBatchItemWithFile(batchItem, f);
+			//(batchItem: BatchItem).file = f;
 		} else {
 			throw new Error(`Unknown type of file added: ${typeof (f)}`);
 		}

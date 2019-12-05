@@ -3,6 +3,7 @@
 .DS_Store
 .jest-cache/
 .jest-coverage/
+.env
 
 coverage
 node_modules

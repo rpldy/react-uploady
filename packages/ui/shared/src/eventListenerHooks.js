@@ -3,9 +3,9 @@ import { UPLOADER_EVENTS } from "@rupy/uploader";
 import {
 	generateUploaderEventHook,
 	generateUploaderEventHookWithState} from "./utils";
-import type { BatchItem } from "@rupy/uploader";
+import type { BatchItem } from "@rupy/shared";
 
-const useBatchStartListeneer = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);
+const useBatchStartListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);
 const useBatchFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINISH);
 const useBatchCancelledListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_CANCEL);
 
@@ -19,7 +19,7 @@ const useFileCancelListener = generateUploaderEventHook(UPLOADER_EVENTS.FILE_CAN
 const useFileErrorListener = generateUploaderEventHook(UPLOADER_EVENTS.FILE_ERROR);
 
 export {
-	useBatchStartListeneer,
+	useBatchStartListener,
 	useBatchFinishListener,
 	useBatchCancelledListener,
 

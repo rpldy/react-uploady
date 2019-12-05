@@ -46,10 +46,15 @@ describe("uploader tests", () => {
 	describe("update tests", () => {
 
 		it("should update options", () => {
-			const uploader = createUploader();
+			const uploader = createUploader({destination: {url: "aaa"}});
 			expect(uploader.getOptions().autoUpload).toBe(true);
-			uploader.update({ autoUpload: false });
+			uploader.update({ autoUpload: false, destination: {filesParamName: "bbb"} });
 			expect(uploader.getOptions().autoUpload).toBe(false);
+			expect(uploader.getOptions().destination).toEqual({
+				url: "aaa",
+				params: {},
+				filesParamName: "bbb",
+			});
 		});
 
 	});

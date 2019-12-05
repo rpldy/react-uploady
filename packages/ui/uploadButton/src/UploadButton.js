@@ -1,8 +1,7 @@
 // @flow
 import React, { useContext } from "react";
-import { UploadyContext } from "@rupy/uploady";
-import { assertContext } from "@rupy/shared-ui";
-import type { UploadButtonProps } from "./types";
+import { UploadyContext, assertContext } from "@rupy/shared-ui";
+import type { UploadButtonProps } from "../types";
 
 //TODO : Should be able to override uploader options !!!!!!!!!!!
 

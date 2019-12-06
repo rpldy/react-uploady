@@ -1,8 +1,8 @@
 // @flow
-import { utils } from "@rupy/shared";
+import { isFunction } from "@rupy/shared";
 
 const validateFunction = (f: any, name: string) => {
-	if (!utils.isFunction(f)) {
+	if (!isFunction(f)) {
 		throw new Error(`${name} is not a valid function`);
 	}
 };

@@ -1,5 +1,6 @@
 // @flow
 import React, { useState } from "react";
+import { isFunction } from "@rupy/shared";
 import { useBatchStartListener } from "@rupy/shared-ui";
 import { getMandatoryOptions } from "./utils";
 
@@ -7,7 +8,7 @@ import type { Element, ComponentType } from "react";
 import type { Batch, BatchItem } from "@rupy/shared";
 import type {
 	PreviewProps,
-		MandatoryPreviewOptions,
+	MandatoryPreviewOptions,
 } from "../types";
 
 const loadPreviewUrl = (item: BatchItem, options: MandatoryPreviewOptions): ?string => {
@@ -20,22 +21,28 @@ const loadPreviewUrl = (item: BatchItem, options: MandatoryPreviewOptions): ?str
 		if (!options.maxPreviewImageSize || item.file.size <= options.maxPreviewImageSize) {
 			url = URL.createObjectURL(item.file);
 		}
-	}
-	else if (item.url) {
+	} else if (item.url) {
 		url = item.url;
+	} else {
+		url = options.fallbackUrl && isFunction(options.fallbackUrl) ?
+			options.fallbackUrl(item.file) : options.fallbackUrl;
 	}
 
 	return url;
 };
 
 const usePreviewLoader = (options: MandatoryPreviewOptions): string[] => {
-	const [urls, setUrls] = useState([]);
+	const [urls, setUrls] = useState<string[]>([]);
 	const previewOptions = getMandatoryOptions(options);
 
 	useBatchStartListener((batch: Batch) => {
 		const items = options.loadFirstOnly ? batch.items.slice(0, 1) : batch.items;
 
-		const urls = items.map((item) => loadPreviewUrl(item, options));
+		const urls: string[] = items
+			.map((item) => loadPreviewUrl(item, previewOptions))
+			.filter((u): boolean => !!u);
+
+		setUrls(urls);
 	});
 
 	return urls;
@@ -45,10 +52,10 @@ const usePreviewLoader = (options: MandatoryPreviewOptions): string[] => {
  * doesn't render its own container
  */
 const Preview = (props: PreviewProps): Element<"img">[] | Element<ComponentType<any>>[] => {
-	const previews = usePreviewLoader(props);
+	const previewUrls = usePreviewLoader(props);
 
-	return previews.map((url): Element<any> =>
-		props.PreviewComponent ? <props.PreviewComponent {...props.previewProps} url={url} /> :
+	return previewUrls.map((url): Element<any> =>
+		props.PreviewComponent ? <props.PreviewComponent {...props.previewProps} url={url}/> :
 			<img key={url} src={url}  {...props.previewProps} />);
 };
 

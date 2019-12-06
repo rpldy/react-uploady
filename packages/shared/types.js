@@ -62,7 +62,7 @@ export type CreateOptions = UploadOptions & {
 	maxConcurrent?: number,
 };
 
-type BatchItemBase = {
+type BatchItemBase = {|
 	id: string,
 	batchId: string,
 	state: FileState,
@@ -72,15 +72,15 @@ type BatchItemBase = {
 	completed: number,
 	//bytes uploaded
 	loaded: number,
-};
+|};
 
-type BatchUrl = BatchItemBase & {
+type BatchUrl = BatchItemBase & {|
 	url: string,
-};
+|};
 
-type BatchFile = BatchItemBase & {
+type BatchFile = BatchItemBase & {|
 	file: Object,
-};
+|};
 
 export type BatchItem = BatchUrl | BatchFile;
 

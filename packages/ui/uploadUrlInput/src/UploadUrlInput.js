@@ -1,6 +1,6 @@
 // @flow
 import React, { useRef, useContext, useCallback } from "react";
-import { utils } from "@rupy/shared";
+import { isFunction } from "@rupy/shared";
 import { UploadyContext, assertContext } from "@rupy/shared-ui";
 import type { UploadUrlInputProps } from "../types";
 
@@ -29,7 +29,7 @@ const UploadUrlInput = (props: UploadUrlInputProps) => {
 	}, deps);
 
 	if (uploadRef) {
-		if (utils.isFunction(uploadRef)) {
+		if (isFunction(uploadRef)) {
 			uploadRef(upload);
 		} else {
 			uploadRef.current = upload;

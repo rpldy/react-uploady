@@ -1,6 +1,6 @@
 // @flow
 
-const isFunction = (f: any) => typeof (f) === "function";
+const isFunction = (f: mixed) : boolean %checks => typeof (f) === "function";
 
 export {
 	isFunction,

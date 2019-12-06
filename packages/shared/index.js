@@ -2,7 +2,7 @@
 
 import { BATCH_STATES, FILE_STATES } from "./src/consts";
 import * as logger from "./src/logger";
-import * as utils from "./src/utils";
+import {isFunction} from "./src/utils";
 
 import type {
 	CreateOptions,
@@ -22,7 +22,7 @@ export {
 	FILE_STATES,
 
 	logger,
-	utils,
+	isFunction,
 };
 
 export type {

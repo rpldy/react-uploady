@@ -10,12 +10,16 @@ export type PreviewOptions = {|
 	//the maximum file size (in kb) to attempt to load a preview for a video (default: 100,000,000)
 	maxPreviewVideoSize?: number,
 	//URL to use or function to call with the file to determine fallback for invalid file URLs, none-images or too large files to preview (maxPreviewImageSize)
-	fallbackUrl?: string | (file: File) => string,
+	fallbackUrl?: string | (file: Object | string) => string,
+	//the image mime-types to load previews for (default: )
+	imageMimeTypes?: string[],
+	//the video mime-types to load preview for (default: )
+	videoMimeTypes?: string[],
 |};
-
-export type MandatoryPreviewOptions = $Exact<$ObjMap<PreviewProps, NonMaybeTypeFunc>>;
 
 export type PreviewProps = PreviewOptions & {
 	PreviewComponent?: React.ComponentType<any>,
 	previewProps?: Object,
 };
+
+export type MandatoryPreviewOptions = $Exact<$ObjMap<PreviewProps, NonMaybeTypeFunc>>;

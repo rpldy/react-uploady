@@ -9,5 +9,5 @@ export type UploadyProps = UploadOptions & {
 	inputFieldName?: string,
 	debug?: boolean,
 	listeners?: { [string]: Function },
-	children: React.Node,
+	children?: React.Node,
 };

@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { isFunction } from "@rupy/shared";
 import { useBatchStartListener } from "@rupy/shared-ui";
 import { getMandatoryOptions } from "./utils";
@@ -11,38 +11,61 @@ import type {
 	MandatoryPreviewOptions,
 } from "../types";
 
-const loadPreviewUrl = (item: BatchItem, options: MandatoryPreviewOptions): ?string => {
+const getFallbackUrl = (options: MandatoryPreviewOptions, prop: string | Object): ?string => {
+	return (options.fallbackUrl && isFunction(options.fallbackUrl)) ?
+		options.fallbackUrl(prop) : options.fallbackUrl;
+};
+
+const getFilePreviewUrl = (file, options: MandatoryPreviewOptions): ?string => {
 	let url;
+	const mimeType = file.type;
 
-	if (item.file) {
+	if (options.imageMimeTypes &&
+		~options.imageMimeTypes.indexOf(mimeType)) {
 
-		//TODO - only certain mime types!	
-
-		if (!options.maxPreviewImageSize || item.file.size <= options.maxPreviewImageSize) {
-			url = URL.createObjectURL(item.file);
+		if (!options.maxPreviewImageSize || file.size <= options.maxPreviewImageSize) {
+			url = URL.createObjectURL(file);
 		}
-	} else if (item.url) {
-		url = item.url;
-	} else {
-		url = options.fallbackUrl && isFunction(options.fallbackUrl) ?
-			options.fallbackUrl(item.file) : options.fallbackUrl;
+	} else if (options.videoMimeTypes &&
+		~options.videoMimeTypes.indexOf(mimeType)) {
+
+		// if (!options.maxPreviewImageSize || file.size <= options.maxPreviewImageSize) {
+		// 	url = URL.createObjectURL(file);
+		// }
 	}
 
 	return url;
 };
 
-const usePreviewLoader = (options: MandatoryPreviewOptions): string[] => {
+const loadPreviewUrl = (item: BatchItem, options: MandatoryPreviewOptions): ?string => {
+	let url;
+
+	if (item.file) {
+		url = getFilePreviewUrl(item.file, options);
+	} else if (item.url) {
+		url = item.url;
+	}
+
+	if (!url) {
+		const uploadProp = item.file ? item.file : item.url;
+		url = getFallbackUrl(options, uploadProp);
+	}
+
+	return url;
+};
+
+const usePreviewLoader = (props: PreviewProps): string[] => {
 	const [urls, setUrls] = useState<string[]>([]);
-	const previewOptions = getMandatoryOptions(options);
+	const previewOptions = getMandatoryOptions(props);
 
 	useBatchStartListener((batch: Batch) => {
-		const items = options.loadFirstOnly ? batch.items.slice(0, 1) : batch.items;
+		const items: BatchItem[] = previewOptions.loadFirstOnly ? batch.items.slice(0, 1) : batch.items;
 
-		const urls: string[] = items
+		const previewUrls = items
 			.map((item) => loadPreviewUrl(item, previewOptions))
-			.filter((u): boolean => !!u);
+			.filter(Boolean);
 
-		setUrls(urls);
+		setUrls(previewUrls);
 	});
 
 	return urls;
@@ -54,9 +77,19 @@ const usePreviewLoader = (options: MandatoryPreviewOptions): string[] => {
 const Preview = (props: PreviewProps): Element<"img">[] | Element<ComponentType<any>>[] => {
 	const previewUrls = usePreviewLoader(props);
 
+	const onPreviewLoadError = useCallback((e) => {
+		const img = e.target;
+
+		const fallback = getFallbackUrl(props, img.src);
+
+		if (fallback) {
+			img.src = fallback;
+		}
+	});
+
 	return previewUrls.map((url): Element<any> =>
 		props.PreviewComponent ? <props.PreviewComponent {...props.previewProps} url={url}/> :
-			<img key={url} src={url}  {...props.previewProps} />);
+			<img onError={onPreviewLoadError} key={url} src={url}  {...props.previewProps} />);
 };
 
 export default Preview;

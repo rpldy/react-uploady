@@ -14,5 +14,9 @@
   "dependencies": {
     "@rupy/shared": "^0.1.0",
     "@rupy/shared-ui": "^0.1.0"
+  },
+  "devDependencies": {
+    "@rupy/upload-button": "^0.1.0",
+    "@rupy/upload-url-input": "^0.1.0"
   }
 }

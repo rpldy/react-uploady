@@ -1,13 +1,13 @@
 // @flow
 import { throttle } from "lodash";
 import { logger, BATCH_STATES, FILE_STATES } from "@rupy/shared";
+import defaultSend from "@rupy/sender";
 import triggerCancellable from "./triggerCancellable";
 import { UPLOADER_EVENTS, PROGRESS_DELAY } from "./consts";
-import send from "./sender";
 
-import type { CreateOptions, } from "@rupy/shared";
-import type { Batch, BatchItem, MandatoryCreateOptions } from "../types";
-import type { UploadData } from "./sender";
+import type { CreateOptions, Batch, BatchItem, } from "@rupy/shared";
+import type { UploadData } from "@rupy/sender";
+import type { MandatoryCreateOptions } from "../types";
 
 //TODO: need a way to augment batch data at any point !!!!!!!!!
 
@@ -28,6 +28,9 @@ export const initUploadQueue = (
 	trigger: Function
 ) => {
 	const { concurrent, maxConcurrent } = options;
+
+	const send = options.send ? options.send : defaultSend;
+
 	const itemQueue: string[] = [];
 
 	const getBatchFromItemId = (itemId: string): Batch => {

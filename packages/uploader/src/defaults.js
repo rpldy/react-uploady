@@ -21,4 +21,5 @@ export const DEFAULT_OPTIONS = Object.freeze({
 	forceJsonResponse: false,
 	withCredentials: false,
 	destination: {},
+	send: null,
 });

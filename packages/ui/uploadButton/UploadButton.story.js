@@ -44,6 +44,12 @@ const HookedUploadButton = () => {
 
 	useBatchStartListener((batch) => {
 		console.log(">>>>> (hook) BATCH START - ", batch);
+
+		const item = batch.items[0];
+
+		if (item.file) {
+			console.log(item.file);
+		}
 	});
 
 	return <UploadButton/>;

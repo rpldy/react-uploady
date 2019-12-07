@@ -6,8 +6,6 @@ import type {
 	UploadInfo,
 		BatchItem,
 		Batch,
-	// BatchState,
-	// AddOptions
 } from "@rupy/shared";
 
 let bCounter = 0,
@@ -26,31 +24,33 @@ const getBatchItemWithFile = (batchItem: Object, file: Object): BatchItem => {
 	return batchItem;
 };
 
+const createBatchItem = (f: UploadInfo, batchId: string): BatchItem => {
+	fCounter += 1;
+	const id = `${batchId}.file-${fCounter}`,
+		state = FILE_STATES.ADDED;
+
+	let batchItem = {
+		id,
+		batchId,
+		state,
+		abort: noOp,
+		completed: 0,
+		loaded: 0,
+	};
+
+	if (isString(f)) {
+		batchItem = getBatchItemWithUrl(batchItem, f);
+	} else if (isObjectLike(f)) {
+		batchItem = getBatchItemWithFile(batchItem, f);
+	} else {
+		throw new Error(`Unknown type of file added: ${typeof (f)}`);
+	}
+
+	return batchItem;
+};
+
 const processFiles = (batchId, files: UploadInfo): BatchItem[] =>
-	Array.prototype.map.call(files, (f: UploadInfo): BatchItem => {
-		fCounter += 1;
-		const id = `${batchId}.file-${fCounter}`,
-			state = FILE_STATES.ADDED;
-
-		let batchItem = {
-			id,
-			batchId,
-			state,
-			abort: noOp,
-			completed: 0,
-			loaded: 0,
-		};
-
-		if (isString(f)) {
-			batchItem = getBatchItemWithUrl(batchItem, f);
-		} else if (isObjectLike(f)) {
-			batchItem = getBatchItemWithFile(batchItem, f);
-		} else {
-			throw new Error(`Unknown type of file added: ${typeof (f)}`);
-		}
-
-		return batchItem;
-	});
+	Array.prototype.map.call(files, (f) => createBatchItem(f, batchId));
 
 export default (files: UploadInfo | UploadInfo[], uploaderId: string): Batch => {
 	bCounter += 1;

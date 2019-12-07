@@ -3,27 +3,8 @@
 //TODO: need to support grouping of files into single request
 
 import { logger, FILE_STATES } from "@rupy/shared";
-import type { FileState } from "@rupy/shared";
-import type { BatchItem } from "../types";
-
-export type SendOptions = {
-	method: string,
-	paramName: string,
-	params: Object,
-	// encoding: string,
-	headers?: Object,
-	forceJsonResponse: ?boolean,
-	withCredentials: ?boolean,
-};
-
-export type UploadData = {
-	state: FileState,
-	response: any,
-};
-
-export type SendResult = { request: Promise<UploadData>, abort: () => void };
-
-type OnProgress = (e: Event) => void;
+import type { FileState, BatchItem } from "@rupy/shared";
+import type { SendOptions, SendResult, UploadData, OnProgress, } from "../types";
 
 type Headers = { [string]: string };
 

@@ -44,6 +44,7 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 	const add = async (files: UploadInfo | UploadInfo[], addOptions: UploadOptions): Promise<void> => {
 		const batch = createBatch(files, uploader.id);
 
+		// $FlowFixMe - https://github.com/facebook/flow/issues/8215
 		const isCancelled = await cancellable(UPLOADER_EVENTS.BATCH_ADD, batch);
 
 		if (!isCancelled) {

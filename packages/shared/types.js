@@ -1,5 +1,6 @@
 // @flow
 import { BATCH_STATES, FILE_STATES } from "./src/consts";
+import type { SendMethod } from "@rupy/sender";
 
 export type NonMaybeTypeFunc = <T>(param: T) => $NonMaybeType<T>;
 
@@ -60,9 +61,23 @@ export type CreateOptions = UploadOptions & {
 	concurrent?: boolean,
 	//the maximum allowed for simultaneous requests (default: 2)
 	maxConcurrent?: number,
+	//the send method to use. Allows overriding the method used to send files to the server for example using a mock (default: @rupy/sender)
+	send?: SendMethod,
 };
 
-type BatchItemBase = {|
+// type BatchItemBase = {
+// 	id: string,
+// 	batchId: string,
+// 	state: FileState,
+// 	uploadResponse?: any,
+// 	abort: () => void,
+// 	//percentage of upload completed
+// 	completed: number,
+// 	//bytes uploaded
+// 	loaded: number,
+// };
+
+type BatchUrl = {|
 	id: string,
 	batchId: string,
 	state: FileState,
@@ -72,17 +87,23 @@ type BatchItemBase = {|
 	completed: number,
 	//bytes uploaded
 	loaded: number,
-|};
-
-type BatchUrl = BatchItemBase & {|
 	url: string,
 |};
 
-type BatchFile = BatchItemBase & {|
+type BatchFile = {|
+	id: string,
+	batchId: string,
+	state: FileState,
+	uploadResponse?: any,
+	abort: () => void,
+	//percentage of upload completed
+	completed: number,
+	//bytes uploaded
+	loaded: number,
 	file: Object,
 |};
 
-export type BatchItem = BatchUrl | BatchFile;
+export type BatchItem =  BatchUrl |  & BatchFile;
 
 export type Batch = {
 	id: string,

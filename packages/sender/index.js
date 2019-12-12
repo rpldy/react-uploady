@@ -3,7 +3,7 @@
 import send from "./src/sender";
 import createMockSender from "./src/mockSender/mockSender";
 
-import type { SendOptions, SendResult, UploadData, SendMethod } from "./types";
+import type { MockOptions, } from "./src/types";
 
 export default send;
 
@@ -12,9 +12,6 @@ export {
 };
 
 export type {
-	SendOptions,
-	SendResult,
-	UploadData,
-	SendMethod
+	MockOptions,
 };
 

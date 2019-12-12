@@ -1,16 +1,15 @@
 // @flow
-import { BATCH_STATES, FILE_STATES } from "./src/consts";
-import type { SendMethod } from "@rupy/sender";
+import { BATCH_STATES, FILE_STATES } from "./consts";
 
 export type NonMaybeTypeFunc = <T>(param: T) => $NonMaybeType<T>;
 
 export type Destination = {|
 	//upload URL
 	url: string,
-	//The name of the param in the upload request (default: input element's name)
-	filesParamName?: string,
-	//collection of params to pass along with the upload
-	params?: Object,
+		//The name of the param in the upload request (default: input element's name)
+		filesParamName ?: string,
+		//collection of params to pass along with the upload
+		params ?: Object,
 |};
 
 export type UploadInfo = string | Object;
@@ -56,6 +55,30 @@ export type UploadOptions = {
 	withCredentials?: boolean,
 };
 
+export type UploadData = {
+	state: FileState,
+	response: any,
+};
+
+export type SendResult = {
+	request: Promise<UploadData>,
+	abort: () => void
+};
+
+export type OnProgress = (e: Event) => void;
+
+export type SendOptions = {
+	method: string,
+	paramName: string,
+	params: Object,
+	// encoding: string,
+	headers?: Object,
+	forceJsonResponse: ?boolean,
+	withCredentials: ?boolean,
+};
+
+export type SendMethod = (item: BatchItem, url: string, options: SendOptions, onProgress: OnProgress) => SendResult;
+
 export type CreateOptions = UploadOptions & {
 	//whether multiple upload requests can be issued simultaneously (default: false)
 	concurrent?: boolean,
@@ -79,31 +102,31 @@ export type CreateOptions = UploadOptions & {
 
 type BatchUrl = {|
 	id: string,
-	batchId: string,
-	state: FileState,
-	uploadResponse?: any,
-	abort: () => void,
-	//percentage of upload completed
-	completed: number,
-	//bytes uploaded
-	loaded: number,
-	url: string,
+		batchId: string,
+			state: FileState,
+				uploadResponse ?: any,
+				abort: () => void,
+					//percentage of upload completed
+					completed: number,
+						//bytes uploaded
+						loaded: number,
+							url: string,
 |};
 
 type BatchFile = {|
 	id: string,
-	batchId: string,
-	state: FileState,
-	uploadResponse?: any,
-	abort: () => void,
-	//percentage of upload completed
-	completed: number,
-	//bytes uploaded
-	loaded: number,
-	file: Object,
+		batchId: string,
+			state: FileState,
+				uploadResponse ?: any,
+				abort: () => void,
+					//percentage of upload completed
+					completed: number,
+						//bytes uploaded
+						loaded: number,
+							file: Object,
 |};
 
-export type BatchItem =  BatchUrl |  & BatchFile;
+export type BatchItem = BatchUrl | & BatchFile;
 
 export type Batch = {
 	id: string,

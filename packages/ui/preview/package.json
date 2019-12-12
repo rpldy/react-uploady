@@ -16,6 +16,7 @@
     "@rupy/shared-ui": "^0.1.0"
   },
   "devDependencies": {
+    "@rupy/sender": "^0.1.0",
     "@rupy/upload-button": "^0.1.0",
     "@rupy/upload-url-input": "^0.1.0"
   }

@@ -2,20 +2,25 @@
 
 import { BATCH_STATES, FILE_STATES } from "./src/consts";
 import * as logger from "./src/logger";
-import {isFunction} from "./src/utils";
+import { isFunction } from "./src/utils";
 
 import type {
 	CreateOptions,
-	Destination,
-	UploadOptions,
-	UploadInfo,
-	ProgressInfo,
-	BatchState,
-	FileState,
-	NonMaybeTypeFunc,
-	Batch,
-	BatchItem,
-} from "./types";
+		Destination,
+		UploadOptions,
+		UploadInfo,
+		ProgressInfo,
+		BatchState,
+		FileState,
+		NonMaybeTypeFunc,
+		Batch,
+		BatchItem,
+		SendMethod,
+		SendResult,
+		UploadData,
+		OnProgress,
+		SendOptions,
+} from "./src/types";
 
 export {
 	BATCH_STATES,
@@ -27,13 +32,18 @@ export {
 
 export type {
 	CreateOptions,
-	Destination,
-	UploadOptions,
-	UploadInfo,
-	ProgressInfo,
-	BatchState,
-	FileState,
-	NonMaybeTypeFunc,
-	Batch,
-	BatchItem,
+		Destination,
+		UploadOptions,
+		UploadInfo,
+		ProgressInfo,
+		BatchState,
+		FileState,
+		NonMaybeTypeFunc,
+		Batch,
+		BatchItem,
+		SendMethod,
+		SendResult,
+		UploadData,
+		OnProgress,
+		SendOptions,
 };

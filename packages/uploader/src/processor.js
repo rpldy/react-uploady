@@ -5,8 +5,7 @@ import defaultSend from "@rupy/sender";
 import triggerCancellable from "./triggerCancellable";
 import { UPLOADER_EVENTS, PROGRESS_DELAY } from "./consts";
 
-import type { CreateOptions, Batch, BatchItem, } from "@rupy/shared";
-import type { UploadData } from "@rupy/sender";
+import type { CreateOptions, Batch, BatchItem, UploadData, } from "@rupy/shared";
 import type { MandatoryCreateOptions } from "../types";
 
 //TODO: need a way to augment batch data at any point !!!!!!!!!

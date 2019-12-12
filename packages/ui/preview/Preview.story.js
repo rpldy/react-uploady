@@ -1,10 +1,22 @@
 // @flow
 import React, { useRef } from "react";
 import styled, { css } from "styled-components";
-import Uploady, {} from "@rupy/uploady";
+import Uploady, { } from "@rupy/uploady";
 import Preview from "./index";
 import UploadButton from "@rupy/upload-button";
 import UploadUrlInput from "@rupy/upload-url-input";
+import { createMockSender } from "@rupy/sender";
+
+const mockSenderEnhancer = (uploader) => {
+
+	const mockSender = createMockSender({ delay: 1000 });
+
+	uploader.update({ send: mockSender.send });
+
+	return uploader;
+};
+
+
 
 // $FlowFixMe
 const uploadUrl = `https://api.cloudinary.com/v1_1/${process.env.CLD_CLOUD}/upload`;
@@ -54,12 +66,12 @@ const cloudinaryDestination = { url: uploadUrl, params: uploadParams };
 
 export const WithLocalFiles = () =>
 	<Uploady debug
-	         destination={cloudinaryDestination}>
+		destination={cloudinaryDestination}>
 
 		<StyledUploadButton />
 
 		<PreviewContainer>
-			<Preview/>
+			<Preview />
 		</PreviewContainer>
 	</Uploady>;
 
@@ -74,28 +86,27 @@ const UrlUpload = () => {
 
 	return <>
 		<StyledUploadUrlInput placeholder="enter valid url to upload"
-		                      uploadRef={uploadRef}/>
+			uploadRef={uploadRef} />
 
 		<Button onClick={onButtonClick}>Upload</Button>
-	</>
+	</>;
 };
 
 export const WithUrls = () => {
-
 	return <Uploady debug
-	                destination={cloudinaryDestination}>
+		destination={cloudinaryDestination}>
 
 		<UrlUpload />
 
 		<PreviewContainer>
-			<Preview/>
+			<Preview />
 		</PreviewContainer>
 	</Uploady>;
 };
 
 export const withFallbackUrl = () =>
 	<Uploady debug
-	         destination={cloudinaryDestination}>
+		destination={cloudinaryDestination}>
 
 		<UrlUpload />
 

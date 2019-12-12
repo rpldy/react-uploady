@@ -2,7 +2,7 @@
 
 import { PREVIEW_DEFAULTS } from "./defaults";
 
-import type { MandatoryPreviewOptions, PreviewOptions } from "../types";
+import type { MandatoryPreviewOptions, PreviewOptions } from "./types";
 
 const getMandatoryOptions = (options: ?PreviewOptions): MandatoryPreviewOptions => {
 	return {

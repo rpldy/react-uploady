@@ -3,8 +3,15 @@
 //TODO: need to support grouping of files into single request
 
 import { logger, FILE_STATES } from "@rupy/shared";
-import type { FileState, BatchItem } from "@rupy/shared";
-import type { SendOptions, SendResult, UploadData, OnProgress, } from "../types";
+
+import type {
+	SendOptions,
+		FileState,
+		BatchItem,
+		SendResult,
+		UploadData,
+		OnProgress,
+} from "@rupy/shared";
 
 type Headers = { [string]: string };
 
@@ -14,7 +21,7 @@ const setHeaders = (req, options: SendOptions) => {
 
 	//TODO: Content-Range
 	//TODO: 'Content-Disposition' = 'attachment; filename="' +  encodeURI(file.name)+ '"'
-//'application/octet-stream'
+	//'application/octet-stream'
 
 	//cld cors allowed headers =  Cache-Control, Content-Disposition, Content-MD5, Content-Range, Content-Type, DPR, Viewport-Width, X-CSRF-Token, X-Prototype-Version, X-Requested-With, X-Unique-Upload-Id
 	const headers = {
@@ -88,7 +95,7 @@ const getResponseHeaders = (xhr: XMLHttpRequest): ?Headers => {
 				return res;
 			}, {});
 	} catch (ex) {
-		logger.debugLog("uploady.uploader.sender: failed to read response headers", xhr);
+		logger.debugLog("uploady.sender: failed to read response headers", xhr);
 	}
 
 	return resHeaders;
@@ -115,7 +122,7 @@ const processResponse = async (pXhr: Promise<XMLHttpRequest>, options: SendOptio
 	try {
 		const xhr = await pXhr;
 
-		logger.debugLog("uploady.uploader.sender: received upload response ", xhr);
+		logger.debugLog("uploady.sender: received upload response ", xhr);
 
 		state = ~SUCCESS_CODES.indexOf(xhr.status) ?
 			FILE_STATES.FINISHED : FILE_STATES.ERROR;
@@ -127,7 +134,7 @@ const processResponse = async (pXhr: Promise<XMLHttpRequest>, options: SendOptio
 			headers: resHeaders,
 		};
 	} catch (ex) {
-		logger.debugLog("uploady.uploader.sender: upload failed: ", ex);
+		logger.debugLog("uploady.sender: upload failed: ", ex);
 		state = FILE_STATES.ERROR;
 		response = ex;
 	}
@@ -139,7 +146,7 @@ const processResponse = async (pXhr: Promise<XMLHttpRequest>, options: SendOptio
 };
 
 export default (item: BatchItem, url: string, options: SendOptions, onProgress: OnProgress): SendResult => {
-	logger.debugLog("uploady.uploader.sender: sending file: ", { item, url, options, });
+	logger.debugLog("uploady.sender: sending file: ", { item, url, options, });
 
 	const request = makeRequest(item, url, options, onProgress);
 

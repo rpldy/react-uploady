@@ -9,13 +9,13 @@ import triggerCancellable from "./triggerCancellable";
 
 import type {
 	UploadInfo,
-	UploadOptions,
-	CreateOptions,
+		UploadOptions,
+		CreateOptions,
 } from "@rupy/shared";
 
 import type  {
 	UploaderType,
-	UploaderEnhancer,
+		UploaderEnhancer,
 } from "../types";
 
 import { getMandatoryOptions } from "./utils";
@@ -99,7 +99,8 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 	const cancellable = triggerCancellable(trigger);
 
 	if (enhancer) {
-		uploader = enhancer(uploader, trigger);
+		const enhanced = enhancer(uploader, trigger);
+		uploader = enhanced || uploader;
 	}
 
 	const processor = getProcessor(trigger, options);

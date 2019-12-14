@@ -20,6 +20,7 @@ import type {
 	UploadData,
 	OnProgress,
 	SendOptions,
+	SenderProgressEvent,
 } from "./src/types";
 
 export {
@@ -46,4 +47,5 @@ export type {
 	UploadData,
 	OnProgress,
 	SendOptions,
+	SenderProgressEvent,
 };

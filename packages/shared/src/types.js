@@ -35,7 +35,9 @@ export type SendResult = {
 	abort: () => void
 };
 
-export type OnProgress = (e: { total: number, loaded: number }) => void;
+export type SenderProgressEvent = { total: number, loaded: number };
+
+export type OnProgress = (e: SenderProgressEvent) => void;
 
 export type SendOptions = {
 	method: string,

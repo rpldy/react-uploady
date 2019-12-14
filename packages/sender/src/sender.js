@@ -6,11 +6,10 @@ import { logger, FILE_STATES } from "@rupy/shared";
 
 import type {
 	SendOptions,
-		FileState,
-		BatchItem,
-		SendResult,
-		UploadData,
-		OnProgress,
+	BatchItem,
+	SendResult,
+	UploadData,
+	OnProgress,
 } from "@rupy/shared";
 
 type Headers = { [string]: string };
@@ -90,7 +89,7 @@ const getResponseHeaders = (xhr: XMLHttpRequest): ?Headers => {
 		resHeaders = xhr.getAllResponseHeaders().trim()
 			.split(/[\r\n]+/)
 			.reduce((res, line: string) => {
-				const [key, val] = line.split(': ');
+				const [key, val] = line.split(": ");
 				res[key] = val;
 				return res;
 			}, {});
@@ -106,7 +105,7 @@ const parseResponseJson = (response: string, headers: ?Headers, options: SendOpt
 
 	const ct = headers && headers["content-type"];
 
-	if (options.forceJsonResponse || ct && ~ct.indexOf("json")) {
+	if (options.forceJsonResponse || (ct && ~ct.indexOf("json"))) {
 		try {
 			parsed = JSON.parse(response);
 		} catch (e) { //silent fail

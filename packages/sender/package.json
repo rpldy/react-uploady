@@ -10,6 +10,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@rupy/shared": "^0.1.0"
+    "@rupy/shared": "^0.1.0",
+    "lodash": "^4.17.15"
   }
 }

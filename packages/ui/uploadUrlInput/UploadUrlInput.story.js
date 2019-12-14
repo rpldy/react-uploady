@@ -16,7 +16,8 @@ const uploadParams = {
 
 const cloudinaryDestination = { url: uploadUrl, params: uploadParams };
 
-export const Simple = () => <Uploady debug
+export const Simple = () => <Uploady
+debug
                                      destination={cloudinaryDestination}>
 	<UploadUrlInput placeholder="URL to upload"/>
 </Uploady>;
@@ -39,10 +40,12 @@ export const WithButtonAndValidate = () => {
 	const [error, setError] = useState(null);
 	const uploadRef = useRef(null);
 
-	return <Uploady debug
+	return <Uploady
+debug
 	                destination={cloudinaryDestination}>
 
-		<UploadUrlInput uploadRef={uploadRef}
+		<UploadUrlInput
+uploadRef={uploadRef}
 		                validate={(value) => {
 			                const valid = !!(value && !value.indexOf("http"));
 			                setError(valid ? null : "URL must be valid http address");
@@ -59,7 +62,7 @@ export const WithButtonAndValidate = () => {
 		</button>
 		<br/>
 		<UploadStatus/>
-	</Uploady>
+	</Uploady>;
 };
 
 export default {

@@ -6,7 +6,7 @@ import triggerCancellable from "./triggerCancellable";
 import { UPLOADER_EVENTS, PROGRESS_DELAY } from "./consts";
 
 import type { CreateOptions, Batch, BatchItem, UploadData, } from "@rupy/shared";
-import type { MandatoryCreateOptions } from "../types";
+import type { MandatoryCreateOptions } from "./types";
 
 //TODO: need a way to augment batch data at any point !!!!!!!!!
 
@@ -27,8 +27,6 @@ export const initUploadQueue = (
 	trigger: Function
 ) => {
 	const { concurrent, maxConcurrent } = options;
-
-	const send = options.send ? options.send : defaultSend;
 
 	const itemQueue: string[] = [];
 
@@ -104,6 +102,8 @@ export const initUploadQueue = (
 		const throttledProgress = throttle(
 			(e: ProgressEvent) => onItemUploadProgress(items, e), PROGRESS_DELAY);
 
+		const send = addOptions.send ? addOptions.send : defaultSend;
+
 		return send(items[0], url, {
 			method: addOptions.method,
 			paramName: addOptions.destination.filesParamName,
@@ -111,7 +111,6 @@ export const initUploadQueue = (
 				...addOptions.params,
 				...addOptions.destination.params,
 			},
-			// encoding: addOptions.encoding,
 			forceJsonResponse: addOptions.forceJsonResponse,
 			withCredentials: addOptions.withCredentials,
 		}, throttledProgress);
@@ -256,4 +255,4 @@ export default (trigger: Function, options: CreateOptions) => {
 	return {
 		process,
 	};
-}
+};

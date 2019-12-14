@@ -20,12 +20,14 @@ const uploadParams = {
 
 const cloudinaryDestination = { url: uploadUrl, params: uploadParams };
 
-export const Simple = () => <Uploady debug
+export const Simple = () => <Uploady
+debug
                                      destination={cloudinaryDestination}>
 	<UploadButton/>
 </Uploady>;
 
-export const WithEventListeners = () => <Uploady debug
+export const WithEventListeners = () => <Uploady
+debug
                                                  destination={cloudinaryDestination}
                                                  listeners={{
 	                                                 [UPLOADER_EVENTS.BATCH_START]: (batch) => console.log(">>>>> BATCH START - ", batch),
@@ -56,7 +58,8 @@ const HookedUploadButton = () => {
 };
 
 export const withEventHooks = () =>
-	<Uploady debug
+	<Uploady
+debug
 	         multiple
 	         destination={cloudinaryDestination}>
 		<HookedUploadButton/>
@@ -91,7 +94,8 @@ const UploadProgress = () => {
 };
 
 export const WithProgress = () => <>
-	<Uploady debug
+	<Uploady
+debug
 	         multiple={false}
 	         destination={cloudinaryDestination}>
 		<UploadProgress/>

@@ -1,22 +1,19 @@
 // @flow
 import React, { useRef } from "react";
 import styled, { css } from "styled-components";
-import Uploady, { } from "@rupy/uploady";
-import Preview from "./index";
+import Uploady from "@rupy/uploady";
 import UploadButton from "@rupy/upload-button";
 import UploadUrlInput from "@rupy/upload-url-input";
 import { createMockSender } from "@rupy/sender";
+import Preview from "./index";
 
-const mockSenderEnhancer = (uploader) => {
+import type { UploaderType } from "@rupy/uploader";
 
+const mockSenderEnhancer = (uploader: UploaderType): UploaderType => {
 	const mockSender = createMockSender({ delay: 1000 });
-
 	uploader.update({ send: mockSender.send });
-
 	return uploader;
 };
-
-
 
 // $FlowFixMe
 const uploadUrl = `https://api.cloudinary.com/v1_1/${process.env.CLD_CLOUD}/upload`;
@@ -65,13 +62,15 @@ const Button = styled.button`
 const cloudinaryDestination = { url: uploadUrl, params: uploadParams };
 
 export const WithLocalFiles = () =>
-	<Uploady debug
-		destination={cloudinaryDestination}>
+	<Uploady
+debug
+	         destination={cloudinaryDestination}
+	         enhancer={mockSenderEnhancer}>
 
-		<StyledUploadButton />
+		<StyledUploadButton/>
 
 		<PreviewContainer>
-			<Preview />
+			<Preview/>
 		</PreviewContainer>
 	</Uploady>;
 
@@ -85,34 +84,39 @@ const UrlUpload = () => {
 	};
 
 	return <>
-		<StyledUploadUrlInput placeholder="enter valid url to upload"
-			uploadRef={uploadRef} />
+		<StyledUploadUrlInput
+placeholder="enter valid url to upload"
+		                      uploadRef={uploadRef}/>
 
 		<Button onClick={onButtonClick}>Upload</Button>
 	</>;
 };
 
 export const WithUrls = () => {
-	return <Uploady debug
-		destination={cloudinaryDestination}>
+	return <Uploady
+debug
+	                destination={cloudinaryDestination}
+	                enhancer={mockSenderEnhancer}>
 
-		<UrlUpload />
+		<UrlUpload/>
 
 		<PreviewContainer>
-			<Preview />
+			<Preview/>
 		</PreviewContainer>
 	</Uploady>;
 };
 
 export const withFallbackUrl = () =>
-	<Uploady debug
-		destination={cloudinaryDestination}>
+	<Uploady
+debug
+	         destination={cloudinaryDestination}
+	         enhancer={mockSenderEnhancer}>
 
-		<UrlUpload />
+		<UrlUpload/>
 
 		<PreviewContainer>
 			<Preview
-				fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"} />
+				fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
 		</PreviewContainer>
 	</Uploady>;
 

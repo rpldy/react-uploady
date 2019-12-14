@@ -1,5 +1,5 @@
 {
-  "name": "@rupy/chunked-uploady",
+  "name": "@rpldy/chunked-uploady",
   "version": "0.1.0",
   "main": "lib/index.js",
   "module": "src/index.js",

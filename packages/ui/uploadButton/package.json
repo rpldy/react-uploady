@@ -16,5 +16,9 @@
   },
   "devDependencies": {
     "@rupy/uploady": "^0.1.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8",
+    "react-dom": ">=16.8"
   }
 }

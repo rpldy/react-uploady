@@ -1,6 +1,6 @@
 // @flow
 import UploadButton from "./src/UploadButton";
-import type {UploadButtonProps} from "./types";
+import type { UploadButtonProps } from "./types";
 
 export default UploadButton;
 

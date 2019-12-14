@@ -1,5 +1,5 @@
 // @flow
-import type {Options} from "../types";
+import type { Options } from "../types";
 
 const defaults: Options = {
 	allowRegisterNonExistent: true,

@@ -7,4 +7,7 @@ Modern file uploader components & hooks for React
 
 takes cues and learning from the venerable jquery-file-upload 
 
-no jquery!!!
+but without jquery!!!
+
+
+should use webpack lodash plugin

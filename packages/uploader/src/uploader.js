@@ -6,20 +6,19 @@ import createBatch from "./batch";
 import getProcessor from "./processor";
 import { UPLOADER_EVENTS } from "./consts";
 import triggerCancellable from "./triggerCancellable";
+import { getMandatoryOptions } from "./utils";
 
 import type {
 	UploadInfo,
-		UploadOptions,
-		CreateOptions,
+	UploadOptions,
+	CreateOptions,
 } from "@rupy/shared";
 
 import type  {
 	UploaderType,
-		UploaderEnhancer,
-} from "../types";
-
-import { getMandatoryOptions } from "./utils";
-import type { MandatoryCreateOptions } from "../types";
+	UploaderEnhancer,
+	MandatoryCreateOptions
+} from "./types";
 
 const EVENT_NAMES = Object.values(UPLOADER_EVENTS);
 
@@ -39,6 +38,7 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 		//TODO: updating concurrent and maxConcurrent means we need to update the processor!!!!!
 
 		options = merge({}, options, updateOptions); //need deep merge for destination
+		return uploader;
 	};
 
 	const add = async (files: UploadInfo | UploadInfo[], addOptions: UploadOptions): Promise<void> => {
@@ -51,7 +51,7 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 			const processOptions = merge({}, options, addOptions);
 
 			if (processOptions.autoUpload) {
-				processor.process(batch, processOptions)
+				processor.process(batch, processOptions);
 			} else {
 				pendingUploads.push({ batch, processOptions });
 			}
@@ -106,4 +106,4 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 	const processor = getProcessor(trigger, options);
 
 	return uploader;
-}
+};

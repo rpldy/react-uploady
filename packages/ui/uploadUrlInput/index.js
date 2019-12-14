@@ -7,4 +7,4 @@ export default UploadUrlInput;
 export type {
 	UploadUrlInputProps,
 	UploadCallback,
-}
+};

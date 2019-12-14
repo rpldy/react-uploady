@@ -8,7 +8,7 @@ import { UploadyContext, createContextApi } from "@rupy/shared-ui";
 
 import type { UploaderType } from "@rupy/uploader";
 import type { CreateOptions } from "@rupy/shared";
-import type { UploadyProps } from "../types";
+import type { UploadyProps } from "./types";
 
 const FileInputFieldPortal = ({ container, children }) =>
 	container && ReactDOM.createPortal(children, container);
@@ -19,15 +19,14 @@ const getUploaderOptions = (props: UploadyProps): CreateOptions =>
 const Uploady = (props: UploadyProps) => {
 
 	logger.setDebug(!!props.debug);
-
-	console.log("!!!!!!!!!!!!! RENDERING UPLOADY !!!!!!!!!!!", props);
+	logger.debugLog("@@@ Uploady rendering @@@", props);
 
 	const inputFieldContainer = document.body;
 	const inputFieldRef = useRef<?HTMLInputElement>(null);
 
 	const uploader = useMemo<UploaderType>(() => {
-		return props.uploader || createUploader(getUploaderOptions(props));
-	}, [props.uploader]);
+		return props.uploader || createUploader(getUploaderOptions(props), props.enhancer);
+	}, [props]);
 
 	//TODO: ALLOW TO CHANGE DESTINATION USING PROPS !!!!!!!!!!
 	//TODO: ALLOW TO SET INPUT FIELD CONTAINER : props.inputFieldContainer
@@ -42,7 +41,7 @@ const Uploady = (props: UploadyProps) => {
 
 	const onFileInputChange = useCallback((e) => {
 		uploader.add(e.target.files);
-	}, []);
+	}, [uploader]);
 
 	const registerEventListener = (([name, cb]) => {
 		uploader.on(name, cb);
@@ -67,19 +66,20 @@ const Uploady = (props: UploadyProps) => {
 				Object.entries(props.listeners)
 					.forEach(unregisterEventListener);
 			}
-		}
-	}, [props.listeners]);
+		};
+	}, [props.listeners, registerEventListener, unregisterEventListener]);
 
 	const uploaderOptions = uploader.getOptions();
 
 	return <UploadyContext.Provider value={api}>
 		<FileInputFieldPortal container={inputFieldContainer}>
-			<input type="file"
-			       onChange={onFileInputChange}
-			       name={uploaderOptions.inputFieldName}
-			       multiple={uploaderOptions.multiple}
-			       style={{ display: "none" }}
-			       ref={inputFieldRef}/>
+			<input
+				type="file"
+				onChange={onFileInputChange}
+				name={uploaderOptions.inputFieldName}
+				multiple={uploaderOptions.multiple}
+				style={{ display: "none" }}
+				ref={inputFieldRef}/>
 		</FileInputFieldPortal>
 
 		{props.children}

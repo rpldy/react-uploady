@@ -4,21 +4,32 @@ import { isFunction } from "@rupy/shared";
 import { useBatchStartListener } from "@rupy/shared-ui";
 import { getMandatoryOptions } from "./utils";
 import { PREVIEW_TYPES } from "./consts";
+
 import type { Element, ComponentType } from "react";
 import type { Batch, BatchItem } from "@rupy/shared";
 import type {
 	PreviewProps,
-		MandatoryPreviewOptions,
-		PreviewData,
-		PreviewType,
+	MandatoryPreviewOptions,
+	PreviewData,
+	PreviewType,
 } from "./types";
 
-const getFallbackUrl = (options: MandatoryPreviewOptions, prop: string | Object): ?string | ?PreviewData => {
-	return (options.fallbackUrl && isFunction(options.fallbackUrl)) ?
-		options.fallbackUrl(prop) : options.fallbackUrl;
+const getFallbackUrl = (options: MandatoryPreviewOptions, file: Object): ?PreviewData => {
+	let data = isFunction(options.fallbackUrl) ?
+		options.fallbackUrl(file) :
+		options.fallbackUrl;
+
+	if (typeof data === "string") {
+		data = {
+			url: data,
+			type: PREVIEW_TYPES.IMAGE,
+		};
+	}
+
+	return data;
 };
 
-const getFileObjcetUrlByType = (type: PreviewType, mimeTypes, max, file: Object) => {
+const getFileObjectUrlByType = (type: PreviewType, mimeTypes, max, file: Object) => {
 	let data;
 
 	if (mimeTypes && ~mimeTypes.indexOf(file.type)) {
@@ -33,13 +44,13 @@ const getFileObjcetUrlByType = (type: PreviewType, mimeTypes, max, file: Object)
 	return data;
 };
 
-const getFilePreviewUrl = (file, options: MandatoryPreviewOptions): ?string | ?PreviewData => {
+const getFilePreviewUrl = (file, options: MandatoryPreviewOptions): ?PreviewData => {
 	let data;
 
-	data = getFileObjcetUrlByType(PREVIEW_TYPES.IMAGE, options.imageMimeTypes, options.maxPreviewImageSize, file);
+	data = getFileObjectUrlByType(PREVIEW_TYPES.IMAGE, options.imageMimeTypes, options.maxPreviewImageSize, file);
 
 	if (!data) {
-		data = getFileObjcetUrlByType(PREVIEW_TYPES.VIDEO, options.videoMimeTypes, options.maxPreviewVideoSize, file);
+		data = getFileObjectUrlByType(PREVIEW_TYPES.VIDEO, options.videoMimeTypes, options.maxPreviewVideoSize, file);
 	}
 
 	return data;
@@ -50,47 +61,53 @@ const loadPreviewUrl = (item: BatchItem, options: MandatoryPreviewOptions): ?Pre
 
 	if (item.file) {
 		data = getFilePreviewUrl(item.file, options);
-	} else if (item.url) {
-		data = item.url;
-	}
 
-	if (!data) {
-		const uploadProp = item.file ? item.file : item.url;
-		data = getFallbackUrl(options, uploadProp);
-	}
-
-	if (data && typeof data === "string") {
+		if (!data) {
+			data = getFallbackUrl(options, item.file);
+		}
+	} else
 		data = {
-			url: data,
+			url: item.url,
 			type: PREVIEW_TYPES.IMAGE,
 		};
-	}
 
 	return data;
+
+// if (!data) {
+// 	const uploadProp = item.file ? item.file : item.url;
+// 	data = getFallbackUrl(options, uploadProp);
+// }
+//
+// if (data && typeof data === "string") {
+// 	data = {
+// 		url: data,
+// 		type: PREVIEW_TYPES.IMAGE,
+// 	};
+// }
 };
 
-const usePreviewsLoader = (props: PreviewProps): string[] => {
-	const [urls, setUrls] = useState<string[]>([]);
+const usePreviewsLoader = (props: PreviewProps): PreviewData[] => {
+	const [previews, setPreviews] = useState<PreviewData[]>([]);
 	const previewOptions = getMandatoryOptions(props);
 
 	useBatchStartListener((batch: Batch) => {
 		const items: BatchItem[] = previewOptions.loadFirstOnly ? batch.items.slice(0, 1) : batch.items;
 
-		const previewUrls = items
+		const previewsData = items
 			.map((item) => loadPreviewUrl(item, previewOptions))
 			.filter(Boolean);
 
-		setUrls(previewUrls);
+		setPreviews(previewsData);
 	});
 
-	return urls;
+	return previews;
 };
 
 /**
  * doesn't render its own container
  */
 const Preview = (props: PreviewProps): Element<"img">[] | Element<ComponentType<any>>[] => {
-	const previewUrls = usePreviewsLoader(props);
+	const previews = usePreviewsLoader(props);
 
 	const onPreviewLoadError = useCallback((e) => {
 		const img = e.target;
@@ -102,9 +119,11 @@ const Preview = (props: PreviewProps): Element<"img">[] | Element<ComponentType<
 		}
 	});
 
-	return previewUrls.map((url): Element<any> =>
-		props.PreviewComponent ? <props.PreviewComponent {...props.previewProps} url={url} /> :
-			<img onError={onPreviewLoadError} key={url} src={url}  {...props.previewProps} />);
+	return previews.map((data: PreviewData): Element<any> =>
+		props.PreviewComponent ? <props.PreviewComponent {...props.previewProps} data={data}/> :
+			<img
+				onError={onPreviewLoadError} key={data.url}
+				src={data.url}  {...props.previewProps} />);
 };
 
 export default Preview;

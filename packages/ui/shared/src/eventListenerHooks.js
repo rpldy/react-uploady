@@ -2,7 +2,7 @@
 import { UPLOADER_EVENTS } from "@rupy/uploader";
 import {
 	generateUploaderEventHook,
-	generateUploaderEventHookWithState} from "./utils";
+	generateUploaderEventHookWithState } from "./utils";
 import type { BatchItem } from "@rupy/shared";
 
 const useBatchStartListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);

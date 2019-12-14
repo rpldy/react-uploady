@@ -1,7 +1,8 @@
 // @flow
 import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "./defaults";
-import type { CreateOptions, Destination, UploadOptions } from "@rupy/shared";
-import type { MandatoryCreateOptions, MandatoryDestination } from "../types";
+
+import type { CreateOptions, Destination } from "@rupy/shared";
+import type { MandatoryCreateOptions, MandatoryDestination } from "./types";
 
 const getMandatoryDestination = (dest: ?Destination): MandatoryDestination => {
 	return {
@@ -21,4 +22,4 @@ const getMandatoryOptions = (options: ?CreateOptions): MandatoryCreateOptions =>
 
 export {
 	getMandatoryOptions,
-}
+};

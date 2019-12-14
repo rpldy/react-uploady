@@ -14,8 +14,8 @@ const useEventEffect = (event: string, fn: Callback) => {
 
 		return () => {
 			uploader.off(event, fn);
-		}
-	}, [fn]);
+		};
+	}, [event, fn, uploader]);
 };
 
 const generateUploaderEventHookWithState = (event: string, stateCalculator: (state: any) => any) => {
@@ -28,7 +28,7 @@ const generateUploaderEventHookWithState = (event: string, stateCalculator: (sta
 			if (fn) {
 				fn(...args);
 			}
-		}, [fn, stateCalculator]);
+		}, [fn]);
 
 		useEventEffect(event, eventCallback);
 
@@ -43,4 +43,4 @@ const generateUploaderEventHook = (event: string) =>
 export {
 	generateUploaderEventHook,
 	generateUploaderEventHookWithState,
-}
+};

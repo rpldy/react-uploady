@@ -12,4 +12,4 @@ const isUndefined = (val: any) => typeof (val) === "undefined";
 export {
 	validateFunction,
 	isUndefined,
-}
+};

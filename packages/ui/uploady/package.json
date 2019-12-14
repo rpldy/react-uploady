@@ -16,5 +16,9 @@
     "@rupy/shared-ui": "^0.1.0",
     "@rupy/uploader": "^0.1.0",
     "lodash": "^4.17.15"
+  },
+  "peerDependencies": {
+    "react": ">=16.8",
+    "react-dom": ">=16.8"
   }
 }

@@ -10,8 +10,9 @@ const UploadButton = (props: UploadButtonProps) => {
 
 	const { showFileUpload } = context;
 
-	return <button id={props.id} className={props.className}
-	               onClick={showFileUpload}>Upload</button>;
+	return <button
+		id={props.id} className={props.className}
+		onClick={showFileUpload}>Upload</button>;
 };
 
 export default UploadButton;

@@ -3,10 +3,10 @@ import { merge } from "lodash";
 import { logger, FILE_STATES } from "@rupy/shared";
 import { MOCK_DEFAULTS } from "./defaults";
 
-import type { FileState, SendResult, SendOptions, UploadData, OnProgress } from "@rupy/shared";
-import type { MockOptions,  } from "../types";
+import type { SendResult, SendOptions, UploadData, OnProgress, BatchItem } from "@rupy/shared";
+import type { MockOptions, MandatoryMockOptions } from "../types";
 
-const createRequest = (options: MockOptions) => {
+const createRequest = (options: MandatoryMockOptions) => {
 
 	let isCancelled = false,
 		isDone = false,
@@ -45,6 +45,7 @@ const createRequest = (options: MockOptions) => {
 		cancelRequest = reject;
 
 		setTimeout(() => {
+			console.log("!!!!!!! ");
 			isDone = true;
 			resolve();
 			clearTimeouts();
@@ -52,11 +53,15 @@ const createRequest = (options: MockOptions) => {
 	});
 
 	if (options.progressEvents) {
-		progressTimeouts = options.progressEvents.map((perc) => {
-			const ms = options.delay * (perc / 100);
+		progressTimeouts = options.progressEvents.map((amount: number) => {
+			const perc = (amount / 100);
+			const ms = (options.delay || 0) * perc;
 			return setTimeout(() => {
 				if (!isCancelled && !isDone && progressCallback) {
-					progressCallback(perc);
+					progressCallback({
+						total: options.fileSize || 0,
+						loaded: (options.fileSize || 0) * perc,
+					});
 				}
 			}, ms);
 		});
@@ -66,10 +71,10 @@ const createRequest = (options: MockOptions) => {
 		then: p.then.bind(p),
 		abort,
 		onProgress,
-	}
+	};
 };
 
-const processResponse = (request, options: MockOptions): Promise<UploadData> => {
+const processResponse = (request, options: MandatoryMockOptions): Promise<UploadData> => {
 	return request.then(() => {
 		logger.debugLog("uploady.mockSender: mock request finished successfully");
 
@@ -77,7 +82,7 @@ const processResponse = (request, options: MockOptions): Promise<UploadData> => 
 			state: FILE_STATES.FINISHED,
 			response: {
 				headers: { "x-request-type": "react-uploady.mockSender" },
-				data: {
+				data: options.response || {
 					mock: true,
 					success: true,
 				}
@@ -96,20 +101,20 @@ const processResponse = (request, options: MockOptions): Promise<UploadData> => 
 
 export default (options?: MockOptions) => {
 
-	let sendOptions = merge({}, MOCK_DEFAULTS, options);
+	let mockOptions: MandatoryMockOptions = merge({}, MOCK_DEFAULTS, options);
 
 	const update = (updated: MockOptions) => {
-		sendOptions = merge(sendOptions, updated);
+		mockOptions = merge(mockOptions, updated);
 	};
 
 	const send = (item: BatchItem, url: string, sendOptions: SendOptions, onProgress: OnProgress): SendResult => {
-		logger.debugLog("uploady.mockSender: about to make a mock request");
-		const request = createRequest(sendOptions);
+		logger.debugLog("uploady.mockSender: about to make a mock request for item: ", item);
+		const request = createRequest(mockOptions);
 
 		request.onProgress(onProgress);
 
 		return {
-			request: processResponse(request, options),
+			request: processResponse(request, mockOptions),
 			abort: request.abort,
 		};
 	};

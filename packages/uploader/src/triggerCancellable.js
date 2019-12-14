@@ -1,5 +1,5 @@
 // @flow
-import type { Trigger } from "../types";
+import type { Trigger } from "./types";
 
 // type Trigger = (event: string, ...args: mixed[]) => Promise<mixed>[];
 type Cancellable = (event: string, ...args: mixed[]) => Promise<boolean>;

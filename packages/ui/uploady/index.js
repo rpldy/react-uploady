@@ -2,7 +2,7 @@
 import { UPLOADER_EVENTS } from "@rupy/uploader";
 import {
 	UploadyContext,
-	
+
 	useBatchStartListener,
 	useBatchFinishListener,
 	useBatchCancelledListener,
@@ -17,7 +17,7 @@ import Uploady from "./src/Uploady";
 
 import type { UploadyContextType } from "@rupy/shared-ui";
 
-import type { UploadyProps } from "./types";
+import type { UploadyProps } from "./src/types";
 
 export default Uploady;
 

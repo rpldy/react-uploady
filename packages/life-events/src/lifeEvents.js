@@ -1,7 +1,7 @@
 // @flow
 import isPromise from "is-promise";
 import defaults from "./defaults";
-import { validateFunction, isUndefined } from "./utils"
+import { validateFunction, isUndefined } from "./utils";
 import { LESYM } from "./consts";
 import type { Options, LifeEventsAPI, RegItem } from "../types";
 
@@ -28,7 +28,7 @@ const addRegistration = (obj: Object, name: any, cb: Function, once: boolean = f
 
 	if (!le.options.allowRegisterNonExistent &&
 		!~le.events.indexOf(name)) {
-		throw new Error(`Cannot register for event ${name.toString()} that wasn't already defined (allowRegisterNonExistent = false)`)
+		throw new Error(`Cannot register for event ${name.toString()} that wasn't already defined (allowRegisterNonExistent = false)`);
 	}
 
 	const regItem: RegItem = {
@@ -51,7 +51,7 @@ const findRegistrations = (obj: Object, name?: any): RegItem[] => {
 	return name ?
 		(registry[name] ? registry[name].slice() : []) :
 		// $FlowFixMe - flow doesnt know about Array.prototype.flat yet...
-		Object.values(registry).flat()
+		Object.values(registry).flat();
 };
 
 const publicMethods = {
@@ -78,7 +78,7 @@ const createApi = (target): LifeEventsAPI =>
 const cleanRegistryForName = (obj: Object, name: any, force: boolean = false) => {
 	const registry = getValidLE(obj).registry;
 
-	if (registry[name] && force || !registry[name].length) {
+	if (registry[name] && (force || !registry[name].length)) {
 		delete registry[name];
 	}
 };
@@ -162,7 +162,7 @@ function addEvent(name: any) {
 		if (!~index) {
 			le.events.push(name);
 		} else {
-			throw new Error(`Event '${name}' already defined`)
+			throw new Error(`Event '${name}' already defined`);
 		}
 
 	} else {
@@ -190,9 +190,9 @@ function hasEventRegistrations(name: any) {
 	return !!findRegistrations(this, name).length;
 }
 
-function getStats(name?: any) {
-
-}
+// function getStats(name?: any) {
+//
+// }
 
 const defineLifeData = (target: Object, options: Options, events?: any[] = [], registry?: Object = {}, stats?: Object = {}) => {
 	Object.defineProperties(target, {
@@ -223,4 +223,4 @@ export default addLife;
 
 export {
 	isLE,
-}
+};

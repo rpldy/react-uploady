@@ -10,7 +10,12 @@ const UploadUrlInput = (props: UploadUrlInputProps) => {
 
 	const { className, id, placeholder, uploadRef, validate, ...uploadOptions } = props;
 
-	const deps = [context.uploader, ...Object.values(uploadOptions)];
+	const deps = [
+		context.upload,
+		validate,
+		inputRef.current,
+		...Object.values(uploadOptions)
+	];
 
 	const upload = useCallback(() => {
 		if (inputRef && inputRef.current) {
@@ -26,7 +31,7 @@ const UploadUrlInput = (props: UploadUrlInputProps) => {
 		if (e.key === "Enter") {
 			upload();
 		}
-	}, deps);
+	}, [upload]);
 
 	if (uploadRef) {
 		if (isFunction(uploadRef)) {
@@ -36,12 +41,13 @@ const UploadUrlInput = (props: UploadUrlInputProps) => {
 		}
 	}
 
-	return <input type="text"
-	              id={id}
-	              ref={inputRef}
-	              className={className}
-	              onKeyPress={onKeyPress}
-	              placeholder={placeholder}/>
+	return <input
+		type="text"
+		id={id}
+		ref={inputRef}
+		className={className}
+		onKeyPress={onKeyPress}
+		placeholder={placeholder}/>;
 };
 
 export default UploadUrlInput;

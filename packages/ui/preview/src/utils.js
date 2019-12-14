@@ -13,4 +13,4 @@ const getMandatoryOptions = (options: ?PreviewOptions): MandatoryPreviewOptions 
 
 export {
 	getMandatoryOptions,
-}
+};

@@ -17,7 +17,6 @@ import type {
 import type  {
 	UploaderType,
 	UploaderEnhancer,
-	MandatoryCreateOptions
 } from "./types";
 
 const EVENT_NAMES = Object.values(UPLOADER_EVENTS);
@@ -29,26 +28,28 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 
 	const pendingUploads = [];
 
+	options = options || {};
+
 	logger.debugLog("uploady.uploader: creating new instance", { options, enhancer, counter });
 
-	options = getMandatoryOptions(options);
+	let uploaderOptions: CreateOptions = getMandatoryOptions(options);
 
 	const update = (updateOptions: CreateOptions) => {
 
 		//TODO: updating concurrent and maxConcurrent means we need to update the processor!!!!!
 
-		options = merge({}, options, updateOptions); //need deep merge for destination
+		uploaderOptions = merge({}, uploaderOptions, updateOptions); //need deep merge for destination
 		return uploader;
 	};
 
-	const add = async (files: UploadInfo | UploadInfo[], addOptions: UploadOptions): Promise<void> => {
+	const add = async (files: UploadInfo | UploadInfo[], addOptions?: UploadOptions): Promise<void> => {
 		const batch = createBatch(files, uploader.id);
 
 		// $FlowFixMe - https://github.com/facebook/flow/issues/8215
 		const isCancelled = await cancellable(UPLOADER_EVENTS.BATCH_ADD, batch);
 
 		if (!isCancelled) {
-			const processOptions = merge({}, options, addOptions);
+			const processOptions = merge({}, uploaderOptions, addOptions);
 
 			if (processOptions.autoUpload) {
 				processor.process(batch, processOptions);
@@ -79,8 +80,8 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 				processor.process(batch, processOptions));
 	};
 
-	const getOptions = (): MandatoryCreateOptions => {
-		return cloneDeep(options);
+	const getOptions = (): CreateOptions => {
+		return cloneDeep(uploaderOptions);
 	};
 
 	let { trigger, target: uploader } = addLife(
@@ -103,7 +104,7 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 		uploader = enhanced || uploader;
 	}
 
-	const processor = getProcessor(trigger, options);
+	const processor = getProcessor(trigger, uploaderOptions);
 
 	return uploader;
 };

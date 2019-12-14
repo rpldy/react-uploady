@@ -2,6 +2,8 @@
 
 export const DEFAULT_PARAM_NAME = "file";
 
+// export const NO_OP_SEND = () => {};
+
 export const DEFAULT_OPTIONS = Object.freeze({
 	autoUpload: true,
 	multiple: true,

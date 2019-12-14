@@ -2,24 +2,17 @@
 
 import type {
 	CreateOptions,
-	NonMaybeTypeFunc,
-	Destination,
 	UploadInfo,
 	UploadOptions,
 } from "@rupy/shared";
 
-// export type MandatoryCreateOptions = $Exact<$ObjMap<CreateOptions, NonMaybeTypeFunc>>;
-export type MandatoryCreateOptions = $ObjMap<CreateOptions, NonMaybeTypeFunc>;
-
-export type MandatoryDestination = $Exact<$ObjMap<Destination, NonMaybeTypeFunc>>;
-
 export type UploaderType = {
 	id: string,
 	update: (updateOptions: CreateOptions) => UploaderType,
-	add: (files: UploadInfo | UploadInfo[], addOptions: UploadOptions) => Promise<void>,
+	add: (files: UploadInfo | UploadInfo[], addOptions?: UploadOptions) => Promise<void>,
 	upload: () => void,
 	abort: () => void,
-	getOptions: () => MandatoryCreateOptions,
+	getOptions: () => CreateOptions,
 	on: (name: any, cb: Function) => void,
 	off: (name: any, cb?: Function) => void,
 };

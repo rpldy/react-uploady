@@ -2,9 +2,8 @@
 import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "./defaults";
 
 import type { CreateOptions, Destination } from "@rupy/shared";
-import type { MandatoryCreateOptions, MandatoryDestination } from "./types";
 
-const getMandatoryDestination = (dest: ?Destination): MandatoryDestination => {
+const getMandatoryDestination = (dest: Destination): Destination => {
 	return {
 		filesParamName: DEFAULT_PARAM_NAME,
 		params: {},
@@ -12,11 +11,11 @@ const getMandatoryDestination = (dest: ?Destination): MandatoryDestination => {
 	};
 };
 
-const getMandatoryOptions = (options: ?CreateOptions): MandatoryCreateOptions => {
+const getMandatoryOptions = (options: CreateOptions): CreateOptions => {
 	return {
 		...DEFAULT_OPTIONS,
 		...options,
-		destination: getMandatoryDestination(options ? options.destination : null)
+		destination: getMandatoryDestination(options.destination || {})
 	};
 };
 

@@ -1,12 +1,12 @@
 // @flow
 import { throttle } from "lodash";
-import { logger, BATCH_STATES, FILE_STATES } from "@rupy/shared";
+import { logger, isFunction, BATCH_STATES, FILE_STATES } from "@rupy/shared";
 import defaultSend from "@rupy/sender";
 import triggerCancellable from "./triggerCancellable";
 import { UPLOADER_EVENTS, PROGRESS_DELAY } from "./consts";
+import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "./defaults";
 
-import type { CreateOptions, Batch, BatchItem, UploadData, } from "@rupy/shared";
-import type { MandatoryCreateOptions } from "./types";
+import type { Batch, BatchItem, UploadData, CreateOptions } from "@rupy/shared";
 
 //TODO: need a way to augment batch data at any point !!!!!!!!!
 
@@ -15,18 +15,21 @@ import type { MandatoryCreateOptions } from "./types";
 
 type State = {
 	currentBatch: ?string,
-	batches: { [string]: { batch: Batch, addOptions: MandatoryCreateOptions } },
+	batches: { [string]: { batch: Batch, addOptions: CreateOptions } },
 	items: { [string]: BatchItem },
 	activeIds: string[],
 };
 
 export const initUploadQueue = (
 	state: State,
-	options: MandatoryCreateOptions,
+	options: CreateOptions,
 	cancellable: Function,
 	trigger: Function
 ) => {
-	const { concurrent, maxConcurrent } = options;
+	const {
+		concurrent = DEFAULT_OPTIONS.concurrent,
+		maxConcurrent = DEFAULT_OPTIONS.maxConcurrent
+	} = options;
 
 	const itemQueue: string[] = [];
 
@@ -93,23 +96,27 @@ export const initUploadQueue = (
 		});
 	};
 
-	const sendFiles = (items: BatchItem[], addOptions: MandatoryCreateOptions) => {
-
+	const sendFiles = (items: BatchItem[], addOptions: CreateOptions) => {
 		//TODO: need to apply grouping of files
+		const destination = addOptions.destination,
+			url = destination && destination.url,
+			paramName = destination && destination.filesParamName;
 
-		const url = addOptions.destination.url;
+		if (!url) {
+			throw new Error("Destination URL not found! Can't send files without it");
+		}
 
 		const throttledProgress = throttle(
 			(e: ProgressEvent) => onItemUploadProgress(items, e), PROGRESS_DELAY);
 
-		const send = addOptions.send ? addOptions.send : defaultSend;
+		const send = isFunction(addOptions.send) ? addOptions.send : defaultSend;
 
 		return send(items[0], url, {
-			method: addOptions.method,
-			paramName: addOptions.destination.filesParamName,
+			method: addOptions.method || DEFAULT_OPTIONS.method,
+			paramName: paramName || addOptions.inputFieldName || DEFAULT_PARAM_NAME,
 			params: { //TODO: might need to rethink the order here:
 				...addOptions.params,
-				...addOptions.destination.params,
+				...(destination && destination.params),
 			},
 			forceJsonResponse: addOptions.forceJsonResponse,
 			withCredentials: addOptions.withCredentials,
@@ -244,9 +251,11 @@ export default (trigger: Function, options: CreateOptions) => {
 		activeIds: [],
 	};
 
+	console.log("!!!!!!!!!!!! ", options.send);
+
 	const queue = initUploadQueue(state, options, cancellable, trigger);
 
-	const process = (batch: Batch, addOptions: MandatoryCreateOptions) => {
+	const process = (batch: Batch, addOptions: CreateOptions) => {
 		state.batches[batch.id] = { batch, addOptions };
 		batch.items.forEach(queue.add);
 		queue.uploadItems();

@@ -15,7 +15,7 @@ import {
 
 import assertContext from "./src/assertContext";
 
-import type { UploadyContextType } from "./types";
+import type { UploadyContextType } from "./src/types";
 
 export type {
 	UploadyContextType,

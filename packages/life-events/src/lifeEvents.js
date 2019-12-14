@@ -3,7 +3,7 @@ import isPromise from "is-promise";
 import defaults from "./defaults";
 import { validateFunction, isUndefined } from "./utils";
 import { LESYM } from "./consts";
-import type { Options, LifeEventsAPI, RegItem } from "../types";
+import type { Options, LifeEventsAPI, RegItem } from "./types";
 
 //TODO: implement STATS
 

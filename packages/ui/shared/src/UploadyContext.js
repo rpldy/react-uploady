@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import type { UploaderType } from "@rpldy/uploader";
-import type { UploadyContextType } from "../types";
+import type { UploadyContextType } from "./types";
 import type { UploadInfo, UploadOptions } from "@rpldy/shared";
 
 const UploadyContext = React.createContext<?UploadyContextType>(null);

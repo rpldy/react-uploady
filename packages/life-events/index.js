@@ -1,6 +1,6 @@
 // @flow
 import addLife, { isLE } from "./src/lifeEvents";
-import type { LifeEventsAPI } from "./types";
+import type { LifeEventsAPI } from "./src/types";
 
 export default addLife;
 

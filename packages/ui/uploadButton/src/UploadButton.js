@@ -1,7 +1,7 @@
 // @flow
 import React, { useContext } from "react";
 import { UploadyContext, assertContext } from "@rpldy/shared-ui";
-import type { UploadButtonProps } from "../types";
+import type { UploadButtonProps } from "./types";
 
 //TODO : Should be able to override uploader options !!!!!!!!!!!
 

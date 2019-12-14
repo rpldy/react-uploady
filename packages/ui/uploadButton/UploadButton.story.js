@@ -21,20 +21,20 @@ const uploadParams = {
 const cloudinaryDestination = { url: uploadUrl, params: uploadParams };
 
 export const Simple = () => <Uploady
-debug
-                                     destination={cloudinaryDestination}>
+	debug
+	destination={cloudinaryDestination}>
 	<UploadButton/>
 </Uploady>;
 
 export const WithEventListeners = () => <Uploady
-debug
-                                                 destination={cloudinaryDestination}
-                                                 listeners={{
-	                                                 [UPLOADER_EVENTS.BATCH_START]: (batch) => console.log(">>>>> BATCH START - ", batch),
-	                                                 [UPLOADER_EVENTS.BATCH_FINISH]: (batch) => console.log(">>>>> BATCH FINISH - ", batch),
-	                                                 [UPLOADER_EVENTS.FILE_START]: (file) => console.log(">>>>>> FILE START - ", file),
-	                                                 [UPLOADER_EVENTS.FILE_FINISH]: (file) => console.log(">>>>>> FILE FINISH - ", file),
-                                                 }}>
+	debug
+	destination={cloudinaryDestination}
+	listeners={{
+		[UPLOADER_EVENTS.BATCH_START]: (batch) => console.log(">>>>> BATCH START - ", batch),
+		[UPLOADER_EVENTS.BATCH_FINISH]: (batch) => console.log(">>>>> BATCH FINISH - ", batch),
+		[UPLOADER_EVENTS.FILE_START]: (file) => console.log(">>>>>> FILE START - ", file),
+		[UPLOADER_EVENTS.FILE_FINISH]: (file) => console.log(">>>>>> FILE FINISH - ", file),
+	}}>
 	<UploadButton/>
 </Uploady>;
 
@@ -59,9 +59,9 @@ const HookedUploadButton = () => {
 
 export const withEventHooks = () =>
 	<Uploady
-debug
-	         multiple
-	         destination={cloudinaryDestination}>
+		debug
+		multiple
+		destination={cloudinaryDestination}>
 		<HookedUploadButton/>
 	</Uploady>;
 
@@ -95,9 +95,9 @@ const UploadProgress = () => {
 
 export const WithProgress = () => <>
 	<Uploady
-debug
-	         multiple={false}
-	         destination={cloudinaryDestination}>
+		debug
+		multiple={false}
+		destination={cloudinaryDestination}>
 		<UploadProgress/>
 		<UploadButton/>
 	</Uploady>

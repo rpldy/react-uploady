@@ -15,7 +15,7 @@ const useFileStartListener = generateUploaderEventHook(UPLOADER_EVENTS.FILE_STAR
 const useFileFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.FILE_FINISH);
 const useFileProgressListener = generateUploaderEventHookWithState(
 	UPLOADER_EVENTS.FILE_PROGRESS,
-	(item: BatchItem) => ({...item}));
+	(item: BatchItem) => ({ ...item }));
 
 const useFileCancelListener = generateUploaderEventHook(UPLOADER_EVENTS.FILE_CANCEL);
 const useFileErrorListener = generateUploaderEventHook(UPLOADER_EVENTS.FILE_ERROR);

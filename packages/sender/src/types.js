@@ -1,6 +1,6 @@
 // @flow
 
-import type { NonMaybeTypeFunc } from "@rupy/shared";
+import type { NonMaybeTypeFunc } from "@rpldy/shared";
 
 export type MockOptions = {|
 	//the time in ms it should take to "upload" (default: 500ms)

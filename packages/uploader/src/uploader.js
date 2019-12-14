@@ -1,7 +1,7 @@
 // @flow
 import { cloneDeep, merge } from "lodash";
-import addLife from "@rupy/life-events";
-import { BATCH_STATES, logger } from "@rupy/shared";
+import addLife from "@rpldy/life-events";
+import { BATCH_STATES, logger } from "@rpldy/shared";
 import createBatch from "./batch";
 import getProcessor from "./processor";
 import { UPLOADER_EVENTS } from "./consts";
@@ -12,7 +12,7 @@ import type {
 	UploadInfo,
 	UploadOptions,
 	CreateOptions,
-} from "@rupy/shared";
+} from "@rpldy/shared";
 
 import type  {
 	UploaderType,

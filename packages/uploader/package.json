@@ -1,5 +1,5 @@
 {
-  "name": "@rupy/uploader",
+  "name": "@rpldy/uploader",
   "version": "0.1.0",
   "main": "lib/index.js",
   "module": "src/index.js",
@@ -10,9 +10,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@rupy/life-events": "^0.1.0",
-    "@rupy/sender": "^0.1.0",
-    "@rupy/shared": "^0.1.0",
+    "@rpldy/life-events": "^0.1.0",
+    "@rpldy/sender": "^0.1.0",
+    "@rpldy/shared": "^0.1.0",
     "lodash": "^4.17.15"
   }
 }

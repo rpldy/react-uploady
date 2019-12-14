@@ -1,9 +1,9 @@
 // @flow
 import { merge } from "lodash";
-import { logger, FILE_STATES } from "@rupy/shared";
+import { logger, FILE_STATES } from "@rpldy/shared";
 import { MOCK_DEFAULTS } from "./defaults";
 
-import type { SendResult, SendOptions, UploadData, OnProgress, BatchItem } from "@rupy/shared";
+import type { SendResult, SendOptions, UploadData, OnProgress, BatchItem } from "@rpldy/shared";
 import type { MockOptions, MandatoryMockOptions } from "../types";
 
 const createRequest = (options: MandatoryMockOptions) => {
@@ -45,7 +45,6 @@ const createRequest = (options: MandatoryMockOptions) => {
 		cancelRequest = reject;
 
 		setTimeout(() => {
-			console.log("!!!!!!! ");
 			isDone = true;
 			resolve();
 			clearTimeouts();

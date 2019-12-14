@@ -1,11 +1,11 @@
 // @flow
-import { BATCH_STATES, FILE_STATES } from "@rupy/shared";
+import { BATCH_STATES, FILE_STATES } from "@rpldy/shared";
 import { isString, isObjectLike, } from "lodash";
 import type {
 	UploadInfo,
 	BatchItem,
 	Batch,
-} from "@rupy/shared";
+} from "@rpldy/shared";
 
 let bCounter = 0,
 	fCounter = 0;

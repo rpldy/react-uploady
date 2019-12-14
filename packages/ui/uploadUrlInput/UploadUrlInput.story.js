@@ -4,7 +4,7 @@ import UploadUrlInput from "./index";
 import Uploady, {
 	useBatchStartListener,
 	useBatchFinishListener,
-} from "@rupy/uploady";
+} from "@rpldy/uploady";
 
 // $FlowFixMe
 const uploadUrl = `https://api.cloudinary.com/v1_1/${process.env.CLD_CLOUD}/upload`;

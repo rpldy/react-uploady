@@ -4,7 +4,7 @@ import type {
 	CreateOptions,
 	UploadInfo,
 	UploadOptions,
-} from "@rupy/shared";
+} from "@rpldy/shared";
 
 export type UploaderType = {
 	id: string,

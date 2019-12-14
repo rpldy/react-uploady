@@ -1,9 +1,9 @@
 // @flow
-import { UPLOADER_EVENTS } from "@rupy/uploader";
+import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import {
 	generateUploaderEventHook,
 	generateUploaderEventHookWithState } from "./utils";
-import type { BatchItem } from "@rupy/shared";
+import type { BatchItem } from "@rpldy/shared";
 
 const useBatchStartListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);
 const useBatchFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINISH);

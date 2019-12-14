@@ -6,7 +6,7 @@ import Uploady, {
 	useFileFinishListener,
 	useBatchStartListener,
 	useFileProgressListener
-} from "@rupy/uploady";
+} from "@rpldy/uploady";
 
 // import readme from '../README.md';
 

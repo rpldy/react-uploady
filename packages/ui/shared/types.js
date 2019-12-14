@@ -1,6 +1,6 @@
 // @flow
-import type { UploaderType } from "@rupy/uploader";
-import type { UploadInfo, UploadOptions } from "@rupy/shared";
+import type { UploaderType } from "@rpldy/uploader";
+import type { UploadInfo, UploadOptions } from "@rpldy/shared";
 
 export type AddUploadFunction = (files: UploadInfo | UploadInfo[], addOptions: UploadOptions) => void;
 

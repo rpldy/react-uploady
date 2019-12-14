@@ -1,7 +1,7 @@
 // @flow
 import React, { useRef, useContext, useCallback } from "react";
-import { isFunction } from "@rupy/shared";
-import { UploadyContext, assertContext } from "@rupy/shared-ui";
+import { isFunction } from "@rpldy/shared";
+import { UploadyContext, assertContext } from "@rpldy/shared-ui";
 import type { UploadUrlInputProps } from "../types";
 
 const UploadUrlInput = (props: UploadUrlInputProps) => {

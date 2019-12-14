@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import type { NonMaybeTypeFunc } from "@rupy/shared";
+import type { NonMaybeTypeFunc } from "@rpldy/shared";
 import { PREVIEW_TYPES } from "./consts";
 
 export type PreviewType = $Values<typeof PREVIEW_TYPES>;

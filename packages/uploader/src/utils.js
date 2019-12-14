@@ -1,7 +1,7 @@
 // @flow
 import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "./defaults";
 
-import type { CreateOptions, Destination } from "@rupy/shared";
+import type { CreateOptions, Destination } from "@rpldy/shared";
 
 const getMandatoryDestination = (dest: Destination): Destination => {
 	return {

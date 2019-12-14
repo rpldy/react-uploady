@@ -1,5 +1,5 @@
 {
-  "name": "@rupy/upload-button",
+  "name": "@rpldy/upload-button",
   "version": "0.1.0",
   "author": "yoav niran (https://github.com/yoavniran",
   "description": "",
@@ -12,10 +12,10 @@
     "directory": "packages/ui/uploadButton"
   },
   "dependencies": {
-    "@rupy/shared-ui": "^0.1.0"
+    "@rpldy/shared-ui": "^0.1.0"
   },
   "devDependencies": {
-    "@rupy/uploady": "^0.1.0"
+    "@rpldy/uploady": "^0.1.0"
   },
   "peerDependencies": {
     "react": ">=16.8",

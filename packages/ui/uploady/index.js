@@ -1,5 +1,5 @@
 // @flow
-import { UPLOADER_EVENTS } from "@rupy/uploader";
+import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import {
 	UploadyContext,
 
@@ -11,12 +11,11 @@ import {
 	useFileProgressListener,
 	useFileCancelListener,
 	useFileErrorListener,
-} from "@rupy/shared-ui";
+} from "@rpldy/shared-ui";
 
 import Uploady from "./src/Uploady";
 
-import type { UploadyContextType } from "@rupy/shared-ui";
-
+import type { UploadyContextType } from "@rpldy/shared-ui";
 import type { UploadyProps } from "./src/types";
 
 export default Uploady;

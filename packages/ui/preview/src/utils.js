@@ -1,5 +1,4 @@
 // @flow
-
 import { PREVIEW_DEFAULTS } from "./defaults";
 
 import type { MandatoryPreviewOptions, PreviewOptions } from "./types";

@@ -1,6 +1,6 @@
 // @flow
 
-import type { UploadyContextType } from "@rupy/uploady";
+import type { UploadyContextType } from "@rpldy/uploady";
 
 export default (context: ?UploadyContextType) : UploadyContextType => {
 	if (!context || !context.uploader) {

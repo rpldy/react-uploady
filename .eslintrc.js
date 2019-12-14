@@ -30,9 +30,9 @@ module.exports = {
 		]
 	},
 	"rules": {
-		"react-hooks/rules-of-hooks": "error",
-		"react-hooks/exhaustive-deps": "warn",
-		"jsx-a11y/href-no-hash": "off",
+		"react-hooks/rules-of-hooks": 2,
+		"react-hooks/exhaustive-deps": 1,
+		"jsx-a11y/href-no-hash": 0,
 		"quotes": [
 			2,
 			"double",

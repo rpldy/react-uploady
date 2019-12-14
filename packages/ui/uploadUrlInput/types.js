@@ -1,5 +1,5 @@
 // @flow
-import type { UploadInfo, UploadOptions } from "@rupy/shared";
+import type { UploadInfo, UploadOptions } from "@rpldy/shared";
 
 export type UploadCallback = (files: UploadInfo | UploadInfo[], addOptions: UploadOptions) => void;
 

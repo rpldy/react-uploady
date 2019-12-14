@@ -2,12 +2,12 @@
 import React, { useMemo, useRef, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { pick } from "lodash";
-import createUploader, { DEFAULT_OPTIONS } from "@rupy/uploader";
-import { logger } from "@rupy/shared";
-import { UploadyContext, createContextApi } from "@rupy/shared-ui";
+import createUploader, { DEFAULT_OPTIONS } from "@rpldy/uploader";
+import { logger } from "@rpldy/shared";
+import { UploadyContext, createContextApi } from "@rpldy/shared-ui";
 
-import type { UploaderType } from "@rupy/uploader";
-import type { CreateOptions } from "@rupy/shared";
+import type { UploaderType } from "@rpldy/uploader";
+import type { CreateOptions } from "@rpldy/shared";
 import type { UploadyProps } from "./types";
 
 const FileInputFieldPortal = ({ container, children }) =>

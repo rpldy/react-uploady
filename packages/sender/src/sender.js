@@ -2,7 +2,7 @@
 
 //TODO: need to support grouping of files into single request
 
-import { logger, FILE_STATES } from "@rupy/shared";
+import { logger, FILE_STATES } from "@rpldy/shared";
 
 import type {
 	SendOptions,
@@ -10,7 +10,7 @@ import type {
 	SendResult,
 	UploadData,
 	OnProgress,
-} from "@rupy/shared";
+} from "@rpldy/shared";
 
 type Headers = { [string]: string };
 

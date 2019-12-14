@@ -1,5 +1,5 @@
 // @flow
-import { isFunction } from "@rupy/shared";
+import { isFunction } from "@rpldy/shared";
 
 const validateFunction = (f: any, name: string) => {
 	if (!isFunction(f)) {

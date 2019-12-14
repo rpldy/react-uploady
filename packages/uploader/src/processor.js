@@ -1,12 +1,12 @@
 // @flow
 import { throttle } from "lodash";
-import { logger, isFunction, BATCH_STATES, FILE_STATES } from "@rupy/shared";
-import defaultSend from "@rupy/sender";
+import { logger, isFunction, BATCH_STATES, FILE_STATES } from "@rpldy/shared";
+import defaultSend from "@rpldy/sender";
 import triggerCancellable from "./triggerCancellable";
 import { UPLOADER_EVENTS, PROGRESS_DELAY } from "./consts";
 import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "./defaults";
 
-import type { Batch, BatchItem, UploadData, CreateOptions } from "@rupy/shared";
+import type { Batch, BatchItem, UploadData, CreateOptions } from "@rpldy/shared";
 
 //TODO: need a way to augment batch data at any point !!!!!!!!!
 
@@ -250,8 +250,6 @@ export default (trigger: Function, options: CreateOptions) => {
 		items: {},
 		activeIds: [],
 	};
-
-	console.log("!!!!!!!!!!!! ", options.send);
 
 	const queue = initUploadQueue(state, options, cancellable, trigger);
 

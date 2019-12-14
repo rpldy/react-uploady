@@ -1,12 +1,12 @@
 // @flow
 import React, { useCallback, useState } from "react";
-import { isFunction } from "@rupy/shared";
-import { useBatchStartListener } from "@rupy/shared-ui";
+import { isFunction } from "@rpldy/shared";
+import { useBatchStartListener } from "@rpldy/shared-ui";
 import { getMandatoryOptions } from "./utils";
 import { PREVIEW_TYPES } from "./consts";
 
 import type { Element, ComponentType } from "react";
-import type { Batch, BatchItem } from "@rupy/shared";
+import type { Batch, BatchItem } from "@rpldy/shared";
 import type {
 	PreviewProps,
 	MandatoryPreviewOptions,

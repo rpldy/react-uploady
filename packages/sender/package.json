@@ -1,5 +1,5 @@
 {
-  "name": "@rupy/sender",
+  "name": "@rpldy/sender",
   "version": "0.1.0",
   "main": "lib/index.js",
   "module": "src/index.js",
@@ -10,7 +10,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@rupy/shared": "^0.1.0",
+    "@rpldy/shared": "^0.1.0",
     "lodash": "^4.17.15"
   }
 }

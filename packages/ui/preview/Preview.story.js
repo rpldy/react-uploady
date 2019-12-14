@@ -1,13 +1,13 @@
 // @flow
 import React, { useRef } from "react";
 import styled, { css } from "styled-components";
-import Uploady from "@rupy/uploady";
-import UploadButton from "@rupy/upload-button";
-import UploadUrlInput from "@rupy/upload-url-input";
-import { createMockSender } from "@rupy/sender";
+import Uploady from "@rpldy/uploady";
+import UploadButton from "@rpldy/upload-button";
+import UploadUrlInput from "@rpldy/upload-url-input";
+import { createMockSender } from "@rpldy/sender";
 import Preview from "./index";
 
-import type { UploaderType } from "@rupy/uploader";
+import type { UploaderType } from "@rpldy/uploader";
 
 const mockSenderEnhancer = (uploader: UploaderType): UploaderType => {
 	const mockSender = createMockSender({ delay: 1000 });

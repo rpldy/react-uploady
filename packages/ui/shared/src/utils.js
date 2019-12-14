@@ -1,6 +1,6 @@
 // @flow
 import { useEffect, useContext, useState, useCallback } from "react";
-import { UploadyContext } from "@rupy/uploady";
+import { UploadyContext } from "@rpldy/uploady";
 import assertContext from "./assertContext";
 
 type Callback = (...args?: any) => ?any;

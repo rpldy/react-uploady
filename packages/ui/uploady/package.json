@@ -1,5 +1,5 @@
 {
-  "name": "@rupy/uploady",
+  "name": "@rpldy/uploady",
   "version": "0.1.0",
   "author": "yoav niran (https://github.com/yoavniran",
   "description": "",
@@ -12,9 +12,9 @@
     "directory": "packages/ui/uploady"
   },
   "dependencies": {
-    "@rupy/shared": "^0.1.0",
-    "@rupy/shared-ui": "^0.1.0",
-    "@rupy/uploader": "^0.1.0",
+    "@rpldy/shared": "^0.1.0",
+    "@rpldy/shared-ui": "^0.1.0",
+    "@rpldy/uploader": "^0.1.0",
     "lodash": "^4.17.15"
   },
   "peerDependencies": {

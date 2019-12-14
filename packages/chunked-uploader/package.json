@@ -1,7 +1,7 @@
 {
-  "name": "@rupy/chunked-uploader",
+  "name": "@rpldy/chunked-uploader",
   "version": "0.1.0",
   "dependencies": {
-    "@rupy/shared": "^0.1.0"
+    "@rpldy/shared": "^0.1.0"
   }
 }

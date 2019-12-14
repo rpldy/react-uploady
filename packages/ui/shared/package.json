@@ -1,5 +1,5 @@
 {
-  "name": "@rupy/shared-ui",
+  "name": "@rpldy/shared-ui",
   "version": "0.1.0",
   "author": "yoav niran (https://github.com/yoavniran",
   "description": "",
@@ -12,8 +12,8 @@
     "directory": "packages/ui/shared"
   },
   "dependencies": {
-    "@rupy/shared": "^0.1.0",
-    "@rupy/uploader": "^0.1.0"
+    "@rpldy/shared": "^0.1.0",
+    "@rpldy/uploader": "^0.1.0"
   },
   "peerDependencies": {
     "react": ">=16.8",

@@ -55,6 +55,7 @@ module.exports = {
 		"no-loop-func": 0,
 		"no-console": 0,
 		"key-spacing": 0,
+		"no-mixed-spaces-and-tabs": 1,
 		"semi": [
 			2,
 			"always"
@@ -96,7 +97,7 @@ module.exports = {
 			1,
 			"never"
 		],
-		"react/jsx-first-prop-new-line": 1,
+		// "react/jsx-first-prop-new-line": 1,
 		"jsx-quotes": 0,
 		"react/jsx-sort-prop-types": 0,
 		"react/jsx-filename-extension": 0,

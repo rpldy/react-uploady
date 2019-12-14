@@ -95,23 +95,27 @@ const usePreviewsLoader = (props: PreviewProps): PreviewData[] => {
  * doesn't render its own container
  */
 const Preview = (props: PreviewProps): Element<"img">[] | Element<ComponentType<any>>[] => {
+	const [fallbackAttempted, setFallbackAttempted] = useState(false);
 	const previews = usePreviewsLoader(props);
 
-	const onPreviewLoadError = useCallback((e) => {
-		const img = e.target;
+	const onImagePreviewLoadError = useCallback((e) => {
+		if (!fallbackAttempted) {
+			const img = e.target;
 
-		const fallback = getFallbackUrl(props.fallbackUrl, img.src);
+			const fallback = getFallbackUrl(props.fallbackUrl, img.src);
 
-		if (fallback) {
-			img.src = fallback;
+			if (fallback) {
+				img.src = fallback.url;
+			}
+
+			setFallbackAttempted(true);
 		}
-	},[props.fallbackUrl]);
+	}, [fallbackAttempted, props.fallbackUrl]);
 
 	return previews.map((data: PreviewData): Element<any> =>
 		props.PreviewComponent ? <props.PreviewComponent {...props.previewProps} data={data}/> :
-			<img
-				onError={onPreviewLoadError} key={data.url}
-				src={data.url}  {...props.previewProps} />);
+			<img key={data.url}
+				onError={onImagePreviewLoadError} src={data.url} {...props.previewProps} />);
 };
 
 export default Preview;

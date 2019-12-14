@@ -1,7 +1,12 @@
 // @flow
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import { withKnobs, boolean } from "@storybook/addon-knobs";
 import styled, { css } from "styled-components";
-import Uploady from "@rpldy/uploady";
+import Uploady, {
+	useFileProgressListener,
+	useBatchFinishListener,
+	useBatchStartListener,
+} from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
 import { createMockSender } from "@rpldy/sender";
@@ -30,7 +35,9 @@ const PreviewContainer = styled.div`
 	img {
 		margin-left: 10px;
 		max-width: 200px;
-		height: auto; 
+		height: auto;
+		
+		${({ completed }) => `opacity: ${completed / 100};`}
 	}
 `;
 
@@ -63,9 +70,9 @@ const cloudinaryDestination = { url: uploadUrl, params: uploadParams };
 
 export const WithLocalFiles = () =>
 	<Uploady
-debug
-	         destination={cloudinaryDestination}
-	         enhancer={mockSenderEnhancer}>
+		debug
+		destination={cloudinaryDestination}
+		enhancer={mockSenderEnhancer}>
 
 		<StyledUploadButton/>
 
@@ -85,8 +92,8 @@ const UrlUpload = () => {
 
 	return <>
 		<StyledUploadUrlInput
-placeholder="enter valid url to upload"
-		                      uploadRef={uploadRef}/>
+			placeholder="enter valid url to upload"
+			uploadRef={uploadRef}/>
 
 		<Button onClick={onButtonClick}>Upload</Button>
 	</>;
@@ -94,9 +101,9 @@ placeholder="enter valid url to upload"
 
 export const WithUrls = () => {
 	return <Uploady
-debug
-	                destination={cloudinaryDestination}
-	                enhancer={mockSenderEnhancer}>
+		debug
+		destination={cloudinaryDestination}
+		enhancer={mockSenderEnhancer}>
 
 		<UrlUpload/>
 
@@ -106,11 +113,13 @@ debug
 	</Uploady>;
 };
 
-export const withFallbackUrl = () =>
-	<Uploady
-debug
-	         destination={cloudinaryDestination}
-	         enhancer={mockSenderEnhancer}>
+export const withFallbackUrl = () => {
+	const value = boolean("Use Mock Sender", true);
+
+	return <Uploady
+		debug
+		destination={cloudinaryDestination}
+		enhancer={value ? mockSenderEnhancer : undefined}>
 
 		<UrlUpload/>
 
@@ -119,8 +128,44 @@ debug
 				fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
 		</PreviewContainer>
 	</Uploady>;
+};
+
+const PreviewWithProgress = () => {
+	const [isDone, setIsDone] = useState(false);
+	const fileProgress = useFileProgressListener();
+
+	useBatchStartListener(()=>{
+		setIsDone(false);
+	});
+
+	useBatchFinishListener(()=>{
+		setIsDone(true);
+	});
+
+	const completed = isDone ? 100 :
+		(fileProgress && fileProgress.completed || 0);
+
+	return <PreviewContainer completed={completed}>
+		<Preview
+			fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
+	</PreviewContainer>;
+};
+
+export const withProgress = () => {
+	const value = boolean("Use Mock Sender", true);
+
+	return <Uploady
+		debug
+		destination={cloudinaryDestination}
+		enhancer={value ? mockSenderEnhancer : undefined}>
+
+		<UrlUpload/>
+		<PreviewWithProgress/>
+	</Uploady>;
+};
 
 export default {
 	component: Preview,
-	title: "Preview"
+	title: "Preview",
+	decorators: [withKnobs],
 };

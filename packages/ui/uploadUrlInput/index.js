@@ -1,6 +1,6 @@
 // @flow
 import UploadUrlInput from "./src/UploadUrlInput";
-import type { UploadUrlInputProps, UploadCallback } from "./types";
+import type { UploadUrlInputProps, UploadCallback } from "./src/types";
 
 export default UploadUrlInput;
 

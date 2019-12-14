@@ -14,10 +14,10 @@ import type {
 	PreviewType,
 } from "./types";
 
-const getFallbackUrl = (options: MandatoryPreviewOptions, file: Object): ?PreviewData => {
-	let data = isFunction(options.fallbackUrl) ?
-		options.fallbackUrl(file) :
-		options.fallbackUrl;
+const getFallbackUrl = (fallbackProp, file: Object): ?PreviewData => {
+	let data = isFunction(fallbackProp) ?
+		fallbackProp(file) :
+		fallbackProp;
 
 	if (typeof data === "string") {
 		data = {
@@ -63,7 +63,7 @@ const loadPreviewUrl = (item: BatchItem, options: MandatoryPreviewOptions): ?Pre
 		data = getFilePreviewUrl(item.file, options);
 
 		if (!data) {
-			data = getFallbackUrl(options, item.file);
+			data = getFallbackUrl(options.fallbackUrl, item.file);
 		}
 	} else
 		data = {
@@ -72,18 +72,6 @@ const loadPreviewUrl = (item: BatchItem, options: MandatoryPreviewOptions): ?Pre
 		};
 
 	return data;
-
-// if (!data) {
-// 	const uploadProp = item.file ? item.file : item.url;
-// 	data = getFallbackUrl(options, uploadProp);
-// }
-//
-// if (data && typeof data === "string") {
-// 	data = {
-// 		url: data,
-// 		type: PREVIEW_TYPES.IMAGE,
-// 	};
-// }
 };
 
 const usePreviewsLoader = (props: PreviewProps): PreviewData[] => {
@@ -112,12 +100,12 @@ const Preview = (props: PreviewProps): Element<"img">[] | Element<ComponentType<
 	const onPreviewLoadError = useCallback((e) => {
 		const img = e.target;
 
-		const fallback = getFallbackUrl(props, img.src);
+		const fallback = getFallbackUrl(props.fallbackUrl, img.src);
 
 		if (fallback) {
 			img.src = fallback;
 		}
-	});
+	},[props.fallbackUrl]);
 
 	return previews.map((data: PreviewData): Element<any> =>
 		props.PreviewComponent ? <props.PreviewComponent {...props.previewProps} data={data}/> :

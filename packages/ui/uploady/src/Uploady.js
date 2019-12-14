@@ -43,14 +43,6 @@ const Uploady = (props: UploadyProps) => {
 		uploader.add(e.target.files);
 	}, [uploader]);
 
-	const registerEventListener = (([name, cb]) => {
-		uploader.on(name, cb);
-	});
-
-	const unregisterEventListener = (([name, cb]) => {
-		uploader.off(name, cb);
-	});
-
 	useEffect(() => {
 		const listeners: Object = props.listeners;
 
@@ -58,16 +50,16 @@ const Uploady = (props: UploadyProps) => {
 			logger.debugLog("settings listeners", listeners);
 
 			Object.entries(listeners)
-				.forEach(registerEventListener);
+				.forEach((args) => uploader.on(...args));
 		}
 
 		return () => {
 			if (props.listeners) {
 				Object.entries(props.listeners)
-					.forEach(unregisterEventListener);
+					.forEach((args) => uploader.off(...args));
 			}
 		};
-	}, [props.listeners, registerEventListener, unregisterEventListener]);
+	}, [props.listeners, uploader]);
 
 	const uploaderOptions = uploader.getOptions();
 

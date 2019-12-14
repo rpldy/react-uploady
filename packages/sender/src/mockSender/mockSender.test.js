@@ -82,7 +82,7 @@ describe("mockSender tests", () => {
 		expect(response.progressEvents).toHaveLength(3);
 		expect(response.progressEvents[2].total).toBe(customOptions.fileSize);
 		expect(response.progressEvents[2].loaded).toBe(customOptions.fileSize * 0.8);
-		expect(response.customOptions.delay).toBe(customOptions.delay);
+		expect(response.options.delay).toBe(customOptions.delay);
 
 		expect(onProgress).toHaveBeenCalledTimes(3);
 

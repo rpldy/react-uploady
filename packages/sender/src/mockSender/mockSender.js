@@ -21,7 +21,6 @@ const createRequest = (options: MandatoryMockOptions) => {
 	const start = performance.now();
 	const progressEventsData: SenderProgressEvent[] = [];
 
-	console.log("creating request !!!!!!!!!!! ", options);
 	let isCancelled = false,
 		isDone = false,
 		progressCallback = null,

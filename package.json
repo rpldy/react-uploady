@@ -6,6 +6,7 @@
     "bootstrap": "lerna bootstrap --use-workspaces",
     "ssb": "start-storybook -p 9111",
     "jest": "NODE_ENV=test jest",
+    "test": "yarn flow && yarn lint --quiet && yarn jest",
     "jest:cov": "yarn jest --coverage",
     "flow": "flow --show-all-errors",
     "flow:mono": "flow-mono create-symlinks",

@@ -2,7 +2,7 @@ import { UPLOADER_EVENTS } from "../consts";
 
 const mockSender = jest.fn();
 
-jest.doMock("../sender", () => mockSender);
+jest.doMock("@rpldy/sender", () => mockSender);
 
 import createProcessor, { initUploadQueue } from "../processor";
 

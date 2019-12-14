@@ -31,7 +31,7 @@ module.exports = {
 	},
 	"rules": {
 		"react-hooks/rules-of-hooks": 2,
-		"react-hooks/exhaustive-deps": 1,
+		"react-hooks/exhaustive-deps": 2,
 		"jsx-a11y/href-no-hash": 0,
 		"quotes": [
 			2,

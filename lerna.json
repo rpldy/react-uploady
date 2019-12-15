@@ -1,11 +1,14 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "npmClient": "yarn",
   "command": {
+    "version": {
+      "allowBranch": "master"
+    },
     "publish": {
       "ignoreChanges": [
-        "ignored-file",
-        "*.md"
+        "**/tests/**",
+        "**/*.test.js"
       ],
       "message": "chore(release): publish"
     }

@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "name": "@rpldy/upload-button",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran",
@@ -15,10 +15,10 @@
     "build": "node ../../../scripts/build.js"
   },
   "dependencies": {
-    "@rpldy/shared-ui": "^0.1.1"
+    "@rpldy/shared-ui": "^0.1.2"
   },
   "devDependencies": {
-    "@rpldy/uploady": "^0.1.1"
+    "@rpldy/uploady": "^0.1.2"
   },
   "peerDependencies": {
     "react": ">=16.8",

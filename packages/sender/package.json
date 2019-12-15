@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "name": "@rpldy/sender",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -15,7 +15,7 @@
     "build": "node ../../scripts/build.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.1.1",
+    "@rpldy/shared": "^0.1.2",
     "lodash": "^4.17.15"
   }
 }

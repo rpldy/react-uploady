@@ -20,5 +20,7 @@
     "@rpldy/shared": "^0.1.3",
     "lodash": "^4.17.15"
   },
-  "gitHead": "655f913a0d5e828b3d69f73176fb79bfaced192d"
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -14,5 +14,7 @@
   "scripts": {
     "build": "node ../../../scripts/build.js"
   },
-  "gitHead": "655f913a0d5e828b3d69f73176fb79bfaced192d"
+  "publishConfig": {
+    "access": "public"
+  }
 }

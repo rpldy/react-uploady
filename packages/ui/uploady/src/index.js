@@ -1,36 +1,37 @@
 // @flow
-import UploadyContext, { createContextApi } from "./src/UploadyContext";
-
+import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import {
+	UploadyContext,
+
 	useBatchStartListener,
 	useBatchFinishListener,
 	useBatchCancelledListener,
-
 	useFileStartListener,
 	useFileFinishListener,
 	useFileProgressListener,
 	useFileCancelListener,
 	useFileErrorListener,
-} from "./src/eventListenerHooks";
+} from "@rpldy/shared-ui";
 
-import assertContext from "./src/assertContext";
+import Uploady from "./Uploady";
 
-import type { UploadyContextType } from "./src/types";
+import type { UploadyContextType } from "@rpldy/shared-ui";
+import type { UploadyProps } from "./types";
+
+export default Uploady;
 
 export type {
 	UploadyContextType,
+	UploadyProps,
 };
 
 export {
 	UploadyContext,
-	createContextApi,
-
-	assertContext,
+	UPLOADER_EVENTS,
 
 	useBatchStartListener,
 	useBatchFinishListener,
 	useBatchCancelledListener,
-
 	useFileStartListener,
 	useFileFinishListener,
 	useFileProgressListener,

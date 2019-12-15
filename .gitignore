@@ -19,3 +19,5 @@ yarn-error.log
 
 jsexample.js
 todo.md
+
+packages/**/lib

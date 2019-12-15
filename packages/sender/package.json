@@ -1,14 +1,19 @@
 {
-  "name": "@rpldy/sender",
   "version": "0.1.0",
+  "name": "@rpldy/sender",
+  "description": "",
+  "author": "yoav niran (https://github.com/yoavniran)",
   "main": "lib/index.js",
   "module": "src/index.js",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/yoavniran/react-uploady.git",
     "directory": "packages/sender"
   },
-  "license": "MIT",
+  "scripts": {
+    "build": "node ../../scripts/build.js"
+  },
   "dependencies": {
     "@rpldy/shared": "^0.1.0",
     "lodash": "^4.17.15"

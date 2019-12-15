@@ -1,11 +1,11 @@
 // @flow
-import uploader from "./src/uploader";
-import { UPLOADER_EVENTS } from "./src/consts";
-import { DEFAULT_OPTIONS } from "./src/defaults";
+import uploader from "./uploader";
+import { UPLOADER_EVENTS } from "./consts";
+import { DEFAULT_OPTIONS } from "./defaults";
 import type {
 	UploaderType,
 	UploaderEnhancer,
-} from "./src/types";
+} from "./types";
 
 export default uploader;
 

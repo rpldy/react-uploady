@@ -1,0 +1,8 @@
+packages/**/src
+*.story.js
+*.test.js
+tests/
+lerna.json
+*.log
+jest*
+.flowconfig

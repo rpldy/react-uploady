@@ -3,7 +3,7 @@ module.exports = {
 		[
 			"@babel/env",
 			{
-				modules: false,
+				// modules: false,
 			},
 		],
 		"@babel/react",
@@ -17,10 +17,10 @@ module.exports = {
 	],
 	env: {
 		test: {
-			plugins: ['@babel/plugin-transform-runtime'],
+			plugins: ["@babel/plugin-transform-runtime"],
 			presets: [
 				[
-					'@babel/env',
+					"@babel/env",
 					{
 						targets: {
 							node: true,

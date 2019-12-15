@@ -1,15 +1,17 @@
 {
   "private": true,
-  "name": "@rpldy/story-helpers",
   "version": "0.1.0",
+  "name": "@rpldy/story-helpers",
+  "description": "",
+  "author": "yoav niran (https://github.com/yoavniran)",
   "main": "lib/index.js",
   "module": "src/index.js",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/yoavniran/react-uploady.git",
     "directory": "packages/story-helpers"
   },
-  "license": "MIT",
   "dependencies": {
     "@rpldy/life-events": "^0.1.0",
     "@rpldy/sender": "^0.1.0",

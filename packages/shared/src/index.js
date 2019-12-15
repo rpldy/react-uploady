@@ -1,8 +1,8 @@
 // @flow
 
-import { BATCH_STATES, FILE_STATES } from "./src/consts";
-import * as logger from "./src/logger";
-import { isFunction } from "./src/utils";
+import { BATCH_STATES, FILE_STATES } from "./consts";
+import * as logger from "./logger";
+import { isFunction } from "./utils";
 
 import type {
 	UploadOptions,
@@ -21,7 +21,7 @@ import type {
 	OnProgress,
 	SendOptions,
 	SenderProgressEvent,
-} from "./src/types";
+} from "./types";
 
 export {
 	BATCH_STATES,

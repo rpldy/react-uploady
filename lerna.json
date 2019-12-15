@@ -1,14 +1,16 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "npmClient": "yarn",
   "command": {
     "publish": {
-      "ignoreChanges": ["ignored-file", "*.md"],
+      "ignoreChanges": [
+        "ignored-file",
+        "*.md"
+      ],
       "message": "chore(release): publish"
     }
   },
   "useWorkspaces": true,
-
   "packages": [
     "packages/*",
     "packages/ui/*"

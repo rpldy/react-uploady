@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "name": "@rpldy/preview",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran",
@@ -15,13 +15,13 @@
     "build": "node ../../../scripts/build.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.1.0",
-    "@rpldy/shared-ui": "^0.1.0"
+    "@rpldy/shared": "^0.1.1",
+    "@rpldy/shared-ui": "^0.1.1"
   },
   "devDependencies": {
-    "@rpldy/sender": "^0.1.0",
-    "@rpldy/upload-button": "^0.1.0",
-    "@rpldy/upload-url-input": "^0.1.0"
+    "@rpldy/sender": "^0.1.1",
+    "@rpldy/upload-button": "^0.1.1",
+    "@rpldy/upload-url-input": "^0.1.1"
   },
   "peerDependencies": {
     "react": ">=16.8",

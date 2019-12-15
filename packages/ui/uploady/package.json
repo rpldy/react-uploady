@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "name": "@rpldy/uploady",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran",
@@ -15,9 +15,9 @@
     "build": "node ../../../scripts/build.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.1.0",
-    "@rpldy/shared-ui": "^0.1.0",
-    "@rpldy/uploader": "^0.1.0",
+    "@rpldy/shared": "^0.1.1",
+    "@rpldy/shared-ui": "^0.1.1",
+    "@rpldy/uploader": "^0.1.1",
     "lodash": "^4.17.15"
   },
   "peerDependencies": {

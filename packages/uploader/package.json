@@ -1,5 +1,5 @@
 {
-  "version": "0.1.3",
+  "version": "0.1.4",
   "name": "@rpldy/uploader",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -15,9 +15,9 @@
     "directory": "packages/uploader"
   },
   "dependencies": {
-    "@rpldy/life-events": "^0.1.3",
-    "@rpldy/sender": "^0.1.3",
-    "@rpldy/shared": "^0.1.3",
+    "@rpldy/life-events": "^0.1.4",
+    "@rpldy/sender": "^0.1.4",
+    "@rpldy/shared": "^0.1.4",
     "lodash": "^4.17.15"
   },
   "publishConfig": {

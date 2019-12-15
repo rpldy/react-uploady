@@ -1,5 +1,5 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.3",
   "name": "@rpldy/chunked-uploady",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran",
@@ -13,5 +13,6 @@
   },
   "scripts": {
     "build": "node ../../../scripts/build.js"
-  }
+  },
+  "gitHead": "655f913a0d5e828b3d69f73176fb79bfaced192d"
 }

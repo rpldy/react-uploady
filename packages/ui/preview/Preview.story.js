@@ -10,7 +10,7 @@ import Uploady, {
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
 import { createMockSender } from "@rpldy/sender";
-import Preview from "./index";
+import Preview from "./src";
 
 import type { UploaderType } from "@rpldy/uploader";
 

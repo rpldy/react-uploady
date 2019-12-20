@@ -1,6 +1,6 @@
 // @flow
 import React, { useRef, useState } from "react";
-import UploadUrlInput from "./index";
+import UploadUrlInput from "./src";
 import Uploady, {
 	useBatchStartListener,
 	useBatchFinishListener,

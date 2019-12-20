@@ -1,11 +1,12 @@
 {
-  "name": "test-server",
+  "name": "@rpldy/test-server",
   "private": true,
   "version": "1.0.0",
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.1.6",
     "lodash": "^4.17.15"
   },
-  "devDependencies": {
-    "smocker": "^1.0.1"
-  }
+  "devDependencies": {}
 }

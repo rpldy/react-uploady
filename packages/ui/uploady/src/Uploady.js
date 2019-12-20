@@ -1,5 +1,5 @@
 // @flow
-import React, { useMemo, useRef, useCallback, useEffect } from "react";
+import React, { useMemo, useRef, useCallback, useEffect, useLayoutEffect } from "react";
 import ReactDOM from "react-dom";
 import { pick } from "lodash";
 import createUploader, { DEFAULT_OPTIONS } from "@rpldy/uploader";
@@ -24,9 +24,21 @@ const Uploady = (props: UploadyProps) => {
 	const inputFieldContainer = document.body;
 	const inputFieldRef = useRef<?HTMLInputElement>(null);
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const uploaderOptions = useMemo(() => getUploaderOptions(props), [...Object.values(props)]);
+
+	//avoid creating new instance of uploader unless we have to (enhancer changed or uploader instance passed)
 	const uploader = useMemo<UploaderType>(() => {
-		return props.uploader || createUploader(getUploaderOptions(props), props.enhancer);
-	}, [props]);
+		if (!props.uploader) {
+			logger.debugLog("Uploady creating a new uploader instance", {
+				uploaderOptions,
+				enhancer: props.enhancer
+			});
+		}
+
+		return props.uploader || createUploader(uploaderOptions, props.enhancer);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [props.enhancer, props.uploader]);
 
 	//TODO: ALLOW TO CHANGE DESTINATION USING PROPS !!!!!!!!!!
 	//TODO: ALLOW TO SET INPUT FIELD CONTAINER : props.inputFieldContainer
@@ -43,11 +55,16 @@ const Uploady = (props: UploadyProps) => {
 		uploader.add(e.target.files);
 	}, [uploader]);
 
+	useMemo(() => {
+		logger.debugLog("Uploady updating uploader options", uploaderOptions);
+		uploader.update(uploaderOptions);
+	}, [uploader, uploaderOptions]);
+
 	useEffect(() => {
 		const listeners: Object = props.listeners;
 
 		if (props.listeners) {
-			logger.debugLog("settings listeners", listeners);
+			logger.debugLog("Uploady setting event listeners", listeners);
 
 			Object.entries(listeners)
 				.forEach((args) => uploader.on(...args));
@@ -61,15 +78,19 @@ const Uploady = (props: UploadyProps) => {
 		};
 	}, [props.listeners, uploader]);
 
-	const uploaderOptions = uploader.getOptions();
+	const instanceOptions = uploader.getOptions();
+
+	//TODO !!!!!!!!! move rendering of portal and input to memoized component !!!!!!!
+
+	console.log("!!!!!!!!! rendering input with options: ", instanceOptions);
 
 	return <UploadyContext.Provider value={api}>
 		<FileInputFieldPortal container={inputFieldContainer}>
 			<input
 				type="file"
 				onChange={onFileInputChange}
-				name={uploaderOptions.inputFieldName}
-				multiple={uploaderOptions.multiple}
+				name={instanceOptions.inputFieldName}
+				multiple={instanceOptions.multiple}
 				style={{ display: "none" }}
 				ref={inputFieldRef}/>
 		</FileInputFieldPortal>

@@ -1,3 +1,4 @@
-console.log("!!!!!!!!! running addons.js")
+import "@storybook/addon-actions/register";
 import "@storybook/addon-knobs/register";
+import "@storybook/addon-storysource/register";
 

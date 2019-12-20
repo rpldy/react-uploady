@@ -5,6 +5,7 @@ const mockSender = jest.fn();
 jest.doMock("@rpldy/sender", () => mockSender);
 
 import createProcessor, { initUploadQueue } from "../processor";
+import { FILE_STATES } from "@rpldy/shared";
 
 describe("processor tests", () => {
 
@@ -48,14 +49,56 @@ describe("processor tests", () => {
 
 		});
 
-		it("should send file to upload if concurrent enabled ", () => {
+		it("should send files to upload if concurrent enabled ", () => {
 
 		});
+
+		describe("onRequestFinished tests", () => {
+
+			it("should finalize if last file in batch", () => {
+
+			});
+
+			it("should continue to next item in batch after previous finished", async () => {
+				const batch = { id: "b1" };
+				const { queue, state } = getQueueTest({
+					currentBatch: "b1",
+					items: {
+						"u1": { batchId: "b1" },
+						"u2": { batchId: "b1" },
+					},
+					batches: {
+						b1: { batch },
+					}
+				});
+
+				queue.getItemQueue().push("u1", "u2");
+
+				mockCancellable.mockResolvedValueOnce(true);
+
+				await queue.onRequestFinished("u1", {
+					state: FILE_STATES.FINISHED,
+					response: { success: true }
+				});
+
+				expect(mockCancellable).toHaveBeenCalledTimes(1);
+				expect(mockCancellable).toHaveBeenCalledWith(UPLOADER_EVENTS.FILE_START, state.items.u2);
+				expect(mockTrigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, batch);
+				expect(mockTrigger).toHaveBeenCalledWith(UPLOADER_EVENTS.FILE_FINISH, state.items.u1);
+				expect(mockTrigger).toHaveBeenCalledWith(UPLOADER_EVENTS.FILE_CANCEL, state.items.u2);
+			});
+
+			it("shouldn't process next if already being uploaded", () => {
+
+			});
+
+
+		});
+
 
 		it("should group files into single upload", () => {
 
 		});
-
 
 		describe("batch finished tests", () => {
 
@@ -102,7 +145,7 @@ describe("processor tests", () => {
 			});
 
 			it("shouldn't finalize batch if it has more uploads", () => {
-				const batch = {id: "b1" };
+				const batch = { id: "b1" };
 
 				const { queue, state } = getQueueTest({
 					currentBatch: "b1",

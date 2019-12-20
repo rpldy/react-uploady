@@ -14,6 +14,7 @@ const build = () => {
 
 	const ignored = [
 		"**/*.story.js",
+		"**/*.stories.js",
 		"**/*.test.js",
 		"**/types.js",
 	].join(",");

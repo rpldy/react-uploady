@@ -18,6 +18,8 @@ module.exports = {
 	"collectCoverageFrom": [
 		"src/**/*.js",
 		"!src/**/*.test.js",
+		"!src/**/*.story.js",
+		"!src/**/*.stories.js",
 		"!src/**/*.json"
 	],
 	testPathIgnorePatterns: ["<rootDir>/packages/(?:.+?)/lib/"],

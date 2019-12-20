@@ -20,6 +20,12 @@ type State = {
 	activeIds: string[],
 };
 
+const FILE_STATE_TO_EVENT_MAP = {
+	[FILE_STATES.FINISHED]: UPLOADER_EVENTS.FILE_FINISH,
+	[FILE_STATES.ERROR]: UPLOADER_EVENTS.FILE_ERROR,
+	[FILE_STATES.CANCELLED]: UPLOADER_EVENTS.FILE_CANCEL,
+};
+
 export const initUploadQueue = (
 	state: State,
 	options: CreateOptions,
@@ -139,11 +145,9 @@ export const initUploadQueue = (
 			sendResult.request
 				.then((info) => onRequestFinished(id, info));
 
-			processNext(); //needed for concurrent is allowed
+			processNext(); //needed when concurrent is allowed
 		} else {
-			item.state = FILE_STATES.CANCELLED;
-			trigger(UPLOADER_EVENTS.FILE_CANCEL, item);
-			processNext();
+			onRequestFinished(id, { state: FILE_STATES.CANCELLED, response: "cancel" });
 		}
 	};
 
@@ -164,14 +168,13 @@ export const initUploadQueue = (
 			if (!currentCount || (concurrent && currentCount < maxConcurrent)) {
 				if (isNewBatchStarting(id)) {
 					const allowBatch = await loadNewBatchForItem(id);
-
-					if (allowBatch) {
-						processBatchItem(id);
-					} else {
+					if (!allowBatch) {
 						cancelBatchForItem(id);
 						processNext();
 					}
 				}
+
+				processBatchItem(id);
 			}
 		}
 	};
@@ -195,10 +198,7 @@ export const initUploadQueue = (
 			item.state = uploadInfo.state;
 			item.uploadResponse = uploadInfo.response;
 
-			const fileEvent = item.state === FILE_STATES.ERROR ?
-				UPLOADER_EVENTS.FILE_ERROR : UPLOADER_EVENTS.FILE_FINISH;
-
-			trigger(fileEvent, item);
+			trigger(FILE_STATE_TO_EVENT_MAP[item.state], item);
 		}
 
 		cleanUpFinishedBatch();
@@ -214,7 +214,7 @@ export const initUploadQueue = (
 			}
 		}
 
-		processNext();
+		return processNext();
 	};
 
 	const add = (item: BatchItem) => {

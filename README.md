@@ -2,12 +2,45 @@
 
 # react-uploady
 
-Modern file uploader components & hooks for React
+> "Modern file uploader components & hooks for React."
+
+With react-uploady you can achieve file uploading with just a few lines of code.
+
+The philosophy behind this library is that it should be as simple as possible to use yet customizable at every point. 
+
+react-uploady comes with many components and features yet you get to choose which ones you need and only install the dependencies required.
+
+At its simplest configuration it is only: ~XXkb
+At its more sophisticated configuration it is still only ~XXkb
+
+XXXX Need animated gif here showing storybook XXXXX
+
+## Installation
 
 
-takes cues and learning from the venerable jquery-file-upload 
+## Packages
 
-but without jquery!!!
+**Base Packages**
+
+* [uploady]() - The context provider for react-uploady. (required)
+* [uploader]() - The processing engine (required)
+
+**UI Packages**
+* [upload-button]() - 
+* [preview]() - 
+* [upload-url-input]() -
+* [upload-drop-zone]() - 
+
+**Uploaders**
+* [chunked-uploader]() - 
+* [tus-uploader]() - 
+
+**Shared Packages**
+
+* [shared]() - set of utils+types all packages require  
+* [shared-ui]() - set of utils+types all UI packages require 
+* [live-events]() - provides cancellable pub/sub "events" 
 
 
-should use webpack lodash plugin
+## Examples
+

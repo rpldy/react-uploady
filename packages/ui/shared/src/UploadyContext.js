@@ -3,6 +3,7 @@ import React from "react";
 import type { UploaderType } from "@rpldy/uploader";
 import type { UploadyContextType } from "./types";
 import type { UploadInfo, UploadOptions } from "@rpldy/shared";
+import type { EventCallback } from "@rpldy/life-events";
 
 const UploadyContext = React.createContext<?UploadyContextType>(null);
 
@@ -21,11 +22,26 @@ const createContextApi = (uploader: UploaderType, inputRef: { current: ?HTMLInpu
 		uploader.add(files, addOptions);
 	};
 
+	const on = (name: any, cb: EventCallback) => {
+		return uploader.on(name, cb);
+	};
+
+	const once = (name: any, cb: EventCallback) => {
+		return uploader.once(name, cb);
+	};
+
+	const off = (name: any, cb?: EventCallback) => {
+		uploader.off(name, cb);
+	};
+
 	return {
 		uploader,
 		getInputField,
 		showFileUpload,
 		upload,
+		on,
+		once,
+		off,
 	};
 };
 

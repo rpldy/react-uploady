@@ -21,3 +21,4 @@ jsexample.js
 todo.md
 
 packages/**/lib
+packages/**/.flowconfig

@@ -4,11 +4,13 @@
 .*/node_modules/eslint-plugin-react/.*
 .*/node_modules/enzyme-matchers/.*
 .*/node_modules/jest-enzyme/.*
+./packages/**/lib/*.js
 
 [include]
+./packages/**/*.js.flow
 
 [libs]
 
 [options]
 module.ignore_non_literal_requires=true
-
+module.system.node.main_field=module

@@ -6,6 +6,8 @@ import type {
 	UploadOptions,
 } from "@rpldy/shared";
 
+import type { OnAndOnceMethod, OffMethod } from "@rpldy/life-events";
+
 export type UploaderType = {
 	id: string,
 	update: (updateOptions: CreateOptions) => UploaderType,
@@ -13,8 +15,9 @@ export type UploaderType = {
 	upload: () => void,
 	abort: () => void,
 	getOptions: () => CreateOptions,
-	on: (name: any, cb: Function) => void,
-	off: (name: any, cb?: Function) => void,
+	on: OnAndOnceMethod,
+	once: OnAndOnceMethod,
+	off: OffMethod,
 };
 
 export type Trigger = (event: string, ...args: mixed[]) => Promise<mixed>[];

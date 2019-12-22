@@ -13,15 +13,21 @@ export type Options = {
 
 export type LifeEventsAPI = {
 	target: Object,
-	trigger: Function,
-	addEvent: Function,
-	removeEvent: Function,
-	hasEvent: Function,
-	hasEventRegistrations: Function,
+	trigger: (name: any, ...args: any[]) => any,
+	addEvent: (name: any) => void,
+	removeEvent: (name: any) => void,
+	hasEvent: (name: any) => boolean,
+	hasEventRegistrations: (name: any) => boolean,
 };
+
+export type EventCallback = (name: any, ...args: any[]) => any;
+
+export type OffMethod = (name: any, cb?: EventCallback) => void;
+
+export type OnAndOnceMethod = (name: any, cb: EventCallback) => OffMethod;
 
 export type RegItem = {
 	name: any,
-	cb: Function,
+	cb: EventCallback,
 	once: boolean,
 };

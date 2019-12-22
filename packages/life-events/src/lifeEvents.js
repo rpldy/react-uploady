@@ -3,7 +3,7 @@ import isPromise from "is-promise";
 import defaults from "./defaults";
 import { validateFunction, isUndefined } from "./utils";
 import { LESYM } from "./consts";
-import type { Options, LifeEventsAPI, RegItem } from "./types";
+import type { Options, LifeEventsAPI, RegItem, EventCallback } from "./types";
 
 //TODO: implement STATS
 
@@ -43,6 +43,8 @@ const addRegistration = (obj: Object, name: any, cb: Function, once: boolean = f
 		namedRegistry.push(regItem);
 		le.registry[name] = namedRegistry;
 	}
+
+	return () => unregister.call(obj, name, cb);
 };
 
 const findRegistrations = (obj: Object, name?: any): RegItem[] => {
@@ -63,7 +65,11 @@ const publicMethods = {
 
 const getPublicMethods = () => Object.entries(publicMethods)
 	.reduce((res, [key, m]) => {
-		res[key] = { value: m }; //, enumerable: true, };
+		// const method: (...args: any[]) => any = m;
+		if (typeof m !== "function"){
+			throw new Error("bla");
+		}
+		res[key] = { value: m };
 		return res;
 	}, {});
 
@@ -96,15 +102,15 @@ const removeRegItem = (obj: Object, name: any, cb?: Function) => {
 	}
 };
 
-function register(name: any, cb: Function) {
-	addRegistration(this, name, cb);
+function register(name: any, cb: EventCallback) {
+	return addRegistration(this, name, cb);
 }
 
-function registerOnce(name: any, cb: Function) {
-	addRegistration(this, name, cb, true);
+function registerOnce(name: any, cb: EventCallback) {
+	return addRegistration(this, name, cb, true);
 }
 
-function unregister(name: any, cb?: Function) {
+function unregister(name: any, cb?: EventCallback) {
 	removeRegItem(this, name, cb);
 }
 

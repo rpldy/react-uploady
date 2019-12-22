@@ -95,8 +95,218 @@ describe("processor tests", () => {
 
 		});
 
+		describe("getNextIdGroup tests", () => {
 
-		it("should group files into single upload", () => {
+			it("should return the next id without grouping", () => {
+				const batch = { id: "b1" };
+
+				const { queue } = getQueueTest({
+					currentBatch: "b1",
+					items: {
+						"u1": { batchId: "b1" },
+						"u2": { batchId: "b1" },
+						"u3": { batchId: "b1" },
+						"u4": { batchId: "b1" },
+					},
+					batches: {
+						b1: {
+							batch,
+							addOptions: {}
+						},
+					},
+					activeIds: ["u1"],
+				});
+
+				queue.getItemQueue().push("u1", "u2", "u3", "u4");
+
+				const ids = queue.getNextIdGroup();
+
+				expect(ids).toEqual(["u2"]);
+			});
+
+			it("should return next id from different batch", () => {
+				const { queue } = getQueueTest({
+					currentBatch: "b1",
+					items: {
+						"u1": { batchId: "b1" },
+						"u2": { batchId: "b2" },
+						"u3": { batchId: "b2" },
+						"u4": { batchId: "b2" },
+					},
+					batches: {
+						b1: {
+							batch: { id: "b1" },
+							addOptions: {}
+						},
+						b2: {
+							batch: { id: "b2" },
+							addOptions: {}
+						}
+					},
+					activeIds: ["u1"],
+				});
+
+				queue.getItemQueue().push("u1", "u2", "u3", "u4");
+
+				const ids = queue.getNextIdGroup();
+
+				expect(ids).toEqual(["u2"]);
+			});
+
+			it("should group files into single upload", () => {
+				const batch = { id: "b1" };
+
+				const { queue } = getQueueTest({
+					currentBatch: "b1",
+					items: {
+						"u1": { batchId: "b1" },
+						"u2": { batchId: "b1" },
+						"u3": { batchId: "b1" },
+						"u4": { batchId: "b1" },
+					},
+					batches: {
+						b1: {
+							batch,
+							addOptions: {
+								grouped: true,
+								maxGroupSize: 2,
+							}
+						},
+					},
+					activeIds: ["u1"],
+				});
+
+				queue.getItemQueue().push("u1", "u2", "u3", "u4");
+
+				const ids = queue.getNextIdGroup();
+
+				expect(ids).toEqual(["u2", "u3"]);
+			});
+
+			it("should group files only from same batch", () => {
+				const { queue } = getQueueTest({
+					currentBatch: "b1",
+					items: {
+						"u1": { batchId: "b1" },
+						"u2": { batchId: "b1" },
+						"u3": { batchId: "b1" },
+						"u4": { batchId: "b1" },
+						"u5": { batchId: "b2" },
+					},
+					batches: {
+						b1: {
+							batch: { id: "b1" },
+							addOptions: {
+								grouped: true,
+								maxGroupSize: 4,
+							}
+						},
+					},
+					activeIds: ["u1"],
+				});
+
+				queue.getItemQueue().push("u1", "u2", "u3", "u4", "u5");
+
+				const ids = queue.getNextIdGroup();
+
+				expect(ids).toEqual(["u2", "u3", "u4"]);
+			});
+
+			it("should group files starting from new batch", () => {
+				const { queue } = getQueueTest({
+					currentBatch: "b1",
+					items: {
+						"u1": { batchId: "b1" },
+						"u2": { batchId: "b2" },
+						"u3": { batchId: "b2" },
+						"u4": { batchId: "b2" },
+						"u5": { batchId: "b3" },
+					},
+					batches: {
+						b1: {
+							batch: { id: "b1" },
+						},
+						b2: {
+							batch: {id: "b2"},
+							addOptions: {
+								grouped: true,
+								maxGroupSize: 4,
+							}
+						}
+					},
+					activeIds: ["u1"],
+				});
+
+				queue.getItemQueue().push("u1", "u2", "u3", "u4", "u5");
+
+				const ids = queue.getNextIdGroup();
+
+				expect(ids).toEqual(["u2", "u3", "u4"]);
+
+			});
+
+			it("should return nothing in case all items already active", () => {
+
+				const { queue } = getQueueTest({
+					currentBatch: "b1",
+					items: {
+						"u1": { batchId: "b1" },
+						"u2": { batchId: "b1" },
+						"u3": { batchId: "b1" },
+						"u4": { batchId: "b1" },
+						"u5": { batchId: "b2" },
+					},
+					batches: {
+						b1: {
+							batch: { id: "b1" },
+							addOptions: {
+								grouped: true,
+								maxGroupSize: 4,
+							}
+						},
+					},
+					activeIds: ["u1", ["u2", "u3"], "u4", "u5"],
+				});
+
+				queue.getItemQueue().push("u1", "u2", "u3", "u4", "u5");
+
+				const ids = queue.getNextIdGroup();
+
+				expect(ids).toBeUndefined();
+			});
+
+			it("should return nothing in case nothing in queue", () => {
+				const { queue } = getQueueTest({
+					currentBatch: "b1",
+					items: {
+						"u1": { batchId: "b1" },
+					},
+					batches: {
+						b1: {
+							batch: { id: "b1" },
+							addOptions: {
+								grouped: true,
+								maxGroupSize: 4,
+							}
+						},
+					},
+					activeIds: ["u1"],
+				});
+
+				queue.getItemQueue().push("u1");
+
+				const ids = queue.getNextIdGroup();
+
+				expect(ids).toBeUndefined();
+
+			});
+		});
+
+		describe("processNext tests", () => {
+
+
+
+
 
 		});
 

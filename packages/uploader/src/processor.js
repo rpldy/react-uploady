@@ -13,11 +13,13 @@ import type { Batch, BatchItem, UploadData, CreateOptions } from "@rpldy/shared"
 //TODO: implement processing pipeline
 //TODO: ex: preview
 
+type BatchData = { batch: Batch, addOptions: CreateOptions };
+
 type State = {
 	currentBatch: ?string,
-	batches: { [string]: { batch: Batch, addOptions: CreateOptions } },
+	batches: { [string]: BatchData },
 	items: { [string]: BatchItem },
-	activeIds: string[],
+	activeIds: Array<string | string[]>,
 };
 
 const FILE_STATE_TO_EVENT_MAP = {
@@ -39,9 +41,13 @@ export const initUploadQueue = (
 
 	const itemQueue: string[] = [];
 
-	const getBatchFromItemId = (itemId: string): Batch => {
+	const getBatchDataFromItemId = (itemId: string): BatchData => {
 		const item = state.items[itemId];
-		return state.batches[item.batchId].batch;
+		return state.batches[item.batchId];
+	};
+
+	const getBatchFromItemId = (itemId: string): Batch => {
+		return getBatchDataFromItemId(itemId).batch;
 	};
 
 	const cancelBatchForItem = (itemId: string) => {
@@ -69,6 +75,10 @@ export const initUploadQueue = (
 	const isNewBatchStarting = (itemId: string): boolean => {
 		const batch = getBatchFromItemId(itemId);
 		return state.currentBatch !== batch.id;
+	};
+
+	const isItemBelongsToBatch = (itemId: string, batchId: string): boolean => {
+		return state.items[itemId].batchId === batchId;
 	};
 
 	const isBatchFinished = (): boolean => {
@@ -129,52 +139,103 @@ export const initUploadQueue = (
 		}, throttledProgress);
 	};
 
-	const processBatchItem = async (id: string) => {
-		const item = state.items[id];
-		const batchData = state.batches[item.batchId];
+	const processBatchItems = async (ids: string[]) => {
+		// const item = state.items[id];
+		// const batchData = state.batches[item.batchId];
+		//
+		// const isCancelled = await cancellable(UPLOADER_EVENTS.FILE_START, item);
+		//
+		// if (!isCancelled) {
+		// 	state.activeIds.push(id);
+		//
+		// 	const sendResult = sendFiles([item], batchData.addOptions);
+		//
+		// 	item.abort = sendResult.abort;
+		//
+		// 	sendResult.request
+		// 		.then((info) => onRequestFinished(id, info));
+		//
+		// 	processNext(); //needed when concurrent is allowed
+		// } else {
+		// 	onRequestFinished(id, { state: FILE_STATES.CANCELLED, response: "cancel" });
+		// }
+	};
 
-		const isCancelled = await cancellable(UPLOADER_EVENTS.FILE_START, item);
+	const isItemInActiveRequest = (itemId: string): boolean => {
+		return !!~state.activeIds
+			// $FlowFixMe - no flat
+			.flat().indexOf(itemId);
+	};
 
-		if (!isCancelled) {
-			state.activeIds.push(id);
+	const findNextNotActiveItemIndex = (): number => {
+		let index = 0,
+			nextId = itemQueue[index];
 
-			const sendResult = sendFiles([item], batchData.addOptions);
-
-			item.abort = sendResult.abort;
-
-			sendResult.request
-				.then((info) => onRequestFinished(id, info));
-
-			processNext(); //needed when concurrent is allowed
-		} else {
-			onRequestFinished(id, { state: FILE_STATES.CANCELLED, response: "cancel" });
+		while (nextId && isItemInActiveRequest(nextId)) {
+			index += 1;
+			nextId = itemQueue[index];
 		}
+
+		return nextId ? index : -1;
+	};
+
+	const getNextIdGroup = (): ?string[] => {
+		const nextItemIndex = findNextNotActiveItemIndex();
+		let nextId = itemQueue[nextItemIndex],
+			nextGroup;
+
+		if (nextId) {
+			const batchData = getBatchDataFromItemId(nextId),
+				batchId = batchData.batch.id,
+				groupMax = batchData.addOptions.maxGroupSize || 0;
+
+			if (batchData.addOptions.grouped && groupMax > 1) {
+				nextGroup = [];
+				let nextBelongsToSameBatch = true;
+
+				//dont group files from different batches
+				while (nextGroup.length < groupMax && nextBelongsToSameBatch) {
+					nextGroup.push(nextId);
+					nextId = itemQueue[nextItemIndex + nextGroup.length];
+					nextBelongsToSameBatch = nextId &&
+						isItemBelongsToBatch(nextId, batchId);
+				}
+			} else {
+				nextGroup = [nextId];
+			}
+		}
+
+		return nextGroup;
 	};
 
 	const processNext = async () => {
-		const id = itemQueue[0];
-		//TODO: refactor to support grouping of files in single request
+		const ids = getNextIdGroup();
 
-		if (id && ~itemQueue.indexOf(id) &&
-			!~state.activeIds.indexOf(id)) { //if valid id and not already being uploaded
+		if (ids) {
 			const currentCount = state.activeIds.length;
 
 			logger.debugLog("uploady.uploader.processor: Processing next upload - ", {
-				id,
+				ids,
 				itemQueue,
 				currentCount
 			});
 
 			if (!currentCount || (concurrent && currentCount < maxConcurrent)) {
-				if (isNewBatchStarting(id)) {
-					const allowBatch = await loadNewBatchForItem(id);
-					if (!allowBatch) {
-						cancelBatchForItem(id);
+				let cancelled = false;
+
+				if (isNewBatchStarting(ids[0])) {
+					const allowBatch = await loadNewBatchForItem(ids[0]);
+					cancelled = !allowBatch;
+
+					if (cancelled) {
+						cancelBatchForItem(ids[0]);
 						processNext();
 					}
 				}
 
-				processBatchItem(id);
+				if (!cancelled) {
+					processBatchItems(ids);
+				}
 			}
 		}
 	};
@@ -231,12 +292,14 @@ export const initUploadQueue = (
 		uploadItems,
 
 		//exported for testing purposes:
-		processBatchItem,
+		processBatchItem: processBatchItems,
 		sendFiles,
 		loadNewBatchForItem,
 		cancelBatchForItem,
 		onRequestFinished,
 		cleanUpFinishedBatch,
+		getNextIdGroup,
+		processNext,
 		getItemQueue: () => itemQueue,
 	};
 };

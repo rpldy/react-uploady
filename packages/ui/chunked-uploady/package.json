@@ -12,7 +12,11 @@
     "directory": "packages/ui/chunked-uploady"
   },
   "scripts": {
-    "build": "node ../../../scripts/build.js"
+    "build": "node ../../../scripts/build.js",
+    "flow:copy": "flow-copy-source ./src ./lib"
+  },
+  "devDependencies": {
+    "flow-bin": "^0.113.0"
   },
   "publishConfig": {
     "access": "public"

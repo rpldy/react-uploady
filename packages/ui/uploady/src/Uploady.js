@@ -9,6 +9,7 @@ import { UploadyContext, createContextApi } from "@rpldy/shared-ui";
 import type { UploaderType } from "@rpldy/uploader";
 import type { CreateOptions } from "@rpldy/shared";
 import type { UploadyProps } from "./types";
+import type { EventCallback } from "@rpldy/life-events";
 
 const FileInputFieldPortal = ({ container, children }) =>
 	container && ReactDOM.createPortal(children, container);
@@ -61,19 +62,21 @@ const Uploady = (props: UploadyProps) => {
 	}, [uploader, uploaderOptions]);
 
 	useEffect(() => {
-		const listeners: Object = props.listeners;
-
 		if (props.listeners) {
+			const listeners = props.listeners;
 			logger.debugLog("Uploady setting event listeners", listeners);
 
 			Object.entries(listeners)
-				.forEach((args) => uploader.on(...args));
+				.forEach(([name, m]: [string, any]) =>{
+					uploader.on(name, m);
+				});
 		}
 
 		return () => {
 			if (props.listeners) {
 				Object.entries(props.listeners)
-					.forEach((args) => uploader.off(...args));
+					.forEach(([name, m]: [string, any]) =>
+						uploader.off(name, m));
 			}
 		};
 	}, [props.listeners, uploader]);

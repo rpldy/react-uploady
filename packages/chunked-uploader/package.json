@@ -12,10 +12,14 @@
     "directory": "packages/chunked-uploader"
   },
   "scripts": {
-    "build": "node ../../scripts/build.js"
+    "build": "node ../../scripts/build.js",
+    "flow:copy": "flow-copy-source ./src ./lib"
   },
   "dependencies": {
     "@rpldy/shared": "^0.1.4"
+  },
+  "devDependencies": {
+    "flow-bin": "^0.113.0"
   },
   "publishConfig": {
     "access": "public"

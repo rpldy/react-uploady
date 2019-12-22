@@ -1,5 +1,5 @@
 // @flow
-import React, { useMemo } from "react";
+import React, { Component, useMemo } from "react";
 import { withKnobs } from "@storybook/addon-knobs";
 import UploadButton from "./src";
 import Uploady, {
@@ -93,6 +93,24 @@ export const WithProgress = () => {
 		<UploadButton/>
 	</Uploady>;
 };
+
+// export class WithClass extends Component<any> {
+//
+// 	componentDidMount(): * {
+//
+// 	}
+//
+// 	// static contex
+//
+// 	render() {
+// 		return (
+// 			<div>
+//
+// 			</div>
+// 		);
+// 	}
+// }
+
 
 export default {
 	component: UploadButton,

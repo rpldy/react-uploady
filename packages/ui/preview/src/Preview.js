@@ -15,6 +15,7 @@ import type {
 } from "./types";
 
 const getFallbackUrl = (fallbackProp, file: Object): ?PreviewData => {
+	// let data = typeof fallbackProp === "function" ?
 	let data = isFunction(fallbackProp) ?
 		fallbackProp(file) :
 		fallbackProp;
@@ -115,7 +116,7 @@ const Preview = (props: PreviewProps): Element<"img">[] | Element<ComponentType<
 	return previews.map((data: PreviewData): Element<any> =>
 		props.PreviewComponent ? <props.PreviewComponent {...props.previewProps} data={data}/> :
 			<img key={data.url}
-				onError={onImagePreviewLoadError} src={data.url} {...props.previewProps} />);
+			     onError={onImagePreviewLoadError} src={data.url} {...props.previewProps} />);
 };
 
 export default Preview;

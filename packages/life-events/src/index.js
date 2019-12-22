@@ -1,6 +1,11 @@
 // @flow
 import addLife, { isLE } from "./lifeEvents";
-import type { LifeEventsAPI } from "./types";
+import type {
+	LifeEventsAPI,
+	EventCallback,
+	OnAndOnceMethod,
+	OffMethod,
+} from "./types";
 
 export default addLife;
 
@@ -9,5 +14,8 @@ export {
 };
 
 export type {
-	LifeEventsAPI
+	LifeEventsAPI,
+	EventCallback,
+	OnAndOnceMethod,
+	OffMethod,
 };

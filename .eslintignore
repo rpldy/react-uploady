@@ -1,2 +1,5 @@
+node_modules/
 *.test.js
 *.story.js
+*.stories.js
+*.mock.js

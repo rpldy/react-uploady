@@ -1,6 +1,5 @@
 // @flow
-
-import send from "./sender";
+import send from "./xhrSender/xhrSender";
 import createMockSender from "./mockSender/mockSender";
 
 import type { MockOptions, } from "./types";

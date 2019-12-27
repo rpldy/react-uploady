@@ -19,6 +19,7 @@
     "@rpldy/life-events": "^0.1.4",
     "@rpldy/sender": "^0.1.4",
     "@rpldy/shared": "^0.1.4",
+    "immer": "^5.1.0",
     "lodash": "^4.17.15"
   },
   "devDependencies": {

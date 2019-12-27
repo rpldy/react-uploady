@@ -1,5 +1,5 @@
 // @flow
-import React, { useMemo, useRef, useCallback, useEffect, useLayoutEffect } from "react";
+import React, { useMemo, useRef, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { pick } from "lodash";
 import createUploader, { DEFAULT_OPTIONS } from "@rpldy/uploader";
@@ -9,7 +9,6 @@ import { UploadyContext, createContextApi } from "@rpldy/shared-ui";
 import type { UploaderType } from "@rpldy/uploader";
 import type { CreateOptions } from "@rpldy/shared";
 import type { UploadyProps } from "./types";
-import type { EventCallback } from "@rpldy/life-events";
 
 const FileInputFieldPortal = ({ container, children }) =>
 	container && ReactDOM.createPortal(children, container);
@@ -84,8 +83,6 @@ const Uploady = (props: UploadyProps) => {
 	const instanceOptions = uploader.getOptions();
 
 	//TODO !!!!!!!!! move rendering of portal and input to memoized component !!!!!!!
-
-	console.log("!!!!!!!!! rendering input with options: ", instanceOptions);
 
 	return <UploadyContext.Provider value={api}>
 		<FileInputFieldPortal container={inputFieldContainer}>

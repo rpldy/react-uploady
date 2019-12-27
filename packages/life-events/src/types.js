@@ -11,9 +11,11 @@ export type Options = {
 	collectStats?: boolean,
 };
 
+export type TriggerMethod = (name: any, ...args: any[]) => any;
+
 export type LifeEventsAPI = {
 	target: Object,
-	trigger: (name: any, ...args: any[]) => any,
+	trigger: TriggerMethod,
 	addEvent: (name: any) => void,
 	removeEvent: (name: any) => void,
 	hasEvent: (name: any) => boolean,

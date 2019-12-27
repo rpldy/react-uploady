@@ -65,7 +65,6 @@ const publicMethods = {
 
 const getPublicMethods = () => Object.entries(publicMethods)
 	.reduce((res, [key, m]) => {
-		// const method: (...args: any[]) => any = m;
 		if (typeof m !== "function"){
 			throw new Error("bla");
 		}

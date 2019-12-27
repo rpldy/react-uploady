@@ -1,16 +1,18 @@
 // @flow
 import React, { Component, useMemo } from "react";
-import { withKnobs } from "@storybook/addon-knobs";
 import UploadButton from "./src";
 import Uploady, {
-	UPLOADER_EVENTS,
+	UploadyContext,
 	useFileFinishListener,
 	useBatchStartListener,
+
+	UPLOADER_EVENTS,
 } from "@rpldy/uploady";
 
 // import readme from '../README.md';
 
 import {
+	withKnobs,
 	useStoryUploadySetup,
 	StoryUploadProgress,
 } from "../../../story-helpers";
@@ -32,13 +34,13 @@ export const WithEventListeners = () => {
 
 	const listeners = useMemo(() => ({
 		[UPLOADER_EVENTS.BATCH_START]: (batch) =>
-			console.log(`>>>>> BATCH START - ${batch.id}`),
+			console.log(`>>>>> WithEventListeners - BATCH START - ${batch.id}`),
 		[UPLOADER_EVENTS.BATCH_FINISH]: (batch) =>
-			console.log(`>>>>> BATCH FINISH - ${batch.id}`),
+			console.log(`>>>>> WithEventListeners - BATCH FINISH - ${batch.id}`),
 		[UPLOADER_EVENTS.FILE_START]: (file) =>
-			console.log(`>>>>> FILE START - ${file.id}`),
+			console.log(`>>>>> WithEventListeners - FILE START - ${file.id}`),
 		[UPLOADER_EVENTS.FILE_FINISH]: (file) =>
-			console.log(`>>>>> FILE FINISH - ${file.id}`),
+			console.log(`>>>>> WithEventListeners - FILE FINISH - ${file.id}`),
 	}), []);
 
 	return <Uploady
@@ -53,11 +55,11 @@ export const WithEventListeners = () => {
 
 const HookedUploadButton = () => {
 	useFileFinishListener((file) => {
-		console.log(">>>>>> (hook) FILE FINISH - ", file);
+		console.log(">>>>>> HookedUploadButton - FILE FINISH - ", file);
 	});
 
 	useBatchStartListener((batch) => {
-		console.log(">>>>> (hook) BATCH START - ", batch);
+		console.log(">>>>> HookedUploadButton - (hook) BATCH START - ", batch);
 
 		const item = batch.items[0];
 
@@ -94,23 +96,45 @@ export const WithProgress = () => {
 	</Uploady>;
 };
 
-// export class WithClass extends Component<any> {
-//
-// 	componentDidMount(): * {
-//
-// 	}
-//
-// 	// static contex
-//
-// 	render() {
-// 		return (
-// 			<div>
-//
-// 			</div>
-// 		);
-// 	}
-// }
+class ClassUsingCustomButton extends Component<any> {
 
+	unsubscribeBatchStart = null;
+
+	componentDidMount(): * {
+		this.unsubscribeBatchStart = this.context.on(UPLOADER_EVENTS.BATCH_START, (batch) => {
+			console.log(`>>>>> ClassUsingCustomButton - BATCH START - ${batch.id}`);
+		});
+	}
+
+	componentWillUnmount(): * {
+		if (this.unsubscribeBatchStart) {
+			this.unsubscribeBatchStart();
+		}
+	}
+
+	static contextType = UploadyContext;
+
+	showFileChooser = () => {
+		this.context.showFileUpload();
+	};
+
+	render() {
+		return (
+			<button onClick={this.showFileChooser}>Custom Upload Button</button>
+		);
+	}
+}
+
+export const WithClass = () => {
+	const { enhancer, destination, multiple } = useStoryUploadySetup();
+	return <Uploady
+		debug
+		multiple={multiple}
+		destination={destination}
+		enhancer={enhancer}>
+		<ClassUsingCustomButton/>
+	</Uploady>;
+};
 
 export default {
 	component: UploadButton,

@@ -16,3 +16,7 @@ export const UPLOADER_EVENTS = {
 };
 
 export const PROGRESS_DELAY = 100;
+
+export const SENDER_EVENTS = {
+	PROGRESS: "progress",
+};

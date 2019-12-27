@@ -5,6 +5,7 @@
 .*/node_modules/enzyme-matchers/.*
 .*/node_modules/jest-enzyme/.*
 ./packages/**/lib/*.js
+./packages/**/*.mock.js
 
 [include]
 ./packages/**/*.js.flow

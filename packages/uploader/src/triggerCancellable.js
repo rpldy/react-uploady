@@ -1,8 +1,6 @@
 // @flow
-import type { Trigger } from "./types";
+import type { Trigger, Cancellable } from "./types";
 
-// type Trigger = (event: string, ...args: mixed[]) => Promise<mixed>[];
-type Cancellable = (event: string, ...args: mixed[]) => Promise<boolean>;
 type Outcome = Promise<boolean> | Cancellable;
 
 export default (trigger: Trigger, event?: string, ...args?: mixed[]): Outcome => {

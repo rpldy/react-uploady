@@ -3,6 +3,7 @@ import addLife, { isLE } from "./lifeEvents";
 import type {
 	LifeEventsAPI,
 	EventCallback,
+	TriggerMethod,
 	OnAndOnceMethod,
 	OffMethod,
 } from "./types";
@@ -16,6 +17,7 @@ export {
 export type {
 	LifeEventsAPI,
 	EventCallback,
+	TriggerMethod,
 	OnAndOnceMethod,
 	OffMethod,
 };

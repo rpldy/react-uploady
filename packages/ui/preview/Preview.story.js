@@ -1,6 +1,6 @@
 // @flow
 import React, { useRef, useState } from "react";
-import { withKnobs, boolean } from "@storybook/addon-knobs";
+// import { withKnobs, boolean } from "@storybook/addon-knobs";
 import styled, { css } from "styled-components";
 import Uploady, {
 	useFileProgressListener,
@@ -81,91 +81,91 @@ export const WithLocalFiles = () =>
 		</PreviewContainer>
 	</Uploady>;
 
-const UrlUpload = () => {
-	const uploadRef = useRef(null);
-
-	const onButtonClick = () => {
-		if (uploadRef.current) {
-			uploadRef.current();
-		}
-	};
-
-	return <>
-		<StyledUploadUrlInput
-			placeholder="enter valid url to upload"
-			uploadRef={uploadRef}/>
-
-		<Button onClick={onButtonClick}>Upload</Button>
-	</>;
-};
-
-export const WithUrls = () => {
-	return <Uploady
-		debug
-		destination={cloudinaryDestination}
-		enhancer={mockSenderEnhancer}>
-
-		<UrlUpload/>
-
-		<PreviewContainer>
-			<Preview/>
-		</PreviewContainer>
-	</Uploady>;
-};
-
-export const withFallbackUrl = () => {
-	const value = boolean("Use Mock Sender", true);
-
-	return <Uploady
-		debug
-		destination={cloudinaryDestination}
-		enhancer={value ? mockSenderEnhancer : undefined}>
-
-		<UrlUpload/>
-
-		<PreviewContainer>
-			<Preview
-				fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
-		</PreviewContainer>
-	</Uploady>;
-};
-
-const PreviewWithProgress = () => {
-	const [isDone, setIsDone] = useState(false);
-	const fileProgress = useFileProgressListener();
-
-	useBatchStartListener(()=>{
-		setIsDone(false);
-	});
-
-	useBatchFinishListener(()=>{
-		setIsDone(true);
-	});
-
-	const completed = isDone ? 100 :
-		(fileProgress && fileProgress.completed || 0);
-
-	return <PreviewContainer completed={completed}>
-		<Preview
-			fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
-	</PreviewContainer>;
-};
-
-export const withProgress = () => {
-	const value = boolean("Use Mock Sender", true);
-
-	return <Uploady
-		debug
-		destination={cloudinaryDestination}
-		enhancer={value ? mockSenderEnhancer : undefined}>
-
-		<UrlUpload/>
-		<PreviewWithProgress/>
-	</Uploady>;
-};
+// const UrlUpload = () => {
+// 	const uploadRef = useRef(null);
+//
+// 	const onButtonClick = () => {
+// 		if (uploadRef.current) {
+// 			uploadRef.current();
+// 		}
+// 	};
+//
+// 	return <>
+// 		<StyledUploadUrlInput
+// 			placeholder="enter valid url to upload"
+// 			uploadRef={uploadRef}/>
+//
+// 		<Button onClick={onButtonClick}>Upload</Button>
+// 	</>;
+// };
+//
+// export const WithUrls = () => {
+// 	return <Uploady
+// 		debug
+// 		destination={cloudinaryDestination}
+// 		enhancer={mockSenderEnhancer}>
+//
+// 		<UrlUpload/>
+//
+// 		<PreviewContainer>
+// 			<Preview/>
+// 		</PreviewContainer>
+// 	</Uploady>;
+// };
+//
+// export const withFallbackUrl = () => {
+// 	const value = boolean("Use Mock Sender", true);
+//
+// 	return <Uploady
+// 		debug
+// 		destination={cloudinaryDestination}
+// 		enhancer={value ? mockSenderEnhancer : undefined}>
+//
+// 		<UrlUpload/>
+//
+// 		<PreviewContainer>
+// 			<Preview
+// 				fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
+// 		</PreviewContainer>
+// 	</Uploady>;
+// };
+//
+// const PreviewWithProgress = () => {
+// 	const [isDone, setIsDone] = useState(false);
+// 	const fileProgress = useFileProgressListener();
+//
+// 	useBatchStartListener(()=>{
+// 		setIsDone(false);
+// 	});
+//
+// 	useBatchFinishListener(()=>{
+// 		setIsDone(true);
+// 	});
+//
+// 	const completed = isDone ? 100 :
+// 		(fileProgress && fileProgress.completed || 0);
+//
+// 	return <PreviewContainer completed={completed}>
+// 		<Preview
+// 			fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
+// 	</PreviewContainer>;
+// };
+//
+// export const withProgress = () => {
+// 	const value = boolean("Use Mock Sender", true);
+//
+// 	return <Uploady
+// 		debug
+// 		destination={cloudinaryDestination}
+// 		enhancer={value ? mockSenderEnhancer : undefined}>
+//
+// 		<UrlUpload/>
+// 		<PreviewWithProgress/>
+// 	</Uploady>;
+// };
 
 export default {
 	component: Preview,
 	title: "Preview",
-	decorators: [withKnobs],
+	// decorators: [withKnobs],
 };

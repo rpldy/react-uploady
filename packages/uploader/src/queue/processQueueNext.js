@@ -64,12 +64,10 @@ export const getNextIdGroup = (queue: QueueState): ?string[] => {
 };
 
 const processNext = async (queue: QueueState) => {
-	console.log("!!!!!!!!!! process next - ENTER");
 	const ids = getNextIdGroup(queue);
 
 	if (ids) {
 		const currentCount = queue.getCurrentActiveCount();
-		console.log("!!!!!!!!!! process next - count", currentCount);
 		logger.debugLog("uploady.uploader.processor: Processing next upload - ", {
 			ids,
 			state: queue.getState(),
@@ -80,11 +78,9 @@ const processNext = async (queue: QueueState) => {
 
 		if (!currentCount || (concurrent && currentCount < maxConcurrent)) {
 			let cancelled = false;
-			console.log("!!!!!!!!!! process next - concurrent", concurrent);
+
 			if (isNewBatchStarting(queue, ids[0])) {
-				console.log("!!!!!!!!!! process next", ids);
 				const allowBatch = await loadNewBatchForItem(queue, ids[0]);
-				console.log("!!!!!!!!!! process next 2", ids);
 				cancelled = !allowBatch;
 
 				if (cancelled) {

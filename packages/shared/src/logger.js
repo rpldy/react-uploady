@@ -20,6 +20,7 @@ const setDebug = (debugOn: boolean) => {
 
 const debugLog = (...args: any[]) => {
 	if (isDebugOn()) {
+		// eslint-disable-next-line no-console
 		console.log(...args);
 	}
 };

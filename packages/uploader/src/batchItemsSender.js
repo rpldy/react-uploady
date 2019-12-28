@@ -18,11 +18,15 @@ const onItemUploadProgress = (items: BatchItem[], e: ProgressEvent, trigger) => 
 		logger.debugLog(`uploady.uploader.processor: file: ${item.id} progress event: loaded(${loadedPerItem}) - completed(${completedPerItem})`);
 		// i.completed = completedPerItem;
 		// i.loaded = loadedPerItem;
-		trigger(SENDER_EVENTS.PROGRESS, {item, completed: completedPerItem, loaded: loadedPerItem });
+		trigger(SENDER_EVENTS.PROGRESS, {
+			item,
+			completed: completedPerItem,
+			loaded: loadedPerItem
+		});
 	});
 };
 
-export default () : ItemsSender => {
+export default (): ItemsSender => {
 	const send = (items: BatchItem[], batchOptions: CreateOptions) => {
 		const destination = batchOptions.destination,
 			url = destination && destination.url,

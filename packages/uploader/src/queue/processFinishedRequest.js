@@ -44,9 +44,7 @@ export default (queue: QueueState, finishedData: FinishData[], next: ProcessNext
 		}
 	});
 
-	console.log("!!!!!!!!!!! clean up")
 	cleanUpFinishedBatch(queue);
 
-	console.log("!!!!!!!!!!! processFInishedRequest - call next");
 	return next(queue);
 };

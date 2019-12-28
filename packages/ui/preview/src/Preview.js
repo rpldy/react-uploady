@@ -114,9 +114,12 @@ const Preview = (props: PreviewProps): Element<"img">[] | Element<ComponentType<
 	}, [fallbackAttempted, props.fallbackUrl]);
 
 	return previews.map((data: PreviewData): Element<any> =>
-		props.PreviewComponent ? <props.PreviewComponent {...props.previewProps} data={data}/> :
+		props.PreviewComponent ?
+			<props.PreviewComponent {...props.previewProps} data={data}/> :
 			<img key={data.url}
-			     onError={onImagePreviewLoadError} src={data.url} {...props.previewProps} />);
+				onError={onImagePreviewLoadError}
+                 src={data.url} {...props.previewProps} />);
+
 };
 
 export default Preview;

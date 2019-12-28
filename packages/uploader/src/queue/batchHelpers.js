@@ -2,7 +2,7 @@
 import { BATCH_STATES, logger } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
 
-import type { BatchData, QueueState } from "./types";
+import type { BatchData, QueueState, State } from "./types";
 import type { Batch, BatchItem } from "@rpldy/shared";
 
 const isItemBelongsToBatch = (queue: QueueState, itemId: string, batchId: string): boolean => {
@@ -11,7 +11,6 @@ const isItemBelongsToBatch = (queue: QueueState, itemId: string, batchId: string
 };
 
 const getBatchDataFromItemId = (queue: QueueState, itemId: string): BatchData => {
-	console.log("getBatchDataFromItemId", itemId)
 	const state = queue.getState();
 	const item = state.items[itemId];
 	return state.batches[item.batchId];
@@ -22,24 +21,29 @@ const getBatchFromItemId = (queue: QueueState, itemId: string): Batch => {
 };
 
 const cancelBatchForItem = (queue: QueueState, itemId: string) => {
-	const batch = getBatchFromItemId(itemId);
+	const batch = getBatchFromItemId(queue, itemId);
 
 	if (batch) {
 		logger.debugLog("uploady.uploader.processor: cancelling batch: ", { batch });
-		batch.items.forEach((bi: BatchItem) => {
-			delete state.items[bi.id];
+		const items = batch.items.map((item: BatchItem) => item.id);
 
-			const index = itemQueue.indexOf(bi.id);
+		queue.updateState((state: State) => {
+			items.forEach((id: string) => {
+				delete state.items[id];
 
-			if (~index) {
-				itemQueue.splice(index, 1);
-			}
+				const index = state.itemQueue.indexOf(id);
+
+				if (~index) {
+					state.itemQueue.splice(index, 1);
+				}
+			});
+
+			batch.state = BATCH_STATES.CANCELLED;
+
+			delete state.batches[batch.id];
 		});
 
-		delete state.batches[batch.id];
-
-		batch.state = BATCH_STATES.CANCELLED;
-		trigger(UPLOADER_EVENTS.BATCH_CANCEL, batch);
+		queue.trigger(UPLOADER_EVENTS.BATCH_CANCEL, batch);
 	}
 };
 

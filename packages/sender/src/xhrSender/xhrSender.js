@@ -3,6 +3,7 @@
 //TODO: need to support grouping of files into single request
 
 import { logger, FILE_STATES } from "@rpldy/shared";
+import prepareFormData from "./prepareFormData";
 
 import type {
 	SendOptions,
@@ -14,7 +15,7 @@ import type {
 
 type Headers = { [string]: string };
 
-const SUCCESS_CODES = [200, 201, 202, 203, 204];
+export const SUCCESS_CODES = [200, 201, 202, 203, 204];
 
 const setHeaders = (req, options: SendOptions) => {
 
@@ -32,28 +33,11 @@ const setHeaders = (req, options: SendOptions) => {
 		req.setRequestHeader(name, headers[name]));
 };
 
-const getFormData = (item: BatchItem, options: SendOptions) => {
-	const fd = new FormData(),
-		fileName = item.file ? item.file.name : undefined;
-
-	if (item.file) {
-		fd.set(options.paramName, item.file, fileName);
-	} else if (item.url) {
-		fd.set(options.paramName, item.url);
-	}
-
-	Object.entries(options.params)
-		.forEach(([key, val]: [string, any]) => fd.set(key, val));
-
-	return fd;
-};
-
-const makeRequest = (item: BatchItem, url: string, options: SendOptions, onProgress: OnProgress): { pXhr: Promise<XMLHttpRequest>, xhr: XMLHttpRequest } => {
+const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onProgress: OnProgress): { pXhr: Promise<XMLHttpRequest>, xhr: XMLHttpRequest } => {
 	const req = new XMLHttpRequest();
 
 	const pXhr = new Promise((resolve, reject) => {
-
-		const formData = getFormData(item, options);
+		const formData = prepareFormData(items, options);
 
 		req.onerror = () => reject(req);
 		req.ontimeout = () => reject(req);
@@ -69,9 +53,7 @@ const makeRequest = (item: BatchItem, url: string, options: SendOptions, onProgr
 
 		setHeaders(req, options);
 
-		if (options.withCredentials) {
-			req.withCredentials = true;
-		}
+		req.withCredentials = !!options.withCredentials;
 
 		req.send(formData);
 	});
@@ -144,10 +126,10 @@ const processResponse = async (pXhr: Promise<XMLHttpRequest>, options: SendOptio
 	};
 };
 
-export default (item: BatchItem, url: string, options: SendOptions, onProgress: OnProgress): SendResult => {
-	logger.debugLog("uploady.sender: sending file: ", { item, url, options, });
+export default (items: BatchItem[], url: string, options: SendOptions, onProgress: OnProgress): SendResult => {
+	logger.debugLog("uploady.sender: sending file: ", { items, url, options, });
 
-	const request = makeRequest(item, url, options, onProgress);
+	const request = makeRequest(items, url, options, onProgress);
 
 	return {
 		request: processResponse(request.pXhr, options),

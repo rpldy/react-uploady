@@ -1,4 +1,5 @@
 import getQueueState from "./mocks/getQueueState.mock";
+import  "./mocks/batchHelpers.mock";
 import { FILE_STATES } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../../consts";
 import processFinishedRequest from "../processFinishedRequest";
@@ -9,7 +10,9 @@ describe("onRequestFinished tests", () => {
 	const mockNext = jest.fn();
 
 	beforeEach(() => {
-		clearJestMocks(mockNext);
+		clearJestMocks(
+			cleanUpFinishedBatch,
+			mockNext);
 	});
 
 	it("for single item should finalize if last file in batch", async () => {

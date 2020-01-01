@@ -1,16 +1,27 @@
 jest.mock("../processBatchItems", () => jest.fn());
 
-import mockBatchHelpers from "./mocks/batchHelpers.mock";
+import "./mocks/batchHelpers.mock";
 import getQueueState from "./mocks/getQueueState.mock";
 import processQueueNext, { getNextIdGroup } from "../processQueueNext";
 import mockProcessBatchItems from "../processBatchItems";
+import {
+	getBatchDataFromItemId,
+	isItemBelongsToBatch,
+	isNewBatchStarting,
+	loadNewBatchForItem,
+	cancelBatchForItem,
+} from "../batchHelpers";
 
 describe("processQueueNext tests", () => {
 
 	beforeEach(() => {
 		clearJestMocks(
 			mockProcessBatchItems,
-			...Object.values(mockBatchHelpers),
+			getBatchDataFromItemId,
+			isItemBelongsToBatch,
+			isNewBatchStarting,
+			loadNewBatchForItem,
+			cancelBatchForItem
 		)
 	});
 
@@ -37,7 +48,7 @@ describe("processQueueNext tests", () => {
 				itemQueue: ["u1", "u2", "u3", "u4"],
 			});
 
-			mockBatchHelpers.getBatchDataFromItemId
+			getBatchDataFromItemId
 				.mockReturnValueOnce(queueState.state.batches.b1);
 
 			const ids = getNextIdGroup(queueState);
@@ -68,7 +79,7 @@ describe("processQueueNext tests", () => {
 				itemQueue: ["u1", "u2", "u3", "u4"],
 			});
 
-			mockBatchHelpers.getBatchDataFromItemId
+			getBatchDataFromItemId
 				.mockReturnValueOnce(queueState.state.batches.b2);
 
 			const ids = getNextIdGroup(queueState);
@@ -100,10 +111,10 @@ describe("processQueueNext tests", () => {
 				itemQueue: ["u1", "u2", "u3", "u4"],
 			});
 
-			mockBatchHelpers.getBatchDataFromItemId
+			getBatchDataFromItemId
 				.mockReturnValueOnce(queueState.state.batches.b1);
 
-			mockBatchHelpers.isItemBelongsToBatch
+			isItemBelongsToBatch
 				.mockReturnValueOnce(true);
 
 			const ids = getNextIdGroup(queueState);
@@ -134,10 +145,10 @@ describe("processQueueNext tests", () => {
 				itemQueue: ["u1", "u2", "u3", "u4", "u5"],
 			});
 
-			mockBatchHelpers.getBatchDataFromItemId
+			getBatchDataFromItemId
 				.mockReturnValueOnce(queueState.state.batches.b1);
 
-			mockBatchHelpers.isItemBelongsToBatch
+			isItemBelongsToBatch
 				.mockReturnValueOnce(true)
 				.mockReturnValueOnce(true);
 
@@ -172,10 +183,10 @@ describe("processQueueNext tests", () => {
 				itemQueue: ["u1", "u2", "u3", "u4", "u5"],
 			});
 
-			mockBatchHelpers.getBatchDataFromItemId
+			getBatchDataFromItemId
 				.mockReturnValueOnce(queueState.state.batches.b2);
 
-			mockBatchHelpers.isItemBelongsToBatch
+			isItemBelongsToBatch
 				.mockReturnValueOnce(true)
 				.mockReturnValueOnce(true);
 
@@ -265,7 +276,7 @@ describe("processQueueNext tests", () => {
 			itemQueue: ["u1", "u2"],
 		});
 
-		mockBatchHelpers.getBatchDataFromItemId.mockReturnValueOnce(
+		getBatchDataFromItemId.mockReturnValueOnce(
 			queueState.state.batches.b1
 		);
 
@@ -295,7 +306,7 @@ describe("processQueueNext tests", () => {
 			maxConcurrent: 2,
 		});
 
-		mockBatchHelpers.getBatchDataFromItemId.mockReturnValueOnce(
+		getBatchDataFromItemId.mockReturnValueOnce(
 			queueState.state.batches.b1
 		);
 
@@ -333,16 +344,16 @@ describe("processQueueNext tests", () => {
 				maxConcurrent: 2,
 			});
 
-		mockBatchHelpers.getBatchDataFromItemId.mockReturnValueOnce(
+		getBatchDataFromItemId.mockReturnValueOnce(
 			queueState.state.batches.b2
 		);
 
-		mockBatchHelpers.isNewBatchStarting.mockReturnValueOnce(true);
-		mockBatchHelpers.loadNewBatchForItem.mockResolvedValueOnce(true);
+		isNewBatchStarting.mockReturnValueOnce(true);
+		loadNewBatchForItem.mockResolvedValueOnce(true);
 
 		await processQueueNext(queueState);
 
-		expect(mockBatchHelpers.loadNewBatchForItem).toHaveBeenCalledWith(queueState, "u2");
+		expect(loadNewBatchForItem).toHaveBeenCalledWith(queueState, "u2");
 
 		expect(mockProcessBatchItems).toHaveBeenCalledWith(
 			expect.any(Object),
@@ -373,21 +384,21 @@ describe("processQueueNext tests", () => {
 				maxConcurrent: 2,
 			});
 
-		mockBatchHelpers.getBatchDataFromItemId.mockReturnValueOnce(
+		getBatchDataFromItemId.mockReturnValueOnce(
 			queueState.state.batches.b2
 		);
 
-		mockBatchHelpers.isNewBatchStarting.mockReturnValueOnce(true);
-		mockBatchHelpers.loadNewBatchForItem.mockResolvedValueOnce(false);
+		isNewBatchStarting.mockReturnValueOnce(true);
+		loadNewBatchForItem.mockResolvedValueOnce(false);
 
-		mockBatchHelpers.cancelBatchForItem.mockImplementationOnce(()=>{
+		cancelBatchForItem.mockImplementationOnce(() => {
 			queueState.state.itemQueue = []; //clear queue process next doesnt work recursively
 		});
 
 		await processQueueNext(queueState);
 
-		expect(mockBatchHelpers.cancelBatchForItem)
-			.toHaveBeenCalledWith("u2");
+		expect(cancelBatchForItem)
+			.toHaveBeenCalledWith(queueState,"u2");
 
 		expect(mockProcessBatchItems).not.toHaveBeenCalled();
 	});

@@ -19,5 +19,3 @@ const helpersMock = {
 };
 
 jest.doMock("../../batchHelpers", () => helpersMock);
-
-export default helpersMock;

@@ -39,6 +39,8 @@ export type SenderProgressEvent = { total: number, loaded: number };
 
 export type OnProgress = (e: SenderProgressEvent) => void;
 
+export type FormatParamGroupNameMethod = (number, string) => string;
+
 export type SendOptions = {
 	method: string,
 	paramName: string,
@@ -47,6 +49,7 @@ export type SendOptions = {
 	headers?: Object,
 	forceJsonResponse: ?boolean,
 	withCredentials: ?boolean,
+	formatGroupParamName: ?FormatParamGroupNameMethod,
 };
 
 type BatchUrl = {|
@@ -84,7 +87,7 @@ export type Batch = {
 	state: BatchState
 };
 
-export type SendMethod = (item: BatchItem, url: string, options: SendOptions, onProgress: OnProgress) => SendResult;
+export type SendMethod = (item: BatchItem[], url: string, options: SendOptions, onProgress: OnProgress) => SendResult;
 
 export type UploadOptions = {
 	//whether to automatically upload files when they are added (default: true)
@@ -93,6 +96,8 @@ export type UploadOptions = {
 	destination?: Destination,
 	//name (attribute) of the file input field (default: "file")
 	inputFieldName?: string,
+	//optional function to determine the upload field name when more than file is grouped in a single upload
+	formatGroupParamName?: FormatParamGroupNameMethod,
 	//whether to allow more than one file to be selected for upload (default: true)
 	multiple?: boolean,
 	//whether to group multiple files in a single request (default: false)

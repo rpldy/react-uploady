@@ -16,8 +16,6 @@ const onItemUploadProgress = (items: BatchItem[], e: ProgressEvent, trigger) => 
 
 	items.forEach((item: BatchItem) => {
 		logger.debugLog(`uploady.uploader.processor: file: ${item.id} progress event: loaded(${loadedPerItem}) - completed(${completedPerItem})`);
-		// i.completed = completedPerItem;
-		// i.loaded = loadedPerItem;
 		trigger(SENDER_EVENTS.PROGRESS, {
 			item,
 			completed: completedPerItem,
@@ -50,6 +48,7 @@ export default (): ItemsSender => {
 			},
 			forceJsonResponse: batchOptions.forceJsonResponse,
 			withCredentials: batchOptions.withCredentials,
+			formatGroupParamName: batchOptions.formatGroupParamName,
 		}, throttledProgress);
 	};
 

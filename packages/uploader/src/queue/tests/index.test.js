@@ -1,12 +1,19 @@
+jest.mock("../processQueueNext", () => jest.fn());
+import { logger } from "packages/tests/mocks/rpldy-shared.mock";
+import mockProcessNext from "../processQueueNext";
+import createQueue from "../";
 
 describe("queue tests", () => {
-	const mockProcessNext = jest.fn();
-
-	jest.doMock("../processQueueNext", () => mockProcessNext);
-
-	const createQueue = require("../").default;
+	// const mockProcessNext = jest.fn();
+	//
+	// jest.mock("../processQueueNext", () => mockProcessNext);
+	//
+	// const createQueue = require("../").default;
 
 	it("should initialize and add uploads", () => {
+
+		logger.isDebugOn.mockReturnValueOnce(true);
+const uploaderId = "uploader111";
 
 		let senderOnHandler;
 
@@ -14,14 +21,16 @@ describe("queue tests", () => {
 			senderOnHandler = handler;
 		};
 
-		const trigger = ()=> {},
-			cancellable = ()=>{},
-		sender = {on: mockSenderOn};
+		const trigger = () => {
+			},
+			cancellable = () => {
+			},
+			sender = { on: mockSenderOn };
 
-		const queue = createQueue({destination: "foo"}, cancellable, trigger, sender);
+		const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
-		const batch = {items: [{id: "u1"}, {id: "u2"}]},
-			batchOptions = {concurrent: true};
+		const batch = { items: [{ id: "u1" }, { id: "u2" }] },
+			batchOptions = { concurrent: true };
 
 		queue.uploadBatch(batch, batchOptions);
 
@@ -40,11 +49,13 @@ describe("queue tests", () => {
 		expect(state.items["u1"]).toBe(batch.items[0]);
 		expect(state.items["u2"]).toBe(batch.items[1]);
 
-		senderOnHandler({id: "u1"}, 20, 1000);
+		senderOnHandler({ id: "u1" }, 20, 1000);
 
 		const state2 = queueState.getState();
 		expect(state2.items["u1"].loaded).toBe(1000);
 		expect(state2.items["u1"].completed).toBe(20);
+
+		expect(window[`${uploaderId}_queue_state`]).toBe(queueState);
 
 	});
 

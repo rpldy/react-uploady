@@ -1,4 +1,4 @@
-import { select, boolean } from "@storybook/addon-knobs";
+import { select, boolean, number } from "@storybook/addon-knobs";
 import { useMemo } from "react";
 import { createMockSender } from "@rpldy/sender";
 
@@ -38,13 +38,17 @@ const mockSenderEnhancer = (uploader) => {
 const useStoryUploadySetup = () => {
 	const type = select("destination", DEST_OPTIONS, DEST_OPTIONS.mock);
 	const multiple = boolean("multiple files", true);
+	const grouped = boolean("group files in single request", false);
+	const groupSize = number("max in group", 2);
 
 	return useMemo(() => ({
 			multiple,
 			destination: DESTINATIONS[type],
 			enhancer: (type === DEST_OPTIONS.mock) ? mockSenderEnhancer : null,
+			grouped,
+			groupSize,
 		}),
-		[type, multiple]);
+		[type, multiple, grouped, groupSize]);
 };
 
 export default useStoryUploadySetup;

@@ -8,19 +8,32 @@ module.exports = {
 		"text",
 		"html"],
 	coverageThreshold: {
-		global: {
-			branches: 100,
-			functions: 100,
-			lines: 100,
-			statements: 100
+		// global: {
+		// 	branches: 100,
+		// 	functions: 100,
+		// 	lines: 100,
+		// 	statements: 100
+		// },
+		"packages/ui/**/src/**/*.js": {
+			branches: 85,
+			functions: 85,
+			lines: 85,
+			statements: 85
+		},
+		"packages/*/src/**/*.js": {
+			branches: 90,
+			functions: 90,
+			lines: 90,
+			statements: 90
 		}
 	},
 	"collectCoverageFrom": [
-		"src/**/*.js",
-		"!src/**/*.test.js",
-		"!src/**/*.story.js",
-		"!src/**/*.stories.js",
-		"!src/**/*.json"
+		"<rootDir>/packages/**/src/**/*.js",
+		"!<rootDir>/packages/**/**/*.test.js",
+		"!<rootDir>/packages/**/*.story.js",
+		"!<rootDir>/packages/**/*.stories.js",
+		"!<rootDir>/packages/**/*.json",
+		"!<rootDir>/packages/**/*.mock.*"
 	],
 	testPathIgnorePatterns: ["<rootDir>/packages/(?:.+?)/lib/"],
 	"setupFilesAfterEnv": ["<rootDir>/jestSetup.js"],

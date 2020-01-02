@@ -18,19 +18,20 @@ import {
 } from "../../../story-helpers";
 
 export const Simple = () => {
-	const { enhancer, destination, multiple } = useStoryUploadySetup();
+	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
 	return <Uploady debug
 	                multiple={multiple}
 	                destination={destination}
-	                enhancer={enhancer}>
+	                enhancer={enhancer}
+	                grouped={grouped}
+	                maxGroupSize={groupSize}>
 		<UploadButton/>
 	</Uploady>;
 };
 
-
 export const WithEventListeners = () => {
-	const { enhancer, destination, multiple } = useStoryUploadySetup();
+	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
 	const listeners = useMemo(() => ({
 		[UPLOADER_EVENTS.BATCH_START]: (batch) =>
@@ -48,7 +49,9 @@ export const WithEventListeners = () => {
 		multiple={multiple}
 		destination={destination}
 		enhancer={enhancer}
-		listeners={listeners}>
+		listeners={listeners}
+		rouped={grouped}
+		maxGroupSize={groupSize}>
 		<UploadButton/>
 	</Uploady>;
 };

@@ -16,17 +16,20 @@ const FILE_STATE_TO_EVENT_MAP = {
 type FinishData = { id: string, info: UploadData };
 
 export default (queue: QueueState, finishedData: FinishData[], next: ProcessNextMethod) => {
-	const state = queue.getState();
-
 	finishedData.forEach((itemData: FinishData) => {
+		const state = queue.getState();
 		const { id, info } = itemData;
-		const item = state.items[id];
 
-		logger.debugLog("uploady.uploader.processor: request finished - ", { id, info });
+		logger.debugLog("uploady.uploader.processor.queue: request finished - ", { id, info });
 
-		if (item) {
-			item.state = info.state;
-			item.uploadResponse = info.response;
+		if (state.items[id]) {
+			queue.updateState((state)=>{
+				const item = state.items[id];
+				item.state = info.state;
+				item.uploadResponse = info.response;
+			});
+
+			const item = state.items[id];
 			queue.trigger(FILE_STATE_TO_EVENT_MAP[item.state], item);
 		}
 

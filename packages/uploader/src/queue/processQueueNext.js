@@ -67,16 +67,16 @@ const processNext = async (queue: QueueState) => {
 	const ids = getNextIdGroup(queue);
 
 	if (ids) {
-		const currentCount = queue.getCurrentActiveCount();
-		logger.debugLog("uploady.uploader.processor: Processing next upload - ", {
-			ids,
-			state: queue.getState(),
-			currentCount,
-		});
-
-		const { concurrent = 0, maxConcurrent = 0 } = queue.getOptions();
+		const currentCount = queue.getCurrentActiveCount(),
+			{ concurrent = 0, maxConcurrent = 0 } = queue.getOptions();
 
 		if (!currentCount || (concurrent && currentCount < maxConcurrent)) {
+			logger.debugLog("uploady.uploader.processor: Processing next upload - ", {
+				ids,
+				state: queue.getState(),
+				currentCount,
+			});
+
 			let cancelled = false;
 
 			if (isNewBatchStarting(queue, ids[0])) {

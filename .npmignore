@@ -7,3 +7,6 @@ lerna.json
 *.log
 jest*
 .flowconfig
+
+.jest-cache/
+.jest-coverage/

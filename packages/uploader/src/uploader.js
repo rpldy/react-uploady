@@ -104,7 +104,7 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 		uploader = enhanced || uploader;
 	}
 
-	const processor = getProcessor(trigger, uploaderOptions);
+	const processor = getProcessor(trigger, uploaderOptions, uploader.id);
 
 	return uploader;
 };

@@ -128,8 +128,8 @@ export default (options?: MockOptions) => {
 		mockOptions = { ...mockOptions, ...updated };
 	};
 
-	const send = (item: BatchItem[], url: string, sendOptions: SendOptions, onProgress: OnProgress): SendResult => {
-		logger.debugLog("uploady.mockSender: about to make a mock request for item: ", item);
+	const send = (items: BatchItem[], url: string, sendOptions: SendOptions, onProgress: OnProgress): SendResult => {
+		logger.debugLog("uploady.mockSender: about to make a mock request for items: ", items);
 		const request = createRequest(mockOptions);
 
 		request.onProgress(onProgress);

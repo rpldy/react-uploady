@@ -26,6 +26,7 @@ const debugLog = (...args: any[]) => {
 };
 
 export {
+	isDebugOn,
 	setDebug,
 	debugLog,
 };

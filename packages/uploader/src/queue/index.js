@@ -1,6 +1,7 @@
 // @flow
 
 import produce from "immer";
+import {logger} from "@rpldy/shared";
 import processQueueNext from "./processQueueNext";
 
 import type { Batch, BatchItem, CreateOptions } from "@rpldy/shared";
@@ -13,6 +14,7 @@ export default (
 	cancellable: Cancellable,
 	trigger: TriggerMethod,
 	sender: ItemsSender,
+	uploaderId: string,
 ) => {
 	let state = {
 		itemQueue: [],
@@ -63,6 +65,10 @@ export default (
 		cancellable,
 		sender,
 	};
+
+	if (logger.isDebugOn()){
+		window[`${uploaderId}_queue_state`] = queueState;
+	}
 
 	return {
 		uploadBatch,

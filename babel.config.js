@@ -14,6 +14,13 @@ module.exports = {
 		"@babel/plugin-proposal-function-bind",
 		"@babel/plugin-proposal-class-properties",
 		"lodash",
+		["module-resolver", {
+			"root": ["./"],
+			// "alias": {
+			// 	"test": "./test",
+			// 	"underscore": "lodash"
+			// }
+		}]
 	],
 	env: {
 		test: {

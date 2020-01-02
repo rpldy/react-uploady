@@ -12,11 +12,11 @@ import type { Cancellable } from "./types";
 //TODO: ex: preview
 
 
-export default (trigger: TriggerMethod, options: CreateOptions) => {
+export default (trigger: TriggerMethod, options: CreateOptions, uploaderId: string) => {
 	// $FlowFixMe - https://github.com/facebook/flow/issues/8215
 	const cancellable: Cancellable = triggerCancellable(trigger);
 	const sender = createItemsSender();
-	const queue = createUploadQueue(options, cancellable, trigger, sender);
+	const queue = createUploadQueue(options, cancellable, trigger, sender, uploaderId);
 
 	const process = (batch: Batch, batchOptions: CreateOptions) => {
 		queue.uploadBatch(batch, batchOptions);

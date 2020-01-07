@@ -1,18 +1,43 @@
 // @flow
-import { FILE_STATES } from "@rpldy/shared";
+import { triggerUpdater, isSamePropInArrays, FILE_STATES } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { QueueState, ProcessNextMethod } from "./types";
 
-const sendAllowedItems = async (queue: QueueState, items: BatchItem[], next: ProcessNextMethod) => {
-	const batchOptions = queue.getState().batches[items[0].batchId].batchOptions,
-		allowedIds = items.map((item: BatchItem) => item.id);
+const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[]) => {
+	// $FlowFixMe - https://github.com/facebook/flow/issues/8215
+	const updated = await triggerUpdater<BatchItem[]>(
+		queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, items);
+
+	if (updated) {
+		if (updated.length !== items.length ||
+			!isSamePropInArrays(updated, items, ["id",  "batchId"])) {
+			throw new Error(`REQUEST_PRE_SEND event handlers must return same items with same ids`);
+		}
+
+		items = updated;
+	}
+
+	return items;
+};
+
+const prepareAllowedItems = async (queue: QueueState, items: BatchItem[]): Promise<BatchItem[]> => {
+	const allowedIds = items.map((item: BatchItem) => item.id);
 
 	queue.updateState((state) => {
 		state.activeIds = state.activeIds.concat(allowedIds);
 	});
+
+	items = await triggerPreSendUpdate(queue, items);
+
+	return items;
+};
+
+const sendAllowedItems = async (queue: QueueState, items: BatchItem[], next: ProcessNextMethod) => {
+	const batchOptions = queue.getState().batches[items[0].batchId].batchOptions,
+		allowedIds = items.map((item: BatchItem) => item.id);
 
 	const sendResult = queue.sender.send(items, batchOptions);
 
@@ -22,7 +47,7 @@ const sendAllowedItems = async (queue: QueueState, items: BatchItem[], next: Pro
 		});
 	});
 
-	const requestInfo = await sendResult.request;
+	const requestInfo = await sendResult.request; //wait for server request to return
 
 	const finishedData = allowedIds.map((id: string) => ({
 		id,
@@ -49,6 +74,7 @@ const reportCancelledItems = (queue: QueueState, items: BatchItem[], cancelledRe
 	return !cancelledResults.length;
 };
 
+//send group of items to be uploaded
 export default async (queue: QueueState, ids: string[], next: ProcessNextMethod) => {
 	const state = queue.getState();
 	//items can have more than one item when grouping is allowed
@@ -58,12 +84,13 @@ export default async (queue: QueueState, ids: string[], next: ProcessNextMethod)
 	const cancelledResults = await Promise.all(items.map((i: BatchItem) =>
 		queue.cancellable(UPLOADER_EVENTS.FILE_START, i)));
 
-	const allowedItems: BatchItem[] = cancelledResults
+	let allowedItems: BatchItem[] = cancelledResults
 		.map((isCancelled: boolean, index: number): ?BatchItem => isCancelled ? null : items[index])
 		.filter(Boolean);
 
 	if (allowedItems.length) {
-		sendAllowedItems(queue, allowedItems, next);
+		allowedItems = await prepareAllowedItems(queue, allowedItems);
+		sendAllowedItems(queue, allowedItems, next); //we dont need to wait for the response here
 	}
 
 	if (!reportCancelledItems(queue, items, cancelledResults, next)) {

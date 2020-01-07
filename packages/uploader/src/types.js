@@ -6,29 +6,35 @@ import type {
 	UploadOptions,
 	BatchItem,
 	SendResult,
+	Trigger,
+	Batch,
 } from "@rpldy/shared";
 
 import type { OnAndOnceMethod, OffMethod } from "@rpldy/life-events";
+
+export type PendingBatch = {
+	batch: Batch,
+	uploadOptions: CreateOptions,
+};
 
 export type UploaderType = {
 	id: string,
 	update: (updateOptions: CreateOptions) => UploaderType,
 	add: (files: UploadInfo | UploadInfo[], addOptions?: UploadOptions) => Promise<void>,
 	upload: () => void,
-	abort: () => void,
+	abort: (id?: string) => void,
+	abortBatch: (id: string) => void,
 	getOptions: () => CreateOptions,
+	getPending: () => PendingBatch[],
+	clearPending: () => void,
 	on: OnAndOnceMethod,
 	once: OnAndOnceMethod,
 	off: OffMethod,
 };
 
-export type Trigger = (event: string, ...args: mixed[]) => Promise<mixed>[];
-
-export type Cancellable = (event: string, ...args: mixed[]) => Promise<boolean>;
-
-export type UploaderEnhancer = (uploader: UploaderType, trigger: Trigger) => UploaderType;
+export type UploaderEnhancer = (uploader: UploaderType, trigger: Trigger<mixed>) => UploaderType;
 
 export type ItemsSender = {
 	send: (BatchItem[], CreateOptions) => SendResult,
 	on: OnAndOnceMethod,
-}
+};

@@ -1,11 +1,14 @@
 // @flow
 import { cloneDeep, merge } from "lodash";
 import addLife from "@rpldy/life-events";
-import { BATCH_STATES, logger } from "@rpldy/shared";
+import {
+	BATCH_STATES,
+	logger,
+	triggerCancellable,
+} from "@rpldy/shared";
 import createBatch from "./batch";
 import getProcessor from "./processor";
 import { UPLOADER_EVENTS } from "./consts";
-import triggerCancellable from "./triggerCancellable";
 import { getMandatoryOptions } from "./utils";
 
 import type {
@@ -17,6 +20,7 @@ import type {
 import type  {
 	UploaderType,
 	UploaderEnhancer,
+	PendingBatch,
 } from "./types";
 
 const EVENT_NAMES = Object.values(UPLOADER_EVENTS);
@@ -26,7 +30,7 @@ let counter = 0;
 export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderType => {
 	counter += 1;
 
-	const pendingUploads = [];
+	const pendingBatches = [];
 
 	options = options || {};
 
@@ -49,12 +53,12 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 		const isCancelled = await cancellable(UPLOADER_EVENTS.BATCH_ADD, batch);
 
 		if (!isCancelled) {
-			const processOptions = merge({}, uploaderOptions, addOptions);
+			const processOptions: CreateOptions = merge({}, uploaderOptions, addOptions);
 
 			if (processOptions.autoUpload) {
 				processor.process(batch, processOptions);
 			} else {
-				pendingUploads.push({ batch, processOptions });
+				pendingBatches.push({ batch, uploadOptions: processOptions });
 			}
 		} else {
 			batch.state = BATCH_STATES.CANCELLED;
@@ -63,21 +67,29 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 	};
 
 	const abort = (id?: string): void => {
+		processor.abort(id);
+	};
+	
+	const abortBatch = (id: string): void => {
+		processor.abortBatch(id);
+	};
 
-		//need access to processor queue
+	const getPending = (): PendingBatch[] => {
+		return pendingBatches.slice();
+	};
 
-		//TODO: implement abort
-
+	const clearPending = (): void => {
+		pendingBatches.splice(0);
 	};
 
 	/**
 	 * Tells the uploader to process batches that weren't auto-uploaded
 	 */
 	const upload = (): void => {
-		pendingUploads
+		pendingBatches
 			.splice(0)
-			.forEach(({ batch, processOptions }) =>
-				processor.process(batch, processOptions));
+			.forEach(({ batch, uploadOptions }: PendingBatch) =>
+				processor.process(batch, uploadOptions));
 	};
 
 	const getOptions = (): CreateOptions => {
@@ -91,7 +103,10 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 			add,
 			upload,
 			abort,
+			abortBatch,
 			getOptions,
+			getPending,
+			clearPending,
 		},
 		EVENT_NAMES,
 		{ canAddEvents: false, canRemoveEvents: false }

@@ -2,7 +2,9 @@
 
 import { BATCH_STATES, FILE_STATES } from "./consts";
 import * as logger from "./logger";
-import { isFunction } from "./utils";
+import { isFunction, isSamePropInArrays } from "./utils";
+import triggerCancellable from "./triggerCancellable";
+import triggerUpdater from "./triggerUpdater";
 
 import type {
 	UploadOptions,
@@ -21,6 +23,9 @@ import type {
 	OnProgress,
 	SendOptions,
 	SenderProgressEvent,
+	Trigger,
+	Cancellable,
+	Updater
 } from "./types";
 
 export {
@@ -29,6 +34,10 @@ export {
 
 	logger,
 	isFunction,
+	isSamePropInArrays,
+
+	triggerCancellable,
+	triggerUpdater,
 };
 
 export type {
@@ -48,4 +57,7 @@ export type {
 	OnProgress,
 	SendOptions,
 	SenderProgressEvent,
+	Trigger,
+	Cancellable,
+	Updater
 };

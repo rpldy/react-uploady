@@ -1,5 +1,5 @@
 jest.mock("@rpldy/sender", () => jest.fn());
-import { mockTrigger } from "./mocks/lifeEventsMock";
+import { mockTrigger } from "packages/tests/mocks/lifeEventsMock";
 import mockSend from "@rpldy/sender";
 import { SENDER_EVENTS } from "../consts";
 import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "../defaults";

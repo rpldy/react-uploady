@@ -1,5 +1,5 @@
 jest.mock("../processQueueNext", () => jest.fn());
-import { logger } from "packages/tests/mocks/rpldy-shared.mock";
+import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import mockProcessNext from "../processQueueNext";
 import createQueue from "../";
 

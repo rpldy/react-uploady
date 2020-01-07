@@ -47,7 +47,7 @@ describe("onRequestFinished tests", () => {
 		expect(cleanUpFinishedBatch).toHaveBeenCalledTimes(1);
 		expect(mockNext).toHaveBeenCalledTimes(1);
 		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.FILE_FINISH, queueState.state.items.u1);
-		expect(queueState.updateState).toHaveBeenCalledTimes(1);
+		expect(queueState.updateState).toHaveBeenCalledTimes(2);
 		expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();
 
 		expect(queueState.state.itemQueue).toHaveLength(0);
@@ -80,7 +80,7 @@ describe("onRequestFinished tests", () => {
 		expect(cleanUpFinishedBatch).toHaveBeenCalledTimes(1);
 		expect(mockNext).toHaveBeenCalledTimes(1);
 		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.FILE_FINISH, queueState.state.items.u1);
-		expect(queueState.updateState).toHaveBeenCalledTimes(1);
+		expect(queueState.updateState).toHaveBeenCalledTimes(2);
 		expect(queueState.state.itemQueue).toHaveLength(1);
 		expect(queueState.state.activeIds).toHaveLength(0);
 	});
@@ -132,7 +132,7 @@ describe("onRequestFinished tests", () => {
 		expect(mockNext).toHaveBeenCalledTimes(1);
 		expect(queueState.trigger).toHaveBeenNthCalledWith(1, UPLOADER_EVENTS.FILE_FINISH, queueState.state.items.u1);
 		expect(queueState.trigger).toHaveBeenNthCalledWith(2, UPLOADER_EVENTS.FILE_ERROR, queueState.state.items.u2);
-		expect(queueState.updateState).toHaveBeenCalledTimes(2);
+		expect(queueState.updateState).toHaveBeenCalledTimes(4);
 		expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();
 
 		expect(queueState.state.itemQueue).toHaveLength(0);

@@ -128,3 +128,9 @@ export type CreateOptions = UploadOptions & {
 	//the send method to use. Allows overriding the method used to send files to the server for example using a mock (default: @rupy/sender)
 	send?: ?SendMethod,
 };
+
+export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];
+
+export type Cancellable = (string, ...args: mixed[]) => Promise<boolean>;
+
+export type Updater<T> = (string, ...args: mixed[]) => Promise<?T>;

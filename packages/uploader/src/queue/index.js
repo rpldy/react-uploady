@@ -1,13 +1,14 @@
 // @flow
 
 import produce from "immer";
-import {logger} from "@rpldy/shared";
-import processQueueNext from "./processQueueNext";
-
-import type { Batch, BatchItem, CreateOptions } from "@rpldy/shared";
-import type { TriggerMethod } from "@rpldy/life-events";
-import type { Cancellable, ItemsSender } from "../types";
+import { logger } from "@rpldy/shared";
 import { SENDER_EVENTS } from "../consts";
+import processQueueNext from "./processQueueNext";
+import * as abortMethods from "./abort";
+
+import type { Cancellable, Batch, BatchItem, CreateOptions } from "@rpldy/shared";
+import type { TriggerMethod } from "@rpldy/life-events";
+import type { ItemsSender } from "../types";
 
 export default (
 	options: CreateOptions,
@@ -66,11 +67,26 @@ export default (
 		sender,
 	};
 
-	if (logger.isDebugOn()){
-		window[`${uploaderId}_queue_state`] = queueState;
+	if (logger.isDebugOn()) {
+		window[`__${uploaderId}_queue_state`] = queueState;
 	}
+
+	const abortItem = (id: string) => {
+		abortMethods.abortItem(id, queueState);
+	};
+
+	const abortBatch = (id: string) => {
+		abortMethods.abortBatch(id, queueState);
+	};
+
+	const abortAll = () => {
+		abortMethods.abortAll(queueState);
+	};
 
 	return {
 		uploadBatch,
+		abortItem,
+		abortBatch,
+		abortAll,
 	};
 };

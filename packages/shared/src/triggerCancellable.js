@@ -3,7 +3,7 @@ import type { Trigger, Cancellable } from "./types";
 
 type Outcome = Promise<boolean> | Cancellable;
 
-export default (trigger: Trigger, event?: string, ...args?: mixed[]): Outcome => {
+export default (trigger: Trigger<mixed>, event?: string, ...args?: mixed[]): Outcome => {
 	const doTrigger = async (event: string, ...args?: mixed[]): Promise<boolean> => {
 		let cancelled = false;
 		const results: Promise<any>[] = trigger(event, ...args);
@@ -15,7 +15,6 @@ export default (trigger: Trigger, event?: string, ...args?: mixed[]): Outcome =>
 
 		return cancelled;
 	};
-
 
 	return event ? doTrigger(event, ...args) : doTrigger;
 };

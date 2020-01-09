@@ -4,16 +4,10 @@ import mockProcessNext from "../processQueueNext";
 import createQueue from "../";
 
 describe("queue tests", () => {
-	// const mockProcessNext = jest.fn();
-	//
-	// jest.mock("../processQueueNext", () => mockProcessNext);
-	//
-	// const createQueue = require("../").default;
-
 	it("should initialize and add uploads", () => {
 
 		logger.isDebugOn.mockReturnValueOnce(true);
-const uploaderId = "uploader111";
+		const uploaderId = "uploader111";
 
 		let senderOnHandler;
 
@@ -55,7 +49,7 @@ const uploaderId = "uploader111";
 		expect(state2.items["u1"].loaded).toBe(1000);
 		expect(state2.items["u1"].completed).toBe(20);
 
-		expect(window[`${uploaderId}_queue_state`]).toBe(queueState);
+		expect(window[`__${uploaderId}_queue_state`]).toBe(queueState);
 
 	});
 

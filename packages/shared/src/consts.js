@@ -16,4 +16,5 @@ export const FILE_STATES = Object.freeze({
 	CANCELLED: 3,
 	FINISHED: 4,
 	ERROR: 5,
+	ABORTED: 6,
 });

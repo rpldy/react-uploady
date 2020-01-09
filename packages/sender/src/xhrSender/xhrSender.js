@@ -15,6 +15,14 @@ import type {
 
 type Headers = { [string]: string };
 
+type SendRequest = {
+	url: string,
+	count: number,
+	pXhr: Promise<XMLHttpRequest>,
+	xhr: XMLHttpRequest,
+	aborted: boolean,
+};
+
 export const SUCCESS_CODES = [200, 201, 202, 203, 204];
 
 const setHeaders = (req, options: SendOptions) => {
@@ -33,7 +41,7 @@ const setHeaders = (req, options: SendOptions) => {
 		req.setRequestHeader(name, headers[name]));
 };
 
-const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onProgress: OnProgress): { pXhr: Promise<XMLHttpRequest>, xhr: XMLHttpRequest } => {
+const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onProgress: OnProgress): SendRequest => {
 	const req = new XMLHttpRequest();
 
 	const pXhr = new Promise((resolve, reject) => {
@@ -41,6 +49,7 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
 
 		req.onerror = () => reject(req);
 		req.ontimeout = () => reject(req);
+		req.onabort = () => reject(req);
 		req.onload = () => resolve(req);
 
 		req.upload.onprogress = (e) => {
@@ -50,17 +59,17 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
 		};
 
 		req.open(options.method, url);
-
 		setHeaders(req, options);
-
 		req.withCredentials = !!options.withCredentials;
-
 		req.send(formData);
 	});
 
 	return {
+		url,
+		count: items.length,
 		pXhr,
 		xhr: req,
+		aborted: false,
 	};
 };
 
@@ -97,11 +106,11 @@ const parseResponseJson = (response: string, headers: ?Headers, options: SendOpt
 	return parsed;
 };
 
-const processResponse = async (pXhr: Promise<XMLHttpRequest>, options: SendOptions): Promise<UploadData> => {
+const processResponse = async (request: SendRequest, options: SendOptions): Promise<UploadData> => {
 	let state, response;
 
 	try {
-		const xhr = await pXhr;
+		const xhr = await request.pXhr;
 
 		logger.debugLog("uploady.sender: received upload response ", xhr);
 
@@ -115,9 +124,15 @@ const processResponse = async (pXhr: Promise<XMLHttpRequest>, options: SendOptio
 			headers: resHeaders,
 		};
 	} catch (ex) {
-		logger.debugLog("uploady.sender: upload failed: ", ex);
-		state = FILE_STATES.ERROR;
-		response = ex;
+		if (request.aborted ){
+			state = FILE_STATES.ABORTED;
+			response = "aborted";
+		}
+		else {
+			logger.debugLog("uploady.sender: upload failed: ", ex);
+			state = FILE_STATES.ERROR;
+			response = ex;
+		}
 	}
 
 	return {
@@ -126,13 +141,28 @@ const processResponse = async (pXhr: Promise<XMLHttpRequest>, options: SendOptio
 	};
 };
 
+const abortRequest = (request: SendRequest) => {
+	let abortCalled = false;
+	const { aborted, xhr } = request;
+
+	if (!aborted && xhr.readyState && xhr.readyState !== 4) {
+		logger.debugLog(`uploady.sender: cancelling request with ${request.count} items to: ${request.url}`);
+
+		xhr.abort();
+		request.aborted = true;
+		abortCalled = true;
+	}
+
+	return abortCalled;
+};
+
 export default (items: BatchItem[], url: string, options: SendOptions, onProgress: OnProgress): SendResult => {
 	logger.debugLog("uploady.sender: sending file: ", { items, url, options, });
 
 	const request = makeRequest(items, url, options, onProgress);
 
 	return {
-		request: processResponse(request.pXhr, options),
-		abort: () => request.xhr.abort(),
+		request: processResponse(request, options),
+		abort: () => abortRequest(request),
 	};
 };

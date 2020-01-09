@@ -38,9 +38,9 @@ export const WithEventListeners = () => {
 			console.log(`>>>>> WithEventListeners - BATCH START - ${batch.id}`),
 		[UPLOADER_EVENTS.BATCH_FINISH]: (batch) =>
 			console.log(`>>>>> WithEventListeners - BATCH FINISH - ${batch.id}`),
-		[UPLOADER_EVENTS.FILE_START]: (file) =>
+		[UPLOADER_EVENTS.ITEM_START]: (file) =>
 			console.log(`>>>>> WithEventListeners - FILE START - ${file.id}`),
-		[UPLOADER_EVENTS.FILE_FINISH]: (file) =>
+		[UPLOADER_EVENTS.ITEM_FINISH]: (file) =>
 			console.log(`>>>>> WithEventListeners - FILE FINISH - ${file.id}`),
 	}), []);
 

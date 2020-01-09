@@ -48,6 +48,7 @@ const createRequest = (options: MandatoryMockOptions) => {
 		}
 
 		clearTimeouts();
+		return true;
 	};
 
 	const onProgress = (cb) => {

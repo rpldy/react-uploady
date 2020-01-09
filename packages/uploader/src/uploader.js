@@ -69,7 +69,7 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 	const abort = (id?: string): void => {
 		processor.abort(id);
 	};
-	
+
 	const abortBatch = (id: string): void => {
 		processor.abortBatch(id);
 	};

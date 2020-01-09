@@ -11,14 +11,14 @@ const useBatchStartListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ST
 const useBatchFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINISH);
 const useBatchCancelledListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_CANCEL);
 
-const useFileStartListener = generateUploaderEventHook(UPLOADER_EVENTS.FILE_START);
-const useFileFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.FILE_FINISH);
+const useFileStartListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_START);
+const useFileFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_FINISH);
 const useFileProgressListener = generateUploaderEventHookWithState(
-	UPLOADER_EVENTS.FILE_PROGRESS,
+	UPLOADER_EVENTS.ITEM_PROGRESS,
 	(item: BatchItem) => ({ ...item }));
 
-const useFileCancelListener = generateUploaderEventHook(UPLOADER_EVENTS.FILE_CANCEL);
-const useFileErrorListener = generateUploaderEventHook(UPLOADER_EVENTS.FILE_ERROR);
+const useFileCancelListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_CANCEL);
+const useFileErrorListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_ERROR);
 
 export {
 	useBatchStartListener,

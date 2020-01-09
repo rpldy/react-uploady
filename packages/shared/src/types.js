@@ -32,7 +32,7 @@ export type UploadData = {
 
 export type SendResult = {
 	request: Promise<UploadData>,
-	abort: () => void
+	abort: () => boolean,
 };
 
 export type SenderProgressEvent = { total: number, loaded: number };
@@ -52,29 +52,25 @@ export type SendOptions = {
 	formatGroupParamName: ?FormatParamGroupNameMethod,
 };
 
-type BatchUrl = {|
+type BatchItemBase = {|
 	id: string,
 	batchId: string,
 	state: FileState,
 	uploadResponse?: any,
-	abort: () => void,
+	abort: () => boolean,
 	//percentage of upload completed
 	completed: number,
 	//bytes uploaded
 	loaded: number,
+|};
+
+type BatchUrl = {|
+	...BatchItemBase,
 	url: string,
 |};
 
 type BatchFile = {|
-	id: string,
-	batchId: string,
-	state: FileState,
-	uploadResponse?: any,
-	abort: () => void,
-	//percentage of upload completed
-	completed: number,
-	//bytes uploaded
-	loaded: number,
+	...BatchItemBase,
 	file: Object,
 |};
 

@@ -59,6 +59,7 @@
     "flow-copy-source": "^2.0.9",
     "flow-mono-cli": "^1.5.0",
     "jest": "^24.9.0",
+    "jest-enzyme": "^7.1.2",
     "jest-styled-components": "^6.3.3",
     "lerna": "^3.18.4",
     "rimraf": "^3.0.0",

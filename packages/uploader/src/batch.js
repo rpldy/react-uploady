@@ -35,6 +35,7 @@ const createBatchItem = (f: UploadInfo, batchId: string): BatchItem => {
 		abort: noOp,
 		completed: 0,
 		loaded: 0,
+		aborted: false,
 	};
 
 	if (isString(f)) {

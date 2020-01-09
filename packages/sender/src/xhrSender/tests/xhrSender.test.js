@@ -14,6 +14,9 @@ describe("xhrSender tests", () => {
 				open: jest.fn(),
 				send: jest.fn(),
 				getAllResponseHeaders: jest.fn(),
+				abort: jest.fn(() => {
+					xhr.onabort();
+				}),
 			};
 
 			fn(xhr);
@@ -50,7 +53,7 @@ describe("xhrSender tests", () => {
 x-header: test`);
 
 		expect(mockPrepareFormData).toHaveBeenCalledWith(items, options);
-		
+
 		if (options.headers) {
 			expect(testXhr.setRequestHeader).toHaveBeenCalledWith("foo", "bar");
 		}
@@ -101,6 +104,31 @@ x-header: test`);
 
 			test.testXhr.upload.onprogress({});
 			expect(test.mockProgress).toHaveBeenCalledTimes(1);
+		});
+	});
+
+	describe("abort tests", () => {
+		it("should abort running upload", (done) => {
+
+			const test = doTest((data) => {
+				expect(test.testXhr.abort).toHaveBeenCalled();
+				expect(data.state).toBe(FILE_STATES.ABORTED);
+				expect(data.response).toBe("aborted");
+
+				done();
+			}, true);
+
+			test.testXhr.readyState = 1;
+			test.sendResult.abort();
+		});
+
+		it("should not abort already finished upload", () => {
+			const test = doTest();
+
+			test.testXhr.readyState = 4;
+			test.sendResult.abort();
+
+			expect(test.testXhr.abort).not.toHaveBeenCalled();
 		});
 	});
 

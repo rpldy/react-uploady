@@ -5,12 +5,12 @@ import {
 	triggerUpdater as mockTriggerUpdater
 } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import getQueueState from "./mocks/getQueueState.mock";
-import processBatchItems from "../processBatchItems";
+import processBatchItems, { getItemAbort } from "../processBatchItems";
 import mockProcessFinishedRequest from "../processFinishedRequest";
 import { UPLOADER_EVENTS } from "../../consts";
 
 describe("processBatchItems tests", () => {
-	const mockNext = jest.fn(); //()=>Promise.resolve());
+	const mockNext = jest.fn();
 
 	beforeEach(() => {
 		clearJestMocks(
@@ -27,11 +27,11 @@ describe("processBatchItems tests", () => {
 	};
 
 	const batchOptions = {};
-	
-	const getMockStateData = ()=>({
+
+	const getMockStateData = () => ({
 		items: {
 			"u1": { id: "u1", batchId: "b1" },
-			"u2": { id: "u2", batchId: "b2"},
+			"u2": { id: "u2", batchId: "b2" },
 		},
 		batches: {
 			"b1": {
@@ -58,7 +58,7 @@ describe("processBatchItems tests", () => {
 
 		expect(queueState.state.activeIds).toEqual(["u1"]);
 
-		expect(queueState.state.items.u1.abort).toBe(sendResult.abort);
+		expect(queueState.state.items.u1.abort).toBeInstanceOf(Function);
 	});
 
 	it("should send allowed items", async () => {
@@ -82,8 +82,8 @@ describe("processBatchItems tests", () => {
 
 		expect(queueState.state.activeIds).toEqual(["u1", "u2"]);
 
-		expect(queueState.state.items.u1.abort).toBe(sendResult.abort);
-		expect(queueState.state.items.u2.abort).toBe(sendResult.abort);
+		expect(queueState.state.items.u1.abort).toBeInstanceOf(Function);
+		expect(queueState.state.items.u2.abort).toBeInstanceOf(Function);
 	});
 
 	it("should throw in case update returns different array length", async () => {
@@ -99,7 +99,7 @@ describe("processBatchItems tests", () => {
 		expect(processBatchItems(queueState, ["u1", "u2"], mockNext)).rejects
 			.toThrow("REQUEST_PRE_SEND event handlers must return same items with same ids");
 	});
-	
+
 	it("should throw in case update returns different item ids", async () => {
 		const queueState = getQueueState(getMockStateData());
 
@@ -109,11 +109,11 @@ describe("processBatchItems tests", () => {
 
 		mockUtils.isSamePropInArrays.mockReturnValueOnce(false);
 
-		mockTriggerUpdater.mockResolvedValueOnce([{ id: "u1"}, {id: "u2"}]);
+		mockTriggerUpdater.mockResolvedValueOnce([{ id: "u1" }, { id: "u2" }]);
 
 		expect(processBatchItems(queueState, ["u1", "u2"], mockNext)).rejects
 			.toThrow("REQUEST_PRE_SEND event handlers must return same items with same ids");
-	}); 
+	});
 
 	it("should update items before sending", async () => {
 
@@ -127,7 +127,11 @@ describe("processBatchItems tests", () => {
 
 		mockUtils.isSamePropInArrays.mockReturnValueOnce(true);
 
-		const newItems = [{ id: "u1", batchId: "b1", newProp: 111}, {id: "u2", batchId: "b1", foo: "bar"}];
+		const newItems = [{ id: "u1", batchId: "b1", newProp: 111 }, {
+			id: "u2",
+			batchId: "b1",
+			foo: "bar"
+		}];
 
 		mockTriggerUpdater.mockResolvedValueOnce(newItems);
 
@@ -195,8 +199,36 @@ describe("processBatchItems tests", () => {
 
 		expect(queueState.state.activeIds).toEqual(["u1"]);
 
-		expect(queueState.state.items.u1.abort).toBe(sendResult.abort);
+		expect(queueState.state.items.u1.abort).toBeInstanceOf(Function);
 		expect(queueState.state.items.u2.abort).toBeUndefined();
 	});
 
+	describe("getItemAbort tests", () => {
+		const xhrAbort = jest.fn(() => true);
+
+		beforeEach(() => {
+			clearJestMocks(xhrAbort);
+		});
+
+		it("should not call abort for item not in progress", () => {
+			const abort = getItemAbort({ state: FILE_STATES.ABORTED });
+			const result = abort();
+			expect(result).toBe(false);
+		});
+
+		it("should call abort for added item", () => {
+			const abort = getItemAbort({ state: FILE_STATES.ADDED }, xhrAbort);
+			const result = abort();
+			expect(result).toBe(true);
+			expect(xhrAbort).not.toHaveBeenCalled();
+		});
+
+		it("should call xhr abort for uploading item", () => {
+			const abort = getItemAbort({ state: FILE_STATES.UPLOADING }, xhrAbort);
+			const result = abort();
+			expect(result).toBe(true);
+			expect(xhrAbort).toHaveBeenCalled();
+		});
+
+	});
 });

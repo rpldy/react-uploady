@@ -36,7 +36,10 @@ module.exports = {
 		"!<rootDir>/packages/**/*.mock.*"
 	],
 	testPathIgnorePatterns: ["<rootDir>/packages/(?:.+?)/lib/"],
-	"setupFilesAfterEnv": ["<rootDir>/jestSetup.js"],
+	"setupFilesAfterEnv": [
+		"./node_modules/jest-enzyme/lib/index.js",
+		"<rootDir>/jestSetup.js"
+	],
 	// "testEnvironment": "<rootDir>/test/jsdomEnv.js",
 	// "testURL": "https://www.somthing.com/test.html"
 };

@@ -9,10 +9,14 @@ const UploadButton = (props: UploadButtonProps) => {
 	const context = assertContext(useContext(UploadyContext));
 
 	const { showFileUpload } = context;
+	const { id, className, text, children } = props;
 
 	return <button
-		id={props.id} className={props.className}
-		onClick={showFileUpload}>Upload</button>;
+		id={id}
+		className={className}
+		onClick={showFileUpload}>
+		{children ? children : (text || "Upload")}
+	</button>;
 };
 
 export default UploadButton;

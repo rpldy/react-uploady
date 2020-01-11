@@ -1,4 +1,4 @@
-import { FILE_STATES } from "../../consts";
+import { FILE_STATES, BATCH_STATES } from "../../consts";
 
 const logger = {
 	isDebugOn: jest.fn(),
@@ -12,6 +12,7 @@ const utils = jest.genMockFromModule("../../utils");
 
 const sharedMock = {
 	FILE_STATES,
+	BATCH_STATES,
 
 	logger,
 	triggerCancellable,
@@ -24,6 +25,7 @@ jest.doMock("@rpldy/shared", () => sharedMock);
 
 export {
 	FILE_STATES,
+	BATCH_STATES,
 
 	logger,
 	triggerCancellable,

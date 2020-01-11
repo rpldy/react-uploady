@@ -1,25 +1,33 @@
 jest.mock("../processQueueNext", () => jest.fn());
+jest.mock("../abort", ()=>({
+	abortAll: jest.fn(),
+	abortItem: jest.fn(),
+	abortBatch: jest.fn(),
+}));
 import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import mockProcessNext from "../processQueueNext";
 import createQueue from "../";
+import abortMethods from "../abort";
 
 describe("queue tests", () => {
+
+	const uploaderId = "uploader111";
+
+	let senderOnHandler;
+
+	const mockSenderOn = (name, handler) => {
+		senderOnHandler = handler;
+	};
+
+	const trigger = () => {
+		},
+		cancellable = () => {
+		},
+		sender = { on: mockSenderOn };
+
 	it("should initialize and add uploads", () => {
 
 		logger.isDebugOn.mockReturnValueOnce(true);
-		const uploaderId = "uploader111";
-
-		let senderOnHandler;
-
-		const mockSenderOn = (name, handler) => {
-			senderOnHandler = handler;
-		};
-
-		const trigger = () => {
-			},
-			cancellable = () => {
-			},
-			sender = { on: mockSenderOn };
 
 		const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
@@ -50,8 +58,33 @@ describe("queue tests", () => {
 		expect(state2.items["u1"].completed).toBe(20);
 
 		expect(window[`__${uploaderId}_queue_state`]).toBe(queueState);
-
 	});
 
+	it("should update state", () => {
+
+		const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
+
+		expect(queue.getState().currentBatch).toBe(null);
+
+		queue.updateState((state)=>{
+			state.currentBatch = "b1";
+		});
+
+		expect(queue.getState().currentBatch).toBe("b1");
+	});
+
+	it("should call abort method", () => {
+
+		const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
+
+		queue.abortItem("u1");
+		expect(abortMethods.abortItem).toHaveBeenCalledWith(expect.any(Object), "u1");
+
+		queue.abortAll();
+		expect(abortMethods.abortAll).toHaveBeenCalledWith(expect.any(Object));
+
+		queue.abortBatch("b1");
+		expect(abortMethods.abortBatch).toHaveBeenCalledWith(expect.any(Object), "b1");
+	});
 
 });

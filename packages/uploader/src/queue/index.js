@@ -9,6 +9,7 @@ import * as abortMethods from "./abort";
 import type { Cancellable, Batch, BatchItem, CreateOptions } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { ItemsSender } from "../types";
+import type { State } from "./types";
 
 export default (
 	options: CreateOptions,
@@ -28,7 +29,7 @@ export default (
 	sender.on(SENDER_EVENTS.PROGRESS,
 		(item: BatchItem, completed: number, loaded: number) => {
 			if (state.items[item.id]) {
-				updateState((state) => {
+				updateState((state: State) => {
 					const stateItem = state.items[item.id];
 					stateItem.loaded = loaded;
 					stateItem.completed = completed;
@@ -36,7 +37,7 @@ export default (
 			}
 		});
 
-	const updateState = (updater) => {
+	const updateState = (updater: (State) => void) => {
 		state = produce(state, updater);
 	};
 
@@ -84,6 +85,8 @@ export default (
 	};
 
 	return {
+		updateState,
+		getState: queueState.getState,
 		uploadBatch,
 		abortItem,
 		abortBatch,

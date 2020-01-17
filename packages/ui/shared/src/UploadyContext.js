@@ -22,6 +22,14 @@ const createContextApi = (uploader: UploaderType, inputRef: { current: ?HTMLInpu
 		uploader.add(files, addOptions);
 	};
 
+	const abort = (itemId?: string) => {
+		uploader.abort(itemId);
+	};
+
+	const abortBatch = (batchId: string) => {
+		uploader.abortBatch(batchId);
+	};
+
 	const on = (name: any, cb: EventCallback) => {
 		return uploader.on(name, cb);
 	};
@@ -39,6 +47,8 @@ const createContextApi = (uploader: UploaderType, inputRef: { current: ?HTMLInpu
 		getInputField,
 		showFileUpload,
 		upload,
+		abort,
+		abortBatch,
 		on,
 		once,
 		off,

@@ -10,15 +10,16 @@ app.use(cors());
 
 app.post("/upload", function (req, res) {
 
+	let timeout = req.query.long ? 10000 : 1000;
 
-	console.log("MOCK SERVER - RECEIVED UPLOAD REQ", req.files);
+	console.log("MOCK SERVER - RECEIVED UPLOAD REQ - response in: " + timeout, req.files);
 
 	setTimeout(() => {
 		res.status(201).json({ success: true });
-	}, 1000);
+	}, timeout);
 
 });
 
 app.listen(port, function () {
-	console.log("server started: ", port); // eslint-disable-line
+	console.log("server started on PORT: ", port); // eslint-disable-line
 });

@@ -1,8 +1,6 @@
 jest.mock("../processBatchItems", () => jest.fn());
-
 import "./mocks/batchHelpers.mock";
 import getQueueState from "./mocks/getQueueState.mock";
-import processQueueNext, { getNextIdGroup } from "../processQueueNext";
 import mockProcessBatchItems from "../processBatchItems";
 import {
 	getBatchDataFromItemId,
@@ -10,9 +8,15 @@ import {
 	isNewBatchStarting,
 	loadNewBatchForItem,
 	cancelBatchForItem,
+	getIsItemBatchReady,
 } from "../batchHelpers";
+import processQueueNext, { getNextIdGroup, findNextItemIndex } from "../processQueueNext";
 
 describe("processQueueNext tests", () => {
+
+	beforeAll(()=>{
+		getIsItemBatchReady.mockReturnValue(true);
+	});
 
 	beforeEach(() => {
 		clearJestMocks(
@@ -21,7 +25,8 @@ describe("processQueueNext tests", () => {
 			isItemBelongsToBatch,
 			isNewBatchStarting,
 			loadNewBatchForItem,
-			cancelBatchForItem
+			cancelBatchForItem,
+			getIsItemBatchReady
 		)
 	});
 
@@ -249,6 +254,30 @@ describe("processQueueNext tests", () => {
 		});
 	});
 
+	describe("findNextNotActiveItemIndex tests", () => {
+
+		it("should skip non-ready batches", () => {
+
+			getIsItemBatchReady
+				.mockReturnValueOnce(false)
+				.mockReturnValueOnce(false)
+				.mockReturnValueOnce(false)
+				.mockReturnValueOnce(true);
+
+			const queueState = getQueueState({
+				currentBatch: "b1",
+				batches: {
+				},
+				activeIds: ["u1"],
+				itemQueue: ["u1", "u2", "u3", "u4", "u5"],
+			});
+
+			const nextId = findNextItemIndex(queueState);
+
+			expect(nextId).toBe(4);
+		});
+	});
+
 	it("should do nothing if no next ids", async () => {
 
 		const queueState = getQueueState();
@@ -398,7 +427,7 @@ describe("processQueueNext tests", () => {
 		await processQueueNext(queueState);
 
 		expect(cancelBatchForItem)
-			.toHaveBeenCalledWith(queueState,"u2");
+			.toHaveBeenCalledWith(queueState, "u2");
 
 		expect(mockProcessBatchItems).not.toHaveBeenCalled();
 	});

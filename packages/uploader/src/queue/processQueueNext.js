@@ -6,6 +6,7 @@ import { logger } from "@rpldy/shared";
 import processBatchItems from "./processBatchItems";
 import {
 	getBatchDataFromItemId,
+	getIsItemBatchReady,
 	isNewBatchStarting,
 	cancelBatchForItem,
 	loadNewBatchForItem,
@@ -20,12 +21,14 @@ const isItemInActiveRequest = (queue: QueueState, itemId: string): boolean => {
 		.flat().indexOf(itemId);
 };
 
-const findNextNotActiveItemIndex = (queue: QueueState): number => {
+export const findNextItemIndex = (queue: QueueState): number => {
 	const itemQueue = queue.getState().itemQueue;
 	let index = 0,
 		nextId = itemQueue[index];
 
-	while (nextId && isItemInActiveRequest(queue, nextId)) {
+	//find item that isnt already in an active request and belongs to a "ready" batch
+	while (nextId && (isItemInActiveRequest(queue, nextId) ||
+		!getIsItemBatchReady(queue, nextId))) {
 		index += 1;
 		nextId = itemQueue[index];
 	}
@@ -35,13 +38,14 @@ const findNextNotActiveItemIndex = (queue: QueueState): number => {
 
 export const getNextIdGroup = (queue: QueueState): ?string[] => {
 	const itemQueue = queue.getState().itemQueue;
-	const nextItemIndex = findNextNotActiveItemIndex(queue);
+	const nextItemIndex = findNextItemIndex(queue);
 	let nextId = itemQueue[nextItemIndex],
 		nextGroup;
 
 	if (nextId) {
-		const batchData = getBatchDataFromItemId(queue, nextId),
-			batchId = batchData.batch.id,
+		const batchData = getBatchDataFromItemId(queue, nextId);
+
+		const batchId = batchData.batch.id,
 			groupMax = batchData.batchOptions.maxGroupSize || 0;
 
 		if (batchData.batchOptions.grouped && groupMax > 1) {
@@ -58,6 +62,7 @@ export const getNextIdGroup = (queue: QueueState): ?string[] => {
 		} else {
 			nextGroup = [nextId];
 		}
+
 	}
 
 	return nextGroup;

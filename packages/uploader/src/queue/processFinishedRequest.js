@@ -8,10 +8,12 @@ import type { UploadData } from "@rpldy/shared";
 import type { ProcessNextMethod, QueueState } from "./types";
 
 const FILE_STATE_TO_EVENT_MAP = {
+	[FILE_STATES.ADDED]: UPLOADER_EVENTS.ITEM_START,
 	[FILE_STATES.FINISHED]: UPLOADER_EVENTS.ITEM_FINISH,
 	[FILE_STATES.ERROR]: UPLOADER_EVENTS.ITEM_ERROR,
 	[FILE_STATES.CANCELLED]: UPLOADER_EVENTS.ITEM_CANCEL,
 	[FILE_STATES.ABORTED]: UPLOADER_EVENTS.ITEM_ABORT,
+	[FILE_STATES.UPLOADING]: UPLOADER_EVENTS.ITEM_PROGRESS,
 };
 
 type FinishData = { id: string, info: UploadData };
@@ -30,8 +32,13 @@ export default (queue: QueueState, finishedData: FinishData[], next: ProcessNext
 				item.uploadResponse = info.response;
 			});
 
-			const item = state.items[id];
-			queue.trigger(FILE_STATE_TO_EVENT_MAP[item.state], item);
+			const item = queue.getState().items[id];
+
+			const event = FILE_STATE_TO_EVENT_MAP[item.state];
+
+			if (event) {
+				queue.trigger(event, item);
+			}
 		}
 
 		const index = state.itemQueue.indexOf(id);

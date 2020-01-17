@@ -1,7 +1,11 @@
+jest.mock("../batchHelpers", () => ({
+	triggerUploaderBatchEvent: jest.fn(),
+}));
 import getQueueState from "./mocks/getQueueState.mock";
+import { BATCH_STATES } from "@rpldy/shared";
 import * as abortMethods from "../abort";
 import { UPLOADER_EVENTS } from "../../consts";
-import { BATCH_STATES } from "@rpldy/shared";
+import { triggerUploaderBatchEvent } from "../batchHelpers";
 
 describe("abort tests", () => {
 	const mockItemAbort = jest.fn(() => true);
@@ -51,9 +55,9 @@ describe("abort tests", () => {
 		const getBatch = (state) => ({
 			state,
 			items: [
-				{ abort: mockItemAbort, },
-				{ abort: mockItemAbort, },
-				{ abort: mockItemAbort, }
+				{ id: "u1", abort: mockItemAbort, },
+				{ id: "u2", abort: mockItemAbort, },
+				{ id: "u3", abort: mockItemAbort, }
 			],
 		});
 
@@ -65,12 +69,17 @@ describe("abort tests", () => {
 					"b1": {
 						batch
 					}
+				},
+				items: {
+					"u1": batch.items[0],
+					"u2": batch.items[1],
+					"u3": batch.items[2],
 				}
 			});
 
 			abortMethods.abortBatch(queue, "b1");
 
-			expect(queue.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_ABORT, batch);
+			expect(triggerUploaderBatchEvent).toHaveBeenCalledWith(queue, batch, UPLOADER_EVENTS.BATCH_ABORT);
 			expect(mockItemAbort).toHaveBeenCalledTimes(3);
 		});
 

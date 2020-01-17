@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, useMemo } from "react";
+import React, { Component, useMemo, useState, useContext } from "react";
 import UploadButton from "./src";
 import Uploady, {
 	UploadyContext,
@@ -8,14 +8,14 @@ import Uploady, {
 
 	UPLOADER_EVENTS,
 } from "@rpldy/uploady";
-
-// import readme from '../README.md';
-
 import {
 	withKnobs,
 	useStoryUploadySetup,
 	StoryUploadProgress,
 } from "../../../story-helpers";
+
+// import readme from '../README.md';
+
 
 export const Simple = () => {
 	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
@@ -34,14 +34,18 @@ export const WithEventListeners = () => {
 	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
 	const listeners = useMemo(() => ({
-		[UPLOADER_EVENTS.BATCH_START]: (batch) =>
-			console.log(`>>>>> WithEventListeners - BATCH START - ${batch.id}`),
-		[UPLOADER_EVENTS.BATCH_FINISH]: (batch) =>
-			console.log(`>>>>> WithEventListeners - BATCH FINISH - ${batch.id}`),
-		[UPLOADER_EVENTS.ITEM_START]: (file) =>
-			console.log(`>>>>> WithEventListeners - FILE START - ${file.id}`),
-		[UPLOADER_EVENTS.ITEM_FINISH]: (file) =>
-			console.log(`>>>>> WithEventListeners - FILE FINISH - ${file.id}`),
+		[UPLOADER_EVENTS.BATCH_START]: (batch) => {
+			console.log(`>>>>> WithEventListeners - BATCH START - ${batch.id}`)
+		},
+		[UPLOADER_EVENTS.BATCH_FINISH]: (batch) => {
+			console.log(`>>>>> WithEventListeners - BATCH FINISH - ${batch.id}`, batch)
+		},
+		[UPLOADER_EVENTS.ITEM_START]: (file) => {
+			console.log(`>>>>> WithEventListeners - FILE START - ${file.id}`)
+		},
+		[UPLOADER_EVENTS.ITEM_FINISH]: (file) => {
+			console.log(`>>>>> WithEventListeners - FILE FINISH - ${file.id}`, file)
+		},
 	}), []);
 
 	return <Uploady
@@ -137,6 +141,38 @@ export const WithClass = () => {
 		enhancer={enhancer}>
 		<ClassUsingCustomButton/>
 	</Uploady>;
+};
+
+const AbortButton = () => {
+	const context = useContext(UploadyContext);
+	const [uploadingId, setUploading] = useState(null);
+
+	useBatchStartListener((batch) => {
+		setUploading(batch.id);
+	});
+
+	return context && uploadingId ? <button onClick={() => {
+		context.abortBatch(uploadingId);
+	}}>Abort</button> : null;
+};
+
+export const Abort = () => {
+
+	const { enhancer, destination, multiple } = useStoryUploadySetup();
+
+	return <div>
+		<p>Enable the "local destination" with "long local request" to be able to try aborting a
+			running request</p>
+		<Uploady
+			debug
+			multiple={multiple}
+			destination={destination}
+			enhancer={enhancer}>
+
+			<UploadButton/>
+			<AbortButton/>
+		</Uploady>
+	</div>
 };
 
 export default {

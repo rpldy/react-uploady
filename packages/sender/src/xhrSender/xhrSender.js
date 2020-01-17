@@ -99,7 +99,7 @@ const parseResponseJson = (response: string, headers: ?Headers, options: SendOpt
 	if (options.forceJsonResponse || (ct && ~ct.indexOf("json"))) {
 		try {
 			parsed = JSON.parse(response);
-		} catch (e) { //silent fail
+		} catch { //silent fail
 		}
 	}
 

@@ -14,7 +14,8 @@
     "flow:mono": "flow-mono create-symlinks ./.flowconfig",
     "flow": "yarn flow:mono; flow --show-all-errors",
     "flow:copy": "lerna exec --parallel -- yarn flow:copy",
-    "lint": "eslint ./packages"
+    "lint": "eslint ./packages",
+    "server": "cd server; PORT=4000 node index.js"
   },
   "private": true,
   "workspaces": [
@@ -30,6 +31,7 @@
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.7.2",
     "@babel/plugin-proposal-function-bind": "^7.2.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.7.5",
     "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-flow": "^7.0.0",

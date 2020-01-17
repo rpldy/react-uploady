@@ -1,6 +1,8 @@
 import { UPLOADER_EVENTS } from "../../consts";
 import getQueueState from "./mocks/getQueueState.mock";
 import * as batchHelpers from "../batchHelpers";
+import { BATCH_STATES } from "@rpldy/shared";
+import { getIsItemBatchReady } from "../batchHelpers";
 
 describe("batchHelpers tests", () => {
 
@@ -49,10 +51,18 @@ describe("batchHelpers tests", () => {
 
 		it("should finalize batch if no more uploads in queue", () => {
 
-			const batch = {};
+			const batch = {
+				id: "b1",
+				items: [{ id: "u1" }, { id: "u2" }]
+			};
 
 			const queueState = getQueueState({
 				currentBatch: "b1",
+				items: {
+					"u1": {},
+					"u2": {},
+					"u3": {},
+				},
 				batches: {
 					b1: { batch },
 				},
@@ -60,14 +70,23 @@ describe("batchHelpers tests", () => {
 
 			batchHelpers.cleanUpFinishedBatch(queueState);
 
-			expect(queueState.updateState).toHaveBeenCalledTimes(1);
-			expect(queueState.state.batches.b1).toBeUndefined();
-			expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, batch);
+			const updatedState = queueState.getState();
+
+			expect(queueState.updateState).toHaveBeenCalledTimes(2);
+			expect(updatedState.batches.b1).toBeUndefined();
+			expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, {
+				...batch,
+				items: [{}, {}]
+			});
+			expect(updatedState.items.u1).toBeUndefined();
+			expect(updatedState.items.u2).toBeUndefined();
 		});
 
 		it("should finalize batch if next upload is from different batch", () => {
 
-			const batch = {};
+			const batch = {
+				items: [{ id: "u1" }]
+			};
 
 			const queueState = getQueueState({
 				currentBatch: "b1",
@@ -78,6 +97,7 @@ describe("batchHelpers tests", () => {
 					}
 				},
 				items: {
+					"u1": { batchId: "b1" },
 					"u2": { batchId: "b2" }
 				},
 				itemQueue: ["u2"]
@@ -85,9 +105,16 @@ describe("batchHelpers tests", () => {
 
 			batchHelpers.cleanUpFinishedBatch(queueState);
 
-			expect(queueState.updateState).toHaveBeenCalledTimes(1);
-			expect(queueState.state.batches.b1).toBeUndefined();
-			expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, batch);
+			const updatedState = queueState.getState();
+
+			expect(queueState.updateState).toHaveBeenCalledTimes(2);
+			expect(updatedState.batches.b1).toBeUndefined();
+			expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, {
+				...batch,
+				items: [{ batchId: "b1" }]
+			});
+			expect(updatedState.items.u1).toBeUndefined();
+			expect(updatedState.items.u2).toBeDefined();
 		});
 
 		it("shouldn't finalize batch if it has more uploads", () => {
@@ -136,7 +163,7 @@ describe("batchHelpers tests", () => {
 			expect(queueState.cancellable).toHaveBeenCalledWith(
 				UPLOADER_EVENTS.BATCH_START, queueState.state.batches.b1.batch);
 
-			expect(queueState.state.currentBatch).toBe("b1");
+			expect(queueState.getState().currentBatch).toBe("b1");
 		});
 
 		it("should cancel batch", async () => {
@@ -206,7 +233,10 @@ describe("batchHelpers tests", () => {
 			const items = ids.reduce((res, id) =>
 				({ ...res, [id]: { id, batchId: "b1" } }), {});
 
-			const cancelledBatch = { id: "b1", items: Object.values(items) };
+			const cancelledBatch = {
+				id: "b1",
+				items: Object.values(items).map((i) => ({ ...i, changed: true }))
+			};
 
 			const queueState = getQueueState({
 				items: {
@@ -224,15 +254,20 @@ describe("batchHelpers tests", () => {
 
 			expect(queueState.trigger).toHaveBeenCalledWith(
 				UPLOADER_EVENTS.BATCH_CANCEL,
-				cancelledBatch,
+				{
+					...cancelledBatch,
+					state: BATCH_STATES.CANCELLED,
+					items: Object.values(items),
+				},
 			);
 
-			expect(queueState.state.batches.b1).toBeUndefined();
-			expect(queueState.state.batches.b2).toBeDefined();
+			const updatedState = queueState.getState();
+			expect(updatedState.batches.b1).toBeUndefined();
+			expect(updatedState.batches.b2).toBeDefined();
 
-			expect(queueState.state.itemQueue).toEqual(["u4"]);
+			expect(updatedState.itemQueue).toEqual(["u4"]);
 
-			expect(queueState.state.items).toEqual({
+			expect(updatedState.items).toEqual({
 				"u4": { id: "u4", batchId: "b2" },
 			});
 		});
@@ -272,7 +307,7 @@ describe("batchHelpers tests", () => {
 				},
 				batches: {
 					b1: { batch: {} },
-					b2: { batch, batchOptions}
+					b2: { batch, batchOptions }
 				}
 			});
 
@@ -300,7 +335,58 @@ describe("batchHelpers tests", () => {
 
 			expect(result).toBe(expected);
 		});
+	});
 
+	describe("triggerUploaderBatchEvent tests", () => {
+
+		it("should trigger with state items", () => {
+
+			const batch = { id: "b1", items: [{ id: "u1" }, { id: "u2" }] };
+
+			const queueState = getQueueState({
+				batches: {
+					b1: batch,
+				},
+				items: {
+					u1: { test: 1 },
+					u2: { test: 2 },
+					u3: {},
+				}
+			});
+
+			batchHelpers.triggerUploaderBatchEvent(queueState, batch, UPLOADER_EVENTS.BATCH_FINISH);
+
+			expect(queueState.trigger)
+				.toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, {
+					...batch,
+					items: [{ test: 1 }, { test: 2 }]
+				})
+		});
+	});
+
+	describe("getIsItemBatchReady tests", () => {
+
+		it.each([
+				[BATCH_STATES.ADDED, true],
+				[BATCH_STATES.PROCESSING, true],
+				[BATCH_STATES.UPLOADING, true],
+				[BATCH_STATES.FINISHED, false],
+				[BATCH_STATES.CANCELLED, false],
+			]
+		)("for batch state: %s should return: %s", (state, result) => {
+			const queueState = getQueueState({
+				batches: {
+					b1: {
+						batch: {
+							state
+						}
+					}
+				},
+				items: { "u1": { batchId: "b1" } }
+			});
+
+			expect(getIsItemBatchReady(queueState, "u1")).toBe(result);
+		});
 	});
 });
 

@@ -84,6 +84,8 @@ const Uploady = (props: UploadyProps) => {
 
 	//TODO !!!!!!!!! move rendering of portal and input to memoized component !!!!!!!
 
+	console.log("######### !!!!!!!!!!!!!!! RENDERING UPLOADY !!!!!!!!!!!!!!!! #########")
+
 	return <UploadyContext.Provider value={api}>
 		<FileInputFieldPortal container={inputFieldContainer}>
 			<input

@@ -5,7 +5,8 @@ const mockIsNewBatchStarting = jest.fn(),
 	mockGetBatchFromItemId = jest.fn(),
 	mockIsItemBelongsToBatch = jest.fn(),
 	mockGetBatchDataFromItemId = jest.fn(),
-	mockCleanUpFinishedBatch = jest.fn();
+	mockCleanUpFinishedBatch = jest.fn(),
+	mockGetIsItemBatchReady = jest.fn();
 
 const helpersMock = {
 	isNewBatchStarting: mockIsNewBatchStarting,
@@ -16,6 +17,7 @@ const helpersMock = {
 	isItemBelongsToBatch: mockIsItemBelongsToBatch,
 	getBatchDataFromItemId: mockGetBatchDataFromItemId,
 	cleanUpFinishedBatch: mockCleanUpFinishedBatch,
+	getIsItemBatchReady: mockGetIsItemBatchReady,
 };
 
 jest.doMock("../../batchHelpers", () => helpersMock);

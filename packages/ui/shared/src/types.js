@@ -13,4 +13,6 @@ export type UploadyContextType = {
 	on: OnAndOnceMethod,
 	once: OnAndOnceMethod,
 	off: OffMethod,
+	abort: (id?: string) => void,
+	abortBatch: (id: string) => void,
 };

@@ -26,7 +26,7 @@ export default (queue: QueueState, finishedData: FinishData[], next: ProcessNext
 		logger.debugLog("uploady.uploader.processor.queue: request finished - ", { id, info });
 
 		if (state.items[id]) {
-			queue.updateState((state)=>{
+			queue.updateState((state) => {
 				const item = state.items[id];
 				item.state = info.state;
 				item.uploadResponse = info.response;
@@ -34,11 +34,7 @@ export default (queue: QueueState, finishedData: FinishData[], next: ProcessNext
 
 			const item = queue.getState().items[id];
 
-			const event = FILE_STATE_TO_EVENT_MAP[item.state];
-
-			if (event) {
-				queue.trigger(event, item);
-			}
+			queue.trigger(FILE_STATE_TO_EVENT_MAP[item.state], item);
 		}
 
 		const index = state.itemQueue.indexOf(id);

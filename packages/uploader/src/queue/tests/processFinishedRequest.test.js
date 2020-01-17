@@ -156,4 +156,58 @@ describe("onRequestFinished tests", () => {
 		expect(queueState.getState().activeIds).toHaveLength(0);
 
 	});
+
+	it("should do not trigger event if id not found in items", async () => {
+
+		const queueState = getQueueState({
+			currentBatch: "b1",
+			items: {
+			},
+			batches: {
+				b1: { batch: {}, batchOptions: {} },
+			},
+			itemQueue: ["u1"],
+			activeIds: ["u1"],
+		});
+
+		await processFinishedRequest(queueState, [{
+			id: "u1",
+			info: {
+				state: FILE_STATES.FINISHED,
+				response: "",
+			}
+		}], mockNext);
+
+		expect(queueState.trigger).not.toHaveBeenCalled();
+		expect(queueState.updateState).toHaveBeenCalledTimes(1);
+		expect(queueState.getState().itemQueue).toHaveLength(0);
+		expect(queueState.getState().activeIds).toHaveLength(0);
+	});
+
+	it("should do nothing if item not found", async () => {
+
+		const queueState = getQueueState({
+			currentBatch: "b1",
+			items: {
+			},
+			batches: {
+				b1: { batch: {}, batchOptions: {} },
+			},
+			itemQueue: [],
+			activeIds: [],
+		});
+
+		await processFinishedRequest(queueState, [{
+			id: "u1",
+			info: {
+				state: FILE_STATES.FINISHED,
+				response: "",
+			}
+		}], mockNext);
+
+		expect(queueState.trigger).not.toHaveBeenCalled();
+		expect(queueState.updateState).not.toHaveBeenCalled();
+		expect(queueState.getState().itemQueue).toHaveLength(0);
+		expect(queueState.getState().activeIds).toHaveLength(0);
+	});
 });

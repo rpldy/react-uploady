@@ -81,6 +81,7 @@ describe("abort tests", () => {
 
 			expect(triggerUploaderBatchEvent).toHaveBeenCalledWith(queue, batch, UPLOADER_EVENTS.BATCH_ABORT);
 			expect(mockItemAbort).toHaveBeenCalledTimes(3);
+			expect(queue.getState().batches.b1.batch.state).toBe(BATCH_STATES.ABORTED);
 		});
 
 		it("shouldnt abort if already finished or cancelled", () => {

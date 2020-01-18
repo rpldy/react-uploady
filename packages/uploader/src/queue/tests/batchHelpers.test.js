@@ -345,7 +345,7 @@ describe("batchHelpers tests", () => {
 
 			const queueState = getQueueState({
 				batches: {
-					b1: batch,
+					b1: {batch, batchOptions: {}},
 				},
 				items: {
 					u1: { test: 1 },

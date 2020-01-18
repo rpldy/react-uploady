@@ -53,6 +53,10 @@ export const getItemAbort = (queue: QueueState, id: string, xhrAbort: () => bool
 			} else {
 				abortCalled = true;
 			}
+
+			queue.updateState((state) => {
+//!!!!!!!!!!!!!!!!!!!!!! UPDATE ITEM STATE AS ABORTED
+			});
 		}
 
 		return abortCalled;

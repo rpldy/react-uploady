@@ -2,7 +2,7 @@
 
 //TODO: NEED TO REMOVE THE ABORT method from the batch items
 
-import { logger } from "@rpldy/shared";
+import { FILE_STATES, logger } from "@rpldy/shared";
 import processBatchItems from "./processBatchItems";
 import {
 	getBatchDataFromItemId,
@@ -13,22 +13,29 @@ import {
 	isItemBelongsToBatch,
 } from "./batchHelpers";
 
+import type { BatchItem } from "@rpldy/shared";
 import type { QueueState } from "./types";
 
-const isItemInActiveRequest = (queue: QueueState, itemId: string): boolean => {
+const getIsItemInActiveRequest = (queue: QueueState, itemId: string): boolean => {
 	return !!~queue.getState().activeIds
 		// $FlowFixMe - no flat
 		.flat().indexOf(itemId);
 };
 
+const getIsItemReady = (item: BatchItem) =>
+	item.state === FILE_STATES.ADDED;
+
 export const findNextItemIndex = (queue: QueueState): number => {
-	const itemQueue = queue.getState().itemQueue;
+	const state = queue.getState(),
+		itemQueue = state.itemQueue,
+		items = state.items;
 	let index = 0,
 		nextId = itemQueue[index];
 
 	//find item that isnt already in an active request and belongs to a "ready" batch
-	while (nextId && (isItemInActiveRequest(queue, nextId) ||
-		!getIsItemBatchReady(queue, nextId))) {
+	while (nextId && (getIsItemInActiveRequest(queue, nextId) ||
+		!getIsItemBatchReady(queue, nextId) ||
+		!getIsItemReady(items[nextId]))) {
 		index += 1;
 		nextId = itemQueue[index];
 	}

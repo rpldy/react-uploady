@@ -8,6 +8,7 @@ export const BATCH_STATES = Object.freeze({
 	UPLOADING: "uploading",
 	CANCELLED: "cancelled",
 	FINISHED: "finished",
+	ABORTED: "aborted",
 });
 
 export const FILE_STATES = Object.freeze({

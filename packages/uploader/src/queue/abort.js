@@ -35,6 +35,10 @@ const abortBatch = (queue: QueueState, id: string): void => {
 			//using state items because batch items are different due to immer
 			callAbortOnItem(state, bi.id));
 
+		queue.updateState((state) => {
+			state.batches[id].batch.state = BATCH_STATES.ABORTED;
+		});
+
 		triggerUploaderBatchEvent(queue, batch, UPLOADER_EVENTS.BATCH_ABORT);
 	}
 };

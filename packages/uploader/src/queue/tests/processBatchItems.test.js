@@ -225,6 +225,7 @@ describe("processBatchItems tests", () => {
 			const abort = getItemAbort(queueState, "u1");
 			const result = abort();
 			expect(result).toBe(false);
+			expect(queueState.getState().items.u1.state).toBe(fileState);
 		});
 
 		it("should call abort for added item", () => {
@@ -238,6 +239,7 @@ describe("processBatchItems tests", () => {
 			const result = abort();
 			expect(result).toBe(true);
 			expect(xhrAbort).not.toHaveBeenCalled();
+			expect(queueState.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
 		});
 
 		it("should call xhr abort for uploading item", () => {
@@ -251,6 +253,7 @@ describe("processBatchItems tests", () => {
 			const result = abort();
 			expect(result).toBe(true);
 			expect(xhrAbort).toHaveBeenCalled();
+			expect(queueState.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
 		});
 
 	});

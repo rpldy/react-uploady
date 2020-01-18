@@ -107,7 +107,10 @@ const cleanUpFinishedBatch = (queue: QueueState) => {
 };
 
 const triggerUploaderBatchEvent = (queue: QueueState, batch: Batch, event: string) => {
-	const stateItems = queue.getState().items;
+	const state = queue.getState(),
+		stateItems = state.items;
+
+	batch = state.batches[batch.id].batch; //get the most uptodate batch data
 
 	queue.trigger(event, {
 		...batch,

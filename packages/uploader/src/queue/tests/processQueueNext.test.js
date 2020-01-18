@@ -1,3 +1,5 @@
+import { FILE_STATES } from "@rpldy/shared";
+
 jest.mock("../processBatchItems", () => jest.fn());
 import "./mocks/batchHelpers.mock";
 import getQueueState from "./mocks/getQueueState.mock";
@@ -39,7 +41,7 @@ describe("processQueueNext tests", () => {
 				currentBatch: "b1",
 				items: {
 					"u1": { batchId: "b1" },
-					"u2": { batchId: "b1" },
+					"u2": { batchId: "b1", state: FILE_STATES.ADDED },
 					"u3": { batchId: "b1" },
 					"u4": { batchId: "b1" },
 				},
@@ -66,7 +68,7 @@ describe("processQueueNext tests", () => {
 				currentBatch: "b1",
 				items: {
 					"u1": { batchId: "b1" },
-					"u2": { batchId: "b2" },
+					"u2": { batchId: "b2", state: FILE_STATES.ADDED },
 					"u3": { batchId: "b2" },
 					"u4": { batchId: "b2" },
 				},
@@ -99,8 +101,8 @@ describe("processQueueNext tests", () => {
 				currentBatch: "b1",
 				items: {
 					"u1": { batchId: "b1" },
-					"u2": { batchId: "b1" },
-					"u3": { batchId: "b1" },
+					"u2": { batchId: "b1", state: FILE_STATES.ADDED },
+					"u3": { batchId: "b1", state: FILE_STATES.ADDED },
 					"u4": { batchId: "b1" },
 				},
 				batches: {
@@ -132,9 +134,9 @@ describe("processQueueNext tests", () => {
 				currentBatch: "b1",
 				items: {
 					"u1": { batchId: "b1" },
-					"u2": { batchId: "b1" },
-					"u3": { batchId: "b1" },
-					"u4": { batchId: "b1" },
+					"u2": { batchId: "b1", state: FILE_STATES.ADDED },
+					"u3": { batchId: "b1", state: FILE_STATES.ADDED },
+					"u4": { batchId: "b1", state: FILE_STATES.ADDED },
 					"u5": { batchId: "b2" },
 				},
 				batches: {
@@ -167,9 +169,9 @@ describe("processQueueNext tests", () => {
 				currentBatch: "b1",
 				items: {
 					"u1": { batchId: "b1" },
-					"u2": { batchId: "b2" },
-					"u3": { batchId: "b2" },
-					"u4": { batchId: "b2" },
+					"u2": { batchId: "b2", state: FILE_STATES.ADDED },
+					"u3": { batchId: "b2", state: FILE_STATES.ADDED },
+					"u4": { batchId: "b2", state: FILE_STATES.ADDED },
 					"u5": { batchId: "b3" },
 				},
 				batches: {
@@ -268,6 +270,9 @@ describe("processQueueNext tests", () => {
 				currentBatch: "b1",
 				batches: {
 				},
+				items: {
+					"u5": {state: FILE_STATES.ADDED}
+				},
 				activeIds: ["u1"],
 				itemQueue: ["u1", "u2", "u3", "u4", "u5"],
 			});
@@ -275,6 +280,23 @@ describe("processQueueNext tests", () => {
 			const nextId = findNextItemIndex(queueState);
 
 			expect(nextId).toBe(4);
+		});
+
+		it("should skip non FILE_STATES.ADDED", () => {
+
+			const queueState = getQueueState({
+				activeIds: ["u1"],
+				items: {
+					"u2": {state: FILE_STATES.UPLOADING},
+					"u3": {state: FILE_STATES.ABORTED},
+					"u4": {state: FILE_STATES.ADDED}
+				},
+				itemQueue: ["u1", "u2", "u3", "u4"],
+			});
+
+			const nextId = findNextItemIndex(queueState);
+
+			expect(nextId).toBe(3);
 		});
 	});
 
@@ -293,7 +315,7 @@ describe("processQueueNext tests", () => {
 			currentBatch: "b1",
 			items: {
 				"u1": { batchId: "b1" },
-				"u2": { batchId: "b1" },
+				"u2": { batchId: "b1", state: FILE_STATES.ADDED },
 			},
 			batches: {
 				b1: {
@@ -320,7 +342,7 @@ describe("processQueueNext tests", () => {
 			currentBatch: "b1",
 			items: {
 				"u1": { batchId: "b1" },
-				"u2": { batchId: "b1" },
+				"u2": { batchId: "b1", state: FILE_STATES.ADDED },
 			},
 			batches: {
 				b1: {
@@ -357,7 +379,7 @@ describe("processQueueNext tests", () => {
 				currentBatch: "b1",
 				items: {
 					"u1": { batchId: "b1" },
-					"u2": { batchId: "b2" },
+					"u2": { batchId: "b2", state: FILE_STATES.ADDED },
 				},
 				batches: {
 					b2: {
@@ -397,7 +419,7 @@ describe("processQueueNext tests", () => {
 				currentBatch: "b1",
 				items: {
 					"u1": { batchId: "b1" },
-					"u2": { batchId: "b2" },
+					"u2": { batchId: "b2", state: FILE_STATES.ADDED },
 				},
 				batches: {
 					b2: {

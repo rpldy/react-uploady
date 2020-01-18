@@ -5,6 +5,7 @@ import Uploady, {
 	UploadyContext,
 	useFileFinishListener,
 	useBatchStartListener,
+	useBatchAbortListener,
 
 	UPLOADER_EVENTS,
 } from "@rpldy/uploady";
@@ -151,6 +152,10 @@ const AbortButton = () => {
 		setUploading(batch.id);
 	});
 
+	useBatchAbortListener((batch) => {
+		console.log(">>>>> AbortButton - (hook) BATCH ABORT - ", batch);
+	});
+
 	return context && uploadingId ? <button onClick={() => {
 		context.abortBatch(uploadingId);
 	}}>Abort</button> : null;
@@ -161,7 +166,7 @@ export const Abort = () => {
 	const { enhancer, destination, multiple } = useStoryUploadySetup();
 
 	return <div>
-		<p>Enable the "local destination" with "long local request" to be able to try aborting a
+		<p>Enable the "local destination" with "long local request" knobs to be able to try aborting a
 			running request</p>
 		<Uploady
 			debug

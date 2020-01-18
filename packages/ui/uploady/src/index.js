@@ -6,6 +6,8 @@ import {
 	useBatchStartListener,
 	useBatchFinishListener,
 	useBatchCancelledListener,
+	useBatchAbortListener,
+
 	useFileStartListener,
 	useFileFinishListener,
 	useFileProgressListener,
@@ -32,6 +34,8 @@ export {
 	useBatchStartListener,
 	useBatchFinishListener,
 	useBatchCancelledListener,
+	useBatchAbortListener,
+
 	useFileStartListener,
 	useFileFinishListener,
 	useFileProgressListener,

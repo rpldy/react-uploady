@@ -10,6 +10,7 @@ import type { BatchItem } from "@rpldy/shared";
 const useBatchStartListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);
 const useBatchFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINISH);
 const useBatchCancelledListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_CANCEL);
+const useBatchAbortListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ABORT);
 
 const useFileStartListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_START);
 const useFileFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_FINISH);
@@ -24,6 +25,7 @@ export {
 	useBatchStartListener,
 	useBatchFinishListener,
 	useBatchCancelledListener,
+	useBatchAbortListener,
 
 	useFileStartListener,
 	useFileFinishListener,

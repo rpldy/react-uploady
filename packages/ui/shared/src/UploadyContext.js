@@ -7,7 +7,7 @@ import type { EventCallback } from "@rpldy/life-events";
 
 const UploadyContext = React.createContext<?UploadyContextType>(null);
 
-const createContextApi = (uploader: UploaderType, inputRef: { current: ?HTMLInputElement }): UploadyContextType => {
+export const createContextApi = (uploader: UploaderType, inputRef: { current: ?HTMLInputElement }): UploadyContextType => {
 
 	const getInputField = () => inputRef.current;
 
@@ -56,7 +56,3 @@ const createContextApi = (uploader: UploaderType, inputRef: { current: ?HTMLInpu
 };
 
 export default UploadyContext;
-
-export {
-	createContextApi,
-};

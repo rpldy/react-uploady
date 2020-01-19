@@ -5,7 +5,7 @@ import {
 	triggerUpdater as mockTriggerUpdater
 } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import getQueueState from "./mocks/getQueueState.mock";
-import processBatchItems, { getItemAbort } from "../processBatchItems";
+import processBatchItems  from "../processBatchItems";
 import mockProcessFinishedRequest from "../processFinishedRequest";
 import { UPLOADER_EVENTS } from "../../consts";
 
@@ -38,7 +38,8 @@ describe("processBatchItems tests", () => {
 				batch: { id: "b1" },
 				batchOptions
 			}
-		}
+		},
+		aborts: {}
 	});
 
 	it("should send allowed item", async () => {
@@ -58,7 +59,7 @@ describe("processBatchItems tests", () => {
 
 		expect(queueState.getState().activeIds).toEqual(["u1"]);
 
-		expect(queueState.getState().items.u1.abort).toBeInstanceOf(Function);
+		expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
 	});
 
 	it("should send allowed items", async () => {
@@ -82,8 +83,8 @@ describe("processBatchItems tests", () => {
 
 		expect(queueState.getState().activeIds).toEqual(["u1", "u2"]);
 
-		expect(queueState.getState().items.u1.abort).toBeInstanceOf(Function);
-		expect(queueState.getState().items.u2.abort).toBeInstanceOf(Function);
+		expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
+		expect(queueState.getState().aborts.u2).toBe(sendResult.abort);
 	});
 
 	it("should throw in case update returns different array length", async () => {
@@ -199,62 +200,7 @@ describe("processBatchItems tests", () => {
 
 		expect(queueState.getState().activeIds).toEqual(["u1"]);
 
-		expect(queueState.getState().items.u1.abort).toBeInstanceOf(Function);
-		expect(queueState.getState().items.u2.abort).toBeUndefined();
-	});
-
-	describe("getItemAbort tests", () => {
-		const xhrAbort = jest.fn(() => true);
-
-		beforeEach(() => {
-			clearJestMocks(xhrAbort);
-		});
-
-		it.each([
-			[FILE_STATES.FINISHED],
-			[FILE_STATES.ABORTED],
-			[FILE_STATES.CANCELLED],
-			[FILE_STATES.ERROR]
-		])("should not call abort for item not in progress - %s", (fileState) => {
-			const queueState = getQueueState({
-				items: {
-					"u1": { state: fileState},
-				}
-			});
-
-			const abort = getItemAbort(queueState, "u1");
-			const result = abort();
-			expect(result).toBe(false);
-			expect(queueState.getState().items.u1.state).toBe(fileState);
-		});
-
-		it("should call abort for added item", () => {
-			const queueState = getQueueState({
-				items: {
-					"u1": { state: FILE_STATES.ADDED},
-				}
-			});
-
-			const abort = getItemAbort(queueState, "u1", xhrAbort);
-			const result = abort();
-			expect(result).toBe(true);
-			expect(xhrAbort).not.toHaveBeenCalled();
-			expect(queueState.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
-		});
-
-		it("should call xhr abort for uploading item", () => {
-			const queueState = getQueueState({
-				items: {
-					"u1": { state: FILE_STATES.UPLOADING},
-				}
-			});
-
-			const abort = getItemAbort(queueState, "u1", xhrAbort);
-			const result = abort();
-			expect(result).toBe(true);
-			expect(xhrAbort).toHaveBeenCalled();
-			expect(queueState.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
-		});
-
+		expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
+		expect(queueState.getState().aborts.u2).toBeUndefined();
 	});
 });

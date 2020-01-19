@@ -2,7 +2,6 @@ import { UPLOADER_EVENTS } from "../../consts";
 import getQueueState from "./mocks/getQueueState.mock";
 import * as batchHelpers from "../batchHelpers";
 import { BATCH_STATES } from "@rpldy/shared";
-import { getIsItemBatchReady } from "../batchHelpers";
 
 describe("batchHelpers tests", () => {
 
@@ -354,7 +353,7 @@ describe("batchHelpers tests", () => {
 				}
 			});
 
-			batchHelpers.triggerUploaderBatchEvent(queueState, batch, UPLOADER_EVENTS.BATCH_FINISH);
+			batchHelpers.triggerUploaderBatchEvent(queueState, "b1", UPLOADER_EVENTS.BATCH_FINISH);
 
 			expect(queueState.trigger)
 				.toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, {
@@ -385,8 +384,25 @@ describe("batchHelpers tests", () => {
 				items: { "u1": { batchId: "b1" } }
 			});
 
-			expect(getIsItemBatchReady(queueState, "u1")).toBe(result);
+			expect(batchHelpers.getIsItemBatchReady(queueState, "u1")).toBe(result);
 		});
 	});
+
+	describe("getBatchFromState", () => {
+
+		it("should return batch", () => {
+			const batch = {};
+			const queueState = getQueueState({
+				batches: {
+					b1: {
+						batch
+					}
+				}
+			});
+
+			expect(batchHelpers.getBatchFromState(queueState.getState(), "b1"));
+		});
+	});
+
 });
 

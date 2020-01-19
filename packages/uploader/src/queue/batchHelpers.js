@@ -8,8 +8,15 @@ import type { Batch, BatchItem } from "@rpldy/shared";
 const BATCH_READY_STATES = [
 	BATCH_STATES.ADDED,
 	BATCH_STATES.PROCESSING,
-	BATCH_STATES.UPLOADING
+	BATCH_STATES.UPLOADING,
 ];
+
+const getBatchFromState = (state: State, id: string) =>
+	state.batches[id].batch;
+
+const getBatch = (queue: QueueState, id: string): Batch => {
+	return getBatchFromState(queue.getState(), id);
+};
 
 const isItemBelongsToBatch = (queue: QueueState, itemId: string, batchId: string): boolean => {
 	return queue.getState()
@@ -26,8 +33,9 @@ const getBatchFromItemId = (queue: QueueState, itemId: string): Batch => {
 	return getBatchDataFromItemId(queue, itemId).batch;
 };
 
-const removeBatchItems = (queue: QueueState, batch: Batch) => {
-	const batchItemIds = batch.items.map((item: BatchItem) => item.id);
+const removeBatchItems = (queue: QueueState, batchId: string) => {
+	const batch = getBatch(queue, batchId),
+		batchItemIds = batch.items.map((item: BatchItem) => item.id);
 
 	queue.updateState((state: State) => {
 		batchItemIds.forEach((id: string) => {
@@ -56,15 +64,13 @@ const cancelBatchForItem = (queue: QueueState, itemId: string) => {
 		logger.debugLog("uploady.uploader.processor: cancelling batch: ", { batch });
 
 		queue.updateState((state: State) => {
-			const batch = state.batches[batchId].batch;
+			const batch = getBatchFromState(state, batchId);
 			batch.state = BATCH_STATES.CANCELLED;
 		});
 
-		const updatedBatch = getBatchFromItemId(queue, itemId);
-
+		triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_CANCEL);
+		removeBatchItems(queue, batchId);
 		removeBatch(queue, batchId);
-		triggerUploaderBatchEvent(queue, updatedBatch, UPLOADER_EVENTS.BATCH_CANCEL);
-		removeBatchItems(queue, batch);
 	}
 };
 
@@ -98,19 +104,16 @@ const cleanUpFinishedBatch = (queue: QueueState) => {
 	const batchId = state.currentBatch;
 
 	if (batchId && isBatchFinished(queue)) {
-		const batch = state.batches[batchId].batch;
-
+		triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_FINISH);
+		removeBatchItems(queue, batchId);
 		removeBatch(queue, batchId);
-		triggerUploaderBatchEvent(queue, batch, UPLOADER_EVENTS.BATCH_FINISH);
-		removeBatchItems(queue, batch);
 	}
 };
 
-const triggerUploaderBatchEvent = (queue: QueueState, batch: Batch, event: string) => {
+const triggerUploaderBatchEvent = (queue: QueueState, batchId: string, event: string) => {
 	const state = queue.getState(),
+		batch = getBatchFromState(state, batchId), //get the most uptodate batch data
 		stateItems = state.items;
-
-	batch = state.batches[batch.id].batch; //get the most uptodate batch data
 
 	queue.trigger(event, {
 		...batch,
@@ -134,4 +137,5 @@ export {
 	cleanUpFinishedBatch,
 	triggerUploaderBatchEvent,
 	getIsItemBatchReady,
+	getBatchFromState,
 };

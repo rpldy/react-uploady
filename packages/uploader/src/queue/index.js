@@ -24,6 +24,7 @@ export default (
 		batches: {},
 		items: {},
 		activeIds: [],
+		aborts: {},
 	};
 
 	sender.on(SENDER_EVENTS.PROGRESS,

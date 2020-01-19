@@ -6,17 +6,16 @@ import type { ItemsSender } from "../types";
 
 export type BatchData = { batch: Batch, batchOptions: CreateOptions };
 
-export type State = {
+export type State = {|
 	itemQueue: string[],
 	currentBatch: ?string,
 	batches: { [string]: BatchData },
 	items: { [string]: BatchItem },
 	activeIds: Array<string | string[]>,
-};
+	aborts: { [string]: () => boolean },
+|};
 
-// export type QueueUpdater = Updater<BatchItem | BatchItem[] | Batch>;
-
-export type QueueState = {
+export type QueueState = {|
 	getOptions: () => CreateOptions,
 	getState: () => State,
 	getCurrentActiveCount: () => number,
@@ -24,6 +23,6 @@ export type QueueState = {
 	trigger: TriggerMethod,
 	cancellable: Cancellable,
 	sender: ItemsSender,
-};
+|};
 
 export type ProcessNextMethod = (QueueState) => Promise<void>;

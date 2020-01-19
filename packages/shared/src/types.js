@@ -57,7 +57,6 @@ type BatchItemBase = {|
 	batchId: string,
 	state: FileState,
 	uploadResponse?: any,
-	abort: () => boolean,
 	//percentage of upload completed
 	completed: number,
 	//bytes uploaded

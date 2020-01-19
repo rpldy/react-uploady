@@ -10,9 +10,6 @@ import type {
 let bCounter = 0,
 	fCounter = 0;
 
-const noOp = () => {
-};
-
 const getBatchItemWithUrl = (batchItem: Object, url: string): BatchItem => {
 	batchItem.url = url;
 	return batchItem;
@@ -32,7 +29,6 @@ const createBatchItem = (f: UploadInfo, batchId: string): BatchItem => {
 		id,
 		batchId,
 		state,
-		abort: noOp,
 		completed: 0,
 		loaded: 0,
 		aborted: false,

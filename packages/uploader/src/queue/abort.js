@@ -1,26 +1,48 @@
 // @flow
-import { BATCH_STATES, logger } from "@rpldy/shared";
+import { BATCH_STATES, FILE_STATES, logger } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
-import { triggerUploaderBatchEvent } from "./batchHelpers";
+import { triggerUploaderBatchEvent, getBatchFromState } from "./batchHelpers";
 
-import type { QueueState, State } from "./types";
+import type { QueueState } from "./types";
+import type { FileState } from "@rpldy/shared";
 
-const callAbortOnItem = (state: State, id: string) => {
-	logger.debugLog("uploader.abort: about to abort item: ", id);
-	const item = state.items[id];
-	return item ? item.abort() : false;
+const isItemInProgress = (state: FileState): boolean =>
+	state === FILE_STATES.ADDED ||
+	state === FILE_STATES.UPLOADING;
+
+const callAbortOnItem = (queue: QueueState, id: string) => {
+	let abortCalled = false;
+
+	const state = queue.getState(),
+		item = state.items[id];
+
+	if (item && isItemInProgress(item.state)) {
+		logger.debugLog(`uploader.queue: aborting item in progress - `, item);
+
+		if (item.state === FILE_STATES.UPLOADING) {
+			abortCalled = state.aborts[id]();
+		} else {
+			abortCalled = true;
+		}
+
+		queue.updateState((state) => {
+			state.items[id].state = FILE_STATES.ABORTED;
+			delete state.aborts[id];
+		});
+	}
+
+	return abortCalled;
 };
 
 const abortAll = (queue: QueueState) => {
-	const state = queue.getState(),
-		items = state.items;
+	const items = queue.getState().items;
 
 	Object.keys(items)
-		.forEach((id) => callAbortOnItem(state, id));
+		.forEach((id) => callAbortOnItem(queue, id));
 };
 
 const abortItem = (queue: QueueState, id: string): boolean => {
-	return callAbortOnItem(queue.getState(), id);
+	return callAbortOnItem(queue, id);
 };
 
 const abortBatch = (queue: QueueState, id: string): void => {
@@ -33,13 +55,13 @@ const abortBatch = (queue: QueueState, id: string): void => {
 
 		batch.items.forEach((bi) =>
 			//using state items because batch items are different due to immer
-			callAbortOnItem(state, bi.id));
+			callAbortOnItem(queue, bi.id));
 
 		queue.updateState((state) => {
-			state.batches[id].batch.state = BATCH_STATES.ABORTED;
+			getBatchFromState(state, id).state = BATCH_STATES.ABORTED;
 		});
 
-		triggerUploaderBatchEvent(queue, batch, UPLOADER_EVENTS.BATCH_ABORT);
+		triggerUploaderBatchEvent(queue, id, UPLOADER_EVENTS.BATCH_ABORT);
 	}
 };
 

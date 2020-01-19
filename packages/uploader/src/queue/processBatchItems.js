@@ -1,9 +1,9 @@
 // @flow
-import { triggerUpdater, isSamePropInArrays, FILE_STATES, logger } from "@rpldy/shared";
+import { triggerUpdater, isSamePropInArrays, FILE_STATES } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 
-import type { BatchItem, SendResult, FileState } from "@rpldy/shared";
+import type { BatchItem, SendResult } from "@rpldy/shared";
 import type { QueueState, ProcessNextMethod } from "./types";
 
 const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[]) => {
@@ -35,40 +35,12 @@ const prepareAllowedItems = async (queue: QueueState, items: BatchItem[]): Promi
 	return items;
 };
 
-const isItemInProgress = (state: FileState): boolean =>
-	state === FILE_STATES.ADDED ||
-	state === FILE_STATES.UPLOADING;
-
-export const getItemAbort = (queue: QueueState, id: string, xhrAbort: () => boolean) => {
-	return () => {
-		let abortCalled = false;
-
-		const item = queue.getState().items[id];
-
-		if (item && isItemInProgress(item.state)) {
-			logger.debugLog(`uploader.queue: aborting item in progress - `, item);
-
-			if (item.state === FILE_STATES.UPLOADING) {
-				abortCalled = xhrAbort();
-			} else {
-				abortCalled = true;
-			}
-
-			queue.updateState((state) => {
-//!!!!!!!!!!!!!!!!!!!!!! UPDATE ITEM STATE AS ABORTED
-			});
-		}
-
-		return abortCalled;
-	};
-};
-
 const updateUploadingState = (queue: QueueState, items: BatchItem[], sendResult: SendResult) => {
 	queue.updateState((state) => {
 		items.forEach((bi) => {
 			const item = state.items[bi.id];
 			item.state = FILE_STATES.UPLOADING;
-			item.abort = getItemAbort(queue, item.id, sendResult.abort);
+			state.aborts[bi.id] = sendResult.abort;
 		});
 	});
 };

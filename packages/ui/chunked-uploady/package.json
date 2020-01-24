@@ -20,5 +20,11 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@rpldy/sender": "^0.1.4",
+    "@rpldy/shared": "^0.1.4",
+    "@rpldy/uploader": "^0.1.4",
+    "@rpldy/uploady": "^0.1.4"
   }
 }

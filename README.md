@@ -42,5 +42,20 @@ XXXX Need animated gif here showing storybook XXXXX
 * [live-events]() - provides cancellable pub/sub "events" 
 
 
+## Size
+
+React Uploady is very small:
+
+(built with webpack lodash plugin)
+
+TODO !!! show table of dependencies and their weight:
+
+uploader
+
+uplodaer + uploady
+
+uploader + uploady + upload-button
+
+
 ## Examples
 

@@ -18,6 +18,7 @@ lerna-debug.log
 yarn-error.log
 
 jsexample.js
+jsexample2.js
 todo.md
 
 packages/**/lib

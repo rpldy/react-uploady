@@ -1,6 +1,7 @@
 // @flow
-import React, { useCallback } from "react";
+import React, { useMemo } from "react";
 import Uploady from "@rpldy/uploady";
+import { CHUNKING_SUPPORT } from "./utils";
 import getChunkedSend from "./chunkedSender";
 
 import type { UploaderType, UploaderEnhancer } from "@rpldy/uploader";
@@ -16,7 +17,7 @@ const getEnhancer = (chunkedSend, enhancer: UploaderEnhancer) => {
 const ChunkedUploady = (props: ChunkedUploadyProps) => {
 	const { chunked, chunkSize, retry, parallel, ...UploadyProps } = props;
 
-	const chunkedSend = useCallback(
+	const chunkedSend = useMemo(
 		() => getChunkedSend({ chunked, chunkSize, retry, parallel }),
 		[
 			chunked,
@@ -25,12 +26,14 @@ const ChunkedUploady = (props: ChunkedUploadyProps) => {
 			parallel
 		]);
 
-	const enhancer = useCallback(
-		() => getEnhancer(chunkedSend, enhancer),
+	const enhancer = useMemo(
+		() => getEnhancer(chunkedSend, props.enhancer),
 		[chunkedSend, props.enhancer]);
 
 	return <Uploady {...UploadyProps} enhancer={enhancer}/>;
 };
 
-export default ChunkedUploady;
+const exportedUploady = CHUNKING_SUPPORT ? ChunkedUploady : Uploady;
+
+export default exportedUploady;
 

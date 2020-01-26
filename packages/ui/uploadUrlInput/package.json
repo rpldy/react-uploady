@@ -2,7 +2,7 @@
   "version": "0.1.4",
   "name": "@rpldy/upload-url-input",
   "description": "",
-  "author": "yoav niran (https://github.com/yoavniran",
+  "author": "yoav niran (https://github.com/yoavniran)",
   "main": "lib/index.js",
   "module": "src/index.js",
   "license": "MIT",

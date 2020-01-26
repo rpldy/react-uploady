@@ -10,6 +10,17 @@ const getMandatoryOptions = (options: ?ChunkedOptions): MandatoryChunkedOptions 
 	};
 };
 
+const isChunkingSupported = (): boolean =>
+	"Blob" in window &&
+	!!(Blob.prototype.slice ||
+		Blob.prototype.webkitSlice ||
+		Blob.prototype.mozSlice);
+
+
+const CHUNKING_SUPPORT = isChunkingSupported();
+
 export {
+	CHUNKING_SUPPORT,
 	getMandatoryOptions,
+	isChunkingSupported, //for tests
 };

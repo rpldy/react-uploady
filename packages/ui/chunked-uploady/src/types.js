@@ -9,15 +9,10 @@ export type ChunkedOptions = {
 	//the maximum chunk size (default: 5000000 bytes)
 	chunkSize?: number,
 	//the number of times to retry a failed chunk (default: 0)
-	retry?: number,
+	retries?: number,
 	//the number of chunks to upload in parallel (default: 0)
 	parallel?: number,
 }
-
-// export type ChunkedSendOptions = {
-// 	...SendOptions,
-// 	...ChunkedOptions
-// }
 
 export type MandatoryChunkedOptions = $Exact<$ObjMap<ChunkedOptions, NonMaybeTypeFunc>>;
 

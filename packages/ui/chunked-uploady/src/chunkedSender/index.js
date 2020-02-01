@@ -3,7 +3,7 @@
 import { logger } from "@rpldy/shared";
 import send from "@rpldy/sender";
 import { getMandatoryOptions } from "../utils";
-import sendWithChunks from "./chunkedSender";
+import processChunks from "./processChunks";
 
 import type { BatchItem, OnProgress, SendOptions, SendResult } from "@rpldy/shared";
 import type { ChunkedOptions } from "../types";
@@ -19,7 +19,7 @@ export default (chunkedOptions: ?ChunkedOptions) => {
 			result = send(items, url, sendOptions, onProgress);
 		} else {
 			logger.debugLog(`ChunkedUploady.sender: sending file as a chunked request`);
-			result = sendWithChunks(items[0], chunkedOptions, url, sendOptions, onProgress);
+			result = processChunks(items[0], chunkedOptions, url, sendOptions, onProgress);
 		}
 
 		return result;

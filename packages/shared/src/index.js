@@ -5,6 +5,7 @@ import * as logger from "./logger";
 import { isFunction, isSamePropInArrays } from "./utils";
 import triggerCancellable from "./triggerCancellable";
 import triggerUpdater from "./triggerUpdater";
+import createBatchItem from "./batchItem";
 
 import type {
 	UploadOptions,
@@ -38,6 +39,7 @@ export {
 
 	triggerCancellable,
 	triggerUpdater,
+	createBatchItem,
 };
 
 export type {

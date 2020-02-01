@@ -54,7 +54,7 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
 
 		req.upload.onprogress = (e) => {
 			if (e.lengthComputable) {
-				onProgress(e);
+				onProgress(e, items);
 			}
 		};
 

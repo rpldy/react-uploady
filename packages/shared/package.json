@@ -18,6 +18,9 @@
   "devDependencies": {
     "flow-bin": "^0.113.0"
   },
+  "dependencies": {
+    "lodash": "^4.17.15"
+  },
   "publishConfig": {
     "access": "public"
   }

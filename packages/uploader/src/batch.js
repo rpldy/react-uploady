@@ -1,49 +1,13 @@
 // @flow
-import { BATCH_STATES, FILE_STATES } from "@rpldy/shared";
-import { isString, isObjectLike, } from "lodash";
+import { BATCH_STATES, createBatchItem } from "@rpldy/shared";
+
 import type {
 	UploadInfo,
 	BatchItem,
 	Batch,
 } from "@rpldy/shared";
 
-let bCounter = 0,
-	fCounter = 0;
-
-const getBatchItemWithUrl = (batchItem: Object, url: string): BatchItem => {
-	batchItem.url = url;
-	return batchItem;
-};
-
-const getBatchItemWithFile = (batchItem: Object, file: Object): BatchItem => {
-	batchItem.file = file;
-	return batchItem;
-};
-
-const createBatchItem = (f: UploadInfo, batchId: string): BatchItem => {
-	fCounter += 1;
-	const id = `${batchId}.file-${fCounter}`,
-		state = FILE_STATES.ADDED;
-
-	let batchItem = {
-		id,
-		batchId,
-		state,
-		completed: 0,
-		loaded: 0,
-		aborted: false,
-	};
-
-	if (isString(f)) {
-		batchItem = getBatchItemWithUrl(batchItem, f);
-	} else if (isObjectLike(f)) {
-		batchItem = getBatchItemWithFile(batchItem, f);
-	} else {
-		throw new Error(`Unknown type of file added: ${typeof (f)}`);
-	}
-
-	return batchItem;
-};
+let bCounter = 0;
 
 const processFiles = (batchId, files: UploadInfo): BatchItem[] =>
 	Array.prototype.map.call(files, (f) => createBatchItem(f, batchId));

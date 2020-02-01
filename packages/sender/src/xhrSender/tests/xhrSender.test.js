@@ -77,6 +77,7 @@ x-header: test`);
 			testXhr,
 			mockProgress,
 			options,
+			items,
 		};
 	};
 
@@ -100,7 +101,7 @@ x-header: test`);
 
 			const progressEvent = { lengthComputable: true, loaded: 100 };
 			test.testXhr.upload.onprogress(progressEvent);
-			expect(test.mockProgress).toHaveBeenCalledWith(progressEvent);
+			expect(test.mockProgress).toHaveBeenCalledWith(progressEvent, test.items);
 
 			test.testXhr.upload.onprogress({});
 			expect(test.mockProgress).toHaveBeenCalledTimes(1);

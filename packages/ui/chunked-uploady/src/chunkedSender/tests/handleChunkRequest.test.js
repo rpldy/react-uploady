@@ -66,6 +66,19 @@ describe("handleChunkRequest tests", () => {
 		expect(state.responses[0]).toBe("fail");
 	});
 
+	it("should handle abort", async () => {
+		const state = await doTest(null, {
+			state: FILE_STATES.ABORTED,
+			response: "abort"
+		});
+
+		expect(state.requests.c1).toBeUndefined();
+		expect(state.chunks).toHaveLength(2);
+		expect(state.chunks[0].id).toBe("c1");
+		expect(state.chunks[0].attempt).toBe(0);
+		expect(state.responses[0]).toBe("abort");
+	});
+
 	it("should not break if finished chunk not found in state", async () => {
 
 		const state = await doTest([]);

@@ -21,7 +21,8 @@ export default async (state: State, chunkId: string, chunkSendResult: SendResult
 		if (result.state === FILE_STATES.FINISHED) {
 			//remove chunk so eventually there are no more chunks to send
 			state.chunks.splice(index, 1);
-		} else {
+		} else if (result.state !== FILE_STATES.ABORTED) {
+			//increment attempt in case chunk failed (and not aborted)
 			state.chunks[index].attempt += 1;
 		}
 

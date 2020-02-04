@@ -3,6 +3,7 @@ packages/**/src
 *.stories.js
 *.test.js
 tests/
+mocks/
 lerna.json
 *.log
 jest*

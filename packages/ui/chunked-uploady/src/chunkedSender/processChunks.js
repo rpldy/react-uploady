@@ -7,34 +7,51 @@ import type { BatchItem, OnProgress, SendOptions, SendResult } from "@rpldy/shar
 import type { MandatoryChunkedOptions } from "../types";
 import type { State, ChunksSendResponse } from "./types";
 
+export const abortChunkedRequest =  (state, item) => {
+	logger.debugLog(`chunkedSender: aborting chunked upload for item: ${item.id}`);
+
+	if (!state.finished && !state.aborted) {
+		Object.keys(state.requests)
+			.forEach((chunkId) => {
+				logger.debugLog(`chunkedSender: aborting chunk: ${chunkId}`);
+				state.requests[chunkId].abort();
+			});
+
+		state.aborted = true;
+	}
+};
+
 export const process = (
 	state: State,
 	item: BatchItem,
 	onProgress: OnProgress
 ): ChunksSendResponse => {
-	const abort = () => {
+	const handleChunkOnProgress = (e, progressChunks) => {
+		const loadedAverage = e.loaded / progressChunks.length;
+		let loadTotal = 0;
 
-		//TODO: abort all pending/in-progress chunk requests
-	};
+		state.chunks.forEach((chunk) => {
+			const upChunk = progressChunks.length === 1 ?
+				progressChunks[0] :
+				progressChunks.find((pc) => pc.id === chunk.id);
 
-	const handleChunkOnProgress = (e, items) => {
+			if (chunk.id === upChunk?.id) {
+				chunk.progress += loadedAverage;
+			}
 
-		//TODO: calculate overall progress and call onProgress !!!
+			loadTotal += chunk.progress;
+		});
 
-		//onProgress()
+		onProgress({ loaded: loadTotal, total: item.file.size }, [item]);
 	};
 
 	const sendPromise = new Promise((resolve) => {
 		sendChunks(state, item, handleChunkOnProgress, resolve);
 	});
 
-	sendPromise.then((result) => {
-
-	});
-
 	return {
 		sendPromise,
-		abort,
+		abort: () => abortChunkedRequest(state, item),
 	};
 };
 
@@ -45,7 +62,6 @@ export default (
 	sendOptions: SendOptions,
 	onProgress: OnProgress
 ): SendResult => {
-
 	const chunks = getChunks(item, chunkedOptions);
 	logger.debugLog(`chunkedSender: created ${chunks.length} chunks for: ${item.file.name}`);
 

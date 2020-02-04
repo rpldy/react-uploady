@@ -12,14 +12,14 @@ import type { ItemsSender } from "./types";
 const onItemUploadProgress = (items: BatchItem[], e: ProgressEvent, trigger) => {
 	const completed = (e.loaded / e.total) * 100,
 		completedPerItem = completed / items.length,
-		loadedPerItem = e.loaded / items.length;
+		loadedAverage = e.loaded / items.length;
 
 	items.forEach((item: BatchItem) => {
-		logger.debugLog(`uploady.uploader.processor: file: ${item.id} progress event: loaded(${loadedPerItem}) - completed(${completedPerItem})`);
+		logger.debugLog(`uploady.uploader.processor: file: ${item.id} progress event: loaded(${loadedAverage}) - completed(${completedPerItem})`);
 		trigger(SENDER_EVENTS.PROGRESS, {
 			item,
 			completed: completedPerItem,
-			loaded: loadedPerItem
+			loaded: loadedAverage
 		});
 	});
 };

@@ -14,7 +14,8 @@ export default (chunkedOptions: ?ChunkedOptions) => {
 	return (items: BatchItem[], url: string, sendOptions: SendOptions, onProgress: OnProgress): SendResult => {
 		let result;
 
-		if (!chunkedOptions.chunked || items.length > 1 || items[0].url) {
+		if (!chunkedOptions.chunked || items.length > 1 || items[0].url ||
+		items[0].file.size <= chunkedOptions.chunkSize) {
 			logger.debugLog(`ChunkedUploady.sender: sending items as normal, un-chunked requests`);
 			result = send(items, url, sendOptions, onProgress);
 		} else {

@@ -7,6 +7,9 @@ import { getChunkDataFromFile } from "../utils";
 import type { BatchItem, OnProgress, SendOptions, SendResult } from "@rpldy/shared";
 import type { Chunk } from "./types";
 
+const getContentRangeValue = (chunk, item) =>
+	`bytes ${chunk.start}-${chunk.end}/${item.file.size}`;
+
 export default (
 	chunk: Chunk,
 	item: BatchItem,
@@ -24,8 +27,13 @@ export default (
 
 	logger.debugLog(`chunkedSender: about to send chunk ${chunk.id} to: ${url}`);
 
-	//TODO:  CONTENT RANGE HEADER !!!!!!!!!!!!!!!!!
-
+	sendOptions = {
+		...sendOptions,
+		headers: {
+			...sendOptions.headers,
+			"Content-Range": getContentRangeValue(chunk, item),
+		}
+	};
 
 	return send([chunkItem], url, sendOptions, onProgress);
 };

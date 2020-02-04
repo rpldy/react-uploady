@@ -39,12 +39,12 @@ const getDestination = (type, longRequest) => {
 	return DESTINATIONS[type](longRequest);
 };
 
-const useStoryUploadySetup = () => {
+const useStoryUploadySetup = (options = {}) => {
 	const type = select("destination", DEST_OPTIONS, DEST_OPTIONS.mock);
 	const longRequest = boolean("long local request (relevant for local only)", false);
 	const multiple = boolean("multiple files", true);
-	const grouped = boolean("group files in single request", false);
-	const groupSize = number("max in group", 2);
+	const grouped = !options.noGroup && boolean("group files in single request", false);
+	const groupSize = !options.noGroup && number("max in group", 2);
 
 	return useMemo(() => ({
 			multiple,

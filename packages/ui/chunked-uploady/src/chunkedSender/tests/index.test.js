@@ -49,9 +49,17 @@ describe("chunkedSender index tests", () => {
 		expect(processChunks).not.toHaveBeenCalled();
 	});
 
+	it("should use default send for chunk size > file size", () => {
+		const items = [{ file: { size: 1000 } }];
+		doChunkedSend(items, { chunkSize: 1001 });
+		doChunkedSend(items, { chunkSize: 1000 });
+		expect(send).toHaveBeenCalledWith(items, url, sendOptions, onProgress);
+		expect(processChunks).not.toHaveBeenCalled();
+	});
+
 	it("should use chunked send", () => {
-		const items = [1];
-		const chunkedOptions = { chunked: true };
+		const items = [{ file: { size: 1e+6 } }];
+		const chunkedOptions = { chunked: true, chunkSize: 5e+5 };
 
 		processChunks.mockReturnValueOnce(true);
 

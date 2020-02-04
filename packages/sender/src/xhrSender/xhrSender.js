@@ -1,7 +1,4 @@
 // @flow
-
-//TODO: need to support grouping of files into single request
-
 import { logger, FILE_STATES } from "@rpldy/shared";
 import prepareFormData from "./prepareFormData";
 
@@ -54,7 +51,7 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
 
 		req.upload.onprogress = (e) => {
 			if (e.lengthComputable) {
-				onProgress(e, items);
+				onProgress(e, items.slice());
 			}
 		};
 

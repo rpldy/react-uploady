@@ -13,6 +13,7 @@ const getMandatoryOptions = (options: ?ChunkedOptions): MandatoryChunkedOptions 
 let sliceMethod = null;
 
 const isChunkingSupported = (): boolean => {
+	sliceMethod = null;
 	if ("Blob" in window) {
 		sliceMethod = Blob.prototype.slice ||
 			Blob.prototype.webkitSlice ||
@@ -25,7 +26,9 @@ const isChunkingSupported = (): boolean => {
 const CHUNKING_SUPPORT = isChunkingSupported();
 
 const getChunkDataFromFile = (file: File, start: number, end: number): Blob => {
-	return sliceMethod?.call(file, start, end, file.type);
+	const blob = sliceMethod?.call(file, start, end, file.type);
+	blob.name = file.name;
+	return blob;
 };
 
 export {

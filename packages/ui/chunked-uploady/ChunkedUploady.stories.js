@@ -10,14 +10,14 @@ import {
 
 export const Simple = () => {
 	const { enhancer, destination, multiple } = useStoryUploadySetup({ noGroup: true });
-	const chunkSize = number("chunk size (KB)", 5000);
+	const chunkSize = number("chunk size (bytes)", 5242880);
 
 	return <ChunkedUploady
 		debug
 		multiple={multiple}
 		destination={destination}
 		enhancer={enhancer}
-		chunkSize={(chunkSize * 1000)}>
+		chunkSize={chunkSize}>
 		<UploadButton/>
 	</ChunkedUploady>;
 };

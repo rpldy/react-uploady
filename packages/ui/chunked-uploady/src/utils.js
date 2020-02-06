@@ -28,6 +28,7 @@ const CHUNKING_SUPPORT = isChunkingSupported();
 const getChunkDataFromFile = (file: File, start: number, end: number): Blob => {
 	const blob = sliceMethod?.call(file, start, end, file.type);
 	blob.name = file.name;
+	blob.lastModified = file.lastModified;
 	return blob;
 };
 

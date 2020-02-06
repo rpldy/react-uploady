@@ -44,7 +44,7 @@ describe("utils tests", () => {
 
 		it("should return true for webkitSlice", () => {
 			window.Blob = {
-				prototype: {webkitSlice: true}
+				prototype: { webkitSlice: true }
 			};
 			expect(utils.isChunkingSupported()).toBe(true);
 
@@ -75,11 +75,12 @@ describe("utils tests", () => {
 	});
 
 	describe("getChunkDataFromFile tests", () => {
-
 		it("should return chunk", () => {
-			const result = utils.getChunkDataFromFile(new Blob([1, 2, 3, 5, 6, 7, 8]), 0, 2);
+			const file = new File([1, 2, 3, 5, 6, 7, 8], "test.jpg", { lastModified: 123 });
+			const result = utils.getChunkDataFromFile(file, 0, 2);
 			expect(result).toBeInstanceOf(Blob);
 			expect(result.size).toBe(2);
+			expect(result.name).toBe("test.jpg");
 		});
 	});
 });

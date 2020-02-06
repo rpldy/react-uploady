@@ -2,7 +2,7 @@
 
 export const DEFAULT_OPTIONS = Object.freeze({
 	chunked: true,
-	chunkSize: 5000000,
+	chunkSize: 5242880,
 	retries: 0,
 	parallel: 1
 });

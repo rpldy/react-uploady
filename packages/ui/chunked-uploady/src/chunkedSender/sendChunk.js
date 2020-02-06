@@ -19,8 +19,9 @@ export default (
 ): SendResult => {
 
 	if (!chunk.data) {
-		//slice the chunk based on byte position
-		chunk.data = getChunkDataFromFile(item.file, chunk.start, chunk.end);
+		//slice the chunk based on bit position
+		const chunkEnd = (chunk.end + 1); // Math.min((chunk.end + 1), item.file.size);
+		chunk.data = getChunkDataFromFile(item.file, chunk.start, chunkEnd);
 	}
 
 	const chunkItem = createBatchItem(chunk.data, chunk.id);
@@ -32,6 +33,7 @@ export default (
 		headers: {
 			...sendOptions.headers,
 			"Content-Range": getContentRangeValue(chunk, item),
+			"X-Unique-Upload-Id": "test-chunk-2"
 		}
 	};
 

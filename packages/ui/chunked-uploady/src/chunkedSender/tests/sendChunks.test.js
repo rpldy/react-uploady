@@ -126,16 +126,20 @@ describe("sendChunks tests", () => {
 				responses: [],
 			};
 
-			const resolve = jest.fn();
-			await handleChunk(state, {}, {}, resolve);
+			const chunkId = "c1";
 
-			expect(handleChunkRequest).toHaveBeenCalledWith(state, result);
+			const resolve = jest.fn();
+			await handleChunk(state, {}, {}, resolve, {id: chunkId});
+
+			expect(handleChunkRequest).toHaveBeenCalledWith(state, chunkId, result);
 
 			expect(state.finished).toBe(true);
+
 			expect(resolve).toHaveBeenCalledWith({
 				state: FILE_STATES.FINISHED,
 				response: state.responses,
 			});
+
 			expect(getChunksToSend).not.toHaveBeenCalled();
 		});
 
@@ -149,7 +153,7 @@ describe("sendChunks tests", () => {
 			};
 
 			const resolve = jest.fn();
-			await handleChunk(state, {}, {}, resolve);
+			await handleChunk(state, {}, {}, resolve, {id: "c1"});
 
 			expect(state.finished).toBeFalsy();
 			expect(resolve).not.toHaveBeenCalled();

@@ -12,7 +12,7 @@ app.post("/upload", function (req, res) {
 
 	let timeout = req.query.long ? 10000 : 1000;
 
-	console.log("MOCK SERVER - RECEIVED UPLOAD REQ - response in: " + timeout, req.files);
+	console.log("MOCK SERVER - RECEIVED UPLOAD REQ - response in: " + timeout, req.files, req.headers);
 
 	setTimeout(() => {
 		res.status(201).json({ success: true });

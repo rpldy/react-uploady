@@ -41,7 +41,7 @@ const resolveOnChunksFinished = (state: State, item: BatchItem, resolve): boolea
 
 export const handleChunk = async (state: State, item: BatchItem, onProgress: OnProgress, resolve, chunk: Chunk) => {
 	const chunkSendResult = sendChunk(chunk, item, state.url, state.sendOptions, onProgress);
-	await handleChunkRequest(state, chunkSendResult);
+	await handleChunkRequest(state, chunk.id, chunkSendResult);
 
 	if (!resolveOnChunksFinished(state, item, resolve)) {
 		sendChunks(state, item, onProgress, resolve);

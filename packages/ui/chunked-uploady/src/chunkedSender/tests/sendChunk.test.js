@@ -14,7 +14,7 @@ describe("sendChunk tests", () => {
 	])("should send chunk with data = %s", (data) => {
 		const url = "test.com",
 			chunk = { id: "c1", start: 1, end: 10, data },
-			fileData = data || {},
+			fileData = data || {size: 10},
 			file = { size: 400 },
 			chunkItem = {},
 			sendOptions = { method: "POST", headers: { "x-test": 123 } },

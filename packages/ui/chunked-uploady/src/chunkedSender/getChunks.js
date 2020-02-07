@@ -10,7 +10,7 @@ export default (item: BatchItem, options: MandatoryChunkedOptions): Chunk[] => {
 
 	return new Array(count).fill(null)
 		.map((n, index) => {
-			const start = (chunkSize * index) + index;
+			const start = (chunkSize * index); // + index;
 
 			return {
 				id: item.id + `_chunk-${index}`,

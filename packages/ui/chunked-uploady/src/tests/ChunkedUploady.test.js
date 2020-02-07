@@ -38,7 +38,7 @@ describe("ChunkedUploady tests", () => {
 			const chunkedProps = {
 				chunked: true,
 				chunkSize: 11,
-				retry: 7,
+				retries: 7,
 				parallel: 3,
 			};
 

@@ -14,16 +14,16 @@ describe("getChunks tests", () => {
 		expect(chunks[0].end).toBe(201);
 		expect(chunks[0].id).toBe("bi1_chunk-0");
 
-		expect(chunks[1].start).toBe(202);
-		expect(chunks[1].end).toBe(403);
+		expect(chunks[1].start).toBe(201);
+		expect(chunks[1].end).toBe(402);
 
-		expect(chunks[2].start).toBe(404);
-		expect(chunks[2].end).toBe(605);
+		expect(chunks[2].start).toBe(402);
+		expect(chunks[2].end).toBe(603);
 
-		expect(chunks[3].start).toBe(606);
-		expect(chunks[3].end).toBe(807);
+		expect(chunks[3].start).toBe(603);
+		expect(chunks[3].end).toBe(804);
 
-		expect(chunks[4].start).toBe(808);
+		expect(chunks[4].start).toBe(804);
 		expect(chunks[4].end).toBe(999);
 		expect(chunks[4].id).toBe("bi1_chunk-4");
 	});

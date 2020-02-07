@@ -1,6 +1,5 @@
 import { DEFAULT_OPTIONS } from "../defaults";
 import * as utils from "../utils";
-import { createRef } from "react";
 
 describe("utils tests", () => {
 
@@ -16,7 +15,7 @@ describe("utils tests", () => {
 			const options = {
 				chunked: false,
 				chunkSize: 1000,
-				retry: 2,
+				retries: 2,
 				parallel: 3
 			};
 

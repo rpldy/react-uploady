@@ -7,28 +7,6 @@ import triggerCancellable from "./triggerCancellable";
 import triggerUpdater from "./triggerUpdater";
 import createBatchItem from "./batchItem";
 
-import type {
-	UploadOptions,
-	CreateOptions,
-	Destination,
-	UploadInfo,
-	ProgressInfo,
-	BatchState,
-	FileState,
-	NonMaybeTypeFunc,
-	Batch,
-	BatchItem,
-	SendMethod,
-	SendResult,
-	UploadData,
-	OnProgress,
-	SendOptions,
-	SenderProgressEvent,
-	Trigger,
-	Cancellable,
-	Updater
-} from "./types";
-
 export {
 	BATCH_STATES,
 	FILE_STATES,
@@ -61,5 +39,6 @@ export type {
 	SenderProgressEvent,
 	Trigger,
 	Cancellable,
-	Updater
-};
+	Updater,
+	FileLike
+} from "./types";

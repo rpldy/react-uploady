@@ -15,10 +15,6 @@
     "build": "node ../../../scripts/build.js",
     "flow:copy": "flow-copy-source ./src ./lib"
   },
-  "devDependencies": {
-    "flow-bin": "^0.113.0",
-    "@rpldy/upload-button": "^0.1.4"
-  },
   "publishConfig": {
     "access": "public"
   },
@@ -27,7 +23,12 @@
     "@rpldy/shared": "^0.1.4",
     "@rpldy/uploader": "^0.1.4",
     "@rpldy/uploady": "^0.1.4",
+    "lodash": "^4.17.15",
     "warning": "^4.0.3"
+  },
+  "devDependencies": {
+    "@rpldy/upload-button": "^0.1.4",
+    "flow-bin": "^0.118.0"
   },
   "peerDependencies": {
     "react": ">=16.8"

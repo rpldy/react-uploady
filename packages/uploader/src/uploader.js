@@ -32,8 +32,6 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 
 	const pendingBatches = [];
 
-	options = options || {};
-
 	logger.debugLog("uploady.uploader: creating new instance", { options, enhancer, counter });
 
 	let uploaderOptions: CreateOptions = getMandatoryOptions(options);

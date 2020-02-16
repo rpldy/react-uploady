@@ -55,7 +55,7 @@ export const WithEventListeners = () => {
 		destination={destination}
 		enhancer={enhancer}
 		listeners={listeners}
-		rouped={grouped}
+		grouped={grouped}
 		maxGroupSize={groupSize}>
 		<UploadButton/>
 	</Uploady>;

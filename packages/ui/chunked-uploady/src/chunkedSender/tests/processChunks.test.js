@@ -33,6 +33,7 @@ describe("processChunks tests", () => {
 		expect(sendChunks).toHaveBeenCalledWith({
 			finished: false,
 			aborted: false,
+			uploaded: 0,
 			requests: {},
 			responses: [],
 			chunks,
@@ -46,54 +47,52 @@ describe("processChunks tests", () => {
 
 		it("should send chunks and handle progress", () => {
 			const state = {
+				uploaded:0,
 				chunks: [
-					{ id: "c1", progress: 0 },
-					{ id: "c2", progress: 30 },
-					{ id: "c3", progress: 20 },
+					{ id: "c1",},
+					{ id: "c2",},
+					{ id: "c3",},
 				]
 			};
-			const item = { file: { size: 1000 } };
+			const item = { file: { size: 1000 }};
 			const onProgress = jest.fn();
 
 			process(state, item, onProgress);
 
 			expect(sendChunks).toHaveBeenCalledWith(state, item, expect.any(Function), expect.any(Function));
 
-			sendChunks.mock.calls[0][2]({ loaded: 200 }, [{ id: "c1" }, { id: "c2" }]);
-
-			expect(onProgress).toHaveBeenCalledWith({
-				loaded: 250,
-				total: 1000
-			}, [item]);
-
-			sendChunks.mock.calls[0][2]({ loaded: 100 }, [{ id: "c3" }]);
-
-			expect(onProgress).toHaveBeenCalledWith({
-				loaded: 350,
-				total: 1000
-			}, [item]);
-		});
-
-		it("should send single chunk and handle progress", () => {
-			const state = {
-				chunks: [
-					{ id: "c1", progress: 0 },
-				]
-			};
-
-			const item = { file: { size: 1000 } };
-			const onProgress = jest.fn();
-
-			process(state, item, onProgress);
-
-			expect(sendChunks).toHaveBeenCalledWith(state, item, expect.any(Function), expect.any(Function));
-
-			sendChunks.mock.calls[0][2]({ loaded: 200 }, [{ id: "c1" }]);
+			sendChunks.mock.calls[0][2]({ loaded: 200 });
 
 			expect(onProgress).toHaveBeenCalledWith({
 				loaded: 200,
 				total: 1000
 			}, [item]);
+
+			sendChunks.mock.calls[0][2]({ loaded: 100 });
+
+			expect(onProgress).toHaveBeenCalledWith({
+				loaded: 300,
+				total: 1000
+			}, [item]);
+		});
+
+		it("should call abort on chunks", () => {
+			const abort = jest.fn();
+
+			const state = {
+				requests: {
+					c1: { abort, },
+					c2: { abort, },
+				},
+			};
+
+			const result = process(state, {}, );
+
+			result.abort();
+
+			expect(abort).toHaveBeenCalledTimes(2);
+
+			expect(state.aborted).toBe(true);
 		});
 	});
 

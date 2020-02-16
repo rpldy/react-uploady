@@ -7,8 +7,8 @@ import { getChunkDataFromFile } from "../utils";
 import type { BatchItem, OnProgress, SendOptions, SendResult } from "@rpldy/shared";
 import type { Chunk } from "./types";
 
-const getContentRangeValue = (chunk, item) =>
-	`bytes ${chunk.start}-${chunk.start + chunk.data.size - 1}/${item.file.size}`;
+const getContentRangeValue = (chunk, item) => chunk.data ?
+	`bytes ${chunk.start}-${chunk.start + chunk.data.size - 1}/${item.file.size}` : "";
 
 export default (
 	chunk: Chunk,
@@ -18,7 +18,7 @@ export default (
 	onProgress: OnProgress,
 ): SendResult => {
 
-	if (!chunk.data) {
+	if (!chunk.data && item.file) {
 		//slice the chunk based on bit position
 		chunk.data = getChunkDataFromFile(item.file, chunk.start, chunk.end);
 	}
@@ -32,7 +32,6 @@ export default (
 		headers: {
 			...sendOptions.headers,
 			"Content-Range": getContentRangeValue(chunk, item),
-			// "X-Unique-Upload-Id": "test-chunk-3-aaaa"
 		}
 	};
 

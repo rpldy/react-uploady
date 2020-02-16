@@ -26,6 +26,7 @@ describe("batchItemsSender tests", () => {
 				params: {
 					foo: "bar",
 				},
+				headers: {"x-test": "123"},
 				...options.destination,
 			},
 		};
@@ -57,6 +58,7 @@ describe("batchItemsSender tests", () => {
 			forceJsonResponse: options.forceJsonResponse,
 			withCredentials: options.withCredentials,
 			formatGroupParamName: options.formatGroupParamName,
+			headers: options.destination.headers,
 		}, expect.any(Function));
 
 		return {
@@ -100,12 +102,11 @@ describe("batchItemsSender tests", () => {
 
 		test.items.forEach((item, i) => {
 			const completed = (progressEvent.loaded / progressEvent.total) * 100;
-			expect(mockTrigger).toHaveBeenNthCalledWith(i + 1, SENDER_EVENTS.PROGRESS, {
+			expect(mockTrigger).toHaveBeenNthCalledWith(i + 1, SENDER_EVENTS.PROGRESS,
 				item,
-				completed: (completed / test.items.length),
-				loaded: (progressEvent.loaded / test.items.length)
-			});
+				(completed / test.items.length),
+				(progressEvent.loaded / test.items.length)
+			);
 		});
 	});
-
 });

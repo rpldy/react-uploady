@@ -18,8 +18,8 @@ const isSamePropInArrays = (arr1: Object[], arr2: Object[], prop: string | strin
 	const propsExtractor = getPropsExtractor(prop);
 
 	if (arr1 && arr2 && arr1.length === arr2.length) {
-		const props1 = propsExtractor(arr1), // arr1.map((i) => props.map((p)=> i[p]).join()),
-			props2 = propsExtractor(arr2); //.map((i) => props.map((p)=> i[p]).join());
+		const props1 = propsExtractor(arr1),
+			props2 = propsExtractor(arr2);
 
 		diff = !!props1.find((p, i) => p !== props2[i]);
 	}

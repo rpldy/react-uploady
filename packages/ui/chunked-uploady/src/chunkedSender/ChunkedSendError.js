@@ -1,7 +1,7 @@
 // @flow
 
 export default class ChunkedSendError extends Error {
-	constructor(message) {
+	constructor(message: string) {
 		super(message);
 		this.name = "ChunkedSendError";
 	}

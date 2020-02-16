@@ -21,6 +21,8 @@ const useFileProgressListener = generateUploaderEventHookWithState(
 const useFileCancelListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_CANCEL);
 const useFileErrorListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_ERROR);
 
+const useRequestPreSend = generateUploaderEventHook(UPLOADER_EVENTS.REQUEST_PRE_SEND);
+
 export {
 	useBatchStartListener,
 	useBatchFinishListener,
@@ -32,4 +34,6 @@ export {
 	useFileProgressListener,
 	useFileCancelListener,
 	useFileErrorListener,
+
+	useRequestPreSend,
 };

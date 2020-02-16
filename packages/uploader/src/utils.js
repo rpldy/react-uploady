@@ -11,11 +11,12 @@ const getMandatoryDestination = (dest: Destination): Destination => {
 	};
 };
 
-const getMandatoryOptions = (options: CreateOptions): CreateOptions => {
+const getMandatoryOptions = (options?: CreateOptions): CreateOptions => {
 	return {
 		...DEFAULT_OPTIONS,
 		...options,
-		destination: getMandatoryDestination(options.destination || {})
+		destination: options && options.destination ?
+			getMandatoryDestination(options.destination) : null,
 	};
 };
 

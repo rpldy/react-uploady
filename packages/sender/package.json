@@ -20,7 +20,7 @@
     "lodash": "^4.17.15"
   },
   "devDependencies": {
-    "flow-bin": "^0.113.0"
+    "flow-bin": "^0.118.0"
   },
   "publishConfig": {
     "access": "public"

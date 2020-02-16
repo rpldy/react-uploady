@@ -22,12 +22,12 @@
     "lodash": "^4.17.15"
   },
   "peerDependencies": {
+    "@rpldy/life-events": "^0.1.4",
     "react": ">=16.8",
-    "react-dom": ">=16.8",
-    "@rpldy/life-events": "^0.1.4"
+    "react-dom": ">=16.8"
   },
   "devDependencies": {
-    "flow-bin": "^0.113.0"
+    "flow-bin": "^0.118.0"
   },
   "publishConfig": {
     "access": "public"

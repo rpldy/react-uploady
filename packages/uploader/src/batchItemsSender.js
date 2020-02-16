@@ -10,25 +10,25 @@ import type { BatchItem, CreateOptions } from "@rpldy/shared";
 import type { ItemsSender } from "./types";
 
 const onItemUploadProgress = (items: BatchItem[], e: ProgressEvent, trigger) => {
-	const completed = (e.loaded / e.total) * 100,
+	const completed = Math.min(((e.loaded / e.total) * 100), 100),
 		completedPerItem = completed / items.length,
 		loadedAverage = e.loaded / items.length;
 
 	items.forEach((item: BatchItem) => {
 		logger.debugLog(`uploady.uploader.processor: file: ${item.id} progress event: loaded(${loadedAverage}) - completed(${completedPerItem})`);
-		trigger(SENDER_EVENTS.PROGRESS, {
+
+		trigger(SENDER_EVENTS.PROGRESS,
 			item,
-			completed: completedPerItem,
-			loaded: loadedAverage
-		});
+			completedPerItem,
+			loadedAverage);
 	});
 };
 
 export default (): ItemsSender => {
 	const send = (items: BatchItem[], batchOptions: CreateOptions) => {
 		const destination = batchOptions.destination,
-			url = destination && destination.url,
-			paramName = destination && destination.filesParamName;
+			url = destination?.url,
+			paramName = destination?.filesParamName;
 
 		if (!url) {
 			throw new Error("Destination URL not found! Can't send files without it");
@@ -44,11 +44,12 @@ export default (): ItemsSender => {
 			paramName: paramName || batchOptions.inputFieldName || DEFAULT_PARAM_NAME,
 			params: { //TODO: might need to rethink the order here:
 				...batchOptions.params,
-				...(destination && destination.params),
+				...destination?.params,
 			},
 			forceJsonResponse: batchOptions.forceJsonResponse,
 			withCredentials: batchOptions.withCredentials,
 			formatGroupParamName: batchOptions.formatGroupParamName,
+			headers: destination?.headers,
 		}, throttledProgress);
 	};
 

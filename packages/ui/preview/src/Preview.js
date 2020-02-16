@@ -61,10 +61,11 @@ const loadPreviewUrl = (item: BatchItem, options: MandatoryPreviewOptions): ?Pre
 	let data;
 
 	if (item.file) {
+		const file = item.file;
 		data = getFilePreviewUrl(item.file, options);
 
 		if (!data) {
-			data = getFallbackUrl(options.fallbackUrl, item.file);
+			data = getFallbackUrl(options.fallbackUrl, file);
 		}
 	} else
 		data = {

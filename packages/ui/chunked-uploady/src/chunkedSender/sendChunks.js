@@ -39,7 +39,7 @@ const resolveOnChunksFinished = (state: State, item: BatchItem, resolve): boolea
 	return finished;
 };
 
-export const handleChunk = async (state: State, item: BatchItem, onProgress: OnProgress, resolve, chunk: Chunk) => {
+export const handleChunk = async (state: State, item: BatchItem, onProgress: OnProgress, resolve: (any) => void, chunk: Chunk) => {
 	const chunkSendResult = sendChunk(chunk, item, state.url, state.sendOptions, onProgress);
 	await handleChunkRequest(state, chunk.id, chunkSendResult);
 
@@ -52,7 +52,7 @@ const sendChunks = (
 	state: State,
 	item: BatchItem,
 	onProgress: OnProgress,
-	resolve,
+	resolve: (any) => void,
 ) => {
 	if (!state.finished && !state.aborted) {
 		const inProgress = Object.keys(state.requests).length;

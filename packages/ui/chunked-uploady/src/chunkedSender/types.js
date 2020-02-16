@@ -9,19 +9,19 @@ export type Chunk = {
 	end: number,
 	data: ?Blob,
 	attempt: number,
-	uploaded: number,
 };
 
-export type State = {
+export type State = {|
+	...MandatoryChunkedOptions,
 	finished: boolean,
 	aborted: boolean,
-	requests: { [string]: { abort: ()=>void } },
+	requests: { [string]: { abort: () => boolean } },
 	responses: any[],
 	chunks: Chunk[],
+	uploaded: number,
 	url: string,
 	sendOptions: SendOptions,
-	...MandatoryChunkedOptions,
-};
+|};
 
 export type ChunksSendResponse = {
 	sendPromise: Promise<UploadData>,

@@ -3,36 +3,48 @@ import { triggerUpdater, isSamePropInArrays, FILE_STATES } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 
-import type { BatchItem, SendResult } from "@rpldy/shared";
+import type { BatchItem, CreateOptions, SendResult } from "@rpldy/shared";
 import type { QueueState, ProcessNextMethod } from "./types";
 
-const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[]) => {
+type ItemsSendData = {
+	items: BatchItem[],
+	options: CreateOptions
+}
+
+const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], options: CreateOptions): Promise<ItemsSendData> => {
 	// $FlowFixMe - https://github.com/facebook/flow/issues/8215
 	const updated = await triggerUpdater<BatchItem[]>(
-		queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, items);
+		queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, { items, options });
 
 	if (updated) {
-		if (updated.length !== items.length ||
-			!isSamePropInArrays(updated, items, ["id", "batchId"])) {
-			throw new Error(`REQUEST_PRE_SEND event handlers must return same items with same ids`);
+		if (updated.items) {
+			if (updated.items.length !== items.length ||
+				!isSamePropInArrays(updated.items, items, ["id", "batchId"])) {
+				throw new Error(`REQUEST_PRE_SEND event handlers must return same items with same ids`);
+			}
+
+			items = updated.items;
 		}
 
-		items = updated;
+		options = {
+			...options,
+			...updated.options,
+		};
 	}
 
-	return items;
+	return { items, options };
 };
 
-const prepareAllowedItems = async (queue: QueueState, items: BatchItem[]): Promise<BatchItem[]> => {
+const prepareAllowedItems = async (queue: QueueState, items: BatchItem[]): Promise<ItemsSendData> => {
 	const allowedIds = items.map((item: BatchItem) => item.id);
 
 	queue.updateState((state) => {
 		state.activeIds = state.activeIds.concat(allowedIds);
 	});
 
-	items = await triggerPreSendUpdate(queue, items);
+	const options = queue.getState().batches[items[0].batchId].batchOptions;
 
-	return items;
+	return await triggerPreSendUpdate(queue, items, options);
 };
 
 const updateUploadingState = (queue: QueueState, items: BatchItem[], sendResult: SendResult) => {
@@ -45,10 +57,10 @@ const updateUploadingState = (queue: QueueState, items: BatchItem[], sendResult:
 	});
 };
 
-const sendAllowedItems = async (queue: QueueState, items: BatchItem[], next: ProcessNextMethod) => {
-	const batchOptions = queue.getState().batches[items[0].batchId].batchOptions;
-
-	const sendResult = queue.sender.send(items, batchOptions);
+const sendAllowedItems = async (queue: QueueState, itemsSendData: ItemsSendData, next: ProcessNextMethod) => {
+	// const batchOptions = queue.getState().batches[items[0].batchId].batchOptions;
+	const { items, options } = itemsSendData;
+	const sendResult = queue.sender.send(items, options);
 
 	updateUploadingState(queue, items, sendResult);
 
@@ -94,8 +106,8 @@ export default async (queue: QueueState, ids: string[], next: ProcessNextMethod)
 		.filter(Boolean);
 
 	if (allowedItems.length) {
-		allowedItems = await prepareAllowedItems(queue, allowedItems);
-		sendAllowedItems(queue, allowedItems, next); //we dont need to wait for the response here
+		const itemsSendData = await prepareAllowedItems(queue, allowedItems);
+		sendAllowedItems(queue, itemsSendData, next); //we dont need to wait for the response here
 	}
 
 	if (!reportCancelledItems(queue, items, cancelledResults, next)) {

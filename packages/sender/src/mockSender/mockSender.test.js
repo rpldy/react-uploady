@@ -24,6 +24,8 @@ describe("mockSender tests", () => {
 		response: { test: true },
 	};
 
+	const items = [1,2,3];
+
 	const doMockSend = (options = {}, updatedOptions = {}, abort = false) => {
 
 		const sender = createMockSender(options);
@@ -32,7 +34,7 @@ describe("mockSender tests", () => {
 			sender.update(updatedOptions);
 		}
 
-		const result = sender.send(null, null, null, onProgress);
+		const result = sender.send(items, null, null, onProgress);
 
 		if (abort) {
 			result.abort();
@@ -67,7 +69,7 @@ describe("mockSender tests", () => {
 		expect(onProgress).toHaveBeenNthCalledWith(1, {
 			total: MOCK_DEFAULTS.fileSize,
 			loaded: MOCK_DEFAULTS.fileSize / 10,
-		});
+		}, items);
 
 		expect(result.state).toBe(FILE_STATES.FINISHED);
 	});
@@ -89,7 +91,7 @@ describe("mockSender tests", () => {
 		expect(onProgress).toHaveBeenNthCalledWith(1, {
 			total: customOptions.fileSize,
 			loaded: customOptions.fileSize * 0.25,
-		});
+		}, items);
 
 		expect(result.state).toBe(FILE_STATES.FINISHED);
 	});
@@ -120,7 +122,7 @@ describe("mockSender tests", () => {
 		expect(onProgress).toHaveBeenNthCalledWith(1, {
 			total: customOptions.fileSize,
 			loaded: customOptions.fileSize * 0.25,
-		});
+		}, items);
 
 		expect(result.state).toBe(FILE_STATES.FINISHED);
 	});

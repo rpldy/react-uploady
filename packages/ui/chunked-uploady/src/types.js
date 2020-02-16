@@ -1,9 +1,9 @@
 // @flow
 
-import type { NonMaybeTypeFunc } from "@rpldy/shared";
+// import type { NonMaybeTypeFunc } from "@rpldy/shared";
 import type { UploadyProps } from "@rpldy/uploady";
 
-export type ChunkedOptions = {
+export type ChunkedOptions = {|
 	//whether to divide the uploaded file into chunks (default: true)
 	chunked?: boolean,
 	//the maximum chunk size (default: 5000000 bytes)
@@ -12,11 +12,16 @@ export type ChunkedOptions = {
 	retries?: number,
 	//the number of chunks to upload in parallel (default: 0)
 	parallel?: number,
-}
+|}
 
-export type MandatoryChunkedOptions = $Exact<$ObjMap<ChunkedOptions, NonMaybeTypeFunc>>;
+export type MandatoryChunkedOptions = {| //$Exact<$ObjMap<ChunkedOptions, NonMaybeTypeFunc>>;
+    chunked: boolean,
+    chunkSize: number,
+    retries: number,
+    parallel: number,
+|};
 
-export type ChunkedUploadyProps = {
+export type ChunkedUploadyProps = {|
 	...UploadyProps,
 	...ChunkedOptions,
-};
+|};

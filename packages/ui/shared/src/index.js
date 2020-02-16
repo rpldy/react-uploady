@@ -12,6 +12,8 @@ import {
 	useFileProgressListener,
 	useFileCancelListener,
 	useFileErrorListener,
+
+	useRequestPreSend,
 } from "./eventListenerHooks";
 
 import assertContext from "./assertContext";
@@ -38,4 +40,6 @@ export {
 	useFileProgressListener,
 	useFileCancelListener,
 	useFileErrorListener,
+
+	useRequestPreSend,
 };

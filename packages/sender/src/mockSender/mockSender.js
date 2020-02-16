@@ -17,7 +17,7 @@ type MockResponse = {
 	progressEvents: SenderProgressEvent[]
 };
 
-const createRequest = (options: MandatoryMockOptions) => {
+const createRequest = (options: MandatoryMockOptions, items: BatchItem[]) => {
 	const start = performance.now();
 	const progressEventsData: SenderProgressEvent[] = [];
 
@@ -82,7 +82,7 @@ const createRequest = (options: MandatoryMockOptions) => {
 					};
 
 					progressEventsData.push(event);
-					progressCallback(event);
+					progressCallback(event, items);
 				}
 			}, ms);
 		});
@@ -131,7 +131,7 @@ export default (options?: MockOptions) => {
 
 	const send = (items: BatchItem[], url: string, sendOptions: SendOptions, onProgress: OnProgress): SendResult => {
 		logger.debugLog("uploady.mockSender: about to make a mock request for items: ", items);
-		const request = createRequest(mockOptions);
+		const request = createRequest(mockOptions, items);
 
 		request.onProgress(onProgress);
 

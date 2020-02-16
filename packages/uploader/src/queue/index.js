@@ -35,6 +35,9 @@ export default (
 					stateItem.loaded = loaded;
 					stateItem.completed = completed;
 				});
+
+				//TODO !!!!!!!!!!!! trigger item progress
+				// UPLOADER_EVENTS.ITEM_PROGRESS
 			}
 		});
 

@@ -26,7 +26,9 @@ describe("processBatchItems tests", () => {
 		request: Promise.resolve(requestResponse),
 	};
 
-	const batchOptions = {};
+	const batchOptions = {
+		destination: {}
+	};
 
 	const getMockStateData = () => ({
 		items: {
@@ -95,7 +97,7 @@ describe("processBatchItems tests", () => {
 			.mockResolvedValueOnce(false)
 			.mockResolvedValueOnce(false);
 
-		mockTriggerUpdater.mockResolvedValueOnce(["u1", "u2", "u3"]);
+		mockTriggerUpdater.mockResolvedValueOnce({items: ["u1", "u2", "u3"]});
 
 		expect(processBatchItems(queueState, ["u1", "u2"], mockNext)).rejects
 			.toThrow("REQUEST_PRE_SEND event handlers must return same items with same ids");
@@ -110,7 +112,7 @@ describe("processBatchItems tests", () => {
 
 		mockUtils.isSamePropInArrays.mockReturnValueOnce(false);
 
-		mockTriggerUpdater.mockResolvedValueOnce([{ id: "u1" }, { id: "u2" }]);
+		mockTriggerUpdater.mockResolvedValueOnce({items:[{ id: "u1" }, { id: "u2" }]});
 
 		expect(processBatchItems(queueState, ["u1", "u2"], mockNext)).rejects
 			.toThrow("REQUEST_PRE_SEND event handlers must return same items with same ids");
@@ -134,14 +136,27 @@ describe("processBatchItems tests", () => {
 			foo: "bar"
 		}];
 
-		mockTriggerUpdater.mockResolvedValueOnce(newItems);
+		const newOptions = {
+			test: true,
+		};
+
+		mockTriggerUpdater.mockResolvedValueOnce({
+			items: newItems,
+			options: newOptions,
+		});
 
 		await processBatchItems(queueState, ["u1", "u2"], mockNext);
 
 		expect(mockTriggerUpdater).toHaveBeenCalledWith(
-			queueState.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, Object.values(queueState.state.items));
+			queueState.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, {
+				items: Object.values(queueState.state.items),
+				options: batchOptions,
+			});
 
-		expect(queueState.sender.send).toHaveBeenCalledWith(Object.values(newItems), batchOptions);
+		expect(queueState.sender.send).toHaveBeenCalledWith(Object.values(newItems), {
+			...batchOptions,
+			...newOptions
+		});
 	});
 
 	it("should report cancelled items", async () => {

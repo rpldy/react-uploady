@@ -24,7 +24,7 @@
     "@rpldy/upload-button": "^0.1.4",
     "@rpldy/upload-url-input": "^0.1.4",
     "@storybook/addon-knobs": "^5.2.8",
-    "flow-bin": "^0.113.0",
+    "flow-bin": "^0.118.0",
     "styled-components": "^4.4.1"
   },
   "peerDependencies": {

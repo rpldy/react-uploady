@@ -32,8 +32,9 @@ describe("create batchItem tests", () => {
 	});
 
 	it("should throw on unknown info type", () => {
-		expect(()=>{
-			createItem(()=>{});
+		expect(() => {
+			createItem(() => {
+			});
 		}).toThrow();
 	});
 

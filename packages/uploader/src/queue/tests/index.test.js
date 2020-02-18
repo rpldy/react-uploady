@@ -1,3 +1,5 @@
+import { SENDER_EVENTS, UPLOADER_EVENTS } from "../../consts";
+
 jest.mock("../processQueueNext", () => jest.fn());
 jest.mock("../abort", ()=>({
 	abortAll: jest.fn(),
@@ -15,15 +17,18 @@ describe("queue tests", () => {
 
 	let senderOnHandler;
 
-	const mockSenderOn = (name, handler) => {
+	const mockSenderOn = jest.fn((name, handler) => {
 		senderOnHandler = handler;
-	};
+	});
 
-	const trigger = () => {
-		},
+	const trigger = jest.fn(),
 		cancellable = () => {
 		},
 		sender = { on: mockSenderOn };
+
+    beforeEach(() => {
+        clearJestMocks(trigger);
+    });
 
 	it("should initialize and add uploads", () => {
 
@@ -51,13 +56,9 @@ describe("queue tests", () => {
 		expect(state.items["u1"]).toBe(batch.items[0]);
 		expect(state.items["u2"]).toBe(batch.items[1]);
 
-		senderOnHandler({ id: "u1" }, 20, 1000);
-
-		const state2 = queueState.getState();
-		expect(state2.items["u1"].loaded).toBe(1000);
-		expect(state2.items["u1"].completed).toBe(20);
-
 		expect(window[`__${uploaderId}_queue_state`]).toBe(queueState);
+
+		expect(mockSenderOn).toHaveBeenCalledWith(SENDER_EVENTS.PROGRESS, expect.any(Function));
 	});
 
 	it("should update state", () => {
@@ -87,4 +88,26 @@ describe("queue tests", () => {
 		expect(abortMethods.abortBatch).toHaveBeenCalledWith(expect.any(Object), "b1");
 	});
 
+    it("should trigger UPLOADER_EVENTS.ITEM_PROGRESS on sender progress", () => {
+
+        const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
+
+        const batch = { items: [{ id: "u1" }, { id: "u2" }] },
+            batchOptions = { };
+
+        queue.uploadBatch(batch, batchOptions);
+
+        senderOnHandler({ id: "u1" }, 20, 1000);
+
+        const state2 = queue.getState();
+        expect(state2.items["u1"].loaded).toBe(1000);
+        expect(state2.items["u1"].completed).toBe(20);
+
+        expect(trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_PROGRESS, {
+            id: "u1",
+            loaded: 1000,
+            completed: 20,
+        });
+
+    });
 });

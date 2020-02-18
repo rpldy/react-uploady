@@ -3,6 +3,7 @@ import { FILE_STATES, BATCH_STATES } from "../../consts";
 const logger = {
 	isDebugOn: jest.fn(),
 	debugLog: jest.fn(),
+    setDebug: jest.fn(),
 };
 
 const triggerCancellable = jest.fn();

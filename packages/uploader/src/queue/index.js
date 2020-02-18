@@ -2,7 +2,7 @@
 
 import produce from "immer";
 import { logger } from "@rpldy/shared";
-import { SENDER_EVENTS } from "../consts";
+import { SENDER_EVENTS, UPLOADER_EVENTS } from "../consts";
 import processQueueNext from "./processQueueNext";
 import * as abortMethods from "./abort";
 
@@ -27,19 +27,7 @@ export default (
 		aborts: {},
 	};
 
-	sender.on(SENDER_EVENTS.PROGRESS,
-		(item: BatchItem, completed: number, loaded: number) => {
-			if (state.items[item.id]) {
-				updateState((state: State) => {
-					const stateItem = state.items[item.id];
-					stateItem.loaded = loaded;
-					stateItem.completed = completed;
-				});
-
-				//TODO !!!!!!!!!!!! trigger item progress
-				// UPLOADER_EVENTS.ITEM_PROGRESS
-			}
-		});
+    const getState = () => state;
 
 	const updateState = (updater: (State) => void) => {
 		state = produce(state, updater);
@@ -62,11 +50,25 @@ export default (
 		processQueueNext(queueState);
 	};
 
-	const queueState = {
+    sender.on(SENDER_EVENTS.PROGRESS,
+        (item: BatchItem, completed: number, loaded: number) => {
+            if (state.items[item.id]) {
+                updateState((state: State) => {
+                    const stateItem = state.items[item.id];
+                    stateItem.loaded = loaded;
+                    stateItem.completed = completed;
+                });
+
+                //trigger item progress event for the outside
+                trigger(UPLOADER_EVENTS.ITEM_PROGRESS,  getState().items[item.id]);
+            }
+        });
+
+    const queueState = {
 		getOptions: () => options,
-		getState: () => state,
 		getCurrentActiveCount: () => state.activeIds.length,
-		updateState,
+        getState,
+        updateState,
 		trigger,
 		cancellable,
 		sender,

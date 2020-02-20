@@ -18,6 +18,7 @@ export default (item: BatchItem, options: MandatoryChunkedOptions): Chunk[] => {
 				end: Math.min((start + chunkSize), item.file.size),
 				data: null,
 				attempt: 0,
+                uploaded: 0,
 			};
 		});
 };

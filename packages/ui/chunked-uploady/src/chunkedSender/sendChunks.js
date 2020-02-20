@@ -28,7 +28,7 @@ const resolveOnChunksFinished = (state: State, item: BatchItem, resolve): boolea
 	if (finished) {
 		state.finished = true;
 
-		logger.debugLog(`chunkedSender: chunked upload finished for item: ${item.id} with ${state.chunks.length}`);
+		logger.debugLog(`chunkedSender: chunked upload finished for item: ${item.id}`, state.responses);
 
 		resolve({
 			state: FILE_STATES.FINISHED,

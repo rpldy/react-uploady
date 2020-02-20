@@ -64,6 +64,7 @@
     "jest-enzyme": "^7.1.2",
     "jest-styled-components": "^6.3.3",
     "lerna": "^3.20.2",
+    "rc-progress": "^2.5.2",
     "rimraf": "^3.0.0",
     "shelljs": "^0.8.3",
     "storybook-readme": "^5.0.8",

@@ -1,34 +1,46 @@
 import React from "react";
+import styled from "styled-components";
+import { Circle } from "rc-progress";
 import { useFileProgressListener } from "@rpldy/uploady";
 
+const StyledProgressCircle = styled(Circle)`
+  width: 100px;
+  height: 100px;
+`;
+
 const StoryUploadProgress = () => {
-	const [completed, setCompleted] = React.useState({});
-	const fileProgress = useFileProgressListener((item) => {
-		console.log(">>>>> (hook) File Progress - ", item);
-	});
+    const [uploads, setUploads] = React.useState({});
+    const progressData = useFileProgressListener((item) => {
+        console.log(">>>>> (hook) File Progress - ", item);
+    });
 
-	if (fileProgress && fileProgress.completed) {
-		const item = completed[fileProgress.id] || [0];
+    if (progressData && progressData.completed) {
+        const upload = uploads[progressData.id] || { name: progressData.file.name, progress: [0] };
 
-		if (!~item.indexOf(fileProgress.completed)) {
-			item.push(fileProgress.completed);
+        if (!~upload.progress.indexOf(progressData.completed)) {
 
-			setCompleted({
-				...completed,
-				[fileProgress.id]: item,
-			});
-		}
-	}
+            upload.progress.push(progressData.completed);
 
-	const completedEntries = Object.entries(completed);
+            setUploads({
+                ...uploads,
+                [progressData.id]: upload,
+            });
+        }
+    }
 
-	return <div>
-		{completedEntries.length ? "Upload Completed:" : ""}<br/>
-		{completedEntries
-			.map(([id, progress: number[]]): React.Element<'p'> =>
-				// $FlowFixMe
-				<p key={id}>{id} - {progress.join(", ")}</p>)}
-	</div>;
+    const entries = Object.entries(uploads);
+
+    return <div>
+
+        {entries
+            .map(([id, { progress, name }]) =>
+                <div key={id}>
+                    <StyledProgressCircle strokeWidth={2}
+                                          percent={progress[progress.length - 1]}
+                    />
+                    <p>{name}</p>
+                </div>)}
+    </div>;
 };
 
 export default StoryUploadProgress;

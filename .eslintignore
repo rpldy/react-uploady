@@ -4,3 +4,4 @@ node_modules/
 *.stories.js
 *.mock.js
 packages/**/lib/**/*.js
+story-helpers/

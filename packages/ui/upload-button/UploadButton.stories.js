@@ -1,11 +1,11 @@
 // @flow
-import React, { Component, useMemo, useState, useContext } from "react";
+import React, { Component, useMemo } from "react";
 import UploadButton from "./src";
 import Uploady, {
 	UploadyContext,
 	useFileFinishListener,
 	useBatchStartListener,
-	useBatchAbortListener,
+	// useBatchAbortListener,
 
 	UPLOADER_EVENTS,
 } from "@rpldy/uploady";
@@ -13,6 +13,7 @@ import {
 	withKnobs,
 	useStoryUploadySetup,
 	StoryUploadProgress,
+    AbortButton,
 } from "../../../story-helpers";
 
 // import readme from '../README.md';
@@ -142,23 +143,6 @@ export const WithClass = () => {
 		enhancer={enhancer}>
 		<ClassUsingCustomButton/>
 	</Uploady>;
-};
-
-const AbortButton = () => {
-	const context = useContext(UploadyContext);
-	const [uploadingId, setUploading] = useState(null);
-
-	useBatchStartListener((batch) => {
-		setUploading(batch.id);
-	});
-
-	useBatchAbortListener((batch) => {
-		console.log(">>>>> AbortButton - (hook) BATCH ABORT - ", batch);
-	});
-
-	return context && uploadingId ? <button onClick={() => {
-		context.abortBatch(uploadingId);
-	}}>Abort</button> : null;
 };
 
 export const Abort = () => {

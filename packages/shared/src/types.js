@@ -82,7 +82,7 @@ type BatchFile = {
 
 export type BatchItem = BatchUrl & BatchFile;
 
-export type OnProgress = (e: SenderProgressEvent, BatchItem[]) => void;
+export type OnProgress = (e: SenderProgressEvent, Object[]) => void;
 
 export type Batch = {
 	id: string,

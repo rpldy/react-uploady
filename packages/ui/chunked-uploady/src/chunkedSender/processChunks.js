@@ -30,7 +30,9 @@ export const process = (
     onProgress: OnProgress
 ): ChunksSendResponse => {
     const onChunkProgress = throttle(
-        (e, { id }: Chunk) => {
+        (e, chunks: Chunk[]) => {
+            //we only ever send one chunk per request
+            const { id } = chunks[0];
 
             state.uploaded[id] = e.loaded;
 

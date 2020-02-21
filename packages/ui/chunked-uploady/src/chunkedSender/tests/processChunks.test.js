@@ -2,12 +2,15 @@ import getChunks from "../getChunks";
 import sendChunks from "../sendChunks";
 import processChunks, { process, abortChunkedRequest } from "../processChunks";
 
+jest.mock("lodash", () => ({ throttle: (fn) => fn })); //doesnt work :(
 jest.mock("../getChunks", () => jest.fn());
 jest.mock("../sendChunks", () => jest.fn());
 
 describe("processChunks tests", () => {
 
 	beforeEach(() => {
+	    jest.useRealTimers();
+
 		clearJestMocks(
 			getChunks,
 			sendChunks,
@@ -33,7 +36,7 @@ describe("processChunks tests", () => {
 		expect(sendChunks).toHaveBeenCalledWith({
 			finished: false,
 			aborted: false,
-			uploaded: 0,
+			uploaded: {},
 			requests: {},
 			responses: [],
 			chunks,
@@ -44,14 +47,12 @@ describe("processChunks tests", () => {
 	});
 
 	describe("process tests", () => {
-
 		it("should send chunks and handle progress", () => {
+		    jest.useFakeTimers(); //using fake timers coz for some reason lodash isnt mocked... :(
+
 			const state = {
-				uploaded:0,
+				uploaded: {},
 				chunks: [
-					{ id: "c1",},
-					{ id: "c2",},
-					{ id: "c3",},
 				]
 			};
 			const item = { file: { size: 1000 }};
@@ -61,19 +62,32 @@ describe("processChunks tests", () => {
 
 			expect(sendChunks).toHaveBeenCalledWith(state, item, expect.any(Function), expect.any(Function));
 
-			sendChunks.mock.calls[0][2]({ loaded: 200 });
+			const onChunkProgress = sendChunks.mock.calls[0][2];
+
+			onChunkProgress({ loaded: 200 }, [{id: "c1"}]);
 
 			expect(onProgress).toHaveBeenCalledWith({
 				loaded: 200,
 				total: 1000
 			}, [item]);
 
-			sendChunks.mock.calls[0][2]({ loaded: 100 });
+			jest.runAllTimers();
+            onChunkProgress({ loaded: 300 }, [{id: "c1"}]);
 
 			expect(onProgress).toHaveBeenCalledWith({
 				loaded: 300,
 				total: 1000
 			}, [item]);
+
+            jest.runAllTimers();
+            onChunkProgress({ loaded: 300 }, [{id: "c2"}]);
+
+            expect(onProgress).toHaveBeenCalledWith({
+                loaded: 600,
+                total: 1000
+            }, [item]);
+
+            expect(onProgress).toHaveBeenCalledTimes(3);
 		});
 
 		it("should call abort on chunks", () => {

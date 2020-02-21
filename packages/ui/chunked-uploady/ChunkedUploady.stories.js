@@ -5,61 +5,82 @@ import { number } from "@storybook/addon-knobs"
 import UploadButton from "@rpldy/upload-button";
 import ChunkedUploady, { useRequestPreSend } from "./src"
 import {
-	withKnobs,
-	useStoryUploadySetup,
-	StoryUploadProgress,
+    withKnobs,
+    useStoryUploadySetup,
+    StoryUploadProgress,
+    AbortButton,
 } from "../../../story-helpers";
 
 const UploadButtonWithUniqueIdHeader = () => {
-	useRequestPreSend((data) => {
-		return {
-			options: {
-				destination: {
-					...data.options.destination,
-					headers: {
-						...data.options.destination.headers,
-						"X-Unique-Upload-Id": `rpldy-chunked-uploader-${Date.now()}`,
-					}
-				}
-			}
-		}
-	});
+    useRequestPreSend((data) => {
+        return {
+            options: {
+                destination: {
+                    ...data.options.destination,
+                    headers: {
+                        ...data.options.destination.headers,
+                        "X-Unique-Upload-Id": `rpldy-chunked-uploader-${Date.now()}`,
+                    }
+                }
+            }
+        }
+    });
 
-	return <UploadButton/>
+    return <UploadButton/>
+};
+
+const useChunkedStoryHelper = () => {
+    const setup = useStoryUploadySetup({ noGroup: true });
+    const chunkSize = number("chunk size (bytes)", 5242880);
+
+    return { ...setup, chunkSize };
 };
 
 export const Simple = () => {
-	const { enhancer, destination, multiple } = useStoryUploadySetup({ noGroup: true });
-	const chunkSize = number("chunk size (bytes)", 5242880);
+    const { enhancer, destination, multiple, chunkSize } = useChunkedStoryHelper();
 
-	return <ChunkedUploady
-		debug
-		multiple={multiple}
-		destination={destination}
-		enhancer={enhancer}
-		chunkSize={chunkSize}>
-		<UploadButtonWithUniqueIdHeader/>
-	</ChunkedUploady>;
+    return <ChunkedUploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        chunkSize={chunkSize}>
+        <UploadButtonWithUniqueIdHeader/>
+    </ChunkedUploady>;
 };
 
 export const WithProgress = () => {
-	const { enhancer, destination, multiple } = useStoryUploadySetup({ noGroup: true });
-	const chunkSize = number("chunk size (bytes)", 5242880);
+    const { enhancer, destination, multiple, chunkSize } = useChunkedStoryHelper();
 
-	return <ChunkedUploady
-		debug
-		multiple={multiple}
-		destination={destination}
-		enhancer={enhancer}
-		chunkSize={chunkSize}>
-		<StoryUploadProgress/>
-		<UploadButtonWithUniqueIdHeader/>
-	</ChunkedUploady>;
+    return <ChunkedUploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        chunkSize={chunkSize}>
+        <StoryUploadProgress/>
+        <UploadButtonWithUniqueIdHeader/>
+    </ChunkedUploady>;
 };
 
 
+export const WithAbortButton = () => {
+    const { enhancer, destination, multiple, chunkSize } = useChunkedStoryHelper();
+
+    return <ChunkedUploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        chunkSize={chunkSize}>
+        <UploadButtonWithUniqueIdHeader/>
+        <br/>
+        <AbortButton/>
+    </ChunkedUploady>
+};
+
 export default {
-	component: UploadButton,
-	title: "Chunked Uploady",
-	decorators: [withKnobs],
+    component: UploadButton,
+    title: "Chunked Uploady",
+    decorators: [withKnobs],
 };

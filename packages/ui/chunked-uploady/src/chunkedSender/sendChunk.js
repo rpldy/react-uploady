@@ -17,8 +17,7 @@ export default (
     sendOptions: SendOptions,
     onProgress: OnProgress,
 ): SendResult => {
-
-    if (!chunk.data && item.file) {
+    if (!chunk.data) {
         //slice the chunk based on bit position
         chunk.data = getChunkDataFromFile(item.file, chunk.start, chunk.end);
     }
@@ -36,7 +35,7 @@ export default (
     };
 
     const onChunkProgress = (e) => {
-        onProgress(e, chunk);
+        onProgress(e, [chunk]);
     };
 
     return send([chunkItem], url, sendOptions, onChunkProgress);

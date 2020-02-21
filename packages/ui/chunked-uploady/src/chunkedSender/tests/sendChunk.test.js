@@ -8,27 +8,37 @@ jest.mock("../../utils", () => ({ getChunkDataFromFile: jest.fn() }));
 
 describe("sendChunk tests", () => {
 
+    const onProgress = jest.fn();
+
+    beforeEach(() => {
+        clearJestMocks(
+            send,
+            onProgress
+        );
+    });
+
 	it.each([
 		null,
-		{},
+		{size: 9},
 	])("should send chunk with data = %s", (data) => {
 		const url = "test.com",
 			chunk = { id: "c1", start: 1, end: 10, data },
 			fileData = data || {size: 10},
 			file = { size: 400 },
-			chunkItem = {},
-			sendOptions = { method: "POST", headers: { "x-test": 123 } },
-			onProgress = {};
+			chunkItem = {id: "ci-1"},
+			sendOptions = { method: "POST", headers: { "x-test": 123 } };
 
 		if (!data) {
 			getChunkDataFromFile.mockReturnValueOnce(fileData);
 		}
 
 		createBatchItem.mockReturnValueOnce(chunkItem);
-
 		sendChunk(chunk, { file }, url, sendOptions, onProgress);
 
-		expect(getChunkDataFromFile).toHaveBeenCalledWith(file, chunk.start, chunk.end);
+        if (!data) {
+            expect(getChunkDataFromFile).toHaveBeenCalledWith(file, chunk.start, chunk.end);
+        }
+
 		expect(createBatchItem).toHaveBeenCalledWith(fileData, "c1");
 
 		expect(send).toHaveBeenCalledWith(
@@ -38,9 +48,15 @@ describe("sendChunk tests", () => {
 				...sendOptions,
 				headers: {
 					...sendOptions.headers,
-					"Content-Range": "bytes 1-10/400",
+					"Content-Range": `bytes 1-${fileData.size}/400`,
 				}
-			}, onProgress);
-	});
+			}, expect.any(Function));
 
+		const progressEvent = {loaded: 123};
+		send.mock.calls[0][3](progressEvent);
+		expect(onProgress).toHaveBeenCalledWith(progressEvent, [{
+		    ...chunk,
+            data: fileData,
+        }]);
+	});
 });

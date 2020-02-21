@@ -13,7 +13,7 @@ import {
 	withKnobs,
 	useStoryUploadySetup,
 	StoryUploadProgress,
-    AbortButton,
+    StoryAbortButton,
 } from "../../../story-helpers";
 
 // import readme from '../README.md';
@@ -159,7 +159,7 @@ export const Abort = () => {
 			enhancer={enhancer}>
 
 			<UploadButton/>
-			<AbortButton/>
+			<StoryAbortButton/>
 		</Uploady>
 	</div>
 };

@@ -8,7 +8,7 @@ import {
     withKnobs,
     useStoryUploadySetup,
     StoryUploadProgress,
-    AbortButton,
+    StoryAbortButton,
 } from "../../../story-helpers";
 
 const UploadButtonWithUniqueIdHeader = () => {
@@ -16,14 +16,12 @@ const UploadButtonWithUniqueIdHeader = () => {
         return {
             options: {
                 destination: {
-                    ...data.options.destination,
                     headers: {
-                        ...data.options.destination.headers,
                         "X-Unique-Upload-Id": `rpldy-chunked-uploader-${Date.now()}`,
                     }
                 }
             }
-        }
+        };
     });
 
     return <UploadButton/>
@@ -63,7 +61,6 @@ export const WithProgress = () => {
     </ChunkedUploady>;
 };
 
-
 export const WithAbortButton = () => {
     const { enhancer, destination, multiple, chunkSize } = useChunkedStoryHelper();
 
@@ -75,7 +72,7 @@ export const WithAbortButton = () => {
         chunkSize={chunkSize}>
         <UploadButtonWithUniqueIdHeader/>
         <br/>
-        <AbortButton/>
+        <StoryAbortButton/>
     </ChunkedUploady>
 };
 

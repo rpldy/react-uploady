@@ -83,7 +83,7 @@ const processNext = async (queue: QueueState) => {
 			{ concurrent = 0, maxConcurrent = 0 } = queue.getOptions();
 
 		if (!currentCount || (concurrent && currentCount < maxConcurrent)) {
-			logger.debugLog("uploady.uploader.processor: Processing next upload - ", {
+			logger.debugLog("uploader.processor: Processing next upload - ", {
 				ids,
 				state: queue.getState(),
 				currentCount,

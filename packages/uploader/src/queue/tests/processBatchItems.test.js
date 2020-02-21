@@ -1,4 +1,3 @@
-jest.mock("../processFinishedRequest", () => jest.fn());
 import {
 	FILE_STATES,
 	utils as mockUtils,
@@ -8,6 +7,8 @@ import getQueueState from "./mocks/getQueueState.mock";
 import processBatchItems  from "../processBatchItems";
 import mockProcessFinishedRequest from "../processFinishedRequest";
 import { UPLOADER_EVENTS } from "../../consts";
+
+jest.mock("../processFinishedRequest", () => jest.fn());
 
 describe("processBatchItems tests", () => {
 	const mockNext = jest.fn();

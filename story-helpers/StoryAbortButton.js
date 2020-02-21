@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useState } from "react";
 import { UploadyContext, useBatchAbortListener, useBatchStartListener } from "@rpldy/shared-ui";
 
-const AbortButton = () => {
+const StoryAbortButton = () => {
     const context = useContext(UploadyContext);
     const [uploadingId, setUploading] = useState(null);
 
@@ -10,7 +10,7 @@ const AbortButton = () => {
     });
 
     useBatchAbortListener((batch) => {
-        console.log(">>>>> AbortButton - (hook) BATCH ABORT - ", batch);
+        console.log(">>>>> StoryAbortButton - (hook) BATCH ABORT - ", batch);
     });
 
     const onClick = useCallback(() => {
@@ -21,4 +21,4 @@ const AbortButton = () => {
         <button onClick={onClick}>Abort</button> : null;
 };
 
-export default AbortButton;
+export default StoryAbortButton;

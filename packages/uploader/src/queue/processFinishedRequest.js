@@ -23,7 +23,7 @@ export default (queue: QueueState, finishedData: FinishData[], next: ProcessNext
 		const state = queue.getState();
 		const { id, info } = itemData;
 
-		logger.debugLog("uploady.uploader.processor.queue: request finished - ", { id, info });
+		logger.debugLog("uploader.processor.queue: request finished - ", { id, info });
 
 		if (state.items[id]) {
 			queue.updateState((state) => {

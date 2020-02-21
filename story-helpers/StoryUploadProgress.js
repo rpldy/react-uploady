@@ -14,6 +14,9 @@ const StoryUploadProgress = () => {
         console.log(">>>>> (hook) File Progress - ", item);
     });
 
+
+    //TODO : add error hook - paint circle red on error
+
     if (progressData && progressData.completed) {
         const upload = uploads[progressData.id] || { name: progressData.file.name, progress: [0] };
 
@@ -33,13 +36,17 @@ const StoryUploadProgress = () => {
     return <div>
 
         {entries
-            .map(([id, { progress, name }]) =>
-                <div key={id}>
+            .map(([id, { progress, name }]) => {
+                const lastProgress = progress[progress.length - 1];
+
+                return <div key={id}>
                     <StyledProgressCircle strokeWidth={2}
-                                          percent={progress[progress.length - 1]}
+                                          strokeColor={lastProgress === 100 ? "#00a626" : "#2db7f5"}
+                                          percent={lastProgress}
                     />
                     <p>{name}</p>
-                </div>)}
+                </div>;
+            })}
     </div>;
 };
 

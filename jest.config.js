@@ -1,6 +1,9 @@
 module.exports = {
 	cacheDirectory: ".jest-cache",
 	coverageDirectory: ".jest-coverage",
+    moduleNameMapper: {
+        "^@rpldy\/([\w-]*)$": `<rootDir>/node_modules/@rpldy/$1/src/index.js`,
+    },
 	coveragePathIgnorePatterns: ["<rootDir>/packages/(?:.+?)/lib/"],
 	coverageReporters: [
 		"json",

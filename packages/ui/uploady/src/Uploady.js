@@ -31,9 +31,9 @@ const Uploady = (props: UploadyProps) => {
     // capture - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture
     // webkitdirectory - https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory
 
-    const onFileInputChange = useCallback((e) => {
-        uploader.add(e.target.files);
-    }, [uploader]);
+    // const onFileInputChange = useCallback((e) => {
+    //     api.upload(e.target.files);
+    // }, [api]);
 
     const instanceOptions = uploader.getOptions();
 
@@ -43,7 +43,7 @@ const Uploady = (props: UploadyProps) => {
         <FileInputFieldPortal container={inputFieldContainer}>
             <input
                 type="file"
-                onChange={onFileInputChange}
+                onChange={api.onFileInputChange}
                 name={instanceOptions.inputFieldName}
                 multiple={instanceOptions.multiple}
                 style={{ display: "none" }}

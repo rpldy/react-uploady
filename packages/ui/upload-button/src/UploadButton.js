@@ -1,23 +1,25 @@
 // @flow
-import React, { useContext } from "react";
+import React, { useCallback, useContext, memo } from "react";
 import { UploadyContext, assertContext } from "@rpldy/shared-ui";
 import type { UploadButtonProps } from "./types";
 
-//TODO : Should be able to override uploader options !!!!!!!!!!!
-
 const UploadButton = (props: UploadButtonProps) => {
-	const context = assertContext(useContext(UploadyContext));
+    const context = assertContext(useContext(UploadyContext));
 
-	const { showFileUpload } = context;
-	const { id, className, text, children } = props;
+    const { showFileUpload } = context;
+    const { id, className, text, children, ...uploadOptions } = props;
 
-	return <button
-		id={id}
-		className={className}
-		onClick={showFileUpload}>
-		{children ? children : (text || "Upload")}
-	</button>;
+    const inputOnClick = useCallback(() => {
+        showFileUpload(uploadOptions);
+    }, [showFileUpload, uploadOptions]);
+
+    return <button
+        id={id}
+        className={className}
+        onClick={inputOnClick}>
+        {children ? children : (text || "Upload")}
+    </button>;
 };
 
-export default UploadButton;
+export default memo(UploadButton);
 

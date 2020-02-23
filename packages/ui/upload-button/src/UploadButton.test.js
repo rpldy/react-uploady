@@ -3,42 +3,48 @@ import { UploadyContext } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared
 import UploadButton from "./UploadButton";
 
 describe("<UploadButton> tests", () => {
-	
-	it("should render button with defaults", () => {
 
-		const wrapper = shallow(<UploadButton
-			id={"test"}
-			className={"styles"}
-		/>);
+    it("should render button with defaults", () => {
 
-		expect(wrapper).toHaveProp("id", "test");
-		expect(wrapper).toHaveProp("className", "styles");
-		expect(wrapper).toHaveText("Upload");
-	});
+        const wrapper = shallow(<UploadButton
+            id={"test"}
+            className={"styles"}
+        />);
 
-	it("should show file upload on click", () => {
-		const wrapper = shallow(<UploadButton/>);
+        expect(wrapper).toHaveProp("id", "test");
+        expect(wrapper).toHaveProp("className", "styles");
+        expect(wrapper).toHaveText("Upload");
+    });
 
-		wrapper.simulate("click");
+    it("should show file upload on click", () => {
+        const wrapper = shallow(<UploadButton
+            multiple
+            autoUpload
+        />);
 
-		expect(UploadyContext.showFileUpload).toHaveBeenCalled();
-	});
+        wrapper.simulate("click");
 
-	it("should render custom children", () => {
+        expect(UploadyContext.showFileUpload).toHaveBeenCalledWith({
+            multiple: true,
+            autoUpload: true,
+        });
+    });
 
-		const wrapper = shallow(<UploadButton text="test">
-			<div>custom</div>
-		</UploadButton>);
+    it("should render custom children", () => {
 
-		expect(wrapper.find("div")).toHaveLength(1);
-		expect(wrapper.find("div")).toHaveText("custom");
-		expect(wrapper).not.toHaveText("Upload");
-		expect(wrapper).not.toHaveText("test");
-	});
+        const wrapper = shallow(<UploadButton text="test">
+            <div>custom</div>
+        </UploadButton>);
 
-	it("should render custom text", () => {
-		const wrapper = shallow(<UploadButton text="test" />);
-		expect(wrapper).toHaveText("test");
-	});
+        expect(wrapper.find("div")).toHaveLength(1);
+        expect(wrapper.find("div")).toHaveText("custom");
+        expect(wrapper).not.toHaveText("Upload");
+        expect(wrapper).not.toHaveText("test");
+    });
+
+    it("should render custom text", () => {
+        const wrapper = shallow(<UploadButton text="test"/>);
+        expect(wrapper).toHaveText("test");
+    });
 
 });

@@ -1,23 +1,29 @@
 import React from "react";
+import { isFunction } from "lodash";
 import { mount } from "enzyme";
 
-export default (runHook, updateProps = null) => {
-	let wrapper, hookResult;
+export default (runHook, props, updateProps = null) => {
+    let wrapper, hookResult, hookParams;
 
-	const Comp = () => {
-		hookResult = runHook();
-		return null;
-	};
+    if (isFunction(props)) {
+        hookParams = props;
+        props = {};
+    }
 
-	//have to use mount() because shallow() doesnt support useEffect - https://github.com/airbnb/enzyme/issues/2086
-	wrapper = mount(<Comp />);
+    const Comp = (props) => {
+        hookResult = runHook(...(hookParams ? hookParams() : [props]));
+        return null;
+    };
 
-	if (updateProps) {
-		wrapper.setProps(updateProps);
-	}
+    //have to use mount() because shallow() doesnt support useEffect - https://github.com/airbnb/enzyme/issues/2086
+    wrapper = mount(<Comp {...props} />);
 
-	return {
-		wrapper,
-		hookResult,
-	};
+    if (updateProps) {
+        wrapper.setProps(updateProps);
+    }
+
+    return {
+        wrapper,
+        hookResult,
+    };
 };

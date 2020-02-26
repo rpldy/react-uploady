@@ -1,5 +1,5 @@
 // @flow
-import React, { useMemo, useRef, useCallback } from "react";
+import React, { useMemo, useRef } from "react";
 import ReactDOM from "react-dom";
 import { logger } from "@rpldy/shared";
 import { UploadyContext, createContextApi } from "@rpldy/shared-ui";
@@ -31,10 +31,6 @@ const Uploady = (props: UploadyProps) => {
     // capture - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture
     // webkitdirectory - https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory
 
-    // const onFileInputChange = useCallback((e) => {
-    //     api.upload(e.target.files);
-    // }, [api]);
-
     const instanceOptions = uploader.getOptions();
 
     //TODO !!!!!!!!! move rendering of portal and input to memoized component !!!!!!!
@@ -43,7 +39,6 @@ const Uploady = (props: UploadyProps) => {
         <FileInputFieldPortal container={inputFieldContainer}>
             <input
                 type="file"
-                onChange={api.onFileInputChange}
                 name={instanceOptions.inputFieldName}
                 multiple={instanceOptions.multiple}
                 style={{ display: "none" }}

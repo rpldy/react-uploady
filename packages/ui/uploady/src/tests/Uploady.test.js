@@ -48,13 +48,5 @@ describe("Uploady tests", () => {
         expect(input).toHaveLength(1);
         expect(input).toHaveProp("multiple", true);
         expect(input).toHaveProp("name", "file");
-
-        input.props().onChange({
-            target: {
-                files: [1, 2]
-            }
-        });
-
-        expect(uploader.add).toHaveBeenCalledWith([1, 2]);
     });
 });

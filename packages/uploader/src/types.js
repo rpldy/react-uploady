@@ -20,7 +20,7 @@ export type PendingBatch = {
 export type UploaderType = {
 	id: string,
 	update: (updateOptions: CreateOptions) => UploaderType,
-	add: (files: UploadInfo | UploadInfo[], addOptions?: UploadOptions) => Promise<void>,
+	add: (files: UploadInfo | UploadInfo[], addOptions?: ?UploadOptions) => Promise<void>,
 	upload: () => void,
 	abort: (id?: string) => void,
 	abortBatch: (id: string) => void,

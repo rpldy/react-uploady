@@ -139,3 +139,5 @@ export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];
 export type Cancellable = (string, ...args: mixed[]) => Promise<boolean>;
 
 export type Updater<T> = (string, ...args: mixed[]) => Promise<?T>;
+
+export type GetExact<T> = T & $Shape<T>;

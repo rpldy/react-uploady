@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "bootstrap": "lerna bootstrap --use-workspaces",
-    "build": "lerna exec --parallel -- FORCE_COLOR=1 NODE_ENV=production yarn build;",
-    "clean": "lerna exec --parallel -- rimraf lib",
+    "build": "lerna exec --stream -- FORCE_COLOR=1 NODE_ENV=production yarn build;",
+    "clean": "lerna exec --stream -- rimraf lib",
     "release": "yarn bootstrap; yarn clean; yarn build; yarn flow:copy",
     "ssb": "start-storybook -p 9111",
     "start": "yarn ssb",
@@ -13,7 +13,7 @@
     "jest:cov": "yarn jest --coverage",
     "flow:mono": "flow-mono create-symlinks ./.flowconfig",
     "flow": "yarn flow:mono; flow --show-all-errors",
-    "flow:copy": "lerna exec --parallel -- yarn flow:copy",
+    "flow:copy": "lerna exec --stream -- yarn flow:copy",
     "lint": "eslint ./packages",
     "server": "cd server; PORT=4000 node index.js"
   },
@@ -75,5 +75,8 @@
   "dependencies": {
     "react": "^16.11.0",
     "react-dom": "^16.11.0"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.1.2"
   }
 }

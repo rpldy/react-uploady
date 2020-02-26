@@ -20,6 +20,9 @@ const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], optio
     if (updated) {
         logger.debugLog(`uploader.queue: REQUEST_PRE_SEND event returned updated items/options`, updated);
         if (updated.items) {
+
+            //TODO - Allow to remove items, just not add any!!!!
+
             if (updated.items.length !== items.length ||
                 !isSamePropInArrays(updated.items, items, ["id", "batchId"])) {
                 throw new Error(`REQUEST_PRE_SEND event handlers must return same items with same ids`);

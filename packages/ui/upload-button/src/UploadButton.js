@@ -1,5 +1,5 @@
 // @flow
-import React, { useCallback, useContext, memo } from "react";
+import React, { useCallback, useContext, useRef } from "react";
 import { UploadyContext, assertContext } from "@rpldy/shared-ui";
 import type { UploadButtonProps } from "./types";
 
@@ -9,9 +9,13 @@ const UploadButton = (props: UploadButtonProps) => {
     const { showFileUpload } = context;
     const { id, className, text, children, ...uploadOptions } = props;
 
+    //using ref so inputOnClick can stay memoized
+    const uploadOptionsRef = useRef();
+    uploadOptionsRef.current = uploadOptions;
+
     const inputOnClick = useCallback(() => {
-        showFileUpload(uploadOptions);
-    }, [showFileUpload, uploadOptions]);
+        showFileUpload(uploadOptionsRef.current);
+    }, [showFileUpload, uploadOptionsRef]);
 
     return <button
         id={id}
@@ -21,5 +25,4 @@ const UploadButton = (props: UploadButtonProps) => {
     </button>;
 };
 
-export default memo(UploadButton);
-
+export default UploadButton;

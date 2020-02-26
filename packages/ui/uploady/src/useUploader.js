@@ -15,8 +15,9 @@ export default (props: UploadyProps) => {
 
     const uploaderOptions = useMemo(
         () => getUploaderOptions(props),
+        //using JSON.stringify because there's no other way to handle props refs - https://github.com/facebook/react/issues/14476#issuecomment-471199055
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [...Object.values(props)]
+        [JSON.stringify({ ...props, children: null })]
     );
 
     //avoid creating new instance of uploader unless we have to (enhancer changed or uploader instance passed)

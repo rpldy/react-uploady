@@ -44,7 +44,7 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 		return uploader;
 	};
 
-	const add = async (files: UploadInfo | UploadInfo[], addOptions?: UploadOptions): Promise<void> => {
+	const add = async (files: UploadInfo | UploadInfo[], addOptions?: ?UploadOptions): Promise<void> => {
 		const batch = createBatch(files, uploader.id);
 
 		// $FlowFixMe - https://github.com/facebook/flow/issues/8215
@@ -52,6 +52,8 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 
 		if (!isCancelled) {
 			const processOptions: CreateOptions = merge({}, uploaderOptions, addOptions);
+
+			logger.debugLog(`uploady.uploader: new items added - auto upload = ${processOptions.autoUpload}`, files)
 
 			if (processOptions.autoUpload) {
 				processor.process(batch, processOptions);

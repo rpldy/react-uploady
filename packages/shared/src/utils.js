@@ -27,7 +27,26 @@ const isSamePropInArrays = (arr1: Object[], arr2: Object[], prop: string | strin
 	return !diff;
 };
 
+// /**
+//  * stringifies an object (props) in a way that should lead
+//  * to same string as long as keys/values stay the same
+//  * while any change will result in a different string
+//  * doesnt handle object ref properties - these will result in the same string even if different ref value
+//  * only deals with own properties
+//  *
+//  * This is better than using JSON.stringify because it attempts to sort the properties
+//  * however its less accurate due to object properties
+//  */
+// const getHookDependenciesString = (deps: Object): string => {
+//     return Object.keys(deps)
+//         .sort()
+//         .reduce((res, key) => {
+//
+//         }, "");
+// };
+
 export {
 	isFunction,
 	isSamePropInArrays,
+    // getHookDependenciesString,
 };

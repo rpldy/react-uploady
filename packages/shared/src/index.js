@@ -40,5 +40,6 @@ export type {
 	Trigger,
 	Cancellable,
 	Updater,
-	FileLike
+	FileLike,
+    GetExact,
 } from "./types";

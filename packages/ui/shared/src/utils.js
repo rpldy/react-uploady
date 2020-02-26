@@ -7,15 +7,15 @@ type Callback = (...args?: any) => ?any;
 
 const useEventEffect = (event: string, fn: Callback) => {
 	const context = assertContext(useContext(UploadyContext));
-	const { uploader } = context;
+	const { on, off } = context;
 
 	useEffect(() => {
-		uploader.on(event, fn);
+		on(event, fn);
 
 		return () => {
-			uploader.off(event, fn);
+			off(event, fn);
 		};
-	}, [event, fn, uploader]);
+	}, [event, fn, on, off]);
 };
 
 const generateUploaderEventHookWithState = (event: string, stateCalculator: (state: any) => any) => {

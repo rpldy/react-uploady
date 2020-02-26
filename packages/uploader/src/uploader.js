@@ -53,7 +53,7 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 		if (!isCancelled) {
 			const processOptions: CreateOptions = merge({}, uploaderOptions, addOptions);
 
-			logger.debugLog(`uploady.uploader: new items added - auto upload = ${processOptions.autoUpload}`, files)
+			logger.debugLog(`uploady.uploader: new items added - auto upload = ${String(processOptions.autoUpload)}`, files)
 
 			if (processOptions.autoUpload) {
 				processor.process(batch, processOptions);

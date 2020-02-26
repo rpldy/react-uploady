@@ -43,6 +43,6 @@ module.exports = {
 		"./node_modules/jest-enzyme/lib/index.js",
 		"<rootDir>/test/jestSetup.js"
 	],
-	// "testEnvironment": "<rootDir>/test/jsdomEnv.js",
+	"testEnvironment": "<rootDir>/test/jsdomEnv.js",
 	// "testURL": "https://www.somthing.com/test.html"
 };

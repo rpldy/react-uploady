@@ -6,7 +6,7 @@ let isDebug;
 const isDebugOn = () => {
 	if (typeof isDebug !== "boolean"){
 		isDebug = process.env.DEBUG ||
-			~window.location.search.indexOf("debug=true") ||
+			!!~window.location.search.indexOf("rpldy_debug=true") ||
 			window[DEBUG_LOG_KEY] === true;
 	}
 
@@ -15,7 +15,7 @@ const isDebugOn = () => {
 
 const setDebug = (debugOn: boolean) => {
 	window[DEBUG_LOG_KEY] = debugOn;
-	isDebug = null;
+	isDebug = debugOn ? true : null;
 };
 
 const debugLog = (...args: any[]) => {

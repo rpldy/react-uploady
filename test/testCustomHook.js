@@ -2,7 +2,7 @@ import React from "react";
 import { isFunction } from "lodash";
 import { mount } from "enzyme";
 
-export default (runHook, props, updateProps = null) => {
+export default (hook, props, updateProps = null) => {
     let wrapper, hookResult, hookParams;
 
     if (isFunction(props)) {
@@ -11,7 +11,7 @@ export default (runHook, props, updateProps = null) => {
     }
 
     const Comp = (props) => {
-        hookResult = runHook(...(hookParams ? hookParams() : [props]));
+        hookResult = hook(...(hookParams ? hookParams() : [props]));
         return null;
     };
 

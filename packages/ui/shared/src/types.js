@@ -6,7 +6,7 @@ export type AddUploadFunction = (files: UploadInfo | UploadInfo[], addOptions: U
 
 export type UploadyContextType = {
     hasUploader: () => boolean,
-	showFileUpload: (UploadOptions) => void,
+	showFileUpload: (?UploadOptions) => void,
 	upload: AddUploadFunction,
 	on: OnAndOnceMethod,
 	once: OnAndOnceMethod,

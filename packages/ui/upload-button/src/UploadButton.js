@@ -1,6 +1,7 @@
 // @flow
 import React, { useCallback, useContext, useRef } from "react";
 import { UploadyContext, assertContext } from "@rpldy/shared-ui";
+import type { UploadOptions } from "@rpldy/shared";
 import type { UploadButtonProps } from "./types";
 
 const UploadButton = (props: UploadButtonProps) => {
@@ -10,7 +11,7 @@ const UploadButton = (props: UploadButtonProps) => {
     const { id, className, text, children, ...uploadOptions } = props;
 
     //using ref so inputOnClick can stay memoized
-    const uploadOptionsRef = useRef();
+    const uploadOptionsRef = useRef<?UploadOptions>();
     uploadOptionsRef.current = uploadOptions;
 
     const inputOnClick = useCallback(() => {

@@ -8,12 +8,13 @@ import type { UploadyProps } from "./types";
 export default Uploady;
 
 export type {
-	UploadyContextType,
-	UploadyProps,
+    UploadyContextType,
+    UploadyProps,
 };
 
 export {
     UploadyContext,
+    assertContext,
 
     useBatchStartListener,
     useBatchFinishListener,
@@ -30,5 +31,5 @@ export {
 } from "@rpldy/shared-ui";
 
 export {
-	UPLOADER_EVENTS,
+    UPLOADER_EVENTS,
 };

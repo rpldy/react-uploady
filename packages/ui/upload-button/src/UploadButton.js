@@ -6,11 +6,10 @@ import type { UploadButtonProps } from "./types";
 
 const UploadButton = forwardRef<UploadButtonProps, ?HTMLButtonElement>(
     (props: UploadButtonProps, ref) => {
-        const context = assertContext(useContext(UploadyContext));
+        const { showFileUpload } = assertContext(useContext(UploadyContext));
 
         const { setRef: setButtonRef } = useWithForwardRef<?HTMLButtonElement>(ref);
 
-        const { showFileUpload } = context;
         const { id, className, text, children, ...uploadOptions } = props;
 
         //using ref so inputOnClick can stay memoized

@@ -1,19 +1,20 @@
 // @flow
-import React, { Component, useCallback, useEffect, useMemo } from "react";
-import styled from "styled-components";
-import Uploady from "@rpldy/uploady";
+import React, { Component, useCallback, useContext, useEffect, useMemo } from "react";
+import styled, { css } from "styled-components";
+import { DndProvider, useDrop } from "react-dnd";
+import Backend, { NativeTypes } from "react-dnd-html5-backend";
+import Uploady, { UploadyContext } from "@rpldy/uploady";
 import UploadDropZone from "./src";
 import {
     withKnobs,
     useStoryUploadySetup,
     StoryUploadProgress,
 } from "../../../story-helpers";
-import UploadButton from "@rpldy/upload-button";
 
 // import readme from '../README.md';
 
-const StyledDropZone = styled(UploadDropZone)`
-    display: flex;
+const dzCss = css`
+  display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -35,6 +36,10 @@ const StyledDropZone = styled(UploadDropZone)`
           display: none;
         }
     }
+`;
+
+const StyledDropZone = styled(UploadDropZone)`
+   ${dzCss}
 `;
 
 const SmallDropZone = styled(StyledDropZone)`
@@ -82,9 +87,9 @@ export const WithDropHandler = () => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     const dropHandler = useCallback((e) => {
-        console.log(">>>> DROP EVENT " , e.dataTransfer);
+        console.log(">>>> DROP EVENT ", e.dataTransfer);
         return "https://i.pinimg.com/originals/51/bf/9c/51bf9c7fdf0d4303140c4949afd1d7b8.jpg";
-    },[]);
+    }, []);
 
     return <Uploady debug
                     multiple={multiple}
@@ -144,8 +149,46 @@ export const DifferentConfiguration = () => {
     </Uploady>;
 };
 
-export const With3rdPartyDropZone = () => {
+const ThirdPartyDropZone = styled.div`
+  ${dzCss}
+`;
 
+const ThirdPartyDropZoneContainer = () => {
+    const uploadyContext = useContext(UploadyContext);
+
+    const [{ isDragging }, dropRef] = useDrop({
+        accept: NativeTypes.FILE,
+        collect: (monitor => ({
+            isDragging: !!monitor.isOver()
+        })),
+        drop: (item, monitor) => {
+            if (uploadyContext) {
+                uploadyContext.upload(item.files);
+            }
+        },
+    });
+
+    return <ThirdPartyDropZone ref={dropRef} className={isDragging ? "drag-over" : ""}>
+        <h2>Using React DnD</h2>
+        <div id="drag-text">Drag File(s) Here</div>
+        <div id="drop-text">Drop Files(s) Here</div>
+    </ThirdPartyDropZone>;
+};
+
+export const WithThirdPartyDropZone = () => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    return <DndProvider backend={Backend}>
+        <Uploady debug
+                 multiple={multiple}
+                 destination={destination}
+                 enhancer={enhancer}
+                 grouped={grouped}
+                 maxGroupSize={groupSize}>
+
+            <ThirdPartyDropZoneContainer/>
+        </Uploady>
+    </DndProvider>;
 };
 
 export default {

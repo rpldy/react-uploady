@@ -22,8 +22,10 @@
     "@rpldy/uploady": "^0.1.4",
     "@storybook/addon-knobs": "^5.2.8",
     "flow-bin": "^0.119.1",
-    "styled-components": "^4.4.1",
-      "html-dir-content": "^0.3.1"
+    "html-dir-content": "^0.3.1",
+    "react-dnd": "^10.0.2",
+    "react-dnd-html5-backend": "^10.0.2",
+    "styled-components": "^4.4.1"
   },
   "peerDependencies": {
     "react": ">=16.8",

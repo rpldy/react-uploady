@@ -1,4 +1,7 @@
+import warning from "warning";
 import { createContextApi } from "../UploadyContext";
+
+jest.mock("warning", () => jest.fn());
 
 describe("UploadyContext tests", () => {
 
@@ -12,15 +15,19 @@ describe("UploadyContext tests", () => {
         click: jest.fn(),
     };
 
-    const getTestContext = (input = fileInput) => {
-        const inputRef = { current: input };
+    const getTestContext = (input) => {
+        const inputRef = input === null ?
+            { current: null } :
+            { current: { ...fileInput, ...input } };
+
         return createContextApi(uploader, inputRef);
     };
 
     beforeEach(() => {
         clearJestMocks(
             fileInput.addEventListener,
-            fileInput.removeEventListener
+            fileInput.removeEventListener,
+            uploader.add,
         );
     });
 
@@ -42,11 +49,17 @@ describe("UploadyContext tests", () => {
             expect(() => {
                 contextApi.showFileUpload();
             }).toThrow();
+
+            expect(warning).toHaveBeenCalledWith(
+                null,
+                expect.any(String)
+            )
         });
 
         it("should handle file input change with upload options", () => {
 
-            const contextApi = getTestContext();
+            const files = [1, 2];
+            const contextApi = getTestContext({ files });
             const options = { autoUpload: true };
             contextApi.showFileUpload(options);
 
@@ -54,18 +67,12 @@ describe("UploadyContext tests", () => {
             expect(fileInput.addEventListener).toHaveBeenCalled();
             expect(fileInput.click).toHaveBeenCalled();
 
-            const files = [1, 2];
 
-            fileInput.addEventListener.mock.calls[0][1]({
-                target: { files }
-            });
+            fileInput.addEventListener.mock.calls[0][1]();
 
             expect(uploader.add).toHaveBeenCalledWith(files, options);
         });
     });
-
-
-
 });
 
 

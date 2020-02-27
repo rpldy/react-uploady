@@ -10,4 +10,5 @@ export type UploadUrlInputProps =  {|
 	placeholder?: string,
 	validate?: (value: ?string, input: ?HTMLInputElement) => boolean,
 	uploadRef?: Object,
+    ignoreKeyPress?: boolean,
 |};

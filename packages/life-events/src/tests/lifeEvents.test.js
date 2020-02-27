@@ -1,4 +1,4 @@
-import addLife, { isLE } from "./lifeEvents";
+import addLife, { isLE } from "../lifeEvents";
 
 describe("life-events tests", () => {
 	const noOp = jest.fn();

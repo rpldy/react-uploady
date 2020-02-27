@@ -1,5 +1,6 @@
 // @flow
 import React from "react";
+import warning from "warning";
 import type { UploaderType } from "@rpldy/uploader";
 import type { UploadyContextType } from "./types";
 import type { UploadInfo, UploadOptions, GetExact } from "@rpldy/shared";
@@ -16,16 +17,15 @@ export const createContextApi =
         const showFileUpload = (addOptions?: ?GetExact<UploadOptions>) => {
             const input : ?HTMLInputElement = getInputField();
 
-            if (!input) {
-                throw new Error("Uploady - Cannot show file upload as file input isn't available");
-            }
+            warning(
+                input,
+                "Uploady - Cannot show file upload. File input isn't available"
+            );
 
             //allow components like upload button to override options
             showFileUploadOptions = addOptions;
 
-            // $FlowFixMe - flow cant deal with file input events :(
             input.removeEventListener("change", onFileInputChange);
-            // $FlowFixMe - flow cant deal with file input events :(
             input.addEventListener("change", onFileInputChange);
 
             //clear the input value so same file can be uploaded again
@@ -33,10 +33,14 @@ export const createContextApi =
             input.click();
         };
 
-        const onFileInputChange = (e: {target: HTMLInputElement}) => {
-            const addOptions = showFileUploadOptions;
-            showFileUploadOptions = null;
-            upload(e.target.files, addOptions);
+        const onFileInputChange = () => {
+            const input : ?HTMLInputElement = getInputField();
+
+            if (input) {
+                const addOptions = showFileUploadOptions;
+                showFileUploadOptions = null;
+                upload(input.files, addOptions);
+            }
         };
 
         const upload = (files: UploadInfo | UploadInfo[], addOptions?: ?UploadOptions) => {

@@ -1,50 +1,62 @@
 // @flow
-import React, { useRef, useContext, useCallback } from "react";
-import { isFunction } from "@rpldy/shared";
-import { UploadyContext, assertContext } from "@rpldy/shared-ui";
+import React, { useRef, useContext, useCallback, forwardRef } from "react";
+import warning from "warning";
+import { UploadyContext, assertContext, useWithForwardRef } from "@rpldy/shared-ui";
 import type { UploadUrlInputProps } from "./types";
+import type { UploadOptions } from "@rpldy/shared";
 
-const UploadUrlInput = (props: UploadUrlInputProps) => {
-	const inputRef = useRef<?HTMLInputElement>(null);
-	const context = assertContext(useContext(UploadyContext));
+type UploadMethod = () => void;
 
-	const { className, id, placeholder, uploadRef, validate, ...uploadOptions } = props;
+const UploadUrlInput = forwardRef<UploadUrlInputProps, ?HTMLInputElement>(
+    (props: UploadUrlInputProps, ref) => {
+        const { ref: inputRef, setRef: setInputRef } = useWithForwardRef<?HTMLInputElement>(ref);
+        const context = assertContext(useContext(UploadyContext));
 
-	const upload = useCallback(() => {
-		if (inputRef && inputRef.current) {
-			const value = inputRef.current.value;
+        const { className, id, placeholder, uploadRef, validate, ignoreKeyPress, ...uploadOptions } = props;
 
-			if ((validate ? validate(value, (inputRef && inputRef.current)) : value)) {
-				context.upload(value, uploadOptions);
-			}
-		}
-	}, [
-		context,
-		validate,
-		uploadOptions,
-	]);
+        //using ref so upload can stay memoized
+        const uploadOptionsRef = useRef<?UploadOptions>();
+        uploadOptionsRef.current = uploadOptions;
 
-	const onKeyPress = useCallback((e: KeyboardEvent) => {
-		if (e.key === "Enter") {
-			upload();
-		}
-	}, [upload]);
+        const upload = useCallback(() => {
 
-	if (uploadRef) {
-		if (isFunction(uploadRef)) {
-			uploadRef(upload);
-		} else {
-			uploadRef.current = upload;
-		}
-	}
+            warning(
+                inputRef.current,
+                "Uploady - UploadUrlInput failed to upload, input ref isn't available"
+            );
 
-	return <input
-		type="text"
-		id={id}
-		ref={inputRef}
-		className={className}
-		onKeyPress={onKeyPress}
-		placeholder={placeholder}/>;
-};
+            if (inputRef.current) {
+                const input = inputRef.current,
+                    value = input.value;
+
+                if ((validate ? validate(value, input) : value)) {
+                    context.upload(value, uploadOptionsRef.current);
+                }
+            }
+        }, [
+            context,
+            validate,
+            uploadOptionsRef,
+            inputRef
+        ]);
+
+        const onKeyPress = useCallback((e: KeyboardEvent) => {
+            if (!ignoreKeyPress && e.key === "Enter") {
+                upload();
+            }
+        }, [upload, ignoreKeyPress]);
+
+        const { setRef: setUploadMethodRef } = useWithForwardRef<UploadMethod>(uploadRef);
+        setUploadMethodRef(upload);
+
+        return <input
+            type="text"
+            id={id}
+            ref={setInputRef}
+            className={className}
+            onKeyPress={onKeyPress}
+            placeholder={placeholder}
+        />;
+    });
 
 export default UploadUrlInput;

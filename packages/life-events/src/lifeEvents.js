@@ -65,9 +65,7 @@ const publicMethods = {
 
 const getPublicMethods = () => Object.entries(publicMethods)
 	.reduce((res, [key, m]) => {
-		if (typeof m !== "function"){
-			throw new Error("bla");
-		}
+
 		res[key] = { value: m };
 		return res;
 	}, {});
@@ -199,7 +197,7 @@ function hasEventRegistrations(name: any) {
 //
 // }
 
-const defineLifeData = (target: Object, options: Options, events?: any[] = [], registry?: Object = {}, stats?: Object = {}) => {
+const defineLifeData = (target: Object, options: Options, events: any[] = [], registry: Object = {}, stats: Object = {}) => {
 	Object.defineProperties(target, {
 		[LESYM]: {
 			value: Object.seal({
@@ -213,7 +211,7 @@ const defineLifeData = (target: Object, options: Options, events?: any[] = [], r
 	});
 };
 
-const addLife = (target?: Object, events?: any[] = [], options?: ?Options): LifeEventsAPI => {
+const addLife = (target?: Object, events: any[] = [], options?: ?Options): LifeEventsAPI => {
 	target = target || {};
 	options = { ...defaults, ...options };
 

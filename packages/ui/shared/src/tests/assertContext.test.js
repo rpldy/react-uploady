@@ -1,15 +1,25 @@
 import assertContext, { ERROR_MSG } from "../assertContext";
+import warning from "warning";
+
+jest.mock("warning", () => jest.fn());
 
 describe("assertContext tests", () => {
 
     it("should throw if no context", () => {
-        expect(assertContext).toThrow(ERROR_MSG);
+        assertContext();
+        expect(warning).toHaveBeenCalledWith(
+            undefined,
+            expect.any(String)
+        );
     });
 
     it("should throw if no uploader", () => {
-        expect(() => {
-            assertContext({ hasUploader: () => false });
-        }).toThrow(ERROR_MSG);
+        assertContext({ hasUploader: () => false });
+
+        expect(warning).toHaveBeenCalledWith(
+            undefined,
+            expect.any(String)
+        );
     });
 
     it("should not throw when has context and uploader", () => {
@@ -18,5 +28,10 @@ describe("assertContext tests", () => {
         const result = assertContext(context);
 
         expect(result).toBe(context);
+
+        expect(warning).toHaveBeenCalledWith(
+            true,
+            expect.any(String)
+        );
     });
 });

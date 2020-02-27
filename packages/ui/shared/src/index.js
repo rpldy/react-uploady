@@ -1,5 +1,6 @@
 // @flow
 import UploadyContext, { createContextApi } from "./UploadyContext";
+import useWithForwardRef from "./useWithForwardRef";
 
 import {
 	useBatchStartListener,
@@ -29,6 +30,8 @@ export {
 	createContextApi,
 
 	assertContext,
+
+    useWithForwardRef,
 
 	useBatchStartListener,
 	useBatchFinishListener,

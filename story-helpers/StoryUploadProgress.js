@@ -18,7 +18,8 @@ const StoryUploadProgress = () => {
     //TODO : add error hook - paint circle red on error
 
     if (progressData && progressData.completed) {
-        const upload = uploads[progressData.id] || { name: progressData.file.name, progress: [0] };
+        const upload = uploads[progressData.id] ||
+            { name: progressData.url || progressData.file.name, progress: [0] };
 
         if (!~upload.progress.indexOf(progressData.completed)) {
 

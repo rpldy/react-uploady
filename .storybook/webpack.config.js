@@ -3,7 +3,7 @@ module.exports = ({ config }) => {
 		test: /\.stor(y|ies)\.jsx?$/,
 		loaders: [{
 			loader: require.resolve("@storybook/source-loader"),
-			// options: { parser: "flow"},
+			options: { parser: "flow"},
 		}],
 		enforce: "pre",
 	});

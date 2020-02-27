@@ -72,7 +72,8 @@ module.exports = {
 				"properties": "never"
 			}
 		],
-		"object-curly-spacing": [
+        "curly": 2,
+        "object-curly-spacing": [
 			2,
 			"always"
 		],

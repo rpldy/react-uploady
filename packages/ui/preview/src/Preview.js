@@ -67,11 +67,12 @@ const loadPreviewUrl = (item: BatchItem, options: MandatoryPreviewOptions): ?Pre
 		if (!data) {
 			data = getFallbackUrl(options.fallbackUrl, file);
 		}
-	} else
-		data = {
-			url: item.url,
-			type: PREVIEW_TYPES.IMAGE,
-		};
+	} else {
+        data = {
+            url: item.url,
+            type: PREVIEW_TYPES.IMAGE,
+        };
+    }
 
 	return data;
 };

@@ -22,15 +22,17 @@ export const createContextApi =
                 "Uploady - Cannot show file upload. File input isn't available"
             );
 
-            //allow components like upload button to override options
-            showFileUploadOptions = addOptions;
+            if (input) {
+                //allow components like upload button to override options
+                showFileUploadOptions = addOptions;
 
-            input.removeEventListener("change", onFileInputChange);
-            input.addEventListener("change", onFileInputChange);
+                input.removeEventListener("change", onFileInputChange);
+                input.addEventListener("change", onFileInputChange);
 
-            //clear the input value so same file can be uploaded again
-            input.value = "";
-            input.click();
+                //clear the input value so same file can be uploaded again
+                input.value = "";
+                input.click();
+            }
         };
 
         const onFileInputChange = () => {

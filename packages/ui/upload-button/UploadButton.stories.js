@@ -185,8 +185,10 @@ export const DifferentConfiguration = () => {
     }), [destination]);
 
     return <div>
-        <p>Buttons can use different configuration overrides. Some options cannot be overriden by the button.<br/>
-        For example, any props that influence the file input directly (such as multiple)</p>
+        <p>Buttons can use different configuration overrides.<br/>
+            However, Some options cannot be overriden by the button.<br/>
+            For example, any prop that influence the file input directly (such as multiple)
+        </p>
         <Uploady
             debug
             multiple={multiple}
@@ -202,7 +204,6 @@ export const DifferentConfiguration = () => {
             </UploadButton>
         </Uploady>
     </div>
-
 };
 
 export default {

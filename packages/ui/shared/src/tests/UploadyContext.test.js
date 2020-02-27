@@ -46,9 +46,7 @@ describe("UploadyContext tests", () => {
         it("should throw if no file input", () => {
             const contextApi = getTestContext(null);
 
-            expect(() => {
-                contextApi.showFileUpload();
-            }).toThrow();
+            contextApi.showFileUpload();
 
             expect(warning).toHaveBeenCalledWith(
                 null,

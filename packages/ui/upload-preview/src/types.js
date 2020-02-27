@@ -15,17 +15,17 @@ export type FallbackType = string | PreviewData;
 export type FallbackMethod = (file: Object) => ?FallbackType;
 
 export type PreviewOptions = {|
-	//whether to load only the first preview in case of a batch upload (default: false)
+	//whether to load only the first upload-preview in case of a batch upload (default: false)
 	loadFirstOnly?: boolean,
-	//the maximum file size (in kb) to attempt to load a preview for an image (default: 20,000,000)
+	//the maximum file size (in kb) to attempt to load a upload-preview for an image (default: 20,000,000)
 	maxPreviewImageSize?: number,
-	//the maximum file size (in kb) to attempt to load a preview for a video (default: 100,000,000)
+	//the maximum file size (in kb) to attempt to load a upload-preview for a video (default: 100,000,000)
 	maxPreviewVideoSize?: number,
-	//URL to use or function to call with the file to determine fallback for invalid file URLs, none-images or too large files to preview (maxPreviewImageSize)
+	//URL to use or function to call with the file to determine fallback for invalid file URLs, none-images or too large files to upload-preview (maxPreviewImageSize)
 	fallbackUrl?: string | FallbackMethod,
 	//the image mime-types to load previews for (default: )
 	imageMimeTypes?: string[],
-	//the video mime-types to load preview for (default: )
+	//the video mime-types to load upload-preview for (default: )
 	videoMimeTypes?: string[],
 |};
 

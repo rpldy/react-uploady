@@ -27,8 +27,6 @@ const UploadDropZone = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
         }, [onDragOverClassName, containerRef]);
 
         const dropFileHandler = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
-            e.persist();
-
             return dropHandler ?
                 dropHandler(e) :
                 getFilesFromDragEvent(e, htmlDirContentParams || {});
@@ -47,10 +45,11 @@ const UploadDropZone = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
             }
         }, [onDragOverClassName, containerRef]);
 
-        const onDrop = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
+        const onDrop = useCallback(async (e: SyntheticDragEvent<HTMLDivElement>) => {
             e.preventDefault();
-            handleDropUpload(e);
+            e.persist();
             handleEnd();
+            await handleDropUpload(e);
         }, [handleEnd, handleDropUpload]);
 
         const onDragLeave = useCallback(() => {

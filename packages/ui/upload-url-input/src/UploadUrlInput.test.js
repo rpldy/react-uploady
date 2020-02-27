@@ -31,11 +31,12 @@ describe("UploadUrlInput tests", () => {
             autoUpload
         />);
 
-        expect(wrapper).toHaveProp("id", "uploadInput");
-        expect(wrapper).toHaveProp("className", "test-input");
-        expect(wrapper).toHaveProp("placeholder", "upload url");
+        const input = wrapper.find("input");
+        expect(input).toHaveProp("id", "uploadInput");
+        expect(input).toHaveProp("className", "test-input");
+        expect(input).toHaveProp("placeholder", "upload url");
 
-        wrapper.find("input").props().onKeyPress({ key: "Enter" });
+        input.props().onKeyPress({ key: "Enter" });
 
         expect(UploadyContext.upload).toHaveBeenCalledWith(value, {
             autoUpload: true

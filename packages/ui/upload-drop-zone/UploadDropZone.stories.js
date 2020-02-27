@@ -144,6 +144,10 @@ export const DifferentConfiguration = () => {
     </Uploady>;
 };
 
+export const With3rdPartyDropZone = () => {
+
+};
+
 export default {
     component: UploadDropZone,
     title: "Upload Drop Zone",

@@ -23,14 +23,7 @@ type SendRequest = {
 export const SUCCESS_CODES = [200, 201, 202, 203, 204];
 
 const setHeaders = (req, options: SendOptions) => {
-
-	//TODO: Content-Range
-	//TODO: 'Content-Disposition' = 'attachment; filename="' +  encodeURI(file.name)+ '"'
-	//'application/octet-stream'
-
-	//cld cors allowed headers =  Cache-Control, Content-Disposition, Content-MD5, Content-Range, Content-Type, DPR, Viewport-Width, X-CSRF-Token, X-Prototype-Version, X-Requested-With, X-Unique-Upload-Id
 	const headers = {
-		// "Content-Type": options.encoding,
 		...(options.headers || {}),
 	};
 

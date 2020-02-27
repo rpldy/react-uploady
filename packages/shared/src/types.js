@@ -93,6 +93,8 @@ export type Batch = {
 
 export type SendMethod = (item: BatchItem[], url: string, options: SendOptions, onProgress: OnProgress) => SendResult;
 
+export type FileFilterMethod = (mixed) => boolean;
+
 export type UploadOptions = {|
 	//whether to automatically upload files when they are added (default: true)
 	autoUpload?: boolean,
@@ -109,7 +111,7 @@ export type UploadOptions = {|
 	//The maximum of files to group together in a single request  (default: 5)
 	maxGroupSize?: number,
 	//the regex or function to use to filter by filename/url
-	fileFilter?: RegExp | Function,
+	fileFilter?: FileFilterMethod,
 	//The accept value to pass the file input
 	inputAccept?: string,
 	// //the upload encoding (default: "multipart/form-data")

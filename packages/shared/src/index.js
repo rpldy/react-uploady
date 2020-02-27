@@ -42,4 +42,5 @@ export type {
 	Updater,
 	FileLike,
     GetExact,
+    FileFilterMethod,
 } from "./types";

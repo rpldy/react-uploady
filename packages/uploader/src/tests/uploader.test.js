@@ -9,210 +9,232 @@ import { UPLOADER_EVENTS } from "../consts";
 
 describe("uploader tests", () => {
 
-	const mockProcess = jest.fn(),
-		mockAbort = jest.fn(),
-		mockAbortBatch = jest.fn();
+    const mockProcess = jest.fn(),
+        mockAbort = jest.fn(),
+        mockAbortBatch = jest.fn();
 
-	beforeEach(() => {
-		clearJestMocks(
-			mockProcess,
-			mockAbort
-		);
-	});
+    beforeEach(() => {
+        clearJestMocks(
+            mockProcess,
+            mockAbort,
+            triggerCancellable,
+        );
+    });
 
-	const getTestUploader = (options) => {
+    const getTestUploader = (options) => {
 
-		options = {
-			destination: { url: "aaa" },
-			...options
-		};
+        options = {
+            destination: { url: "aaa" },
+            ...options
+        };
 
-		mockCreateProcessor.mockReturnValueOnce({
-			process: mockProcess,
-			abort: mockAbort,
-			abortBatch: mockAbortBatch,
-		});
+        mockCreateProcessor.mockReturnValueOnce({
+            process: mockProcess,
+            abort: mockAbort,
+            abortBatch: mockAbortBatch,
+        });
 
-		return createUploader(options);
-	};
+        return createUploader(options);
+    };
 
-	describe("getOptions tests", () => {
+    describe("getOptions tests", () => {
 
-		it("should return combination of passed options with defaults", () => {
+        it("should return combination of passed options with defaults", () => {
 
-			const uploader = createUploader({
-				multiple: false,
-				autoUpload: false,
-			});
+            const uploader = createUploader({
+                multiple: false,
+                autoUpload: false,
+            });
 
-			const options = uploader.getOptions();
+            const options = uploader.getOptions();
 
-			expect(options.multiple).toBe(false);
-			expect(options.autoUpload).toBe(false);
-			expect(options.maxConcurrent).toBe(2);
-			expect(options.maxGroupSize).toBe(5);
-		});
+            expect(options.multiple).toBe(false);
+            expect(options.autoUpload).toBe(false);
+            expect(options.maxConcurrent).toBe(2);
+            expect(options.maxGroupSize).toBe(5);
+        });
 
-		it("should get a deep clone", () => {
+        it("should get a deep clone", () => {
 
-			const uploader = createUploader({
-				multiple: false,
-				autoUpload: false,
-				destination: {
-					url: "test-url"
-				},
-			});
+            const uploader = createUploader({
+                multiple: false,
+                autoUpload: false,
+                destination: {
+                    url: "test-url"
+                },
+            });
 
-			const options = uploader.getOptions();
+            const options = uploader.getOptions();
 
-			options.multiple = true;
-			options.destination.url = "test2";
+            options.multiple = true;
+            options.destination.url = "test2";
 
-			const options2 = uploader.getOptions();
+            const options2 = uploader.getOptions();
 
-			expect(options2.multiple).toBe(false);
-			expect(options2.destination.url).toBe("test-url");
+            expect(options2.multiple).toBe(false);
+            expect(options2.destination.url).toBe("test-url");
 
-		});
-	});
+        });
+    });
 
-	describe("updateOptions tests", () => {
+    describe("updateOptions tests", () => {
 
-		it("should update options", () => {
-			// const uploader = createUploader({ destination: { url: "aaa" } });
-			const uploader = getTestUploader();
+        it("should update options", () => {
+            // const uploader = createUploader({ destination: { url: "aaa" } });
+            const uploader = getTestUploader();
 
-			expect(uploader.getOptions().autoUpload).toBe(true);
-			uploader.update({ autoUpload: false, destination: { filesParamName: "bbb" } });
-			expect(uploader.getOptions().autoUpload).toBe(false);
-			expect(uploader.getOptions().destination).toEqual({
-				url: "aaa",
-				params: {},
-				filesParamName: "bbb",
-			});
-		});
-	});
+            expect(uploader.getOptions().autoUpload).toBe(true);
+            uploader.update({ autoUpload: false, destination: { filesParamName: "bbb" } });
+            expect(uploader.getOptions().autoUpload).toBe(false);
+            expect(uploader.getOptions().destination).toEqual({
+                url: "aaa",
+                params: {},
+                filesParamName: "bbb",
+            });
+        });
+    });
 
-	describe("upload tests", () => {
+    describe("upload tests", () => {
 
-		it("should not process if no pending", () => {
+        it("should not process if no pending", () => {
 
-			triggerCancellable
-				.mockReturnValueOnce(() => Promise.resolve(true));
+            triggerCancellable
+                .mockReturnValueOnce(() => Promise.resolve(true));
 
-			const uploader = getTestUploader({ autoUpload: false });
+            const uploader = getTestUploader({ autoUpload: false });
 
-			uploader.upload();
-			expect(mockProcess).not.toHaveBeenCalled();
-		});
+            uploader.upload();
+            expect(mockProcess).not.toHaveBeenCalled();
+        });
 
-		it("should process pending", async () => {
-			triggerCancellable
-				.mockReturnValueOnce(() => Promise.resolve(false));
+        it("should process pending", async () => {
+            triggerCancellable
+                .mockReturnValueOnce(() => Promise.resolve(false));
 
-			const batch1 = {},
-				batch2 = {};
+            const batch1 = { items: [1, 2] },
+                batch2 = { items: [3] };
 
-			mockCreateBatch
-				.mockReturnValueOnce(batch1)
-				.mockReturnValueOnce(batch2);
+            mockCreateBatch
+                .mockReturnValueOnce(batch1)
+                .mockReturnValueOnce(batch2);
 
-			const uploader = getTestUploader({ autoUpload: false });
+            const uploader = getTestUploader({ autoUpload: false });
 
-			await uploader.add([], { test: 1 });
-			await uploader.add([], { test: 2 });
+            await uploader.add([], { test: 1 });
+            await uploader.add([], { test: 2 });
 
-			uploader.upload();
-			expect(mockProcess).toHaveBeenCalledWith(batch1, expect.objectContaining({ test: 1 }));
-			expect(mockProcess).toHaveBeenCalledWith(batch2, expect.objectContaining({ test: 2 }));
-		});
-	});
+            uploader.upload();
+            expect(mockProcess).toHaveBeenCalledWith(batch1, expect.objectContaining({ test: 1 }));
+            expect(mockProcess).toHaveBeenCalledWith(batch2, expect.objectContaining({ test: 2 }));
+        });
+    });
 
-	describe("add uploads tests", () => {
+    describe("add uploads tests", () => {
 
-		it("should auto upload ", async () => {
+        it("should not add anything in case batch returns empty", async () => {
 
-			triggerCancellable
-				.mockReturnValueOnce(() => Promise.resolve(false));
+            const cancellable = jest.fn ();
+            triggerCancellable
+                .mockReturnValueOnce(cancellable);
 
-			const batch = {};
+            mockCreateBatch.mockReturnValueOnce({items: []});
+            const uploader = getTestUploader({ autoUpload: true });
 
-			mockCreateBatch.mockReturnValueOnce({});
+            await uploader.add([], { test: 1 });
 
-			const uploader = getTestUploader({ autoUpload: true });
+            expect(cancellable).not.toHaveBeenCalled();
+            expect(mockProcess).not.toHaveBeenCalled();
+        });
 
-			await uploader.add([], { test: 1 });
+        it("should auto upload ", async () => {
 
-			expect(mockProcess).toHaveBeenCalledWith(batch, expect.objectContaining({
-				autoUpload: true
-			}));
-		});
+            triggerCancellable
+                .mockReturnValueOnce(() => Promise.resolve(false));
 
-		it("should set batch as cancelled if add is cancelled", async () => {
+            const batch = { items: [1, 2] };
 
-			triggerCancellable
-				.mockReturnValueOnce(() => Promise.resolve(true));
+            mockCreateBatch.mockReturnValueOnce(batch);
 
-			const batch = {};
+            const uploader = getTestUploader({ autoUpload: true });
 
-			mockCreateBatch.mockReturnValueOnce(batch);
+            await uploader.add([], { test: 1 });
 
-			const uploader = getTestUploader({});
+            expect(mockProcess).toHaveBeenCalledWith(batch, expect.objectContaining({
+                autoUpload: true
+            }));
+        });
 
-			await uploader.add([], { test: 1 });
+        it("should set batch as cancelled if add is cancelled", async () => {
 
-			expect(batch.state).toBe(BATCH_STATES.CANCELLED);
-			expect(mockTrigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_CANCEL, batch);
-		});
+            triggerCancellable
+                .mockReturnValueOnce(() => Promise.resolve(true));
 
-		it("should add to pending when auto upload is false", async () => {
+            const batch = { items: [1, 2] };
 
-			triggerCancellable
-				.mockReturnValueOnce(() => Promise.resolve(false));
+            mockCreateBatch.mockReturnValueOnce(batch);
 
-			const uploader = getTestUploader({ autoUpload: false });
+            const uploader = getTestUploader({});
 
-			mockCreateBatch
-				.mockReturnValueOnce("batch1")
-				.mockReturnValueOnce("batch2");
+            await uploader.add([], { test: 1 });
 
-			await uploader.add([], { test: 1 });
-			await uploader.add([], { test: 2 });
+            expect(batch.state).toBe(BATCH_STATES.CANCELLED);
+            expect(mockTrigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_CANCEL, batch);
+        });
 
-			const pending = uploader.getPending();
+        it("should add to pending when auto upload is false", async () => {
 
-			expect(pending[0].batch).toBe("batch1");
-			expect(pending[0].uploadOptions).toEqual(expect.objectContaining({ test: 1 }));
+            triggerCancellable
+                .mockReturnValueOnce(() => Promise.resolve(false));
 
-			expect(pending[1].batch).toBe("batch2");
-			expect(pending[1].uploadOptions).toEqual(expect.objectContaining({ test: 2 }));
-		});
-	});
+            const uploader = getTestUploader({ autoUpload: false });
 
-	describe("abort tests", () => {
+            const batch1 = { items: [1, 2] },
+                batch2 = { items: [3, 4] };
 
-		it("should call processor.abort", () => {
-			const uploader = getTestUploader();
-			uploader.abort("u1");
-			expect(mockAbort).toHaveBeenCalledWith("u1");
-		});
+            mockCreateBatch
+                .mockReturnValueOnce(batch1)
+                .mockReturnValueOnce(batch2);
 
-		it("should call processor.abortBatch", () => {
-			const uploader = getTestUploader();
-			uploader.abortBatch("u1");
-			expect(mockAbortBatch).toHaveBeenCalledWith("u1");
-		});
-	});
+            await uploader.add([], { test: 1 });
+            await uploader.add([], { test: 2 });
 
-	it("should clear pending", async () => {
-		triggerCancellable
-			.mockReturnValueOnce(() => Promise.resolve(false));
+            const pending = uploader.getPending();
 
-		const uploader = getTestUploader({ autoUpload: false });
-		await uploader.add([], { test: 1 });
+            expect(pending[0].batch).toBe(batch1);
+            expect(pending[0].uploadOptions).toEqual(expect.objectContaining({ test: 1 }));
 
-		expect(uploader.getPending()).toHaveLength(1);
-		uploader.clearPending();
-		expect(uploader.getPending()).toHaveLength(0);
-	});
+            expect(pending[1].batch).toBe(batch2);
+            expect(pending[1].uploadOptions).toEqual(expect.objectContaining({ test: 2 }));
+        });
+    });
+
+    describe("abort tests", () => {
+
+        it("should call processor.abort", () => {
+            const uploader = getTestUploader();
+            uploader.abort("u1");
+            expect(mockAbort).toHaveBeenCalledWith("u1");
+        });
+
+        it("should call processor.abortBatch", () => {
+            const uploader = getTestUploader();
+            uploader.abortBatch("u1");
+            expect(mockAbortBatch).toHaveBeenCalledWith("u1");
+        });
+    });
+
+    it("should clear pending", async () => {
+        triggerCancellable
+            .mockReturnValueOnce(() => Promise.resolve(false));
+
+        mockCreateBatch
+            .mockReturnValueOnce({items: [1,2]});
+
+        const uploader = getTestUploader({ autoUpload: false });
+        await uploader.add([], { test: 1 });
+
+        expect(uploader.getPending()).toHaveLength(1);
+        uploader.clearPending();
+        expect(uploader.getPending()).toHaveLength(0);
+    });
 });

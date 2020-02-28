@@ -59,7 +59,7 @@ describe("UploadUrlInput tests", () => {
         expect(UploadyContext.upload).not.toHaveBeenCalled();
     });
 
-    it("should warn on no input ref", () => {
+    it("should throw on no input ref", () => {
         useWithForwardRef.mockReturnValueOnce({
             ...withForwardRefMock,
             ref: { current: null}
@@ -67,13 +67,9 @@ describe("UploadUrlInput tests", () => {
 
         const wrapper = mount(<UploadUrlInput />);
 
-        wrapper.find("input").props().onKeyPress({ key: "Enter" });
-        expect(UploadyContext.upload).not.toHaveBeenCalled();
-
-        expect(warning).toHaveBeenCalledWith(
-            null,
-            expect.any(String)
-        );
+        expect(() => {
+            wrapper.find("input").props().onKeyPress({ key: "Enter" });
+        }).toThrow("Uploady - ");
     });
 
     it("should not upload if validate fails", () => {

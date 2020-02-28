@@ -5,8 +5,11 @@ const uploader = {
     add: jest.fn(),
     upload: jest.fn(),
     on: jest.fn(),
+    once: jest.fn(),
     off: jest.fn(),
     update: jest.fn(),
+    abort: jest.fn(),
+    abortBatch: jest.fn(),
 };
 
 const createUploader = jest.fn(() => uploader);

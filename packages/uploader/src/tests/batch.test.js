@@ -3,6 +3,12 @@ import createBatch from "../batch";
 
 describe("Batch tests", () => {
 
+    beforeEach(() => {
+        clearJestMocks(
+            createBatchItem,
+        );
+    });
+
     it("should create new batch", () => {
         createBatchItem
             .mockReturnValueOnce("item1")
@@ -38,6 +44,18 @@ describe("Batch tests", () => {
         expect(batch.uploaderId).toBe("uploader1");
         expect(batch.state).toBe(BATCH_STATES.ADDED);
         expect(batch.items).toHaveLength(0);
+    });
+
+    it("should work with single file", () => {
+        const file = { file: true };
+        const batch = createBatch(file, "uploader1", {});
+
+        expect(batch.id).toBeDefined();
+        expect(batch.uploaderId).toBe("uploader1");
+        expect(batch.state).toBe(BATCH_STATES.ADDED);
+        expect(batch.items).toHaveLength(1);
+
+        expect(createBatchItem).toHaveBeenCalledWith(file, expect.any(String));
     });
 
     it("should use options file filter", () => {

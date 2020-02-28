@@ -9,34 +9,34 @@ import Uploady, {
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
-import { createMockSender } from "@rpldy/sender";
+// import { createMockSender } from "@rpldy/sender";
 import Preview from "./src";
 
 import type { UploaderType } from "@rpldy/uploader";
 
-const mockSenderEnhancer = (uploader: UploaderType): UploaderType => {
-	const mockSender = createMockSender({ delay: 1000 });
-	uploader.update({ send: mockSender.send });
-	return uploader;
-};
-
-// $FlowFixMe
-const uploadUrl = `https://api.cloudinary.com/v1_1/${process.env.CLD_CLOUD}/upload`;
-
-const uploadParams = {
-	upload_preset: process.env.CLD_PRESET,
-	folder: process.env.CLD_TEST_FOLDER,
-};
+// const mockSenderEnhancer = (uploader: UploaderType): UploaderType => {
+// 	const mockSender = createMockSender({ delay: 1000 });
+// 	uploader.update({ send: mockSender.send });
+// 	return uploader;
+// };
+//
+// // $FlowFixMe
+// const uploadUrl = `https://api.cloudinary.com/v1_1/${process.env.CLD_CLOUD}/upload`;
+//
+// const uploadParams = {
+// 	upload_preset: process.env.CLD_PRESET,
+// 	folder: process.env.CLD_TEST_FOLDER,
+// };
 
 const PreviewContainer = styled.div`
 	display: flex;
 	flex-wrap: wrap;
-	
+
 	img {
 		margin-left: 10px;
 		max-width: 200px;
 		height: auto;
-		
+
 		${({ completed }) => `opacity: ${completed / 100};`}
 	}
 `;

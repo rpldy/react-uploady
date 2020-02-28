@@ -18,7 +18,7 @@
   "dependencies": {
     "@rpldy/shared": "^0.1.4",
     "@rpldy/shared-ui": "^0.1.4",
-      "warning": "^4.0.3"
+    "invariant": "^2.2.4"
   },
   "devDependencies": {
     "@rpldy/uploady": "^0.1.4",

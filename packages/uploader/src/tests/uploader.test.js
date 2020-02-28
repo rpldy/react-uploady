@@ -21,8 +21,7 @@ describe("uploader tests", () => {
         );
     });
 
-    const getTestUploader = (options) => {
-
+    const getTestUploader = (options, enhancer) => {
         options = {
             destination: { url: "aaa" },
             ...options
@@ -34,7 +33,7 @@ describe("uploader tests", () => {
             abortBatch: mockAbortBatch,
         });
 
-        return createUploader(options);
+        return createUploader(options, enhancer);
     };
 
     describe("getOptions tests", () => {
@@ -133,11 +132,11 @@ describe("uploader tests", () => {
 
         it("should not add anything in case batch returns empty", async () => {
 
-            const cancellable = jest.fn ();
+            const cancellable = jest.fn();
             triggerCancellable
                 .mockReturnValueOnce(cancellable);
 
-            mockCreateBatch.mockReturnValueOnce({items: []});
+            mockCreateBatch.mockReturnValueOnce({ items: [] });
             const uploader = getTestUploader({ autoUpload: true });
 
             await uploader.add([], { test: 1 });
@@ -223,12 +222,38 @@ describe("uploader tests", () => {
         });
     });
 
+    describe("enhancer tests", () => {
+
+        it("should create with enhancer", () => {
+            const enhancer = jest.fn((uploader, trigger) => {
+                expect(trigger).toBe(mockTrigger);
+                uploader.test = true;
+
+                return uploader;
+            });
+
+            const uploader = getTestUploader({}, enhancer);
+
+            expect(uploader.test).toBe(true);
+        });
+
+        it("should create with enhancer that doesnt return uploader", () => {
+            const enhancer = jest.fn((uploader) => {
+                uploader.test = true;
+            });
+
+            const uploader = getTestUploader({}, enhancer);
+
+            expect(uploader.test).toBe(true);
+        });
+    });
+
     it("should clear pending", async () => {
         triggerCancellable
             .mockReturnValueOnce(() => Promise.resolve(false));
 
         mockCreateBatch
-            .mockReturnValueOnce({items: [1,2]});
+            .mockReturnValueOnce({ items: [1, 2] });
 
         const uploader = getTestUploader({ autoUpload: false });
         await uploader.add([], { test: 1 });

@@ -8,18 +8,18 @@ import type { Batch, CreateOptions, Cancellable } from "@rpldy/shared";
 //TODO: need a way to augment batch data at any point !!!!!!!!!
 
 export default (trigger: TriggerMethod, options: CreateOptions, uploaderId: string) => {
-	// $FlowFixMe - https://github.com/facebook/flow/issues/8215
-	const cancellable: Cancellable = triggerCancellable(trigger),
-		sender = createItemsSender(),
-		queue = createUploadQueue(options, cancellable, trigger, sender, uploaderId);
+    // $FlowFixMe - https://github.com/facebook/flow/issues/8215
+    const cancellable: Cancellable = triggerCancellable(trigger),
+        sender = createItemsSender(),
+        queue = createUploadQueue(options, cancellable, trigger, sender, uploaderId);
 
-	const process = (batch: Batch, batchOptions: CreateOptions) => {
-		queue.uploadBatch(batch, batchOptions);
-	};
+    const process = (batch: Batch, batchOptions: CreateOptions) => {
+        queue.uploadBatch(batch, batchOptions);
+    };
 
-	const abortBatch = (batchId: string) => {
-		queue.abortBatch(batchId);
-	};
+    const abortBatch = (batchId: string) => {
+        queue.abortBatch(batchId);
+    };
 
 	const abort = (id?: string) => {
 		if (id){
@@ -30,9 +30,9 @@ export default (trigger: TriggerMethod, options: CreateOptions, uploaderId: stri
 		}
 	};
 
-	return {
-		process,
-		abortBatch,
-		abort,
-	};
+    return {
+        process,
+        abortBatch,
+        abort,
+    };
 };

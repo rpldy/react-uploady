@@ -7,7 +7,13 @@ require("core-js"); //need babel for newer ES features on older node versions
 configure({ adapter: new enzymeAdapter() });
 
 global.clearJestMocks = (...mocks) => {
-	mocks.forEach((mock) => mock.mockClear());
+    mocks.forEach((mock) => {
+        if (mock.mockClear) {
+            mock.mockClear();
+        } else {
+            global.clearJestMocks(...Object.values(mock));
+        }
+    });
 };
 
 global.shallow = shallow;

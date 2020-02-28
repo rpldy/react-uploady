@@ -1,6 +1,6 @@
 // @flow
 import React, { useRef, useContext, useCallback, forwardRef } from "react";
-import warning from "warning";
+import invariant from "invariant";
 import { UploadyContext, assertContext, useWithForwardRef } from "@rpldy/shared-ui";
 import type { UploadUrlInputProps } from "./types";
 import type { UploadOptions } from "@rpldy/shared";
@@ -20,18 +20,16 @@ const UploadUrlInput = forwardRef<UploadUrlInputProps, ?HTMLInputElement>(
 
         const upload = useCallback(() => {
 
-            warning(
+            invariant(
                 inputRef.current,
                 "Uploady - UploadUrlInput failed to upload, input ref isn't available"
             );
 
-            if (inputRef.current) {
-                const input = inputRef.current,
-                    value = input.value;
+            const input = inputRef.current,
+                value = input.value;
 
-                if ((validate ? validate(value, input) : value)) {
-                    context.upload(value, uploadOptionsRef.current);
-                }
+            if ((validate ? validate(value, input) : value)) {
+                context.upload(value, uploadOptionsRef.current);
             }
         }, [
             context,

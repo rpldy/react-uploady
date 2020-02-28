@@ -79,7 +79,7 @@ export default (
 	}
 
 	const abortItem = (id: string) => {
-		abortMethods.abortItem(queueState, id);
+		return abortMethods.abortItem(queueState, id);
 	};
 
 	const abortBatch = (id: string) => {

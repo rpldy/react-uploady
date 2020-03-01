@@ -88,7 +88,12 @@ export type Batch = {
 	id: string,
 	uploaderId: string,
 	items: BatchItem[],
-	state: BatchState
+	state: BatchState,
+    uploaded: number,
+    //sum of percentage of upload completed for batch items
+    completed: number,
+    //sum of bytes uploaded for batch items
+    loaded: number,
 };
 
 export type SendMethod = (item: BatchItem[], url: string, options: SendOptions, onProgress: OnProgress) => SendResult;

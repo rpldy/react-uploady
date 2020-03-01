@@ -1,39 +1,46 @@
 // @flow
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import {
-	generateUploaderEventHook,
-	generateUploaderEventHookWithState
+    generateUploaderEventHook,
+    generateUploaderEventHookWithState
 } from "./utils";
 
-import type { BatchItem } from "@rpldy/shared";
+import type { Batch, BatchItem } from "@rpldy/shared";
 
+const useBatchAddListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ADD);
 const useBatchStartListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);
 const useBatchFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINISH);
 const useBatchCancelledListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_CANCEL);
 const useBatchAbortListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ABORT);
 
-const useFileStartListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_START);
-const useFileFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_FINISH);
-const useFileProgressListener = generateUploaderEventHookWithState(
-	UPLOADER_EVENTS.ITEM_PROGRESS,
-	(item: BatchItem) => ({ ...item }));
+const useBatchProgressListener = generateUploaderEventHookWithState(
+    UPLOADER_EVENTS.BATCH_PROGRESS,
+    (batch: Batch) => ({ ...batch }));
 
-const useFileCancelListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_CANCEL);
-const useFileErrorListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_ERROR);
+const useItemStartListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_START);
+const useItemFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_FINISH);
+const useItemCancelListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_CANCEL);
+const useItemErrorListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_ERROR);
+
+const useItemProgressListener = generateUploaderEventHookWithState(
+    UPLOADER_EVENTS.ITEM_PROGRESS,
+    (item: BatchItem) => ({ ...item }));
 
 const useRequestPreSend = generateUploaderEventHook(UPLOADER_EVENTS.REQUEST_PRE_SEND);
 
 export {
-	useBatchStartListener,
-	useBatchFinishListener,
-	useBatchCancelledListener,
-	useBatchAbortListener,
+    useBatchAddListener,
+    useBatchStartListener,
+    useBatchFinishListener,
+    useBatchCancelledListener,
+    useBatchAbortListener,
+    useBatchProgressListener,
 
-	useFileStartListener,
-	useFileFinishListener,
-	useFileProgressListener,
-	useFileCancelListener,
-	useFileErrorListener,
+    useItemStartListener,
+    useItemFinishListener,
+    useItemProgressListener,
+    useItemCancelListener,
+    useItemErrorListener,
 
-	useRequestPreSend,
+    useRequestPreSend,
 };

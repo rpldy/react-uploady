@@ -16,7 +16,7 @@ const UploadButton = forwardRef<UploadButtonProps, ?HTMLButtonElement>(
         const uploadOptionsRef = useRef<?UploadOptions>();
         uploadOptionsRef.current = uploadOptions;
 
-        const inputOnClick = useCallback(() => {
+        const onButtonClick = useCallback(() => {
             showFileUpload(uploadOptionsRef.current);
         }, [showFileUpload, uploadOptionsRef]);
 
@@ -24,7 +24,7 @@ const UploadButton = forwardRef<UploadButtonProps, ?HTMLButtonElement>(
             id={id}
             ref={setButtonRef}
             className={className}
-            onClick={inputOnClick}>
+            onClick={onButtonClick}>
             {children ? children : (text || "Upload")}
         </button>;
     });

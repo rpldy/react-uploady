@@ -12,7 +12,7 @@ import type {
 /**
  * doesn't render its own container
  */
-const Preview = (props: PreviewProps): Element<"img">[] | Element<ComponentType<any>>[] => {
+const UploadPreview = (props: PreviewProps): Element<"img">[] | Element<ComponentType<any>>[] => {
     const [fallbackAttempted, setFallbackAttempted] = useState(false);
     const previews = usePreviewsLoader(props);
 
@@ -36,7 +36,6 @@ const Preview = (props: PreviewProps): Element<"img">[] | Element<ComponentType<
             <img key={data.url}
                  onError={onImagePreviewLoadError}
                  src={data.url} {...props.previewProps} />);
-
 };
 
-export default Preview;
+export default UploadPreview;

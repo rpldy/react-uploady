@@ -4,6 +4,11 @@ import StoryUploadProgress from "./StoryUploadProgress";
 import StoryAbortButton from "./StoryAbortButton"
 
 export {
+    uploadUrlInputCss,
+    uploadButtonCss,
+} from "./ComponentsStyles";
+
+export {
     withKnobs,
     StoryUploadProgress,
     useStoryUploadySetup,

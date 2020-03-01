@@ -1,19 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 import { Circle } from "rc-progress";
-import { useFileProgressListener } from "@rpldy/uploady";
+import { useItemProgressListener } from "@rpldy/uploady";
 
 const StyledProgressCircle = styled(Circle)`
   width: 100px;
   height: 100px;
 `;
 
+//TODO: Wont work for 'concurrent = true' - progress for one request can override the other's
 const StoryUploadProgress = () => {
     const [uploads, setUploads] = React.useState({});
-    const progressData = useFileProgressListener((item) => {
+    const progressData = useItemProgressListener((item) => {
         console.log(">>>>> (hook) File Progress - ", item);
     });
-
 
     //TODO : add error hook - paint circle red on error
 

@@ -35,6 +35,6 @@ export type UploaderType = {
 export type UploaderEnhancer = (uploader: UploaderType, trigger: Trigger<mixed>) => UploaderType;
 
 export type ItemsSender = {
-	send: (BatchItem[], CreateOptions) => SendResult,
+	send: (BatchItem[], Batch, CreateOptions) => SendResult,
 	on: OnAndOnceMethod,
 };

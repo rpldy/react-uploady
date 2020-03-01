@@ -15,11 +15,11 @@ export  {
 	useBatchCancelledListener,
 	useBatchAbortListener,
 
-	useFileStartListener,
-	useFileFinishListener,
-	useFileProgressListener,
-	useFileCancelListener,
-	useFileErrorListener,
+	useItemStartListener,
+	useItemFinishListener,
+	useItemProgressListener,
+	useItemCancelListener,
+	useItemErrorListener,
 
 	useRequestPreSend,
 } from "@rpldy/uploady";

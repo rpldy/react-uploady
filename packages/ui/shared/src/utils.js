@@ -23,7 +23,6 @@ const generateUploaderEventHookWithState = (event: string, stateCalculator: (sta
 		const [eventState, setEventState] = useState(null);
 
 		const eventCallback = useCallback((...args) => {
-
 			setEventState(stateCalculator(...args));
 
 			if (fn) {

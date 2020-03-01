@@ -1,9 +1,10 @@
 // @flow
 import React, { Component, useEffect, useMemo } from "react";
+import styled from "styled-components";
 import UploadButton from "./src";
 import Uploady, {
     UploadyContext,
-    useFileFinishListener,
+    useItemFinishListener,
     useBatchStartListener,
     // useBatchAbortListener,
 
@@ -14,20 +15,10 @@ import {
     useStoryUploadySetup,
     StoryUploadProgress,
     StoryAbortButton,
+    // uploadButtonCss,
 } from "../../../story-helpers";
 
 // import readme from '../README.md';
-
-// const Test = (props) => {
-//     useEffect(() => {
-//         console.log("!!!!!!!!!! TEST USE EFFECT ", props.destination);
-//         return () => {
-//             console.log("!!!!!!!!!! TEST CLEAN UP !!! ", props.destination);
-//         };
-//     }, [props.destination]);
-//
-//     return null;
-// };
 
 export const Simple = () => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
@@ -74,7 +65,7 @@ export const WithEventListeners = () => {
 };
 
 const HookedUploadButton = () => {
-    useFileFinishListener((file) => {
+    useItemFinishListener((file) => {
         console.log(">>>>>> HookedUploadButton - FILE FINISH - ", file);
     });
 
@@ -157,7 +148,6 @@ export const WithClass = () => {
 };
 
 export const Abort = () => {
-
     const { enhancer, destination, multiple } = useStoryUploadySetup();
 
     return <div>
@@ -174,6 +164,30 @@ export const Abort = () => {
             <StoryAbortButton/>
         </Uploady>
     </div>
+};
+
+// ${uploadButtonCss}
+const StyledUploadButton = styled(UploadButton)`
+
+  //
+  // &.disabled {
+  //
+  // }
+`;
+
+export const DisabledDuringUpload = () => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}>
+
+        <StyledUploadButton/>
+    </Uploady>;
 };
 
 export const DifferentConfiguration = () => {

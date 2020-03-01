@@ -60,9 +60,9 @@ const updateUploadingState = (queue: QueueState, items: BatchItem[], sendResult:
 };
 
 const sendAllowedItems = async (queue: QueueState, itemsSendData: ItemsSendData, next: ProcessNextMethod) => {
-    // const batchOptions = queue.getState().batches[items[0].batchId].batchOptions;
     const { items, options } = itemsSendData;
-    const sendResult = queue.sender.send(items, options);
+    const batch = queue.getState().batches[items[0].batchId].batch;
+    const sendResult = queue.sender.send(items, batch, options);
 
     updateUploadingState(queue, items, sendResult);
 

@@ -11,9 +11,9 @@ import {
 import "../eventListenerHooks";
 
 describe("eventListenerHooks tests", () => {
-
 	describe("generateUploaderEventHook tests", () => {
 		it.each([
+			[UPLOADER_EVENTS.BATCH_ADD],
 			[UPLOADER_EVENTS.BATCH_START],
 			[UPLOADER_EVENTS.BATCH_FINISH],
 			[UPLOADER_EVENTS.BATCH_CANCEL],

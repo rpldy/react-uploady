@@ -1,8 +1,8 @@
 // @flow
-import Preview from "./Preview";
+import UploadPreview from "./UploadPreview";
 import type { PreviewProps } from "./types";
 
-export default Preview;
+export default UploadPreview;
 
 export type {
 	PreviewProps,

@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import type { NonMaybeTypeFunc } from "@rpldy/shared";
+import type { BatchItem, NonMaybeTypeFunc } from "@rpldy/shared";
 import { PREVIEW_TYPES } from "./consts";
 
 export type PreviewType = $Values<typeof PREVIEW_TYPES>;
@@ -8,6 +8,7 @@ export type PreviewType = $Values<typeof PREVIEW_TYPES>;
 export type PreviewData = {
 	url: string,
 	type: PreviewType,
+    props: Object,
 };
 
 export type FallbackType = string | PreviewData;
@@ -23,15 +24,18 @@ export type PreviewOptions = {|
 	maxPreviewVideoSize?: number,
 	//URL to use or function to call with the file to determine fallback for invalid file URLs, none-images or too large files to upload-preview (maxPreviewImageSize)
 	fallbackUrl?: string | FallbackMethod,
-	//the image mime-types to load previews for (default: )
+	//the image mime-types to load previews for (default: ["image/jpeg", "image/webp", "image/gif", "image/png", "image/apng", "image/bmp", "image/x-icon", "image/svg+xml"])
 	imageMimeTypes?: string[],
-	//the video mime-types to load upload-preview for (default: )
+	//the video mime-types to load upload-preview for (default: ["video/mp4", "video/webm", "video/ogg"])
 	videoMimeTypes?: string[],
 |};
 
-export type PreviewProps = PreviewOptions & {
-	PreviewComponent?: React.ComponentType<any>,
-	previewProps?: Object,
-};
+export type PreviewComponentPropsOrMethod = Object | (item: BatchItem, url: string, type: PreviewType) => Object
 
-export type MandatoryPreviewOptions = $Exact<$ObjMap<PreviewProps, NonMaybeTypeFunc>>;
+export type PreviewProps =  {|
+    ...PreviewOptions,
+	PreviewComponent?: React.ComponentType<any>,
+	previewComponentProps?: PreviewComponentPropsOrMethod,
+|};
+
+// export type MandatoryPreviewOptions = $Exact<$ObjMap<PreviewProps, NonMaybeTypeFunc>>;

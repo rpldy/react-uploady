@@ -3,16 +3,20 @@ import { isFunction } from "@rpldy/shared";
 import { PREVIEW_TYPES } from "./consts";
 import { PREVIEW_DEFAULTS } from "./defaults";
 
-import type { FallbackMethod, MandatoryPreviewOptions, PreviewData, PreviewOptions } from "./types";
+import type {
+    FallbackMethod,
+    // MandatoryPreviewOptions,
+    PreviewProps
+} from "./types";
 
-const getMandatoryOptions = (options: ?PreviewOptions): MandatoryPreviewOptions => {
+const getWithMandatoryOptions = (props: ?PreviewProps): PreviewProps => {
 	return {
 		...PREVIEW_DEFAULTS,
-		...options,
+		...props,
 	};
 };
 
-const getFallbackUrl = (fallbackProp: ?string | FallbackMethod, file: Object): ?PreviewData => {
+const getFallbackUrl = (fallbackProp: ?string | FallbackMethod, file: Object) => {
     let data = isFunction(fallbackProp) ?
         fallbackProp(file) :
         fallbackProp;
@@ -28,6 +32,6 @@ const getFallbackUrl = (fallbackProp: ?string | FallbackMethod, file: Object): ?
 };
 
 export {
-	getMandatoryOptions,
+    getWithMandatoryOptions,
     getFallbackUrl,
 };

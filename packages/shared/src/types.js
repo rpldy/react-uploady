@@ -89,8 +89,7 @@ export type Batch = {
 	uploaderId: string,
 	items: BatchItem[],
 	state: BatchState,
-    uploaded: number,
-    //sum of percentage of upload completed for batch items
+    //average of percentage of upload completed for batch items
     completed: number,
     //sum of bytes uploaded for batch items
     loaded: number,

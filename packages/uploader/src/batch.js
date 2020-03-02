@@ -28,5 +28,7 @@ export default (files: UploadInfo | UploadInfo[], uploaderId: string, options: C
         uploaderId,
         items: processFiles(id, files, options.fileFilter),
         state: BATCH_STATES.ADDED,
+        completed: 0,
+        loaded: 0,
     };
 };

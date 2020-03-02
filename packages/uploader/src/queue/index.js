@@ -66,10 +66,12 @@ export default (
 
     sender.on(SENDER_EVENTS.BATCH_PROGRESS,
         (batch: Batch) => {
-            const [completed, loaded] = state
+            const batchItems = state
                 .batches[batch.id]
                 .batch
-                .items
+                .items;
+
+            const [completed, loaded] = batchItems
                 .reduce((res, item) => {
                     res[0] += item.completed;
                     res[1] += item.loaded;
@@ -77,12 +79,14 @@ export default (
                 }, [0, 0]);
 
             updateState((state: State) => {
-                const stateBatch = state.batches[batch.id];
-                stateBatch.completed = completed;
+                const stateBatch = state.batches[batch.id].batch;
+                //average of completed percentage for batch items
+                stateBatch.completed = completed / batchItems.length;
+                //sum of loaded bytes for batch items
                 stateBatch.loaded = loaded;
             });
 
-            trigger(UPLOADER_EVENTS.BATCH_PROGRESS, state.batches[batch.id]);
+            trigger(UPLOADER_EVENTS.BATCH_PROGRESS, state.batches[batch.id].batch);
         });
 
     const queueState = {

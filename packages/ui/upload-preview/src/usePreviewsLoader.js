@@ -1,12 +1,19 @@
 // @flow
 
 import { useState } from "react";
+import { isFunction } from "@rpldy/shared";
 import { useBatchStartListener } from "@rpldy/shared-ui";
 import { PREVIEW_TYPES } from "./consts";
-import { getMandatoryOptions, getFallbackUrl } from "./utils";
+import { getWithMandatoryOptions, getFallbackUrl } from "./utils";
 
 import type { Batch, BatchItem } from "@rpldy/shared";
-import type { MandatoryPreviewOptions, PreviewData, PreviewProps, PreviewType } from "./types";
+import type {
+    // MandatoryPreviewOptions,
+    PreviewComponentPropsOrMethod,
+    PreviewData,
+    PreviewProps,
+    PreviewType
+} from "./types";
 
 const getFileObjectUrlByType = (type: PreviewType, mimeTypes, max, file: Object) => {
     let data;
@@ -23,7 +30,7 @@ const getFileObjectUrlByType = (type: PreviewType, mimeTypes, max, file: Object)
     return data;
 };
 
-const getFilePreviewUrl = (file, options: MandatoryPreviewOptions): ?PreviewData => {
+const getFilePreviewUrl = (file, options: PreviewProps) => {
     let data;
 
     data = getFileObjectUrlByType(PREVIEW_TYPES.IMAGE, options.imageMimeTypes, options.maxPreviewImageSize, file);
@@ -36,8 +43,12 @@ const getFilePreviewUrl = (file, options: MandatoryPreviewOptions): ?PreviewData
 };
 
 
-const loadPreviewUrl = (item: BatchItem, options: MandatoryPreviewOptions): ?PreviewData => {
-    let data;
+const loadPreviewData = (
+    item: BatchItem,
+    options: PreviewProps,
+    previewComponentProps: PreviewComponentPropsOrMethod): ?PreviewData => {
+
+    let data, props;
 
     if (item.file) {
         const file = item.file;
@@ -53,17 +64,27 @@ const loadPreviewUrl = (item: BatchItem, options: MandatoryPreviewOptions): ?Pre
         };
     }
 
-    return data;
+    if (data) {
+        props = isFunction(previewComponentProps) ?
+            previewComponentProps(item, data.url, data.type) :
+            previewComponentProps;
+    }
+
+    return data && {
+        ...data,
+        props
+    };
 };
+
 export default (props: PreviewProps): PreviewData[] => {
     const [previews, setPreviews] = useState<PreviewData[]>([]);
-    const previewOptions = getMandatoryOptions(props);
+    const previewOptions = getWithMandatoryOptions(props);
 
     useBatchStartListener((batch: Batch) => {
         const items: BatchItem[] = previewOptions.loadFirstOnly ? batch.items.slice(0, 1) : batch.items;
 
         const previewsData = items
-            .map((item) => loadPreviewUrl(item, previewOptions))
+            .map((item) => loadPreviewData(item, previewOptions, props.previewComponentProps))
             .filter(Boolean);
 
         setPreviews(previewsData);

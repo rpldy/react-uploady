@@ -1,222 +1,236 @@
 import {
-	FILE_STATES,
-	utils as mockUtils,
-	triggerUpdater as mockTriggerUpdater
+    FILE_STATES,
+    utils as mockUtils,
+    triggerUpdater as mockTriggerUpdater
 } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import getQueueState from "./mocks/getQueueState.mock";
-import processBatchItems  from "../processBatchItems";
+import processBatchItems from "../processBatchItems";
 import mockProcessFinishedRequest from "../processFinishedRequest";
 import { UPLOADER_EVENTS } from "../../consts";
 
 jest.mock("../processFinishedRequest", () => jest.fn());
 
 describe("processBatchItems tests", () => {
-	const mockNext = jest.fn();
+    const mockNext = jest.fn();
 
-	beforeEach(() => {
-		clearJestMocks(
-			mockProcessFinishedRequest,
-			mockTriggerUpdater,
-			mockNext);
-	});
+    beforeEach(() => {
+        clearJestMocks(
+            mockProcessFinishedRequest,
+            mockTriggerUpdater,
+            mockNext);
+    });
 
-	const requestResponse = {};
+    const requestResponse = {};
 
-	const sendResult = {
-		abort: jest.fn(),
-		request: Promise.resolve(requestResponse),
-	};
+    const sendResult = {
+        abort: jest.fn(),
+        request: Promise.resolve(requestResponse),
+    };
 
-	const batchOptions = {
-		destination: {}
-	};
+    const batchOptions = {
+        destination: {}
+    };
 
-	const getMockStateData = () => ({
-		items: {
-			"u1": { id: "u1", batchId: "b1" },
-			"u2": { id: "u2", batchId: "b2" },
-		},
-		batches: {
-			"b1": {
-				batch: { id: "b1" },
-				batchOptions
-			}
-		},
-		aborts: {}
-	});
+    const getMockStateData = () => ({
+        items: {
+            "u1": { id: "u1", batchId: "b1" },
+            "u2": { id: "u2", batchId: "b2" },
+        },
+        batches: {
+            "b1": {
+                batch: { id: "b1" },
+                batchOptions
+            }
+        },
+        aborts: {}
+    });
 
-	it("should send allowed item", async () => {
+    it("should send allowed item", async () => {
 
-		const queueState = getQueueState(getMockStateData());
+        const queueState = getQueueState(getMockStateData());
 
-		queueState.cancellable.mockResolvedValueOnce(false);
-		queueState.sender.send.mockReturnValueOnce(sendResult);
+        queueState.cancellable.mockResolvedValueOnce(false);
+        queueState.sender.send.mockReturnValueOnce(sendResult);
 
-		await processBatchItems(queueState, ["u1"], mockNext);
+        await processBatchItems(queueState, ["u1"], mockNext);
 
-		expect(queueState.sender.send).toHaveBeenCalledWith([queueState.state.items.u1], batchOptions);
-		expect(mockProcessFinishedRequest).toHaveBeenCalledTimes(1);
+        expect(queueState.sender.send).toHaveBeenCalledWith(
+            [queueState.state.items.u1],
+            queueState.state.batches["b1"].batch,
+            batchOptions);
 
-		expect(mockProcessFinishedRequest)
-			.toHaveBeenCalledWith(queueState, [{ id: "u1", info: requestResponse }], mockNext);
+        expect(mockProcessFinishedRequest).toHaveBeenCalledTimes(1);
 
-		expect(queueState.getState().activeIds).toEqual(["u1"]);
+        expect(mockProcessFinishedRequest)
+            .toHaveBeenCalledWith(queueState, [{ id: "u1", info: requestResponse }], mockNext);
 
-		expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
-	});
+        expect(queueState.getState().activeIds).toEqual(["u1"]);
 
-	it("should send allowed items", async () => {
-		const queueState = getQueueState(getMockStateData());
+        expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
+    });
 
-		queueState.cancellable
-			.mockResolvedValueOnce(false)
-			.mockResolvedValueOnce(false);
+    it("should send allowed items", async () => {
+        const queueState = getQueueState(getMockStateData());
 
-		queueState.sender.send.mockReturnValueOnce(sendResult);
+        queueState.cancellable
+            .mockResolvedValueOnce(false)
+            .mockResolvedValueOnce(false);
 
-		await processBatchItems(queueState, ["u1", "u2"], mockNext);
+        queueState.sender.send.mockReturnValueOnce(sendResult);
 
-		expect(queueState.sender.send).toHaveBeenCalledWith(Object.values(queueState.state.items), batchOptions);
-		expect(mockProcessFinishedRequest).toHaveBeenCalledTimes(1);
+        await processBatchItems(queueState, ["u1", "u2"], mockNext);
 
-		expect(mockProcessFinishedRequest)
-			.toHaveBeenCalledWith(queueState, [
-				{ id: "u1", info: requestResponse },
-				{ id: "u2", info: requestResponse }], mockNext);
+        expect(queueState.sender.send).toHaveBeenCalledWith(
+            Object.values(queueState.state.items),
+            queueState.state.batches["b1"].batch,
+            batchOptions);
 
-		expect(queueState.getState().activeIds).toEqual(["u1", "u2"]);
+        expect(mockProcessFinishedRequest).toHaveBeenCalledTimes(1);
 
-		expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
-		expect(queueState.getState().aborts.u2).toBe(sendResult.abort);
-	});
+        expect(mockProcessFinishedRequest)
+            .toHaveBeenCalledWith(queueState, [
+                { id: "u1", info: requestResponse },
+                { id: "u2", info: requestResponse }], mockNext);
 
-	it("should throw in case update returns different array length", async () => {
+        expect(queueState.getState().activeIds).toEqual(["u1", "u2"]);
 
-		const queueState = getQueueState(getMockStateData());
+        expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
+        expect(queueState.getState().aborts.u2).toBe(sendResult.abort);
+    });
 
-		queueState.cancellable
-			.mockResolvedValueOnce(false)
-			.mockResolvedValueOnce(false);
+    it("should throw in case update returns different array length", async () => {
 
-		mockTriggerUpdater.mockResolvedValueOnce({items: ["u1", "u2", "u3"]});
+        const queueState = getQueueState(getMockStateData());
 
-		expect(processBatchItems(queueState, ["u1", "u2"], mockNext)).rejects
-			.toThrow("REQUEST_PRE_SEND event handlers must return same items with same ids");
-	});
+        queueState.cancellable
+            .mockResolvedValueOnce(false)
+            .mockResolvedValueOnce(false);
 
-	it("should throw in case update returns different item ids", async () => {
-		const queueState = getQueueState(getMockStateData());
+        mockTriggerUpdater.mockResolvedValueOnce({ items: ["u1", "u2", "u3"] });
 
-		queueState.cancellable
-			.mockResolvedValueOnce(false)
-			.mockResolvedValueOnce(false);
+        expect(processBatchItems(queueState, ["u1", "u2"], mockNext)).rejects
+            .toThrow("REQUEST_PRE_SEND event handlers must return same items with same ids");
+    });
 
-		mockUtils.isSamePropInArrays.mockReturnValueOnce(false);
+    it("should throw in case update returns different item ids", async () => {
+        const queueState = getQueueState(getMockStateData());
 
-		mockTriggerUpdater.mockResolvedValueOnce({items:[{ id: "u1" }, { id: "u2" }]});
+        queueState.cancellable
+            .mockResolvedValueOnce(false)
+            .mockResolvedValueOnce(false);
 
-		expect(processBatchItems(queueState, ["u1", "u2"], mockNext)).rejects
-			.toThrow("REQUEST_PRE_SEND event handlers must return same items with same ids");
-	});
+        mockUtils.isSamePropInArrays.mockReturnValueOnce(false);
 
-	it("should update items before sending", async () => {
+        mockTriggerUpdater.mockResolvedValueOnce({ items: [{ id: "u1" }, { id: "u2" }] });
 
-		const queueState = getQueueState(getMockStateData());
+        expect(processBatchItems(queueState, ["u1", "u2"], mockNext)).rejects
+            .toThrow("REQUEST_PRE_SEND event handlers must return same items with same ids");
+    });
 
-		queueState.cancellable
-			.mockResolvedValueOnce(false)
-			.mockResolvedValueOnce(false);
+    it("should update items before sending", async () => {
 
-		queueState.sender.send.mockReturnValueOnce(sendResult);
+        const queueState = getQueueState(getMockStateData());
 
-		mockUtils.isSamePropInArrays.mockReturnValueOnce(true);
+        queueState.cancellable
+            .mockResolvedValueOnce(false)
+            .mockResolvedValueOnce(false);
 
-		const newItems = [{ id: "u1", batchId: "b1", newProp: 111 }, {
-			id: "u2",
-			batchId: "b1",
-			foo: "bar"
-		}];
+        queueState.sender.send.mockReturnValueOnce(sendResult);
 
-		const newOptions = {
-			test: true,
-		};
+        mockUtils.isSamePropInArrays.mockReturnValueOnce(true);
 
-		mockTriggerUpdater.mockResolvedValueOnce({
-			items: newItems,
-			options: newOptions,
-		});
+        const newItems = [{ id: "u1", batchId: "b1", newProp: 111 }, {
+            id: "u2",
+            batchId: "b1",
+            foo: "bar"
+        }];
 
-		await processBatchItems(queueState, ["u1", "u2"], mockNext);
+        const newOptions = {
+            test: true,
+        };
 
-		expect(mockTriggerUpdater).toHaveBeenCalledWith(
-			queueState.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, {
-				items: Object.values(queueState.state.items),
-				options: batchOptions,
-			});
+        mockTriggerUpdater.mockResolvedValueOnce({
+            items: newItems,
+            options: newOptions,
+        });
 
-		expect(queueState.sender.send).toHaveBeenCalledWith(Object.values(newItems), {
-			...batchOptions,
-			...newOptions
-		});
-	});
+        await processBatchItems(queueState, ["u1", "u2"], mockNext);
 
-	it("should report cancelled items", async () => {
+        expect(mockTriggerUpdater).toHaveBeenCalledWith(
+            queueState.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, {
+                items: Object.values(queueState.state.items),
+                options: batchOptions,
+            });
 
-		const queueState = getQueueState(getMockStateData());
+        expect(queueState.sender.send).toHaveBeenCalledWith(
+            Object.values(newItems),
+            queueState.state.batches["b1"].batch,
+            {
+                ...batchOptions,
+                ...newOptions
+            });
+    });
 
-		queueState.cancellable
-			.mockResolvedValueOnce(true)
-			.mockResolvedValueOnce(true);
+    it("should report cancelled items", async () => {
 
-		await processBatchItems(queueState, ["u1", "u2"], mockNext);
+        const queueState = getQueueState(getMockStateData());
 
-		expect(queueState.sender.send).not.toHaveBeenCalled();
+        queueState.cancellable
+            .mockResolvedValueOnce(true)
+            .mockResolvedValueOnce(true);
 
-		expect(mockProcessFinishedRequest).toHaveBeenCalledTimes(1);
+        await processBatchItems(queueState, ["u1", "u2"], mockNext);
 
-		expect(mockProcessFinishedRequest)
-			.toHaveBeenCalledWith(queueState,
-				[{ id: "u1", info: { state: FILE_STATES.CANCELLED, response: "cancel" } },
-					{
-						id: "u2",
-						info: { state: FILE_STATES.CANCELLED, response: "cancel" }
-					}], mockNext);
+        expect(queueState.sender.send).not.toHaveBeenCalled();
 
-		expect(queueState.state.activeIds).toHaveLength(0);
+        expect(mockProcessFinishedRequest).toHaveBeenCalledTimes(1);
 
-		expect(queueState.state.items.u1.abort).toBeUndefined();
-		expect(queueState.state.items.u2.abort).toBeUndefined();
-	});
+        expect(mockProcessFinishedRequest)
+            .toHaveBeenCalledWith(queueState,
+                [{ id: "u1", info: { state: FILE_STATES.CANCELLED, response: "cancel" } },
+                    {
+                        id: "u2",
+                        info: { state: FILE_STATES.CANCELLED, response: "cancel" }
+                    }], mockNext);
 
-	it("should send allowed and report cancelled both", async () => {
-		const queueState = getQueueState(getMockStateData());
+        expect(queueState.state.activeIds).toHaveLength(0);
 
-		queueState.cancellable
-			.mockResolvedValueOnce(false)
-			.mockResolvedValueOnce(true);
+        expect(queueState.state.items.u1.abort).toBeUndefined();
+        expect(queueState.state.items.u2.abort).toBeUndefined();
+    });
 
-		queueState.sender.send.mockReturnValueOnce(sendResult);
+    it("should send allowed and report cancelled both", async () => {
+        const queueState = getQueueState(getMockStateData());
 
-		await processBatchItems(queueState, ["u1", "u2"], mockNext);
+        queueState.cancellable
+            .mockResolvedValueOnce(false)
+            .mockResolvedValueOnce(true);
 
-		expect(queueState.sender.send).toHaveBeenCalledWith([queueState.state.items.u1], batchOptions);
+        queueState.sender.send.mockReturnValueOnce(sendResult);
 
-		expect(mockProcessFinishedRequest).toHaveBeenCalledTimes(2);
+        await processBatchItems(queueState, ["u1", "u2"], mockNext);
 
-		expect(mockProcessFinishedRequest)
-			.toHaveBeenCalledWith(queueState,
-				[{ id: "u1", info: requestResponse }], mockNext);
+        expect(queueState.sender.send).toHaveBeenCalledWith(
+            [queueState.state.items.u1],
+            queueState.state.batches["b1"].batch,
+            batchOptions);
 
-		expect(mockProcessFinishedRequest)
-			.toHaveBeenCalledWith(queueState,
-				[{
-					id: "u2",
-					info: { state: FILE_STATES.CANCELLED, response: "cancel" }
-				}], mockNext);
+        expect(mockProcessFinishedRequest).toHaveBeenCalledTimes(2);
 
-		expect(queueState.getState().activeIds).toEqual(["u1"]);
+        expect(mockProcessFinishedRequest)
+            .toHaveBeenCalledWith(queueState,
+                [{ id: "u1", info: requestResponse }], mockNext);
 
-		expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
-		expect(queueState.getState().aborts.u2).toBeUndefined();
-	});
+        expect(mockProcessFinishedRequest)
+            .toHaveBeenCalledWith(queueState,
+                [{
+                    id: "u2",
+                    info: { state: FILE_STATES.CANCELLED, response: "cancel" }
+                }], mockNext);
+
+        expect(queueState.getState().activeIds).toEqual(["u1"]);
+
+        expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
+        expect(queueState.getState().aborts.u2).toBeUndefined();
+    });
 });

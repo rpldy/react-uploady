@@ -15,10 +15,10 @@ describe("queue tests", () => {
 
 	const uploaderId = "uploader111";
 
-	let senderOnHandler;
+	let senderOnHandlers = {};
 
 	const mockSenderOn = jest.fn((name, handler) => {
-		senderOnHandler = handler;
+        senderOnHandlers[name] = handler;
 	});
 
 	const trigger = jest.fn(),
@@ -58,7 +58,8 @@ describe("queue tests", () => {
 
 		expect(window[`__${uploaderId}_queue_state`]).toBe(queueState);
 
-		expect(mockSenderOn).toHaveBeenCalledWith(SENDER_EVENTS.PROGRESS, expect.any(Function));
+		expect(mockSenderOn).toHaveBeenCalledWith(SENDER_EVENTS.ITEM_PROGRESS, expect.any(Function));
+		expect(mockSenderOn).toHaveBeenCalledWith(SENDER_EVENTS.BATCH_PROGRESS, expect.any(Function));
 	});
 
 	it("should update state", () => {
@@ -88,7 +89,7 @@ describe("queue tests", () => {
 		expect(abortMethods.abortBatch).toHaveBeenCalledWith(expect.any(Object), "b1");
 	});
 
-    it("should trigger UPLOADER_EVENTS.ITEM_PROGRESS on sender progress", () => {
+    it("should trigger UPLOADER_EVENTS.ITEM_PROGRESS on sender item progress", () => {
 
         const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
@@ -97,7 +98,7 @@ describe("queue tests", () => {
 
         queue.uploadBatch(batch, batchOptions);
 
-        senderOnHandler({ id: "u1" }, 20, 1000);
+        senderOnHandlers[SENDER_EVENTS.ITEM_PROGRESS]({ id: "u1" }, 20, 1000);
 
         const state2 = queue.getState();
         expect(state2.items["u1"].loaded).toBe(1000);
@@ -108,6 +109,32 @@ describe("queue tests", () => {
             loaded: 1000,
             completed: 20,
         });
+    });
 
+    it("should trigger UPLOADER_EVENTS.BATCH_PROGRESS on sender batch progress ", () => {
+
+        const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
+
+        const batch = { id: "b1",
+                items: [
+                    { id: "u1", completed: 20, loaded: 1000 },
+                    { id: "u2", completed: 80, loaded: 3000 }
+                ]
+            },
+            batchOptions = {};
+
+        queue.uploadBatch(batch, batchOptions);
+
+        senderOnHandlers[SENDER_EVENTS.BATCH_PROGRESS](batch);
+
+        const state2 = queue.getState();
+        expect(state2.batches["b1"].batch.completed).toBe(50);
+        expect(state2.batches["b1"].batch.loaded).toBe(4000);
+
+        expect(trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS,{
+            ...batch,
+            completed: 50,
+            loaded: 4000,
+        });
     });
 });

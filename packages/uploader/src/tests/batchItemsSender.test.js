@@ -37,6 +37,8 @@ describe("batchItemsSender tests", () => {
             { id: "u3" }
         ];
 
+        const batch = {id: "b1"};
+
         const sendFn = options.send || mockSend;
 
         const sendResult = {result: true};
@@ -44,7 +46,7 @@ describe("batchItemsSender tests", () => {
 
         const sender = createItemsSender();
 
-        const result = sender.send(items, options);
+        const result = sender.send(items, batch, options);
 
         expect(result).toBe(sendResult);
 
@@ -65,6 +67,7 @@ describe("batchItemsSender tests", () => {
             options,
             items,
             sendFn,
+            batch,
         }
     };
 
@@ -102,12 +105,16 @@ describe("batchItemsSender tests", () => {
 
         test.items.forEach((item, i) => {
             const completed = (progressEvent.loaded / progressEvent.total) * 100;
-            expect(mockTrigger).toHaveBeenNthCalledWith(i + 1, SENDER_EVENTS.PROGRESS,
+            expect(mockTrigger).toHaveBeenNthCalledWith(i + 1, SENDER_EVENTS.ITEM_PROGRESS,
                 item,
                 (completed / test.items.length),
                 (progressEvent.loaded / test.items.length)
             );
         });
+
+        expect(mockTrigger).toHaveBeenNthCalledWith(test.items.length+1,
+            SENDER_EVENTS.BATCH_PROGRESS,
+            test.batch);
     });
 
     it("should throw when no destination url", () => {

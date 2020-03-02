@@ -1,11 +1,8 @@
 // @flow
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useState, useRef } from "react";
 import styled from "styled-components";
 import Uploady, {
     useItemProgressListener,
-    useBatchAddListener,
-    useBatchStartListener,
-    useBatchFinishListener,
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
@@ -18,6 +15,10 @@ import {
     uploadUrlInputCss,
 } from "../../../story-helpers";
 
+const StyledUploadButton = styled(UploadButton)`
+	${uploadButtonCss}
+`;
+
 export const Simple = () => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
@@ -29,97 +30,37 @@ export const Simple = () => {
         grouped={grouped}
         maxGroupSize={groupSize}>
 
-        <UploadButton/>
+        <StyledUploadButton/>
         <br/><br/>
         <UploadPreview
             fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
     </Uploady>;
 };
 
-const PreviewContainer = styled.div`
-	display: flex;
-	flex-wrap: wrap;
+const PreviewImage = styled.img`
+    margin: 5px;
+    max-width: 200px;
+    height: auto;
 
-	img {
-		margin-left: 10px;
-		max-width: 200px;
-		height: auto;
-
-		${({ completed }) => `opacity: ${completed / 100};`}
-	}
+    ${({ completed }) => `opacity: ${completed / 100};`}
 `;
 
-const StyledUploadButton = styled(UploadButton)`
-	${uploadButtonCss}
-`;
+const CustomImagePreview = (props) => {
+    const [completed, setCompleted] = useState(0);
 
-const StyledUploadUrlInput = styled(UploadUrlInput)`
-  ${uploadUrlInputCss}
-`;
-
-// const UrlUpload = () => {
-// 	const uploadRef = useRef(null);
-//
-// 	const onButtonClick = () => {
-// 		if (uploadRef.current) {
-// 			uploadRef.current();
-// 		}
-// 	};
-//
-// 	return <>
-// 		<StyledUploadUrlInput
-// 			placeholder="enter valid url to upload"
-// 			uploadRef={uploadRef}/>
-//
-// 		<Button onClick={onButtonClick}>Upload</Button>
-// 	</>;
-// };
-
-
-// export const WithUrls = () => {
-//     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-//
-//     return <Uploady
-//         debug
-//         multiple={multiple}
-//         destination={destination}
-//         enhancer={enhancer}
-//         grouped={grouped}
-//         maxGroupSize={groupSize}>
-//
-//         <StyledUploadUrlInput/>
-//
-//         <PreviewContainer>
-//             <UploadPreview
-//                 fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
-//         </PreviewContainer>
-//     </Uploady>;
-// };
-
-//TODO: This example only works for single file upload (not multiple and not concurrent)
-const PreviewWithProgress = () => {
-    const [currentBatch, setCurrentBatch] = useState(null);
-    const fileProgress = useItemProgressListener();
-
-    useBatchAddListener((batch) => {
-        setCurrentBatch(batch.id);
+    useItemProgressListener((item) => {
+        if (item.id === props.id){
+            setCompleted(item.completed);
+        }
     });
 
-    const completed = useMemo(() => {
-            return (!currentBatch ||
-                fileProgress?.batchId === currentBatch &&
-                fileProgress?.completed) || 0;
-        },
-        [currentBatch, fileProgress]);
-
-    return <PreviewContainer completed={completed}>
-        <UploadPreview
-            fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
-    </PreviewContainer>;
+    return <PreviewImage src={props.url} completed={completed}/>;
 };
 
 export const WithProgress = () => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    const getPreviewProps = useCallback((item) => ({ id: item.id, }), []);
 
     return <Uploady
         debug
@@ -133,7 +74,73 @@ export const WithProgress = () => {
             Upload with Progress
         </StyledUploadButton>
 
-        <PreviewWithProgress/>
+        <UploadPreview
+            fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}
+            previewComponentProps={getPreviewProps}
+            PreviewComponent={CustomImagePreview}/>
+    </Uploady>;
+};
+
+export const WithCustomProps = () => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    const getPreviewProps = useCallback((item, url, type) => {
+        return {
+            alt: `${type} - ${url}`,
+            "data-id": item.id,
+        }
+    }, []);
+
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}>
+
+        <StyledUploadButton>
+            Upload
+        </StyledUploadButton>
+
+        <UploadPreview
+            fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}
+            previewComponentProps={getPreviewProps}/>
+    </Uploady>;
+};
+
+const StyledUploadUrlInput = styled(UploadUrlInput)`
+  ${uploadUrlInputCss}
+`;
+
+const Button  = styled.button`
+  ${uploadButtonCss}
+`;
+
+export const WithUrls = () => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+    const uploadRef = useRef(null);
+
+    const onButtonClick = () => {
+		if (uploadRef.current) {
+			uploadRef.current();
+		}
+	};
+
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}>
+
+        <StyledUploadUrlInput uploadRef={uploadRef}/>
+
+        <Button onClick={onButtonClick}>Upload</Button>
+
+        <UploadPreview
+                fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
     </Uploady>;
 };
 

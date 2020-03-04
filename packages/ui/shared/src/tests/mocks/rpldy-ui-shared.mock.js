@@ -18,11 +18,25 @@ const withForwardRefMock = {
 
 const useWithForwardRef = jest.fn(() => withForwardRefMock);
 
+const useBatchStartListener = jest.fn();
+
 const uiSharedMock = {
     UploadyContext,
     assertContext,
     createContextApi,
     useWithForwardRef,
+    // useBatchAddListener,
+    useBatchStartListener,
+    // useBatchProgressListener,
+    // useBatchFinishListener,
+    // useBatchCancelledListener,
+    // useBatchAbortListener,
+    // useItemStartListener,
+    // useItemFinishListener,
+    // useItemProgressListener,
+    // useItemCancelListener,
+    // useItemErrorListener,
+    // useRequestPreSend,
 };
 
 jest.doMock("@rpldy/shared-ui", () => uiSharedMock);
@@ -32,5 +46,7 @@ export {
     assertContext,
     createContextApi,
     useWithForwardRef,
-    withForwardRefMock
+    withForwardRefMock,
+
+    useBatchStartListener,
 };

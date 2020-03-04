@@ -67,6 +67,7 @@ export default (
     const state = {
         finished: false,
         aborted: false,
+        error: false,
         uploaded: {},
         requests: {},
         responses: [],

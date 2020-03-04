@@ -11,12 +11,6 @@ module.exports = {
 		"text",
 		"html"],
 	coverageThreshold: {
-		// global: {
-		// 	branches: 100,
-		// 	functions: 100,
-		// 	lines: 100,
-		// 	statements: 100
-		// },
 		"packages/ui/**/src/**/*.js": {
 			branches: 85,
 			functions: 85,

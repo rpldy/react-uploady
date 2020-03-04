@@ -118,8 +118,6 @@ export type UploadOptions = {|
 	fileFilter?: FileFilterMethod,
 	//The accept value to pass the file input
 	inputAccept?: string,
-	// //the upload encoding (default: "multipart/form-data")
-	// encoding?: string,
 	//HTTP method (default: POST)
 	method?: string,
 	//collection of params to pass along with the upload (Destination params take precedence)

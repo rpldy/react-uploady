@@ -30,9 +30,7 @@ const createRequest = (options: MandatoryMockOptions, items: BatchItem[]) => {
 	const clearTimeouts = () => {
 		if (progressTimeouts) {
 			progressTimeouts.forEach((handle) => {
-				if (handle) {
-					clearTimeout(handle);
-				}
+                clearTimeout(handle);
 			});
 
 			progressTimeouts = null;
@@ -66,13 +64,14 @@ const createRequest = (options: MandatoryMockOptions, items: BatchItem[]) => {
 				progressEvents: progressEventsData,
 			});
 			clearTimeouts();
-		}, options.delay);
+		}, options.delay || 0);
 	});
 
 	if (options.progressIntervals) {
 		progressTimeouts = options.progressIntervals.map((amount: number) => {
 			const perc = (amount / 100);
 			const ms = (options.delay || 0) * perc;
+
 			return setTimeout(() => {
 				if (!isCancelled && !isDone && progressCallback) {
 

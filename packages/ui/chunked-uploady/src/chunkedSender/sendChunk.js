@@ -6,9 +6,10 @@ import { getChunkDataFromFile } from "../utils";
 
 import type { BatchItem, OnProgress, SendOptions, SendResult } from "@rpldy/shared";
 import type { Chunk } from "./types";
+import ChunkedSendError from "./ChunkedSendError";
 
-const getContentRangeValue = (chunk, item) => chunk.data ?
-    `bytes ${chunk.start}-${chunk.start + chunk.data.size - 1}/${item.file.size}` : "";
+const getContentRangeValue = (chunk, data, item) =>
+    `bytes ${chunk.start}-${chunk.start + data.size - 1}/${item.file.size}`;
 
 export default (
     chunk: Chunk,
@@ -22,7 +23,12 @@ export default (
         chunk.data = getChunkDataFromFile(item.file, chunk.start, chunk.end);
     }
 
-    const chunkItem = createBatchItem(chunk.data, chunk.id);
+    if (!chunk.data) {
+        throw new ChunkedSendError("chunk failure - failed to slice");
+    }
+
+    const data = chunk.data; //things we do for flow...
+    const chunkItem = createBatchItem(data, chunk.id);
 
     logger.debugLog(`chunkedSender: about to send chunk ${chunk.id} [${chunk.start}-${chunk.end}] to: ${url}`);
 
@@ -30,7 +36,7 @@ export default (
         ...sendOptions,
         headers: {
             ...sendOptions.headers,
-            "Content-Range": getContentRangeValue(chunk, item),
+            "Content-Range": getContentRangeValue(chunk, data, item),
         }
     };
 

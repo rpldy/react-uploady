@@ -4,6 +4,7 @@ jest.mock("../utils", () => ({
     generateUploaderEventHook: jest.fn(),
     generateUploaderEventHookWithState: jest.fn(),
 }));
+
 import {
     generateUploaderEventHook,
     generateUploaderEventHookWithState
@@ -30,14 +31,14 @@ describe("eventListenerHooks tests", () => {
 
     describe("generateUploaderEventHookWithState tests", () => {
         it.each([
-            UPLOADER_EVENTS.ITEM_PROGRESS,
-            UPLOADER_EVENTS.BATCH_PROGRESS
-        ])("should generate state hook for: %s", (event) => {
+            [UPLOADER_EVENTS.ITEM_PROGRESS, 0],
+            [UPLOADER_EVENTS.BATCH_PROGRESS, 1]
+        ])("should generate state hook for: %s", (event, index) => {
             expect(generateUploaderEventHookWithState)
                 .toHaveBeenCalledWith(event, expect.any(Function));
 
             const calculator = generateUploaderEventHookWithState
-                .mock.calls[0][1];
+                .mock.calls[index][1];
 
             const item = { test: "foo" };
             expect(calculator(item)).toEqual(item);

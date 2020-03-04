@@ -15,6 +15,8 @@ export type FallbackType = string | PreviewData;
 
 export type FallbackMethod = (file: Object) => ?FallbackType;
 
+export type PreviewComponentPropsOrMethod = Object | (item: BatchItem, url: string, type: PreviewType) => Object
+
 export type PreviewOptions = {|
 	//whether to load only the first upload-preview in case of a batch upload (default: false)
 	loadFirstOnly?: boolean,
@@ -28,14 +30,22 @@ export type PreviewOptions = {|
 	imageMimeTypes?: string[],
 	//the video mime-types to load upload-preview for (default: ["video/mp4", "video/webm", "video/ogg"])
 	videoMimeTypes?: string[],
+    //either object or function to generate object as additional props for the preview component
+    previewComponentProps?: PreviewComponentPropsOrMethod,
 |};
-
-export type PreviewComponentPropsOrMethod = Object | (item: BatchItem, url: string, type: PreviewType) => Object
 
 export type PreviewProps =  {|
     ...PreviewOptions,
 	PreviewComponent?: React.ComponentType<any>,
-	previewComponentProps?: PreviewComponentPropsOrMethod,
 |};
 
 // export type MandatoryPreviewOptions = $Exact<$ObjMap<PreviewProps, NonMaybeTypeFunc>>;
+export type MandatoryPreviewOptions = {|
+    loadFirstOnly: boolean,
+    maxPreviewImageSize: number,
+    maxPreviewVideoSize: number,
+    fallbackUrl: string | FallbackMethod,
+    imageMimeTypes: string[],
+    videoMimeTypes: string[],
+    previewComponentProps?: PreviewComponentPropsOrMethod,
+|};

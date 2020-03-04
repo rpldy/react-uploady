@@ -4,48 +4,35 @@ import { useState } from "react";
 import { isFunction } from "@rpldy/shared";
 import { useBatchStartListener } from "@rpldy/shared-ui";
 import { PREVIEW_TYPES } from "./consts";
-import { getWithMandatoryOptions, getFallbackUrl } from "./utils";
+import {
+    getWithMandatoryOptions,
+    getFallbackUrl,
+    getFileObjectUrlByType
+} from "./utils";
 
 import type { Batch, BatchItem } from "@rpldy/shared";
 import type {
-    // MandatoryPreviewOptions,
     PreviewComponentPropsOrMethod,
     PreviewData,
-    PreviewProps,
-    PreviewType
+    PreviewOptions,
+    MandatoryPreviewOptions,
 } from "./types";
 
-const getFileObjectUrlByType = (type: PreviewType, mimeTypes, max, file: Object) => {
+const getFilePreviewUrl = (file, options: MandatoryPreviewOptions) => {
     let data;
 
-    if (mimeTypes && ~mimeTypes.indexOf(file.type)) {
-        if (!max || file.size <= max) {
-            data = {
-                url: URL.createObjectURL(file),
-                type,
-            };
-        }
-    }
-
-    return data;
-};
-
-const getFilePreviewUrl = (file, options: PreviewProps) => {
-    let data;
-
-    data = getFileObjectUrlByType(PREVIEW_TYPES.IMAGE, options.imageMimeTypes, options.maxPreviewImageSize, file);
+    data = getFileObjectUrlByType(PREVIEW_TYPES.IMAGE, options.imageMimeTypes, options.maxPreviewImageSize || 0, file);
 
     if (!data) {
-        data = getFileObjectUrlByType(PREVIEW_TYPES.VIDEO, options.videoMimeTypes, options.maxPreviewVideoSize, file);
+        data = getFileObjectUrlByType(PREVIEW_TYPES.VIDEO, options.videoMimeTypes, options.maxPreviewVideoSize || 0, file);
     }
 
     return data;
 };
-
 
 const loadPreviewData = (
     item: BatchItem,
-    options: PreviewProps,
+    options: MandatoryPreviewOptions,
     previewComponentProps: PreviewComponentPropsOrMethod): ?PreviewData => {
 
     let data, props;
@@ -76,9 +63,9 @@ const loadPreviewData = (
     };
 };
 
-export default (props: PreviewProps): PreviewData[] => {
+export default (props: PreviewOptions): PreviewData[] => {
     const [previews, setPreviews] = useState<PreviewData[]>([]);
-    const previewOptions = getWithMandatoryOptions(props);
+    const previewOptions: MandatoryPreviewOptions = getWithMandatoryOptions(props);
 
     useBatchStartListener((batch: Batch) => {
         const items: BatchItem[] = previewOptions.loadFirstOnly ? batch.items.slice(0, 1) : batch.items;

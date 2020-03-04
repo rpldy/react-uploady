@@ -1,5 +1,6 @@
 import { createBatchItem } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import send from "@rpldy/sender";
+import ChunkedSendError from "../ChunkedSendError";
 import { getChunkDataFromFile } from "../../utils";
 import sendChunk from "../sendChunk";
 
@@ -59,4 +60,15 @@ describe("sendChunk tests", () => {
             data: fileData,
         }]);
 	});
+
+
+    it("should throw if failed to slice chunk", () => {
+
+        getChunkDataFromFile.mockReturnValueOnce(null);
+        const chunk = { id: "c1", start: 1, end: 10, data: null };
+
+        expect(() => {
+            sendChunk(chunk, { file: {} }, "url", {});
+        }).toThrow(ChunkedSendError)
+    });
 });

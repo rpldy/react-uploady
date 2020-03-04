@@ -29,10 +29,12 @@ const CHUNKING_SUPPORT = isChunkingSupported();
 
 const getChunkDataFromFile = (file: FileLike, start: number, end: number): ?Blob => {
     const blob = sliceMethod?.call(file, start, end, file.type);
+
     if (blob) {
         blob.name = file.name;
         blob.lastModified = file.lastModified;
     }
+
     return blob;
 };
 

@@ -36,6 +36,7 @@ describe("processChunks tests", () => {
 		expect(sendChunks).toHaveBeenCalledWith({
 			finished: false,
 			aborted: false,
+            error: false,
 			uploaded: {},
 			requests: {},
 			responses: [],

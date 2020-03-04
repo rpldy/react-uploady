@@ -15,50 +15,57 @@ describe("onRequestFinished tests", () => {
 			mockNext);
 	});
 
+	const testSingleItem = async (activeIds) => {
+        const batch = { id: "b1" };
+        const response = { success: true };
+        const queueState = getQueueState({
+            currentBatch: "b1",
+            items: {
+                "u1": { batchId: "b1" },
+            },
+            batches: {
+                b1: { batch, batchOptions: {} },
+            },
+            itemQueue: ["u1"],
+            activeIds: activeIds || ["u1"],
+        });
+
+        await processFinishedRequest(queueState, [{
+            id: "u1",
+            info: {
+                state: FILE_STATES.FINISHED,
+                response,
+            }
+        }], mockNext);
+
+        expect(queueState.getState().items.u1).toEqual({
+            batchId: "b1",
+            state: FILE_STATES.FINISHED,
+            uploadResponse: { success: true },
+        });
+
+        expect(cleanUpFinishedBatch).toHaveBeenCalledTimes(1);
+        expect(mockNext).toHaveBeenCalledTimes(1);
+        expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH,
+            {
+                batchId: "b1",
+                state: FILE_STATES.FINISHED,
+                uploadResponse: response,
+            });
+        expect(queueState.updateState).toHaveBeenCalledTimes(2);
+        expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();
+
+        expect(queueState.getState().itemQueue).toHaveLength(0);
+        expect(queueState.getState().activeIds).toHaveLength(0);
+    };
+
 	it("for single item should finalize if last file in batch", async () => {
-
-		const batch = { id: "b1" };
-		const response = { success: true };
-		const queueState = getQueueState({
-			currentBatch: "b1",
-			items: {
-				"u1": { batchId: "b1" },
-			},
-			batches: {
-				b1: { batch, batchOptions: {} },
-			},
-			itemQueue: ["u1"],
-			activeIds: ["u1"],
-		});
-
-		await processFinishedRequest(queueState, [{
-			id: "u1",
-			info: {
-				state: FILE_STATES.FINISHED,
-				response,
-			}
-		}], mockNext);
-
-		expect(queueState.getState().items.u1).toEqual({
-			batchId: "b1",
-			state: FILE_STATES.FINISHED,
-			uploadResponse: { success: true },
-		});
-
-		expect(cleanUpFinishedBatch).toHaveBeenCalledTimes(1);
-		expect(mockNext).toHaveBeenCalledTimes(1);
-		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH,
-			{
-				batchId: "b1",
-				state: FILE_STATES.FINISHED,
-				uploadResponse: response,
-			});
-		expect(queueState.updateState).toHaveBeenCalledTimes(2);
-		expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();
-
-		expect(queueState.getState().itemQueue).toHaveLength(0);
-		expect(queueState.getState().activeIds).toHaveLength(0);
+        await testSingleItem();
 	});
+
+    it("for single item should finalize if last file in batch without active id found", async () => {
+        await testSingleItem([]);
+    });
 
 	it("for single item should continue to next item in batch after previous finished", async () => {
 		const batch = { id: "b1" };

@@ -13,15 +13,15 @@ module.exports = {
 	coverageThreshold: {
 		"packages/ui/**/src/**/*.js": {
 			branches: 85,
-			functions: 85,
-			lines: 85,
-			statements: 85
-		},
-		"packages/*/src/**/*.js": {
-			branches: 90,
 			functions: 90,
 			lines: 90,
 			statements: 90
+		},
+		"packages/*/src/**/*.js": {
+			branches: 90,
+			functions: 95,
+			lines: 95,
+			statements: 95
 		}
 	},
 	"collectCoverageFrom": [

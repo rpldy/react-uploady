@@ -20,9 +20,7 @@ const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], optio
     if (updated) {
         logger.debugLog(`uploader.queue: REQUEST_PRE_SEND event returned updated items/options`, updated);
         if (updated.items) {
-
-            //TODO - Allow to remove items, just not add any!!!!
-
+            //can't change items count at this point. removing can be done by cancelling with UPLOADER_EVENTS.ITEM_START
             if (updated.items.length !== items.length ||
                 !isSamePropInArrays(updated.items, items, ["id", "batchId"])) {
                 throw new Error(`REQUEST_PRE_SEND event handlers must return same items with same ids`);
@@ -90,16 +88,17 @@ const reportCancelledItems = (queue: QueueState, items: BatchItem[], cancelledRe
         processFinishedRequest(queue, finishedData, next); //report out info about cancelled items
     }
 
-    return !cancelledResults.length;
+    return !!cancelledItemsIds.length;
 };
 
 //send group of items to be uploaded
 export default async (queue: QueueState, ids: string[], next: ProcessNextMethod) => {
     const state = queue.getState();
-    //items can have more than one item when grouping is allowed
+    //multiple items can happen when grouping is allowed
     let items: any[] = Object.values(state.items);
     items = items.filter((item: BatchItem) => !!~ids.indexOf(item.id));
 
+    //allow external code to cancel items
     const cancelledResults = await Promise.all(items.map((i: BatchItem) =>
         queue.cancellable(UPLOADER_EVENTS.ITEM_START, i)));
 
@@ -112,6 +111,7 @@ export default async (queue: QueueState, ids: string[], next: ProcessNextMethod)
         sendAllowedItems(queue, itemsSendData, next); //we dont need to wait for the response here
     }
 
+    //if no cancelled we can go to process more items immediately (and not wait for upload responses)
     if (!reportCancelledItems(queue, items, cancelledResults, next)) {
         await next(queue); //when concurrent is allowed, we can go ahead and process more
     }

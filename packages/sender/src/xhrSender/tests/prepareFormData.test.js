@@ -92,6 +92,11 @@ describe("prepareFormData tests", () => {
 		expect(mockFormDataSet).toHaveBeenCalledWith(paramName, items[0].url);
 	});
 
+    it("should create FD for unknown item", () => {
+        const items = [{ }];
+        testPrepare(items);
+    });
+
 	it("should add extra params", () => {
 
 		const items = [{ url: "https://test.com" }];

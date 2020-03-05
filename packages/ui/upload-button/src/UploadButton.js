@@ -1,32 +1,10 @@
 // @flow
-import React, { forwardRef, useCallback, useContext, useRef } from "react";
-import { UploadyContext, assertContext, useWithForwardRef } from "@rpldy/shared-ui";
-import type { UploadOptions } from "@rpldy/shared";
-import type { UploadButtonProps } from "./types";
+import React, { forwardRef } from "react";
+import asUploadButton from "./asUploadButton";
 
-const UploadButton = forwardRef<UploadButtonProps, ?HTMLButtonElement>(
-    (props: UploadButtonProps, ref) => {
-        const { showFileUpload } = assertContext(useContext(UploadyContext));
-
-        const { setRef: setButtonRef } = useWithForwardRef<?HTMLButtonElement>(ref);
-
-        const { id, className, text, children, ...uploadOptions } = props;
-
-        //using ref so inputOnClick can stay memoized
-        const uploadOptionsRef = useRef<?UploadOptions>();
-        uploadOptionsRef.current = uploadOptions;
-
-        const onButtonClick = useCallback(() => {
-            showFileUpload(uploadOptionsRef.current);
-        }, [showFileUpload, uploadOptionsRef]);
-
-        return <button
-            id={id}
-            ref={setButtonRef}
-            className={className}
-            onClick={onButtonClick}>
-            {children ? children : (text || "Upload")}
-        </button>;
-    });
+const UploadButton = asUploadButton(
+    forwardRef((props, ref) => {
+        return <button ref={ref} {...props}/>;
+    }));
 
 export default UploadButton;

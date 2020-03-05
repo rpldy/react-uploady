@@ -1,13 +1,12 @@
 // @flow
-import React, { Component, useEffect, useMemo } from "react";
+import React, { Component, useMemo, useState } from "react";
 import styled from "styled-components";
-import UploadButton from "./src";
+import UploadButton, { asUploadButton } from "./src";
 import Uploady, {
     UploadyContext,
     useItemFinishListener,
     useBatchStartListener,
-    // useBatchAbortListener,
-
+    useBatchFinishListener,
     UPLOADER_EVENTS,
 } from "@rpldy/uploady";
 import {
@@ -15,7 +14,7 @@ import {
     useStoryUploadySetup,
     StoryUploadProgress,
     StoryAbortButton,
-    // uploadButtonCss,
+    uploadButtonCss,
 } from "../../../story-helpers";
 
 // import readme from '../README.md';
@@ -31,6 +30,24 @@ export const Simple = () => {
                     maxGroupSize={groupSize}>
 
         <UploadButton/>
+    </Uploady>;
+};
+
+const StyledUploadButton = styled(UploadButton)`
+  ${uploadButtonCss}
+`;
+
+export const WithStyledComponent = () => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    return <Uploady debug
+                    multiple={multiple}
+                    destination={destination}
+                    enhancer={enhancer}
+                    grouped={grouped}
+                    maxGroupSize={groupSize}>
+
+        <StyledUploadButton/>
     </Uploady>;
 };
 
@@ -166,14 +183,19 @@ export const Abort = () => {
     </div>
 };
 
-// ${uploadButtonCss}
-const StyledUploadButton = styled(UploadButton)`
+const DisabledDuringUploadButton = () => {
+    const [uploading, setUploading] = useState(false);
 
-  //
-  // &.disabled {
-  //
-  // }
-`;
+    useBatchStartListener(() => {
+        setUploading(true);
+    });
+
+    useBatchFinishListener(() => {
+        setUploading(false);
+    });
+    
+    return <StyledUploadButton extraProps={{ disabled: uploading }}/>;
+};
 
 export const DisabledDuringUpload = () => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
@@ -186,7 +208,7 @@ export const DisabledDuringUpload = () => {
         grouped={grouped}
         maxGroupSize={groupSize}>
 
-        <StyledUploadButton/>
+        <DisabledDuringUploadButton/>
     </Uploady>;
 };
 
@@ -218,6 +240,26 @@ export const DifferentConfiguration = () => {
             </UploadButton>
         </Uploady>
     </div>
+};
+
+const DivUploadButton = asUploadButton((props) => {
+    return <div {...props} style={{ border: "1px solid red", width: "200px", cursor: "pointer" }}>
+        This is a DIV
+    </div>
+});
+
+export const WithCustomComponentAsButton = () => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    return <Uploady debug
+                    multiple={multiple}
+                    destination={destination}
+                    enhancer={enhancer}
+                    grouped={grouped}
+                    maxGroupSize={groupSize}>
+
+        <DivUploadButton/>
+    </Uploady>;
 };
 
 export default {

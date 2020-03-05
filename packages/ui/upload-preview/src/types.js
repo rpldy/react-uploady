@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import type { BatchItem, NonMaybeTypeFunc } from "@rpldy/shared";
+import type { BatchItem } from "@rpldy/shared";
 import { PREVIEW_TYPES } from "./consts";
 
 export type PreviewType = $Values<typeof PREVIEW_TYPES>;

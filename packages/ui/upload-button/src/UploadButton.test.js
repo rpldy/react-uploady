@@ -6,7 +6,7 @@ describe("<UploadButton> tests", () => {
 
     it("should render button with defaults", () => {
 
-        const wrapper = shallow(<UploadButton
+        const wrapper = mount(<UploadButton
             id={"test"}
             className={"styles"}
         />);
@@ -17,7 +17,7 @@ describe("<UploadButton> tests", () => {
     });
 
     it("should show file upload on click", () => {
-        const wrapper = shallow(<UploadButton
+        const wrapper = mount(<UploadButton
             multiple
             autoUpload
         />);
@@ -32,7 +32,7 @@ describe("<UploadButton> tests", () => {
 
     it("should render custom children", () => {
 
-        const wrapper = shallow(<UploadButton text="test">
+        const wrapper = mount(<UploadButton text="test">
             <div>custom</div>
         </UploadButton>);
 
@@ -43,7 +43,7 @@ describe("<UploadButton> tests", () => {
     });
 
     it("should render custom text", () => {
-        const wrapper = shallow(<UploadButton text="test"/>);
+        const wrapper = mount(<UploadButton text="test"/>);
         expect(wrapper).toHaveText("test");
     });
 

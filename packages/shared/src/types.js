@@ -1,5 +1,6 @@
 // @flow
 import { BATCH_STATES, FILE_STATES } from "./consts";
+import type { UploaderEnhancer } from "@rpldy/uploader";
 
 export type NonMaybeTypeFunc = <T>(param: T) => $NonMaybeType<T>;
 
@@ -108,16 +109,12 @@ export type UploadOptions = {|
 	inputFieldName?: string,
 	//optional function to determine the upload field name when more than file is grouped in a single upload
 	formatGroupParamName?: FormatParamGroupNameMethod,
-	//whether to allow more than one file to be selected for upload (default: true)
-	multiple?: boolean,
 	//whether to group multiple files in a single request (default: false)
 	grouped?: boolean,
 	//The maximum of files to group together in a single request  (default: 5)
 	maxGroupSize?: number,
-	//the regex or function to use to filter by filename/url
+	//optional function to use to filter by filename/url
 	fileFilter?: FileFilterMethod,
-	//The accept value to pass the file input
-	inputAccept?: string,
 	//HTTP method (default: POST)
 	method?: string,
 	//collection of params to pass along with the upload (Destination params take precedence)
@@ -130,6 +127,8 @@ export type UploadOptions = {|
 
 export type CreateOptions =  {|
 	...UploadOptions,
+    //uploader enhancer function
+    enhancer?: UploaderEnhancer,
 	//whether multiple upload requests can be issued simultaneously (default: false)
 	concurrent?: boolean,
 	//the maximum allowed for simultaneous requests (default: 2)

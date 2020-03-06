@@ -11,25 +11,21 @@ const FileInputFieldPortal = ({ container, children }) =>
     container && ReactDOM.createPortal(children, container);
 
 const Uploady = (props: UploadyProps) => {
+    const { multiple, capture, accept, webkitdirectory, listeners, debug, children, ...uploadOptions } = props;
 
-    logger.setDebug(!!props.debug);
+    logger.setDebug(!!debug);
     logger.debugLog("@@@@@@ Uploady Rendering @@@@@@", props);
 
     const inputFieldContainer = document.body;
     const inputFieldRef = useRef<?HTMLInputElement>(null);
 
-    const uploader = useUploader(props);
+    const uploader = useUploader(uploadOptions, listeners);
 
     //TODO: ALLOW TO SET INPUT FIELD CONTAINER : props.inputFieldContainer
     //TODO: allow to use input field from outside - using hook?
 
     const api = useMemo(() =>
         createContextApi(uploader, inputFieldRef), [uploader, inputFieldRef]);
-
-    //TODO: FILE INPUT ATTRS  TO USE !!!!!!!!!
-    // accept - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept
-    // capture - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture
-    // webkitdirectory - https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory
 
     const instanceOptions = uploader.getOptions();
 
@@ -40,12 +36,14 @@ const Uploady = (props: UploadyProps) => {
             <input
                 type="file"
                 name={instanceOptions.inputFieldName}
-                multiple={instanceOptions.multiple}
+                multiple={multiple}
+                capture={capture}
+                accept={accept}
+                webkitdirectory={webkitdirectory}
                 style={{ display: "none" }}
-                ref={inputFieldRef} />
+                ref={inputFieldRef}/>
         </FileInputFieldPortal>
-
-        {props.children}
+        {children}
     </UploadyContext.Provider>;
 };
 

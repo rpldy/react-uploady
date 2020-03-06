@@ -18,24 +18,26 @@ describe("useUploader tests", () => {
         const options = {
             multiple: true,
             autoUpload: true,
+            enhancer: "123",
         };
 
-        const enhancer = "123";
+        // const enhancer = "123";
 
-        const { wrapper, hookResult } = testCustomHook(useUploader,
-            {
-                ...options,
-                enhancer,
-            });
+        // const props = {
+        //     ...options,
+        //     enhancer,
+        // };
+
+        const { wrapper, hookResult } = testCustomHook(useUploader, options);
 
         expect(hookResult).toBe(uploader);
 
-        expect(createUploader).toHaveBeenCalledWith(options, enhancer);
+        expect(createUploader).toHaveBeenCalledWith(options);
         expect(uploader.update).toHaveBeenCalledWith(options);
         expect(uploader.on).not.toHaveBeenCalled();
 
-        wrapper.setProps({});
-        expect(uploader.update).toHaveBeenCalledTimes(1);
+        // wrapper.setProps({});
+        // expect(uploader.update).toHaveBeenCalledTimes(1);
 
         const changedProps = { inputFieldName: "aaaa" };
         wrapper.setProps(changedProps);
@@ -65,7 +67,7 @@ describe("useUploader tests", () => {
             b: "222"
         };
 
-        const { wrapper } = testCustomHook(useUploader, { listeners, autoUpload: true });
+        const { wrapper } = testCustomHook(useUploader, () => [  {autoUpload: true }, listeners]);
 
         expect(uploader.update).toHaveBeenCalledWith({ autoUpload: true });
 
@@ -81,18 +83,5 @@ describe("useUploader tests", () => {
         expect(uploader.off).toHaveBeenCalledWith("a", listeners.a);
         expect(uploader.off).toHaveBeenCalledWith("b", listeners.b);
 
-    });
-
-    it("should accept uploader from outside", () => {
-
-        const customUploader = { custom: true, update: jest.fn() };
-
-        const {  hookResult } = testCustomHook(useUploader, {
-            uploader: customUploader,
-            autoUpload: true
-        });
-
-        expect(hookResult).toBe(customUploader);
-        expect(customUploader.update).toHaveBeenCalledWith({ autoUpload: true });
     });
 });

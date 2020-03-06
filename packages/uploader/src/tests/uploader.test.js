@@ -232,7 +232,7 @@ describe("uploader tests", () => {
                 return uploader;
             });
 
-            const uploader = getTestUploader({}, enhancer);
+            const uploader = getTestUploader({enhancer});
 
             expect(uploader.test).toBe(true);
         });
@@ -242,7 +242,7 @@ describe("uploader tests", () => {
                 uploader.test = true;
             });
 
-            const uploader = getTestUploader({}, enhancer);
+            const uploader = getTestUploader({enhancer});
 
             expect(uploader.test).toBe(true);
         });

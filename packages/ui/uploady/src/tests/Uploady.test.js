@@ -1,7 +1,6 @@
 import React from "react";
 import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import {
-    UploadyContext,
     createContextApi
 } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import useUploader from "../useUploader";
@@ -12,9 +11,9 @@ jest.mock("../useUploader", () => jest.fn());
 describe("Uploady tests", () => {
 
     const uploader = {
-            getOptions: jest.fn(),
-            add: jest.fn(),
-        };
+        getOptions: jest.fn(),
+        add: jest.fn(),
+    };
 
     beforeEach(() => {
         useUploader.mockReturnValueOnce(uploader);
@@ -28,12 +27,17 @@ describe("Uploady tests", () => {
     it("should render Uploady successfully", () => {
 
         uploader.getOptions.mockReturnValueOnce({
-            multiple: true,
             inputFieldName: "file",
         });
 
+        const listeners = [1, 2, 3];
         const wrapper = mount(<Uploady
             debug
+            accept={".doc"}
+            capture="user"
+            multiple
+            listeners={listeners}
+            autoUpload
         >
             <div id="test"/>
         </Uploady>);
@@ -48,5 +52,9 @@ describe("Uploady tests", () => {
         expect(input).toHaveLength(1);
         expect(input).toHaveProp("multiple", true);
         expect(input).toHaveProp("name", "file");
+        expect(input).toHaveProp("capture", "user");
+        expect(input).toHaveProp("accept", ".doc");
+
+        expect(useUploader).toHaveBeenCalledWith({ autoUpload: true }, listeners);
     });
 });

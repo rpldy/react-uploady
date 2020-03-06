@@ -17,6 +17,7 @@ const build = () => {
 		"**/*.stories.js",
 		"**/*.test.js",
 		"**/types.js",
+        "**/tests/**",
 	].join(",");
 
 	const result = shell.exec(`babel --root-mode upward ${files} -d lib --ignore ${ignored}`);

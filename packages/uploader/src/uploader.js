@@ -19,7 +19,6 @@ import type {
 
 import type  {
     UploaderType,
-    UploaderEnhancer,
     PendingBatch,
 } from "./types";
 
@@ -27,19 +26,17 @@ const EVENT_NAMES = Object.values(UPLOADER_EVENTS);
 
 let counter = 0;
 
-export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderType => {
+export default (options?: CreateOptions): UploaderType => {
     counter += 1;
 
     const pendingBatches = [];
 
-    logger.debugLog("uploady.uploader: creating new instance", { options, enhancer, counter });
+    logger.debugLog("uploady.uploader: creating new instance", { options, counter });
 
     let uploaderOptions: CreateOptions = getMandatoryOptions(options);
 
     const update = (updateOptions: CreateOptions) => {
-
-        //TODO: updating concurrent and maxConcurrent means we need to update the processor!!!!!
-
+        //TODO: updating concurrent and maxConcurrent means we need to update the processor - not supported yet!
         uploaderOptions = merge({}, uploaderOptions, updateOptions); //need deep merge for destination
         return uploader;
     };
@@ -117,8 +114,9 @@ export default (options?: CreateOptions, enhancer?: UploaderEnhancer): UploaderT
 
     const cancellable = triggerCancellable(trigger);
 
-    if (enhancer) {
-        const enhanced = enhancer(uploader, trigger);
+    if (uploaderOptions.enhancer) {
+        const enhanced = uploaderOptions.enhancer(uploader, trigger);
+        //graceful handling for enhancer forgetting to return uploader
         uploader = enhanced || uploader;
     }
 

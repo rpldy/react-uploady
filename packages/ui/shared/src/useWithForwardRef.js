@@ -33,4 +33,4 @@ const useWithForwardRef = <T>(ref: Object | (T) => { current: T }): ReturnType<T
 };
 
 
-export default useWithForwardRef
+export default useWithForwardRef;

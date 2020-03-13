@@ -1,20 +1,31 @@
 // @flow
 import React from "react";
 import invariant from "invariant";
+import { logger } from "@rpldy/shared";
 import type { UploaderType } from "@rpldy/uploader";
-import type { UploadyContextType } from "./types";
-import type { UploadInfo, UploadOptions, GetExact } from "@rpldy/shared";
+import type { UploadInfo, UploadOptions, GetExact, CreateOptions } from "@rpldy/shared";
 import type { EventCallback } from "@rpldy/life-events";
+import type { UploadyContextType, InputRef } from "./types";
 
 const UploadyContext = React.createContext<?UploadyContextType>(null);
 
 const NO_INPUT_ERROR_MSG = "Uploady - Context. File input isn't available";
 
 export const createContextApi =
-    (uploader: UploaderType, inputRef: { current: ?HTMLInputElement }): UploadyContextType => {
-        let showFileUploadOptions;
+    (uploader: UploaderType, internalInputRef: ?InputRef): UploadyContextType => {
+        let fileInputRef, showFileUploadOptions;
 
-        const getInputField = () => inputRef.current;
+        if (internalInputRef) {
+            fileInputRef = internalInputRef;
+        } else {
+            logger.debugLog("Uploady context - didn't receive input field ref - waiting for external ref");
+        }
+
+        const getInputField = () => fileInputRef?.current;
+
+        const setExternalFileInput = (extRef: InputRef) => {
+            fileInputRef = extRef;
+        };
 
         const showFileUpload = (addOptions?: ?GetExact<UploadOptions>) => {
             const input: ?HTMLInputElement = getInputField();
@@ -52,6 +63,14 @@ export const createContextApi =
             uploader.add(files, addOptions);
         };
 
+        const setOptions = (options: CreateOptions) => {
+            uploader.update(options);
+        };
+
+        const getOptions = () => {
+            return uploader.getOptions();
+        };
+
         const abort = (itemId?: string) => {
             uploader.abort(itemId);
         };
@@ -76,8 +95,11 @@ export const createContextApi =
 
         return {
             hasUploader,
+            setExternalFileInput,
             showFileUpload,
             upload,
+            setOptions,
+            getOptions,
             abort,
             abortBatch,
             on,

@@ -270,7 +270,7 @@ describe("batchHelpers tests", () => {
 				"u4": { id: "u4", batchId: "b2" },
 			});
 		});
-	});
+    });
 
 	describe("getBatchFromItemId tests", () => {
 		it("should return correct batch", () => {

@@ -211,6 +211,41 @@ describe("processBatchItems tests", () => {
             });
     });
 
+    it("should update items without options", async () => {
+        const queueState = getQueueState(getMockStateData());
+
+        queueState.cancellable
+            .mockResolvedValueOnce(false)
+            .mockResolvedValueOnce(false);
+
+        queueState.sender.send.mockReturnValueOnce(sendResult);
+
+        mockUtils.isSamePropInArrays.mockReturnValueOnce(true);
+
+        const newItems = [{ id: "u1", batchId: "b1", newProp: 111 }, {
+            id: "u2",
+            batchId: "b1",
+            foo: "bar"
+        }];
+
+        triggerUpdater.mockResolvedValueOnce({
+            items: newItems,
+        });
+
+        await processBatchItems(queueState, ["u1", "u2"], mockNext);
+
+        expect(triggerUpdater).toHaveBeenCalledWith(
+            queueState.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, {
+                items: Object.values(queueState.state.items),
+                options: batchOptions,
+            });
+
+        expect(queueState.sender.send).toHaveBeenCalledWith(
+            Object.values(newItems),
+            queueState.state.batches["b1"].batch,
+            batchOptions);
+    });
+
     it("should report cancelled items", async () => {
 
         const queueState = getQueueState(getMockStateData());

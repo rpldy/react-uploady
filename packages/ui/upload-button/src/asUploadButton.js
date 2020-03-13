@@ -6,9 +6,8 @@ import type { ComponentType } from "react";
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadButtonProps } from "./types";
 
-export default (Component: ComponentType<any>) => forwardRef<UploadButtonProps, ?any>(
-    (props: UploadButtonProps, ref) => {
-
+export default (Component: ComponentType<any>) => {
+    const AsUploadButton = (props: UploadButtonProps, ref) => {
         const { showFileUpload } = assertContext(useContext(UploadyContext));
         const { setRef: setButtonRef } = useWithForwardRef(ref);
         const { id, className, text, children, extraProps, ...uploadOptions } = props;
@@ -29,5 +28,8 @@ export default (Component: ComponentType<any>) => forwardRef<UploadButtonProps, 
             children={children || text || "Upload"}
             {...extraProps}
         />;
-    });
+    };
+
+    return forwardRef<UploadButtonProps, ?any>(AsUploadButton);
+};
 

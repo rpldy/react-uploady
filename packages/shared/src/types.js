@@ -6,13 +6,15 @@ export type NonMaybeTypeFunc = <T>(param: T) => $NonMaybeType<T>;
 
 export type Destination = {
 	//upload URL
-	url: string,
+	url: ?string,
 	//The name of the param in the upload request (default: input element's name)
-	filesParamName?: string,
+	filesParamName?: ?string,
 	//collection of params to pass along with the upload
 	params?: Object,
 	//collection of headers to send with
 	headers?: Object,
+    //HTTP method to use when uploading
+    method?: ?string,
 };
 
 export type UploadInfo = string | Object;
@@ -46,7 +48,6 @@ export type SendOptions = {
 	method: string,
 	paramName: string,
 	params: Object,
-	// encoding: string,
 	headers?: Object,
 	forceJsonResponse: ?boolean,
 	withCredentials: ?boolean,
@@ -115,7 +116,7 @@ export type UploadOptions = {|
 	maxGroupSize?: number,
 	//optional function to use to filter by filename/url
 	fileFilter?: FileFilterMethod,
-	//HTTP method (default: POST)
+	//HTTP method to use when uploading (default: POST)
 	method?: string,
 	//collection of params to pass along with the upload (Destination params take precedence)
 	params?: Object,

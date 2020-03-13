@@ -7,8 +7,8 @@ import type { UploaderType } from "@rpldy/uploader";
 import type { CreateOptions } from "@rpldy/shared";
 import type { UploaderListeners } from "./types";
 
-export default (options: CreateOptions, listeners: ?UploaderListeners) => {
-    //avoid creating new instance of uploader unless we have to (enhancer changed or uploader instance passed)
+export default (options: CreateOptions, listeners: ?UploaderListeners): UploaderType => {
+    //avoid creating new instance of uploader (this means for ex: cant change enhancer function)
     const uploader = useMemo<UploaderType>(
         () => {
             logger.debugLog("Uploady creating a new uploader instance", options);

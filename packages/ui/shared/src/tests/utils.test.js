@@ -1,10 +1,10 @@
-jest.mock("../assertContext", () => jest.fn());
-import testCustomHook from "/test/testCustomHook";
-import mockAssertContext from "../assertContext";
+import assertContext from "../assertContext";
 import {
     generateUploaderEventHook,
     generateUploaderEventHookWithState
 } from "../utils";
+
+jest.mock("../assertContext", () => jest.fn());
 
 describe("ui-shared utils tests", () => {
     const event = "TEST_EVENT";
@@ -14,12 +14,12 @@ describe("ui-shared utils tests", () => {
     };
 
     beforeAll(() => {
-        mockAssertContext.mockReturnValue(context);
+        assertContext.mockReturnValue(context);
     });
 
     beforeEach(() => {
         clearJestMocks(
-            mockAssertContext,
+            assertContext,
         );
     });
 

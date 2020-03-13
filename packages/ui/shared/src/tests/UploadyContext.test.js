@@ -1,8 +1,8 @@
-import warning from "warning";
-import {uploader} from "@rpldy/uploader/src/tests/mocks/rpldy-uploader.mock";
+import invariant from "invariant";
+import { uploader } from "@rpldy/uploader/src/tests/mocks/rpldy-uploader.mock";
 import { createContextApi } from "../UploadyContext";
 
-jest.mock("warning", () => jest.fn());
+jest.mock("invariant", () => jest.fn());
 
 describe("UploadyContext tests", () => {
 
@@ -14,8 +14,13 @@ describe("UploadyContext tests", () => {
 
     const getTestContext = (input, contextUploader = uploader) => {
         const inputRef = input === null ?
+            //no element
             { current: null } :
-            { current: { ...fileInput, ...input } };
+            //no ref
+            input === false ?
+                undefined :
+                //default test input ref
+                { current: { ...fileInput, ...input } };
 
         return createContextApi(contextUploader, inputRef);
     };
@@ -24,7 +29,9 @@ describe("UploadyContext tests", () => {
         clearJestMocks(
             fileInput.addEventListener,
             fileInput.removeEventListener,
+            fileInput.click,
             uploader,
+            invariant,
         );
     });
 
@@ -51,23 +58,50 @@ describe("UploadyContext tests", () => {
 
     it("should call on on uploader", () => {
         uploader.on.mockReturnValueOnce(true);
-        const result = getTestContext().on("abc", [1,2]);
+        const result = getTestContext().on("abc", [1, 2]);
         expect(result).toBe(true);
-        expect(uploader.on).toHaveBeenCalledWith("abc", [1,2]);
+        expect(uploader.on).toHaveBeenCalledWith("abc", [1, 2]);
     });
 
     it("should call once on uploader", () => {
         uploader.once.mockReturnValueOnce(true);
-        const result = getTestContext().once("abc", [1,2]);
+        const result = getTestContext().once("abc", [1, 2]);
         expect(result).toBe(true);
-        expect(uploader.once).toHaveBeenCalledWith("abc", [1,2]);
+        expect(uploader.once).toHaveBeenCalledWith("abc", [1, 2]);
     });
 
     it("should call off on uploader", () => {
         uploader.off.mockReturnValueOnce(true);
-        const result = getTestContext().off("abc", [1,2]);
+        const result = getTestContext().off("abc", [1, 2]);
         expect(result).toBe(true);
-        expect(uploader.off).toHaveBeenCalledWith("abc", [1,2]);
+        expect(uploader.off).toHaveBeenCalledWith("abc", [1, 2]);
+    });
+
+    it("should update options", () => {
+        const options = { autoUpload: false };
+        getTestContext().setOptions(options);
+        expect(uploader.update).toHaveBeenCalledWith(options);
+    });
+
+    it("should return options", () => {
+        const options = { autoUpload: false };
+        uploader.getOptions.mockReturnValueOnce(options);
+        expect(getTestContext().getOptions()).toEqual(options);
+    });
+
+    it("should cope with no internal input ref and setExternalFileInput", () => {
+        const context = getTestContext(false);
+
+        try {
+            context.showFileUpload();
+        } catch (e) {
+        }
+
+        expect(invariant).toHaveBeenCalled(undefined, expect.any(String));
+
+        context.setExternalFileInput({ current: fileInput });
+        context.showFileUpload();
+        expect(fileInput.click).toHaveBeenCalled();
     });
 
     describe("hasUploader tests", () => {
@@ -84,9 +118,9 @@ describe("UploadyContext tests", () => {
         it("should throw if no file input", () => {
             const contextApi = getTestContext(null);
 
-            expect(()=>{
+            expect(() => {
                 contextApi.showFileUpload();
-            }).toThrow("Uploady - ");
+            }).toThrow();
         });
 
         it("should handle file input change with upload options", () => {

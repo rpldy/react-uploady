@@ -2,6 +2,9 @@ import React from "react";
 
 const UploadyContext = {
     showFileUpload: jest.fn(),
+    getOptions: jest.fn(),
+    setOptions: jest.fn(),
+    setExternalFileInput: jest.fn(),
     upload: jest.fn(),
     Provider: jest.fn(({ children }) =>
         <div id="uploady-context-provider">{children}</div>),

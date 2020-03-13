@@ -1,24 +1,23 @@
 // @flow
 import type { Node } from "react";
 import type { CreateOptions } from "@rpldy/shared";
-// import type { UploaderEnhancer } from "@rpldy/uploader";
 import type { EventCallback } from "@rpldy/life-events";
 
 export type UploaderListeners = { [string]: EventCallback };
 
 export type UploadyProps = {|
 	...CreateOptions,
-	// destination?: Destination,
-	// uploader?: UploaderType,
-    // //uploader enhancer function
-	// enhancer?: UploaderEnhancer,
-    //the field name to use for the file input element
-	// inputFieldName?: string,
     //whether to set debug flag for extra console logs from the uploader module
 	debug?: boolean,
     //
 	listeners?: UploaderListeners,
-    //
+
+	//whether a file input element ref will be provided instead of Uploady creating one internally - see: useFileInput (default: false)
+	customInput?: boolean,
+
+    //html element to place the file input element inside (default: document.body)
+    inputFieldContainer?: HTMLElement,
+    //any part of your React app. Specifically any components that needs access to the uploading flow
 	children?: Node,
     //'capture' file input field attribute - see: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture
     capture?: string,

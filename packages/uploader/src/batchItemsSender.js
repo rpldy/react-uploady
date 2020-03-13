@@ -33,8 +33,7 @@ const onItemUploadProgress = (items: BatchItem[], batch: Batch, e: ProgressEvent
 export default (): ItemsSender => {
     const send = (items: BatchItem[], batch: Batch, batchOptions: CreateOptions) => {
         const destination = batchOptions.destination,
-            url = destination?.url,
-            paramName = destination?.filesParamName;
+            url = destination?.url;
 
         if (!url) {
             throw new Error("Destination URL not found! Can't send files without it");
@@ -46,8 +45,8 @@ export default (): ItemsSender => {
         const send = isFunction(batchOptions.send) ? batchOptions.send : defaultSend;
 
         return send(items, url, {
-            method: batchOptions.method || DEFAULT_OPTIONS.method,
-            paramName: paramName || batchOptions.inputFieldName || DEFAULT_PARAM_NAME,
+            method: destination?.method || batchOptions.method || DEFAULT_OPTIONS.method,
+            paramName: destination?.filesParamName || batchOptions.inputFieldName || DEFAULT_PARAM_NAME,
             params: { //TODO: might need to rethink the order here:
                 ...batchOptions.params,
                 ...destination?.params,

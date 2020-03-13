@@ -1,4 +1,3 @@
-import testCustomHook from "test/testCustomHook";
 import { useBatchStartListener } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import { getFallbackUrl, getFileObjectUrlByType } from "../utils";
 import { PREVIEW_TYPES } from "../consts";

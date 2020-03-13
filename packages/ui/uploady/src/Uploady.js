@@ -1,48 +1,74 @@
 // @flow
-import React, { useMemo, useRef } from "react";
+import React, { forwardRef, memo, useMemo, useRef } from "react";
 import ReactDOM from "react-dom";
 import { logger } from "@rpldy/shared";
 import { UploadyContext, createContextApi } from "@rpldy/shared-ui";
 import useUploader from "./useUploader";
 
+import type { UploaderType } from "@rpldy/uploader";
 import type { UploadyProps } from "./types";
 
-const FileInputFieldPortal = ({ container, children }) =>
-    container && ReactDOM.createPortal(children, container);
+type FileInputPortalProps = {|
+    container: ?HTMLElement,
+    uploader: UploaderType,
+    multiple: boolean,
+    capture: ?string,
+    accept: ?string,
+    webkitdirectory: ?boolean,
+    style: Object,
+|};
+
+const FileInputFieldPortal = memo(forwardRef((props: FileInputPortalProps, ref) => {
+    const { uploader, container, ...inputProps } = props;
+    const instanceOptions = uploader.getOptions();
+
+    return container ? ReactDOM.createPortal(<input
+        {...inputProps}
+        name={instanceOptions.inputFieldName}
+        type="file"
+        ref={ref}
+    />, container) : null;
+}));
 
 const Uploady = (props: UploadyProps) => {
-    const { multiple, capture, accept, webkitdirectory, listeners, debug, children, ...uploadOptions } = props;
+    const {
+        multiple = true,
+        capture,
+        accept,
+        webkitdirectory,
+        listeners,
+        debug,
+        children,
+        inputFieldContainer,
+        customInput,
+        ...uploadOptions
+    } = props;
 
     logger.setDebug(!!debug);
     logger.debugLog("@@@@@@ Uploady Rendering @@@@@@", props);
 
-    const inputFieldContainer = document.body;
-    const inputFieldRef = useRef<?HTMLInputElement>(null);
+    const container = inputFieldContainer || document.body;
+    const internalInputFieldRef = useRef<?HTMLInputElement>();
 
     const uploader = useUploader(uploadOptions, listeners);
 
-    //TODO: ALLOW TO SET INPUT FIELD CONTAINER : props.inputFieldContainer
-    //TODO: allow to use input field from outside - using hook?
-
     const api = useMemo(() =>
-        createContextApi(uploader, inputFieldRef), [uploader, inputFieldRef]);
-
-    const instanceOptions = uploader.getOptions();
-
-    //TODO !!!!!!!!! move rendering of portal and input to memoized component !!!!!!!
+             createContextApi(uploader, !customInput ? internalInputFieldRef : null),
+        [uploader, internalInputFieldRef, customInput]
+    );
 
     return <UploadyContext.Provider value={api}>
-        <FileInputFieldPortal container={inputFieldContainer}>
-            <input
-                type="file"
-                name={instanceOptions.inputFieldName}
-                multiple={multiple}
-                capture={capture}
-                accept={accept}
-                webkitdirectory={webkitdirectory}
-                style={{ display: "none" }}
-                ref={inputFieldRef}/>
-        </FileInputFieldPortal>
+        {!customInput ? <FileInputFieldPortal
+            container={container}
+            uploader={uploader}
+            multiple={multiple}
+            capture={capture}
+            accept={accept}
+            webkitdirectory={webkitdirectory}
+            style={{ display: "none" }}
+            ref={internalInputFieldRef}
+        /> : null}
+
         {children}
     </UploadyContext.Provider>;
 };

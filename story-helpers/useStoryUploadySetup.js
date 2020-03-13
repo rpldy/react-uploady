@@ -4,7 +4,7 @@ import { createMockSender } from "@rpldy/sender";
 
 const mockDestination = () => ({ url: "dummy.com" });
 
-const localDestination = (long) => ({
+export const localDestination = (long) => ({
 	url: `http://localhost:${process.env.LOCAL_PORT}/upload${long ? "?long=true" : ""}`,
 	params: { test: true }
 });
@@ -39,9 +39,13 @@ const getDestination = (type, longRequest) => {
 	return DESTINATIONS[type](longRequest);
 };
 
+export const useLongRequestKnob = () => {
+    return boolean("long local request (relevant for local only)", false);
+};
+
 const useStoryUploadySetup = (options = {}) => {
 	const type = select("destination", DEST_OPTIONS, DEST_OPTIONS.mock);
-	const longRequest = boolean("long local request (relevant for local only)", false);
+	const longRequest = useLongRequestKnob();
 	const multiple = boolean("multiple files", true);
 	const grouped = !options.noGroup && boolean("group files in single request", false);
 	const groupSize = !options.noGroup && number("max in group", 2);

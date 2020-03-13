@@ -1,14 +1,13 @@
 // @flow
 import UploadyContext, { createContextApi } from "./UploadyContext";
 import useWithForwardRef from "./useWithForwardRef";
-
 import assertContext from "./assertContext";
-
-import type { UploadyContextType } from "./types";
+import useUploadOptions from "./useUploadOptions";
 
 export type {
-	UploadyContextType,
-};
+    InputRef,
+    UploadyContextType,
+} from "./types";
 
 export {
     useBatchAddListener,
@@ -28,10 +27,10 @@ export {
 } from "./eventListenerHooks";
 
 export {
-	UploadyContext,
-	createContextApi,
-
-	assertContext,
+    UploadyContext,
+    createContextApi,
+    useUploadOptions,
+    assertContext,
 
     useWithForwardRef,
 };

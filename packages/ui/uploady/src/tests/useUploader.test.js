@@ -1,7 +1,6 @@
 import React from "react";
 import { createUploader, uploader } from "@rpldy/uploader/src/tests/mocks/rpldy-uploader.mock";
 import useUploader from "../useUploader";
-import testCustomHook from "test/testCustomHook";
 
 describe("useUploader tests", () => {
 

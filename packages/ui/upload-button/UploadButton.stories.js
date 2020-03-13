@@ -1,8 +1,9 @@
 // @flow
-import React, { Component, useMemo, useState } from "react";
+import React, { Component, useMemo, useState, useRef } from "react";
 import styled from "styled-components";
 import UploadButton, { asUploadButton } from "./src";
 import Uploady, {
+    useFileInput,
     UploadyContext,
     useItemFinishListener,
     useBatchStartListener,
@@ -15,6 +16,7 @@ import {
     StoryUploadProgress,
     StoryAbortButton,
     uploadButtonCss,
+    localDestination,
 } from "../../../story-helpers";
 
 // import readme from '../README.md';
@@ -169,8 +171,7 @@ export const Abort = () => {
 
     return <div>
         <p>Enable the "local destination" with "long local request" knobs to be able to try aborting
-            a
-            running request</p>
+            a running request</p>
         <Uploady
             debug
             multiple={multiple}
@@ -193,7 +194,7 @@ const DisabledDuringUploadButton = () => {
     useBatchFinishListener(() => {
         setUploading(false);
     });
-    
+
     return <StyledUploadButton extraProps={{ disabled: uploading }}/>;
 };
 
@@ -260,6 +261,27 @@ export const WithCustomComponentAsButton = () => {
 
         <DivUploadButton/>
     </Uploady>;
+};
+
+const ExampleForm = ({ url }) => {
+    const inputRef = useRef();
+    useFileInput(inputRef);
+
+    return <form action={url} method="POST">
+        <input type="file" name="testFile" style={{ display: "none" }} ref={inputRef}/>
+    </form>;
+};
+
+export const WithCustomFileInputAndForm = () => {
+    return <section>
+        <Uploady
+            debug
+            customInput
+        >
+            <ExampleForm url={localDestination().url}/>
+            <UploadButton/>
+        </Uploady>
+    </section>
 };
 
 export default {

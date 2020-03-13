@@ -4,6 +4,7 @@ import { DEFAULT_OPTIONS } from "../../defaults";
 const uploader = {
     add: jest.fn(),
     upload: jest.fn(),
+    getOptions: jest.fn(),
     on: jest.fn(),
     once: jest.fn(),
     off: jest.fn(),

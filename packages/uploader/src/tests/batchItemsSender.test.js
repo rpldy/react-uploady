@@ -51,7 +51,7 @@ describe("batchItemsSender tests", () => {
         expect(result).toBe(sendResult);
 
         expect(sendFn).toHaveBeenCalledWith(items, options.destination.url, {
-            method: options.method || DEFAULT_OPTIONS.method,
+            method: options.destination.method || options.method || DEFAULT_OPTIONS.method,
             paramName: options.destination.filesParamName || options.inputFieldName || DEFAULT_PARAM_NAME,
             params: {
                 ...options.params,
@@ -84,6 +84,7 @@ describe("batchItemsSender tests", () => {
             method: "POST",
             destination: {
                 filesParamName: "fff",
+                method: "PUT",
             },
             forceJsonResponse: true,
             withCredentials: true,

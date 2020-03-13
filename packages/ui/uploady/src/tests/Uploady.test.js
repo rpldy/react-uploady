@@ -57,4 +57,29 @@ describe("Uploady tests", () => {
 
         expect(useUploader).toHaveBeenCalledWith({ autoUpload: true }, listeners);
     });
+
+    it("should use provided container for file input", () => {
+
+        uploader.getOptions.mockReturnValueOnce({
+            inputFieldName: "file",
+        });
+
+        const div = document.createElement("div");
+        document.body.appendChild(div);
+
+        const wrapper = mount(<Uploady inputFieldContainer={div}/>);
+
+        const input = wrapper.find("input");
+
+        expect(input).toHaveLength(1);
+        expect(wrapper.find("Portal").props().containerInfo).toBe(div);
+    });
+
+    it("should work with customInput", () => {
+
+        const wrapper = mount(<Uploady customInput/>);
+
+        expect(wrapper.find("input")).toHaveLength(0);
+    });
+
 });

@@ -19,8 +19,7 @@
         "@rpldy/shared": "^0.1.4",
         "@rpldy/uploader": "^0.1.4",
         "invariant": "^2.2.4",
-        "lodash": "^4.17.15",
-        "warning": "^4.0.3"
+        "lodash": "^4.17.15"
     },
     "devDependencies": {
         "flow-bin": "^0.119.1"

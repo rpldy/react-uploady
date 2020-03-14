@@ -1,4 +1,5 @@
 [![CircleCI](https://circleci.com/gh/yoavniran/react-uploady.svg?style=svg)](https://circleci.com/gh/yoavniran/react-uploady)
+[![codecov](https://codecov.io/gh/yoavniran/react-uploady/branch/master/graph/badge.svg)](https://codecov.io/gh/yoavniran/react-uploady)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
 # react-uploady

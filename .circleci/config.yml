@@ -1,7 +1,33 @@
 version: 2.1
 orbs:
   node: circleci/node@1.1.6
+  codecov: codecov/codecov@1.0.5
+commands:
+  setup:
+    description: "Setup command to install/bootstrap/build"
+    steps:
+        - run: yarn install
+        - run: yarn bootstrap
+        - run: yarn build
 jobs:
+#  build-and-deploy:
+#    executor:
+#        name: node/default
+#    steps:
+#        - checkout
+#        - node/with-cache:
+#            steps:
+#              - setup:
+#              - run:
+#                  name: Jest With Coverage
+#                  command: yarn jest:ci
+#                  environment:
+#                      JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+#              - store_test_results:
+#                  path: reports/junit
+#              - store_artifacts:
+#                  path: reports/junit
+
   build-and-test:
     executor:
       name: node/default
@@ -9,19 +35,43 @@ jobs:
       - checkout
       - node/with-cache:
           steps:
-            - run: yarn install
-            - run: yarn bootstrap
+            - setup:
             - run:
-                name: Test (lint, flow, jest)
-                command: yarn ci-test
+                name: Test Code (lint, flow, jest)
+                command: yarn test:ci
                 environment:
                     JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
             - store_test_results:
                 path: reports/junit
             - store_artifacts:
                 path: reports/junit
+            - store_artifacts:
+                    path: .jest-coverage
+
+  coverage:
+    executor:
+      name: node/default
+    steps:
+      - node/with-cache:
+          steps:
+            - codecov/upload:
+              file: .jest-coverage/coverage-final.json
+              token: $CODECOV_TOKEN
 
 workflows:
     build-and-test:
       jobs:
         - build-and-test
+        - coverage:
+            requires:
+              - build-and-test
+            filters:
+              branches:
+               only: master
+
+#    build-and-deploy:
+#      jobs:
+#        - build-and-deploy:
+#          filters:
+#              branches:
+#                  only: master

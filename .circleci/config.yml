@@ -45,7 +45,7 @@ jobs:
                 path: reports/junit
             - store_artifacts:
                 path: reports/junit
-            -   store_artifacts:
+            - store_artifacts:
                     path: .jest-coverage
 
   coverage:
@@ -53,10 +53,10 @@ jobs:
       name: node/default
     steps:
       - node/with-cache:
-        steps:
-          - codecov/upload:
-            file: .jest-coverage/coverage-final.json
-            token: $CODECOV_TOKEN
+          steps:
+            - codecov/upload:
+              file: .jest-coverage/coverage-final.json
+              token: $CODECOV_TOKEN
 
 workflows:
     build-and-test:

@@ -1,6 +1,14 @@
 version: 2.1
 orbs:
   node: circleci/node@1.1.6
+  codecov: codecov/codecov@1.0.6
+commands:
+  setup
+    description: "Setup command to install/bootstrap/build"
+    steps:
+        - run: yarn install
+        - run: yarn bootstrap
+        - run: yarn build
 jobs:
   build-and-test:
     executor:
@@ -9,8 +17,7 @@ jobs:
       - checkout
       - node/with-cache:
           steps:
-            - run: yarn install
-            - run: yarn bootstrap
+            - setup:
             - run:
                 name: Test (lint, flow, jest)
                 command: yarn ci-test
@@ -25,3 +32,7 @@ workflows:
     build-and-test:
       jobs:
         - build-and-test
+#    build-and-deploy:
+#      triggers:
+#          filters
+#      jobs:

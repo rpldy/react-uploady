@@ -3,7 +3,7 @@ module.exports = {
 	coverageDirectory: ".jest-coverage",
     // reporters: ["default", "jest-junit"],
     moduleNameMapper: {
-        "^@rpldy\/([\w-]*)$": `<rootDir>/node_modules/@rpldy-$1/src/index.js`,
+        "^@rpldy\/([\w-]*)$": `<rootDir>/node_modules/@rpldy/$1/src/index.js`,
     },
 	coveragePathIgnorePatterns: ["<rootDir>/packages/(?:.+?)/lib/"],
 	coverageReporters: [

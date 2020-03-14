@@ -10,6 +10,29 @@ commands:
         - run: yarn bootstrap
         - run: yarn build
 jobs:
+  build-and-deploy:
+    executor:
+        name: node/default
+    steps:
+        - checkout
+        - node/with-cache:
+            steps:
+              - setup:
+              - run:
+                  name: Jest With Coverage
+                  command: yarn jest:ci
+                  environment:
+                      JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+              - store_test_results:
+                  path: reports/junit
+              - store_artifacts:
+                  path: reports/junit
+              - store_artifacts:
+                  path: .jest-coverage
+              - codecov/upload:
+                  file: .jest-coverage/coverage-final.json
+                  token: $CODECOV_TOKEN
+
   build-and-test:
     executor:
       name: node/default
@@ -20,7 +43,7 @@ jobs:
             - setup:
             - run:
                 name: Test Code (lint, flow, jest)
-                command: yarn ci-test
+                command: yarn test:ci
                 environment:
                     JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
             - store_test_results:
@@ -32,7 +55,8 @@ workflows:
     build-and-test:
       jobs:
         - build-and-test
-#    build-and-deploy:
-#      triggers:
-#          filters
-#      jobs:
+    build-and-deploy:
+      triggers:
+          filters
+      jobs:
+          - build-and-deploy

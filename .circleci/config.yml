@@ -11,9 +11,11 @@ jobs:
           steps:
             - run: yarn install
             - run: yarn bootstrap
-            - run: yarn ci-test
+            - run:
+              name: Test (lint, flow, jest)
+              command: yarn ci-test
               environment:
-                  JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+                JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
             - store_test_results:
               path: reports/junit
             - store_artifacts:

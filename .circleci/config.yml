@@ -19,7 +19,7 @@ jobs:
           steps:
             - setup:
             - run:
-                name: Test (lint, flow, jest)
+                name: Test Code (lint, flow, jest)
                 command: yarn ci-test
                 environment:
                     JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"

@@ -1,0 +1,27 @@
+version: 2.1
+orbs:
+  node: circleci/node@1.1.6
+jobs:
+  build-and-test:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/with-cache:
+          steps:
+            - run: yarn install
+            - run: yarn bootstrap
+            - run:
+                name: Test (lint, flow, jest)
+                command: yarn ci-test
+                environment:
+                    JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+            - store_test_results:
+                path: reports/junit
+            - store_artifacts:
+                path: reports/junit
+
+workflows:
+    build-and-test:
+      jobs:
+        - build-and-test

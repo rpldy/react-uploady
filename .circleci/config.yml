@@ -49,10 +49,14 @@ jobs:
                     path: .jest-coverage
 
   coverage:
+    executor:
+      name: node/default
     steps:
-      - codecov/upload:
-          file: .jest-coverage/coverage-final.json
-          token: $CODECOV_TOKEN
+      - node/with-cache:
+        steps:
+          - codecov/upload:
+            file: .jest-coverage/coverage-final.json
+            token: $CODECOV_TOKEN
 
 workflows:
     build-and-test:

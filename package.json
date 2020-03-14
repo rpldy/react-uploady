@@ -16,7 +16,7 @@
     "flow:copy": "lerna exec --stream -- yarn flow:copy",
     "lint": "eslint ./packages",
     "test": "yarn flow && yarn lint --quiet && yarn jest:cov",
-    "test:ci": "yarn build; yarn flow && yarn lint --quiet && yarn jest:ci",
+    "test:ci": "yarn flow && yarn lint --quiet && yarn jest:ci",
     "server": "cd server; PORT=4000 node index.js"
   },
   "private": true,

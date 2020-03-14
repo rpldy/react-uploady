@@ -1,8 +1,9 @@
 module.exports = {
 	cacheDirectory: ".jest-cache",
 	coverageDirectory: ".jest-coverage",
+    // reporters: ["default", "jest-junit"],
     moduleNameMapper: {
-        "^@rpldy\/([\w-]*)$": `<rootDir>/node_modules/@rpldy/$1/src/index.js`,
+        "^@rpldy\/([\w-]*)$": `<rootDir>/node_modules/@rpldy-$1/src/index.js`,
     },
 	coveragePathIgnorePatterns: ["<rootDir>/packages/(?:.+?)/lib/"],
 	coverageReporters: [
@@ -38,5 +39,4 @@ module.exports = {
 		"<rootDir>/test/jestSetup.js"
 	],
 	"testEnvironment": "<rootDir>/test/jsdomEnv.js",
-	// "testURL": "https://www.somthing.com/test.html"
 };

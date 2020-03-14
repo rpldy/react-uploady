@@ -9,7 +9,7 @@
     "ssb": "start-storybook -p 9111",
     "start": "yarn ssb",
     "jest": "NODE_ENV=test jest",
-    "test": "yarn flow && yarn lint --quiet && yarn jest",
+    "test": "yarn flow && yarn lint --quiet && yarn jest:cov",
     "jest:cov": "yarn jest --coverage",
     "flow:mono": "flow-mono create-symlinks ./.flowconfig",
     "flow": "yarn flow:mono; flow --show-all-errors",

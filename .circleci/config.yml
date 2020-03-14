@@ -10,28 +10,23 @@ commands:
         - run: yarn bootstrap
         - run: yarn build
 jobs:
-  build-and-deploy:
-    executor:
-        name: node/default
-    steps:
-        - checkout
-        - node/with-cache:
-            steps:
-              - setup:
-              - run:
-                  name: Jest With Coverage
-                  command: yarn jest:ci
-                  environment:
-                      JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
-              - store_test_results:
-                  path: reports/junit
-              - store_artifacts:
-                  path: reports/junit
-              - store_artifacts:
-                  path: .jest-coverage
-              - codecov/upload:
-                  file: .jest-coverage/coverage-final.json
-                  token: $CODECOV_TOKEN
+#  build-and-deploy:
+#    executor:
+#        name: node/default
+#    steps:
+#        - checkout
+#        - node/with-cache:
+#            steps:
+#              - setup:
+#              - run:
+#                  name: Jest With Coverage
+#                  command: yarn jest:ci
+#                  environment:
+#                      JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+#              - store_test_results:
+#                  path: reports/junit
+#              - store_artifacts:
+#                  path: reports/junit
 
   build-and-test:
     executor:
@@ -50,14 +45,29 @@ jobs:
                 path: reports/junit
             - store_artifacts:
                 path: reports/junit
+            -   store_artifacts:
+                    path: .jest-coverage
+
+  coverage:
+    steps:
+      - codecov/upload:
+          file: .jest-coverage/coverage-final.json
+          token: $CODECOV_TOKEN
 
 workflows:
     build-and-test:
       jobs:
         - build-and-test
-    build-and-deploy:
-      jobs:
-        - build-and-deploy:
-          filters:
+        - coverage
+            requires:
+                - build-and-test
+            filters:
               branches:
-                  only: master
+               only: master
+
+#    build-and-deploy:
+#      jobs:
+#        - build-and-deploy:
+#          filters:
+#              branches:
+#                  only: master

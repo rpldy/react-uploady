@@ -8,7 +8,7 @@ import type { CreateOptions } from "@rpldy/shared";
 import type { UploaderListeners } from "./types";
 
 export default (options: CreateOptions, listeners: ?UploaderListeners): UploaderType => {
-    //avoid creating new instance of uploader (this means for ex: cant change enhancer function)
+    //avoid creating new instance of uploader (unless enhancer method changed)
     const uploader = useMemo<UploaderType>(
         () => {
             logger.debugLog("Uploady creating a new uploader instance", options);
@@ -16,7 +16,7 @@ export default (options: CreateOptions, listeners: ?UploaderListeners): Uploader
         },
         //dont recreate the uploader when options changed - we do update later
         //eslint-disable-next-line react-hooks/exhaustive-deps
-        []
+        [options.enhancer]
     );
 
     //Forgoing any kind of memoization. Probably not worth the comparison work to save on the options merge

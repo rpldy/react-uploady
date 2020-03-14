@@ -35,9 +35,6 @@ describe("useUploader tests", () => {
         expect(uploader.update).toHaveBeenCalledWith(options);
         expect(uploader.on).not.toHaveBeenCalled();
 
-        // wrapper.setProps({});
-        // expect(uploader.update).toHaveBeenCalledTimes(1);
-
         const changedProps = { inputFieldName: "aaaa" };
         wrapper.setProps(changedProps);
         expect(uploader.update).toHaveBeenCalledWith({
@@ -47,10 +44,13 @@ describe("useUploader tests", () => {
 
         expect(createUploader).toHaveBeenCalledTimes(1);
 
-        wrapper.setProps(({ multiple: false }));
+        wrapper.setProps(({ multiple: false, enhancer: true }));
+        expect(createUploader).toHaveBeenCalledTimes(2);
+
         expect(uploader.update).toHaveBeenCalledWith({
             ...options,
             ...changedProps,
+            enhancer: true,
             multiple: false,
         });
 

@@ -19,6 +19,7 @@
     "@rpldy/shared": "^0.1.4",
     "@rpldy/shared-ui": "^0.1.4",
     "@rpldy/uploader": "^0.1.4",
+    "invariant": "^2.2.4",
     "lodash": "^4.17.15"
   },
   "peerDependencies": {

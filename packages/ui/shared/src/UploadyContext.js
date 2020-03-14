@@ -54,6 +54,8 @@ export const createContextApi =
                 NO_INPUT_ERROR_MSG
             );
 
+            input.removeEventListener("change", onFileInputChange);
+
             const addOptions = showFileUploadOptions;
             showFileUploadOptions = null;
             upload(input.files, addOptions);

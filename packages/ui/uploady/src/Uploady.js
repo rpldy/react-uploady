@@ -1,6 +1,7 @@
 // @flow
 import React, { forwardRef, memo, useMemo, useRef } from "react";
 import ReactDOM from "react-dom";
+import invariant from "invariant";
 import { logger } from "@rpldy/shared";
 import { UploadyContext, createContextApi } from "@rpldy/shared-ui";
 import useUploader from "./useUploader";
@@ -18,11 +19,19 @@ type FileInputPortalProps = {|
     style: Object,
 |};
 
+const NO_CONTAINER_ERROR_MSG = "Uploady - Container for file input must be a valid dom element";
+
 const FileInputFieldPortal = memo(forwardRef((props: FileInputPortalProps, ref) => {
     const { uploader, container, ...inputProps } = props;
     const instanceOptions = uploader.getOptions();
+    const isValidContainer = container && container.nodeType === 1;
 
-    return container ? ReactDOM.createPortal(<input
+    invariant(
+        isValidContainer,
+        NO_CONTAINER_ERROR_MSG
+    );
+
+    return container && isValidContainer ? ReactDOM.createPortal(<input
         {...inputProps}
         name={instanceOptions.inputFieldName}
         type="file"
@@ -53,7 +62,7 @@ const Uploady = (props: UploadyProps) => {
     const uploader = useUploader(uploadOptions, listeners);
 
     const api = useMemo(() =>
-             createContextApi(uploader, !customInput ? internalInputFieldRef : null),
+            createContextApi(uploader, !customInput ? internalInputFieldRef : null),
         [uploader, internalInputFieldRef, customInput]
     );
 

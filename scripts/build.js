@@ -8,9 +8,11 @@ const build = () => {
 
 	console.log(chalk.bold(chalk.cyan(`___ building: ${packageName} ___`)));
 
-	const files = [
-		"src",
-	].join(" ");
+	// const files = [
+	// 	"src",
+	// ].join(" ");
+
+    const src = "src";
 
 	const ignored = [
 		"**/*.story.js",
@@ -20,7 +22,7 @@ const build = () => {
         "**/tests/**",
 	].join(",");
 
-	const result = shell.exec(`babel --root-mode upward ${files} -d lib --ignore ${ignored}`);
+	const result = shell.exec(`babel --root-mode upward ${src} -d lib --ignore ${ignored}`);
 
 	if (result.code) {
 		console.log(chalk.red(`BUILD ERROR!!! (${result.code})`));

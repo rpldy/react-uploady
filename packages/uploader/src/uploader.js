@@ -50,7 +50,7 @@ export default (options?: CreateOptions): UploaderType => {
             const isCancelled = await cancellable(UPLOADER_EVENTS.BATCH_ADD, batch);
 
             if (!isCancelled) {
-                logger.debugLog(`uploady.uploader: new items added - auto upload = ${String(processOptions.autoUpload)}`, batch.items);
+                logger.debugLog(`uploady.uploader [${uploader.id}]: new items added - auto upload = ${String(processOptions.autoUpload)}`, batch.items);
 
                 if (processOptions.autoUpload) {
                     processor.process(batch, processOptions);

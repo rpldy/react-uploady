@@ -1,4 +1,5 @@
 import React from "react";
+import invariant from "invariant";
 import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import {
     createContextApi
@@ -7,6 +8,7 @@ import useUploader from "../useUploader";
 import Uploady from "../Uploady";
 
 jest.mock("../useUploader", () => jest.fn());
+jest.mock("invariant", () => jest.fn());
 
 describe("Uploady tests", () => {
 
@@ -21,6 +23,7 @@ describe("Uploady tests", () => {
         clearJestMocks(
             uploader.getOptions,
             uploader.add,
+            invariant,
         )
     });
 
@@ -69,10 +72,29 @@ describe("Uploady tests", () => {
 
         const wrapper = mount(<Uploady inputFieldContainer={div}/>);
 
+        expect(invariant).toHaveBeenCalledWith(
+            true,
+            expect.any(String)
+        );
+
         const input = wrapper.find("input");
 
         expect(input).toHaveLength(1);
         expect(wrapper.find("Portal").props().containerInfo).toBe(div);
+    });
+
+    it("should show error in case no valid container", () => {
+
+        uploader.getOptions.mockReturnValueOnce({
+            inputFieldContainer: true,
+        });
+
+        mount(<Uploady inputFieldContainer/>);
+
+        expect(invariant).toHaveBeenCalledWith(
+            false,
+            expect.any(String)
+        );
     });
 
     it("should work with customInput", () => {
@@ -81,5 +103,4 @@ describe("Uploady tests", () => {
 
         expect(wrapper.find("input")).toHaveLength(0);
     });
-
 });

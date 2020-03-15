@@ -56,7 +56,7 @@ jobs:
       - node/with-cache:
           steps:
             - attach_workspace:
-                at: /build
+                at: /tmp/build
             - codecov/upload:
               file: .jest-coverage/coverage-final.json
               token: $CODECOV_TOKEN

@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
   codecov: codecov/codecov@1.0.5
+
 commands:
   setup:
     description: "Setup command to install/bootstrap/build"
@@ -9,32 +10,21 @@ commands:
         - run: yarn install
         - run: yarn bootstrap
         - run: yarn build
-jobs:
-#  build-and-deploy:
-#    executor:
-#        name: node/default
-#    steps:
-#        - checkout
-#        - node/with-cache:
-#            steps:
-#              - setup:
-#              - run:
-#                  name: Jest With Coverage
-#                  command: yarn jest:ci
-#                  environment:
-#                      JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
-#              - store_test_results:
-#                  path: reports/junit
-#              - store_artifacts:
-#                  path: reports/junit
+executors:
+    build-executor:
+        node/default:
+        working_directory: /build
 
+jobs:
   build-and-test:
-    executor:
-      name: node/default
+    executor: build-executor
+#      name: node/default
     steps:
       - checkout
       - node/with-cache:
           steps:
+            - attach_workspace:
+                at: /build
             - setup:
             - run:
                 name: Test Code (lint, flow, jest)
@@ -46,14 +36,19 @@ jobs:
             - store_artifacts:
                 path: reports/junit
             - store_artifacts:
-                    path: .jest-coverage
-
+                path: .jest-coverage
+            - persist_to_workspace:
+                root: .jest-coverage
+                path:
+                  - .jest-coverage
   coverage:
-    executor:
-      name: node/default
+    executor: build-executor
+#      name: node/default
     steps:
       - node/with-cache:
           steps:
+            - attach_workspace:
+                at: /build
             - codecov/upload:
               file: .jest-coverage/coverage-final.json
               token: $CODECOV_TOKEN

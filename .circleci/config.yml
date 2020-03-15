@@ -10,15 +10,17 @@ commands:
         - run: yarn install
         - run: yarn bootstrap
         - run: yarn build
-executors:
-    build-executor:
-        node/default:
-        working_directory: /build
+
+#executors:
+#    build-executor:
+#        node/default
+
 
 jobs:
   build-and-test:
-    executor: build-executor
-#      name: node/default
+    working_directory: /build
+    executor:
+      name: node/default
     steps:
       - checkout
       - node/with-cache:
@@ -42,8 +44,9 @@ jobs:
                 path:
                   - .jest-coverage
   coverage:
-    executor: build-executor
-#      name: node/default
+    working_directory: /build
+    executor:
+      name: node/default
     steps:
       - node/with-cache:
           steps:

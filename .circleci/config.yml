@@ -5,7 +5,7 @@ orbs:
 
 references:
     workspace_root: &workspace_root
-        /tmp/build
+        /tmp
 
 commands:
   setup:
@@ -44,7 +44,7 @@ jobs:
             - store_artifacts:
                 path: .jest-coverage
             - persist_to_workspace:
-                root: ~/
+                root: build
                 paths:
                   - .jest-coverage
 

@@ -41,8 +41,9 @@ jobs:
                 path: .jest-coverage
             - persist_to_workspace:
                 root: .jest-coverage
-                path:
+                paths:
                   - .jest-coverage
+
   coverage:
     working_directory: /build
     executor:

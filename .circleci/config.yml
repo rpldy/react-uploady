@@ -44,7 +44,7 @@ jobs:
             - store_artifacts:
                 path: .jest-coverage
             - persist_to_workspace:
-                root: build
+                root: /
                 paths:
                   - .jest-coverage
 

@@ -7,6 +7,7 @@
     "clean": "lerna exec --stream -- rimraf lib",
     "release": "yarn bootstrap; yarn clean; yarn build; yarn flow:copy",
     "ssb": "start-storybook -p 9111",
+    "bsb": "NODE_ENV=development build-storybook -c .storybook -o .sb-static",
     "start": "yarn ssb",
     "jest": "NODE_ENV=test jest",
     "jest:cov": "yarn jest --coverage",

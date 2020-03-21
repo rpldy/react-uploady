@@ -60,6 +60,8 @@ jobs:
             - codecov/upload:
               file: .jest-coverage/coverage-final.json
               token: $CODECOV_TOKEN
+            - store_artifacts:
+                path: .jest-coverage
 
 workflows:
     build-and-test:

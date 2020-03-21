@@ -3,6 +3,7 @@
 .DS_Store
 .jest-cache/
 .jest-coverage/
+.sb-static/
 .env
 
 coverage
@@ -23,3 +24,5 @@ todo.md
 
 packages/**/lib
 packages/**/.flowconfig
+
+test.js

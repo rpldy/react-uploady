@@ -1,5 +1,5 @@
 {
-    "version": "0.1.5",
+    "version": "0.1.6",
     "name": "@rpldy/shared-ui",
     "description": "",
     "author": "yoav niran (https://github.com/yoavniran)",
@@ -16,8 +16,8 @@
         "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
     },
     "dependencies": {
-        "@rpldy/shared": "^0.1.5",
-        "@rpldy/uploader": "^0.1.5",
+        "@rpldy/shared": "^0.1.6",
+        "@rpldy/uploader": "^0.1.6",
         "invariant": "^2.2.4",
         "lodash": "^4.17.15"
     },

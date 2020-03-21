@@ -1,5 +1,5 @@
 {
-  "version": "0.1.4",
+  "version": "0.1.5",
   "name": "@rpldy/upload-preview",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -16,13 +16,13 @@
     "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.1.4",
-    "@rpldy/shared-ui": "^0.1.4"
+    "@rpldy/shared": "^0.1.5",
+    "@rpldy/shared-ui": "^0.1.5"
   },
   "devDependencies": {
-    "@rpldy/sender": "^0.1.4",
-    "@rpldy/upload-button": "^0.1.4",
-    "@rpldy/upload-url-input": "^0.1.4",
+    "@rpldy/sender": "^0.1.5",
+    "@rpldy/upload-button": "^0.1.5",
+    "@rpldy/upload-url-input": "^0.1.5",
     "@storybook/addon-knobs": "^5.2.8",
     "flow-bin": "^0.119.1",
     "styled-components": "^4.4.1"

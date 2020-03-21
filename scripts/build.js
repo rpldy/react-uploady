@@ -1,16 +1,19 @@
 const chalk = require("chalk"),
 	shell = require("shelljs"),
-	{ getPackageName } = require("./utils");
+	{ getPackageName, copyFilesToPackage } = require("./utils");
 
 const build = () => {
-	const currentDir = process.cwd(),
-		packageName = getPackageName(currentDir);
+	const pkgDir = process.cwd(),
+		pkgeName = getPackageName(pkgDir),
+        scriptsDir = __dirname;
 
-	console.log(chalk.bold(chalk.cyan(`___ building: ${packageName} ___`)));
+    console.log(chalk.bold(chalk.cyan(`___ copying files to: ${pkgeName} ___`)));
+    copyFilesToPackage(scriptsDir, pkgDir, [
+        "../.npmignore",
+        "../LICENCE"
+    ]);
 
-	// const files = [
-	// 	"src",
-	// ].join(" ");
+	console.log(chalk.bold(chalk.cyan(`___ building: ${pkgeName} ___`)));
 
     const src = "src";
 
@@ -27,7 +30,7 @@ const build = () => {
 	if (result.code) {
 		console.log(chalk.red(`BUILD ERROR!!! (${result.code})`));
 	} else {
-		console.log(chalk.green(`___ finished building ${packageName} ___`));
+		console.log(chalk.green(`___ finished building ${pkgeName} ___`));
 	}
 };
 

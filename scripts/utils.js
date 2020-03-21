@@ -15,6 +15,15 @@ const getPackageName = (dir) => {
 	return name;
 };
 
+const copyFilesToPackage = (currentDir, destination, files = []) => {
+
+    files.forEach((file) => {
+        const destFile = path.resolve(destination, path.basename(file));
+        fs.copyFileSync(path.resolve(currentDir, file), destFile);
+    });
+};
+
 module.exports = {
 	getPackageName,
+    copyFilesToPackage,
 };

@@ -70,13 +70,22 @@ const getPublicMethods = () => Object.entries(publicMethods)
 		return res;
 	}, {});
 
-const apiMethods = { trigger, addEvent, removeEvent, hasEvent, hasEventRegistrations, assign };
+//using string keys here because can't rely on function names to stay after build
+const apiMethods = {
+    "trigger": trigger,
+    "addEvent": addEvent,
+    "removeEvent": removeEvent,
+    "hasEvent": hasEvent,
+    "hasEventRegistrations": hasEventRegistrations,
+    "assign": assign
+};
 
 const createApi = (target): LifeEventsAPI =>
-	Object.values(apiMethods).reduce((res, m: Function) => {
-		res[m.name] = m.bind(target);
-		return res;
-	}, { target, ...apiMethods });
+    Object.keys(apiMethods)
+        .reduce((res: LifeEventsAPI, name: string) => {
+            res[name] = apiMethods[name].bind(target);
+            return res;
+        }, { target, ...apiMethods });
 
 const cleanRegistryForName = (obj: Object, name: any, force: boolean = false) => {
 	const registry = getValidLE(obj).registry;

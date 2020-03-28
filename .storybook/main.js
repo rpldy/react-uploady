@@ -1,9 +1,9 @@
 module.exports = {
     stories: [
-        "../packages/**/*.stories.js"
+        // "../packages/**/*.stories.js"
         // "../packages/**/!(node_modules/)*.stor(y|ies).js"
         // "../packages/*/!(node_modules)/*.stories.js",
-        // "../packages/**/!(node_modules)*.stories.js"
+        "../packages/**/!(node_modules)*.stories.js"
     ],
 
     addons: [

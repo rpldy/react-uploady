@@ -7,7 +7,8 @@
     "clean": "lerna exec --stream -- rimraf lib",
     "release": "yarn bootstrap; yarn clean; yarn build; yarn flow:copy",
     "ssb": "start-storybook -p 9111",
-    "bsb": "NODE_ENV=development build-storybook -c .storybook -o .sb-static",
+    "bsb": "build-storybook -c .storybook -o .sb-static",
+    "bsbw": "yarn bsb --watch",
     "start": "yarn ssb",
     "jest": "NODE_ENV=test jest",
     "jest:cov": "yarn jest --coverage",
@@ -63,7 +64,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^2.2.0",
-    "flow-bin": "^0.119.1",
+    "flow-bin": "^0.121.0",
     "flow-copy-source": "^2.0.9",
     "flow-mono-cli": "^1.5.0",
     "husky": "^4.2.3",
@@ -85,5 +86,6 @@
   },
   "optionalDependencies": {
     "fsevents": "^2.1.2"
-  }
+  },
+  "dependencies": {}
 }

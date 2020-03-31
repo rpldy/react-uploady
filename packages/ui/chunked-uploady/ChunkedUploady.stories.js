@@ -1,11 +1,10 @@
 // @flow
 import React from "react";
-// $FlowFixMe - for some reason flow doesnt see @storybook/addon-knobs is installed...
-import { number } from "@storybook/addon-knobs"
+import { withKnobs, number } from "@storybook/addon-knobs";
 import UploadButton from "@rpldy/upload-button";
 import ChunkedUploady, { useRequestPreSend } from "./src"
 import {
-    withKnobs,
+    KNOB_GROUPS,
     useStoryUploadySetup,
     StoryUploadProgress,
     StoryAbortButton,
@@ -29,7 +28,7 @@ const UploadButtonWithUniqueIdHeader = () => {
 
 const useChunkedStoryHelper = () => {
     const setup = useStoryUploadySetup({ noGroup: true });
-    const chunkSize = number("chunk size (bytes)", 5242880);
+    const chunkSize = number("chunk size (bytes)", 5242880, {}, KNOB_GROUPS.SETTINGS);
 
     return { ...setup, chunkSize };
 };

@@ -1,64 +1,110 @@
-import { select, boolean, number } from "@storybook/addon-knobs";
+import { select, boolean, number, text, object } from "@storybook/addon-knobs";
 import { useMemo } from "react";
 import { createMockSender } from "@rpldy/sender";
 
-const mockDestination = () => ({ url: "dummy.com" });
+export const isProd = process.env.NODE_ENV === "production";
 
-export const localDestination = (long) => ({
-	url: `http://localhost:${process.env.LOCAL_PORT}/upload${long ? "?long=true" : ""}`,
-	params: { test: true }
-});
-
-const cldDestination = () => ({
-	url: `https://api.cloudinary.com/v1_1/${process.env.CLD_CLOUD}/upload`,
-	params: {
-		upload_preset: process.env.CLD_PRESET,
-		folder: process.env.CLD_TEST_FOLDER,
-	}
-});
-
-const DEST_OPTIONS = {
-	"mock": 0,
-	"cloudinary": 1,
-	"local": 2,
+export const KNOB_GROUPS = {
+    DESTINATION: "Upload Destination",
+    SETTINGS: "Upload Settings",
 };
 
-const DESTINATIONS = {
-	[DEST_OPTIONS.mock]: mockDestination,
-	[DEST_OPTIONS.cloudinary]: cldDestination,
-	[DEST_OPTIONS.local]: localDestination,
+console.log(`** React Uploady - storybook helper running in ${isProd ? "production" : "development"} mode. **`);
+
+const PROD_DEST_OPTIONS = {
+    "mock": "mock",
+    "cloudinary": "cloudinary",
+    "url": "url",
+};
+
+const DEV_DEST_OPTIONS = {
+    ...PROD_DEST_OPTIONS,
+    "local": "local",
 };
 
 const mockSenderEnhancer = (uploader) => {
-	const mockSender = createMockSender({ delay: 1000 });
-	uploader.update({ send: mockSender.send });
-	return uploader;
+    const mockSender = createMockSender({ delay: 1000 });
+    uploader.update({ send: mockSender.send });
+    return uploader;
 };
 
-const getDestination = (type, longRequest) => {
-	return DESTINATIONS[type](longRequest);
+const mockDestination = () => ({
+    destinationType: DEV_DEST_OPTIONS.mock,
+    destination: { url: "dummy.com" },
+    enhancer: mockSenderEnhancer
+});
+
+export const localDestination = () => {
+    let result;
+
+    if (!isProd) {
+        const long = boolean("long local request (relevant for local only)", false, KNOB_GROUPS.DESTINATION);
+
+        result = {
+            destinationType: DEV_DEST_OPTIONS.local,
+            destination: {
+                url: `http://localhost:${process.env.LOCAL_PORT}/upload${long ? "?long=true" : ""}`,
+                params: { test: true }
+            }
+        }
+    }
+
+    //no local when running online
+    return result || mockDestination();
 };
 
-export const useLongRequestKnob = () => {
-    return boolean("long local request (relevant for local only)", false);
+const cldDestination = () => {
+    const cloudName = text("(cloudinary) cloud name", process.env.CLD_CLOUD || "", KNOB_GROUPS.DESTINATION);
+    const uploadPreset = text("(cloudinary) upload preset", process.env.CLD_PRESET || "", KNOB_GROUPS.DESTINATION);
+    const folder = text("(cloudinary) folder", process.env.CLD_TEST_FOLDER || "", KNOB_GROUPS.DESTINATION);
+
+    return {
+        destinationType: DEV_DEST_OPTIONS.cloudinary,
+        destination: {
+            url: `https://api.cloudinary.com/v1_1/${cloudName}/upload`,
+            params: {
+                upload_preset: uploadPreset,
+                folder: folder
+            }
+        }
+    };
+};
+
+const urlDestination = () => {
+    const url = text('upload url', "", KNOB_GROUPS.DESTINATION);
+    const params = object("params", { foo: "bar" }, KNOB_GROUPS.DESTINATION);
+
+    return {
+        destinationType: DEV_DEST_OPTIONS.url,
+        destination: {
+            url,
+            params,
+        }
+    };
+};
+
+const DESTINATIONS = {
+    [DEV_DEST_OPTIONS.mock]: mockDestination,
+    [DEV_DEST_OPTIONS.cloudinary]: cldDestination,
+    [DEV_DEST_OPTIONS.local]: localDestination,
+    [DEV_DEST_OPTIONS.url]: urlDestination,
 };
 
 const useStoryUploadySetup = (options = {}) => {
-	const type = select("destination", DEST_OPTIONS, DEST_OPTIONS.mock);
-	const longRequest = useLongRequestKnob();
-	const multiple = boolean("multiple files", true);
-	const grouped = !options.noGroup && boolean("group files in single request", false);
-	const groupSize = !options.noGroup && number("max in group", 2);
+    const type = select("destination", isProd ? PROD_DEST_OPTIONS : DEV_DEST_OPTIONS, DEV_DEST_OPTIONS.mock, KNOB_GROUPS.DESTINATION),
+        { destination, enhancer } = DESTINATIONS[type](),
+        multiple = boolean("multiple files", true, KNOB_GROUPS.SETTINGS),
+        grouped = !options.noGroup && boolean("group files in single request", false, KNOB_GROUPS.SETTINGS),
+        groupSize = !options.noGroup && number("max in group", 2, {}, KNOB_GROUPS.SETTINGS);
 
-	return useMemo(() => ({
-			multiple,
-			destination: getDestination(type, longRequest), //DESTINATIONS[type],
-			enhancer: (type === DEST_OPTIONS.mock) ? mockSenderEnhancer : null,
-			grouped,
-			groupSize,
-			longRequest,
-		}),
-		[type, multiple, grouped, groupSize, longRequest]);
+    return useMemo(() => ({
+            multiple,
+            destination,
+            enhancer,
+            grouped,
+            groupSize,
+        }),
+        [type, multiple, grouped, groupSize, destination, enhancer]);
 };
 
 export default useStoryUploadySetup;

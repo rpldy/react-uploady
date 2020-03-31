@@ -1,5 +1,4 @@
-import { withKnobs } from "@storybook/addon-knobs";
-import useStoryUploadySetup, { localDestination, useLongRequestKnob } from "./useStoryUploadySetup";
+import useStoryUploadySetup, { localDestination, KNOB_GROUPS } from "./useStoryUploadySetup";
 import StoryUploadProgress from "./StoryUploadProgress";
 import StoryAbortButton from "./StoryAbortButton"
 
@@ -9,10 +8,9 @@ export {
 } from "./ComponentsStyles";
 
 export {
-    withKnobs,
     StoryUploadProgress,
     useStoryUploadySetup,
     StoryAbortButton,
     localDestination,
-    useLongRequestKnob,
+    KNOB_GROUPS,
 };

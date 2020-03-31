@@ -1,10 +1,10 @@
+const glob = require("fast-glob");
+
 module.exports = {
-    stories: [
-        // "../packages/**/*.stories.js"
-        // "../packages/**/!(node_modules/)*.stor(y|ies).js"
-        // "../packages/*/!(node_modules)/*.stories.js",
-        "../packages/**/!(node_modules)*.stories.js"
-    ],
+    stories: async () => {
+        const paths = await glob(["./packages/**/*.stories.js", "!**/node_modules"]);
+        return paths.map((p)=> `.${p}`);
+    },
 
     addons: [
         "@storybook/addon-actions/register",

@@ -12,6 +12,7 @@ const options = {
     latest: argv.latest,
     exact: argv.exact,
     tilde: argv.tilde,
+    //also accepts --scope which is passed as is to the lerna list command
 };
 
 console.log(">>> upgrading dependency in packages");

@@ -1,5 +1,38 @@
 const fs = require("fs"),
-	path = require("path");
+	path = require("path"),
+    { getFilteredPackages } = require("@lerna/filter-options"),
+    { ListCommand } = require("@lerna/list");
+
+class DepListCommand extends ListCommand {
+    initialize() {
+
+        this.result = new Promise((resolve) => {
+            getFilteredPackages(this.packageGraph, this.execOpts, this.options)
+                .then((packages) => {
+                    resolve({
+                        packages,
+                        graph: this.packageGraph
+                    });
+                });
+        });
+
+        return Promise.resolve(false);
+    }
+}
+
+const getMatchingPackages = async (argv) => {
+    const cmd = new DepListCommand(argv);
+    await cmd.runner;
+    return await cmd.result;
+};
+
+const isDevDep = (pkgJson, depName) => {
+    return !!~Object.keys(pkgJson.devDependencies).indexOf(depName);
+};
+
+const isPeerDep = (pgkJson, depName) => {
+    return !!~Object.keys(pgkJson.peerDependencies).indexOf(depName);
+};
 
 const getPackageName = (dir) => {
 	let name;
@@ -26,4 +59,7 @@ const copyFilesToPackage = (currentDir, destination, files = []) => {
 module.exports = {
 	getPackageName,
     copyFilesToPackage,
+    getMatchingPackages,
+    isDevDep,
+    isPeerDep,
 };

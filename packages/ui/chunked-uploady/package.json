@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@rpldy/upload-button": "^0.1.6",
-    "flow-bin": "^0.119.1"
+    "flow-bin": "^0.121.0"
   },
   "peerDependencies": {
     "react": ">=16.8"

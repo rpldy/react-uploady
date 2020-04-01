@@ -20,8 +20,8 @@
   },
   "devDependencies": {
     "@rpldy/uploady": "^0.1.6",
-    "@storybook/addon-knobs": "^5.2.8",
-    "flow-bin": "^0.119.1",
+    "@storybook/addon-knobs": "^5.3.18",
+    "flow-bin": "^0.121.0",
     "styled-components": "^4.4.1"
   },
   "peerDependencies": {

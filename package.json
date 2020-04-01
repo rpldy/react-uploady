@@ -2,6 +2,7 @@
   "name": "react-uploady-root",
   "version": "1.0.0",
   "scripts": {
+    "upgradep": "node scripts/upgradeDep.js",
     "bootstrap": "lerna bootstrap --use-workspaces",
     "build": "lerna exec --stream -- FORCE_COLOR=1 NODE_ENV=production yarn build;",
     "clean": "lerna exec --stream -- rimraf lib",
@@ -43,11 +44,11 @@
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
     "@commitlint/config-lerna-scopes": "^8.3.4",
-    "@storybook/addon-actions": "^5.3.17",
+    "@storybook/addon-actions": "^5.3.18",
     "@storybook/addon-console": "^1.2.1",
-    "@storybook/addon-knobs": "^5.3.17",
-    "@storybook/addon-storysource": "^5.3.17",
-    "@storybook/react": "^5.3.17",
+    "@storybook/addon-knobs": "^5.3.18",
+    "@storybook/addon-storysource": "^5.3.18",
+    "@storybook/react": "^5.3.18",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
@@ -75,6 +76,7 @@
     "jest-styled-components": "^6.3.3",
     "lerna": "^3.20.2",
     "lodash": "^4.17.15",
+    "pacote": "^11.1.4",
     "rc-progress": "^2.5.2",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
@@ -83,7 +85,8 @@
     "storybook-readme": "^5.0.8",
     "storybook-styled-components": "^1.1.4",
     "styled-components": "^4.4.1",
-    "webpack": "^4.41.2"
+    "webpack": "^4.41.2",
+    "yargs": "^15.3.1"
   },
   "optionalDependencies": {
     "fsevents": "^2.1.2"

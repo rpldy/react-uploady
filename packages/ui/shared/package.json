@@ -22,7 +22,7 @@
         "lodash": "^4.17.15"
     },
     "devDependencies": {
-        "flow-bin": "^0.119.1"
+        "flow-bin": "^0.121.0"
     },
     "peerDependencies": {
         "react": ">=16.8",

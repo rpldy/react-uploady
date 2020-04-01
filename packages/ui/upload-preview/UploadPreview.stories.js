@@ -1,6 +1,7 @@
 // @flow
 import React, { useCallback, useState, useRef } from "react";
 import styled from "styled-components";
+import { withKnobs } from "@storybook/addon-knobs";
 import Uploady, {
     useItemProgressListener,
 } from "@rpldy/uploady";
@@ -10,7 +11,6 @@ import UploadPreview from "./src";
 
 import {
     useStoryUploadySetup,
-    withKnobs,
     uploadButtonCss,
     uploadUrlInputCss,
 } from "../../../story-helpers";

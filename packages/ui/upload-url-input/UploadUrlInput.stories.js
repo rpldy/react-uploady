@@ -1,12 +1,12 @@
 // @flow
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import UploadUrlInput from "./src";
+import { withKnobs } from "@storybook/addon-knobs";
 import Uploady from "@rpldy/uploady";
 import {
-    withKnobs,
     useStoryUploadySetup,
     StoryUploadProgress,
 } from "../../../story-helpers";
+import UploadUrlInput from "./src";
 
 export const Simple = () => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();

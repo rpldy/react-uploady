@@ -22,7 +22,8 @@
   },
   "devDependencies": {
     "@rpldy/uploady": "^0.1.6",
-    "flow-bin": "^0.119.1"
+    "@storybook/addon-knobs": "^5.3.18",
+    "flow-bin": "^0.121.0"
   },
   "peerDependencies": {
     "react": ">=16.8",

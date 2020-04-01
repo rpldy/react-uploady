@@ -1,12 +1,12 @@
 // @flow
-import React, { Component, useCallback, useContext, useEffect, useMemo } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import styled, { css } from "styled-components";
+import { withKnobs } from "@storybook/addon-knobs";
 import { DndProvider, useDrop } from "react-dnd";
 import Backend, { NativeTypes } from "react-dnd-html5-backend";
 import Uploady, { UploadyContext } from "@rpldy/uploady";
 import UploadDropZone from "./src";
 import {
-    withKnobs,
     useStoryUploadySetup,
     StoryUploadProgress,
 } from "../../../story-helpers";

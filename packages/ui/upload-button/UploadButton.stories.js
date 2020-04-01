@@ -1,6 +1,7 @@
 // @flow
 import React, { Component, useMemo, useState, useRef } from "react";
 import styled from "styled-components";
+import { withKnobs } from "@storybook/addon-knobs";
 import UploadButton, { asUploadButton } from "./src";
 import Uploady, {
     useFileInput,
@@ -11,7 +12,6 @@ import Uploady, {
     UPLOADER_EVENTS,
 } from "@rpldy/uploady";
 import {
-    withKnobs,
     useStoryUploadySetup,
     StoryUploadProgress,
     StoryAbortButton,

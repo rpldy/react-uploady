@@ -68,3 +68,11 @@ uploader + uploady + upload-button
 
 ## Examples
 
+Our [storybook](https://react-uploady-storybook.netlify.com/) has many examples but here are a few handy ones:
+
+> add examples here
+
+
+
+
+logo's wing thanks to <a href="https://www.vecteezy.com/free-vector/illustration">Illustration Vectors by Vecteezy</a>

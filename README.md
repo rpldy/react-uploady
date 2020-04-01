@@ -2,7 +2,9 @@
 [![codecov](https://codecov.io/gh/yoavniran/react-uploady/branch/master/graph/badge.svg)](https://codecov.io/gh/yoavniran/react-uploady)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
-# react-uploady
+<img src="https://res.cloudinary.com/yoav-cloud/image/upload/w_400/v22212321/icons/react-uploady-text-logo.png" width="300" alt='react-uploady Logo' aria-label='react-uploady' />
+
+#
 
 > "Modern file uploader components & hooks for React."
 
@@ -16,6 +18,11 @@ At its simplest configuration it is only: ~XXkb
 At its more sophisticated configuration it is still only ~XXkb
 
 XXXX Need animated gif here showing storybook XXXXX
+
+## Documentation
+
+__Storybook__ https://react-uploady-storybook.netlify.com/
+
 
 ## Installation
 

@@ -1,0 +1,3 @@
+[build]
+    publish = ".sb-static"
+    command = "yarn bsb"

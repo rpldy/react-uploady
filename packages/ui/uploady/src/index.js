@@ -32,7 +32,8 @@ export {
 } from "@rpldy/shared-ui";
 
 export {
-    UPLOADER_EVENTS
+    UPLOADER_EVENTS,
+    composeEnhancers,
 } from "@rpldy/uploader";
 
 export default Uploady;

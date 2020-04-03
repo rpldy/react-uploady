@@ -20,6 +20,7 @@
     "@rpldy/sender": "^0.1.6",
     "@rpldy/shared": "^0.1.6",
     "immer": "^5.1.0",
+    "invariant": "^2.2.4",
     "lodash": "^4.17.15"
   },
   "devDependencies": {

@@ -1,10 +1,12 @@
 // @flow
 import { cloneDeep, merge } from "lodash";
+import invariant from "invariant";
 import addLife from "@rpldy/life-events";
 import {
     BATCH_STATES,
     logger,
     triggerCancellable,
+    devFreeze,
 } from "@rpldy/shared";
 import createBatch from "./batch";
 import getProcessor from "./processor";
@@ -24,12 +26,17 @@ import type  {
 
 const EVENT_NAMES = Object.values(UPLOADER_EVENTS);
 
+const EXT_OUTSIDE_ENHANCER_TIME = "Uploady - uploader extensions can only be registered by enhancers",
+    EXT_ALREADY_EXISTS = "Uploady - uploader extension by this name [%s] already exists";
+
 let counter = 0;
 
 export default (options?: CreateOptions): UploaderType => {
     counter += 1;
+    let enhancerTime = false;
 
-    const pendingBatches = [];
+    const pendingBatches = [],
+        extensions = {};
 
     logger.debugLog("uploady.uploader: creating new instance", { options, counter });
 
@@ -96,6 +103,20 @@ export default (options?: CreateOptions): UploaderType => {
         return cloneDeep(uploaderOptions);
     };
 
+    const registerExtension = (name: string, methods: { [string]: any }) => {
+
+        invariant(
+            enhancerTime,
+            EXT_OUTSIDE_ENHANCER_TIME
+        );
+
+        invariant(
+            !extensions[name],
+            EXT_ALREADY_EXISTS,
+            name
+        );
+    };
+
     let { trigger, target: uploader } = addLife(
         {
             id: `uploader-${counter}`,
@@ -107,6 +128,7 @@ export default (options?: CreateOptions): UploaderType => {
             getOptions,
             getPending,
             clearPending,
+            registerExtension,
         },
         EVENT_NAMES,
         { canAddEvents: false, canRemoveEvents: false }
@@ -115,12 +137,16 @@ export default (options?: CreateOptions): UploaderType => {
     const cancellable = triggerCancellable(trigger);
 
     if (uploaderOptions.enhancer) {
+        enhancerTime = true;
         const enhanced = uploaderOptions.enhancer(uploader, trigger);
+        enhancerTime = false;
         //graceful handling for enhancer forgetting to return uploader
         uploader = enhanced || uploader;
     }
 
     const processor = getProcessor(trigger, uploaderOptions, uploader.id);
 
-    return uploader;
+    //TODO: only freeze in DEV
+
+    return devFreeze(uploader);
 };

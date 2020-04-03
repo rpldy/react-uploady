@@ -5,8 +5,8 @@ const fs = require("fs"),
 
 class DepListCommand extends ListCommand {
     initialize() {
-
         this.result = new Promise((resolve) => {
+            //replace the underlying List command result with objects (and not a string)
             getFilteredPackages(this.packageGraph, this.execOpts, this.options)
                 .then((packages) => {
                     resolve({
@@ -16,6 +16,7 @@ class DepListCommand extends ListCommand {
                 });
         });
 
+        //stop the underlying List command from executing
         return Promise.resolve(false);
     }
 }

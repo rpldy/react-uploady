@@ -107,7 +107,6 @@ const upgradeDep = async () => {
             } else {
                 console.log(chalk.red(`!!! no packages found that use ${exactDep.name}`));
             }
-
         } else {
             console.log(chalk.red(`${exactDep.full} cannot be found on npm!`));
         }

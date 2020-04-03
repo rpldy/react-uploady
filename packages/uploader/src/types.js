@@ -30,6 +30,7 @@ export type UploaderType = {
 	on: OnAndOnceMethod,
 	once: OnAndOnceMethod,
 	off: OffMethod,
+    extensions
 };
 
 export type UploaderEnhancer = (uploader: UploaderType, trigger: Trigger<mixed>) => UploaderType;

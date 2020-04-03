@@ -1,8 +1,7 @@
 // @flow
-import React, { Component, useMemo, useState, useRef } from "react";
+import React, { Component, useMemo, useState, useRef, useCallback } from "react";
 import styled from "styled-components";
 import { withKnobs } from "@storybook/addon-knobs";
-import UploadButton, { asUploadButton } from "./src";
 import Uploady, {
     useFileInput,
     UploadyContext,
@@ -10,7 +9,9 @@ import Uploady, {
     useBatchStartListener,
     useBatchFinishListener,
     UPLOADER_EVENTS,
+    composeEnhancers,
 } from "@rpldy/uploady";
+import retryEnhancer from "@rpldy/retry";
 import {
     useStoryUploadySetup,
     StoryUploadProgress,
@@ -18,6 +19,7 @@ import {
     uploadButtonCss,
     localDestination,
 } from "../../../story-helpers";
+import UploadButton, { asUploadButton } from "./src";
 
 // import readme from '../README.md';
 
@@ -283,6 +285,49 @@ export const WithCustomFileInputAndForm = () => {
         </Uploady>
     </section>
 };
+
+export const WithRetry = () => {
+    const storySetup = useStoryUploadySetup();
+    const { destination, multiple, grouped, groupSize } = storySetup;
+    let { enhancer } = storySetup;
+
+    enhancer = enhancer ?
+        composeEnhancers(retryEnhancer, enhancer) : retryEnhancer;
+
+    const [seenItems, setSeen] = useState([]); // useMemo(() => [],[]);
+
+    const listeners = useMemo(() => ({
+        //cancel all items seen for the first time
+        [UPLOADER_EVENTS.ITEM_START]: (item) => {
+            let ret;
+
+            if (!~seenItems.indexOf(item.id)) {
+                // seenItems.push(item.id);
+                setSeen(seenItems.concat(item.id));
+                ret = false;
+            }
+
+            return ret;
+        },
+    }), [seenItems]);
+
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        listeners={listeners}>
+
+        <UploadButton/>
+        <StoryUploadProgress/>
+
+        <ul>
+        {seenItems.map((id) =>
+            <li key={id}>cancelled: {id}</li>)}
+        </ul>
+    </Uploady>
+};
+
 
 export default {
     component: UploadButton,

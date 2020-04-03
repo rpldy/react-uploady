@@ -232,7 +232,7 @@ describe("uploader tests", () => {
                 return uploader;
             });
 
-            const uploader = getTestUploader({enhancer});
+            const uploader = getTestUploader({ enhancer });
 
             expect(uploader.test).toBe(true);
         });
@@ -242,9 +242,24 @@ describe("uploader tests", () => {
                 uploader.test = true;
             });
 
-            const uploader = getTestUploader({enhancer});
+            const uploader = getTestUploader({ enhancer });
 
             expect(uploader.test).toBe(true);
+        });
+    });
+
+    describe("registerExtension tests", () => {
+
+        it("should register extension successfully", () => {
+            throw new Error("imp");
+        });
+
+        it("should fail to register outside enhancer time", () => {
+            throw new Error("imp");
+        });
+
+        it("should fail to register existing name", () => {
+            throw new Error("imp");ß
         });
     });
 

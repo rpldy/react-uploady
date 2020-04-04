@@ -3,7 +3,7 @@ import { isFunction } from "lodash";
 import { mount } from "enzyme";
 
 export default (hook, props) => {
-    let wrapper, hookResult, hookParams;
+    let wrapper, hookResult, hookParams, error;
 
     if (isFunction(props)) {
         hookParams = props;
@@ -11,7 +11,13 @@ export default (hook, props) => {
     }
 
     const Comp = (props) => {
-        hookResult = hook(...(hookParams ? hookParams() : [props]));
+        try {
+            hookResult = hook(...(hookParams ? hookParams() : [props]));
+        }
+        catch (ex) {
+            error = ex;
+        }
+
         return null;
     };
 
@@ -22,5 +28,6 @@ export default (hook, props) => {
         wrapper,
         hookResult,
         getHookResult: () => hookResult,
+        error,
     };
 };

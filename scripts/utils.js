@@ -28,11 +28,11 @@ const getMatchingPackages = async (argv) => {
 };
 
 const isDevDep = (pkgJson, depName) => {
-    return !!~Object.keys(pkgJson.devDependencies).indexOf(depName);
+    return !!(pkgJson.devDependencies && pkgJson.devDependencies[depName]);
 };
 
 const isPeerDep = (pgkJson, depName) => {
-    return !!~Object.keys(pgkJson.peerDependencies).indexOf(depName);
+    return !!(pgkJson.peerDependencies && pgkJson.peerDependencies[depName]);
 };
 
 const getPackageName = (dir) => {

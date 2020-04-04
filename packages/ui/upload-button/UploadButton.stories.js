@@ -5,13 +5,14 @@ import { withKnobs } from "@storybook/addon-knobs";
 import Uploady, {
     useFileInput,
     UploadyContext,
+    useItemStartListener,
     useItemFinishListener,
     useBatchStartListener,
     useBatchFinishListener,
     UPLOADER_EVENTS,
     composeEnhancers,
 } from "@rpldy/uploady";
-import retryEnhancer from "@rpldy/retry";
+import retryEnhancer, { useRetry, useBatchRetry, useRetryListener } from "@rpldy/retry";
 import {
     useStoryUploadySetup,
     StoryUploadProgress,
@@ -286,6 +287,85 @@ export const WithCustomFileInputAndForm = () => {
     </section>
 };
 
+const RetryUi = () => {
+    const [seenItems, setItems] = useState({});
+    const [seenBatches, setBatches] = useState([]);
+    const retry = useRetry();
+    const retryBatch = useBatchRetry();
+
+    useItemStartListener((item) => {
+        let ret;
+
+        const itemIdentity : string = item.file ? item.file.name : item.url;
+
+        if (!seenItems[itemIdentity]) {
+            setItems((seen) => {
+                return { ...seen, [itemIdentity]: item.id };
+            });
+
+            setBatches((batches) => {
+                return !~batches.indexOf(item.batchId) ?
+                    batches.concat(item.batchId) :
+                    batches;
+            });
+
+            ret = false;
+        }
+
+        //cancel all items seen for the first time
+        return ret;
+    });
+
+    useRetryListener(({ items }) => {
+        console.log("##### RETRY EVENT - retrying items: ", items);
+    });
+
+    const onRetryAll = useCallback(() => {
+        retry();
+    }, [retry]);
+
+    const onRetryItem = useCallback((e) => {
+        const itemId = e.target.dataset["id"];
+        retry(itemId);
+    }, [retry]);
+
+    const onRetryBatch = useCallback((e) => {
+        const batchId = e.target.dataset["id"];
+        retryBatch(batchId);
+    }, [retryBatch]);
+
+    return <>
+        <UploadButton/>
+        <br/>
+        <button onClick={onRetryAll}>Retry All</button>
+
+        <section>Failed Batches:
+            <ul>
+                {seenBatches.map((bId) =>
+                    <li style={{ cursor: "pointer" }}
+                        key={bId}
+                        data-id={bId}
+                        onClick={onRetryBatch}>
+                        {bId}
+                    </li>)}
+            </ul>
+        </section>
+
+        <section>Failed Items:
+            <ul>
+                {Object.keys(seenItems).map((name) =>
+                    <li style={{ cursor: "pointer" }}
+                        data-id={seenItems[name]} key={seenItems[name]}
+                        onClick={onRetryItem}>
+                        cancelled: ({seenItems[name]}) {name}
+                    </li>)}
+            </ul>
+        </section>
+        <br/>
+        <StoryUploadProgress/>
+    </>
+};
+
 export const WithRetry = () => {
     const storySetup = useStoryUploadySetup();
     const { destination, multiple, grouped, groupSize } = storySetup;
@@ -294,40 +374,17 @@ export const WithRetry = () => {
     enhancer = enhancer ?
         composeEnhancers(retryEnhancer, enhancer) : retryEnhancer;
 
-    const [seenItems, setSeen] = useState([]); // useMemo(() => [],[]);
-
-    const listeners = useMemo(() => ({
-        //cancel all items seen for the first time
-        [UPLOADER_EVENTS.ITEM_START]: (item) => {
-            let ret;
-
-            if (!~seenItems.indexOf(item.id)) {
-                // seenItems.push(item.id);
-                setSeen(seenItems.concat(item.id));
-                ret = false;
-            }
-
-            return ret;
-        },
-    }), [seenItems]);
-
     return <Uploady
         debug
         multiple={multiple}
         destination={destination}
         enhancer={enhancer}
-        listeners={listeners}>
+        grouped={grouped}
+        maxGroupSize={groupSize}>
 
-        <UploadButton/>
-        <StoryUploadProgress/>
-
-        <ul>
-        {seenItems.map((id) =>
-            <li key={id}>cancelled: {id}</li>)}
-        </ul>
+        <RetryUi />
     </Uploady>
 };
-
 
 export default {
     component: UploadButton,

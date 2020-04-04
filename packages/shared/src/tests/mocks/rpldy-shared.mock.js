@@ -12,6 +12,8 @@ const createBatchItem = jest.fn();
 
 const utils = jest.genMockFromModule("../../utils");
 
+utils.devFreeze.mockImplementation((obj) => obj);
+
 const sharedMock = {
 	FILE_STATES,
 	BATCH_STATES,

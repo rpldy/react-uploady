@@ -27,7 +27,7 @@ const isSamePropInArrays = (arr1: Object[], arr2: Object[], prop: string | strin
 	return !diff;
 };
 
-const devFreeze = (obj) => {
+const devFreeze = (obj: Object) => {
     return process.env.NODE_ENV === "production" ? obj : Object.freeze(obj);
 };
 

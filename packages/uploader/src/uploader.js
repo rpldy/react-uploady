@@ -103,8 +103,7 @@ export default (options?: CreateOptions): UploaderType => {
         return cloneDeep(uploaderOptions);
     };
 
-    const registerExtension = (name: string, methods: { [string]: any }) => {
-
+    const registerExtension = (name: any, methods: { [string]: any }) => {
         invariant(
             enhancerTime,
             EXT_OUTSIDE_ENHANCER_TIME
@@ -115,6 +114,13 @@ export default (options?: CreateOptions): UploaderType => {
             EXT_ALREADY_EXISTS,
             name
         );
+
+        logger.debugLog(`uploady.uploader: registering extension: ${name.toString()}`, methods);
+        extensions[name] = methods;
+    };
+
+    const getExtension = (name: any): ?Object => {
+        return extensions[name];
     };
 
     let { trigger, target: uploader } = addLife(
@@ -129,6 +135,7 @@ export default (options?: CreateOptions): UploaderType => {
             getPending,
             clearPending,
             registerExtension,
+            getExtension,
         },
         EVENT_NAMES,
         { canAddEvents: false, canRemoveEvents: false }
@@ -145,8 +152,6 @@ export default (options?: CreateOptions): UploaderType => {
     }
 
     const processor = getProcessor(trigger, uploaderOptions, uploader.id);
-
-    //TODO: only freeze in DEV
 
     return devFreeze(uploader);
 };

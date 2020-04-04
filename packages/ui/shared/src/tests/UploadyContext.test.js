@@ -89,6 +89,12 @@ describe("UploadyContext tests", () => {
         expect(getTestContext().getOptions()).toEqual(options);
     });
 
+    it("should return registered extension", () => {
+        uploader.getExtension.mockReturnValueOnce("test");
+        expect(getTestContext().getExtension("ext")).toBe("test");
+        expect(uploader.getExtension).toHaveBeenCalledWith("ext");
+    });
+
     it("should cope with no internal input ref and setExternalFileInput", () => {
         const context = getTestContext(false);
 

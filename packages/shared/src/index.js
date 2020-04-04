@@ -11,7 +11,6 @@ export {
     FILE_STATES,
 
     logger,
-    // i
 
     triggerCancellable,
     triggerUpdater,

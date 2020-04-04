@@ -1,10 +1,10 @@
 // @flow
 
-import { BatchItem } from "@rpldy/shared";
+import type { BatchItem } from "@rpldy/shared";
 
 export type State = {
     batchIdsMap: {
-        [string]: string
+        [string]: string[]
     },
     failed: {
         [string]: BatchItem
@@ -12,7 +12,7 @@ export type State = {
 };
 
 export type RetryState = {
-    updateState: (State) => void,
+    updateState: ((State) => void) => void,
     getState: () => State,
 
 };

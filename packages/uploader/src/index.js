@@ -11,6 +11,10 @@ export type {
     UploaderEnhancer,
 } from "./types";
 
+export type {
+    TriggerMethod
+} from "@rpldy/life-events";
+
 export {
     UPLOADER_EVENTS,
     DEFAULT_OPTIONS,

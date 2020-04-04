@@ -27,6 +27,11 @@ export {
 } from "./eventListenerHooks";
 
 export {
+    generateUploaderEventHook,
+    generateUploaderEventHookWithState
+} from "./utils";
+
+export {
     UploadyContext,
     createContextApi,
     useUploadOptions,

@@ -45,7 +45,7 @@ const StoryUploadProgress = () => {
                                           strokeColor={lastProgress === 100 ? "#00a626" : "#2db7f5"}
                                           percent={lastProgress}
                     />
-                    <p>{name}</p>
+                    <p>{id} : {name}</p>
                 </div>;
             })}
     </div>;

@@ -11,6 +11,8 @@ const uploader = {
     update: jest.fn(),
     abort: jest.fn(),
     abortBatch: jest.fn(),
+    registerExtension: jest.fn(),
+    getExtension: jest.fn(),
 };
 
 const createUploader = jest.fn(() => uploader);

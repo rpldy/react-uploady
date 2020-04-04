@@ -5,8 +5,8 @@ const fs = require("fs"),
 
 class DepListCommand extends ListCommand {
     initialize() {
-
         this.result = new Promise((resolve) => {
+            //replace the underlying List command result with objects (and not a string)
             getFilteredPackages(this.packageGraph, this.execOpts, this.options)
                 .then((packages) => {
                     resolve({
@@ -16,6 +16,7 @@ class DepListCommand extends ListCommand {
                 });
         });
 
+        //stop the underlying List command from executing
         return Promise.resolve(false);
     }
 }
@@ -27,11 +28,11 @@ const getMatchingPackages = async (argv) => {
 };
 
 const isDevDep = (pkgJson, depName) => {
-    return !!~Object.keys(pkgJson.devDependencies).indexOf(depName);
+    return !!(pkgJson.devDependencies && pkgJson.devDependencies[depName]);
 };
 
 const isPeerDep = (pgkJson, depName) => {
-    return !!~Object.keys(pgkJson.peerDependencies).indexOf(depName);
+    return !!(pgkJson.peerDependencies && pgkJson.peerDependencies[depName]);
 };
 
 const getPackageName = (dir) => {

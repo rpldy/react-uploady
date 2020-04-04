@@ -7,6 +7,8 @@ const yargs = require("yargs"),
 
 const argv = yargs.argv;
 
+//TODO - ONLY SUPPORTS ONE DEP AT A TIME...
+
 const options = {
     dep: argv._[0],
     latest: argv.latest,
@@ -42,18 +44,19 @@ const getDependencyWithVersion = () => {
 
 const doPackageUpgrade = (pkg, exactDep, graph) => {
     const graphEntry = graph.get(pkg.name),
-        pkgDep = graphEntry.externalDependencies.get(exactDep.name);
+        pkgDep = graphEntry.externalDependencies.get(exactDep.name),
+        pkgJson = graphEntry.pkg,
+        //lerna package graph doesnt include peer deps
+        isPeer = isPeerDep(pkgJson, exactDep.name);
 
     let result;
 
-    if (pkgDep) {
-        console.log(chalk.white(`>>>> found package [${pkg.name}] with dependency: ${pkgDep.raw} - setting version to: ${exactDep.upgradeVersion}`));
-
-        const pkgJson = graphEntry.pkg;
+    if (pkgDep || isPeer) {
+        console.log(chalk.white(`>>>> found package [${pkg.name}] with dependency: ${isPeer ? pkgJson.peerDependencies[exactDep.name] : pkgDep.raw} - setting version to: ${exactDep.upgradeVersion}`));
 
         const depsList = isDevDep(pkgJson, exactDep.name) ?
             pkgJson.devDependencies :
-            isPeerDep(pkgJson, exactDep.name) ?
+            isPeer ?
                 pkgJson.peerDependencies :
                 pkgJson.dependencies;
 
@@ -107,7 +110,6 @@ const upgradeDep = async () => {
             } else {
                 console.log(chalk.red(`!!! no packages found that use ${exactDep.name}`));
             }
-
         } else {
             console.log(chalk.red(`${exactDep.full} cannot be found on npm!`));
         }

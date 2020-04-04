@@ -18,4 +18,5 @@ export type UploadyContextType = {
 	off: OffMethod,
 	abort: (id?: string) => void,
 	abortBatch: (id: string) => void,
+    getExtension: (any) => ?Object,
 };

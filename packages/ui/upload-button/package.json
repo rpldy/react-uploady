@@ -19,14 +19,15 @@
     "@rpldy/shared-ui": "^0.1.6"
   },
   "devDependencies": {
+    "@rpldy/retry": "^0.1.6",
     "@rpldy/uploady": "^0.1.6",
     "@storybook/addon-knobs": "^5.3.18",
     "flow-bin": "^0.121.0",
     "styled-components": "^4.4.1"
   },
   "peerDependencies": {
-    "react": ">=16.8",
-    "react-dom": ">=16.8"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
   "publishConfig": {
     "access": "public"

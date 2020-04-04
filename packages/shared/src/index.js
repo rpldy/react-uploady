@@ -2,45 +2,48 @@
 
 import { BATCH_STATES, FILE_STATES } from "./consts";
 import * as logger from "./logger";
-import { isFunction, isSamePropInArrays } from "./utils";
 import triggerCancellable from "./triggerCancellable";
 import triggerUpdater from "./triggerUpdater";
 import createBatchItem from "./batchItem";
 
 export {
-	BATCH_STATES,
-	FILE_STATES,
+    BATCH_STATES,
+    FILE_STATES,
 
-	logger,
-	isFunction,
-	isSamePropInArrays,
+    logger,
 
-	triggerCancellable,
-	triggerUpdater,
-	createBatchItem,
+    triggerCancellable,
+    triggerUpdater,
+    createBatchItem,
 };
 
+export {
+    isFunction,
+    isSamePropInArrays,
+    devFreeze,
+} from "./utils";
+
 export type {
-	UploadOptions,
-	CreateOptions,
-	Destination,
-	UploadInfo,
-	ProgressInfo,
-	BatchState,
-	FileState,
-	NonMaybeTypeFunc,
-	Batch,
-	BatchItem,
-	SendMethod,
-	SendResult,
-	UploadData,
-	OnProgress,
-	SendOptions,
-	SenderProgressEvent,
-	Trigger,
-	Cancellable,
-	Updater,
-	FileLike,
+    UploadOptions,
+    CreateOptions,
+    Destination,
+    UploadInfo,
+    ProgressInfo,
+    BatchState,
+    FileState,
+    NonMaybeTypeFunc,
+    Batch,
+    BatchItem,
+    SendMethod,
+    SendResult,
+    UploadData,
+    OnProgress,
+    SendOptions,
+    SenderProgressEvent,
+    Trigger,
+    Cancellable,
+    Updater,
+    FileLike,
     GetExact,
     FileFilterMethod,
 } from "./types";

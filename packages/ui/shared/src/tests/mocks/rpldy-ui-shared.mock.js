@@ -6,6 +6,7 @@ const UploadyContext = {
     setOptions: jest.fn(),
     setExternalFileInput: jest.fn(),
     upload: jest.fn(),
+    getExtension: jest.fn(),
     Provider: jest.fn(({ children }) => {
         return <div id="uploady-context-provider">{children}</div>
     }),

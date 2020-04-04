@@ -73,6 +73,10 @@ export const createContextApi =
             return uploader.getOptions();
         };
 
+        const getExtension = (name: string | Symbol): ?Object => {
+            return uploader.getExtension(name);
+        };
+
         const abort = (itemId?: string) => {
             uploader.abort(itemId);
         };
@@ -102,6 +106,7 @@ export const createContextApi =
             upload,
             setOptions,
             getOptions,
+            getExtension,
             abort,
             abortBatch,
             on,

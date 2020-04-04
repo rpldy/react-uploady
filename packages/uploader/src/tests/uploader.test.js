@@ -21,10 +21,10 @@ describe("uploader tests", () => {
         );
     });
 
-    const getTestUploader = (options, enhancer) => {
+    const getTestUploader = (options) => {
         options = {
             destination: { url: "aaa" },
-            ...options
+            ...options,
         };
 
         mockCreateProcessor.mockReturnValueOnce({
@@ -33,7 +33,7 @@ describe("uploader tests", () => {
             abortBatch: mockAbortBatch,
         });
 
-        return createUploader(options, enhancer);
+        return createUploader(options);
     };
 
     describe("getOptions tests", () => {
@@ -232,7 +232,7 @@ describe("uploader tests", () => {
                 return uploader;
             });
 
-            const uploader = getTestUploader({enhancer});
+            const uploader = getTestUploader({ enhancer });
 
             expect(uploader.test).toBe(true);
         });
@@ -242,9 +242,45 @@ describe("uploader tests", () => {
                 uploader.test = true;
             });
 
-            const uploader = getTestUploader({enhancer});
+            const uploader = getTestUploader({ enhancer });
 
             expect(uploader.test).toBe(true);
+        });
+    });
+
+    describe("registerExtension tests", () => {
+
+        it("should register extension successfully", () => {
+            const methods = { foo: "bar" };
+
+            const uploader = getTestUploader({
+                enhancer: (uploader) => {
+                    uploader.registerExtension("ext", methods);
+                    return uploader;
+                }
+            });
+
+            const extMethods = uploader.getExtension("ext");
+            expect(extMethods).toEqual(methods);
+        });
+
+        it("should fail to register outside enhancer time", () => {
+            const uploader = getTestUploader();
+
+            expect(() => {
+                uploader.registerExtension("ext");
+            }).toThrow("Uploady - uploader extensions can only be registered by enhancers")
+        });
+
+        it("should fail to register existing name", () => {
+            expect(() => {
+                getTestUploader({
+                    enhancer: (uploader) => {
+                        uploader.registerExtension("ext", {});
+                        uploader.registerExtension("ext", {});
+                    }
+                });
+            }).toThrow("Uploady - uploader extension by this name [ext] already exists");
         });
     });
 

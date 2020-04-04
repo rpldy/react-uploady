@@ -70,7 +70,7 @@ const getPublicMethods = () => Object.entries(publicMethods)
 		return res;
 	}, {});
 
-//using string keys here because can't rely on function names to stay after build
+//using string keys here because can't rely on function names to stay after (babel/webpack) build
 const apiMethods = {
     "trigger": trigger,
     "addEvent": addEvent,

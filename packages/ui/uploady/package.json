@@ -24,8 +24,8 @@
   },
   "peerDependencies": {
     "@rpldy/life-events": "^0.1.4",
-    "react": ">=16.8",
-    "react-dom": ">=16.8"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
   "devDependencies": {
     "flow-bin": "^0.121.0"

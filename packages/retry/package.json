@@ -1,6 +1,6 @@
 {
   "version": "0.1.6",
-  "name": "@rpldy/upload-url-input",
+  "name": "@rpldy/retry",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
   "main": "lib/index.js",
@@ -9,25 +9,25 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/yoavniran/react-uploady.git",
-    "directory": "packages/ui/upload-url-input"
+    "directory": "packages/retry"
   },
   "scripts": {
-    "build": "node ../../../scripts/build.js",
+    "build": "node ../../scripts/build.js",
     "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
   },
   "dependencies": {
     "@rpldy/shared": "^0.1.6",
     "@rpldy/shared-ui": "^0.1.6",
+    "@rpldy/uploader": "^0.1.6",
+    "immer": "^6.0.3",
     "invariant": "^2.2.4"
-  },
-  "devDependencies": {
-    "@rpldy/uploady": "^0.1.6",
-    "@storybook/addon-knobs": "^5.3.18",
-    "flow-bin": "^0.121.0"
   },
   "peerDependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "flow-bin": "^0.121.0"
   },
   "publishConfig": {
     "access": "public"

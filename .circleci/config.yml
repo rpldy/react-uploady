@@ -31,7 +31,6 @@ jobs:
           steps:
             - attach_workspace:
                 at: .
-                  #/tmp/build
             - setup:
             - run:
                 name: Test Code (lint, flow, jest)
@@ -46,7 +45,6 @@ jobs:
                 path: .jest-coverage
             - persist_to_workspace:
                 root: .
-                #*workspace_root
                 paths:
                   - node_modules
                   - .jest-coverage
@@ -61,13 +59,9 @@ jobs:
           steps:
             - attach_workspace:
                 at: .
-                  #/tmp/build
             - run:
                 name: Upload Coverage
                 command: yarn coverage
-#            - codecov/upload:
-#              file: .jest-coverage/coverage-final.json
-#              token: $CODECOV_TOKEN
             - store_artifacts:
                 path: .jest-coverage
 

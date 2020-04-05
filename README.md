@@ -62,13 +62,16 @@ After that, you can add additional packages as needed. See below for more detail
 
 **UI Packages**
 * [upload-button]() - 
-* [preview]() - 
+* [upload-preview]() - 
 * [upload-url-input]() -
 * [upload-drop-zone]() - 
 
 **Uploaders**
-* [chunked-uploader]() - 
+* [chunked-uploady]() - 
 * tus-uploader - TODO 
+
+**Extra**
+* [retry]() -
 
 **Shared Packages**
 

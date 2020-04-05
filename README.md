@@ -11,9 +11,9 @@
 
 With react-uploady you can achieve file uploading with just a few lines of code.
 
-The philosophy behind this library is that it should be as simple as possible to use yet customizable at every point. 
+The philosophy behind this library is that it should be as simple as possible to use, yet customizable at every point. 
 
-react-uploady comes with many components and features yet you get to choose which ones you need and only install the dependencies required.
+react-uploady comes with many components and features. You get to choose which ones you need and only install the dependencies required.
 
 At its simplest configuration it is only: ~XXkb
 At its more sophisticated configuration it is still only ~XXkb
@@ -22,10 +22,35 @@ XXXX Need animated gif here showing storybook XXXXX
 
 ## Documentation
 
-__Storybook__ https://react-uploady-storybook.netlify.com/
+Our __[Storybook](https://react-uploady-storybook.netlify.com/)__ has many examples, both simple and advanced.
+
+Checkout our __[Guides](https://github.com/yoavniran/react-uploady/blob/master/guides/)__ section for useful information
 
 
 ## Installation
+
+react-uploady is a mono-repo and such provides multiple packages with different functionality.
+
+For React appliactions, at the very least, you will need the Uploady provider:
+
+> yarn add @rpldy/uploady
+
+Or
+
+> npm i @rpldy/uploady
+
+If you wish to use the uploading mechanism (no UI), at the very least, you will need the Uploader:
+
+> yarn add @rpldy/uploader
+
+Or
+
+> npm i @rpldy/uploader
+
+
+After that, you can add additional packages as needed. See below for more details.
+
+
 
 
 ## Packages
@@ -43,12 +68,12 @@ __Storybook__ https://react-uploady-storybook.netlify.com/
 
 **Uploaders**
 * [chunked-uploader]() - 
-* [tus-uploader]() - 
+* tus-uploader - TODO 
 
 **Shared Packages**
 
-* [shared]() - set of utils+types all packages require  
-* [shared-ui]() - set of utils+types all UI packages require 
+* [shared]() - set of utils+types that all packages require  
+* [shared-ui]() - set of utils+types that all UI packages require 
 * [live-events]() - provides cancellable pub/sub "events" 
 
 

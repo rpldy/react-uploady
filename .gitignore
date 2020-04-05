@@ -12,9 +12,9 @@ stats.json
 dist
 output
 build
+bundle/
 .history
 storybook-static
-.sb-static/
 npm-debug.log
 lerna-debug.log
 yarn-error.log

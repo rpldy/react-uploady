@@ -48,6 +48,7 @@ jobs:
                 root: .
                 #*workspace_root
                 paths:
+                  - node_modules
                   - .jest-coverage
 
   coverage:
@@ -55,6 +56,7 @@ jobs:
     executor:
       name: node/default
     steps:
+      - checkout
       - node/with-cache:
           steps:
             - attach_workspace:

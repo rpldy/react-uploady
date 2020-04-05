@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@1.1.6
-  codecov: codecov/codecov@1.0.5
+  #codecov: codecov/codecov@1.0.5
 
 references:
     workspace_root: &workspace_root
@@ -60,9 +60,12 @@ jobs:
             - attach_workspace:
                 at: .
                   #/tmp/build
-            - codecov/upload:
-              file: .jest-coverage/coverage-final.json
-              token: $CODECOV_TOKEN
+            - run:
+                name: Upload Coverage
+                command: yarn coverage
+#            - codecov/upload:
+#              file: .jest-coverage/coverage-final.json
+#              token: $CODECOV_TOKEN
             - store_artifacts:
                 path: .jest-coverage
 

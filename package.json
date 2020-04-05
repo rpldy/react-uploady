@@ -4,6 +4,7 @@
   "scripts": {
     "upgradep": "node scripts/upgradeDep.js",
     "bootstrap": "lerna bootstrap --use-workspaces",
+    "coverage": "codecov",
     "build": "lerna exec --stream -- FORCE_COLOR=1 NODE_ENV=production yarn build;",
     "clean": "lerna exec --stream -- rimraf lib",
     "release": "yarn bootstrap; yarn clean; yarn build; yarn flow:copy",
@@ -56,6 +57,7 @@
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-module-resolver": "^4.0.0",
     "chalk": "^3.0.0",
+    "codecov": "^3.6.5",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "eslint": "^6.6.0",

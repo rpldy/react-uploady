@@ -1,6 +1,6 @@
 // @flow
 import React, { useRef, useContext, useCallback, forwardRef } from "react";
-import invariant from "invariant";
+import { invariant } from "@rpldy/shared";
 import { UploadyContext, assertContext, useWithForwardRef } from "@rpldy/shared-ui";
 import type { UploadUrlInputProps } from "./types";
 import type { UploadOptions } from "@rpldy/shared";

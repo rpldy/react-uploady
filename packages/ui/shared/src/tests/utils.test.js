@@ -1,7 +1,8 @@
 import assertContext from "../assertContext";
 import {
     generateUploaderEventHook,
-    generateUploaderEventHookWithState
+    generateUploaderEventHookWithState,
+    logWarning,
 } from "../utils";
 
 jest.mock("../assertContext", () => jest.fn());
@@ -77,6 +78,26 @@ describe("ui-shared utils tests", () => {
             expect(stateCalculator).toHaveBeenCalledWith(p1, p2);
 
             wrapper.unmount();
+        });
+
+    });
+
+    describe("logWarning test", () => {
+
+        it.each([
+
+        ])("should log for falsy values : %s", (val) =>{
+
+        });
+
+        it.each([
+
+        ])("shouldn't log for truthy values : %s", (val) =>{
+
+        });
+
+        it("should'nt log in production", () => {
+
         });
 
     });

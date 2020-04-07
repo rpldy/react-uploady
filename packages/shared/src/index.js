@@ -1,5 +1,6 @@
 // @flow
 
+import invariant from "invariant";
 import { BATCH_STATES, FILE_STATES } from "./consts";
 import * as logger from "./logger";
 import triggerCancellable from "./triggerCancellable";
@@ -9,6 +10,9 @@ import createBatchItem from "./batchItem";
 export {
     BATCH_STATES,
     FILE_STATES,
+
+    //one source for invariant to all other packages
+    invariant,
 
     logger,
 
@@ -21,6 +25,8 @@ export {
     isFunction,
     isSamePropInArrays,
     devFreeze,
+    merge,
+    clone,
 } from "./utils";
 
 export type {

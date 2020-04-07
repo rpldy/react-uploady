@@ -4,7 +4,7 @@ import { FILE_STATES } from "../consts";
 describe("create batchItem tests", () => {
 
 	it("should create batch item with file", () => {
-		const file = {};
+		const file = {name: "test"};
 
 		const fileItem = createItem(file, "b1");
 
@@ -14,7 +14,7 @@ describe("create batchItem tests", () => {
 		expect(fileItem.id).toBeDefined();
 		expect(fileItem.state).toBe(FILE_STATES.ADDED);
 
-		const fileItem2 = createItem({}, "b1");
+		const fileItem2 = createItem({name: "test2"}, "b1");
 		expect(fileItem2.id).not.toBe(fileItem.id);
 	});
 

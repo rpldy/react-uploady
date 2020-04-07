@@ -53,7 +53,7 @@ module.exports = {
 		"no-process-exit": 0,
 		"no-underscore-dangle": 0,
 		"no-loop-func": 0,
-		"no-console": 1,
+		"no-console": 2,
 		"key-spacing": 0,
 		"no-mixed-spaces-and-tabs": 1,
 		"semi": [

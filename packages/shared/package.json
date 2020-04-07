@@ -19,6 +19,7 @@
     "flow-bin": "^0.121.0"
   },
   "dependencies": {
+    "invariant": "^2.2.4",
     "lodash": "^4.17.15"
   },
   "publishConfig": {

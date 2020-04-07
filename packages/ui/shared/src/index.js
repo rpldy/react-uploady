@@ -28,7 +28,8 @@ export {
 
 export {
     generateUploaderEventHook,
-    generateUploaderEventHookWithState
+    generateUploaderEventHookWithState,
+    logWarning,
 } from "./utils";
 
 export {

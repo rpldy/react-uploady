@@ -21,10 +21,9 @@
   "dependencies": {
     "@rpldy/sender": "^0.1.6",
     "@rpldy/shared": "^0.1.6",
+    "@rpldy/shared-ui": "^0.1.6",
     "@rpldy/uploader": "^0.1.6",
-    "@rpldy/uploady": "^0.1.6",
-    "lodash": "^4.17.15",
-    "warning": "^4.0.3"
+    "@rpldy/uploady": "^0.1.6"
   },
   "devDependencies": {
     "@rpldy/upload-button": "^0.1.6",

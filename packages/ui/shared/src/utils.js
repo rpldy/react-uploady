@@ -40,7 +40,15 @@ const generateUploaderEventHook = (event: string) =>
 	(fn: Callback) =>
 		useEventEffect(event, fn);
 
+const logWarning = (condition: ?any, msg: string) => {
+    if (process.env.NODE_ENV !== "production" && !condition) {
+        // eslint-disable-next-line no-console
+        console.warn(msg);
+    }
+};
+
 export {
 	generateUploaderEventHook,
 	generateUploaderEventHookWithState,
+    logWarning,
 };

@@ -17,9 +17,7 @@
     },
     "dependencies": {
         "@rpldy/shared": "^0.1.6",
-        "@rpldy/uploader": "^0.1.6",
-        "invariant": "^2.2.4",
-        "lodash": "^4.17.15"
+        "@rpldy/uploader": "^0.1.6"
     },
     "devDependencies": {
         "flow-bin": "^0.121.0"

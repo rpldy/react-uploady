@@ -19,8 +19,7 @@
     "@rpldy/shared": "^0.1.6",
     "@rpldy/shared-ui": "^0.1.6",
     "@rpldy/uploader": "^0.1.6",
-    "immer": "^6.0.3",
-    "invariant": "^2.2.4"
+    "immer": "^6.0.3"
   },
   "peerDependencies": {
     "react": "^16.13.1",

@@ -1,12 +1,13 @@
 // @flow
-import { cloneDeep, merge } from "lodash";
-import invariant from "invariant";
 import addLife from "@rpldy/life-events";
 import {
     BATCH_STATES,
+    invariant,
     logger,
     triggerCancellable,
     devFreeze,
+    merge,
+    clone,
 } from "@rpldy/shared";
 import createBatch from "./batch";
 import getProcessor from "./processor";
@@ -100,7 +101,7 @@ export default (options?: CreateOptions): UploaderType => {
     };
 
     const getOptions = (): CreateOptions => {
-        return cloneDeep(uploaderOptions);
+        return clone(uploaderOptions);
     };
 
     const registerExtension = (name: any, methods: { [string]: any }) => {

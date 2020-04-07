@@ -1,5 +1,5 @@
 // @flow
-import { merge } from "lodash";
+import { merge } from "@rpldy/shared";
 import { DEFAULT_OPTIONS } from "./defaults";
 
 import type { FileLike } from "@rpldy/shared";

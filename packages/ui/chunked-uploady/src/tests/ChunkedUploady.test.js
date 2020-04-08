@@ -2,27 +2,28 @@ import React from "react";
 
 describe("ChunkedUploady tests", () => {
 
-	let Uploady, ChunkedUploady;
+	let Uploady, ChunkedUploady, logWarning;
 	const chunkedSend = () => {
 	};
 
-	const mockWarning = jest.fn();
 	const mockGetChunkedSend = jest.fn(() => chunkedSend);
 
 	afterEach(() => {
 		clearJestMocks(
 			mockGetChunkedSend,
-			mockWarning,
-		)
+            logWarning,
+		);
 	});
 
 	const doTest = (testFn, mockChunkSupport = true) => {
 		jest.isolateModules(() => {
-			jest.mock("warning", () => mockWarning);
+
 			jest.mock("../chunkedSender", () => mockGetChunkedSend);
 			jest.mock("../utils", () => ({
 				CHUNKING_SUPPORT: mockChunkSupport
 			}));
+
+            logWarning = require("@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock").logWarning;
 
 			Uploady = require("@rpldy/uploady/src/tests/mocks/rpldy-uploady.mock").default;
 
@@ -63,7 +64,7 @@ describe("ChunkedUploady tests", () => {
 			expect(update.mock.calls[0][0].send).toBe(chunkedSend);
 			expect(props.enhancer).toHaveBeenCalled();
 
-			expect(mockWarning).toHaveBeenCalledWith(true, expect.any(String));
+			expect(logWarning).toHaveBeenCalledWith(true, expect.any(String));
 			expect(mockGetChunkedSend).toHaveBeenCalledWith(chunkedProps);
 		});
 	});
@@ -102,7 +103,7 @@ describe("ChunkedUploady tests", () => {
 		doTest(() => {
 			shallow(<ChunkedUploady/>);
 
-			expect(mockWarning).toHaveBeenCalledWith(false, expect.any(String));
+			expect(logWarning).toHaveBeenCalledWith(false, expect.any(String));
 			expect(mockGetChunkedSend).not.toHaveBeenCalled();
 
 		}, false);

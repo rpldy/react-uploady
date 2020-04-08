@@ -18,12 +18,12 @@
   "dependencies": {
     "@rpldy/shared": "^0.1.6",
     "@rpldy/shared-ui": "^0.1.6",
-    "@rpldy/uploader": "^0.1.6",
-    "immer": "^6.0.3"
+    "@rpldy/uploader": "^0.1.6"
   },
   "peerDependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react": ">=16.8.x",
+    "react-dom": ">=16.8.x",
+    "immer": "^6.0.3"
   },
   "devDependencies": {
     "flow-bin": "^0.121.0"

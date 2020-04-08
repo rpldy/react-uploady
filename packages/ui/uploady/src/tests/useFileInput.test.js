@@ -24,7 +24,7 @@ describe("useFileInput tests", () => {
                        ref={withoutRef ? undefined : inputRef}/>
             </form> :
             <input type="file" name="testFile" style={{ display: "none" }}
-                   ref={withoutRef ? undefined : inputRef}/>
+                   ref={withoutRef ? undefined : inputRef}/>;
     };
 
     const renderTestComp = (options) => {

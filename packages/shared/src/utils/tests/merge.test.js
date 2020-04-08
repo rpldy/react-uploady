@@ -2,6 +2,14 @@ import merge from "../merge";
 
 describe("merge (deep) tests", () => {
 
+    it("should return target if not sources", () => {
+
+        const a = {foo: "bar"};
+        const result = merge(a);
+
+        expect(result).toBe(a);
+    });
+
     it("should merge two simple-flat objects", () => {
 
         const a = {
@@ -185,6 +193,8 @@ describe("merge (deep) tests", () => {
             a: "b",
             c: "d"
         });
+
+        expect(a["__proto__"].b).toBeUndefined();
 
         expect(a.b).toBeUndefined();
     });

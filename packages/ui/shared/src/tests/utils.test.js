@@ -83,21 +83,50 @@ describe("ui-shared utils tests", () => {
     });
 
     describe("logWarning test", () => {
+        let mockWarn, env;
 
-        it.each([
+        beforeAll(() => {
+            mockWarn = jest.spyOn(console, "warn");
+            mockWarn.mockImplementation(()=>{});
+            env = process.env.NODE_ENV;
+        });
 
-        ])("should log for falsy values : %s", (val) =>{
+        afterAll(() => {
+            mockWarn.mockRestore();
+        });
 
+        beforeEach(() => {
+            clearJestMocks(mockWarn);
+        });
+
+        afterEach(() => {
+            process.env.NODE_ENV = env;
         });
 
         it.each([
+            false,
+            null,
+            undefined,
+            0,
+        ])("should log for falsy values : %s", (val) => {
+            logWarning(val, "warning");
+            expect(mockWarn).toHaveBeenCalledWith("warning");
+        });
 
-        ])("shouldn't log for truthy values : %s", (val) =>{
-
+        it.each([
+            true,
+            {},
+            "test",
+            1,
+        ])("shouldn't log for truthy values : %s", (val) => {
+            logWarning(val, "warning");
+            expect(mockWarn).not.toHaveBeenCalled();
         });
 
         it("should'nt log in production", () => {
-
+            process.env.NODE_ENV = "production";
+            logWarning(null, "warning");
+            expect(mockWarn).not.toHaveBeenCalled();
         });
 
     });

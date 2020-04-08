@@ -81,7 +81,6 @@ describe("uploader tests", () => {
     describe("updateOptions tests", () => {
 
         it("should update options", () => {
-            // const uploader = createUploader({ destination: { url: "aaa" } });
             const uploader = getTestUploader();
 
             expect(uploader.getOptions().autoUpload).toBe(true);

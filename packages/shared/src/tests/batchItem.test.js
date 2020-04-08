@@ -9,7 +9,7 @@ describe("create batchItem tests", () => {
 		const fileItem = createItem(file, "b1");
 
 		expect(fileItem.file).toBe(file);
-		expect(fileItem.url).toBeUndefined()
+		expect(fileItem.url).toBeUndefined();
 		expect(fileItem.batchId).toBe("b1");
 		expect(fileItem.id).toBeDefined();
 		expect(fileItem.state).toBe(FILE_STATES.ADDED);

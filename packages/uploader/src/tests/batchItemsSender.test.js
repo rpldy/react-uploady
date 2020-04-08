@@ -1,9 +1,12 @@
-jest.mock("@rpldy/sender", () => jest.fn());
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "testSend"] }] */
+
 import { mockTrigger } from "@rpldy/life-events/src/tests/mocks/rpldy-life-events.mock";
 import mockSend from "@rpldy/sender";
 import { SENDER_EVENTS } from "../consts";
 import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "../defaults";
 import createItemsSender from "../batchItemsSender";
+
+jest.mock("@rpldy/sender", () => jest.fn());
 
 describe("batchItemsSender tests", () => {
 
@@ -68,7 +71,7 @@ describe("batchItemsSender tests", () => {
             items,
             sendFn,
             batch,
-        }
+        };
     };
 
     it("should send using default sender", () => {

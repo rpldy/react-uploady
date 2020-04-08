@@ -22,7 +22,7 @@ describe("Uploady tests", () => {
             uploader.getOptions,
             uploader.add,
             invariant,
-        )
+        );
     });
 
     it("should render Uploady successfully", () => {
@@ -44,7 +44,7 @@ describe("Uploady tests", () => {
         </Uploady>);
 
         expect(logger.setDebug).toHaveBeenCalledWith(true);
-        expect(createContextApi).toHaveBeenCalledWith(uploader, expect.any(Object))
+        expect(createContextApi).toHaveBeenCalledWith(uploader, expect.any(Object));
 
         expect(wrapper.find("#test")).toHaveLength(1);
 

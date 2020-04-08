@@ -31,6 +31,6 @@
     "flow-bin": "^0.121.0"
   },
   "peerDependencies": {
-    "react": "^16.13.1"
+    "react": ">=16.8.x"
   }
 }

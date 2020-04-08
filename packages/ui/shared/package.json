@@ -23,8 +23,8 @@
         "flow-bin": "^0.121.0"
     },
     "peerDependencies": {
-        "react": "^16.13.1",
-        "react-dom": "^16.13.1"
+        "react": ">=16.8.x",
+        "react-dom": ">=16.8.x"
     },
     "publishConfig": {
         "access": "public"

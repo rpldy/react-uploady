@@ -2,6 +2,7 @@
 const yargs = require("yargs"),
     chalk = require("chalk"),
     pacote = require("pacote"),
+    semverUtils = require("semver-utils"),
     shell = require("shelljs"),
     { getMatchingPackages, isDevDep, isPeerDep } = require("./utils");
 
@@ -35,10 +36,17 @@ const getDependencyWithVersion = () => {
 
     version = latest ? "latest" : (version || "");
 
+    const semver = semverUtils.parseRange(version);
+
+    if (semver.length > 1) {
+        throw new Error(`multiple part semver not supported - ${version}`);
+    }
+
     return {
         name,
         version,
-        full: `${name}@${version}`
+        full: `${name}@${version}`,
+        operator: semver.length ? semver[0].operator : null,
     };
 };
 
@@ -71,6 +79,7 @@ const getValidUpgradeVersion = async (exactDep) => {
     let result = null;
 
     try {
+        console.log("getting valid ver", exactDep);
         const manifest = await pacote.manifest(exactDep.full);
         console.log(chalk.green(`>>>> found package manifest [${manifest.name}] version: ${manifest.version}`));
 
@@ -88,10 +97,12 @@ const upgradeDep = async () => {
     if (packages.length) {
         const upgradeVersion = await getValidUpgradeVersion(exactDep);
 
-        if (upgradeVersion) {
-            const prefix = !options.exact ? (options.tilde ? "~" : "^") : "";
+        // console.log("!!!!! ", {exactDep, upgradeVersion, semver: exactDep.semver});
 
-            exactDep.upgradeVersion = `${prefix}${upgradeVersion}`;
+        if (upgradeVersion) {
+            const prefix = (!exactDep.operator && !options.exact) ? (options.tilde ? "~" : "^") : "";
+
+            exactDep.upgradeVersion = `${prefix}${exactDep.operator ? exactDep.version : upgradeVersion}`;
 
             const writes = [];
 

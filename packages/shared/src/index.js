@@ -1,6 +1,7 @@
 // @flow
 
 import invariant from "invariant";
+import throttle from "just-throttle";
 import { BATCH_STATES, FILE_STATES } from "./consts";
 import * as logger from "./logger";
 import triggerCancellable from "./triggerCancellable";
@@ -13,6 +14,9 @@ export {
 
     //one source for invariant to all other packages
     invariant,
+
+    //one source for throttle to all other packages
+    throttle,
 
     logger,
 
@@ -27,6 +31,7 @@ export {
     devFreeze,
     merge,
     clone,
+    produce,
 } from "./utils";
 
 export type {

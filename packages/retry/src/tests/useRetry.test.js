@@ -1,9 +1,7 @@
-import invariant from "invariant";
+import { invariant } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { UploadyContext } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import { NO_EXT } from "../consts";
 import useRetry from "../useRetry";
-
-jest.mock("invariant", () => jest.fn());
 
 describe("useRetry tests", () => {
 

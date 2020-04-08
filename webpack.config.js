@@ -24,16 +24,7 @@ const config = {
     // devtool: isProduction ? false : "eval-cheap-module-source-map",
     devtool: "source-map",
 
-    externals: [/lodash/, "immer", /@rpldy/],
-// {
-//         "lodash": "lodash",
-//         // lodash: {
-//         //     commonjs: "lodash",
-//         //     commonjs2: "lodash",
-//         //     amd: "lodash",
-//         //     root: "_",
-//         // }
-//     },
+    externals: [/@rpldy/],
 
     module: {
         rules: [
@@ -48,12 +39,18 @@ const config = {
                 }
             }
         ]
+    },
+
+    resolve: {
+        alias: {
+            "immer": path.resolve(__dirname, "packages/shared/src/utils/produce"),
+        }
     }
 };
 
 if (!isProduction) {
     config.devtool = "cheap-module-source-map";
-        //"eval-cheap-module-source-map";
+    //"eval-cheap-module-source-map";
 }
 
 module.exports = config;

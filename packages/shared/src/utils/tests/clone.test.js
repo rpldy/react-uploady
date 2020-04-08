@@ -1,4 +1,4 @@
-import clone from "clone";
+import clone from "../clone";
 
 describe("clone (deep) tests", () => {
 
@@ -19,7 +19,7 @@ describe("clone (deep) tests", () => {
         const result = clone(obj);
 
         expect(result).not.toBe(obj);
-        expect(result).toStrictEqual(obj);
+        expect(result).toEqual(obj);
     });
 
 });

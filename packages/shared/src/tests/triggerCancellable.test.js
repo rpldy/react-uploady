@@ -23,7 +23,7 @@ describe("triggerCancellable tests", () => {
 
 		trigger.mockReturnValueOnce([true, false]);
 
-		const isCancelled = await triggerCancellable(trigger, "test", 2)
+		const isCancelled = await triggerCancellable(trigger, "test", 2);
 
 		expect(isCancelled).toBe(true);
 	});
@@ -34,7 +34,7 @@ describe("triggerCancellable tests", () => {
 			Promise.resolve(true),
 			Promise.resolve(false)]);
 
-		const isCancelled = await triggerCancellable(trigger, "test", 2)
+		const isCancelled = await triggerCancellable(trigger, "test", 2);
 
 		expect(isCancelled).toBe(true);
 	});
@@ -42,7 +42,7 @@ describe("triggerCancellable tests", () => {
 	it("should return false if no result was false", async () => {
 		trigger.mockReturnValueOnce([undefined, null, 0]);
 
-		const isCancelled = await triggerCancellable(trigger, "test", 2)
+		const isCancelled = await triggerCancellable(trigger, "test", 2);
 
 		expect(isCancelled).toBe(false);
 	});

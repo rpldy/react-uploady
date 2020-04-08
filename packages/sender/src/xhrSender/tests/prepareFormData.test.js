@@ -21,7 +21,7 @@ describe("prepareFormData tests", () => {
 			...options
 		};
 
-		prepareFormData(items, options);
+		return prepareFormData(items, options);
 	};
 
 	it("should create FD for File", () => {
@@ -95,6 +95,8 @@ describe("prepareFormData tests", () => {
     it("should create FD for unknown item", () => {
         const items = [{ }];
         testPrepare(items);
+
+        expect(mockFormDataSet).not.toHaveBeenCalled();
     });
 
 	it("should add extra params", () => {

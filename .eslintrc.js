@@ -155,5 +155,35 @@ module.exports = {
 		"jsx-a11y/alt-text": 0,
 		"jsx-a11y/media-has-caption": 0,
 		"jsx-a11y/anchor-is-valid": 1
-	}
+	},
+
+    "overrides": [
+        {
+            "files": ["*.test.js"],
+            "plugins": [
+                "jest",
+            ],
+            "env": {
+                "jest/globals": true
+            },
+            "globals": {
+                "clearJestMocks": "readonly",
+                "testCustomHook": "readonly",
+                "mount": "readonly",
+                "shallow": "readonly",
+                "jsdom": "readonly",
+            },
+            "extends": ["plugin:jest/recommended"],
+            "rules": {
+                "no-empty": 0,
+                "import/first": 0,
+                "no-mixed-spaces-and-tabs": 0,
+                "object-curly-spacing": 0,
+                "no-unexpected-multiline": 0,
+                "react/jsx-no-bind": 0,
+                "jest/valid-expect": 0,
+                "jest/expect-expect": 2,
+            }
+        }
+    ]
 };

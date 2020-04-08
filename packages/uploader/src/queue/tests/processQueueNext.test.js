@@ -29,7 +29,7 @@ describe("processQueueNext tests", () => {
 			loadNewBatchForItem,
 			cancelBatchForItem,
 			getIsItemBatchReady
-		)
+		);
 	});
 
 	describe("getNextIdGroup tests", () => {

@@ -1,5 +1,6 @@
 const fs = require("fs"),
-	path = require("path"),
+    path = require("path"),
+    chalk = require("chalk"),
     { getFilteredPackages } = require("@lerna/filter-options"),
     { ListCommand } = require("@lerna/list");
 
@@ -36,17 +37,17 @@ const isPeerDep = (pgkJson, depName) => {
 };
 
 const getPackageName = (dir) => {
-	let name;
+    let name;
 
-	const packagePath = path.resolve(dir, "package.json");
-	if (fs.existsSync(packagePath)) {
-		const json = require(packagePath);
-		name = json.name;
-	} else {
-		throw new Error("failed to get package name. package.json not found in " + dir);
-	}
+    const packagePath = path.resolve(dir, "package.json");
+    if (fs.existsSync(packagePath)) {
+        const json = require(packagePath);
+        name = json.name;
+    } else {
+        throw new Error("failed to get package name. package.json not found in " + dir);
+    }
 
-	return name;
+    return name;
 };
 
 const copyFilesToPackage = (currentDir, destination, files = []) => {
@@ -57,8 +58,17 @@ const copyFilesToPackage = (currentDir, destination, files = []) => {
     });
 };
 
+const logger = {
+    verbose: (...args) => console.log(chalk.gray(...args)),
+    log: (...args) => console.log(chalk.white(...args)),
+    info: (...args) => console.log(chalk.cyan(...args)),
+    warn: (...args) => console.log(chalk.yellow(...args)),
+    error: (...args) => console.log(chalk.red(...args)),
+};
+
 module.exports = {
-	getPackageName,
+    logger,
+    getPackageName,
     copyFilesToPackage,
     getMatchingPackages,
     isDevDep,

@@ -7,12 +7,18 @@ const isProduction = process.env.NODE_ENV === "production";
 const config = {
     mode: isProduction ? "production" : "development",
 
-    entry: {
-        "uploader": "./packages/uploader",
-        "life-events": "./packages/life-events",
-        "sender": "./packages/sender",
-        "shared": "./packages/shared",
-    },
+    entry: [
+        "./packages/uploader",
+        "./packages/life-events",
+        "./packages/sender",
+        "./packages/shared",
+    ],
+    // entry: {
+    //     "uploader": "./packages/uploader",
+    //     "life-events": "./packages/life-events",
+    //     "sender": "./packages/sender",
+    //     "shared": "./packages/shared",
+    // },
 
     output: {
         path: path.join(__dirname, "bundle"),

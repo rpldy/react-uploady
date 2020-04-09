@@ -3,9 +3,12 @@ import { DEBUG_LOG_KEY } from "./consts";
 
 let isDebug;
 
+const isEnvDebug =  () =>
+    process.env.NODE_ENV !== "production" && process.env.DEBUG;
+
 const isDebugOn = () => {
 	if (typeof isDebug !== "boolean"){
-		isDebug = process.env.DEBUG ||
+		isDebug = isEnvDebug() ||
 			!!~window.location.search.indexOf("rpldy_debug=true") ||
 			window[DEBUG_LOG_KEY] === true;
 	}

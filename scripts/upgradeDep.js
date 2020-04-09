@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 const yargs = require("yargs"),
-    chalk = require("chalk"),
     pacote = require("pacote"),
     semverUtils = require("semver-utils"),
     shell = require("shelljs"),
-    { getMatchingPackages, isDevDep, isPeerDep } = require("./utils");
+    { logger, getMatchingPackages, isDevDep, isPeerDep } = require("./utils");
 
 const argv = yargs.argv;
 
@@ -18,7 +17,7 @@ const options = {
     //also accepts --scope which is passed as is to the lerna list command
 };
 
-console.log(">>> upgrading dependency in packages");
+logger.info(">>> upgrading dependency in packages");
 
 const getDependencyWithVersion = () => {
     const { dep, latest } = options;
@@ -60,7 +59,7 @@ const doPackageUpgrade = (pkg, exactDep, graph) => {
     let result;
 
     if (pkgDep || isPeer) {
-        console.log(chalk.white(`>>>> found package [${pkg.name}] with dependency: ${isPeer ? pkgJson.peerDependencies[exactDep.name] : pkgDep.raw} - setting version to: ${exactDep.upgradeVersion}`));
+        logger.verbose(`>>>> found package [${pkg.name}] with dependency: ${isPeer ? pkgJson.peerDependencies[exactDep.name] : pkgDep.raw} - setting version to: ${exactDep.upgradeVersion}`);
 
         const depsList = isDevDep(pkgJson, exactDep.name) ?
             pkgJson.devDependencies :
@@ -79,9 +78,8 @@ const getValidUpgradeVersion = async (exactDep) => {
     let result = null;
 
     try {
-        console.log("getting valid ver", exactDep);
         const manifest = await pacote.manifest(exactDep.full);
-        console.log(chalk.green(`>>>> found package manifest [${manifest.name}] version: ${manifest.version}`));
+        logger.info(`>>>> found package manifest [${manifest.name}] version: ${manifest.version}`);
 
         result = manifest.version;
     } catch (ex) {
@@ -116,13 +114,13 @@ const upgradeDep = async () => {
 
             if (writes.length) {
                 await Promise.all(writes);
-                console.log(chalk.cyan(`>>>> finished updating packages - bootstraping`));
+                logger.info(`>>>> finished updating packages - bootstraping`);
                 shell.exec("yarn bootstrap");
             } else {
-                console.log(chalk.red(`!!! no packages found that use ${exactDep.name}`));
+                logger.error(`!!! no packages found that use ${exactDep.name}`);
             }
         } else {
-            console.log(chalk.red(`${exactDep.full} cannot be found on npm!`));
+            logger.error(`${exactDep.full} cannot be found on npm!`);
         }
     }
 };

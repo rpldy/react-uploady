@@ -5,8 +5,8 @@
     "upgradep": "node scripts/upgradeDep.js",
     "bootstrap": "lerna bootstrap --use-workspaces",
     "coverage": "codecov",
-    "bundle": "NODE_ENV=production webpack",
-    "bundle:dev": "rimraf bundle; webpack",
+    "bundle": "rimraf bundle; node scripts/bundle.js --validate --out bundle",
+    "bundle:prod": "NODE_ENV=production yarn bundle",
     "build": "lerna exec --stream -- FORCE_COLOR=1 NODE_ENV=production yarn build;",
     "clean": "lerna exec --stream -- rimraf lib",
     "release": "yarn bootstrap; yarn clean; yarn build; yarn flow:copy",
@@ -97,6 +97,7 @@
     "styled-components": "^4.4.1",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2",
     "yargs": "^15.3.1"
   },
   "optionalDependencies": {

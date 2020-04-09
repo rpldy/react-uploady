@@ -41,7 +41,7 @@ describe("life-events tests", () => {
 			addLife(obj, ["test", "test2"]);
 			expect(obj.getEvents()).toEqual(["test", "test2"]);
 		});
-	});
+    });
 
 	describe("add regs tests", () => {
 

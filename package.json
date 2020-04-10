@@ -8,7 +8,7 @@
     "bundle": "rimraf bundle; node scripts/bundle.js --validate --out bundle",
     "bundle:prod": "NODE_ENV=production yarn bundle",
     "build": "lerna exec --stream -- FORCE_COLOR=1 NODE_ENV=production yarn build;",
-    "clean": "lerna exec --stream -- rimraf lib",
+    "clean": "lerna exec --stream -- rimraf lib umd",
     "release": "yarn bootstrap; yarn clean; yarn build; yarn flow:copy",
     "ssb": "start-storybook -p 9111 --ci",
     "bsb": "build-storybook -c .storybook -o .sb-static",

@@ -16,13 +16,13 @@
     "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared-ui": "^0.1.6"
+    "@rpldy/shared-ui": "^0.1.6",
+      "html-dir-content": "^0.3.1"
   },
   "devDependencies": {
     "@rpldy/uploady": "^0.1.6",
     "@storybook/addon-knobs": "^5.3.18",
     "flow-bin": "^0.121.0",
-    "html-dir-content": "^0.3.1",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
     "styled-components": "^4.4.1"

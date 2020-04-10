@@ -60,14 +60,13 @@ const BUNDLES = {
         //
         // },
 
-        // "package": {
-        //     maxSize: 99999,
-        //     pkgs: "*",
-        //     target: "*", //output relative to package
-        //     config: {
-        //         externals: [/@rpldy/],
-        //     }
-        // },
+        "package": {
+            pkgs: "*",
+            target: "*", //output relative to package
+            config: {
+                externals: [/@rpldy/, "react", "react-dom"],
+            }
+        },
     },
 };
 

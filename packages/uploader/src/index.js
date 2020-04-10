@@ -1,10 +1,10 @@
 // @flow
-import uploader from "./uploader";
+import createUploader from "./uploader";
 import composeEnhancers from "./composeEnhancers";
 import { UPLOADER_EVENTS } from "./consts";
 import { DEFAULT_OPTIONS } from "./defaults";
 
-export default uploader;
+export default createUploader;
 
 export type {
     UploaderType,
@@ -20,4 +20,5 @@ export {
     DEFAULT_OPTIONS,
 
     composeEnhancers,
+    createUploader,
 };

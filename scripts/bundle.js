@@ -15,6 +15,7 @@ const config = require("../bundle.config");
 const options = {
     validate: yargs.argv.validate,
     outputPath: yargs.argv.out,
+    bundle: yargs.argv.bundle,
     debugBundleSize: yargs.argv.debugSize,
 };
 
@@ -73,11 +74,14 @@ const getEntriesFromDefinition = ({ pkgs }, type, repoPackages) => {
     return _.flatten(entries);
 };
 
-const validateSize = (type, name, result) => {
-    const outputFile = path.join(result.outputPath, result.assets[0].name);
+const validateSize = (type, name, wpResult) => {
     const maxSize = _.get(config.bundles, [type, name, "maxSize"]);
 
     if (isProduction && maxSize) {
+        const mainAssetNamePrefix = `${config.library}-${name}.${type}`;
+        const mainAsset = wpResult.assets.find((a) => a.name.startsWith(mainAssetNamePrefix));
+        const outputFile = path.join(wpResult.outputPath, mainAsset.name);
+
         const result = shell.exec(`bundlesize -f ${outputFile} -s ${maxSize} ${options.debugBundleSize ? "--debug" : ""}`);
 
         if (result.code) {
@@ -112,37 +116,52 @@ const runWebpack = (type, name, config) => {
     });
 };
 
-const copyBundleToTarget = (asset, outputPath, type, pkgRoot) => {
-    const outputFile = path.join(outputPath, asset.name);
+const copyBundleToTarget = (assets, outputPath, type, pkgRoot) => {
     const dest = path.join(pkgRoot, config.targets[type]);
-    const mapFile = `${outputFile}.map`;
-
     fs.ensureDirSync(dest);
 
-    fs.copyFileSync(outputFile, path.join(dest, path.basename(outputFile)));
-    fs.copyFileSync(mapFile, path.join(dest, path.basename(mapFile)));
+    assets.forEach((asset) => {
+        const outputFile = path.join(outputPath, asset.name);
+        fs.copyFileSync(outputFile, path.join(dest, path.basename(outputFile)));
+    });
 };
 
-const handleBundleOutput = (type, definition, result, repoPackages) => {
+const findExtraBundles = (wpResult, definition) => {
+    let extra = [];
+
+    if (definition.extraBundles) {
+        extra = wpResult.assets.filter((a) =>
+            !!~definition.extraBundles.indexOf(a.name));
+    }
+
+    return extra;
+};
+
+const handleBundleOutput = (type, definition, wpResult, repoPackages) => {
     if (definition.target) {
 
-        const outputPath = result.outputPath;
+        const outputPath = wpResult.outputPath;
 
         if (definition.target === "*") {
-            repoPackages.forEach((pkg) => {
-                const bundleName = `${pkg.name
-                        .replace(/(@)(\w+)(\/)/, (m, p, p2) => p2 + ".")}${isProduction ? ".min" : ""}.js`,
-                    asset = result.assets.find((a) => a.name === bundleName);
 
-                if (asset) {
-                    copyBundleToTarget(asset, outputPath, type, pkg.location);
+            repoPackages.forEach((pkg) => {
+                const bundleFileName = `${pkg.name.replace(/(@)(\w+)(\/)/, (m, p, p2) => p2 + "\\.")}`,
+                    assetsRgx = new RegExp(definition.bundlePattern.replace("*", bundleFileName))
+
+                const assets = [
+                        ...wpResult.assets.filter((a) => assetsRgx.test(a.name)),
+                        ...findExtraBundles(wpResult, definition),
+                    ];
+
+                if (assets.length) {
+                    copyBundleToTarget(assets, outputPath, type, pkg.location);
                 } else {
-                    throw new Error(`Didn't find matching bundle for package: ${pkg.name} - bundle: ${bundleName}`);
+                    throw new Error(`Didn't find matching bundle for package: ${pkg.name} - bundle: ${bundleFileName}`);
                 }
             });
         } else {
             const pkgRoot = getPackageRootFromName(definition.target, repoPackages);
-            copyBundleToTarget(result.assets[0], outputPath, type, pkgRoot);
+            copyBundleToTarget(wpResult.assets, outputPath, type, pkgRoot);
         }
     }
 };
@@ -150,7 +169,7 @@ const handleBundleOutput = (type, definition, result, repoPackages) => {
 const getWebpackConfig = (type, name, definition, repoPackages) => {
     const entries = getEntriesFromDefinition(definition, type, repoPackages);
 
-    logger.verbose(`>>>> creating bundle: ${name} of type: ${type} - entries: `, entries);
+    logger.verbose(`>>>> creating bundle: '${name}' of type: '${type}' - with entries: `, entries);
 
     return wpMerge(
         config.webpackConfig.base,
@@ -162,8 +181,8 @@ const getWebpackConfig = (type, name, definition, repoPackages) => {
 
             output: {
                 path: path.join(process.cwd(), options.outputPath || "bundle"),
-                filename: `rpldy-${name}.${type}${isProduction ? ".min" : ""}.js`,
-                library: ["rpldy", "[name]"],
+                filename: `${config.fileNamePrefix || config.library}-${name}.${type}${isProduction ? ".min" : ""}.js`,
+                library: [config.library, "[name]"],
                 libraryTarget: type,
             }
         },
@@ -172,21 +191,21 @@ const getWebpackConfig = (type, name, definition, repoPackages) => {
 }
 
 const createBundleFromDefinition = async (type, name, definition, repoPackages) => {
-    let result;
+    let wpResult;
 
     const bundleConfig = getWebpackConfig(type, name, definition, repoPackages);
 
     try {
-        result = await runWebpack(type, name, bundleConfig);
-        logger.log(`>>>> bundle (${type}.${name}) created in ${result.time} ms`);
+        wpResult = await runWebpack(type, name, bundleConfig);
+        logger.log(`>>>> bundle (${type}.${name}) created in ${wpResult.time} ms`);
 
-        handleBundleOutput(type, definition, result, repoPackages);
+        handleBundleOutput(type, definition, wpResult, repoPackages);
     } catch (e) {
         throw new Error("Webpack compile failed ! " + e.message);
     }
 
-    if (options.validate && result) {
-        validateSize(type, name, result);
+    if (options.validate && wpResult) {
+        validateSize(type, name, wpResult);
     }
 };
 
@@ -196,15 +215,22 @@ const doBundle = async () => {
     const { packages: repoPackages } = await getMatchingPackages({});
     const bundlers = [];
 
-    Object.entries(config.bundles)
-        .forEach(([type, bundle]) => {
-            Object.entries(bundle)
-                .forEach(([name, definition]) => {
-                    bundlers.push(
-                        createBundleFromDefinition(type, name, definition, repoPackages)
-                    );
-                });
-        });
+    if (options.bundle) {
+        const parts = options.bundle.split(".");
+        const definition = _.get(config.bundles, parts);
+
+        bundlers.push(createBundleFromDefinition(parts[0], parts[1], definition, repoPackages));
+    } else {
+        Object.entries(config.bundles)
+            .forEach(([type, bundle]) => {
+                Object.entries(bundle)
+                    .forEach(([name, definition]) => {
+                        bundlers.push(
+                            createBundleFromDefinition(type, name, definition, repoPackages)
+                        );
+                    });
+            });
+    }
 
     try {
         logger.verbose(`>>> waiting for ${bundlers.length} bundles to compile`);

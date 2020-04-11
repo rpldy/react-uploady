@@ -1,12 +1,13 @@
 // @flow
-import retry from "./retry";
+import retryEnhancer from "./retry";
 import useRetry from "./useRetry";
 import useBatchRetry from "./useBatchRetry";
 import useRetryListener from "./useRetryListener";
 
-export default retry;
+export default retryEnhancer;
 
 export {
+    retryEnhancer,
     useRetry,
     useBatchRetry,
     useRetryListener,

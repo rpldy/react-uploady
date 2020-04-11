@@ -11,7 +11,7 @@ const build = () => {
     console.log(chalk.bold(chalk.cyan(`___ copying files to: ${pkgeName} ___`)));
     copyFilesToPackage(scriptsDir, pkgDir, [
         "../.npmignore",
-        "../LICENCE"
+        "../LICENSE.md"
     ]);
 
 	console.log(chalk.bold(chalk.cyan(`___ building: ${pkgeName} ___`)));

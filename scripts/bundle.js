@@ -139,19 +139,17 @@ const findExtraBundles = (wpResult, definition) => {
 
 const handleBundleOutput = (type, definition, wpResult, repoPackages) => {
     if (definition.target) {
-
         const outputPath = wpResult.outputPath;
 
         if (definition.target === "*") {
-
             repoPackages.forEach((pkg) => {
                 const bundleFileName = `${pkg.name.replace(/(@)(\w+)(\/)/, (m, p, p2) => p2 + "\\.")}`,
                     assetsRgx = new RegExp(definition.bundlePattern.replace("*", bundleFileName))
 
                 const assets = [
-                        ...wpResult.assets.filter((a) => assetsRgx.test(a.name)),
-                        ...findExtraBundles(wpResult, definition),
-                    ];
+                    ...wpResult.assets.filter((a) => assetsRgx.test(a.name)),
+                    ...findExtraBundles(wpResult, definition),
+                ];
 
                 if (assets.length) {
                     copyBundleToTarget(assets, outputPath, type, pkg.location);
@@ -176,15 +174,22 @@ const getWebpackConfig = (type, name, definition, repoPackages) => {
         config.webpackConfig[process.env.NODE_ENV],
         {
             entry: Array.isArray(definition.pkgs) ? {
-                [name]: entries
+                [_.camelCase(name)]: entries
             } : undefined,
 
             output: {
                 path: path.join(process.cwd(), options.outputPath || "bundle"),
                 filename: `${config.fileNamePrefix || config.library}-${name}.${type}${isProduction ? ".min" : ""}.js`,
-                library: [config.library, "[name]"],
+                library: config.library,
                 libraryTarget: type,
-            }
+                // globalObject: "this",
+            },
+
+            plugins: [
+                config.banner ? new webpack.BannerPlugin({
+                    banner: config.banner,
+                }) : undefined
+            ],
         },
         _.isFunction(definition.config) ? definition.config(entries, isProduction, definition) : definition.config,
     );

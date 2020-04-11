@@ -3,6 +3,7 @@
  */
 
 const path = require("path"),
+    fs = require("fs-extra"),
     _ = require("lodash"),
     VirtualModulePlugin = require("virtual-module-webpack-plugin");
 
@@ -15,12 +16,23 @@ const PKGS = {
     UPLOADY: "@uploady",
 };
 
+let licenseContent;
+
 module.exports = {
     org: "@rpldy/",
+
     library: "rpldy",
 
     targets: {
         umd: "umd",
+    },
+
+    banner: () => {
+        if (!licenseContent) {
+            licenseContent = fs.readFileSync(path.resolve(process.cwd(), "LICENSE.md"), { encoding: "utf-8" });
+        }
+
+        return licenseContent;
     },
 
     bundles: {
@@ -31,7 +43,7 @@ module.exports = {
             "core": {
                 pkgs: [PKGS.LIFE_EVENTS, PKGS.SHARED, PKGS.SENDER, PKGS.UPLOADER],
                 target: PKGS.UPLOADER,
-                maxSize: 9500,
+                maxSize: 10500,
             },
 
             /**
@@ -43,7 +55,7 @@ module.exports = {
                 config: {
                     externals: ["react", "react-dom"],
                 },
-                maxSize: 12000,
+                maxSize: 12500,
             },
 
             /**
@@ -61,6 +73,7 @@ module.exports = {
                     return {
                         output: {
                             library: "rpldy",
+                            //["rpldy", "[name]"],
                         },
 
                         entry: "./packages/ui/uploady/all-bundle-entry.js",
@@ -77,7 +90,7 @@ module.exports = {
                         externals: ["react", "react-dom"],
                     };
                 },
-                maxSize: 15500,
+                maxSize: 16500,
             },
 
             /**
@@ -86,7 +99,7 @@ module.exports = {
             "package": {
                 pkgs: "*",
                 target: "*", //output relative to package
-                bundlePattern: "*(-runtime)?\\.js",
+                bundlePattern: `*(-runtime)?(\.min)?\\.js`,
                 extraBundles: ["polyfills-bundle.js"],
                 config: (entries, isProduction) => {
                     const entry = entries.reduce((res, pkg) => {
@@ -167,6 +180,14 @@ module.exports = {
         production: {
             mode: "production",
             devtool: "cheap-module-source-map",
+            optimization: {
+                //needed for production build to work with single/shared polyfills bundle
+                namedChunks: true,
+                //needed for production build to work with single/shared polyfills bundle
+                namedModules: true,
+                //use hashed ids for smaller bundles
+                moduleIds: "hashed",
+            }
         }
     },
 };

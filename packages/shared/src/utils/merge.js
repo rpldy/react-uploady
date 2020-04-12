@@ -19,23 +19,25 @@ const isObjectProp = (prop) =>
 const merge = (target: Object, ...args: Object[]) => {
     if (target && args.length) {
         args.forEach((source) => {
-            Object.keys(source)
-                .forEach((key) => {
-                    const prop = getProp(source, key);
+            if (source) {
+                Object.keys(source)
+                    .forEach((key) => {
+                        const prop = getProp(source, key);
 
-                    if (typeof prop !== "undefined") {
-                        if (isObjectProp(prop)) {
-                            //object - go deeper
-                            if (!target[key] || !isObjectProp(target[key])) {
-                                //recreate target prop if doesnt exist or not an object
-                                target[key] = {};
+                        if (typeof prop !== "undefined") {
+                            if (isObjectProp(prop)) {
+                                //object - go deeper
+                                if (!target[key] || !isObjectProp(target[key])) {
+                                    //recreate target prop if doesnt exist or not an object
+                                    target[key] = {};
+                                }
+                                merge(target[key], prop);
+                            } else {
+                                target[key] = prop;
                             }
-                            merge(target[key], prop);
-                        } else {
-                            target[key] = prop;
                         }
-                    }
-                });
+                    });
+            }
         });
     }
 

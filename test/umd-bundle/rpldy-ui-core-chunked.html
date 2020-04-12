@@ -10,8 +10,8 @@
 </script>
 
 <script src="../../bundle/polyfills-bundle.js"></script>
-<!--<script src="../../bundle/rpldy-ui-core.umd.js"></script>-->
-<script src="../../bundle/rpldy-ui-core.umd.min.js"></script>
+<!--<script src="../../bundle/rpldy-ui-core-chunked.umd.js"></script>-->
+<script src="../../bundle/rpldy-ui-core-chunked.umd.min.js"></script>
 
 <head>
     <meta charset="UTF-8">
@@ -19,7 +19,7 @@
 </head>
 <body>
 
-<h1>Test: rpldy.ui-core</h1>
+<h1>Test: rpldy.ui-core-chunked</h1>
 
 <main id="app">
 
@@ -27,32 +27,27 @@
 
 <script>
 
-    const mockSenderEnhancer = (uploader) => {
-        const mockSender = rpldy.createMockSender({ delay: 1000 });
-        uploader.update({ send: mockSender.send });
-        return uploader;
-    };
-
-    const uploadyProps = {
+    const chunkedUploadyProps = {
         debug: true,
         destination: {
-            url: "https://mock.test.com"
+            url: `http://localhost:4000/upload`,
+            params: { test: true }
         },
-        enhancer: mockSenderEnhancer,
+        chunkSize: 2000,
     }
 
     const MyUploadButton = () => {
         const uploadyContext = react.useContext(rpldy.UploadyContext);
 
-        const onClick = react.useCallback(()=>{
+        const onClick = react.useCallback(() => {
             uploadyContext.showFileUpload();
         });
 
-        return react.createElement("button", {onClick: onClick, children: "Upload"});
+        return react.createElement("button", { onClick: onClick, children: "Upload" });
     }
 
     ReactDOM.render(
-        react.createElement(rpldy.Uploady, uploadyProps, [react.createElement(MyUploadButton)]),
+        react.createElement(rpldy.ChunkedUploady, chunkedUploadyProps, [react.createElement(MyUploadButton)]),
         document.getElementById("app")
     );
 

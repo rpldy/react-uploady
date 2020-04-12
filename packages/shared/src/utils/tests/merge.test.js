@@ -4,7 +4,7 @@ describe("merge (deep) tests", () => {
 
     it("should return target if not sources", () => {
 
-        const a = {foo: "bar"};
+        const a = { foo: "bar" };
         const result = merge(a);
 
         expect(result).toBe(a);
@@ -197,5 +197,23 @@ describe("merge (deep) tests", () => {
         expect(a["__proto__"].b).toBeUndefined();
 
         expect(a.b).toBeUndefined();
+    });
+
+    it("should ignore empty sources", () => {
+
+        const a = {
+            foo: "bar",
+        };
+
+        const b = {
+            test: true,
+        };
+
+        merge(a, b, undefined, null);
+
+        expect(a).toStrictEqual({
+            foo: "bar",
+            test: true,
+        });
     });
 });

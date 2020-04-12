@@ -6,6 +6,16 @@ import { DEFAULT_OPTIONS } from "./defaults";
 
 export default createUploader;
 
+export {
+    UPLOADER_EVENTS,
+    DEFAULT_OPTIONS,
+
+    composeEnhancers,
+    createUploader,
+};
+
+export * from "@rpldy/sender";
+
 export type {
     UploaderType,
     UploaderEnhancer,
@@ -15,10 +25,3 @@ export type {
     TriggerMethod
 } from "@rpldy/life-events";
 
-export {
-    UPLOADER_EVENTS,
-    DEFAULT_OPTIONS,
-
-    composeEnhancers,
-    createUploader,
-};

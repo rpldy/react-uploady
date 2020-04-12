@@ -184,12 +184,6 @@ const getWebpackConfig = (type, name, definition, repoPackages) => {
                 libraryTarget: type,
                 // globalObject: "this",
             },
-
-            plugins: [
-                config.banner ? new webpack.BannerPlugin({
-                    banner: config.banner,
-                }) : undefined
-            ],
         },
         _.isFunction(definition.config) ? definition.config(entries, isProduction, definition) : definition.config,
     );
@@ -221,11 +215,13 @@ const doBundle = async () => {
     const bundlers = [];
 
     if (options.bundle) {
-        const parts = options.bundle.split(".");
-        const definition = _.get(config.bundles, parts);
+        //only bundle the definition requested by argument
+        const parts = options.bundle.split("."),
+            definition = _.get(config.bundles, parts);
 
         bundlers.push(createBundleFromDefinition(parts[0], parts[1], definition, repoPackages));
     } else {
+        //bundle all definitions in config
         Object.entries(config.bundles)
             .forEach(([type, bundle]) => {
                 Object.entries(bundle)

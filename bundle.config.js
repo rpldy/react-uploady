@@ -4,6 +4,7 @@
 
 const path = require("path"),
     fs = require("fs-extra"),
+    webpack = require("webpack"),
     _ = require("lodash"),
     VirtualModulePlugin = require("virtual-module-webpack-plugin");
 
@@ -14,6 +15,7 @@ const PKGS = {
     UPLOADER: "@uploader",
     SHARED_UI: "@shared-ui",
     UPLOADY: "@uploady",
+    CHUNKED_UPLOADY: "@chunked-uploady",
 };
 
 let licenseContent;
@@ -25,14 +27,6 @@ module.exports = {
 
     targets: {
         umd: "umd",
-    },
-
-    banner: () => {
-        if (!licenseContent) {
-            licenseContent = fs.readFileSync(path.resolve(process.cwd(), "LICENSE.md"), { encoding: "utf-8" });
-        }
-
-        return licenseContent;
     },
 
     bundles: {
@@ -56,6 +50,18 @@ module.exports = {
                     externals: ["react", "react-dom"],
                 },
                 maxSize: 12500,
+            },
+
+            /**
+             * Bundle the core functionality + core UI + Chunked Uploady
+             */
+            "ui-core-chunked": {
+                pkgs: ["ui-core", PKGS.CHUNKED_UPLOADY],
+                target: PKGS.CHUNKED_UPLOADY,
+                config: {
+                    externals: ["react", "react-dom"],
+                },
+                maxSize: 15500,
             },
 
             /**
@@ -93,34 +99,47 @@ module.exports = {
                 maxSize: 16500,
             },
 
-            /**
-             * Bundle a umd bundle per repo package, without internal dependencies
-             */
-            "package": {
-                pkgs: "*",
-                target: "*", //output relative to package
-                bundlePattern: `*(-runtime)?(\.min)?\\.js`,
-                extraBundles: ["polyfills-bundle.js"],
-                config: (entries, isProduction) => {
-                    const entry = entries.reduce((res, pkg) => {
-                        res[pkg.name.split("/")[1]] = pkg.location;
-                        return res;
-                    }, {});
-
-                    return {
-                        entry,
-                        externals: [/@rpldy/, "react", "react-dom"],
-                        output: {
-                            filename: `rpldy.[name]${isProduction ? ".min" : ""}.js`,
-                        },
-                        optimization: {
-                            runtimeChunk: {
-                                name: (entrypoint) => `${entrypoint.name}-runtime`
-                            }
-                        },
-                    };
-                }
-            },
+            //TODO: find a way to make this work with global object assignment (webpack externals root)
+            //
+            // /**
+            //  * Bundle a umd bundle per repo package, without internal dependencies
+            //  */
+            // "package": {
+            //     pkgs: "*",
+            //     target: "*", //output relative to package
+            //     bundlePattern: `*(-runtime)?(\.min)?\\.js`,
+            //     extraBundles: ["polyfills-bundle.js"],
+            //     config: (entries, isProduction) => {
+            //         const entry = entries.reduce((res, pkg) => {
+            //             res[pkg.name.split("/")[1]] = pkg.location;
+            //             return res;
+            //         }, {});
+            //
+            //         return {
+            //             entry,
+            //             externals: ["react", "react-dom",
+            //                 (context, request, callback) => {
+            //                     return /@rpldy/.test(request) ? callback(null, {
+            //                         commonjs: request,
+            //                         commonjs2: request,
+            //                         amd: request,
+            //                         root: request,
+            //                     }) : callback();
+            //                         //[`commonjs ${request}`, `amd ${request}`]) : callback();
+            //                 }
+            //                 ],
+            //             output: {
+            //                 library: ["rpldy", "[name]"],
+            //                 filename: `rpldy.[name]${isProduction ? ".min" : ""}.js`,
+            //             },
+            //             optimization: {
+            //                 runtimeChunk: {
+            //                     name: "package-runtime",
+            //                 }
+            //             },
+            //         };
+            //     }
+            // },
         },
     },
 
@@ -137,15 +156,6 @@ module.exports = {
                             test: /[\\/]node_modules[\\/]/,
                             name: "polyfills",
                             filename: "[name]-bundle.js",
-                            // name: (module, chunks, cacheGroupKey)  => {
-                            //     const moduleFileName = module.identifier().split('/').reduceRight(item => item);
-                            //     const allChunksNames = chunks.map((item) => item.name).join('~');
-                            //
-                            //     console.log("!!!!!!! CHUNK NAME = ", {moduleFileName, allChunksNames});
-                            //
-                            //     return "vendors";
-                            //     // return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
-                            // },
                             chunks: "all"
                         }
                     }
@@ -187,70 +197,18 @@ module.exports = {
                 namedModules: true,
                 //use hashed ids for smaller bundles
                 moduleIds: "hashed",
-            }
+            },
+            plugins: [
+                new webpack.BannerPlugin({
+                    banner: () => {
+                        if (!licenseContent) {
+                            licenseContent = fs.readFileSync(path.resolve(process.cwd(), "LICENSE.md"), { encoding: "utf-8" });
+                        }
+
+                        return licenseContent;
+                    }
+                }),
+            ],
         }
     },
 };
-
-// const path = require("path");
-//
-// console.log("+++ ENV = ", process.env.NODE_ENV);
-//
-// const isProduction = process.env.NODE_ENV === "production";
-//
-// const config = {
-//     mode: isProduction ? "production" : "development",
-//
-//     entry: [
-//         "./packages/uploader",
-//         "./packages/life-events",
-//         "./packages/sender",
-//         "./packages/shared",
-//     ],
-//     // entry: {
-//     //     "uploader": "./packages/uploader",
-//     //     "life-events": "./packages/life-events",
-//     //     "sender": "./packages/sender",
-//     //     "shared": "./packages/shared",
-//     // },
-//
-//     output: {
-//         path: path.join(__dirname, "bundle"),
-//         filename: "rpldy.[name].js",
-//         library: ["rpldy", "[name]"],
-//         libraryTarget: "umd"
-//     },
-//
-//     // devtool: isProduction ? false : "eval-cheap-module-source-map",
-//     devtool: "source-map",
-//
-//     externals: [/@rpldy/],
-//
-//     module: {
-//         rules: [
-//             {
-//                 test: /\.?js$/,
-//                 exclude: /node_module/,
-//                 use: {
-//                     loader: "babel-loader",
-//                     options: {
-//                         presets: ["@babel/preset-env"]
-//                     }
-//                 }
-//             }
-//         ]
-//     },
-//
-//     resolve: {
-//         alias: {
-//             "immer": path.resolve(__dirname, "packages/shared/src/utils/produce"),
-//         }
-//     }
-// };
-//
-// if (!isProduction) {
-//     config.devtool = "cheap-module-source-map";
-//     //"eval-cheap-module-source-map";
-// }
-//
-// module.exports = config;

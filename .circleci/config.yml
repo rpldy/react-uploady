@@ -1,7 +1,6 @@
 version: 2.1
 orbs:
   node: circleci/node@1.1.6
-  #codecov: codecov/codecov@1.0.5
 
 references:
     workspace_root: &workspace_root
@@ -14,11 +13,6 @@ commands:
         - run: yarn install
         - run: yarn bootstrap
         - run: yarn build
-
-#executors:
-#    build-executor:
-#        node/default
-
 
 jobs:
   build-and-test:
@@ -48,6 +42,7 @@ jobs:
                 paths:
                   - node_modules
                   - .jest-coverage
+                  - packages
 
   coverage:
     working_directory: *workspace_root
@@ -65,8 +60,26 @@ jobs:
             - store_artifacts:
                 path: .jest-coverage
 
+  bundle:
+    working_directory: *workspace_root
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/with-cache:
+          steps:
+            - attach_workspace:
+               at: .
+            - run:
+                name: Bundle it up
+                command: yarn bundle:prod
+            - store_artifacts
+                paths:
+                 - bundle
+                 - packages
+
 workflows:
-    build-and-test:
+    create-rpldy:
       jobs:
         - build-and-test
         - coverage:
@@ -75,6 +88,12 @@ workflows:
             filters:
               branches:
                only: master
+        - bundle:
+            requires:
+              - build-and-test
+            filters:
+              branches:
+                only: master
 
 #    build-and-deploy:
 #      jobs:

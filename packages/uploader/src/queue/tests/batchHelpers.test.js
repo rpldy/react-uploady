@@ -359,7 +359,7 @@ describe("batchHelpers tests", () => {
 				.toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, {
 					...batch,
 					items: [{ test: 1 }, { test: 2 }]
-				})
+				});
 		});
 	});
 

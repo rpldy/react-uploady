@@ -5,6 +5,7 @@ import asUploadButton from "./asUploadButton";
 export default UploadButton;
 
 export {
+    UploadButton,
     asUploadButton,
 };
 

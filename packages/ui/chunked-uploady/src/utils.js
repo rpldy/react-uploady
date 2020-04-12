@@ -1,12 +1,11 @@
 // @flow
-import { merge } from "lodash";
+import { merge } from "@rpldy/shared";
 import { DEFAULT_OPTIONS } from "./defaults";
 
 import type { FileLike } from "@rpldy/shared";
 import type { ChunkedOptions, MandatoryChunkedOptions } from "./types";
 
 const getMandatoryOptions = (options: ?ChunkedOptions): MandatoryChunkedOptions => {
-    //using lodash.merge instead of spread so undefined values wont override the default ones
     return merge({}, DEFAULT_OPTIONS, options);
 };
 

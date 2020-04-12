@@ -1,11 +1,12 @@
-jest.mock("../batch", () => jest.fn());
-jest.mock("../processor", () => jest.fn());
-import { BATCH_STATES, triggerCancellable } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { BATCH_STATES, triggerCancellable, invariant } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { mockTrigger } from "@rpldy/life-events/src/tests/mocks/rpldy-life-events.mock";
 import mockCreateProcessor from "../processor";
 import mockCreateBatch from "../batch";
 import createUploader from "../uploader";
 import { UPLOADER_EVENTS } from "../consts";
+
+jest.mock("../batch", () => jest.fn());
+jest.mock("../processor", () => jest.fn());
 
 describe("uploader tests", () => {
 
@@ -18,6 +19,7 @@ describe("uploader tests", () => {
             mockProcess,
             mockAbort,
             triggerCancellable,
+            invariant,
         );
     });
 
@@ -79,7 +81,6 @@ describe("uploader tests", () => {
     describe("updateOptions tests", () => {
 
         it("should update options", () => {
-            // const uploader = createUploader({ destination: { url: "aaa" } });
             const uploader = getTestUploader();
 
             expect(uploader.getOptions().autoUpload).toBe(true);
@@ -267,20 +268,20 @@ describe("uploader tests", () => {
         it("should fail to register outside enhancer time", () => {
             const uploader = getTestUploader();
 
-            expect(() => {
-                uploader.registerExtension("ext");
-            }).toThrow("Uploady - uploader extensions can only be registered by enhancers")
+            uploader.registerExtension("ext");
+
+            expect(invariant).toHaveBeenNthCalledWith(1, false, "Uploady - uploader extensions can only be registered by enhancers");
         });
 
         it("should fail to register existing name", () => {
-            expect(() => {
-                getTestUploader({
-                    enhancer: (uploader) => {
-                        uploader.registerExtension("ext", {});
-                        uploader.registerExtension("ext", {});
-                    }
-                });
-            }).toThrow("Uploady - uploader extension by this name [ext] already exists");
+            getTestUploader({
+                enhancer: (uploader) => {
+                    uploader.registerExtension("ext", {});
+                    uploader.registerExtension("ext", {});
+                }
+            });
+
+            expect(invariant).toHaveBeenNthCalledWith(4, false, "Uploady - uploader extension by this name [%s] already exists", "ext");
         });
     });
 

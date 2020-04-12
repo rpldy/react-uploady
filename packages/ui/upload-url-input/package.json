@@ -17,8 +17,7 @@
   },
   "dependencies": {
     "@rpldy/shared": "^0.1.6",
-    "@rpldy/shared-ui": "^0.1.6",
-    "invariant": "^2.2.4"
+    "@rpldy/shared-ui": "^0.1.6"
   },
   "devDependencies": {
     "@rpldy/uploady": "^0.1.6",
@@ -26,8 +25,8 @@
     "flow-bin": "^0.121.0"
   },
   "peerDependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react": ">=16.8.x",
+    "react-dom": ">=16.8.x"
   },
   "publishConfig": {
     "access": "public"

@@ -1,6 +1,5 @@
 // @flow
-import { throttle } from "lodash";
-import { isFunction, logger } from "@rpldy/shared";
+import { isFunction, logger, throttle } from "@rpldy/shared";
 import addLife from "@rpldy/life-events";
 import defaultSend from "@rpldy/sender";
 import { PROGRESS_DELAY, SENDER_EVENTS } from "./consts";
@@ -40,7 +39,7 @@ export default (): ItemsSender => {
         }
 
         const throttledProgress = throttle(
-            (e: ProgressEvent) => onItemUploadProgress(items, batch, e, trigger), PROGRESS_DELAY);
+            (e: ProgressEvent) => onItemUploadProgress(items, batch, e, trigger), PROGRESS_DELAY, true);
 
         const send = isFunction(batchOptions.send) ? batchOptions.send : defaultSend;
 

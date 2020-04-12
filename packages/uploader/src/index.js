@@ -1,10 +1,20 @@
 // @flow
-import uploader from "./uploader";
+import createUploader from "./uploader";
 import composeEnhancers from "./composeEnhancers";
 import { UPLOADER_EVENTS } from "./consts";
 import { DEFAULT_OPTIONS } from "./defaults";
 
-export default uploader;
+export default createUploader;
+
+export {
+    UPLOADER_EVENTS,
+    DEFAULT_OPTIONS,
+
+    composeEnhancers,
+    createUploader,
+};
+
+export * from "@rpldy/sender";
 
 export type {
     UploaderType,
@@ -15,9 +25,3 @@ export type {
     TriggerMethod
 } from "@rpldy/life-events";
 
-export {
-    UPLOADER_EVENTS,
-    DEFAULT_OPTIONS,
-
-    composeEnhancers,
-};

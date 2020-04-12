@@ -1,3 +1,5 @@
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "testSingleItem"] }] */
+
 import getQueueState from "./mocks/getQueueState.mock";
 import "./mocks/batchHelpers.mock";
 import { FILE_STATES } from "@rpldy/shared";

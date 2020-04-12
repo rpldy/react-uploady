@@ -1,8 +1,7 @@
 // @flow
 import React, { forwardRef, memo, useMemo, useRef } from "react";
 import ReactDOM from "react-dom";
-import invariant from "invariant";
-import { logger } from "@rpldy/shared";
+import { logger, invariant } from "@rpldy/shared";
 import { UploadyContext, createContextApi } from "@rpldy/shared-ui";
 import useUploader from "./useUploader";
 

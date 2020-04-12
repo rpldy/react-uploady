@@ -11,6 +11,7 @@ import type {
 export default addLife;
 
 export {
+    addLife,
 	isLE,
 };
 

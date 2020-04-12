@@ -7,6 +7,7 @@ import type { MockOptions, } from "./types";
 export default send;
 
 export {
+    send,
 	createMockSender,
 };
 

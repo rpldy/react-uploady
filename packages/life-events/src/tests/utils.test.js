@@ -10,7 +10,7 @@ describe("utils tests", () => {
            [true, true],
        ])("should validate as function - %s", (val, shouldThrow) =>{
           const exResult = expect(()=>{
-              validateFunction(val, "test")
+              validateFunction(val, "test");
           });
 
           if (shouldThrow){

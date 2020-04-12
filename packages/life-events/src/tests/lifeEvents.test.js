@@ -41,7 +41,7 @@ describe("life-events tests", () => {
 			addLife(obj, ["test", "test2"]);
 			expect(obj.getEvents()).toEqual(["test", "test2"]);
 		});
-	});
+    });
 
 	describe("add regs tests", () => {
 
@@ -214,7 +214,7 @@ describe("life-events tests", () => {
 			it("triggering within once handler shouldnt call it", () => {
 
 				const handler = jest.fn(() => {
-					api.trigger("test")
+					api.trigger("test");
 				});
 
 				const api = addLife();
@@ -278,7 +278,7 @@ describe("life-events tests", () => {
 
 			expect(() => {
 				api.addEvent("test-2");
-			}).toThrow("Cannot add new events")
+			}).toThrow("Cannot add new events");
 
 		});
 
@@ -294,7 +294,7 @@ describe("life-events tests", () => {
 
 			expect(() => {
 				api.removeEvent("test");
-			}).toThrow("Cannot remove events")
+			}).toThrow("Cannot remove events");
 		});
 
 		it("should return true if has event", () => {

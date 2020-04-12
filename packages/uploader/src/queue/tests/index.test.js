@@ -2,7 +2,7 @@ import { SENDER_EVENTS, UPLOADER_EVENTS } from "../../consts";
 import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import processQueueNext from "../processQueueNext";
 import createQueue from "../";
-import abortMethods from "../abort";
+import * as abortMethods from "../abort";
 
 jest.mock("../processQueueNext", () => jest.fn());
 jest.mock("../abort", () => ({

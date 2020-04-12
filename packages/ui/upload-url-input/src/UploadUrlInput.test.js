@@ -1,5 +1,4 @@
 import React from "react";
-import warning from "warning";
 import {
     UploadyContext,
     useWithForwardRef,
@@ -7,7 +6,7 @@ import {
 } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import UploadUrlInput from "./UploadUrlInput";
 
-jest.mock('warning', () => jest.fn());
+
 describe("UploadUrlInput tests", () => {
 
     beforeEach(() => {

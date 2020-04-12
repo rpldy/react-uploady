@@ -102,6 +102,6 @@ Our [storybook](https://react-uploady-storybook.netlify.com/) has many examples 
 > add examples here
 
 
-
+chunked uploads
 
 logo's wing thanks to <a href="https://www.vecteezy.com/free-vector/illustration">Illustration Vectors by Vecteezy</a>

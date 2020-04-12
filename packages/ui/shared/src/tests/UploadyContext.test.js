@@ -1,8 +1,7 @@
-import invariant from "invariant";
+import { invariant } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { uploader } from "@rpldy/uploader/src/tests/mocks/rpldy-uploader.mock";
 import { createContextApi } from "../UploadyContext";
 
-jest.mock("invariant", () => jest.fn());
 
 describe("UploadyContext tests", () => {
 

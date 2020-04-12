@@ -1,6 +1,6 @@
 // @flow
 import { useContext } from "react";
-import invariant from "invariant";
+import { invariant } from "@rpldy/shared";
 import { UploadyContext, assertContext } from "@rpldy/shared-ui";
 import { RETRY_EXT, NO_EXT } from "./consts";
 

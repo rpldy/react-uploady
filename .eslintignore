@@ -1,7 +1,8 @@
 node_modules/
-*.test.js
 *.story.js
 *.stories.js
 *.mock.js
 packages/**/lib/**/*.js
+packages/**/umd/**/*.js
 story-helpers/
+scripts/

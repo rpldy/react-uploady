@@ -25,6 +25,8 @@ const useWithForwardRef = jest.fn(() => withForwardRefMock);
 
 const useBatchStartListener = jest.fn();
 
+const logWarning = jest.fn();
+
 const uiSharedMock = {
     UploadyContext,
     assertContext,
@@ -42,6 +44,8 @@ const uiSharedMock = {
     // useItemCancelListener,
     // useItemErrorListener,
     // useRequestPreSend,
+
+    logWarning,
 };
 
 jest.doMock("@rpldy/shared-ui", () => uiSharedMock);
@@ -54,4 +58,6 @@ export {
     withForwardRefMock,
 
     useBatchStartListener,
+
+    logWarning,
 };

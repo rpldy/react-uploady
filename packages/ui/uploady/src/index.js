@@ -5,9 +5,11 @@ import useFileInput from "./useFileInput";
 import type { UploadyContextType } from "@rpldy/shared-ui";
 import type { UploadyProps } from "./types";
 
-export type {
-    UploadyContextType,
-    UploadyProps,
+export default Uploady;
+
+export {
+    Uploady,
+    useFileInput,
 };
 
 export {
@@ -31,13 +33,10 @@ export {
     useRequestPreSend,
 } from "@rpldy/shared-ui";
 
-export {
-    UPLOADER_EVENTS,
-    composeEnhancers,
-} from "@rpldy/uploader";
+export * from "@rpldy/uploader";
 
-export default Uploady;
-
-export {
-    useFileInput,
+export type {
+    UploadyContextType,
+    UploadyProps,
 };
+

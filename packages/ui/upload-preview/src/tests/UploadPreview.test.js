@@ -14,7 +14,7 @@ describe("UploadPreview tests", () => {
     beforeEach(() => {
         clearJestMocks(
             getFallbackUrl,
-        )
+        );
     });
 
     it("should render with simple img preview", () => {

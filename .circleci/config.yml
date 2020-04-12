@@ -73,11 +73,13 @@ jobs:
             - run:
                 name: Bundle it up
                 command: yarn bundle:prod
-            - store_artifacts
-                paths:
-                 - bundle
-                 - packages
-
+            - store_artifacts:
+                path: bundle
+            - persist_to_workspace:
+                root: .
+                  paths:
+                    - packages
+                    - bundle
 workflows:
     create-rpldy:
       jobs:

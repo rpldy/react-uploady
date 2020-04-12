@@ -1,4 +1,3 @@
-import React from "react";
 import { createUploader, uploader } from "@rpldy/uploader/src/tests/mocks/rpldy-uploader.mock";
 import useUploader from "../useUploader";
 
@@ -9,7 +8,7 @@ describe("useUploader tests", () => {
             uploader.update,
             uploader.on,
             uploader.off,
-        )
+        );
     });
 
     it("should create uploader", () => {

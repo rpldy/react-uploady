@@ -1,6 +1,5 @@
 import React from "react";
-import invariant from "invariant";
-import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { logger, invariant } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import {
     createContextApi
 } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
@@ -8,7 +7,6 @@ import useUploader from "../useUploader";
 import Uploady from "../Uploady";
 
 jest.mock("../useUploader", () => jest.fn());
-jest.mock("invariant", () => jest.fn());
 
 describe("Uploady tests", () => {
 
@@ -24,7 +22,7 @@ describe("Uploady tests", () => {
             uploader.getOptions,
             uploader.add,
             invariant,
-        )
+        );
     });
 
     it("should render Uploady successfully", () => {
@@ -46,7 +44,7 @@ describe("Uploady tests", () => {
         </Uploady>);
 
         expect(logger.setDebug).toHaveBeenCalledWith(true);
-        expect(createContextApi).toHaveBeenCalledWith(uploader, expect.any(Object))
+        expect(createContextApi).toHaveBeenCalledWith(uploader, expect.any(Object));
 
         expect(wrapper.find("#test")).toHaveLength(1);
 

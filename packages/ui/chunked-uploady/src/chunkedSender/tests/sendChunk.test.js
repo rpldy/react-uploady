@@ -69,6 +69,6 @@ describe("sendChunk tests", () => {
 
         expect(() => {
             sendChunk(chunk, { file: {} }, "url", {});
-        }).toThrow(ChunkedSendError)
+        }).toThrow(ChunkedSendError);
     });
 });

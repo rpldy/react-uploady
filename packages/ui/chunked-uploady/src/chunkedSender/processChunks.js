@@ -1,6 +1,5 @@
 // @flow
-import { throttle } from "lodash";
-import { logger } from "@rpldy/shared";
+import { logger, throttle } from "@rpldy/shared";
 import getChunks from "./getChunks";
 import sendChunks from "./sendChunks";
 
@@ -42,7 +41,7 @@ export const process = (
 
             onProgress({ loaded, total: item.file.size }, [item]);
         },
-        100);
+        100, true);
 
     const sendPromise = new Promise((resolve) => {
         sendChunks(state, item, onChunkProgress, resolve);

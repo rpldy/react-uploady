@@ -12,9 +12,10 @@ stats.json
 dist
 output
 build
+bundle/
+umd/
 .history
 storybook-static
-.sb-static/
 npm-debug.log
 lerna-debug.log
 yarn-error.log

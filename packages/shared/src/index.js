@@ -1,5 +1,7 @@
 // @flow
 
+import invariant from "invariant";
+import throttle from "just-throttle";
 import { BATCH_STATES, FILE_STATES } from "./consts";
 import * as logger from "./logger";
 import triggerCancellable from "./triggerCancellable";
@@ -9,6 +11,12 @@ import createBatchItem from "./batchItem";
 export {
     BATCH_STATES,
     FILE_STATES,
+
+    //one source for invariant to all other packages
+    invariant,
+
+    //one source for throttle to all other packages
+    throttle,
 
     logger,
 
@@ -21,6 +29,9 @@ export {
     isFunction,
     isSamePropInArrays,
     devFreeze,
+    merge,
+    clone,
+    produce,
 } from "./utils";
 
 export type {

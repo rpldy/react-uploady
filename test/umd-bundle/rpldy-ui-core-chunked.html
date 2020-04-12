@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<script src="../../node_modules/react/umd/react.production.min.js"></script>
+<script src="../../node_modules/react-dom/umd/react-dom.production.min.js"></script>
+
+<script>
+    window.react = window.React;
+    window["react-dom"] = window.ReactDOM;
+</script>
+
+<script src="../../bundle/polyfills-bundle.js"></script>
+<!--<script src="../../bundle/rpldy-ui-core-chunked.umd.js"></script>-->
+<script src="../../bundle/rpldy-ui-core-chunked.umd.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>Test: rpldy.ui-core-chunked</h1>
+
+<main id="app">
+
+</main>
+
+<script>
+
+    const chunkedUploadyProps = {
+        debug: true,
+        destination: {
+            url: `http://localhost:4000/upload`,
+            params: { test: true }
+        },
+        chunkSize: 2000,
+    }
+
+    const MyUploadButton = () => {
+        const uploadyContext = react.useContext(rpldy.UploadyContext);
+
+        const onClick = react.useCallback(() => {
+            uploadyContext.showFileUpload();
+        });
+
+        return react.createElement("button", { onClick: onClick, children: "Upload" });
+    }
+
+    ReactDOM.render(
+        react.createElement(rpldy.ChunkedUploady, chunkedUploadyProps, [react.createElement(MyUploadButton)]),
+        document.getElementById("app")
+    );
+
+</script>
+
+</body>
+</html>

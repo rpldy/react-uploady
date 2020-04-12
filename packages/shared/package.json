@@ -19,7 +19,8 @@
     "flow-bin": "^0.121.0"
   },
   "dependencies": {
-    "lodash": "^4.17.15"
+    "invariant": "^2.2.4",
+    "just-throttle": "^1.1.0"
   },
   "publishConfig": {
     "access": "public"

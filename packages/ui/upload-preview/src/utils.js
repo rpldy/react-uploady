@@ -1,5 +1,4 @@
 // @flow
-// import { merge } from "lodash";
 import { isFunction } from "@rpldy/shared";
 import { PREVIEW_TYPES } from "./consts";
 import { PREVIEW_DEFAULTS } from "./defaults";

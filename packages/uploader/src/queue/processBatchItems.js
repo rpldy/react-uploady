@@ -1,6 +1,5 @@
 // @flow
-import { merge } from "lodash";
-import { triggerUpdater, isSamePropInArrays, FILE_STATES, logger } from "@rpldy/shared";
+import { triggerUpdater, isSamePropInArrays, merge, FILE_STATES, logger } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 

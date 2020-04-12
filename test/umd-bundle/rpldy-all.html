@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<script src="../../node_modules/react/umd/react.production.min.js"></script>
+<script src="../../node_modules/react-dom/umd/react-dom.production.min.js"></script>
+
+<script>
+    window.react = window.React;
+    window["react-dom"] = window.ReactDOM;
+</script>
+
+<script src="../../bundle/polyfills-bundle.js"></script>
+<!--<script src="../../bundle/rpldy-all.umd.js"></script>-->
+<script src="../../bundle/rpldy-all.umd.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>Test: rpldy.all</h1>
+
+<main id="app">
+
+</main>
+
+<script>
+
+    const mockSenderEnhancer = (uploader) => {
+        const mockSender = rpldy.sender.createMockSender({ delay: 1000 });
+        uploader.update({ send: mockSender.send });
+        return uploader;
+    };
+
+    const uploadButton = react.createElement(rpldy.uploadButton.UploadButton);
+
+    const uploadyProps = {
+        debug: true,
+        destination: {
+            url: "https://mock.test.com"
+        },
+        enhancer: mockSenderEnhancer,
+    }
+
+    ReactDOM.render(
+        react.createElement(rpldy.uploady.Uploady, uploadyProps, [uploadButton]),
+        document.getElementById("app")
+    );
+
+</script>
+
+</body>
+</html>

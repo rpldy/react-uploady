@@ -1,5 +1,4 @@
 // @flow
-import { isString, isObjectLike, } from "lodash";
 import { FILE_STATES } from "./consts";
 import type { BatchItem, UploadInfo } from "./types";
 
@@ -15,6 +14,8 @@ const getBatchItemWithFile = (batchItem: Object, file: Object): BatchItem => {
 	return batchItem;
 };
 
+const isLikeFile = (f: UploadInfo) => f && typeof f === "object" && f.name;
+
 export default (f: UploadInfo, batchId: string): BatchItem => {
 	iCounter += 1;
 	const id = `${batchId}.item-${iCounter}`,
@@ -29,9 +30,9 @@ export default (f: UploadInfo, batchId: string): BatchItem => {
 		aborted: false,
 	};
 
-	if (isString(f)) {
+	if (typeof f === "string") {
 		batchItem = getBatchItemWithUrl(batchItem, f);
-	} else if (isObjectLike(f)) {
+	} else if (isLikeFile(f)) {
 		batchItem = getBatchItemWithFile(batchItem, f);
 	} else {
 		throw new Error(`Unknown type of file added: ${typeof (f)}`);

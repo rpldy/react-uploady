@@ -34,7 +34,7 @@ describe("abort tests", () => {
 			expect(result).toBe(true);
 			expect(mockItemAbort).toHaveBeenCalled();
 			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
-			expect(queue.getState().aborts.u1).toBeUndefined()
+			expect(queue.getState().aborts.u1).toBeUndefined();
 		});
 
 		it("should call abort for added item", () => {

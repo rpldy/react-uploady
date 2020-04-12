@@ -16,7 +16,7 @@ describe("sendChunks tests", () => {
             handleChunkRequest,
             getChunksToSend,
             sendChunk,
-        )
+        );
     });
 
     it("should do nothing if finished", () => {

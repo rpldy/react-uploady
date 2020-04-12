@@ -1,7 +1,6 @@
 // @flow
 import React, { useMemo } from "react";
-// $FlowFixMe - for some reason flow doesnt see warning is installed...
-import warning from "warning";
+import { logWarning } from "@rpldy/shared-ui";
 import Uploady from "@rpldy/uploady";
 import { CHUNKING_SUPPORT } from "./utils";
 import getChunkedSend from "./chunkedSender";
@@ -42,7 +41,7 @@ const ChunkedUploady = (props: ChunkedUploadyProps) => {
     return <Uploady {...uploadyProps} enhancer={enhancer}/>;
 };
 
-warning(CHUNKING_SUPPORT, "This browser doesn't support chunking. Consider using @rpldy/uploady instead");
+logWarning(CHUNKING_SUPPORT, "This browser doesn't support chunking. Consider using @rpldy/uploady instead");
 
 export default ChunkedUploady;
 

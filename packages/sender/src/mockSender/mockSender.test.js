@@ -170,7 +170,7 @@ describe("mockSender tests", () => {
         const result = await doMockSend(null, null, true).request;
         const response = result.response;
 
-        expect(onProgress).toHaveBeenCalledTimes(1)
+        expect(onProgress).toHaveBeenCalledTimes(1);
         expect(result.state).toBe(FILE_STATES.CANCELLED);
         expect(response).toBe("abort");
     });

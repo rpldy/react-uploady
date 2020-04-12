@@ -4,17 +4,17 @@ import { FILE_STATES } from "../consts";
 describe("create batchItem tests", () => {
 
 	it("should create batch item with file", () => {
-		const file = {};
+		const file = {name: "test"};
 
 		const fileItem = createItem(file, "b1");
 
 		expect(fileItem.file).toBe(file);
-		expect(fileItem.url).toBeUndefined()
+		expect(fileItem.url).toBeUndefined();
 		expect(fileItem.batchId).toBe("b1");
 		expect(fileItem.id).toBeDefined();
 		expect(fileItem.state).toBe(FILE_STATES.ADDED);
 
-		const fileItem2 = createItem({}, "b1");
+		const fileItem2 = createItem({name: "test2"}, "b1");
 		expect(fileItem2.id).not.toBe(fileItem.id);
 	});
 

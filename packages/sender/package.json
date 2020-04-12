@@ -16,8 +16,7 @@
     "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.1.6",
-    "lodash": "^4.17.15"
+    "@rpldy/shared": "^0.1.6"
   },
   "devDependencies": {
     "flow-bin": "^0.121.0"

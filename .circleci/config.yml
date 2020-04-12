@@ -77,9 +77,9 @@ jobs:
                 path: bundle
             - persist_to_workspace:
                 root: .
-                  paths:
-                    - packages
-                    - bundle
+                paths:
+                  - packages
+                  - bundle
 workflows:
     create-rpldy:
       jobs:

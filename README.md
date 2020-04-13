@@ -1,20 +1,19 @@
 <p align="center">
     <img src="https://res.cloudinary.com/yoav-cloud/image/upload/w_400/v22212321/icons/react-uploady-text-logo.png" width="300" alt='react-uploady Logo' aria-label='react-uploady' />
+    
+   <h3>Modern file-upload components & hooks for React.</h3>
 </p>
 
 <p align="center">
 
-[![CircleCI](https://circleci.com/gh/yoavniran/react-uploady.svg?style=svg)](https://circleci.com/gh/yoavniran/react-uploady)
-[![codecov](https://codecov.io/gh/yoavniran/react-uploady/branch/master/graph/badge.svg)](https://codecov.io/gh/yoavniran/react-uploady)
-[![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://react-uploady-storybook.netlify.com/)
-[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
-[![license](https://img.shields.io/github/license/yoavniran/react-uploady?color=blue&style=plastic)](https://github.com/yoavniran/react-uploady/blob/master/LICENCE)
-
+  [![CircleCI](https://circleci.com/gh/yoavniran/react-uploady.svg?style=svg)](https://circleci.com/gh/yoavniran/react-uploady)
+  [![codecov](https://codecov.io/gh/yoavniran/react-uploady/branch/master/graph/badge.svg)](https://codecov.io/gh/yoavniran/react-uploady)
+  [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://react-uploady-storybook.netlify.com/)
+  [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
+  [![license](https://img.shields.io/github/license/yoavniran/react-uploady?color=blue&style=plastic)](https://github.com/yoavniran/react-uploady/blob/master/LICENCE)
 </p>
 
 ## Intro
-
-> "Modern file-upload components & hooks for React."
 
 With React-Uploady you can build (client-side) file-upload features with just a few lines of code.
 
@@ -39,11 +38,11 @@ Our __[Storybook](https://react-uploady-storybook.netlify.com/)__ has many examp
 <!--TODO XXXX Need animated gif here showing storybook XXXXX-->
 
 
-Checkout our __[Guides](guides)__ section for additional examples & information
+Checkout our __[Guides](guides)__ section for additional examples & information.
 
 ## Installation
 
-react-uploady is a mono-repo, and as such provides multiple packages with different functionality.
+React-uploady is a mono-repo, and as such provides multiple packages with different functionality.
 
 For React applications, at the very least, you will need the Uploady provider:
 
@@ -94,18 +93,56 @@ After that, you can add additional packages as needed. See below for more detail
 
 ## Examples
 
-Our [storybook](https://react-uploady-storybook.netlify.com/) has many examples but here are a few handy ones:
-
 ### Simple Upload Button
+
+This examples shows how you add Uploady and UploadButton to your app.
+This is all it takes to get file uploading to work in your React app.
+
+```javascript 
+
+import React from "react";
+import Uploady from "@rpldy/uploady";
+import UploadButton from "@rpldy/upload-button";
+
+const App = () => (<Uploady
+    destination={{ url: "https://my-server/upload" }}>
+    <UploadButton/>
+</Uploady>);
+
+```
 
 ### Custom Upload Button
 
+In case you want to use your own component as the upload trigger, use the asUploadButton HOC:
+
+```javascript
+
+import React from "react";
+import Uploady from "@rpldy/uploady";
+import { asUploadButton } from "@rpldy/upload-button";
+
+const DivUploadButton = asUploadButton((props) => {
+    return <div {...props} style={{ cursor: "pointer" }}>
+        DIV Upload Button
+    </div>
+});
+
+const App = () => (<Uploady
+    destination={{ url: "https://my-server/upload" }}>
+    <DivUploadButton/>
+</Uploady>);
+
+```
+
 ### Progress Hook
+
+
+
 
 ### Add support for Chunked Uploads
 
 
-> See more (advanced) examples in our [guides](guides).
+> See more (advanced) examples in our [guides](guides) and  [storybook](https://react-uploady-storybook.netlify.com/).
 
 ## UMD Bundles
 

@@ -6,7 +6,7 @@
 
 [![CircleCI](https://circleci.com/gh/yoavniran/react-uploady.svg?style=svg)](https://circleci.com/gh/yoavniran/react-uploady)
 [![codecov](https://codecov.io/gh/yoavniran/react-uploady/branch/master/graph/badge.svg)](https://codecov.io/gh/yoavniran/react-uploady)
-[![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/yoavniran@react-uploady/badge/badge-storybook.svg)](https://react-uploady-storybook.netlify.com/)
+[![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://react-uploady-storybook.netlify.com/)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 [![license](https://img.shields.io/github/license/yoavniran/react-uploady?color=blue&style=plastic)](https://github.com/yoavniran/react-uploady/blob/master/LICENCE)
 

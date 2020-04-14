@@ -10,7 +10,7 @@
   [![codecov](https://codecov.io/gh/yoavniran/react-uploady/branch/master/graph/badge.svg)](https://codecov.io/gh/yoavniran/react-uploady)
   [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://react-uploady-storybook.netlify.com/)
   [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
-  [![license](https://img.shields.io/github/license/yoavniran/react-uploady?color=blue&style=plastic)](https://github.com/yoavniran/react-uploady/blob/master/LICENCE)
+  [![license](https://img.shields.io/github/license/yoavniran/react-uploady?color=blue&style=plastic)](LICENSE.md)
 </p>
 
 ## Intro
@@ -46,19 +46,31 @@ React-uploady is a mono-repo, and as such provides multiple packages with differ
 
 For React applications, at the very least, you will need the Uploady provider:
 
-> yarn add @rpldy/uploady
+```bash
+
+   yarn add @rpldy/uploady
+``` 
 
 Or
 
-> npm i @rpldy/uploady
+```bash
+
+   npm i @rpldy/uploady
+```
 
 If you wish to use the uploading mechanism (no UI), at the very least, you will need the Uploader:
 
-> yarn add @rpldy/uploader
+```bash
+
+  yarn add @rpldy/uploader
+```
 
 Or
 
-> npm i @rpldy/uploader
+```bash
+
+   npm i @rpldy/uploader
+```
 
 
 After that, you can add additional packages as needed. See below for more details.
@@ -92,6 +104,10 @@ After that, you can add additional packages as needed. See below for more detail
 
 
 ## Examples
+
+For specific usage, see documentation in the relevant package README file.
+
+For upload options see the [@rpldy/uploady docs](packages/ui/uploady).
 
 ### Simple Upload Button
 
@@ -142,7 +158,10 @@ const App = () => (<Uploady
 ### Add support for Chunked Uploads
 
 
-> See more (advanced) examples in our [guides](guides) and  [storybook](https://react-uploady-storybook.netlify.com/).
+
+
+
+> See more (advanced) examples in our [guides](guides) and [storybook](https://react-uploady-storybook.netlify.com/).
 
 ## UMD Bundles
 
@@ -150,7 +169,7 @@ React-uploady is also available on CDNs such as [unpkg.com](https://unpkg.com) a
 
 <!-- TOOD: add urls here -->
 
-See [this guide](guides/UMD.md) for more information on how to use.
+See this [guide](guides/UMD.md) for more information on how to use.
 
 ## Credits
 

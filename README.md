@@ -1,16 +1,25 @@
 <p align="center">
-    <img src="https://res.cloudinary.com/yoav-cloud/image/upload/w_400/v22212321/icons/react-uploady-text-logo.png" width="300" alt='react-uploady Logo' aria-label='react-uploady' />
-    
-   <h3>Modern file-upload components & hooks for React.</h3>
+    <img src="https://res.cloudinary.com/yoav-cloud/image/upload/w_400/v22212321/icons/react-uploady-text-logo.png" width="300" alt='react-uploady Logo' aria-label='react-uploady' />   
 </p>
 
-<p align="center">
+<p align="center">Modern file-upload components & hooks for React.</p>
 
-  [![CircleCI](https://circleci.com/gh/rpldy/react-uploady.svg?style=svg)](https://circleci.com/gh/rpldy/react-uploady)
-  [![codecov](https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg)](https://codecov.io/gh/rpldy/react-uploady)
-  [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://react-uploady-storybook.netlify.com/)
-  [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
-  [![license](https://img.shields.io/github/license/rpldy/react-uploady?color=blue&style=plastic)](LICENSE.md)
+<p align="center">
+    <a href="https://circleci.com/gh/rpldy/react-uploady">
+        <img src="https://circleci.com/gh/rpldy/react-uploady.svg?style=svg" alt="circleci status"/>
+    </a>  
+    <a href="https://codecov.io/gh/rpldy/react-uploady">
+      <img src="https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg" alt="codecov status"/>
+    </a>
+    <a href="https://react-uploady-storybook.netlify.com">
+       <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/>
+    </a>  
+    <a href="https://lerna.js.org/">
+       <img src="https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg" alt="lerna"/>
+    </a>
+    <a href="LICENSE.md">
+       <img src="https://img.shields.io/github/license/rpldy/react-uploady?color=blue&style=plastic" alt="MIT License"/>
+    </a>
 </p>
 
 ## Intro
@@ -204,7 +213,7 @@ const App = () => (<ChunkedUploady
 
 ## Important Concepts
 
-Upload Options
+**Upload Options**
 
 These are options that are passed to the [uploader](packages/uploader) to configure aspects of the upload process.
 For example, whether files can be grouped in a single request (by default, no).

@@ -8,22 +8,22 @@ It provides multiple hooks that enable more advanced features and data for clien
 
 ## Installation
 
-```bash
+```shell
 
-   yarn add @rpldy/uploady 
+   $ yarn add @rpldy/uploady 
 ```
 >   
 
 Or 
 
-```bash
+```shell
 
-   npm i @rpldy/uploady 
+   $ npm i @rpldy/uploady 
 ```
 
 ## Example
 
-
+Register to file start
 
 
 

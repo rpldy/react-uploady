@@ -59,32 +59,27 @@ React-uploady is a mono-repo, and as such provides multiple packages with differ
 
 For React applications, at the very least, you will need the Uploady provider:
 
-```bash
-
-   yarn add @rpldy/uploady
+```shell
+   $ yarn add @rpldy/uploady
 ``` 
 
 Or
 
-```bash
-
-   npm i @rpldy/uploady
+```shell
+   $ npm i @rpldy/uploady
 ```
 
 If you wish to use the uploading mechanism (no UI), at the very least, you will need the Uploader:
 
-```bash
-
-  yarn add @rpldy/uploader
+```shell
+  $ yarn add @rpldy/uploader
 ```
 
 Or
 
-```bash
-
-   npm i @rpldy/uploader
+```shell
+   $ npm i @rpldy/uploader
 ```
-
 
 After that, you can add additional packages as needed. See below for more details.
 
@@ -165,16 +160,89 @@ const App = () => (<Uploady
 
 ### Progress Hook
 
+```javascript
 
+import React from "react";
+import Uploady, { useItemProgressListener } from "@rpldy/uploady";
+import UploadButton from "@rpldy/upload-button";
 
+//must be rendered inside <Uploady>
+const LogProgress = () => {
+    useItemProgressListener((item) => {
+        console.log(`>>>>> (hook) File ${item.file.name} completed: ${item.completed}`);
+    });
+
+    return null;
+}
+
+const App = () => (<Uploady
+    destination={{ url: "https://my-server/upload" }}>
+    <LogProgress/>   
+    <UploadButton/>
+</Uploady>);
+
+```
 
 ### Add support for Chunked Uploads
 
+Can be used with servers that support chunked uploads
 
+```javascript
+import React from "react";
+import ChunkedUploady from "@rpldy/chunked-uploady";
+ 
+const App = () => (<ChunkedUploady
+    destination={{ url: "https://my-server/upload" }}
+    chunkSize={5242880}>
+       
+    <UploadButton/>
+</ChunkedUploady>);
 
-
+```
 
 > See more (advanced) examples in our [guides](guides) and [storybook](https://react-uploady-storybook.netlify.com/).
+
+## Important Concepts
+
+Upload Options
+
+These are options that are passed to the [uploader](packages/uploader) to configure aspects of the upload process.
+For example, whether files can be grouped in a single request (by default, no).
+
+Upload Options are typically passed to the [Uploady](packages/ui/uploady) instance. But these can be overriden. For example, by an [upload button](packages/ui/upload-button).
+Or even during [upload processing](guides/DynamicParameters.md).  
+
+Provider
+
+Passed as a part of the upload options. It's an object that is used to configure the end-point the files will be uploaded to.
+It's type is defined [here](packages/shared/src/types.js#L7).
+
+See more information in the [Uploady](packages/ui/uploady#props) README.
+
+**Enhancer**
+
+```javascript
+
+(uploader: UploaderType, trigger: Trigger<mixed>) => UploaderType
+``` 
+
+Enhancers are functions that can ehance an uploader instance. They are also passed as part of the options given to the Uploady instance.
+
+As they are applied when the uploader instance is created, they can change the way uploader does things or pass different defaults. 
+
+See this [guide](guides/Enhancers.md) for more practical information and sample code.
+
+**Batch**
+
+When a file or files are handed over to the uploader, they are grouped into a batch. 
+This batch will have its all lifetime [events](packages/ui/uploady#events).
+A batch can be used to abort the upload of all files inside it. Or can also be retried together (see [@rpldy/retry](packages/retry)).
+
+**BatchItem**
+
+Each file (or URL) added to the uploader are wrapped by a BatchItem object. They will have a unique ID within the life-time of the uploader instance.
+A BatchItem has its own lifetime [events](packages/ui/uploady#events).
+
 
 ## UMD Bundles
 

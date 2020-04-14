@@ -10,17 +10,17 @@ Buttons can use different configuration overrides that supersede the options pas
 
 ## Installation
 
-```bash
+```shell
 
-   yarn add @rpldy/uploady @rpldy/upload-button 
+   $ yarn add @rpldy/uploady @rpldy/upload-button 
 ```
 >   
 
 Or 
 
-```bash
+```shell
 
-   npm i @rpldy/uploady @rpldy/upload-button 
+   $ npm i @rpldy/uploady @rpldy/upload-button 
 ```
 
 ## Example

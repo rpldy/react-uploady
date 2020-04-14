@@ -6,11 +6,11 @@
 
 <p align="center">
 
-  [![CircleCI](https://circleci.com/gh/yoavniran/react-uploady.svg?style=svg)](https://circleci.com/gh/yoavniran/react-uploady)
-  [![codecov](https://codecov.io/gh/yoavniran/react-uploady/branch/master/graph/badge.svg)](https://codecov.io/gh/yoavniran/react-uploady)
+  [![CircleCI](https://circleci.com/gh/rpldy/react-uploady.svg?style=svg)](https://circleci.com/gh/rpldy/react-uploady)
+  [![codecov](https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg)](https://codecov.io/gh/rpldy/react-uploady)
   [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://react-uploady-storybook.netlify.com/)
   [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
-  [![license](https://img.shields.io/github/license/yoavniran/react-uploady?color=blue&style=plastic)](LICENSE.md)
+  [![license](https://img.shields.io/github/license/rpldy/react-uploady?color=blue&style=plastic)](LICENSE.md)
 </p>
 
 ## Intro

@@ -10,6 +10,7 @@ module.exports = {
         "@storybook/addon-actions/register",
         "@storybook/addon-knobs/register",
         "@storybook/addon-storysource/register",
+        "storybook-readme/register",
     ],
 
     webpackFinal: (config) => {

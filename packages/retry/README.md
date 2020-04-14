@@ -4,5 +4,3 @@
 @rpldy/retry
 
 ## Events
-
-## Hooks

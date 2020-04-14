@@ -23,13 +23,69 @@ Or
 
 ## Example
 
-Register to file start
+To be able to use one of the [UI Components](../../../README.md#ui-packages) or one of the hooks, you need to wrap them with <Uploady>.
+This will give them access to the UploadyContext.
 
+```javascript
+
+import Uploady from "@rpldy/uploady";
+
+const App = () => (<Uploady
+    multiple
+    grouped
+    maxGroupSize={2}
+    method="PUT"
+    destination={{url: "https://my-server", headers: {"x-custom": "123"}}}>
+
+    <RestOfMyApp/>
+</Uploady>)
+
+```
 
 
 ## Context
 
-UploadyContext,
+When working in React, The UploadyContext is the API provider for the uploader mechanism.
+It wraps the uploadre and exposes everything the app using it needs.
+
+```javascript
+import React, { useContext, useCallback } from "react";
+import Uploady, { UploadyContext } from "@rpldy/uploady";
+
+const MyComponent = () => { 
+    const uploady = useContext(UploadyContext);
+
+    const onClick = useCallback(()=> {
+            uploady.showFileUpload();
+        });
+
+    return <button onClick={onClick}>Custom Upload Button</button>
+}
+
+const App = () => (<Uploady>
+    <MyComponent/>
+</Uploady>);
+
+```
+
+The UploadyContext API:
+
+* showFileUpload - (?UploadOptions) => void
+    
+    Show the native file selection dialog. Pass upload options to override options set as props on the <Uploady/> component. 
+
+* upload - (files: UploadInfo | UploadInfo[], addOptions: ?UploadOptions) => void
+
+* setOptions - (CreateOptions) => void
+
+            getOptions,
+            getExtension,
+            abort,
+            abortBatch,
+            on,
+            once,
+            off,
+
 
 
 ## Events

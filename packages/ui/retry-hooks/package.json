@@ -1,6 +1,6 @@
 {
   "version": "0.1.6",
-  "name": "@rpldy/retry",
+  "name": "@rpldy/retry-hooks",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
   "main": "lib/index.js",
@@ -9,20 +9,24 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/yoavniran/react-uploady.git",
-    "directory": "packages/retry"
+    "directory": "packages/ui/retry-hooks"
   },
   "scripts": {
-    "build": "node ../../scripts/build.js",
+    "build": "node ../../../scripts/build.js",
     "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
   },
   "dependencies": {
+    "@rpldy/retry": "^0.1.6",
     "@rpldy/shared": "^0.1.6",
+    "@rpldy/shared-ui": "^0.1.6",
     "@rpldy/uploader": "^0.1.6"
   },
   "peerDependencies": {
-    "immer": "^6.0.3"
+    "react": ">=16.8.x",
+    "react-dom": ">=16.8.x"
   },
   "devDependencies": {
+    "@rpldy/upload-button": "^0.1.6",
     "flow-bin": "^0.121.0"
   },
   "publishConfig": {

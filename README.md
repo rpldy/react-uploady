@@ -105,6 +105,7 @@ After that, you can add additional packages as needed. See below for more detail
 * [@rpldy/upload-url-input](packages/ui/upload-url-input) - Input component to send URL as upload info (ex: [Cloudinary](https://cloudinary.com/documentation/upload_images#auto_fetching_remote_images))
 * [@rpldy/upload-drop-zone](packages/ui/upload-drop-zone) - (Drag&)Drop zone to upload files and folder content
 * @rpldy/crop - TDOO
+* [@rpldy/retry-hooks](packages/ui/retry-hooks) - Hooks to interact with the retry mechanism
 
 ### Uploaders
 * [@rpldy/chunked-uploady](packages/ui/chunked-uploady) - Wrapper for Uploady to support chunked uploads
@@ -221,7 +222,7 @@ For example, whether files can be grouped in a single request (by default, no).
 Upload Options are typically passed to the [Uploady](packages/ui/uploady) instance. But these can be overriden. For example, by an [upload button](packages/ui/upload-button).
 Or even during [upload processing](guides/DynamicParameters.md).  
 
-Provider
+**Provider**
 
 Passed as a part of the upload options. It's an object that is used to configure the end-point the files will be uploaded to.
 It's type is defined [here](packages/shared/src/types.js#L7).

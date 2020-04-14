@@ -27,5 +27,6 @@ todo.md
 
 packages/**/lib
 packages/**/.flowconfig
+packages/**/LICENSE.md
 
 test.js

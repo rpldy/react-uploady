@@ -1,4 +1,3 @@
-
 # Upload Button
 
 Upload button component and asUploadButton HOC

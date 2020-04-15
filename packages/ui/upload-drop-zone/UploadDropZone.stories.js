@@ -11,6 +11,9 @@ import {
     StoryUploadProgress,
 } from "../../../story-helpers";
 
+// $FlowFixMe - doesnt understand loading readme
+import readme from "./README.md";
+
 // import readme from '../README.md';
 
 const dzCss = css`
@@ -195,4 +198,10 @@ export default {
     component: UploadDropZone,
     title: "Upload Drop Zone",
     decorators: [withKnobs],
+    parameters: {
+        readme: {
+            sidebar: readme,
+        },
+        options: { theme: {} }, //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
+    },
 };

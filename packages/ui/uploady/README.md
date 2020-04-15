@@ -11,8 +11,7 @@ It provides multiple hooks that enable more advanced features and data for clien
 ```shell
 
    $ yarn add @rpldy/uploady 
-```
->   
+``` 
 
 Or 
 
@@ -20,6 +19,38 @@ Or
 
    $ npm i @rpldy/uploady 
 ```
+
+
+## Props
+
+| Name (* = mandatory) | Type          | Default       | Description  
+| --------------       | ------------- | ------------- | -------------
+| Uploader Options
+| autoUpload           | boolean       | true          | automatically upload files when they are added 
+| destination          | [Destination](../../shared/src/types.js#L7)   | undefined     | configure the end-point to upload to
+| inputFieldName       | string        | "file"        | name (attribute) of the file input field
+| grouped              | boolean       | false         | group multiple files in a single request 
+| maxGroupSize         | number        | 5             | maximum of files to group together in a single request 
+| formatGroupParamName | (number, string) => string | undefined | determine the upload request field name when more than file is grouped in a single upload
+| fileFilter           | (File &#124; string) => boolean | undefined | return false to exclude from batch
+| method               | string        | "POST"        | HTTP method in upload request
+| params               | Object        | undefined     | collection of params to pass along with the upload
+| forceJsonResponse    | boolean       | false         | parse server response as JSON even if no JSON content-type header received            
+| withCredentials      | boolean       | false         | set XHR withCredentials to true
+| enhancer             | [UploaderEnhancer](../../uploader/src/types.js#L37) | undefined    | uploader [enhancer](../../../README.md#enhancer) function
+| concurrent           | boolean       | false          | issue multiple upload requests simultaneously
+| maxConcurrent        | number        | 2              | maximum allowed simultaneous requests
+| send                 | [SendMethod](../../shared/src/types.js#L100) | @rpldy/sender | how to send files to the server
+| Uploady Options
+| debug                | boolean        | false | enable console logs from uploady packages
+| listeners            | Object        | undefined | map of [event](../../uploader/README.md#events) name and event handler
+| customInput          | boolean       | false | whether to use a custom file input (see: [useFileInput](#useFileInput)
+| inputFieldContainer  | HTMLElement   | document.body | html element to place the file input element inside
+| children             | React.Node    | undefined     | any part of your React app that will require access to the upload flow  (components, hooks, etc.)
+| capture              | string        | null          | [input/file#capture](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture)
+| multiple             | boolean       | true          | [input/file#multiple](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#multiple)
+| accept               | string        | null          | [input/file#accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept)
+| webkitdirectory      | boolean       | false         | [webkitdirectory](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory)
 
 ## Example
 
@@ -46,7 +77,7 @@ const App = () => (<Uploady
 ## Context
 
 When working in React, The UploadyContext is the API provider for the uploader mechanism.
-It wraps the uploadre and exposes everything the app using it needs.
+It wraps the uploader and exposes everything the app using it needs.
 
 ```javascript
 import React, { useContext, useCallback } from "react";
@@ -68,66 +99,183 @@ const App = () => (<Uploady>
 
 ```
 
-The UploadyContext API:
+### UploadyContext API
 
-* showFileUpload - (?UploadOptions) => void
+#### showFileUpload 
+
+_(?UploadOptions) => void_
     
-    Show the native file selection dialog. Pass upload options to override options set as props on the <Uploady/> component. 
+Show the native file selection dialog. Optionally Pass options as a parameter to override options set as props on the <Uploady/> component. 
 
-* upload - (files: UploadInfo | UploadInfo[], addOptions: ?UploadOptions) => void
+#### upload 
 
-* setOptions - (CreateOptions) => void
+_(files: UploadInfo | UploadInfo[], addOptions: ?UploadOptions) => void_
 
-            getOptions,
-            getExtension,
-            abort,
-            abortBatch,
-            on,
-            once,
-            off,
-
-
-
-## Events
-
-	[UPLOADER_EVENTS.BATCH_START],
-    [UPLOADER_EVENTS.BATCH_FINISH],
-    [UPLOADER_EVENTS.BATCH_CANCEL],
-    [UPLOADER_EVENTS.BATCH_ABORT],
-    [UPLOADER_EVENTS.ITEM_START],
-    [UPLOADER_EVENTS.ITEM_FINISH],
-    [UPLOADER_EVENTS.ITEM_CANCEL],
-    [UPLOADER_EVENTS.ITEM_ERROR],
-    [UPLOADER_EVENTS.REQUEST_PRE_SEND],
-
-### Cancellable Events
-
-
-### withEvent.... maybe dont need
-
-### Hooks
-
-    useUploadOptions,
+Upload file(s). Optionally Pass options as the second parameter to override options set as props on the <Uploady/> component.
     
-    useBatchAddListener,
-    useBatchStartListener,
-    useBatchProgressListener,
-    useBatchFinishListener,
-    useBatchCancelledListener,
-    useBatchAbortListener,
+#### setOptions 
 
-    useItemStartListener,
-    useItemFinishListener,
-    useItemProgressListener,
-    useItemCancelListener,
-    useItemErrorListener,
+_(UploadOptions) => void_
+    
+Update the uploader instance with different options than the ones used to initialize
+    
+#### getOptions 
 
-    useRequestPreSend,
+_() => UploadOptions_
+
+get the current options used by the uploader
+
+#### getExtension 
+
+_(name: any) => ?Object_
+    
+get an extension registered by that name (through an enhancer)
+ 
+#### abort
+
+_(id?: string) => void_
+
+abort all files being uploaded or a single item by its ID
+   
+#### abortBatch 
+
+_(id: string) => void_
+            
+abort a specific batch by its ID
+
+#### on 
+
+_(name: any, cb: EventCallback) => OffMethod_
+
+register for an [event](../../uploader/README.md#events)
+ 
+#### once 
+
+_(name: any, cb: EventCallback) => OffMethod_
+ 
+register once for an [event](../../uploader/README.md#events)
+    
+#### off
+
+_(name: any, cb?: EventCallback) => void_
+
+unregister from an events
+
+## Hooks
+
+Uploady provides hooks for all [uploader events](../../uploader/README.md#events), as well as a few other useful ones.
+
+### useBatchAddListener (event hook)
+
+Called when new batch is added.
+
+> This event is _[cancellable](../../uploader/README.md#cancellable-events)_
+
+```javascript
+    const MyComponent = () => {
+        useBatchAddListener((batch) => {
+            console.log(`batch ${batch.id} was just added with ${batch.items.length} items`);  
+        });
+
+        //...    
+    };
+```
+
+### useBatchStartListener (event hook)
+
+Called when batch items start uploading
+
+> This event is _[cancellable](../../uploader/README.md#cancellable-events)_
+
+```javascript
+    const MyComponent = () => {
+        useBatchStartListener((batch) => {
+            console.log(`batch ${batch.id} started uploading`);  
+        });
+
+        //...    
+    };
+```
+
+### useBatchProgressListener (event hook)
+
+Called every time progress data is received from the upload request(s)
+
+```javascript
+   const MyComponent = () => {
+        const batch = useBatchProgressListener((batch) => {});
+    
+        console.log(`batch ${batch.id} is ${batch.completed}% and ${batch.loaded} bytes uploaded`)
+
+       //...    
+   };
+``` 
+        
+### useBatchFinishListener (event hook)
+
+Called when batch items finished uploading 
+
+```javascript
+    const MyComponent = () => {
+        useBatchFinishListener((batch) => {
+            console.log(`batch ${batch.id} finished uploading`);  
+        });
+
+        //...    
+    };
+```
+
+### useBatchCancelledListener (event hook)
+
+Called in case batch was cancelled from BATCH_START event handler
+
+```javascript
+    const MyComponent = () => {
+        useBatchCancelledListener((batch) => {
+            console.log(`batch ${batch.id} was cancelled`);  
+        });
+
+        //...    
+    };
+```
+
+### useBatchAbortListener (event hook)
+
+Called in case [abortBatch](#abortBatch) was called
+
+```javascript
+    const MyComponent = () => {
+        useBatchAbortListener((batch) => {
+            console.log(`batch ${batch.id} was aborted`);  
+        });
+
+        //...    
+    };
+```
+ 
+
+### useItemStartListener (event hook)
+   
+### useItemFinishListener (event hook)
+    
+### useItemProgressListener (event hook)
+    
+### useItemCancelListener (event hook)
+
+### useItemErrorListener (event hook)
+
+### useRequestPreSend (event hook)
+    
+### useUploadOptions
+        
+### useFileInput
+
+
     
  ## custom file input and useFileInput
 
 will use the input name attribute and url (action), and method from the form element if the input resides in one
 only if a destination configuration object wasnt provided already
  
- > updating the attributes of the form wont affect the uploader configuration
+ > updating the attributes of the form won't affect the uploader configuration
  

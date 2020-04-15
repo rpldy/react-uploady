@@ -7,6 +7,8 @@ import Uploady from "@rpldy/uploady";
 import { StoryUploadProgress, useStoryUploadySetup } from "../../../story-helpers";
 import retryEnhancer, { useBatchRetry, useRetry, useRetryListener } from "./src";
 import { withKnobs } from "@storybook/addon-knobs";
+
+// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
 const RetryUi = () => {

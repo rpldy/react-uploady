@@ -134,7 +134,7 @@ export type CreateOptions =  {|
 	concurrent?: boolean,
 	//the maximum allowed for simultaneous requests (default: 2)
 	maxConcurrent?: number,
-	//the send method to use. Allows overriding the method used to send files to the server for example using a mock (default: @rupy/sender)
+	//the send method to use. Allows overriding the method used to send files to the server for example using a mock (default: @rpldy/sender)
 	send?: ?SendMethod,
 |};
 

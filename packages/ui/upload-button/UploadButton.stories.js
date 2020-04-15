@@ -19,6 +19,7 @@ import {
 } from "../../../story-helpers";
 import UploadButton, { asUploadButton } from "./src";
 
+// $FlowFixMe - doesnt understand loading readme
 import readme from './README.md';
 
 export const Simple = () => {

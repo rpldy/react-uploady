@@ -7,9 +7,9 @@ export type UploaderListeners = { [string]: EventCallback };
 
 export type UploadyProps = {|
 	...CreateOptions,
-    //whether to set debug flag for extra console logs from the uploader module
+    //whether to set debug flag for extra console logs
 	debug?: boolean,
-    //
+    //map of event name and event handler
 	listeners?: UploaderListeners,
 
 	//whether a file input element ref will be provided instead of Uploady creating one internally - see: useFileInput (default: false)

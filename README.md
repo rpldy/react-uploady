@@ -53,6 +53,8 @@ RU has a small footprint (by design):
 We recommend checking out the [Uploady](packages/ui/uploady) README first to understand how to configure your uploads
 and how to access upload data (using the provided hooks or events).
 
+It's also worth reading the  [Important Concepts](#important-concepts) section below for some key concepts.
+
 In case you need UI components (like an upload button), check out any of our [UI packages](#ui-packages).
 
 **Additional Resources**
@@ -214,7 +216,7 @@ const App = () => (<ChunkedUploady
 
 ## Important Concepts
 
-**Upload Options**
+### Upload Options
 
 These are options that are passed to the [uploader](packages/uploader) to configure aspects of the upload process.
 For example, whether files can be grouped in a single request (by default, no).
@@ -222,14 +224,14 @@ For example, whether files can be grouped in a single request (by default, no).
 Upload Options are typically passed to the [Uploady](packages/ui/uploady) instance. But these can be overriden. For example, by an [upload button](packages/ui/upload-button).
 Or even during [upload processing](guides/DynamicParameters.md).  
 
-**Provider**
+### Destination
 
 Passed as a part of the upload options. It's an object that is used to configure the end-point the files will be uploaded to.
 It's type is defined [here](packages/shared/src/types.js#L7).
 
 See more information in the [Uploady](packages/ui/uploady#props) README.
 
-**Enhancer**
+### Enhancer
 
 ```javascript
 
@@ -242,13 +244,13 @@ As they are applied when the uploader instance is created, they can change the w
 
 See this [guide](guides/Enhancers.md) for more practical information and sample code.
 
-**Batch**
+### Batch
 
 When a file or files are handed over to the uploader, they are grouped into a batch. 
 This batch will have its all lifetime [events](packages/ui/uploady#events).
 A batch can be used to abort the upload of all files inside it. Or can also be retried together (see [@rpldy/retry](packages/retry)).
 
-**BatchItem**
+### BatchItem
 
 Each file (or URL) added to the uploader are wrapped by a BatchItem object. They will have a unique ID within the life-time of the uploader instance.
 A BatchItem has its own lifetime [events](packages/ui/uploady#events).

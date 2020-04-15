@@ -15,6 +15,9 @@ import {
     uploadUrlInputCss,
 } from "../../../story-helpers";
 
+// $FlowFixMe - doesnt understand loading readme
+import readme from "./README.md";
+
 const StyledUploadButton = styled(UploadButton)`
 	${uploadButtonCss}
 `;
@@ -148,4 +151,10 @@ export default {
     component: UploadPreview,
     title: "Upload Preview",
     decorators: [withKnobs],
+    parameters: {
+        readme: {
+            sidebar: readme,
+        },
+        options: { theme: {} }, //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
+    },
 };

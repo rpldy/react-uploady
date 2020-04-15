@@ -8,6 +8,9 @@ import {
 } from "../../../story-helpers";
 import UploadUrlInput from "./src";
 
+// $FlowFixMe - doesnt understand loading readme
+import readme from "./README.md";
+
 export const Simple = () => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
@@ -94,5 +97,11 @@ export default {
     component: UploadUrlInput,
     title: "Upload Url Input",
     decorators: [withKnobs],
+    parameters: {
+        readme: {
+            sidebar: readme,
+        },
+        options: { theme: {} }, //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
+    },
 };
 

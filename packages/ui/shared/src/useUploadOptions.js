@@ -5,7 +5,12 @@ import { UploadyContext } from "./index";
 
 import type { CreateOptions } from "@rpldy/shared";
 
-export default (options: CreateOptions) => {
+export default (options?: CreateOptions): CreateOptions => {
     const context = assertContext(useContext(UploadyContext));
-    context.setOptions(options);
+
+    if (options) {
+        context.setOptions(options);
+    }
+
+    return context.getOptions();
 };

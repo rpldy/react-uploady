@@ -7,6 +7,35 @@ import type { InputRef } from "@rpldy/shared-ui";
 
 type DestinationShape = $Shape<Destination>;
 
+//https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#form-submission-algorithm
+const getUrl = (form) => {
+    const loc = window.location;
+    let url = form.getAttribute("action") || "";
+    url = url.replace(/\s/g, "");
+    let path;
+
+    // eslint-disable-next-line default-case
+    switch (true) {
+        //if empty, use same url as page
+        case url === "":
+            url = loc.href;
+            break;
+        //starts with "/", make it absolute
+        case url.startsWith("/"):
+            url = `${loc.protocol}//${loc.host}${url}`;
+            break;
+        //not an http(s) and doesnt start with "/", make it relative
+        case !(/:\/\//.test(url)):
+            path = loc.pathname.split("/")
+                .slice(0, -1).concat("").join("/");
+
+            url = `${loc.protocol}//${loc.host}${path}${url}`;
+            break;
+    }
+
+    return url;
+};
+
 const getDestinationFromInput = (input: HTMLInputElement): ?DestinationShape => {
     const form = input.closest("form");
 
@@ -18,7 +47,7 @@ const getDestinationFromInput = (input: HTMLInputElement): ?DestinationShape => 
 
     if (form) {
         const method = form.getAttribute("method"),
-            url = form.getAttribute("action");
+            url = getUrl(form);
 
         destination.method = method ? method.toUpperCase() : undefined;
         destination.url = url || undefined;
@@ -43,7 +72,6 @@ export default (fileInputRef: InputRef) => {
                 //if no destination was passed, try and get from input's parent form
                 if (!uploaderOptions.destination || !uploaderOptions.destination.url) {
                     const domDestination = getDestinationFromInput(input);
-
                     context.setOptions({ destination: domDestination });
                 }
             }

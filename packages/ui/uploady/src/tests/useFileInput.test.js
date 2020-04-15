@@ -12,14 +12,15 @@ describe("useFileInput tests", () => {
         );
     });
 
-    const TestComp = ({ withForm, withoutRef, formNoProps, exposeRef }) => {
+    const TestComp = ({ withForm, withoutRef, formNoProps, exposeRef, action }) => {
         const inputRef = useRef();
         useFileInput(inputRef);
 
         exposeRef(inputRef);
 
         return withForm ?
-            <form action={formNoProps ? undefined : url} method={formNoProps ? undefined : "put"}>
+            <form action={formNoProps ? undefined : (action === undefined ? url : action)}
+                  method={formNoProps ? undefined : "put"}>
                 <input type="file" name="testFile" style={{ display: "none" }}
                        ref={withoutRef ? undefined : inputRef}/>
             </form> :
@@ -60,23 +61,39 @@ describe("useFileInput tests", () => {
             });
     });
 
-    it("should pass destination props from input form", () => {
+    describe("test with form action", () => {
+        const pageUrl = "https://test.com/home/test.html";
 
-        UploadyContext.getOptions.mockReturnValueOnce({});
-
-        const { inputRef } = renderTestComp({ withForm: true });
-
-        expect(UploadyContext.setExternalFileInput)
-            .toHaveBeenCalledWith(inputRef);
-
-        expect(UploadyContext.setOptions)
-            .toHaveBeenCalledWith({
-                destination: {
-                    filesParamName: "testFile",
-                    method: "PUT",
-                    url,
-                }
+        beforeEach(() => {
+            jsdom.reconfigure({
+                url: pageUrl
             });
+        });
+
+        it.each([
+            ["", pageUrl],
+            ["  ", pageUrl],
+            ["upload", "https://test.com/home/upload"],
+            ["/upload", "https://test.com/upload"],
+            ["https://my-upload.com", "https://my-upload.com"],
+        ])("should pass destination props from input form for action: '%s'", (formAction, resultUrl) => {
+
+            UploadyContext.getOptions.mockReturnValueOnce({});
+
+            const { inputRef } = renderTestComp({ withForm: true, action: formAction });
+
+            expect(UploadyContext.setExternalFileInput)
+                .toHaveBeenCalledWith(inputRef);
+
+            expect(UploadyContext.setOptions)
+                .toHaveBeenCalledWith({
+                    destination: {
+                        filesParamName: "testFile",
+                        method: "PUT",
+                        url: resultUrl,
+                    }
+                });
+        });
     });
 
     it("should not pass form destination props if destination in options", () => {
@@ -97,14 +114,14 @@ describe("useFileInput tests", () => {
 
         UploadyContext.getOptions.mockReturnValueOnce({});
 
-        renderTestComp({ withForm: true , formNoProps: true});
+        renderTestComp({ withForm: true, formNoProps: true });
 
         expect(UploadyContext.setOptions)
             .toHaveBeenCalledWith({
                 destination: {
                     filesParamName: "testFile",
                     method: undefined,
-                    url: undefined,
+                    url: "https://test.com/home/test.html",
                 }
             });
     });

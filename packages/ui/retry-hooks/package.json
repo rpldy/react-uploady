@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "node ../../../scripts/build.js",
-    "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
+    "flow:copy": "flow-copy-source ./src ./lib"
   },
   "dependencies": {
     "@rpldy/retry": "^0.1.6",

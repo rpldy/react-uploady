@@ -1,5 +1,5 @@
 {
-  "version": "0.1.6",
+  "version": "0.1.7",
   "name": "@rpldy/uploader",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -16,9 +16,9 @@
     "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/life-events": "^0.1.6",
-    "@rpldy/sender": "^0.1.6",
-    "@rpldy/shared": "^0.1.6",
+    "@rpldy/life-events": "^0.1.7",
+    "@rpldy/sender": "^0.1.7",
+    "@rpldy/shared": "^0.1.7",
     "immer": "^6.0.3"
   },
   "devDependencies": {

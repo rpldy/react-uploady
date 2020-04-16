@@ -1,5 +1,5 @@
 {
-  "version": "0.1.6",
+  "version": "0.1.7",
   "name": "@rpldy/chunked-uploady",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -19,15 +19,15 @@
     "access": "public"
   },
   "dependencies": {
-    "@rpldy/chunked-sender": "^0.1.6",
-    "@rpldy/sender": "^0.1.6",
-    "@rpldy/shared": "^0.1.6",
-    "@rpldy/shared-ui": "^0.1.6",
-    "@rpldy/uploader": "^0.1.6",
-    "@rpldy/uploady": "^0.1.6"
+    "@rpldy/chunked-sender": "^0.1.7",
+    "@rpldy/sender": "^0.1.7",
+    "@rpldy/shared": "^0.1.7",
+    "@rpldy/shared-ui": "^0.1.7",
+    "@rpldy/uploader": "^0.1.7",
+    "@rpldy/uploady": "^0.1.7"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^0.1.6",
+    "@rpldy/upload-button": "^0.1.7",
     "@storybook/addon-knobs": "^5.3.18",
     "flow-bin": "^0.121.0"
   },

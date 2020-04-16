@@ -165,7 +165,7 @@ Uploady provides hooks for all [uploader events](../../uploader/README.md#events
 
 ### useBatchAddListener (event hook)
 
-Called when new batch is added.
+Called when a new batch is added.
 
 > This event is _[cancellable](../../uploader/README.md#cancellable-events)_
 
@@ -339,6 +339,22 @@ Called in case item upload failed
     const MyComponent = () => {
         useItemErrorListener((item) => {
             console.log(`item ${item.id} failed - `, item.uploadResponse);  
+        });
+
+        //...    
+    };
+``` 
+
+### useItemAbortListener (event hook)
+
+Called in case [abort](#abort) was called
+
+```javascript
+    import { useItemAbortListener } from "@rpldy/uploady";
+
+    const MyComponent = () => {
+        useItemAbortListener((item) => {
+            console.log(`item ${item.id} was aborted`);  
         });
 
         //...    

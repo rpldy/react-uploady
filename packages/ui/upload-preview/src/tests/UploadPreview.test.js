@@ -2,6 +2,7 @@ import React from "react";
 import usePreviewsLoader from "../usePreviewsLoader";
 import { getFallbackUrl } from "../utils";
 import UploadPreview from "../UploadPreview";
+import { PREVIEW_TYPES } from "../consts";
 
 jest.mock("../usePreviewsLoader", () => jest.fn());
 
@@ -33,6 +34,20 @@ describe("UploadPreview tests", () => {
 
         expect(imgs.at(1)).toHaveProp("src", "test2.com");
         expect(imgs.at(1)).toHaveProp("data-test", "456");
+    });
+
+    it("should render with simple video preview", () => {
+
+        usePreviewsLoader.mockReturnValueOnce([{
+            url: "video.mp4",
+            type: PREVIEW_TYPES.VIDEO,
+        }]);
+
+        const wrapper = mount(<UploadPreview/>);
+
+        const videos = wrapper.find("video");
+
+        expect(videos.at(0)).toHaveProp("src", "video.mp4");
     });
 
     it("should render with PreviewComponent from props", () => {

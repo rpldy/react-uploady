@@ -22,6 +22,7 @@ export {
     useItemProgressListener,
     useItemCancelListener,
     useItemErrorListener,
+    useItemAbortListener,
 
     useRequestPreSend,
 } from "./eventListenerHooks";

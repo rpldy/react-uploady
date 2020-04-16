@@ -36,7 +36,7 @@ export const Simple = () => {
         <StyledUploadButton/>
         <br/><br/>
         <UploadPreview
-            fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
+            fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"/>
     </Uploady>;
 };
 

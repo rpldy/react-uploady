@@ -1,5 +1,4 @@
 // @flow
-
 import { useState } from "react";
 import { isFunction } from "@rpldy/shared";
 import { useBatchStartListener } from "@rpldy/shared-ui";

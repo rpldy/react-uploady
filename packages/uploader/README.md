@@ -70,7 +70,7 @@ _(files: UploadInfo | UploadInfo[], options?: ?UploadOptions) => void_
 The way to add file(s) to be uploaded. Second parameters allows to pass different options than
 the ones the instance currently uses for this specific batch. These options will be merged with current instance options.
  
-### upload: 
+### upload
 
 _() => void_
 
@@ -135,7 +135,7 @@ unregister an existing event handler
 
 _(name: any, Object) => void_
 
-Extensions can only be registered by enhancers.
+Extensions can only be registered by [enhancers](../../README.md#enhancer).
 If registerExtension is called outside an enhancer, an error will be thrown
 Name must be unique. If not, an error will be thrown
 
@@ -149,8 +149,8 @@ Retrieve a registered extension by its name
 
 The Uploader will trigger for batch and batch-item lifecycle events.
 
-Registering to handle events can be done using the uploader's on() and once() methods.
-Unregistering can be done using off() or by the return value of both on and once.
+Registering to handle events can be done using the uploader's _on()_ and _once()_ methods.
+Unregistering can be done using _off()_ or by the return value of both on and once.
 
 ```javascript
 const batchAddHandler = (batch) => {};

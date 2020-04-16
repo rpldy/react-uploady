@@ -261,9 +261,36 @@ A BatchItem has its own lifetime [events](packages/ui/uploady#events).
 
 React-uploady is also available on CDNs such as [unpkg.com](https://unpkg.com) and [jsdelivr.com](https://www.jsdelivr.com/)
 
-<!-- TOOD: add urls here -->
+### jsDelivr
+
+| Bundle                        | URL
+| ---------------------------- | ------------- 
+| core                         | https://cdn.jsdelivr.net/npm/@rpldy/uploader/umd/rpldy-core.umd.min.js
+| core + ui                    | https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/rpldy-ui-core.umd.min.js
+| core + ui + chunked support  | https://cdn.jsdelivr.net/npm/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js  
+| everything                   | https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/rpldy-all.umd.min.js
+
+You will most likely need the polyfill (regenerator & core js) bundle as well (load it first):
+
+https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/polyfills-bundle.js
 
 See this [guide](guides/UMD.md) for more information on how to use.
+
+### unpkg
+
+| Bundle                        | URL
+| ---------------------------- | ------------- 
+| core                         | https://unpkg.com/@rpldy/uploader/umd/rpldy-core.umd.min.js
+| core + ui                    | https://unpkg.com/@rpldy/uploady/umd/rpldy-ui-core.umd.min.js
+| core + ui + chunked support  | https://unpkg.com/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js  
+| everything                   | https://unpkg.com/@rpldy/uploady/umd/rpldy-all.umd.min.js
+
+You will most likely need the polyfill (regenerator & core js) bundle as well (load it first):
+
+https://unpkg.com/@rpldy/uploady/umd/polyfills-bundle.js
+
+> Note that unpkg does a redirect to the latest version in case the URL doesn't already contain it. So don't copy any of the URLs above into your page. 
+> Load in the browser first and then copy the final URL from there.  
 
 ## Credits
 

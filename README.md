@@ -26,6 +26,8 @@
 
 With React-Uploady you can build (client-side) file-upload features with just a few lines of code.
 
+![React-Uploady Demo](guides/rpldy-demo.gif)
+
 <img style="width:100%; height:auto;" src="https://res.cloudinary.com/yoav-cloud/image/upload/q_auto/v1587052753/rpldy/rpldy-readme-demo-animated.gif" alt="rpldy-demo"/>
 
 The philosophy behind this library is that it should be as simple as possible to use, yet customizable at every point. 

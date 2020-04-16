@@ -1,329 +1,345 @@
 import addLife, { isLE } from "../lifeEvents";
 
 describe("life-events tests", () => {
-	const noOp = jest.fn();
+    const noOp = jest.fn();
 
-	beforeEach(() => {
-		clearJestMocks(noOp);
-	});
-
-	describe("init tests", () => {
-
-		it("isLE should return false for null/undefined", () => {
-			expect(isLE(null)).toBe(false);
-			expect(isLE(undefined)).toBe(false);
-		});
-
-		it("should add LE to existing object", () => {
-
-			const obj = { foo: "bar" };
-
-			expect(isLE(obj)).toBe(false);
-			addLife(obj);
-			expect(isLE(obj)).toBe(true);
-		});
-
-		it("should create LE without existing object", () => {
-			const api = addLife();
-			expect(isLE(api.target)).toBe(true);
-		});
-
-		it("should create with defined events", () => {
-
-			const obj = {};
-			addLife(obj, ["test", "test2"]);
-			expect(obj.getEvents()).toEqual(["test", "test2"]);
-		});
-
-		it("should be safe to addLife more than once", () => {
-			const obj = {};
-			addLife(obj, ["test", "test2"]);
-			addLife(obj, ["test", "test2"]);
-			expect(obj.getEvents()).toEqual(["test", "test2"]);
-		});
+    beforeEach(() => {
+        clearJestMocks(noOp);
     });
 
-	describe("add regs tests", () => {
+    describe("init tests", () => {
 
-		it("should add reg ", () => {
-			const obj = { foo: "bar" };
-			const api = addLife(obj);
+        it("isLE should return false for null/undefined", () => {
+            expect(isLE(null)).toBe(false);
+            expect(isLE(undefined)).toBe(false);
+        });
 
-			obj.on("test", noOp);
-			expect(api.hasEventRegistrations("test")).toBe(true);
-		});
+        it("should add LE to existing object", () => {
 
-		it.each([
-			Symbol.for("test-name"),
-			1,
-			{}
-		])("should add reg using non-strings %s", (name) => {
-			const obj = { foo: "bar" };
-			const api = addLife(obj);
+            const obj = { foo: "bar" };
 
-			obj.on(name, noOp);
-			expect(api.hasEventRegistrations(name)).toBe(true);
-		});
+            expect(isLE(obj)).toBe(false);
+            addLife(obj);
+            expect(isLE(obj)).toBe(true);
+        });
 
-		it("should add reg once", () => {
-			const obj = { foo: "bar" };
-			const api = addLife(obj);
+        it("should create LE without existing object", () => {
+            const api = addLife();
+            expect(isLE(api.target)).toBe(true);
+        });
 
-			obj.once("test", noOp);
-			expect(api.hasEventRegistrations("test")).toBe(true);
-		});
+        it("should create with defined events", () => {
 
-		it("shouldn't fail to add reg for existing event with allow flag is false", () => {
-			const obj = {};
-			addLife(obj, ["test"], { allowRegisterNonExistent: false });
+            const obj = {};
+            addLife(obj, ["test", "test2"]);
+            expect(obj.getEvents()).toEqual(["test", "test2"]);
+        });
 
-			expect(() => {
-				obj.on("test", noOp);
-			}).not.toThrow();
-		});
+        it("should be safe to addLife more than once", () => {
+            const obj = {};
+            addLife(obj, ["test", "test2"]);
+            addLife(obj, ["test", "test2"]);
+            expect(obj.getEvents()).toEqual(["test", "test2"]);
+        });
+    });
 
-		it("should fail to add reg when event doesnt exist and allow flag is false", () => {
-			const obj = {};
-			addLife(obj, [], { allowRegisterNonExistent: false });
+    describe("add regs tests", () => {
 
-			expect(() => {
-				obj.on("test", noOp);
-			}).toThrow(/Cannot register for event/);
-		});
+        it("should add reg ", () => {
+            const obj = { foo: "bar" };
+            const api = addLife(obj);
 
-		it("should only add same callback once", () => {
+            obj.on("test", noOp);
+            expect(api.hasEventRegistrations("test")).toBe(true);
+        });
 
-			const api = addLife();
+        it.each([
+            Symbol.for("test-name"),
+            1,
+            {}
+        ])("should add reg using non-strings %s", (name) => {
+            const obj = { foo: "bar" };
+            const api = addLife(obj);
 
-			api.target.on("test", noOp);
-			api.target.on("test", noOp);
-			api.target.on("test-2", noOp);
+            obj.on(name, noOp);
+            expect(api.hasEventRegistrations(name)).toBe(true);
+        });
 
-			api.trigger("test");
-			api.trigger("test-2");
+        it("should add reg once", () => {
+            const obj = { foo: "bar" };
+            const api = addLife(obj);
 
-			expect(noOp).toHaveBeenCalledTimes(2);
-		});
-	});
+            obj.once("test", noOp);
+            expect(api.hasEventRegistrations("test")).toBe(true);
+        });
 
-	describe("trigger tests", () => {
+        it("shouldn't fail to add reg for existing event with allow flag is false", () => {
+            const obj = {};
+            addLife(obj, ["test"], { allowRegisterNonExistent: false });
 
-		it("trigger with no regs should return undefined", () => {
-			const api = addLife();
-			const result = api.trigger("test");
+            expect(() => {
+                obj.on("test", noOp);
+            }).not.toThrow();
+        });
 
-			expect(result).toBeUndefined();
-		});
+        it("should fail to add reg when event doesnt exist and allow flag is false", () => {
+            const obj = {};
+            addLife(obj, [], { allowRegisterNonExistent: false });
 
-		it.each([1, 2, 3, 4, 5, 6])("should trigger with different arg count: %s", (argNum) => {
-			const api = addLife();
-			api.target.on("test", noOp);
+            expect(() => {
+                obj.on("test", noOp);
+            }).toThrow(/Cannot register for event/);
+        });
 
-			const args = new Array(argNum).fill("a");
-			api.trigger("test", ...args);
+        it("should only add same callback once", () => {
 
-			expect(noOp.mock.calls[0]).toHaveLength(argNum);
-		});
+            const api = addLife();
 
-		it("trigger reg with no value shold return undefined", () => {
-			const api = addLife();
-			api.target.on("test", noOp);
-			const result = api.trigger("test", 1, 2);
+            api.target.on("test", noOp);
+            api.target.on("test", noOp);
+            api.target.on("test-2", noOp);
 
-			expect(result).toBeUndefined();
-			expect(noOp).toHaveBeenCalledWith(1, 2);
-		});
+            api.trigger("test");
+            api.trigger("test-2");
 
-		it("should trigger reg with boolean return value", async () => {
+            expect(noOp).toHaveBeenCalledTimes(2);
+        });
 
-			const api = addLife();
-			api.target.on("test", () => true);
-			api.target.on("test", () => false);
-			const result = api.trigger("test");
+        it("on should return off function", () => {
 
-			const results = await Promise.all(result);
+            const obj = {};
+            const api = addLife(obj);
+            const event = "on-foo";
+            const handler = jest.fn();
 
-			expect(results).toEqual([true, false]);
-		});
+            const off = obj.on(event, handler);
 
-		it("should trigger reg with promise return value", async () => {
-			const api = addLife();
-			api.target.on("test", () => Promise.resolve(true));
-			api.target.on("test", () => Promise.resolve(false));
-			const result = api.trigger("test");
+            api.trigger(event);
+            off();
+            api.trigger(event);
 
-			const results = await Promise.all(result);
+            expect(handler).toHaveBeenCalledTimes(1);
+        });
+    });
 
-			expect(results).toEqual([true, false]);
-		});
+    describe("trigger tests", () => {
 
-		describe("once tests", () => {
-			it("should remove once after trigger", () => {
-				const api = addLife();
-				api.target.once("test", noOp);
+        it("trigger with no regs should return undefined", () => {
+            const api = addLife();
+            const result = api.trigger("test");
 
-				api.trigger("test", "a");
-				api.trigger("test", "b");
+            expect(result).toBeUndefined();
+        });
 
-				expect(noOp).toHaveBeenCalledTimes(1);
-				expect(noOp).toHaveBeenCalledWith("a");
-				expect(noOp).not.toHaveBeenCalledWith("b");
-			});
+        it.each([1, 2, 3, 4, 5, 6])("should trigger with different arg count: %s", (argNum) => {
+            const api = addLife();
+            api.target.on("test", noOp);
 
-			it("should only remove onces", async () => {
+            const args = new Array(argNum).fill("a");
+            api.trigger("test", ...args);
 
-				const handler1 = () => "b",
-					handler2 = () => "c",
-					handler3 = () => "e";
+            expect(noOp.mock.calls[0]).toHaveLength(argNum);
+        });
 
-				const api = addLife();
-				api.target.once("test", () => "a");
-				api.target.on("test", handler1);
-				api.target.on("test", handler2);
-				api.target.once("test", () => "d");
-				api.target.on("test", handler3);
+        it("trigger reg with no value shold return undefined", () => {
+            const api = addLife();
+            api.target.on("test", noOp);
+            const result = api.trigger("test", 1, 2);
 
-				const results = await Promise.all(api.trigger("test"));
-				expect(results).toEqual(["a", "b", "c", "d", "e"]);
+            expect(result).toBeUndefined();
+            expect(noOp).toHaveBeenCalledWith(1, 2);
+        });
 
-				const results2 = await Promise.all(api.trigger("test"));
-				expect(results2).toEqual(["b", "c", "e"]);
-			});
+        it("should trigger reg with boolean return value", async () => {
 
-			it("should only remove onces for the correct name", async () => {
-				const api = addLife();
-				api.target.once("test", () => "a");
-				api.target.on("test", () => "b");
-				api.target.on("test", () => "c");
-				api.target.once("test-2", () => "d");
-				api.target.on("test-2", () => "e");
+            const api = addLife();
+            api.target.on("test", () => true);
+            api.target.on("test", () => false);
+            const result = api.trigger("test");
 
-				const results = await Promise.all(api.trigger("test"));
-				expect(results).toEqual(["a", "b", "c"]);
+            const results = await Promise.all(result);
 
-				const results2 = await Promise.all(api.trigger("test-2"));
-				expect(results2).toEqual(["d", "e"]);
+            expect(results).toEqual([true, false]);
+        });
 
-				const results3 = await Promise.all(api.trigger("test"));
-				expect(results3).toEqual(["b", "c"]);
+        it("should trigger reg with promise return value", async () => {
+            const api = addLife();
+            api.target.on("test", () => Promise.resolve(true));
+            api.target.on("test", () => Promise.resolve(false));
+            const result = api.trigger("test");
 
-				const results4 = await Promise.all(api.trigger("test-2"));
-				expect(results4).toEqual(["e"]);
-			});
+            const results = await Promise.all(result);
 
-			it("triggering within once handler shouldnt call it", () => {
+            expect(results).toEqual([true, false]);
+        });
 
-				const handler = jest.fn(() => {
-					api.trigger("test");
-				});
+        describe("once tests", () => {
+            it("should remove once after trigger", () => {
+                const api = addLife();
+                api.target.once("test", noOp);
 
-				const api = addLife();
-				api.target.once("test", handler);
-				api.trigger("test");
+                api.trigger("test", "a");
+                api.trigger("test", "b");
 
-				expect(handler).toHaveBeenCalledTimes(1);
-			});
-		});
+                expect(noOp).toHaveBeenCalledTimes(1);
+                expect(noOp).toHaveBeenCalledWith("a");
+                expect(noOp).not.toHaveBeenCalledWith("b");
+            });
 
-	});
+            it("should only remove onces", async () => {
 
-	describe("unregister tests", () => {
+                const handler1 = () => "b",
+                    handler2 = () => "c",
+                    handler3 = () => "e";
 
-		it("off should remove registration for specific cb", () => {
+                const api = addLife();
+                api.target.once("test", () => "a");
+                api.target.on("test", handler1);
+                api.target.on("test", handler2);
+                api.target.once("test", () => "d");
+                api.target.on("test", handler3);
 
-			const api = addLife();
-			api.target.on("test", noOp);
+                const results = await Promise.all(api.trigger("test"));
+                expect(results).toEqual(["a", "b", "c", "d", "e"]);
 
-			expect(api.hasEventRegistrations("test")).toBe(true);
+                const results2 = await Promise.all(api.trigger("test"));
+                expect(results2).toEqual(["b", "c", "e"]);
+            });
 
-			api.target.off("test", noOp);
-			expect(api.hasEventRegistrations("test")).toBe(false);
-		});
+            it("should only remove onces for the correct name", async () => {
+                const api = addLife();
+                api.target.once("test", () => "a");
+                api.target.on("test", () => "b");
+                api.target.on("test", () => "c");
+                api.target.once("test-2", () => "d");
+                api.target.on("test-2", () => "e");
 
-		it("off should remove registrations for name ", () => {
-			const api = addLife();
-			api.target.on("test", noOp);
-			api.target.on("test", () => {
-			});
+                const results = await Promise.all(api.trigger("test"));
+                expect(results).toEqual(["a", "b", "c"]);
 
-			expect(api.hasEventRegistrations("test")).toBe(true);
+                const results2 = await Promise.all(api.trigger("test-2"));
+                expect(results2).toEqual(["d", "e"]);
 
-			api.target.off("test");
-			expect(api.hasEventRegistrations("test")).toBe(false);
-		});
-	});
+                const results3 = await Promise.all(api.trigger("test"));
+                expect(results3).toEqual(["b", "c"]);
 
-	describe("events tests", () => {
+                const results4 = await Promise.all(api.trigger("test-2"));
+                expect(results4).toEqual(["e"]);
+            });
 
-		it("should be able to add event ", () => {
+            it("triggering within once handler shouldnt call it", () => {
 
-			const api = addLife(null, ["test"]);
-			api.addEvent("test-2");
-			const events = api.target.getEvents();
+                const handler = jest.fn(() => {
+                    api.trigger("test");
+                });
 
-			expect(events).toEqual(["test", "test-2"]);
-		});
+                const api = addLife();
+                api.target.once("test", handler);
+                api.trigger("test");
 
-		it("shouldnt be possible to add same as existing event", () => {
+                expect(handler).toHaveBeenCalledTimes(1);
+            });
+        });
 
-			const api = addLife(null, ["test"],);
+    });
 
-			expect(() => {
-				api.addEvent("test");
-			}).toThrow("Event 'test' already defined");
-		});
+    describe("unregister tests", () => {
 
-		it("shouldnt be possible to add event if flag is false", () => {
-			const api = addLife(null, ["test"], { canAddEvents: false });
+        it("off should remove registration for specific cb", () => {
 
-			expect(() => {
-				api.addEvent("test-2");
-			}).toThrow("Cannot add new events");
+            const api = addLife();
+            api.target.on("test", noOp);
 
-		});
+            expect(api.hasEventRegistrations("test")).toBe(true);
 
-		it("should be able to remove event", () => {
-			const api = addLife(null, ["test", "test-2"],);
+            api.target.off("test", noOp);
+            expect(api.hasEventRegistrations("test")).toBe(false);
+        });
 
-			api.removeEvent("test");
-			expect(api.target.getEvents()).toEqual((["test-2"]));
-		});
+        it("off should remove registrations for name ", () => {
+            const api = addLife();
+            api.target.on("test", noOp);
+            api.target.on("test", () => {
+            });
 
-		it("shouldnt be able to remove event if flag is false", () => {
-			const api = addLife(null, ["test", "test-2"], { canRemoveEvents: false });
+            expect(api.hasEventRegistrations("test")).toBe(true);
 
-			expect(() => {
-				api.removeEvent("test");
-			}).toThrow("Cannot remove events");
-		});
+            api.target.off("test");
+            expect(api.hasEventRegistrations("test")).toBe(false);
+        });
+    });
 
-		it("should return true if has event", () => {
-			const api = addLife(null, ["test"]);
-			expect(api.hasEvent("test")).toBe(true);
-		});
-	});
+    describe("events tests", () => {
 
-	describe("assign tests", () => {
+        it("should be able to add event ", () => {
 
-		it("should be possible to assign life to another object", () => {
+            const api = addLife(null, ["test"]);
+            api.addEvent("test-2");
+            const events = api.target.getEvents();
 
-			const obj = {};
-			const { assign } = addLife(obj, ["test", "test-2"], { canAddEvents: false });
-			obj.on("test", noOp);
+            expect(events).toEqual(["test", "test-2"]);
+        });
 
-			const obj2 = {clone: true};
-			const { trigger, addEvent, hasEvent, hasEventRegistrations } = assign(obj2);
+        it("shouldnt be possible to add same as existing event", () => {
 
-			expect(hasEvent("test")).toBe(true);
-			expect(hasEventRegistrations("test")).toBe(true);
+            const api = addLife(null, ["test"],);
 
-			trigger("test", "aaa");
+            expect(() => {
+                api.addEvent("test");
+            }).toThrow("Event 'test' already defined");
+        });
 
-			expect(noOp).toHaveBeenCalledWith("aaa");
+        it("shouldnt be possible to add event if flag is false", () => {
+            const api = addLife(null, ["test"], { canAddEvents: false });
 
-			expect(() => addEvent("test-3")).toThrow("Cannot add new events");
+            expect(() => {
+                api.addEvent("test-2");
+            }).toThrow("Cannot add new events");
 
-		});
+        });
 
-	});
+        it("should be able to remove event", () => {
+            const api = addLife(null, ["test", "test-2"],);
+
+            api.removeEvent("test");
+            expect(api.target.getEvents()).toEqual((["test-2"]));
+        });
+
+        it("shouldnt be able to remove event if flag is false", () => {
+            const api = addLife(null, ["test", "test-2"], { canRemoveEvents: false });
+
+            expect(() => {
+                api.removeEvent("test");
+            }).toThrow("Cannot remove events");
+        });
+
+        it("should return true if has event", () => {
+            const api = addLife(null, ["test"]);
+            expect(api.hasEvent("test")).toBe(true);
+        });
+    });
+
+    describe("assign tests", () => {
+
+        it("should be possible to assign life to another object", () => {
+
+            const obj = {};
+            const { assign } = addLife(obj, ["test", "test-2"], { canAddEvents: false });
+            obj.on("test", noOp);
+
+            const obj2 = { clone: true };
+            const { trigger, addEvent, hasEvent, hasEventRegistrations } = assign(obj2);
+
+            expect(hasEvent("test")).toBe(true);
+            expect(hasEventRegistrations("test")).toBe(true);
+
+            trigger("test", "aaa");
+
+            expect(noOp).toHaveBeenCalledWith("aaa");
+
+            expect(() => addEvent("test-3")).toThrow("Cannot add new events");
+
+        });
+
+    });
 });

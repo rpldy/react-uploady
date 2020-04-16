@@ -10,6 +10,9 @@ import {
     StoryAbortButton,
 } from "../../../story-helpers";
 
+// $FlowFixMe - doesnt understand loading readme
+import readme from "./README.md";
+
 const UploadButtonWithUniqueIdHeader = () => {
     useRequestPreSend((data) => {
         return {
@@ -79,4 +82,10 @@ export default {
     component: UploadButton,
     title: "Chunked Uploady",
     decorators: [withKnobs],
+    parameters: {
+        readme: {
+            sidebar: readme,
+        },
+        options: { theme: {} }, //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
+    },
 };

@@ -110,8 +110,12 @@ After that, you can add additional packages as needed. See below for more detail
 * [@rpldy/retry-hooks](packages/ui/retry-hooks) - Hooks to interact with the retry mechanism
 
 ### Uploaders
-* [@rpldy/chunked-uploady](packages/ui/chunked-uploady) - Wrapper for Uploady to support chunked uploads
+* [@rpldy/chunked-uploady](packages/ui/chunked-uploady) - Wrapper for Uploady with support for chunked uploads
 * @rpldy/tus - TODO 
+
+### Senders
+* [@rpldy/sender](packages/sender) - XHR sender - Uploady's main file sender. Contains mock sender (for testing purposes)
+* [@rpldy/chunked-sender](packages/chunked-sender) - add chunked uploads support on top of the XHR Sender
 
 ### Extra
 * [@rpldy/retry](packages/retry) - Add support for retrying failed uploads

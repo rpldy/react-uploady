@@ -2,110 +2,97 @@ import React from "react";
 
 describe("ChunkedUploady tests", () => {
 
-	let Uploady, ChunkedUploady, logWarning;
-	const chunkedSend = () => {
-	};
+    let Uploady, composeEnhancers, ChunkedUploady, logWarning;
+    const chunkedEnhancer = (uploader) => uploader;
 
-	const mockGetChunkedSend = jest.fn(() => chunkedSend);
+    const mockGetChunkedEnhancer = jest.fn(() => chunkedEnhancer);
 
-	afterEach(() => {
-		clearJestMocks(
-			mockGetChunkedSend,
+    afterEach(() => {
+        clearJestMocks(
+            mockGetChunkedEnhancer,
             logWarning,
-		);
-	});
+        );
+    });
 
-	const doTest = (testFn, mockChunkSupport = true) => {
-		jest.isolateModules(() => {
+    const doTest = (testFn, mockChunkSupport = true) => {
+        jest.isolateModules(() => {
 
-			jest.mock("../chunkedSender", () => mockGetChunkedSend);
-			jest.mock("../utils", () => ({
-				CHUNKING_SUPPORT: mockChunkSupport
-			}));
+            mockGetChunkedEnhancer.CHUNKING_SUPPORT = mockChunkSupport;
+            jest.mock("@rpldy/chunked-sender", () => mockGetChunkedEnhancer);
 
             logWarning = require("@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock").logWarning;
 
-			Uploady = require("@rpldy/uploady/src/tests/mocks/rpldy-uploady.mock").default;
+            Uploady = require("@rpldy/uploady/src/tests/mocks/rpldy-uploady.mock").default;
+            composeEnhancers = Uploady.composeEnhancers;
 
-			ChunkedUploady = require("../ChunkedUploady").default;
+            ChunkedUploady = require("../ChunkedUploady").default;
 
-			testFn();
-		});
-	};
+            testFn();
+        });
+    };
 
-	it("should render ChunkedUploady with enhancer", () => {
-		doTest(() => {
-			const chunkedProps = {
-				chunked: true,
-				chunkSize: 11,
-				retries: 7,
-				parallel: 3,
-			};
+    it("should render ChunkedUploady with enhancer", () => {
+        doTest(() => {
+            const chunkedProps = {
+                chunked: true,
+                chunkSize: 11,
+                retries: 7,
+                parallel: 3,
+            };
 
-			const props = {
-				enhancer: jest.fn((uploader) => uploader),
-				...chunkedProps,
-			};
+            const enhancer = jest.fn((uploader) => uploader);
 
-			const wrapper = shallow(<ChunkedUploady {...props} />);
+            const props = {
+                enhancer,
+                ...chunkedProps,
+            };
 
-			const UploadyElm = wrapper.find(Uploady);
+            composeEnhancers.mockReturnValueOnce(enhancer);
 
-			expect(UploadyElm).toHaveLength(1);
+            const wrapper = shallow(<ChunkedUploady {...props} />);
 
-			const enhancer = UploadyElm.props().enhancer;
+            const UploadyElm = wrapper.find(Uploady);
 
-			const update = jest.fn();
-			const uploader = enhancer({
-				update,
-			});
+            expect(UploadyElm).toHaveLength(1);
 
-			expect(uploader).toBeDefined();
-			expect(update.mock.calls[0][0].send).toBe(chunkedSend);
-			expect(props.enhancer).toHaveBeenCalled();
+            const update = jest.fn();
+            const uploader = enhancer({
+                update,
+            });
 
-			expect(logWarning).toHaveBeenCalledWith(true, expect.any(String));
-			expect(mockGetChunkedSend).toHaveBeenCalledWith(chunkedProps);
-		});
-	});
+            expect(uploader).toBeDefined();
+            expect(composeEnhancers).toHaveBeenCalledWith(chunkedEnhancer, enhancer);
 
-	it("should render ChunkedUploady without enhancer", () => {
-		doTest(() => {
-			const wrapper = shallow(<ChunkedUploady/>);
+            expect(logWarning).toHaveBeenCalledWith(true, expect.any(String));
+            expect(mockGetChunkedEnhancer).toHaveBeenCalledWith(chunkedProps);
+        });
+    });
 
-			const UploadyElm = wrapper.find(Uploady);
+    it("should render ChunkedUploady without enhancer", () => {
+        doTest(() => {
+            const wrapper = shallow(<ChunkedUploady/>);
 
-			const enhancer = UploadyElm.props().enhancer;
+            const UploadyElm = wrapper.find(Uploady);
 
-			const update = jest.fn();
-			const uploader = {
-				update,
-			};
+            const enhancer = UploadyElm.props().enhancer;
 
-			const enhancedUploader = enhancer(uploader);
-			expect(enhancedUploader).toBe(uploader);
-		});
-	});
+            const update = jest.fn();
+            const uploader = {
+                update,
+            };
 
-	it("should only pass defined chunked props", () => {
-		doTest(() => {
-			const wrapper = shallow(<ChunkedUploady chunkSize={5000}
-			destination="test"/>);
-			expect(mockGetChunkedSend).toHaveBeenCalledWith({
-				chunkSize: 5000
-			});
+            const enhancedUploader = enhancer(uploader);
+            expect(enhancedUploader).toBe(uploader);
+        });
+    });
 
-			expect(wrapper.find(Uploady)).toHaveProp("destination", "test");
-		});
-	});
+    it("should render Uploady when no chunk support", () => {
+        doTest(() => {
+            shallow(<ChunkedUploady/>);
 
-	it("should render Uploady when no chunk support", () => {
-		doTest(() => {
-			shallow(<ChunkedUploady/>);
+            expect(logWarning).toHaveBeenCalledWith(false, expect.any(String));
+            expect(mockGetChunkedEnhancer).not.toHaveBeenCalled();
 
-			expect(logWarning).toHaveBeenCalledWith(false, expect.any(String));
-			expect(mockGetChunkedSend).not.toHaveBeenCalled();
-
-		}, false);
-	});
+        }, false);
+    });
 });

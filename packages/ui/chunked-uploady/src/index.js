@@ -2,8 +2,6 @@
 
 import ChunkedUploady from "./ChunkedUploady";
 
-import type { ChunkedUploadyProps } from "./types";
-
 export default ChunkedUploady;
 
 export {
@@ -14,4 +12,4 @@ export * from "@rpldy/uploady";
 
 export type {
     ChunkedUploadyProps,
-};
+} from "./types";

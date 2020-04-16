@@ -5,9 +5,8 @@ import { DEFAULT_OPTIONS } from "./defaults";
 import type { FileLike } from "@rpldy/shared";
 import type { ChunkedOptions, MandatoryChunkedOptions } from "./types";
 
-const getMandatoryOptions = (options: ?ChunkedOptions): MandatoryChunkedOptions => {
-    return merge({}, DEFAULT_OPTIONS, options);
-};
+const getMandatoryOptions = (options: ?ChunkedOptions): MandatoryChunkedOptions =>
+    merge({}, DEFAULT_OPTIONS, options);
 
 let sliceMethod = null;
 
@@ -40,6 +39,6 @@ const getChunkDataFromFile = (file: FileLike, start: number, end: number): ?Blob
 export {
     CHUNKING_SUPPORT,
     getMandatoryOptions,
-    isChunkingSupported, //for tests
     getChunkDataFromFile,
+    isChunkingSupported, //for tests
 };

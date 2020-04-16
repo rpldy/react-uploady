@@ -1,42 +1,26 @@
 // @flow
 import React, { useMemo } from "react";
 import { logWarning } from "@rpldy/shared-ui";
-import Uploady from "@rpldy/uploady";
-import { CHUNKING_SUPPORT } from "./utils";
-import getChunkedSend from "./chunkedSender";
+import Uploady, { composeEnhancers } from "@rpldy/uploady";
+import getChunkedEnhancer, { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
 
-import type { UploaderType, UploaderEnhancer } from "@rpldy/uploader";
+import type { UploaderEnhancer } from "@rpldy/uploader";
+import type { ChunkedOptions } from "@rpldy/chunked-sender";
 import type { ChunkedUploadyProps } from "./types";
 
-const getEnhancer = (chunkedSend, enhancer: ?UploaderEnhancer) => {
-    return (uploader: UploaderType, trigger): UploaderType => {
-        uploader.update({ send: chunkedSend });
-        return enhancer ? enhancer(uploader, trigger) : uploader;
-    };
+const getEnhancer = (options: ChunkedOptions, enhancer: ?UploaderEnhancer) => {
+    const chunkedEnhancer = getChunkedEnhancer(options);
+    return enhancer ? composeEnhancers(chunkedEnhancer, enhancer) : chunkedEnhancer;
 };
 
 const ChunkedUploady = (props: ChunkedUploadyProps) => {
     const { chunked, chunkSize, retries, parallel, ...uploadyProps } = props;
 
-    const chunkedSend = useMemo(
-        () => {
-            return CHUNKING_SUPPORT ? getChunkedSend({
-                chunked,
-                chunkSize,
-                retries,
-                parallel
-            }) : null;
-        },
-        [
-            chunked,
-            chunkSize,
-            retries,
-            parallel
-        ]);
-
     const enhancer = useMemo(
-        () => CHUNKING_SUPPORT ? getEnhancer(chunkedSend, props.enhancer) : undefined,
-        [chunkedSend, props.enhancer]);
+        () => CHUNKING_SUPPORT ?
+            getEnhancer({ chunked, chunkSize, retries, parallel }, props.enhancer) :
+            undefined,
+        [props.enhancer, chunked, chunkSize, retries, parallel]);
 
     return <Uploady {...uploadyProps} enhancer={enhancer}/>;
 };

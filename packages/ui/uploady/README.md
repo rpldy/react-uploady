@@ -1,6 +1,6 @@
 # Uploady
 
-This is the main UI package. It's main role is to initialize and expose the [uploader](../../uploader) functionality.
+This is the main UI package. Its role is to initialize and expose the [uploader](../../uploader) functionality.
 It contains the Provider that all other UI packages rely on.
 
 It provides multiple hooks that enable more advanced features and data for client apps.

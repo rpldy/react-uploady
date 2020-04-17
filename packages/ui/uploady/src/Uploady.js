@@ -15,6 +15,7 @@ type FileInputPortalProps = {|
     capture: ?string,
     accept: ?string,
     webkitdirectory: ?boolean,
+    id: ?string,
     style: Object,
 |};
 

@@ -24,6 +24,7 @@
     "lint": "eslint ./packages",
     "test": "yarn flow && yarn lint && yarn jest:cov",
     "test:ci": "yarn flow && yarn lint && yarn jest:ci",
+    "cypress:open": "cypress open",
     "server": "cd server; PORT=4000 node index.js"
   },
   "private": true,
@@ -63,6 +64,8 @@
     "chalk": "^3.0.0",
     "codecov": "^3.6.5",
     "core-js": "^3.6.5",
+    "cypress": "^4.4.0",
+    "cypress-file-upload": "3.5.3",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "eslint": "^6.8.0",

@@ -30,7 +30,8 @@ export const Simple = () => {
                     destination={destination}
                     enhancer={enhancer}
                     grouped={grouped}
-                    maxGroupSize={groupSize}>
+                    maxGroupSize={groupSize}
+                    fileInputId={"rpldyInput"}>
 
         <UploadButton/>
     </Uploady>;

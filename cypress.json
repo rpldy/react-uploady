@@ -1,0 +1,15 @@
+{
+    "port": 8089,
+    "chromeWebSecurity": false,
+    "env": {
+        "storybookUrl": "http://localhost:9111/?path=/story/",
+        "components": {
+            "uploadButton": "upload-button",
+            "chunkedUploady": "chunked-uploady",
+            "retry": "retry",
+            "uploadDropZone": "upload-drop-zone",
+            "uploadUrlInput": "upload-url-input",
+            "uploadPreview": "upload-preview"
+        }
+    }
+}

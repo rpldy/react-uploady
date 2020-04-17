@@ -49,6 +49,7 @@ Or
 | multiple             | boolean       | true          | [input/file#multiple](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#multiple)
 | accept               | string        | null          | [input/file#accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept)
 | webkitdirectory      | boolean       | false         | [webkitdirectory](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory)
+| fileInputId          | string        | undefined     | the value to use for the internal file input element
 
 ## Example
 

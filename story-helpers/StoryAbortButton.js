@@ -18,7 +18,7 @@ const StoryAbortButton = () => {
     }, [context, uploadingId]);
 
     return context && uploadingId ?
-        <button onClick={onClick}>Abort</button> : null;
+        <button onClick={onClick} data-test="story-abort-button">Abort</button> : null;
 };
 
 export default StoryAbortButton;

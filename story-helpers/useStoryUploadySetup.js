@@ -1,6 +1,8 @@
 import { select, boolean, number, text, object } from "@storybook/addon-knobs";
 import { useMemo } from "react";
+import { composeEnhancers } from "@rpldy/uploady";
 import { createMockSender } from "@rpldy/sender";
+import { actionLogEnhancer } from "./uploadyStoryLogger";
 
 export const isProd = process.env.NODE_ENV === "production";
 
@@ -90,6 +92,10 @@ const DESTINATIONS = {
     [DEV_DEST_OPTIONS.url]: urlDestination,
 };
 
+const addActionLogEnhancer = (enhancer) => {
+    return enhancer ? composeEnhancers(enhancer, actionLogEnhancer) : actionLogEnhancer;
+};
+
 const useStoryUploadySetup = (options = {}) => {
     const type = select("destination", isProd ? PROD_DEST_OPTIONS : DEV_DEST_OPTIONS, DEV_DEST_OPTIONS.mock, KNOB_GROUPS.DESTINATION),
         { destination, enhancer } = DESTINATIONS[type](),
@@ -100,7 +106,7 @@ const useStoryUploadySetup = (options = {}) => {
     return useMemo(() => ({
             multiple,
             destination,
-            enhancer,
+            enhancer: addActionLogEnhancer(enhancer),
             grouped,
             groupSize,
         }),

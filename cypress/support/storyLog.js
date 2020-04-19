@@ -14,12 +14,27 @@ Cypress.Commands.add("assertItemStartFinish", { prevSubject: true }, (storyLog, 
     expect(storyLog[startIndex + 1].args[1].file.name).to.equal(fileName);
 });
 
-Cypress.Commands.add("assertLogPattern", { prevSubject: true }, (storyLog, pattern, times = 1) => {
+Cypress.Commands.add("assertLogPattern", { prevSubject: true }, (storyLog, pattern, times = 1, different = false) => {
     console.log("assertItemStartFinish received log", storyLog);
 
-    const matches = storyLog.filter((line) => {
-        return !!line.args.find((l) => typeof l === "string" && pattern.test(l));
-    });
+    const matches = storyLog.reduce((res, line) => {
+         const arg = line.args.find((a) => typeof a === "string" && pattern.test(a));
+         if (arg) {
+             res.push(arg);
+         }
+         return res;
+    }, []);
 
     expect(matches.length).to.equal(times, "pattern found in log");
+
+    if (different) {
+        const checked = [];
+        const found = matches.find((m) => {
+            const same = !!~checked.indexOf(m);
+            checked.push(m)
+            return same;
+        });
+
+        expect(found, "pattern matches must be different").to.be.undefined
+    }
 });

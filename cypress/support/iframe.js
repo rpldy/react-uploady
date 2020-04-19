@@ -1,47 +1,14 @@
-const waitForIframe = (iframe) => {
-    return new Promise((resolve) => {
-        const frameState = iframe.contentWindow.document.readyState;
-        let resolved = false;
+//https://www.cypress.io/blog/2020/02/12/working-with-iframes-in-cypress/
 
-        const resolvePromise = () => {
-            if (!resolved) {
-                cy.log("RESOLVING = ", iframe.contentWindow.document.readyState);
-                resolved = true;
-                resolve();
-            }
-        };
-
-        cy.log("IFRAME state =", frameState);
-
-        if (frameState === "complete") {
-            resolvePromise();
-        } else {
-            setTimeout(() => {
-                //fallback in case load event isnt called...
-                resolvePromise();
-            }, 1500);
-            iframe.contentWindow.addEventListener("load", () => {
-                resolvePromise();
-            });
-        }
-    });
-};
-
-const doSleep = (time) => new Promise(resolve => setTimeout(resolve, time));
-
-const command = (selector) => cy.get(selector)
-    .then(async ($frame) => {
-        const iframe = $frame.get(0);
-
-        await waitForIframe(iframe);
-
-        //need to wait some more for iframe content to load (cy.wait doesnt workd !!!!! :| )
-        await doSleep();
-
-        return cy.wrap(Cypress.$(iframe.contentWindow.document));
-    });
+const command = (selector) =>
+    cy.get(selector, { log: false })
+        .its("0.contentDocument.body", { log: false })
+        .should("not.be.empty")
+        .then(cy.wrap);
 
 Cypress.Commands.add("iframe",command);
+
+// const iframe = cy.get(selector);
 //
 // const frameLoaded = (selector) => {
 //     // if (selector === undefined) {
@@ -90,3 +57,53 @@ Cypress.Commands.add("iframe",command);
 //     })
 // }
 // Cypress.Commands.add('frameLoaded', frameLoaded)
+// .then(async ($frame) => {
+// // const iframe = $frame.get(0);
+//
+// // console.log("!!!!!!!!! 1111 ", $frame.get(0));
+// await waitForIframe($frame.get(0));
+//
+// //need to wait some more for iframe content to load (cy.wait doesnt work !!!!! :| )
+// await doSleep();
+
+// console.log("!!!!!!!!! 2222", $frame.find("contentWindow document"));
+
+// console.log("------------ iframe = ", iframe.get(0));
+
+// return cy.wrap(Cypress.$(iframe.contentWindow.document));
+// return Cypress.$($frame[0].contentWindow.document)  //cy.wrap(Cypress.$($frame[0].contentWindow.document)); //.get(0).contentWindow.document);
+
+// iframe.debug().find("contentWindow.document.body")
+//     .then(cy.wrap);
+// return cy.wrap($frame.get(0).contentWindow.document)
+// });
+// const waitForIframe = (iframe) => {
+//     return new Promise((resolve) => {
+//         const frameState = iframe.contentWindow.document.readyState;
+//         let resolved = false;
+//
+//         const resolvePromise = () => {
+//             if (!resolved) {
+//                 cy.log("RESOLVING = ", iframe.contentWindow.document.readyState);
+//                 resolved = true;
+//                 resolve();
+//             }
+//         };
+//
+//         cy.log("IFRAME state =", frameState);
+//
+//         if (frameState === "complete") {
+//             resolvePromise();
+//         } else {
+//             setTimeout(() => {
+//                 //fallback in case load event isnt called...
+//                 resolvePromise();
+//             }, 1500);
+//             iframe.contentWindow.addEventListener("load", () => {
+//                 resolvePromise();
+//             });
+//         }
+//     });
+// };
+//
+// const doSleep = (time) => new Promise(resolve => setTimeout(resolve, time));

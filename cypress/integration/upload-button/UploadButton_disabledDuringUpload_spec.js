@@ -1,10 +1,11 @@
 describe("UploadButton Tests", () => {
 
     before(() => {
-        cy.visitStory("uploadButton", "simple");
+        cy.visitStory("uploadButton", "disabled-during-upload");
     });
 
-    it("Upload Button - Simple", () => {
+    it("Upload Button - Disabled During Upload", () => {
+
         cy.iframe("#storybook-preview-iframe").as("iframe");
 
         cy.get("@iframe")
@@ -25,8 +26,13 @@ describe("UploadButton Tests", () => {
                 { fileContent, fileName, mimeType: "image/jpeg" },
                 { subjectType: "input" });
 
+            cy.wait(100);
+            cy.get("@uploadButton").should("be.disabled");
+
             cy.wait(2000);
             cy.storyLog().assertItemStartFinish(fileName);
+            cy.get("@uploadButton").should("not.be.disabled");
         });
     });
+// });
 });

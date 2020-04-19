@@ -1,29 +1,26 @@
 describe("UploadButton Tests", () => {
-
-    beforeEach(() => {
+    before(() => {
         cy.visitStory("uploadButton", "with-progress");
     });
 
     it("Upload Button - With Progress", () => {
-        cy.iframe("#storybook-preview-iframe")
-            .then((iframe) => {
+        cy.iframe("#storybook-preview-iframe").as("iframe");
 
-                cy.get(iframe.find("button"))
-                    .click();
+        cy.get("@iframe")
+            .find("button")
+            .click()
 
-                const rpldyFileInput = iframe.find("input");
+        const fileName = "flower.jpg";
 
-                const fileName = "flower.jpg";
+        cy.fixture(fileName, "base64").then((fileContent) => {
+            cy.get("@iframe")
+                .find("input").upload(
+                { fileContent, fileName, mimeType: "image/jpeg" },
+                { subjectType: "input" });
 
-                cy.fixture(fileName, "base64").then((fileContent) => {
-                    cy.wrap(rpldyFileInput).upload(
-                        { fileContent, fileName, mimeType: "image/jpeg" },
-                        { subjectType: "input" });
+            cy.wait(2000);
 
-                    cy.wait(2000);
-
-                    cy.storyLog().assertLogPattern(/progress event uploaded: \d+, completed: \d+$/, 5);
-                });
-            });
+            cy.storyLog().assertLogPattern(/progress event uploaded: \d+, completed: \d+$/, 5, true);
+        });
     });
 });

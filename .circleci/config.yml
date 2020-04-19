@@ -31,6 +31,9 @@ jobs:
                 command: yarn test:ci
                 environment:
                     JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+            - run:
+                name: E2E
+                command: yarn e2e
             - store_test_results:
                 path: reports/junit
             - store_artifacts:
@@ -80,6 +83,7 @@ jobs:
                 paths:
                   - packages
                   - bundle
+
 workflows:
     create-rpldy:
       jobs:

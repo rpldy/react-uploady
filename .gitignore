@@ -30,3 +30,8 @@ packages/**/.flowconfig
 packages/**/LICENSE.md
 
 test.js
+
+cypress/videos/
+cypress/screenshots/
+cypress/examples
+

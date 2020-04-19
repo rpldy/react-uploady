@@ -1,6 +1,7 @@
 {
     "port": 8089,
     "chromeWebSecurity": false,
+    "video": false,
     "env": {
         "storybookUrl": "http://localhost:9111/?path=/story/",
         "components": {

@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@1.1.6
+  cypress: cypress-io/cypress@1.16.1
 
 references:
     workspace_root: &workspace_root
@@ -31,9 +32,6 @@ jobs:
                 command: yarn test:ci
                 environment:
                     JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
-            - run:
-                name: E2E
-                command: yarn e2e
             - store_test_results:
                 path: reports/junit
             - store_artifacts:
@@ -97,6 +95,10 @@ workflows:
         - bundle:
             requires:
               - build-and-test
+        - cypress/run:
+            yarn: true
+            start: yarn ssb
+            wait-on: "http://localhost:9111"
 
 #    build-and-deploy:
 #      jobs:

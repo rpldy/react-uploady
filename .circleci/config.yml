@@ -96,6 +96,8 @@ workflows:
             requires:
               - build-and-test
         - cypress/run:
+              requires:
+                - bundle
             yarn: true
             start: yarn ssb
             wait-on: "http://localhost:9111"

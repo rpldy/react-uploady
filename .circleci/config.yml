@@ -99,6 +99,7 @@ workflows:
             name: Prepare E2E
             requires:
                 - bundle
+            yarn: true
             build: "yarn sb:build"
         - cypress/run:
             name: E2E (cypress)

@@ -25,7 +25,7 @@
     "test": "yarn flow && yarn lint && yarn jest:cov",
     "test:ci": "yarn flow && yarn lint && yarn jest:ci",
     "cypress:open": "cypress open",
-    "cypress:run": "wait-on http://localhost:9111 -d 3000 && cypress run",
+    "cypress:run": "wait-on http://localhost:8001 -d 3000 && cypress run",
     "e2e": "concurrently --success first --kill-others \"yarn sb:start\" \"yarn cypress:run\"",
     "server": "cd server; PORT=4000 node index.js"
   },

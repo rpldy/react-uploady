@@ -3,7 +3,9 @@
     "chromeWebSecurity": false,
     "video": false,
     "env": {
-        "storybookUrl": "http://localhost:9111/?path=/story/",
+        "storybookDomain": "http://localhost",
+        "storybookPath": "/?path=/story/",
+
         "components": {
             "uploadButton": "upload-button",
             "chunkedUploady": "chunked-uploady",

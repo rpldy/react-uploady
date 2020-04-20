@@ -19,11 +19,9 @@
     "@rpldy/shared": "^0.1.7",
     "@rpldy/uploader": "^0.1.7"
   },
-  "peerDependencies": {
-    "immer": "^6.0.3"
-  },
   "devDependencies": {
-    "flow-bin": "^0.121.0"
+    "flow-bin": "^0.121.0",
+    "immer": "^6.0.3"
   },
   "publishConfig": {
     "access": "public"

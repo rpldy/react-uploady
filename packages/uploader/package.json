@@ -18,11 +18,11 @@
   "dependencies": {
     "@rpldy/life-events": "^0.1.7",
     "@rpldy/sender": "^0.1.7",
-    "@rpldy/shared": "^0.1.7",
-    "immer": "^6.0.3"
+    "@rpldy/shared": "^0.1.7"
   },
   "devDependencies": {
-    "flow-bin": "^0.121.0"
+    "flow-bin": "^0.121.0",
+    "immer": "^6.0.3"
   },
   "publishConfig": {
     "access": "public"

@@ -95,13 +95,21 @@ workflows:
         - bundle:
             requires:
               - build-and-test
-        - cypress/run:
+        - cypress/install:
+            name: Prepare E2E
             requires:
-              - bundle
+                - bundle
+            build: "yarn sb:build"
+        - cypress/run:
+            name: E2E (cypress)
+            requires:
+              - Prepare E2E
+            attach-workspace: true
             yarn: true
-            start: yarn ssb
+            start: yarn sb:serve
             wait-on: "http://localhost:9111"
-
+            parallel: true
+            parallelism: 2
 
 #    build-and-deploy:
 #      jobs:

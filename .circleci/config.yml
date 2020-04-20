@@ -104,7 +104,7 @@ workflows:
             name: E2E (cypress)
             requires:
               - Prepare E2E
-            attach-workspace: true
+            #attach-workspace: true
             yarn: true
             start: yarn sb:serve
             wait-on: "http://localhost:9111"

@@ -115,12 +115,13 @@ workflows:
             wait-on: "http://localhost:8001"
             parallel: true
             parallelism: 2
-        - cypress/run:
-            name: Mac E2E (cypress)
-            executor: mac
-            yarn: true
-            start: yarn sb:serve
-            wait-on: "http://localhost:8001"
+#requires paid plan
+#        - cypress/run:
+#            name: Mac E2E (cypress)
+#            executor: mac
+#            yarn: true
+#            start: yarn sb:serve
+#            wait-on: "http://localhost:8001"
 
 
 #    build-and-deploy:

@@ -108,7 +108,7 @@ workflows:
             #attach-workspace: true
             yarn: true
             start: yarn sb:serve
-            wait-on: "http://localhost:9111"
+            wait-on: "http://localhost:8001"
             parallel: true
             parallelism: 2
 

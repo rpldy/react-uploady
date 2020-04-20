@@ -3,6 +3,11 @@ orbs:
   node: circleci/node@1.1.6
   cypress: cypress-io/cypress@1.16.1
 
+executors:
+  mac:
+    macos:
+      xcode: 10.1.0
+
 references:
     workspace_root: &workspace_root
         /tmp/build
@@ -105,12 +110,18 @@ workflows:
             name: E2E (cypress)
             requires:
               - Prepare E2E
-            #attach-workspace: true
             yarn: true
             start: yarn sb:serve
             wait-on: "http://localhost:8001"
             parallel: true
             parallelism: 2
+        - cypress/run:
+            name: Mac E2E (cypress)
+            executor: mac
+            yarn: true
+            start: yarn sb:serve
+            wait-on: "http://localhost:8001"
+
 
 #    build-and-deploy:
 #      jobs:

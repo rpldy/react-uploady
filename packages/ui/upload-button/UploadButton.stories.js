@@ -262,11 +262,11 @@ export const DifferentConfiguration = () => {
             destination={destination}
             enhancer={enhancer}>
 
-            <UploadButton autoUpload={false}>
+            <UploadButton autoUpload={false} id="upload-a">
                 autoUpload = false
             </UploadButton>
             <br/>
-            <UploadButton destination={destinationOverride}>
+            <UploadButton destination={destinationOverride} id="upload-b">
                 add 'x-test' header
             </UploadButton>
         </Uploady>

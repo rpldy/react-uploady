@@ -35,8 +35,8 @@ describe("UploadButton Tests", () => {
                     .click();
             });
 
-            cy.storyLog().assertLogPattern(/BATCH_ABORT/, 1);
-            cy.storyLog().assertLogPattern(/ITEM_FINISH/, 0);
+            cy.storyLog().assertLogPattern(/BATCH_ABORT/);
+            cy.storyLog().assertLogPattern(/ITEM_FINISH/, {times: 0});
         });
     });
 });

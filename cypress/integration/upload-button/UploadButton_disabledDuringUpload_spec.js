@@ -34,5 +34,4 @@ describe("UploadButton Tests", () => {
             cy.get("@uploadButton").should("not.be.disabled");
         });
     });
-// });
 });

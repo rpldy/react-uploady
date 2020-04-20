@@ -24,9 +24,9 @@
     "lint": "eslint ./packages",
     "test": "yarn flow && yarn lint && yarn jest:cov",
     "test:ci": "yarn flow && yarn lint && yarn jest:ci",
-    "cypress:open": "CYPRESS_SB_PORT=9111 cypress open",
-    "cypress:run": "wait-on http://localhost:9111 -d 3000 && CYPRESS_SB_PORT=9111 cypress run",
-    "e2e": "concurrently --success first --kill-others \"yarn sb:start\" \"yarn cypress:run\"",
+    "cy:open": "CYPRESS_SB_PORT=9111 cypress open",
+    "cy:run": "wait-on http://localhost:9111 -d 3000 && CYPRESS_SB_PORT=9111 cypress run",
+    "e2e": "concurrently --success first --kill-others \"yarn sb:start\" \"yarn cy:run\"",
     "server": "cd server; PORT=4000 node index.js"
   },
   "private": true,

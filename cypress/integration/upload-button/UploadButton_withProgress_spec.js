@@ -20,7 +20,7 @@ describe("UploadButton Tests", () => {
 
             cy.wait(2000);
 
-            cy.storyLog().assertLogPattern(/progress event uploaded: \d+, completed: \d+$/, 5, true);
+            cy.storyLog().assertLogPattern(/progress event uploaded: \d+, completed: \d+$/, {times: 5, different: true});
         });
     });
 });

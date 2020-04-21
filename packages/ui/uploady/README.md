@@ -2,19 +2,15 @@
 <a href="https://circleci.com/gh/rpldy/react-uploady">
     <img src="https://circleci.com/gh/rpldy/react-uploady.svg?style=svg" alt="circleci status"/>
 </a>  
-
+<a href="https://codecov.io/gh/rpldy/react-uploady">
+    <img src="https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg" alt="codecov status"/>
+</a> 
 <a href="https://bundlephobia.com/result?p=@rpldy/uploady">
     <img src="https://badgen.net/bundlephobia/minzip/@rpldy/uploady" alt="bundlephobia badge"/>
 </a>
-
-<a href="https://codecov.io/gh/rpldy/react-uploady">
-    <img src="https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg" alt="codecov status"/>
-</a>
-
 <a href="https://react-uploady-storybook.netlify.com">
    <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/>
-</a>  
-    
+</a> 
 # Uploady
 
 This is the main UI package. Its role is to initialize and expose the [uploader](../../uploader) functionality.

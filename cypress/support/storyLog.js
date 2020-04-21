@@ -40,8 +40,6 @@ Cypress.Commands.add("assertLogEntryCount", { prevSubject: true }, (storyLog, co
 Cypress.Commands.add("assertLogEntryContains", { prevSubject: true }, (storyLog, index, obj) => {
     const logLine = storyLog[index];
 
-    console.log("!!!!!!!!!! comparing log line = ", {logLine, obj});
-
     const match = logLine.args.find((a) => isContains(a, obj));
 
     expect(match, `expect log line ${index} to contain obj`).to.exist;

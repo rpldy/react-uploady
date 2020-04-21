@@ -1,4 +1,4 @@
-import useStoryUploadySetup, { localDestination, KNOB_GROUPS } from "./useStoryUploadySetup";
+import useStoryUploadySetup, { mockDestination, localDestination, KNOB_GROUPS } from "./useStoryUploadySetup";
 import StoryUploadProgress from "./StoryUploadProgress";
 import StoryAbortButton from "./StoryAbortButton"
 import useEventsLogUpdater from "./useEventsLogUpdater";
@@ -13,6 +13,7 @@ export {
     StoryUploadProgress,
     useStoryUploadySetup,
     StoryAbortButton,
+    mockDestination,
     localDestination,
     useEventsLogUpdater,
     logToCypress,

@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, useMemo, useState, useRef, useCallback } from "react";
+import React, { Component, useMemo, useState, useRef, useCallback, forwardRef } from "react";
 import styled from "styled-components";
 import { withKnobs } from "@storybook/addon-knobs";
 import Uploady, {
@@ -16,7 +16,7 @@ import {
     StoryUploadProgress,
     StoryAbortButton,
     uploadButtonCss,
-    localDestination,
+    mockDestination,
     useEventsLogUpdater,
 } from "../../../story-helpers";
 import UploadButton, { asUploadButton } from "./src";
@@ -273,13 +273,15 @@ export const DifferentConfiguration = () => {
     </div>
 };
 
-const DivUploadButton = asUploadButton((props) => {
-    return <div {...props} style={{ border: "1px solid red", width: "200px", cursor: "pointer" }}>
+const DivUploadButton = asUploadButton(forwardRef((props, ref) => {
+    return <div {...props}
+                style={{ border: "1px solid red", width: "200px", cursor: "pointer" }}
+                id="div-upload">
         This is a DIV
     </div>
-});
+}));
 
-export const WithCustomComponentAsButton = () => {
+export const WithComponentAsButton = () => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady debug
@@ -308,7 +310,7 @@ export const WithCustomFileInputAndForm = () => {
             debug
             customInput
         >
-            <ExampleForm url={localDestination().url}/>
+            <ExampleForm url={mockDestination().destination.url}/>
             <UploadButton/>
         </Uploady>
     </section>

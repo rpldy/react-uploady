@@ -30,9 +30,9 @@ const mockSenderEnhancer = (uploader) => {
     return uploader;
 };
 
-const mockDestination = () => ({
+export const mockDestination = () => ({
     destinationType: DEV_DEST_OPTIONS.mock,
-    destination: { url: "dummy.com" },
+    destination: { url: "http://react-uploady-dummy-server.comm" },
     enhancer: mockSenderEnhancer
 });
 

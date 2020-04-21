@@ -1,10 +1,11 @@
 // @flow
-import React, { Component, useMemo, useState, useRef } from "react";
+import React, { Component, useMemo, useState, useRef, useCallback, forwardRef } from "react";
 import styled from "styled-components";
 import { withKnobs } from "@storybook/addon-knobs";
 import Uploady, {
     useFileInput,
     UploadyContext,
+    useItemStartListener,
     useItemFinishListener,
     useBatchStartListener,
     useBatchFinishListener,
@@ -15,7 +16,8 @@ import {
     StoryUploadProgress,
     StoryAbortButton,
     uploadButtonCss,
-    localDestination,
+    mockDestination,
+    useEventsLogUpdater,
 } from "../../../story-helpers";
 import UploadButton, { asUploadButton } from "./src";
 
@@ -30,7 +32,8 @@ export const Simple = () => {
                     destination={destination}
                     enhancer={enhancer}
                     grouped={grouped}
-                    maxGroupSize={groupSize}>
+                    maxGroupSize={groupSize}
+                    fileInputId={"rpldyInput"}>
 
         <UploadButton/>
     </Uploady>;
@@ -54,21 +57,36 @@ export const WithStyledComponent = () => {
     </Uploady>;
 };
 
+const EventsLog = ({ setUpdater }) => {
+    const [events, setEvents] = useState([]);
+
+    const addEvent = useCallback((event) => {
+        setEvents((events) => events.concat(event));
+    }, [setEvents]);
+
+    setUpdater(addEvent);
+
+    return <ul data-test="hooks-events">
+        {events.map((e) => <li key={e}>{e}</li>)}
+    </ul>
+};
+
 export const WithEventListeners = () => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+    const { setUpdater, logEvent } = useEventsLogUpdater();
 
     const listeners = useMemo(() => ({
         [UPLOADER_EVENTS.BATCH_START]: (batch) => {
-            console.log(`>>>>> WithEventListeners - BATCH START - ${batch.id}`)
+            logEvent(`Batch Start - ${batch.id} - item count = ${batch.items.length}`);
         },
         [UPLOADER_EVENTS.BATCH_FINISH]: (batch) => {
-            console.log(`>>>>> WithEventListeners - BATCH FINISH - ${batch.id}`, batch)
+            logEvent(`Batch Finish - ${batch.id} - item count = ${batch.items.length}`);
         },
-        [UPLOADER_EVENTS.ITEM_START]: (file) => {
-            console.log(`>>>>> WithEventListeners - FILE START - ${file.id}`)
+        [UPLOADER_EVENTS.ITEM_START]: (item) => {
+            logEvent(`Item Start - ${item.id} : ${item.file.name}`);
         },
-        [UPLOADER_EVENTS.ITEM_FINISH]: (file) => {
-            console.log(`>>>>> WithEventListeners - FILE FINISH - ${file.id}`, file)
+        [UPLOADER_EVENTS.ITEM_FINISH]: (item) => {
+            logEvent(`Item Finish - ${item.id} : ${item.file.name}`);
         },
     }), []);
 
@@ -80,26 +98,36 @@ export const WithEventListeners = () => {
         listeners={listeners}
         grouped={grouped}
         maxGroupSize={groupSize}>
+
         <UploadButton/>
+        <EventsLog setUpdater={setUpdater}/>
     </Uploady>;
 };
 
+//to be able to use uploady hooks, we need a components that's rendered inside <Uploady>
 const HookedUploadButton = () => {
-    useItemFinishListener((file) => {
-        console.log(">>>>>> HookedUploadButton - FILE FINISH - ", file);
-    });
+    const { setUpdater, logEvent } = useEventsLogUpdater();
 
     useBatchStartListener((batch) => {
-        console.log(">>>>> HookedUploadButton - (hook) BATCH START - ", batch);
-
-        const item = batch.items[0];
-
-        if (item.file) {
-            console.log(item.file);
-        }
+        logEvent(`hooks: Batch Start - ${batch.id} - item count = ${batch.items.length}`);
     });
 
-    return <UploadButton/>;
+    useBatchFinishListener((batch) => {
+        logEvent(`hooks: Batch Finish - ${batch.id} - item count = ${batch.items.length}`);
+    });
+
+    useItemStartListener((item) => {
+        logEvent(`hooks: Item Start - ${item.id} : ${item.file.name}`);
+    });
+
+    useItemFinishListener((item) => {
+        logEvent(`hooks: Item Finish - ${item.id} : ${item.file.name}`);
+    });
+
+    return <>
+        <UploadButton/>
+        <EventsLog setUpdater={setUpdater}/>
+    </>;
 };
 
 export const withEventHooks = () => {
@@ -110,6 +138,7 @@ export const withEventHooks = () => {
         multiple={multiple}
         destination={destination}
         enhancer={enhancer}>
+
         <HookedUploadButton/>
     </Uploady>;
 };
@@ -122,8 +151,8 @@ export const WithProgress = () => {
         multiple={multiple}
         destination={destination}
         enhancer={enhancer}>
-        <StoryUploadProgress/>
         <UploadButton/>
+        <StoryUploadProgress/>
     </Uploady>;
 };
 
@@ -167,7 +196,7 @@ export const WithClass = () => {
     </Uploady>;
 };
 
-export const Abort = () => {
+export const WithAbort = () => {
     const { enhancer, destination, multiple } = useStoryUploadySetup();
 
     return <div>
@@ -179,7 +208,7 @@ export const Abort = () => {
             destination={destination}
             enhancer={enhancer}>
 
-            <UploadButton/>
+            <UploadButton id="upload-button"/>
             <StoryAbortButton/>
         </Uploady>
     </div>
@@ -233,24 +262,26 @@ export const DifferentConfiguration = () => {
             destination={destination}
             enhancer={enhancer}>
 
-            <UploadButton autoUpload={false}>
+            <UploadButton autoUpload={false} id="upload-a">
                 autoUpload = false
             </UploadButton>
             <br/>
-            <UploadButton destination={destinationOverride}>
+            <UploadButton destination={destinationOverride} id="upload-b">
                 add 'x-test' header
             </UploadButton>
         </Uploady>
     </div>
 };
 
-const DivUploadButton = asUploadButton((props) => {
-    return <div {...props} style={{ border: "1px solid red", width: "200px", cursor: "pointer" }}>
+const DivUploadButton = asUploadButton(forwardRef((props, ref) => {
+    return <div {...props}
+                style={{ border: "1px solid red", width: "200px", cursor: "pointer" }}
+                id="div-upload">
         This is a DIV
     </div>
-});
+}));
 
-export const WithCustomComponentAsButton = () => {
+export const WithComponentAsButton = () => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady debug
@@ -279,7 +310,7 @@ export const WithCustomFileInputAndForm = () => {
             debug
             customInput
         >
-            <ExampleForm url={localDestination().url}/>
+            <ExampleForm url={mockDestination().destination.url}/>
             <UploadButton/>
         </Uploady>
     </section>

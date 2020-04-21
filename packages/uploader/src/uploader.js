@@ -55,7 +55,7 @@ export default (options?: CreateOptions): UploaderType => {
 
         if (batch.items.length) {
             // $FlowFixMe - https://github.com/facebook/flow/issues/8215
-            const isCancelled = await cancellable(UPLOADER_EVENTS.BATCH_ADD, batch);
+            const isCancelled = await cancellable(UPLOADER_EVENTS.BATCH_ADD, batch, processOptions);
 
             if (!isCancelled) {
                 logger.debugLog(`uploady.uploader [${uploader.id}]: new items added - auto upload = ${String(processOptions.autoUpload)}`, batch.items);

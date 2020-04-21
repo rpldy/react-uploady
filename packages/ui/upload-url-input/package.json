@@ -1,5 +1,5 @@
 {
-  "version": "0.1.7",
+  "version": "0.1.8",
   "name": "@rpldy/upload-url-input",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -17,10 +17,10 @@
   },
   "dependencies": {
     "@rpldy/shared": "^0.1.7",
-    "@rpldy/shared-ui": "^0.1.7"
+    "@rpldy/shared-ui": "^0.1.8"
   },
   "devDependencies": {
-    "@rpldy/uploady": "^0.1.7",
+    "@rpldy/uploady": "^0.1.8",
     "@storybook/addon-knobs": "^5.3.18",
     "flow-bin": "^0.121.0"
   },

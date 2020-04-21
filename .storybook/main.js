@@ -3,7 +3,8 @@ const glob = require("fast-glob");
 module.exports = {
     stories: async () => {
         const paths = await glob(["./packages/**/*.stories.js", "!**/node_modules"]);
-        return paths.map((p)=> `.${p}`);
+        return ["./welcome.story.js"]
+            .concat(paths.map((p) => `.${p}`));
     },
 
     addons: [
@@ -18,7 +19,7 @@ module.exports = {
             test: /\.stor(y|ies)\.jsx?$/,
             loaders: [{
                 loader: require.resolve("@storybook/source-loader"),
-                options: { parser: "flow"},
+                options: { parser: "flow" },
             }],
             enforce: "pre",
         });

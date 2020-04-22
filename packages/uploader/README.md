@@ -1,3 +1,14 @@
+<a href="https://badge.fury.io/js/%40rpldy%2Fuploader">
+    <img src="https://badge.fury.io/js/%40rpldy%2Fuploader.svg" alt="npm version" height="20"></a>
+<a href="https://circleci.com/gh/rpldy/react-uploady">
+    <img src="https://circleci.com/gh/rpldy/react-uploady.svg?style=svg" alt="circleci status"/></a>  
+<a href="https://codecov.io/gh/rpldy/react-uploady">
+    <img src="https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg" alt="codecov status"/></a> 
+<a href="https://bundlephobia.com/result?p=@rpldy/uploader">
+    <img src="https://badgen.net/bundlephobia/minzip/@rpldy/uploader" alt="bundlephobia badge"/></a>
+<a href="https://react-uploady-storybook.netlify.com">
+   <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/></a> 
+
 # Uploader
 
 The processing and queuing engine.
@@ -165,11 +176,15 @@ uploader.off(UPLOADER_EVENTS.BATCH_ADD, batchAddHandler);
 
 Triggered when a new batch is added.
 
+- Parameters: _(batch, uploadOptions)_ 
+
 > This event is _[cancellable](#cancellable-events)_
 
 ### UPLOADER_EVENTS.BATCH_START
 
 Triggered when batch items start uploading
+
+- Parameters: _(batch)_
 
 > This event is _[cancellable](#cancellable-events)_
 
@@ -177,45 +192,67 @@ Triggered when batch items start uploading
 
 Triggered every time progress data is received from the upload request(s)
 
+- Parameters: _(batch)_
+
 ### UPLOADER_EVENTS.BATCH_FINISH
 
 Triggered when batch items finished uploading
+
+- Parameters: _(batch)_
  
 ### UPLOADER_EVENTS.BATCH_CANCEL
 
 Triggered in case batch was cancelled from BATCH_START event handler
 
+- Parameters: _(batch)_
+
 ### UPLOADER_EVENTS.BATCH_ABORT
 
 Triggered in case the batch was [aborted](#abortBatch)
+
+- Parameters: _(batch)_
 
 ### UPLOADER_EVENTS.ITEM_START
 
 Triggered when item starts uploading (just before)
 
+- Parameters: _(item)_
+
 ### UPLOADER_EVENTS.ITEM_FINISH
 
 Triggered when item finished uploading
 
-The server response can be accessed through the item's uploadResponse property.
+- Parameters: _(item)_
+
+> The server response can be accessed through the item's uploadResponse property.
 
 ### UPLOADER_EVENTS.ITEM_PROGRESS
 
 Triggered every time progress data is received for this file upload
 
+- Parameters: _(item)_
+
+> progress info is accessed through the item's "completed" (percentage) and "loaded" (bytes) properties.
+
 ### UPLOADER_EVENTS.ITEM_CANCEL
 
 Triggered in case item was cancelled from [ITEM_START](#UPLOADER_EVENTS.ITEM_START) event handler
+
+- Parameters: _(item)_
 
 ### UPLOADER_EVENTS.ITEM_ERROR
 
 Triggered in case item upload failed
 
-The server response can be accessed through the item's uploadResponse property.
+- Parameters: _(item)_
+
+> The server response can be accessed through the item's uploadResponse property.
 
 ### UPLOADER_EVENTS.ITEM_ABORT
     
 Triggered in case [abort](#abort) was called
+
+- Parameters: _(item)_
 
 ### UPLOADER_EVENTS.REQUEST_PRE_SEND
 
@@ -225,6 +262,8 @@ Group will contain a single item unless "grouped" option is set to true.
 Handler receives the item(s) in the group and the upload options that were used.
 The handler can change data inside the items and in the options by returning different data than received.
 See this [guide](../../guides/DynamicParameters.md) for more details.
+
+- Parameters: _(items, options)_
 
 ## Cancellable Events
 

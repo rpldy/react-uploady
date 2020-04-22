@@ -6,3 +6,4 @@ packages/**/lib/**/*.js
 packages/**/umd/**/*.js
 story-helpers/
 scripts/
+cypress/

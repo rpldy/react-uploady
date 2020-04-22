@@ -25,7 +25,6 @@ export default (options: CreateOptions, listeners: ?UploaderListeners): Uploader
     useEffect(() => {
         if (listeners) {
             logger.debugLog("Uploady setting event listeners", listeners);
-
             Object.entries(listeners)
                 .forEach(([name, m]: [string, any]) => {
                     uploader.on(name, m);
@@ -34,6 +33,7 @@ export default (options: CreateOptions, listeners: ?UploaderListeners): Uploader
 
         return () => {
             if (listeners) {
+                logger.debugLog("Uploady removing event listeners", listeners);
                 Object.entries(listeners)
                     .forEach(([name, m]: [string, any]) =>
                         uploader.off(name, m));

@@ -15,6 +15,7 @@ type FileInputPortalProps = {|
     capture: ?string,
     accept: ?string,
     webkitdirectory: ?boolean,
+    id: ?string,
     style: Object,
 |};
 
@@ -49,6 +50,7 @@ const Uploady = (props: UploadyProps) => {
         children,
         inputFieldContainer,
         customInput,
+        fileInputId,
         ...uploadOptions
     } = props;
 
@@ -75,6 +77,7 @@ const Uploady = (props: UploadyProps) => {
             webkitdirectory={webkitdirectory}
             style={{ display: "none" }}
             ref={internalInputFieldRef}
+            id={fileInputId}
         /> : null}
 
         {children}

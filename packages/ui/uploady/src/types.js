@@ -27,4 +27,6 @@ export type UploadyProps = {|
     accept?: string,
     //'webkitdirectory' file input field attribute - https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory
     webkitdirectory?: boolean,
+    //the value to use for the internal file input element
+    fileInputId?: string,
 |};

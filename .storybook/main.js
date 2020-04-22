@@ -33,6 +33,7 @@ module.exports = {
         "@storybook/addon-knobs/register",
         "@storybook/addon-storysource/register",
         "storybook-readme/register",
+        "./.storybook/cypressAddon/register",
     ],
 
     webpackFinal: async (config) => {

@@ -21,7 +21,10 @@ export default (files: UploadInfo | UploadInfo[], uploaderId: string, options: C
     bCounter += 1;
     const id = `batch-${bCounter}`;
 
-    files = (Array.isArray(files) || files instanceof FileList) ? files : [files];
+    //in case files list was created in a different context(window) need to check toString
+    const isFileList = files instanceof FileList || files.toString() === "[object FileList]";
+
+    files = (Array.isArray(files) || isFileList) ? files : [files];
 
     return {
         id,

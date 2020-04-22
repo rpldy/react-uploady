@@ -111,7 +111,7 @@ export const WithRetry = () => {
 };
 
 export default {
-    title: "Retry",
+    title: "Retry Hooks",
     decorators: [withKnobs],
     parameters: {
         sidebar: readme,

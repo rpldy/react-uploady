@@ -1,3 +1,14 @@
+<a href="https://badge.fury.io/js/%40rpldy%2Fuploady">
+    <img src="https://badge.fury.io/js/%40rpldy%2Fuploady.svg" alt="npm version" height="20"></a>
+<a href="https://circleci.com/gh/rpldy/react-uploady">
+    <img src="https://circleci.com/gh/rpldy/react-uploady.svg?style=svg" alt="circleci status"/></a>  
+<a href="https://codecov.io/gh/rpldy/react-uploady">
+    <img src="https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg" alt="codecov status"/></a> 
+<a href="https://bundlephobia.com/result?p=@rpldy/uploady">
+    <img src="https://badgen.net/bundlephobia/minzip/@rpldy/uploady" alt="bundlephobia badge"/></a>
+<a href="https://react-uploady-storybook.netlify.com">
+   <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/></a> 
+
 # Uploady
 
 This is the main UI package. Its role is to initialize and expose the [uploader](../../uploader) functionality.
@@ -49,6 +60,7 @@ Or
 | multiple             | boolean       | true          | [input/file#multiple](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#multiple)
 | accept               | string        | null          | [input/file#accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept)
 | webkitdirectory      | boolean       | false         | [webkitdirectory](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory)
+| fileInputId          | string        | undefined     | the value to use for the internal file input element
 
 ## Example
 

@@ -18,5 +18,5 @@ export default create({
     // inputBorderRadius: 4,
 
     // brandUrl: 'https://example.com',
-    brandImage: "https://res.cloudinary.com/yoav-cloud/image/upload/w_300/v22212321/icons/react-uploady-text-logo.png",
+    brandImage: "https://res.cloudinary.com/yoav-cloud/image/upload/w_300/v22212321/rpldy/logo/react-uploady-text-logo.png",
 });

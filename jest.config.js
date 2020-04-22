@@ -33,7 +33,10 @@ module.exports = {
 		"!<rootDir>/packages/**/*.json",
 		"!<rootDir>/packages/**/*.mock.*"
 	],
-	testPathIgnorePatterns: ["<rootDir>/packages/(?:.+?)/lib/"],
+	testPathIgnorePatterns: [
+	    "<rootDir>/packages/(?:.+?)/lib/",
+        "<rootDir>/cypress"
+    ],
 	"setupFilesAfterEnv": [
 		"./node_modules/jest-enzyme/lib/index.js",
 		"<rootDir>/test/jestSetup.js"

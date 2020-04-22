@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://res.cloudinary.com/yoav-cloud/image/upload/w_400/v22212321/icons/react-uploady-text-logo.png" width="300" alt='react-uploady Logo' aria-label='react-uploady' />   
+    <img src="https://res.cloudinary.com/yoav-cloud/image/upload/w_400/v22212321/rpldy/logo/react-uploady-text-logo.png" width="300" alt='react-uploady Logo' aria-label='react-uploady' />   
 </p>
 
 <p align="center">Modern file-upload components & hooks for React.</p>
@@ -261,6 +261,8 @@ A BatchItem has its own lifetime [events](packages/ui/uploady#events).
 
 React-uploady is also available on CDNs such as [unpkg.com](https://unpkg.com) and [jsdelivr.com](https://www.jsdelivr.com/)
 
+See this [guide](guides/UMD.md) for more information on how to use.
+
 ### jsDelivr
 
 | Bundle                        | URL
@@ -273,8 +275,6 @@ React-uploady is also available on CDNs such as [unpkg.com](https://unpkg.com) a
 You will most likely need the polyfill (regenerator & core js) bundle as well (load it first):
 
 https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/polyfills-bundle.js
-
-See this [guide](guides/UMD.md) for more information on how to use.
 
 ### unpkg
 
@@ -289,7 +289,7 @@ You will most likely need the polyfill (regenerator & core js) bundle as well (l
 
 https://unpkg.com/@rpldy/uploady/umd/polyfills-bundle.js
 
-> Note that unpkg does a redirect to the latest version in case the URL doesn't already contain it. So don't copy any of the URLs above into your page. 
+> Note that unpkg does a redirect to the latest version in case the URL doesn't already contain it. So don't copy any of the URLs above into your code. 
 > Load in the browser first and then copy the final URL from there.  
 
 ## Credits

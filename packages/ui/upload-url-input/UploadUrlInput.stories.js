@@ -101,7 +101,11 @@ export default {
         readme: {
             sidebar: readme,
         },
-        options: { theme: {} }, //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
+        options: {
+            showPanel: true,
+            //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
+            theme: {}
+        },
     },
 };
 

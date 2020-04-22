@@ -99,6 +99,7 @@
     "rc-progress": "^2.5.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-icons": "^3.10.0",
     "regenerator-runtime": "^0.13.5",
     "rimraf": "^3.0.0",
     "semver-utils": "^1.1.4",

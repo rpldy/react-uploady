@@ -1,18 +1,18 @@
 {
-    "port": 8089,
-    "chromeWebSecurity": false,
-    "video": false,
-    "env": {
-        "storybookDomain": "http://localhost",
-        "storybookPath": "/?path=/story/",
-
-        "components": {
-            "uploadButton": "upload-button",
-            "chunkedUploady": "chunked-uploady",
-            "retry": "retry",
-            "uploadDropZone": "upload-drop-zone",
-            "uploadUrlInput": "upload-url-input",
-            "uploadPreview": "upload-preview"
-        }
+  "port": 8089,
+  "chromeWebSecurity": false,
+  "video": false,
+  "env": {
+    "storybookDomain": "http://localhost",
+    "storybookPath": "/?path=/story/",
+    "components": {
+      "uploadButton": "upload-button",
+      "chunkedUploady": "chunked-uploady",
+      "retry": "retry",
+      "uploadDropZone": "upload-drop-zone",
+      "uploadUrlInput": "upload-url-input",
+      "uploadPreview": "upload-preview"
     }
+  },
+  "projectId": "excxm9"
 }

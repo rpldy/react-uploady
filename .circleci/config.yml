@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@1.1.6
-  cypress: cypress-io/cypress@1.16.1
+  cypress: cypress-io/cypress@1.19.2
 
 executors:
   mac:
@@ -113,9 +113,15 @@ workflows:
             yarn: true
             start: yarn sb:serve
             wait-on: "http://localhost:8001"
+            record: true
             parallel: true
             parallelism: 2
-#requires paid plan
+            group: rpldy-ci
+            post-steps:
+              - store_test_results:
+                  path: cypress/results
+
+#requires paid plan:
 #        - cypress/run:
 #            name: Mac E2E (cypress)
 #            executor: mac

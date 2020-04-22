@@ -103,7 +103,7 @@ workflows:
         - cypress/install:
             name: Prepare E2E
             requires:
-                - bundle
+              - build-and-test
             yarn: true
             build: "yarn sb:build"
         - cypress/run:

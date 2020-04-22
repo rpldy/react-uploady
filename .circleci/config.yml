@@ -3,11 +3,6 @@ orbs:
   node: circleci/node@1.1.6
   cypress: cypress-io/cypress@1.19.2
 
-executors:
-  mac:
-    macos:
-      xcode: 10.1.0
-
 references:
     workspace_root: &workspace_root
         /tmp/build
@@ -16,7 +11,7 @@ commands:
   setup:
     description: "Setup command to install/bootstrap/build"
     steps:
-        - run: yarn install
+        - run: yarn install --pure-lockfile
         - run: yarn bootstrap
         - run: yarn build
 
@@ -28,6 +23,8 @@ jobs:
     steps:
       - checkout
       - node/with-cache:
+          cache-version: v1
+          cache-key: yarn.lock
           steps:
             - attach_workspace:
                 at: .
@@ -122,6 +119,10 @@ workflows:
                   path: cypress/results
 
 #requires paid plan:
+#executors:
+#  mac:
+#    macos:
+#      xcode: 10.1.0
 #        - cypress/run:
 #            name: Mac E2E (cypress)
 #            executor: mac

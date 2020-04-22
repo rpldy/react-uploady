@@ -12,7 +12,8 @@ const Container = styled.section`
     padding: 40px 10px;
     margin-bottom: 40px;
 
-    max-width: 500px;
+    max-width: 900px;
+    width: 80%;
     min-width: 350px;
 
     display: flex;

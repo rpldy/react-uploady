@@ -14,8 +14,6 @@ import {
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-// import readme from '../README.md';
-
 const dzCss = css`
   display: flex;
     flex-direction: column;
@@ -62,7 +60,7 @@ export const Simple = () => {
 
         <StyledDropZone onDragOverClassName="drag-over">
             <div id="drag-text">Drag File(s) Here</div>
-            <div id="drop-text">Drop Files(s) Here</div>
+            <div id="drop-text">Drop File(s) Here</div>
         </StyledDropZone>
     </Uploady>;
 };
@@ -79,7 +77,7 @@ export const WithProgress = () => {
 
         <StyledDropZone onDragOverClassName="drag-over">
             <div id="drag-text">Drag File(s) Here</div>
-            <div id="drop-text">Drop Files(s) Here</div>
+            <div id="drop-text">Drop File(s) Here</div>
 
             <StoryUploadProgress/>
         </StyledDropZone>

@@ -22,7 +22,7 @@
   "devDependencies": {
     "@rpldy/uploady": "^0.1.7",
     "@storybook/addon-knobs": "^5.3.18",
-    "flow-bin": "^0.121.0",
+    "flow-bin": "^0.123.0",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
     "styled-components": "^4.4.1"

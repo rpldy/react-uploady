@@ -20,15 +20,12 @@ It provides multiple hooks that enable more advanced features and data for clien
 ## Installation
 
 ```shell
-   $ yarn add @rpldy/uploady 
+#Yarn: 
+   $ yarn add @rpldy/uploady
+
+#NPM:
+   $ npm i @rpldy/uploady
 ``` 
-
-Or 
-
-```shell
-   $ npm i @rpldy/uploady 
-```
-
 
 ## Props
 

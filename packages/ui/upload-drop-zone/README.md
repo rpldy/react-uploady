@@ -22,19 +22,15 @@ Drop Zones can use different configuration overrides that supersede the options 
 
 > Note: Some options cannot be overriden by the button. For example, any prop that influences the file input directly (such as '_multiple_')
 
-## Install
-
 ## Installation
 
 ```shell
+#Yarn: 
    $ yarn add @rpldy/uploady @rpldy/upload-drop-zone 
-```
-   
-Or 
 
-```shell
-   $ npm i @rpldy/uploady @rpldy/upload-drop-zone
-```
+#NPM:
+   $ npm i @rpldy/uploady @rpldy/upload-drop-zone 
+``` 
 
 ## Props
 

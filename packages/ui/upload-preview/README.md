@@ -18,14 +18,12 @@ By default, will present a preview of the file being uploaded in case its an ima
 ## Installation
 
 ```shell
+#Yarn: 
    $ yarn add @rpldy/uploady @rpldy/upload-preview 
-``` 
 
-Or 
-
-```shell
+#NPM:
    $ npm i @rpldy/uploady @rpldy/upload-preview 
-```
+``` 
 
 ## Props
 

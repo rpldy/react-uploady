@@ -68,25 +68,22 @@ React-uploady is a mono-repo, and as such provides multiple packages with differ
 For React applications, at the very least, you will need the Uploady provider:
 
 ```shell
+#Yarn: 
    $ yarn add @rpldy/uploady
+
+#NPM:
+   $ npm i @rpldy/uploady
 ``` 
 
-Or
-
-```shell
-   $ npm i @rpldy/uploady
-```
 
 If you wish to use the uploading mechanism (no UI), at the very least, you will need the Uploader:
 
 ```shell
+#Yarn:
   $ yarn add @rpldy/uploader
-```
 
-Or
-
-```shell
-   $ npm i @rpldy/uploader
+#NPM:
+  $ npm i @rpldy/uploader
 ```
 
 After that, you can add additional packages as needed. See below for more details.
@@ -203,7 +200,8 @@ Can be used with servers that support chunked uploads
 ```javascript
 import React from "react";
 import ChunkedUploady from "@rpldy/chunked-uploady";
- 
+import UploadButton from "@rpldy/upload-button";
+
 const App = () => (<ChunkedUploady
     destination={{ url: "https://my-server/upload" }}
     chunkSize={5242880}>

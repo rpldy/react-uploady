@@ -3,7 +3,7 @@
 export type ChunkedOptions = {|
 	//whether to divide the uploaded file into chunks (default: true)
 	chunked?: boolean,
-	//the maximum chunk size (default: 5000000 bytes)
+	//the maximum chunk size (default: 5242880 bytes)
 	chunkSize?: number,
 	//the number of times to retry a failed chunk (default: 0)
 	retries?: number,

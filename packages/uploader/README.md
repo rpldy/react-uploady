@@ -20,13 +20,11 @@ Uploader fires Batch & BatchItem lifecycle [events](#events) that can be listene
 ## Installation
 
 ```shell
-   $ yarn add @rpldy/uploader
-``` 
+#Yarn:
+  $ yarn add @rpldy/uploader
 
-Or 
-
-```shell
-   $ npm i @rpldy/uploader
+#NPM:
+  $ npm i @rpldy/uploader
 ```
 
 ## Usage

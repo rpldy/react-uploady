@@ -12,15 +12,57 @@
 # Chunked Uploady
 
 This package is identical to the main [Uploady](../uploady) package. It's provided as a convenient alternative
-to be used in case chunked upload support is needed. 
+to be used in case chunked upload is desired. 
 
-When using Chunked-Uploady, there is no need to also use Uploady.
+The server that is accepting the upload must also support chunked uploads. 
+The original file is broken down into smaller blobs, which are sent in different requests. 
+Each request is sent with the _Content-Range_ header to specify the bytes range.
 
+Internally, _ChunkedUploady_ uses [@rpldy/chunked-sender](../../chunked-sender) instead of the default sender.
 
+_Chunked-Sender_, doesn't support grouped uploads (see Upload Options [documentation](../uploady#props)) or URL uploading. 
+These will be handed over to the default [@rpldy/sender](../../sender).
 
-@rpldy/chunked-uploady
+In case the browser doesn't support chunking (blob slicing), the default sender will be used as well.
 
-doesnt support grouped uploads (in single XHR equest) or URL uploading. 
-These will be handed over to the default [@rpldy/sender]()
+## Installation
 
-will enable chunked uploads only if the browser supports it.
+```shell
+#Yarn: 
+   $ yarn add @rpldy/chunked-uploady
+
+#NPM:
+   $ npm i @rpldy/chunked-uploady
+``` 
+
+> Note that you don't need @rpldy/uploady, it comes with.
+
+## Props
+
+| Name (* = mandatory) | Type          | Default       | Description  
+| --------------       | ------------- | ------------- | ------------
+| chunked               | boolean       | true          | chunk uploads. setting to false will return to default sending behavior
+| chunkSize             | number        | 5242880      | the chunk size. relevant when uploaded file is larger than the value
+| retries               | number        | 0             | how many times to retry sending a failed chunk
+| parallel              | number        | 0             | how many (chunk) requests to send simultaneously
+
+In addition, all [UploadOptions](../../shared/src/types.js#L104) props can be passed to ChunkedUploady.
+In order to override configuration passed to the parent Uploady component. 
+See [Uploady documentation](../uploady#props) for detailed list of upload options.   
+
+## Example
+
+```javascript
+ import React from "react";
+ import ChunkedUploady from "@rpldy/chunked-uploady";
+ import UploadButton from "@rpldy/upload-button";
+ 
+ const App = () => (<ChunkedUploady
+     destination={{ url: "https://my-server/upload" }}
+     chunkSize={2142880}>
+        
+     <UploadButton/>
+ </ChunkedUploady>);
+ 
+ ```
+

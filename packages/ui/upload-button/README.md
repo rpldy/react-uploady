@@ -22,14 +22,12 @@ Buttons can use different configuration overrides that supersede the options pas
 ## Installation
 
 ```shell
+#Yarn: 
    $ yarn add @rpldy/uploady @rpldy/upload-button 
-```
-   
-Or 
 
-```shell
+#NPM:
    $ npm i @rpldy/uploady @rpldy/upload-button 
-```
+``` 
 
 ## Props
 

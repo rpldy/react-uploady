@@ -30,7 +30,7 @@ jobs:
                 at: .
             - setup:
             - run:
-                name: Test Code (lint, flow, jest)
+                name: Test Code (lint, flow, jest, types)
                 command: yarn test:ci
                 environment:
                     JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"

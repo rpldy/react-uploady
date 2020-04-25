@@ -1,6 +1,5 @@
 // @flow
 import { BATCH_STATES, FILE_STATES } from "./consts";
-import type { UploaderEnhancer } from "@rpldy/uploader";
 
 export type NonMaybeTypeFunc = <T>(param: T) => $NonMaybeType<T>;
 
@@ -124,18 +123,6 @@ export type UploadOptions = {|
 	forceJsonResponse?: boolean,
 	//whether to set XHR withCredentials to true (default: false)
 	withCredentials?: boolean,
-|};
-
-export type CreateOptions =  {|
-	...UploadOptions,
-    //uploader enhancer function
-    enhancer?: UploaderEnhancer,
-	//whether multiple upload requests can be issued simultaneously (default: false)
-	concurrent?: boolean,
-	//the maximum allowed for simultaneous requests (default: 2)
-	maxConcurrent?: number,
-	//the send method to use. Allows overriding the method used to send files to the server for example using a mock (default: @rpldy/sender)
-	send?: ?SendMethod,
 |};
 
 export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];

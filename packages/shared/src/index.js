@@ -36,7 +36,6 @@ export {
 
 export type {
     UploadOptions,
-    CreateOptions,
     Destination,
     UploadInfo,
     ProgressInfo,

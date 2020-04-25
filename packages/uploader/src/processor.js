@@ -4,8 +4,8 @@ import createUploadQueue from "./queue";
 import createItemsSender from "./batchItemsSender";
 
 import type { TriggerMethod } from "@rpldy/life-events";
-import type { Batch, CreateOptions, Cancellable } from "@rpldy/shared";
-//TODO: need a way to augment batch data at any point !!!!!!!!!
+import type { Batch, Cancellable } from "@rpldy/shared";
+import type { CreateOptions } from "./types";
 
 export default (trigger: TriggerMethod, options: CreateOptions, uploaderId: string) => {
     // $FlowFixMe - https://github.com/facebook/flow/issues/8215

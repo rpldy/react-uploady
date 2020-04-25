@@ -1,24 +1,14 @@
-
 import * as React from "react";
 import Uploady from "./index";
 
-const MyApp: React.FC = () => <Uploady debug >
+const MyApp: React.FC = () => <Uploady debug>
     <div>test</div>
 </Uploady>;
 
-export default () => <MyApp/>;
+const testMyApp = (): JSX.Element => {
+    return <MyApp/>;
+};
 
-
-// import * as React from "react";
-// import {  } from "./index";
-// // import { expectError } from "tsd";
-//
-// function TestComponent() {
-//     return (
-//         <Uploady   />
-//     );
-// }
-//
-// TestComponent();
-//
-//
+export {
+    testMyApp,
+};

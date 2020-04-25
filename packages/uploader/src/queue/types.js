@@ -1,8 +1,8 @@
 // @flow
 
-import type { Batch, BatchItem, CreateOptions, Cancellable } from "@rpldy/shared";
+import type { Batch, BatchItem, Cancellable } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
-import type { ItemsSender } from "../types";
+import type { ItemsSender, CreateOptions } from "../types";
 
 export type BatchData = { batch: Batch, batchOptions: CreateOptions };
 

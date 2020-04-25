@@ -9,7 +9,7 @@ export type ChunkedOptions = {|
 	retries?: number,
 	//the number of chunks to upload in parallel (default: 0)
 	parallel?: number,
-|}
+|};
 
 export type MandatoryChunkedOptions = {|
     chunked: boolean,

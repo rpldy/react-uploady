@@ -22,7 +22,7 @@ export type LifeEventsAPI = {
 	hasEventRegistrations: (name: any) => boolean,
 };
 
-export type EventCallback = (name: any, ...args: any[]) => any;
+export type EventCallback = (...args: any[]) => any;
 
 export type OffMethod = (name: any, cb?: EventCallback) => void;
 

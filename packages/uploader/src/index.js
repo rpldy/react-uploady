@@ -17,11 +17,11 @@ export {
 export * from "@rpldy/sender";
 
 export type {
-    UploaderType,
-    UploaderEnhancer,
-} from "./types";
-
-export type {
     TriggerMethod
 } from "@rpldy/life-events";
 
+export type {
+    UploaderType,
+    UploaderEnhancer,
+    CreateOptions,
+} from "./types";

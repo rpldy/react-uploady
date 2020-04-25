@@ -1,17 +1,16 @@
 {
     "compilerOptions": {
         "target": "esnext",
-        "module": "system",
+        "module": "CommonJS",
         "lib": [
             "dom",
             "esnext"
         ],
         "jsx": "react",
+        "strict": true,
         "moduleResolution": "node",
-//        "resolveJsonModule": true,
         "allowJs": true,
         "noImplicitAny": true,
-//        "noImplicitThis": true,
         "strictNullChecks": true,
         "types": [],
         "noEmit": true,
@@ -22,7 +21,6 @@
         "paths": {
             "~/*": ["packages/*"]
         }
-//        "forceConsistentCasingInFileNames": true
     },
     "include": [
         "packages/**/types/*.ts",

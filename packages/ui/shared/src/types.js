@@ -1,5 +1,6 @@
 // @flow
-import type { CreateOptions, UploadInfo, UploadOptions } from "@rpldy/shared";
+import type { UploadInfo, UploadOptions } from "@rpldy/shared";
+import type { CreateOptions } from "@rpldy/uploader";
 import type { OnAndOnceMethod, OffMethod } from "@rpldy/life-events";
 
 export type AddUploadFunction = (files: UploadInfo | UploadInfo[], addOptions: ?UploadOptions) => void;

@@ -56,3 +56,5 @@ export const useRequestPreSend: (cb: (data: PreSendData) =>
 export const useUploadOptions: (options?: CreateOptions) => CreateOptions;
 
 export const UploadyContext: React.Context<UploadyContextType>;
+
+export const assertContext: (context: UploadyContextType) => UploadyContextType;

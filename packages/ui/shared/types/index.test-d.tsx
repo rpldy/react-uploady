@@ -19,6 +19,7 @@ import {
     useUploadOptions,
 
     UploadyContext,
+    assertContext,
 } from "./index";
 
 const EventHooksTest: React.FC = () => {
@@ -102,7 +103,7 @@ const testEventHooks = (): JSX.Element => {
 };
 
 const WithUploadyContext: React.FC = () => {
-    const uploadyContext = React.useContext(UploadyContext);
+    const uploadyContext = assertContext(React.useContext(UploadyContext));
 
     const hasUploader = uploadyContext.hasUploader();
 

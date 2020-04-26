@@ -1,4 +1,4 @@
-export type UploadInfo = string | Object;
+export type UploadInfo = string | object;
 
 export type Destination = {
     url?: string;
@@ -86,28 +86,4 @@ export type UploadData = {
     response: any;
 };
 
-export type SendResult = {
-    request: Promise<UploadData>;
-    abort: () => boolean;
-};
-
-export type SenderProgressEvent = {
-    total: number;
-    loaded: number;
-};
-
-export type OnProgress = (e: SenderProgressEvent, objs: object[]) => void;
-
-export type SendOptions = {
-    method: string;
-    paramName: string;
-    params: object;
-    headers?: object;
-    forceJsonResponse?: boolean;
-    withCredentials?: boolean;
-    formatGroupParamName?: FormatParamGroupNameMethod;
-};
-
-export type SendMethod = (item: BatchItem[], url: string, options: SendOptions, onProgress: OnProgress) => SendResult;
-
-export const createBatchItem: (f: UploadInfo, batchId: string) => BatchItem
+export const createBatchItem: (f: UploadInfo, batchId: string) => BatchItem;

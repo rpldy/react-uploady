@@ -1,4 +1,4 @@
-import { UploaderEnhancer } from "@rpldy/shared";
+import { UploaderEnhancer } from "@rpldy/uploader";
 
 export const retryEnhancer: UploaderEnhancer;
 

@@ -1,4 +1,4 @@
-import { UploaderEnhancer } from "~/shared";
+import { UploaderEnhancer } from "@rpldy/uploader";
 
 export interface ChunkedOptions {
     chunked?: boolean;

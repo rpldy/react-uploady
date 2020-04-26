@@ -5,7 +5,8 @@ import handleChunkRequest from "./handleChunkRequest";
 import getChunksToSend from "./getChunksToSend";
 import sendChunk from "./sendChunk";
 
-import type { BatchItem, OnProgress } from "@rpldy/shared";
+import type { BatchItem } from "@rpldy/shared";
+import type { OnProgress } from "@rpldy/sender";
 import type { Chunk, State } from "./types";
 
 const resolveOnError = (resolve, ex) => {

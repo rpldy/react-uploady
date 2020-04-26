@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CreateOptions } from "@rpldy/shared";
+import { CreateOptions } from "@rpldy/uploader";
 import { EventCallback } from "@rpldy/life-events";
 
 export type UploaderListeners = { [key: string]: EventCallback };

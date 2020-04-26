@@ -1,19 +1,48 @@
-import send from "./index";
-import { createBatchItem} from "@rpldy/shared";
+import send, { createMockSender, OnProgress } from "./index";
+import { createBatchItem } from "@rpldy/shared";
 
-const testSend = (): void => {
+const batchItem = createBatchItem({ name: "test.png" }, "b1");
 
-    const batchItem = createBatchItem({ name: "test.png" }, "b1");
-
-    const result = send([batchItem], "test.com", {
-       forceJsonResponse: true,
-       formatGroupParamName: "myFile",
-    }, ());
-
+const onProgress: OnProgress = ({ loaded, total }) => {
+    console.log("uploaded/completed", { loaded, total });
 };
 
-const testMockSend = (): voic => {
+const testSend = async (): Promise<void> => {
 
+    const sendResult = send([batchItem], "test.com", {
+        method: "POST",
+        forceJsonResponse: true,
+        paramName: "file",
+        headers: {
+            "x-test": "111"
+        }
+    }, onProgress);
+
+    const result = await sendResult.request;
+
+    console.log(result.response);
+};
+
+const testMockSend =  async (): Promise<void> => {
+
+    const mockSender = createMockSender({
+        delay: 1100,
+        response: { test: true }
+    });
+
+    mockSender.update({
+        delay: 1200,
+        fileSize: 2222222,
+    });
+
+    const sendResult = mockSender.send([batchItem], "mocked", {
+        method: "PUT",
+        paramName: "bla"
+    }, onProgress);
+
+    const result = await sendResult.request;
+
+    console.log(result.response);
 };
 
 export {

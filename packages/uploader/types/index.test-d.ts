@@ -1,5 +1,5 @@
-import { Trigger, UploaderEnhancer } from "@rpldy/shared";
-import { createUploader, UploaderType, composeEnhancers } from "./index";
+import { Trigger } from "@rpldy/shared";
+import { createUploader, UploaderType, composeEnhancers, UploaderEnhancer } from "./index";
 
 const testCreateUploader = (): void => {
 
@@ -17,7 +17,7 @@ const testCreateUploader = (): void => {
 const testComposeEnhancers = (): void => {
 
     const enhancer1 = (uploader: UploaderType) => {
-        uploader.update({maxGroupSize: 4});
+        uploader.update({ maxGroupSize: 4 });
         return uploader;
     };
 

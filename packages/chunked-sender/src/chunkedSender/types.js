@@ -1,6 +1,7 @@
 // @flow
 
-import type { SendOptions, UploadData } from "@rpldy/shared";
+import type { UploadData } from "@rpldy/shared";
+import type { SendOptions } from "@rpldy/sender";
 import type { MandatoryChunkedOptions } from "../types";
 
 export type Chunk = {

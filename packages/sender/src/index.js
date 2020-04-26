@@ -11,5 +11,10 @@ export {
 
 export type {
 	MockOptions,
+    SendMethod,
+    OnProgress,
+    SenderProgressEvent,
+    SendOptions,
+    SendResult,
 } from "./types";
 

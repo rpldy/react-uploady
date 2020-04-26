@@ -2,15 +2,16 @@
 import { logger, FILE_STATES } from "@rpldy/shared";
 import { MOCK_DEFAULTS } from "./defaults";
 
+import type { UploadData, BatchItem, } from "@rpldy/shared";
+
 import type {
-	SendResult,
-	SendOptions,
-	UploadData,
-	OnProgress,
-	BatchItem,
-	SenderProgressEvent,
-} from "@rpldy/shared";
-import type { MockOptions, MandatoryMockOptions } from "../types";
+    MockOptions,
+    MandatoryMockOptions,
+    SendResult,
+    SendOptions,
+    OnProgress,
+    SenderProgressEvent,
+} from "../types";
 
 type MockResponse = {
 	time: number,

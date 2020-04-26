@@ -4,11 +4,13 @@ import type {
     UploadInfo,
     UploadOptions,
     BatchItem,
-    SendResult,
-    Batch, Trigger, SendMethod,
+    Batch,
+    Trigger,
 } from "@rpldy/shared";
 
 import type { OnAndOnceMethod, OffMethod } from "@rpldy/life-events";
+
+import type { SendResult, SendMethod } from "@rpldy/sender";
 
 export type PendingBatch = {
 	batch: Batch,

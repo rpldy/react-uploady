@@ -2,10 +2,13 @@ import {
     UploadOptions,
     Batch,
     FormatParamGroupNameMethod,
-    SendMethod,
     Trigger,
     UploadInfo,
 } from "@rpldy/shared";
+import {
+    SendMethod,
+} from "@rpldy/sender";
+
 import { OnAndOnceMethod, OffMethod } from "@rpldy/life-events";
 
 export type SendOptions = {

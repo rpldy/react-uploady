@@ -5,8 +5,8 @@ import defaultSend from "@rpldy/sender";
 import { PROGRESS_DELAY, SENDER_EVENTS } from "./consts";
 import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "./defaults";
 
-import type { Batch, BatchItem, CreateOptions } from "@rpldy/shared";
-import type { ItemsSender } from "./types";
+import type { Batch, BatchItem } from "@rpldy/shared";
+import type { ItemsSender, CreateOptions } from "./types";
 
 const reportItemsProgress = (items: BatchItem[], completed: number, loaded: number, trigger) => {
     items.forEach((item: BatchItem) => {

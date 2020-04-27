@@ -1,16 +1,16 @@
 // @flow
 
 import type {
-	CreateOptions,
-	UploadInfo,
-	UploadOptions,
-	BatchItem,
-	SendResult,
-	Trigger,
-	Batch,
+    UploadInfo,
+    UploadOptions,
+    BatchItem,
+    Batch,
+    Trigger,
 } from "@rpldy/shared";
 
 import type { OnAndOnceMethod, OffMethod } from "@rpldy/life-events";
+
+import type { SendResult, SendMethod } from "@rpldy/sender";
 
 export type PendingBatch = {
 	batch: Batch,
@@ -34,9 +34,21 @@ export type UploaderType = {
     getExtension: (any) => ?Object,
 };
 
-export type UploaderEnhancer = (uploader: UploaderType, trigger: Trigger<mixed>) => UploaderType;
-
 export type ItemsSender = {
 	send: (BatchItem[], Batch, CreateOptions) => SendResult,
 	on: OnAndOnceMethod,
 };
+
+export type UploaderEnhancer = (uploader: UploaderType, trigger: Trigger<mixed>) => UploaderType;
+
+export type CreateOptions =  {|
+    ...UploadOptions,
+    //uploader enhancer function
+    enhancer?: UploaderEnhancer,
+    //whether multiple upload requests can be issued simultaneously (default: false)
+    concurrent?: boolean,
+    //the maximum allowed for simultaneous requests (default: 2)
+    maxConcurrent?: number,
+    //the send method to use. Allows overriding the method used to send files to the server for example using a mock (default: @rpldy/sender)
+    send?: ?SendMethod,
+|};

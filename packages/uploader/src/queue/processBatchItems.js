@@ -3,7 +3,9 @@ import { triggerUpdater, isSamePropInArrays, merge, FILE_STATES, logger } from "
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 
-import type { BatchItem, CreateOptions, SendResult } from "@rpldy/shared";
+import type { BatchItem } from "@rpldy/shared";
+import type { SendResult } from "@rpldy/sender";
+import type { CreateOptions } from "../types";
 import type { QueueState, ProcessNextMethod } from "./types";
 
 type ItemsSendData = {

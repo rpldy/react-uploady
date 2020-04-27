@@ -1,7 +1,7 @@
 // @flow
-import type { UploadInfo, UploadOptions } from "@rpldy/shared";
+import type { UploadOptions } from "@rpldy/shared";
 
-export type UploadCallback = (files: UploadInfo | UploadInfo[], addOptions: UploadOptions) => void;
+// export type UploadCallback = (files: UploadInfo | UploadInfo[], addOptions: UploadOptions) => void;
 
 export type UploadUrlInputProps =  {|
 	...UploadOptions,

@@ -9,6 +9,17 @@
 <a href="https://react-uploady-storybook.netlify.com">
    <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/></a> 
 
+<details>
+    <summary>Contents</summary>
+    
+* [Intro](#uploady)
+* [Installation](#installation)
+* [Props](#props)
+* [Example](#example)
+* [Context](#context)
+* [Hooks](#hooks)
+</details>
+
 # Uploady
 
 This is the main UI package. Its role is to initialize and expose the [uploader](../../uploader) functionality.
@@ -79,7 +90,6 @@ const App = () => (<Uploady
 </Uploady>)
 
 ```
-
 
 ## Context
 

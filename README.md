@@ -25,16 +25,14 @@
 <details>
     <summary>Contents</summary>
     
-    <p>
-        * [Intro](#intro)
-        * [Documentation](#documentation)
-        * [Installation](#installation)
-        * [Packages](#packages)
-        * [Examples](#examples)
-        * [Important Concepts](#important-concepts)
-        * [UMD Bundles](#umd-bundles)
-        * [Acknowledgements](#acknowledgements)
-    </p>
+    * [Intro](#intro)
+    * [Documentation](#documentation)
+    * [Installation](#installation)
+    * [Packages](#packages)
+    * [Examples](#examples)
+    * [Important Concepts](#important-concepts)
+    * [UMD Bundles](#umd-bundles)
+    * [Acknowledgements](#acknowledgements)   
 </details>
 
 ## Intro

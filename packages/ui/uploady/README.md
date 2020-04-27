@@ -420,7 +420,6 @@ Shortcut hook to set/get upload options.
         //...       
     };
 ```
-
         
 ### useFileInput
 

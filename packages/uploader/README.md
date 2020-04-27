@@ -9,13 +9,24 @@
 <a href="https://react-uploady-storybook.netlify.com">
    <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/></a> 
 
+<details>
+    <summary>Contents</summary>
+    
+* [Intro](#uploader)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Upload Options](#usage-options)
+* [Uploader API](#uploader-api)
+* [Events](#events)
+* [Cancellable Events](#cancellable-events)
+</details>
+
 # Uploader
 
 The processing and queuing engine.
 The Uploader creates batches from the files passed to it for upload. 
 It will handle the processing and send the files to be uploaded to the server.
 Uploader fires Batch & BatchItem lifecycle [events](#events) that can be listened to as well cancel uploads dynamically. 
-
 
 ## Installation
 
@@ -68,7 +79,6 @@ uploader.add(myFile);
 | concurrent           | boolean       | false          | issue multiple upload requests simultaneously
 | maxConcurrent        | number        | 2              | maximum allowed simultaneous requests
 | send                 | [SendMethod](../../shared/src/types.js#L100) | @rpldy/sender | how to send files to the server
-
 
 ## Uploader API
 
@@ -159,7 +169,7 @@ Retrieve a registered extension by its name
 The Uploader will trigger for batch and batch-item lifecycle events.
 
 Registering to handle events can be done using the uploader's _on()_ and _once()_ methods.
-Unregistering can be done using _off()_ or by the return value of both on and once.
+Unregistering can be done using _off()_ or by the return value of both _on()_ and _once()_.
 
 ```javascript
 const batchAddHandler = (batch) => {};

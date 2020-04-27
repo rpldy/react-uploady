@@ -22,6 +22,21 @@
     </a>
 </p>
 
+<details>
+    <summary>Contents</summary>
+    
+    <p>
+        * [Intro](#intro)
+        * [Documentation](#documentation)
+        * [Installation](#installation)
+        * [Packages](#packages)
+        * [Examples](#examples)
+        * [Important Concepts](#important-concepts)
+        * [UMD Bundles](#umd-bundles)
+        * [Acknowledgements](#acknowledgements)
+    </p>
+</details>
+
 ## Intro
 
 With React-Uploady you can build (client-side) file-upload features with just a few lines of code.
@@ -42,7 +57,6 @@ RU has a small footprint (by design):
 | core + ui + chunked support  | 55.9KB          | 14.6KB
 | everything                   | 63.7KB          | 16KB
 
-
 ## Documentation
 
 **Getting Started**
@@ -59,7 +73,6 @@ In case you need UI components (like an upload button), check out any of our [UI
 Our __[Storybook](https://react-uploady-storybook.netlify.com/)__ has many examples, both simple and advanced.
 
 Checkout our __[Guides](guides)__ section for additional examples & information.
-
 
 ## Installation
 
@@ -114,12 +127,11 @@ After that, you can add additional packages as needed. See below for more detail
 ### Extra
 * [@rpldy/retry](packages/retry) - Add support for retrying failed uploads
 
-### Shared Package
+### Shared Packages
 
 * [@rpldy/shared](packages/shared) - Internal set of utils+types that all packages require  
 * [@rpldy/shared-ui](packages/ui/shared) - Internal set of utils+types that all UI packages require 
 * [@rpldy/live-events](packages/life-events) - provides **cancellable** pub/sub "events" 
-
 
 ## Examples
 
@@ -254,7 +266,6 @@ A batch can be used to abort the upload of all files inside it. Or can also be r
 Each file (or URL) added to the uploader are wrapped by a BatchItem object. They will have a unique ID within the life-time of the uploader instance.
 A BatchItem has its own lifetime [events](packages/ui/uploady#events).
 
-
 ## UMD Bundles
 
 React-uploady is also available on CDNs such as [unpkg.com](https://unpkg.com) and [jsdelivr.com](https://www.jsdelivr.com/)
@@ -290,6 +301,6 @@ https://unpkg.com/@rpldy/uploady/umd/polyfills-bundle.js
 > Note that unpkg does a redirect to the latest version in case the URL doesn't already contain it. So don't copy any of the URLs above into your code. 
 > Load in the browser first and then copy the final URL from there.  
 
-## Credits
+## Acknowledgements 
 
 logo's wing thanks to <a href="https://www.vecteezy.com/free-vector/illustration">Illustration Vectors by Vecteezy</a>

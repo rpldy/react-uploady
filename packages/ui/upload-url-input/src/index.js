@@ -9,5 +9,4 @@ export {
 
 export type {
     UploadUrlInputProps,
-    UploadCallback,
 } from "./types";

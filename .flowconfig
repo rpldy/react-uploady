@@ -4,8 +4,7 @@
 .*/node_modules/eslint-plugin-react/.*
 .*/node_modules/enzyme-matchers/.*
 .*/node_modules/jest-enzyme/.*
-./packages/**/lib/*.js
-./packages/**/*.mock.js
+.*/lib/.*
 
 [include]
 ./packages/**/*.js.flow

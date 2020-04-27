@@ -1,6 +1,11 @@
 // @flow
 
-import type { NonMaybeTypeFunc } from "@rpldy/shared";
+import type {
+    BatchItem,
+    NonMaybeTypeFunc,
+    UploadData,
+    FormatParamGroupNameMethod,
+} from "@rpldy/shared";
 
 export type MockOptions = {|
 	//the time in ms it should take to "upload" (default: 500ms)
@@ -14,3 +19,25 @@ export type MockOptions = {|
 |};
 
 export type MandatoryMockOptions = $ObjMap<MockOptions, NonMaybeTypeFunc>;
+
+export type SendResult = {
+    request: Promise<UploadData>,
+    abort: () => boolean,
+};
+
+
+export type SendOptions = {
+    method: string,
+    paramName: string,
+    params: Object,
+    headers?: Object,
+    forceJsonResponse: ?boolean,
+    withCredentials: ?boolean,
+    formatGroupParamName: ?FormatParamGroupNameMethod,
+};
+
+export type SenderProgressEvent = { total: number, loaded: number };
+
+export type OnProgress = (e: SenderProgressEvent, Object[]) => void;
+
+export type SendMethod = (item: BatchItem[], url: string, options: SendOptions, onProgress: OnProgress) => SendResult;

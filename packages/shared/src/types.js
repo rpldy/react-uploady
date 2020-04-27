@@ -1,6 +1,5 @@
 // @flow
 import { BATCH_STATES, FILE_STATES } from "./consts";
-import type { UploaderEnhancer } from "@rpldy/uploader";
 
 export type NonMaybeTypeFunc = <T>(param: T) => $NonMaybeType<T>;
 
@@ -35,24 +34,7 @@ export type UploadData = {
 	response: any,
 };
 
-export type SendResult = {
-	request: Promise<UploadData>,
-	abort: () => boolean,
-};
-
-export type SenderProgressEvent = { total: number, loaded: number };
-
 export type FormatParamGroupNameMethod = (number, string) => string;
-
-export type SendOptions = {
-	method: string,
-	paramName: string,
-	params: Object,
-	headers?: Object,
-	forceJsonResponse: ?boolean,
-	withCredentials: ?boolean,
-	formatGroupParamName: ?FormatParamGroupNameMethod,
-};
 
 type BatchItemBase = {|
 	id: string,
@@ -84,8 +66,6 @@ type BatchFile = {
 
 export type BatchItem = BatchUrl & BatchFile;
 
-export type OnProgress = (e: SenderProgressEvent, Object[]) => void;
-
 export type Batch = {
 	id: string,
 	uploaderId: string,
@@ -96,8 +76,6 @@ export type Batch = {
     //sum of bytes uploaded for batch items
     loaded: number,
 };
-
-export type SendMethod = (item: BatchItem[], url: string, options: SendOptions, onProgress: OnProgress) => SendResult;
 
 export type FileFilterMethod = (mixed) => boolean;
 
@@ -124,18 +102,6 @@ export type UploadOptions = {|
 	forceJsonResponse?: boolean,
 	//whether to set XHR withCredentials to true (default: false)
 	withCredentials?: boolean,
-|};
-
-export type CreateOptions =  {|
-	...UploadOptions,
-    //uploader enhancer function
-    enhancer?: UploaderEnhancer,
-	//whether multiple upload requests can be issued simultaneously (default: false)
-	concurrent?: boolean,
-	//the maximum allowed for simultaneous requests (default: 2)
-	maxConcurrent?: number,
-	//the send method to use. Allows overriding the method used to send files to the server for example using a mock (default: @rpldy/sender)
-	send?: ?SendMethod,
 |};
 
 export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];

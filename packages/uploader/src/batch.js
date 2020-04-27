@@ -7,8 +7,9 @@ import type {
     BatchItem,
     Batch,
     FileFilterMethod,
-    CreateOptions,
 } from "@rpldy/shared";
+
+import type { CreateOptions } from "./types";
 
 let bCounter = 0;
 

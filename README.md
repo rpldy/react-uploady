@@ -37,13 +37,16 @@
 
 ## Intro
 
-With React-Uploady you can build (client-side) file-upload features with just a few lines of code.
+<p align="center">
+    React-Uploady let's you can build (client-side) file-upload features with just a few lines of code.
+    RU provides the foundations needed to upload files from the browser - The rest is up to you.
+</p>
 
 ![React-Uploady Demo](guides/rpldy-demo.gif)
 
-The philosophy behind this library is that it should be as simple as possible to use, yet customizable at every point. 
-
-RU comes with many components and features. 
+The philosophy behind this library is that it should be as simple as possible to use, yet customizable at every point.
+You can start simple or you can can configure just about every aspect of the upload flow. 
+For this purpose, RU provides components, hooks, and plenty of features. 
 You get to choose which ones you need and only install the dependencies required (See [Packages](#packages) details below)
 
 RU has a small footprint (by design):

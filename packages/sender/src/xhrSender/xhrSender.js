@@ -3,12 +3,11 @@ import { logger, FILE_STATES } from "@rpldy/shared";
 import prepareFormData from "./prepareFormData";
 
 import type {
-	SendOptions,
 	BatchItem,
-	SendResult,
 	UploadData,
-	OnProgress,
 } from "@rpldy/shared";
+
+import type { OnProgress, SendResult, SendOptions } from "../types";
 
 type Headers = { [string]: string };
 
@@ -31,7 +30,7 @@ const setHeaders = (req, options: SendOptions) => {
 		req.setRequestHeader(name, headers[name]));
 };
 
-const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onProgress: OnProgress): SendRequest => {
+const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onProgress: ?OnProgress): SendRequest => {
 	const req = new XMLHttpRequest();
 
 	const pXhr = new Promise((resolve, reject) => {
@@ -43,7 +42,7 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
 		req.onload = () => resolve(req);
 
 		req.upload.onprogress = (e) => {
-			if (e.lengthComputable) {
+			if (e.lengthComputable && onProgress) {
 				onProgress(e, items.slice());
 			}
 		};
@@ -146,7 +145,7 @@ const abortRequest = (request: SendRequest) => {
 	return abortCalled;
 };
 
-export default (items: BatchItem[], url: string, options: SendOptions, onProgress: OnProgress): SendResult => {
+export default (items: BatchItem[], url: string, options: SendOptions, onProgress?: OnProgress): SendResult => {
 	logger.debugLog("uploady.sender: sending file: ", { items, url, options, });
 
 	const request = makeRequest(items, url, options, onProgress);

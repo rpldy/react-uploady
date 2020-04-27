@@ -1,8 +1,8 @@
 // @flow
 import React from "react";
 import { logger, invariant } from "@rpldy/shared";
-import type { UploaderType } from "@rpldy/uploader";
-import type { UploadInfo, UploadOptions, GetExact, CreateOptions } from "@rpldy/shared";
+import type { UploaderType, CreateOptions } from "@rpldy/uploader";
+import type { UploadInfo, UploadOptions, GetExact } from "@rpldy/shared";
 import type { EventCallback } from "@rpldy/life-events";
 import type { UploadyContextType, InputRef } from "./types";
 

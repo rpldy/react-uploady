@@ -1,7 +1,7 @@
 // @flow
 import { FILE_STATES, logger } from "@rpldy/shared";
 
-import type { SendResult } from "@rpldy/shared";
+import type { SendResult } from "@rpldy/sender";
 import type { State } from "./types";
 
 export default async (state: State, chunkId: string, chunkSendResult: SendResult) => {

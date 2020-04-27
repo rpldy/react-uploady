@@ -3,7 +3,8 @@ import { logger, throttle } from "@rpldy/shared";
 import getChunks from "./getChunks";
 import sendChunks from "./sendChunks";
 
-import type { BatchItem, OnProgress, SendOptions, SendResult } from "@rpldy/shared";
+import type { BatchItem } from "@rpldy/shared";
+import type { OnProgress, SendOptions, SendResult } from "@rpldy/sender";
 import type { MandatoryChunkedOptions } from "../types";
 import type { State, ChunksSendResponse, Chunk } from "./types";
 

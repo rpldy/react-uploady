@@ -4,7 +4,8 @@ import { createBatchItem, logger } from "@rpldy/shared";
 import send from "@rpldy/sender";
 import { getChunkDataFromFile } from "../utils";
 
-import type { BatchItem, OnProgress, SendOptions, SendResult } from "@rpldy/shared";
+import type { BatchItem } from "@rpldy/shared";
+import type { OnProgress, SendOptions, SendResult } from "@rpldy/sender";
 import type { Chunk } from "./types";
 import ChunkedSendError from "./ChunkedSendError";
 

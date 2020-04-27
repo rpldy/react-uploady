@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "CommonJS",
+        "lib": [
+            "dom",
+            "esnext"
+        ],
+        "jsx": "react",
+        "strict": true,
+        "moduleResolution": "node",
+        "allowJs": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "types": [],
+        "noEmit": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strictFunctionTypes": true,
+        "baseUrl": ".",
+        "paths": {
+            "~/*": ["packages/*"]
+        }
+    },
+    "include": [
+        "packages/**/types/*.ts",
+        "packages/**/types/*.tsx"
+    ],
+    "exclude": [
+    ]
+}

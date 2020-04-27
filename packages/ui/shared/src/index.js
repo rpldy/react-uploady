@@ -4,11 +4,6 @@ import useWithForwardRef from "./useWithForwardRef";
 import assertContext from "./assertContext";
 import useUploadOptions from "./useUploadOptions";
 
-export type {
-    InputRef,
-    UploadyContextType,
-} from "./types";
-
 export {
     useBatchAddListener,
     useBatchStartListener,
@@ -41,3 +36,9 @@ export {
 
     useWithForwardRef,
 };
+
+export type {
+    InputRef,
+    UploadyContextType,
+} from "./types";
+

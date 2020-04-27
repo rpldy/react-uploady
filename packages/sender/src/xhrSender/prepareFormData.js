@@ -1,7 +1,8 @@
 // @flow
 import { isFunction } from "@rpldy/shared";
 
-import type { BatchItem, SendOptions } from "@rpldy/shared";
+import type { BatchItem } from "@rpldy/shared";
+import type { SendOptions } from "../types";
 
 const getFormFileField = (fd: FormData, items: BatchItem[], options: SendOptions) => {
     const single = (items.length === 1);

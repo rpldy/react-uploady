@@ -11,4 +11,15 @@
 
 # Sender
 
-@rpldy/sender
+The default XHR sender of the [uploader](../uploader).
+
+## Installation
+
+```shell
+#Yarn:
+  $ yarn add @rpldy/sender
+
+#NPM:
+  $ npm i @rpldy/sender
+``` 
+

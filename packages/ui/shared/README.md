@@ -11,4 +11,13 @@
 
 # Shared UI
 
-@rpldy/shared-ui
+Internal set of utils+types that all UI packages require and use.
+
+```shell
+#Yarn:
+  $ yarn add @rpldy/shared-ui
+
+#NPM:
+  $ npm i @rpldy/shared-ui
+``` 
+

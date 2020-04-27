@@ -11,8 +11,16 @@
 
 # Life Events
 
-events pub/sub management with return values
+Events pub/sub management with return values
 
 Makes it possible for the registered handlers to return a response to the emitting code.
 
+## Installation
  
+```shell
+#Yarn:
+  $ yarn add @rpldy/life-events
+
+#NPM:
+  $ npm i @rpldy/life-events
+``` 

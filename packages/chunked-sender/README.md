@@ -10,8 +10,21 @@
    <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/></a> 
 
 # Chunked Sender
- 
- @rpldy/chunked-sender
 
-doesnt support grouped uploads (in single XHR equest) or URL uploading. 
+Adds chunked upload capabilities on top of the regular XHR [@rpldy/sender](../sender)
+Exposes an UploaderEnhancer that replaces the default send method the [uploader](../uploader) uses.
+
+For usage with your React app, see [@rpldy/chunked-uploady](../ui/chunked-uploady).
+
+Doesnt support grouped uploads (in single XHR equest) or URL uploading. 
 These will be handed over to the default [@rpldy/sender]()
+
+## Installation
+
+```shell
+#Yarn:
+  $ yarn add @rpldy/chunked-sender
+
+#NPM:
+  $ npm i @rpldy/chunked-sender
+``` 

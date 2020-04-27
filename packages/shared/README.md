@@ -11,4 +11,15 @@
 
 # Shared
 
-@rpldy/shared
+Internal set of utils+types that all rpldy packages require and use.
+
+## Installation
+
+```shell
+#Yarn:
+  $ yarn add @rpldy/shared
+
+#NPM:
+  $ npm i @rpldy/shared
+``` 
+

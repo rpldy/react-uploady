@@ -25,15 +25,14 @@
 <details>
     <summary>Contents</summary>
     
-    ### In this Document
-    [Intro](#intro)
-    [Documentation](#documentation)
-    [Installation](#installation)
-    [Packages](#packages)
-    [Examples](#examples)
-    [Important Concepts](#important-concepts)
-    [UMD Bundles](#umd-bundles)
-    [Acknowledgements](#acknowledgements)   
+* [Intro](#intro)
+* [Documentation](#documentation)
+* [Installation](#installation)
+* [Packages](#packages)
+* [Examples](#examples)
+* [Important Concepts](#important-concepts)
+* [UMD Bundles](#umd-bundles)
+* [Acknowledgements](#acknowledgements)   
 </details>
 
 ## Intro

@@ -28,6 +28,8 @@ The Uploader creates batches from the files passed to it for upload.
 It will handle the processing and send the files to be uploaded to the server.
 Uploader fires Batch & BatchItem lifecycle [events](#events) that can be listened to as well cancel uploads dynamically. 
 
+_If you're looking to integrate file upload with your React app, you'd probably want to head over to the [@rpldy/uploady README](../ui/uploady).
+
 ## Installation
 
 ```shell

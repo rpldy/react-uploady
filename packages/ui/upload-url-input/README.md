@@ -11,14 +11,58 @@
 
 # Upload URL Input
 
-@rpldy/upload-url-input
+Input component to enter a URL (or any string for that matter) that will be sent as an upload.
+
+This can be useful for services that accept a URL and do server-side fetch. [Cloudinary](https://cloudinary.com) is such a service.
+
+## Installation
+
+```shell
+#Yarn: 
+   $ yarn add @rpldy/uploady @rpldy/upload-url-input
+
+#NPM:
+   $ npm i @rpldy/uploady @rpldy/upload-url-input
+``` 
 
 ## Props
 
-dropHandler - handle the drop event yourself and provide the files to be uploaded
-htmlDirContentParams - by default uses [html-dir-content](https://www.npmjs.com/package/html-dir-content) - this allows to pass params to the 3rd party lib. see its [API Documentation](https://www.npmjs.com/package/html-dir-content#api)
-for available parameters (ex: recursive).
 
+| Name (* = mandatory) | Type          | Default       | Description  
+| --------------       | ------------- | ------------- | -------------
+| id             | string   | undefined | id attribute to pass to the button element
+| className      | string   | undefined | the class attribute to pass to the button element
+| placeholder    | string    | undefined | input's placeholder text
+| validate       | [ValidateMethod](src/types.js#L6) | undefined | function to validate input's value before its sent
+| uploadRef     | React Ref   | undefined | ref will be set to the upload callback so it can be triggered from the outside (see [example](#example))
+| ignoreKeyPress   | boolean | false | by default pressing Enter will initiate the upload, set to true in order to disable this behavior
 
+In addition, most [UploadOptions](../../shared/src/types.js#L104) props can be passed to UploadButton.
+In order to override configuration passed to the parent Uploady component. 
+See [Uploady documentation](../uploady#props) for detailed list of upload options.
 
+## Example
 
+```javascript
+import React, { useRef, useCallback } from "react";
+import Uploady from "@rpldy/uploady";
+import UploadUrlInput from "@rpldy/upload-url-input";
+
+const MyUrlUpload = () => {
+    const uploadRef = useRef(null);
+
+    const onClick = useCallback(() => {
+        if (uploadRef && uploadRef.current) {
+            uploadRef.current(); //initiate upload
+        }
+    }, []);
+    
+    return <Uploady>
+        <UploadUrlInput placeholder="URL to upload"
+            uploadRef={uploadRef} />
+        
+        <button onClick={onClick}>Upload</button>
+    </Uploady>;
+};
+
+```

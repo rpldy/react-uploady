@@ -65,7 +65,6 @@ const App = () => (<Uploady
 
 ```
 
-
 ### Custom Upload Button (asUploadButton)
 
 In case you want to use your own component as the upload trigger, use the asUploadButton HOC:

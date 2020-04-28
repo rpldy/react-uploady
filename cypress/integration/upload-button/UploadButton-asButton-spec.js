@@ -1,3 +1,5 @@
+import uploadFile from "../uploadFile";
+
 describe("With Component asButton", () => {
     const fileName = "flower.jpg";
 
@@ -8,19 +10,9 @@ describe("With Component asButton", () => {
     it("should make any custom component an upload button", () => {
         cy.iframe("#storybook-preview-iframe").as("iframe");
 
-        cy.get("@iframe")
-            .find("#div-upload")
-            .should("be.visible")
-            .click();
-
-        cy.fixture(fileName, "base64").then((fileContent) => {
-            cy.get("@iframe")
-                .find("input").upload(
-                { fileContent, fileName, mimeType: "image/jpeg" },
-                { subjectType: "input" });
-
+        uploadFile(fileName, () => {
             cy.wait(2000);
             cy.storyLog().assertItemStartFinish(fileName, 1);
-        });
+        }, "#div-upload");
     });
 });

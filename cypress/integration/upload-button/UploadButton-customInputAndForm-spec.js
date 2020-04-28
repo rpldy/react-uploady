@@ -1,3 +1,5 @@
+import uploadFile from "../uploadFile";
+
 describe("With Custom File Input And Form", () => {
     const fileName = "flower.jpg";
 
@@ -16,18 +18,8 @@ describe("With Custom File Input And Form", () => {
 
         cy.iframe("#storybook-preview-iframe").as("iframe");
 
-        cy.get("@iframe")
-            .find("button")
-            .should("be.visible")
-            .click();
-
-        cy.fixture(fileName, "base64").then((fileContent) => {
-            cy.get("@iframe")
-                .find("input").upload(
-                { fileContent, fileName, mimeType: "image/jpeg" },
-                { subjectType: "input" });
-
-            cy.wait('@uploadReq').then((xhr) => {
+        uploadFile(fileName, () => {
+            cy.wait("@uploadReq").then((xhr) => {
                 assert.isNotNull(xhr.response.body);
             });
         });

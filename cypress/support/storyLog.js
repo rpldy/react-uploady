@@ -62,7 +62,7 @@ Cypress.Commands.add("assertLogPattern", { prevSubject: true }, (storyLog, patte
         return res;
     }, []);
 
-    expect(matches.length).to.equal(options.times, `expect to find matches in log ${options.times} times`);
+    expect(matches.length).to.equal(options.times, `expect to find match: ${pattern} in log ${options.times} times`);
 
     if (options.different) {
         const checked = [];

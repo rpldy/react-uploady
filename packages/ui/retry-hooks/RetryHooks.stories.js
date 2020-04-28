@@ -59,9 +59,9 @@ const RetryUi = () => {
     }, [retryBatch]);
 
     return <>
-        <UploadButton/>
+        <UploadButton id="upload-button"/>
         <br/>
-        <button onClick={onRetryAll}>Retry All</button>
+        <button id="retry-all" onClick={onRetryAll}>Retry All</button>
 
         <section>Failed Batches:
             <ul>

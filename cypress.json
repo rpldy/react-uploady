@@ -1,5 +1,6 @@
 {
     "port": 8089,
+    "testFiles": "**/*-spec.js",
     "chromeWebSecurity": false,
     "video": false,
     "env": {
@@ -8,7 +9,7 @@
         "components": {
             "uploadButton": "upload-button",
             "chunkedUploady": "chunked-uploady",
-            "retry": "retry",
+            "retryHooks": "retry-hooks",
             "uploadDropZone": "upload-drop-zone",
             "uploadUrlInput": "upload-url-input",
             "uploadPreview": "upload-preview"

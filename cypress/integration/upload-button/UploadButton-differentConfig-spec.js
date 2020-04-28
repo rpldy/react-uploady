@@ -1,38 +1,24 @@
+import uploadFile from "../uploadFile";
+
 describe("Different Configuration", () => {
     const fileName = "flower.jpg";
-    
+
     before(() => {
         cy.visitStory("uploadButton", "different-configuration");
     });
-
-    const uploadWithButton = (selector, doAssertion) => {
-        cy.get("@iframe")
-            .find(selector)
-            .should("be.visible")
-            .click()
-
-        cy.fixture(fileName, "base64").then((fileContent) => {
-            cy.get("@iframe")
-                .find("input").upload(
-                { fileContent, fileName, mimeType: "image/jpeg" },
-                { subjectType: "input" });
-
-            doAssertion();
-        });
-    };
 
     it("should allow overriding upload options from button", () => {
 
         cy.iframe("#storybook-preview-iframe").as("iframe");
 
         //test button with autoUpload = false
-        uploadWithButton("#upload-a", () => {
+        uploadFile(fileName, () => {
             cy.wait(100);
             cy.storyLog().assertLogEntryCount(1);
-        });
+        }, "#upload-a");
 
         //test other button with custom destination header
-        uploadWithButton("#upload-b", () => {
+        uploadFile(fileName, () => {
             cy.wait(100);
 
             cy.storyLog().assertLogEntryContains(1, {
@@ -42,6 +28,6 @@ describe("Different Configuration", () => {
                     }
                 }
             });
-        });
+        }, "#upload-b");
     });
 });

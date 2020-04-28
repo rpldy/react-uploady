@@ -1,17 +1,14 @@
+import uploadFile from "../uploadFile";
+
 describe("With Abort", () => {
     const fileName = "flower.jpg";
-    
+
     before(() => {
         cy.visitStory("uploadButton", "with-abort");
     });
 
     it("should abort upload", () => {
         cy.iframe("#storybook-preview-iframe").as("iframe");
-
-        cy.get("@iframe")
-            .find("button")
-            .click()
-            .as("uploadButton");
 
         cy.get("@iframe")
             .find("input")
@@ -23,11 +20,7 @@ describe("With Abort", () => {
             .find(abortSelector)
             .should("not.exist");
 
-        cy.fixture(fileName, "base64").then(async (fileContent) => {
-            cy.get("@fInput").upload(
-                { fileContent, fileName, mimeType: "image/jpeg" },
-                { subjectType: "input" });
-
+        uploadFile(fileName, () => {
             cy.wait(500).then(() => {
                 cy.get("@iframe")
                     .find(abortSelector)

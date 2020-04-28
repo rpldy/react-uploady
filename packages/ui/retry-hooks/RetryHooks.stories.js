@@ -65,10 +65,11 @@ const RetryUi = () => {
 
         <section>Failed Batches:
             <ul>
-                {seenBatches.map((bId) =>
+                {seenBatches.map((bId, index) =>
                     <li style={{ cursor: "pointer" }}
                         key={bId}
                         data-id={bId}
+                        data-test={`batch-retry-${index}`}
                         onClick={onRetryBatch}>
                         {bId}
                     </li>)}

@@ -1,3 +1,5 @@
+import uploadFile from "../uploadFile";
+
 describe("UploadPreview - Simple", () => {
     const fileName = "flower.jpg";
 
@@ -8,16 +10,7 @@ describe("UploadPreview - Simple", () => {
     it("should show fallback on image > max size", () => {
         cy.iframe("#storybook-preview-iframe").as("iframe");
 
-        cy.get("@iframe")
-            .find("button")
-            .click();
-
-        cy.fixture(fileName, "base64").then((fileContent) => {
-            cy.get("@iframe")
-                .find("input").upload(
-                { fileContent, fileName, mimeType: "image/jpeg" },
-                { subjectType: "input" });
-
+        uploadFile(fileName, () => {
             cy.get("@iframe")
                 .find("img[data-test='upload-preview']")
                 .should("be.visible")

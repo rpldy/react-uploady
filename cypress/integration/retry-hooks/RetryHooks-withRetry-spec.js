@@ -25,7 +25,7 @@ describe("RetryHooks - Retry Upload", () => {
                     .should("be.visible")
                     .click();
 
-                cy.wait(2000);
+                cy.wait(3000);
 
                 cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 2 });
             }, "#upload-button");

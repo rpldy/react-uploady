@@ -1,5 +1,5 @@
 {
-  "version": "0.1.7",
+  "version": "0.1.9",
   "name": "@rpldy/sender",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -17,7 +17,7 @@
     "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.1.7"
+    "@rpldy/shared": "^0.1.9"
   },
   "devDependencies": {
     "flow-bin": "^0.123.0"

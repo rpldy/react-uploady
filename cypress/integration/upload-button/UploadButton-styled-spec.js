@@ -17,7 +17,7 @@ describe("With Styled Component", () => {
                 .should("have.css", "color", "rgb(176, 177, 179)")
 
             cy.wait(2000);
-            cy.storyLog().assertItemStartFinish(fileName, 1);
+            cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });
 });

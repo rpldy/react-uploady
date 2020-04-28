@@ -1,23 +1,23 @@
-import uploadFile from "../uploadFile";
+import dropFile from "../dropFile";
 
-describe("Different Configuration", () => {
+describe("UploadDropZone - Different Config", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadButton", "different-configuration");
+        cy.visitStory("uploadDropZone", "different-configuration");
     });
 
-    it("should allow overriding upload options from button", () => {
+    it("should allow overriding upload options from dropzone", () => {
         cy.iframe("#storybook-preview-iframe").as("iframe");
 
         //test button with autoUpload = false
-        uploadFile(fileName, () => {
+        dropFile(fileName, () => {
             cy.wait(100);
             cy.storyLog().assertLogEntryCount(1);
-        }, "#upload-a");
+        }, "#upload-dz-a");
 
         //test other button with custom destination header
-        uploadFile(fileName, () => {
+        dropFile(fileName, () => {
             cy.wait(100);
 
             cy.storyLog().assertLogEntryContains(1, {
@@ -27,6 +27,6 @@ describe("Different Configuration", () => {
                     }
                 }
             });
-        }, "#upload-b");
+        }, "#upload-dz-b");
     });
 });

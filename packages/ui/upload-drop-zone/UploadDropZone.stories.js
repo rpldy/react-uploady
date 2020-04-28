@@ -58,7 +58,7 @@ export const Simple = () => {
                     grouped={grouped}
                     maxGroupSize={groupSize}>
 
-        <StyledDropZone onDragOverClassName="drag-over">
+        <StyledDropZone id="upload-drop-zone" onDragOverClassName="drag-over">
             <div id="drag-text">Drag File(s) Here</div>
             <div id="drop-text">Drop File(s) Here</div>
         </StyledDropZone>
@@ -99,7 +99,7 @@ export const WithDropHandler = () => {
                     grouped={grouped}
                     maxGroupSize={groupSize}>
 
-        <StyledDropZone onDragOverClassName="drag-over" dropHandler={dropHandler}>
+        <StyledDropZone id="upload-drop-zone" onDragOverClassName="drag-over" dropHandler={dropHandler}>
             <div id="drag-text">Drag File(s) Here</div>
             <div id="drop-text">Drop Files(s) Here</div>
         </StyledDropZone>
@@ -133,13 +133,13 @@ export const DifferentConfiguration = () => {
         </p>
 
         <DifferentWrapper>
-            <SmallDropZone onDragOverClassName="drag-over" autoUpload={false}>
+            <SmallDropZone id="upload-dz-a" onDragOverClassName="drag-over" autoUpload={false}>
                 <h2>autoUpload = false</h2>
                 <div id="drag-text">Drag File(s) Here</div>
                 <div id="drop-text">Drop Files(s) Here</div>
             </SmallDropZone>
 
-            <SmallDropZone onDragOverClassName="drag-over" destination={destinationOverride}>
+            <SmallDropZone id="upload-dz-b" onDragOverClassName="drag-over" destination={destinationOverride}>
                 <h2>add 'x-test' header</h2>
                 <div id="drag-text">Drag File(s) Here</div>
                 <div id="drop-text">Drop Files(s) Here</div>

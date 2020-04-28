@@ -10,15 +10,6 @@ describe("With Progress", () => {
     it("should show upload progress", () => {
         cy.iframe("#storybook-preview-iframe").as("iframe");
 
-        // cy.get("@iframe")
-        //     .find("button")
-        //     .click()
-        //
-        // cy.fixture(fileName, "base64").then((fileContent) => {
-        //     cy.get("@iframe")
-        //         .find("input").upload(
-        //         { fileContent, fileName, mimeType: "image/jpeg" },
-        //         { subjectType: "input" });
         uploadFile(fileName, () => {
             cy.wait(2000);
 

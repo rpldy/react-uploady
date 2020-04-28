@@ -28,7 +28,7 @@ describe("ChunkedUploady - Simple", () => {
 
         uploadFile(fileName, () => {
             cy.wait(2000);
-            cy.storyLog().assertItemStartFinish(fileName, 1);
+            cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             let uniqueHeader;
 

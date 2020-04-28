@@ -21,7 +21,7 @@ describe("Disabled During Upload", () => {
             cy.get("@uploadButton").should("be.disabled");
 
             cy.wait(2000);
-            cy.storyLog().assertItemStartFinish(fileName, 1);
+            cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.get("@uploadButton").should("not.be.disabled");
         });
     });

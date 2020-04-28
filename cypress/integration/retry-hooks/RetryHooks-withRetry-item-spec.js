@@ -21,7 +21,7 @@ describe("RetryHooks - Retry Upload", () => {
                 cy.storyLog().assertLogPattern(/ITEM_CANCEL/, { times: 2 });
 
                 cy.get("@iframe")
-                    .find("li[data-test='batch-retry-0']")
+                    .find("li[data-test='item-retry-0']")
                     .click();
 
                 cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 3 });

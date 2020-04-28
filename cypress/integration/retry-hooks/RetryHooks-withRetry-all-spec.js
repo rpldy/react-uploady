@@ -15,6 +15,7 @@ describe("RetryHooks - Retry Upload", () => {
         uploadFile(fileName, () => {
             //create second batch
             uploadFile(fileName2, () => {
+                cy.wait(1000);
 
                 cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 2 });
                 cy.storyLog().assertLogPattern(/ITEM_START/, { times: 2 });

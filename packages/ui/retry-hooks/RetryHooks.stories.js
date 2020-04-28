@@ -78,9 +78,10 @@ const RetryUi = () => {
 
         <section>Failed Items:
             <ul>
-                {Object.keys(seenItems).map((name) =>
+                {Object.keys(seenItems).map((name, index) =>
                     <li style={{ cursor: "pointer" }}
                         data-id={seenItems[name]} key={seenItems[name]}
+                        data-test={`item-retry-${index}`}
                         onClick={onRetryItem}>
                         cancelled: ({seenItems[name]}) {name}
                     </li>)}

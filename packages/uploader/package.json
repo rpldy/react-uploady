@@ -5,6 +5,7 @@
   "author": "yoav niran (https://github.com/yoavniran)",
   "main": "lib/index.js",
   "module": "src/index.js",
+  "types": "types/index.d.ts",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -21,7 +22,7 @@
     "@rpldy/shared": "^0.1.7"
   },
   "devDependencies": {
-    "flow-bin": "^0.121.0",
+    "flow-bin": "^0.123.0",
     "immer": "^6.0.3"
   },
   "publishConfig": {

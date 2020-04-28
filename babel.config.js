@@ -10,7 +10,6 @@ module.exports = {
 		"@babel/flow",
 	],
 	plugins: [
-		"babel-plugin-styled-components",
 		"@babel/plugin-proposal-function-bind",
 		"@babel/plugin-proposal-class-properties",
 		"@babel/plugin-proposal-optional-chaining",
@@ -18,8 +17,6 @@ module.exports = {
 		["module-resolver", {
 			"root": ["./"],
 			// "alias": {
-			// 	"test": "./test",
-			// 	"underscore": "lodash"
 			// }
 		}]
 	],

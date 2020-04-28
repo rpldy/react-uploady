@@ -1,11 +1,11 @@
 // @flow
-import chunkedEnhancer from "./chunkedEnhancer";
+import getChunkedEnhancer from "./getChunkedEnhancer";
 import { CHUNKING_SUPPORT } from "./utils";
 
-export default chunkedEnhancer;
+export default getChunkedEnhancer;
 
 export {
-    chunkedEnhancer,
+    getChunkedEnhancer,
     CHUNKING_SUPPORT,
 };
 

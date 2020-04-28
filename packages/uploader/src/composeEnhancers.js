@@ -1,6 +1,6 @@
 // @flow
 
-import type { UploaderEnhancer, UploaderType } from "./types";
+import type { UploaderType, UploaderEnhancer } from "./types";
 
 export default (...enhancers: UploaderEnhancer[]) =>
     (uploader: UploaderType, ...args: any[]) =>

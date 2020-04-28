@@ -5,6 +5,7 @@
   "author": "yoav niran (https://github.com/yoavniran)",
   "main": "lib/index.js",
   "module": "src/index.js",
+  "types": "types/index.d.ts",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -22,7 +23,7 @@
   "devDependencies": {
     "@rpldy/uploady": "^0.1.8",
     "@storybook/addon-knobs": "^5.3.18",
-    "flow-bin": "^0.121.0"
+    "flow-bin": "^0.123.0"
   },
   "peerDependencies": {
     "react": ">=16.8.x",

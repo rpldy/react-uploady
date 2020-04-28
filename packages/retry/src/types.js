@@ -1,5 +1,4 @@
 // @flow
-
 import type { BatchItem } from "@rpldy/shared";
 
 export type State = {
@@ -14,5 +13,4 @@ export type State = {
 export type RetryState = {
     updateState: ((State) => void) => void,
     getState: () => State,
-
 };

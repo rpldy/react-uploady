@@ -22,15 +22,30 @@ Cypress.Commands.add("storyLog", () =>
         return w.__cypressResults.storyLog;
     }));
 
-Cypress.Commands.add("assertItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex = 0) => {
-    console.log("assertItemStartFinish received log", storyLog);
-
+const assertStartFinish = (storyLog, startIndex, prop, value) => {
     expect(storyLog[startIndex].args[0]).to.equal("ITEM_START");
-    expect(storyLog[startIndex].args[1].file.name).to.equal(fileName);
 
-    //TODO: this wont work with multiple files !! look for start event't batch item id
-    expect(storyLog[startIndex + 1].args[0]).to.equal("ITEM_FINISH");
-    expect(storyLog[startIndex + 1].args[1].file.name).to.equal(fileName);
+    cy.wrap(storyLog[startIndex].args[1])
+        .its(prop).should("eq", value);
+
+    const itemId = storyLog[startIndex].args[1].id;
+
+    const matchingFinish = storyLog
+        .slice(startIndex + 1)
+        .find((entry) =>
+            entry.args[0] === "ITEM_FINISH" && entry.args[1].id === itemId);
+
+    expect(matchingFinish, `expect matching ITEM_FINISH for ID: ${itemId}`).to.exist;
+};
+
+Cypress.Commands.add("assertFileItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex = 0) => {
+    console.log("assertFileItemStartFinish received log", storyLog);
+    assertStartFinish(storyLog, startIndex, "file.name", fileName);
+});
+
+Cypress.Commands.add("assertUrlItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex = 0) => {
+    console.log("assertUrlItemStartFinish received log", storyLog);
+    assertStartFinish(storyLog, startIndex, "url", fileName);
 });
 
 Cypress.Commands.add("assertLogEntryCount", { prevSubject: true }, (storyLog, count) => {
@@ -62,7 +77,7 @@ Cypress.Commands.add("assertLogPattern", { prevSubject: true }, (storyLog, patte
         return res;
     }, []);
 
-    expect(matches.length).to.equal(options.times, `expect to find matches in log ${options.times} times`);
+    expect(matches.length).to.equal(options.times, `expect to find match: ${pattern} in log ${options.times} times`);
 
     if (options.different) {
         const checked = [];

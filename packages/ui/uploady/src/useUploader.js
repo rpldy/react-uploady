@@ -3,8 +3,7 @@ import { useEffect, useMemo } from "react";
 import { logger } from "@rpldy/shared";
 import createUploader from "@rpldy/uploader";
 
-import type { UploaderType } from "@rpldy/uploader";
-import type { CreateOptions } from "@rpldy/shared";
+import type { UploaderType, CreateOptions } from "@rpldy/uploader";
 import type { UploaderListeners } from "./types";
 
 export default (options: CreateOptions, listeners: ?UploaderListeners): UploaderType => {

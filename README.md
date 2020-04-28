@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://res.cloudinary.com/yoav-cloud/image/upload/w_400/v22212321/icons/react-uploady-text-logo.png" width="300" alt='react-uploady Logo' aria-label='react-uploady' />   
+    <img src="https://res.cloudinary.com/yoav-cloud/image/upload/w_400/v22212321/rpldy/logo/react-uploady-text-logo.png" width="300" alt='react-uploady Logo' aria-label='react-uploady' />   
 </p>
 
 <p align="center">Modern file-upload components & hooks for React.</p>
@@ -22,15 +22,31 @@
     </a>
 </p>
 
+<details>
+    <summary>Contents</summary>
+    
+* [Intro](#intro)
+* [Documentation](#documentation)
+* [Installation](#installation)
+* [Packages](#packages)
+* [Examples](#examples)
+* [Important Concepts](#important-concepts)
+* [UMD Bundles](#umd-bundles)
+* [Acknowledgements](#acknowledgements)   
+</details>
+
 ## Intro
 
-With React-Uploady you can build (client-side) file-upload features with just a few lines of code.
+<p align="center">
+    React-Uploady let's you can build (client-side) file-upload features with just a few lines of code.
+    RU provides the foundations needed to upload files from the browser - The rest is up to you.
+</p>
 
 ![React-Uploady Demo](guides/rpldy-demo.gif)
 
-The philosophy behind this library is that it should be as simple as possible to use, yet customizable at every point. 
-
-RU comes with many components and features. 
+The philosophy behind this library is that it should be as simple as possible to use, yet customizable at every point.
+You can start simple or you can can configure just about every aspect of the upload flow. 
+For this purpose, RU provides components, hooks, and plenty of features. 
 You get to choose which ones you need and only install the dependencies required (See [Packages](#packages) details below)
 
 RU has a small footprint (by design):
@@ -41,7 +57,6 @@ RU has a small footprint (by design):
 | core + ui                    | 45KB          | 11.8KB
 | core + ui + chunked support  | 55.9KB          | 14.6KB
 | everything                   | 63.7KB          | 16KB
-
 
 ## Documentation
 
@@ -60,7 +75,6 @@ Our __[Storybook](https://react-uploady-storybook.netlify.com/)__ has many examp
 
 Checkout our __[Guides](guides)__ section for additional examples & information.
 
-
 ## Installation
 
 React-uploady is a mono-repo, and as such provides multiple packages with different functionality.
@@ -68,25 +82,22 @@ React-uploady is a mono-repo, and as such provides multiple packages with differ
 For React applications, at the very least, you will need the Uploady provider:
 
 ```shell
+#Yarn: 
    $ yarn add @rpldy/uploady
+
+#NPM:
+   $ npm i @rpldy/uploady
 ``` 
 
-Or
-
-```shell
-   $ npm i @rpldy/uploady
-```
 
 If you wish to use the uploading mechanism (no UI), at the very least, you will need the Uploader:
 
 ```shell
+#Yarn:
   $ yarn add @rpldy/uploader
-```
 
-Or
-
-```shell
-   $ npm i @rpldy/uploader
+#NPM:
+  $ npm i @rpldy/uploader
 ```
 
 After that, you can add additional packages as needed. See below for more details.
@@ -100,7 +111,7 @@ After that, you can add additional packages as needed. See below for more detail
 
 ### UI Packages
 * [@rpldy/upload-button](packages/ui/upload-button) - Upload button component and asUploadButton HOC  
-* [@rpldy/upload-preview](packages/ui/upload-preview) - Image preview component for files being uploaded 
+* [@rpldy/upload-preview](packages/ui/upload-preview) - Image&video preview component for files being uploaded 
 * [@rpldy/upload-url-input](packages/ui/upload-url-input) - Input component to send URL as upload info (ex: [Cloudinary](https://cloudinary.com/documentation/upload_images#auto_fetching_remote_images))
 * [@rpldy/upload-drop-zone](packages/ui/upload-drop-zone) - (Drag&)Drop zone to upload files and folder content
 * @rpldy/crop - TDOO
@@ -117,12 +128,11 @@ After that, you can add additional packages as needed. See below for more detail
 ### Extra
 * [@rpldy/retry](packages/retry) - Add support for retrying failed uploads
 
-### Shared Package
+### Shared Packages
 
 * [@rpldy/shared](packages/shared) - Internal set of utils+types that all packages require  
 * [@rpldy/shared-ui](packages/ui/shared) - Internal set of utils+types that all UI packages require 
 * [@rpldy/live-events](packages/life-events) - provides **cancellable** pub/sub "events" 
-
 
 ## Examples
 
@@ -203,7 +213,8 @@ Can be used with servers that support chunked uploads
 ```javascript
 import React from "react";
 import ChunkedUploady from "@rpldy/chunked-uploady";
- 
+import UploadButton from "@rpldy/upload-button";
+
 const App = () => (<ChunkedUploady
     destination={{ url: "https://my-server/upload" }}
     chunkSize={5242880}>
@@ -256,7 +267,6 @@ A batch can be used to abort the upload of all files inside it. Or can also be r
 Each file (or URL) added to the uploader are wrapped by a BatchItem object. They will have a unique ID within the life-time of the uploader instance.
 A BatchItem has its own lifetime [events](packages/ui/uploady#events).
 
-
 ## UMD Bundles
 
 React-uploady is also available on CDNs such as [unpkg.com](https://unpkg.com) and [jsdelivr.com](https://www.jsdelivr.com/)
@@ -292,6 +302,6 @@ https://unpkg.com/@rpldy/uploady/umd/polyfills-bundle.js
 > Note that unpkg does a redirect to the latest version in case the URL doesn't already contain it. So don't copy any of the URLs above into your code. 
 > Load in the browser first and then copy the final URL from there.  
 
-## Credits
+## Acknowledgements 
 
 logo's wing thanks to <a href="https://www.vecteezy.com/free-vector/illustration">Illustration Vectors by Vecteezy</a>

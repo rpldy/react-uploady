@@ -1,3 +1,25 @@
+<a href="https://badge.fury.io/js/%40rpldy%2Fuploady">
+    <img src="https://badge.fury.io/js/%40rpldy%2Fuploady.svg" alt="npm version" height="20"></a>
+<a href="https://circleci.com/gh/rpldy/react-uploady">
+    <img src="https://circleci.com/gh/rpldy/react-uploady.svg?style=svg" alt="circleci status"/></a>  
+<a href="https://codecov.io/gh/rpldy/react-uploady">
+    <img src="https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg" alt="codecov status"/></a> 
+<a href="https://bundlephobia.com/result?p=@rpldy/uploady">
+    <img src="https://badgen.net/bundlephobia/minzip/@rpldy/uploady" alt="bundlephobia badge"/></a>
+<a href="https://react-uploady-storybook.netlify.com">
+   <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/></a> 
+
+<details>
+    <summary>Contents</summary>
+    
+* [Intro](#uploady)
+* [Installation](#installation)
+* [Props](#props)
+* [Example](#example)
+* [Context](#context)
+* [Hooks](#hooks)
+</details>
+
 # Uploady
 
 This is the main UI package. Its role is to initialize and expose the [uploader](../../uploader) functionality.
@@ -9,15 +31,12 @@ It provides multiple hooks that enable more advanced features and data for clien
 ## Installation
 
 ```shell
-   $ yarn add @rpldy/uploady 
+#Yarn: 
+   $ yarn add @rpldy/uploady
+
+#NPM:
+   $ npm i @rpldy/uploady
 ``` 
-
-Or 
-
-```shell
-   $ npm i @rpldy/uploady 
-```
-
 
 ## Props
 
@@ -71,7 +90,6 @@ const App = () => (<Uploady
 </Uploady>)
 
 ```
-
 
 ## Context
 
@@ -402,7 +420,6 @@ Shortcut hook to set/get upload options.
         //...       
     };
 ```
-
         
 ### useFileInput
 

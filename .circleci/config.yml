@@ -1,12 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@1.1.6
-  cypress: cypress-io/cypress@1.16.1
-
-executors:
-  mac:
-    macos:
-      xcode: 10.1.0
+  cypress: cypress-io/cypress@1.19.2
 
 references:
     workspace_root: &workspace_root
@@ -16,7 +11,7 @@ commands:
   setup:
     description: "Setup command to install/bootstrap/build"
     steps:
-        - run: yarn install
+        - run: yarn install --pure-lockfile
         - run: yarn bootstrap
         - run: yarn build
 
@@ -28,12 +23,14 @@ jobs:
     steps:
       - checkout
       - node/with-cache:
+          cache-version: v1
+          cache-key: yarn.lock
           steps:
             - attach_workspace:
                 at: .
             - setup:
             - run:
-                name: Test Code (lint, flow, jest)
+                name: Test Code (lint, flow, jest, types)
                 command: yarn test:ci
                 environment:
                     JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
@@ -103,7 +100,7 @@ workflows:
         - cypress/install:
             name: Prepare E2E
             requires:
-                - bundle
+              - build-and-test
             yarn: true
             build: "yarn sb:build"
         - cypress/run:
@@ -113,9 +110,19 @@ workflows:
             yarn: true
             start: yarn sb:serve
             wait-on: "http://localhost:8001"
+            record: true
             parallel: true
             parallelism: 2
-#requires paid plan
+            group: rpldy-ci
+            post-steps:
+              - store_test_results:
+                  path: cypress/results
+
+#requires paid plan:
+#executors:
+#  mac:
+#    macos:
+#      xcode: 10.1.0
 #        - cypress/run:
 #            name: Mac E2E (cypress)
 #            executor: mac

@@ -1,3 +1,26 @@
+<a href="https://badge.fury.io/js/%40rpldy%2Fuploader">
+    <img src="https://badge.fury.io/js/%40rpldy%2Fuploader.svg" alt="npm version" height="20"></a>
+<a href="https://circleci.com/gh/rpldy/react-uploady">
+    <img src="https://circleci.com/gh/rpldy/react-uploady.svg?style=svg" alt="circleci status"/></a>  
+<a href="https://codecov.io/gh/rpldy/react-uploady">
+    <img src="https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg" alt="codecov status"/></a> 
+<a href="https://bundlephobia.com/result?p=@rpldy/uploader">
+    <img src="https://badgen.net/bundlephobia/minzip/@rpldy/uploader" alt="bundlephobia badge"/></a>
+<a href="https://react-uploady-storybook.netlify.com">
+   <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/></a> 
+
+<details>
+    <summary>Contents</summary>
+    
+* [Intro](#uploader)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Upload Options](#usage-options)
+* [Uploader API](#uploader-api)
+* [Events](#events)
+* [Cancellable Events](#cancellable-events)
+</details>
+
 # Uploader
 
 The processing and queuing engine.
@@ -5,17 +28,16 @@ The Uploader creates batches from the files passed to it for upload.
 It will handle the processing and send the files to be uploaded to the server.
 Uploader fires Batch & BatchItem lifecycle [events](#events) that can be listened to as well cancel uploads dynamically. 
 
+_If you're looking to integrate file upload with your React app, you'd probably want to head over to the [@rpldy/uploady README](../ui/uploady).
 
 ## Installation
 
 ```shell
-   $ yarn add @rpldy/uploader
-``` 
+#Yarn:
+  $ yarn add @rpldy/uploader
 
-Or 
-
-```shell
-   $ npm i @rpldy/uploader
+#NPM:
+  $ npm i @rpldy/uploader
 ```
 
 ## Usage
@@ -59,7 +81,6 @@ uploader.add(myFile);
 | concurrent           | boolean       | false          | issue multiple upload requests simultaneously
 | maxConcurrent        | number        | 2              | maximum allowed simultaneous requests
 | send                 | [SendMethod](../../shared/src/types.js#L100) | @rpldy/sender | how to send files to the server
-
 
 ## Uploader API
 
@@ -150,7 +171,7 @@ Retrieve a registered extension by its name
 The Uploader will trigger for batch and batch-item lifecycle events.
 
 Registering to handle events can be done using the uploader's _on()_ and _once()_ methods.
-Unregistering can be done using _off()_ or by the return value of both on and once.
+Unregistering can be done using _off()_ or by the return value of both _on()_ and _once()_.
 
 ```javascript
 const batchAddHandler = (batch) => {};

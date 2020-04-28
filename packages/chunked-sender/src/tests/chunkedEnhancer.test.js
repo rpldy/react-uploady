@@ -1,5 +1,5 @@
 import chunkedSender from "../chunkedSender";
-import getChunkedEnhancer from "../chunkedEnhancer";
+import getChunkedEnhancer from "../getChunkedEnhancer";
 
 jest.mock("../chunkedSender", () => jest.fn());
 

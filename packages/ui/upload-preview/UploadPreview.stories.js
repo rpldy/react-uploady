@@ -1,7 +1,7 @@
 // @flow
 import React, { useCallback, useState, useRef } from "react";
 import styled from "styled-components";
-import { withKnobs } from "@storybook/addon-knobs";
+import { withKnobs, number } from "@storybook/addon-knobs";
 import Uploady, {
     useItemProgressListener,
 } from "@rpldy/uploady";
@@ -10,6 +10,7 @@ import UploadUrlInput from "@rpldy/upload-url-input";
 import UploadPreview from "./src";
 
 import {
+    KNOB_GROUPS,
     useStoryUploadySetup,
     uploadButtonCss,
     uploadUrlInputCss,
@@ -22,8 +23,15 @@ const StyledUploadButton = styled(UploadButton)`
 	${uploadButtonCss}
 `;
 
+const usePreviewStorySetup = () => {
+    const setup = useStoryUploadySetup();
+    const maxImageSize = number("preview max image size", 2e+7, {}, KNOB_GROUPS.SETTINGS);
+
+    return {...setup, maxImageSize};
+};
+
 export const Simple = () => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+    const { enhancer, destination, multiple, grouped, groupSize, maxImageSize } = usePreviewStorySetup();
 
     return <Uploady
         debug
@@ -36,6 +44,8 @@ export const Simple = () => {
         <StyledUploadButton/>
         <br/><br/>
         <UploadPreview
+            maxPreviewImageSize={maxImageSize}
+            previewComponentProps={{"data-test": "upload-preview"}}
             fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"/>
     </Uploady>;
 };
@@ -155,6 +165,10 @@ export default {
         readme: {
             sidebar: readme,
         },
-        options: { theme: {} }, //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
+        options: {
+            showPanel: true,
+            //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
+            theme: {}
+        },
     },
 };

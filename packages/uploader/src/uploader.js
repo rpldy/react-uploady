@@ -17,12 +17,12 @@ import { getMandatoryOptions } from "./utils";
 import type {
     UploadInfo,
     UploadOptions,
-    CreateOptions,
 } from "@rpldy/shared";
 
 import type  {
     UploaderType,
     PendingBatch,
+    CreateOptions,
 } from "./types";
 
 const EVENT_NAMES = Object.values(UPLOADER_EVENTS);

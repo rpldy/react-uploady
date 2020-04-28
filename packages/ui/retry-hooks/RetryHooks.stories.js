@@ -59,16 +59,17 @@ const RetryUi = () => {
     }, [retryBatch]);
 
     return <>
-        <UploadButton/>
+        <UploadButton id="upload-button"/>
         <br/>
-        <button onClick={onRetryAll}>Retry All</button>
+        <button id="retry-all" onClick={onRetryAll}>Retry All</button>
 
         <section>Failed Batches:
             <ul>
-                {seenBatches.map((bId) =>
+                {seenBatches.map((bId, index) =>
                     <li style={{ cursor: "pointer" }}
                         key={bId}
                         data-id={bId}
+                        data-test={`batch-retry-${index}`}
                         onClick={onRetryBatch}>
                         {bId}
                     </li>)}
@@ -77,9 +78,10 @@ const RetryUi = () => {
 
         <section>Failed Items:
             <ul>
-                {Object.keys(seenItems).map((name) =>
+                {Object.keys(seenItems).map((name, index) =>
                     <li style={{ cursor: "pointer" }}
                         data-id={seenItems[name]} key={seenItems[name]}
+                        data-test={`item-retry-${index}`}
                         onClick={onRetryItem}>
                         cancelled: ({seenItems[name]}) {name}
                     </li>)}
@@ -111,10 +113,14 @@ export const WithRetry = () => {
 };
 
 export default {
-    title: "Retry",
+    title: "Retry Hooks",
     decorators: [withKnobs],
     parameters: {
         sidebar: readme,
-        options: { theme: {} }, //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
+        options: {
+            showPanel: true,
+            //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
+            theme: {}
+        },
     },
 };

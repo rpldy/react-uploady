@@ -1,6 +1,6 @@
 // @flow
 import type { Node } from "react";
-import type { CreateOptions } from "@rpldy/shared";
+import type { CreateOptions } from "@rpldy/uploader";
 import type { EventCallback } from "@rpldy/life-events";
 
 export type UploaderListeners = { [string]: EventCallback };

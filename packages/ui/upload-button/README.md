@@ -1,3 +1,14 @@
+<a href="https://badge.fury.io/js/%40rpldy%2Fupload-button">
+    <img src="https://badge.fury.io/js/%40rpldy%2Fupload-button.svg" alt="npm version" height="20"></a>
+<a href="https://circleci.com/gh/rpldy/react-uploady">
+    <img src="https://circleci.com/gh/rpldy/react-uploady.svg?style=svg" alt="circleci status"/></a>  
+<a href="https://codecov.io/gh/rpldy/react-uploady">
+    <img src="https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg" alt="codecov status"/></a> 
+<a href="https://bundlephobia.com/result?p=@rpldy/upload-button">
+    <img src="https://badgen.net/bundlephobia/minzip/@rpldy/upload-button" alt="bundlephobia badge"/></a>
+<a href="https://react-uploady-storybook.netlify.com/?path=/story/upload-button--simple">
+   <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/></a> 
+
 # Upload Button
 
 Upload button component and asUploadButton HOC
@@ -6,19 +17,17 @@ Initiate file upload by opening the browser's native file selection dialog.
 
 Buttons can use different configuration overrides that supersede the options passed to the parent Uploady. 
 
-> Note: Some options cannot be overriden by the button. For example, any props that influence the file input directly (such as '_multiple_')
+> Note: Some options cannot be overriden by the button. For example, any prop that influences the file input directly (such as '_multiple_')
 
 ## Installation
 
 ```shell
+#Yarn: 
    $ yarn add @rpldy/uploady @rpldy/upload-button 
-```
-   
-Or 
 
-```shell
+#NPM:
    $ npm i @rpldy/uploady @rpldy/upload-button 
-```
+``` 
 
 ## Props
 
@@ -55,7 +64,6 @@ const App = () => (<Uploady
 </Uploady>);
 
 ```
-
 
 ### Custom Upload Button (asUploadButton)
 

@@ -1,14 +1,16 @@
 // @flow
-import type { UploadInfo, UploadOptions } from "@rpldy/shared";
+import type { UploadOptions } from "@rpldy/shared";
 
-export type UploadCallback = (files: UploadInfo | UploadInfo[], addOptions: UploadOptions) => void;
+// export type UploadCallback = (files: UploadInfo | UploadInfo[], addOptions: UploadOptions) => void;
+
+type ValidateMethod = (value: ?string, input: ?HTMLInputElement) => boolean;
 
 export type UploadUrlInputProps =  {|
 	...UploadOptions,
 	className?: string,
 	id?: string,
 	placeholder?: string,
-	validate?: (value: ?string, input: ?HTMLInputElement) => boolean,
+	validate?: ValidateMethod,
 	uploadRef?: Object,
     ignoreKeyPress?: boolean,
 |};

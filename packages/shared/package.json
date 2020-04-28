@@ -5,6 +5,7 @@
   "author": "yoav niran (https://github.com/yoavniran)",
   "main": "lib/index.js",
   "module": "src/index.js",
+  "types": "types/index.d.ts",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -16,7 +17,7 @@
     "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
   },
   "devDependencies": {
-    "flow-bin": "^0.121.0"
+    "flow-bin": "^0.123.0"
   },
   "dependencies": {
     "invariant": "^2.2.4",

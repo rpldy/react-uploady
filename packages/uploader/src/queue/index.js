@@ -6,9 +6,9 @@ import { SENDER_EVENTS, UPLOADER_EVENTS } from "../consts";
 import processQueueNext from "./processQueueNext";
 import * as abortMethods from "./abort";
 
-import type { Cancellable, Batch, BatchItem, CreateOptions } from "@rpldy/shared";
+import type { Cancellable, Batch, BatchItem } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
-import type { ItemsSender } from "../types";
+import type { ItemsSender, CreateOptions } from "../types";
 import type { State } from "./types";
 
 export default (

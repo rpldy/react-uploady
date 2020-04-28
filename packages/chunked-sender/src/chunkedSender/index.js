@@ -5,7 +5,8 @@ import send from "@rpldy/sender";
 import { getMandatoryOptions } from "../utils";
 import processChunks from "./processChunks";
 
-import type { BatchItem, OnProgress, SendOptions, SendResult } from "@rpldy/shared";
+import type { BatchItem } from "@rpldy/shared";
+import type { OnProgress, SendOptions, SendResult } from "@rpldy/sender";
 import type { ChunkedOptions } from "../types";
 
 export default (chunkedOptions: ?ChunkedOptions) => {

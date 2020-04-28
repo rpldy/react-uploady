@@ -36,7 +36,6 @@ export {
 
 export type {
     UploadOptions,
-    CreateOptions,
     Destination,
     UploadInfo,
     ProgressInfo,
@@ -45,12 +44,8 @@ export type {
     NonMaybeTypeFunc,
     Batch,
     BatchItem,
-    SendMethod,
-    SendResult,
     UploadData,
-    OnProgress,
-    SendOptions,
-    SenderProgressEvent,
+    FormatParamGroupNameMethod,
     Trigger,
     Cancellable,
     Updater,

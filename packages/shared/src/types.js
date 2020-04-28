@@ -5,7 +5,7 @@ export type NonMaybeTypeFunc = <T>(param: T) => $NonMaybeType<T>;
 
 export type Destination = {
 	//upload URL
-	url: ?string,
+	url?: ?string,
 	//The name of the param in the upload request (default: input element's name)
 	filesParamName?: ?string,
 	//collection of params to pass along with the upload

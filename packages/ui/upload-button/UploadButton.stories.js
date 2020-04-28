@@ -247,9 +247,8 @@ export const DifferentConfiguration = () => {
     const { enhancer, destination, multiple } = useStoryUploadySetup();
 
     const destinationOverride = useMemo(() => ({
-        ...destination,
         headers: { ...destination.headers, "x-test": "1234" }
-    }), [destination]);
+    }), []);
 
     return <div>
         <p>Buttons can use different configuration overrides.<br/>

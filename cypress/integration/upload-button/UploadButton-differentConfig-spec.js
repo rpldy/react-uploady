@@ -22,6 +22,7 @@ describe("Different Configuration", () => {
 
             cy.storyLog().assertLogEntryContains(1, {
                 destination: {
+                    url: "http://react-uploady-dummy-server.comm",
                     headers: {
                         "x-test": "1234"
                     }

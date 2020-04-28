@@ -1,5 +1,5 @@
 {
-  "version": "0.1.8",
+  "version": "0.1.9",
   "name": "@rpldy/retry",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -17,8 +17,8 @@
     "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.1.7",
-    "@rpldy/uploader": "^0.1.8"
+    "@rpldy/shared": "^0.1.9",
+    "@rpldy/uploader": "^0.1.9"
   },
   "devDependencies": {
     "flow-bin": "^0.123.0",

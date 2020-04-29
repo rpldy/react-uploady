@@ -9,7 +9,7 @@ You can configure it with parameters that are relevant for all uploads from your
 
 If you need to then override certain options closer to where the actual upload takes place (in your app), you can do that with the provided UI components.
 
-## Example
+## Examples
 
 ### Multiple upload button with different overrides
 

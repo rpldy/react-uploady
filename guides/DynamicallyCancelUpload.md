@@ -61,7 +61,7 @@ Event handlers can be passed to the Uploady instance and can also cancel uploads
 ```javascript
 
 import React from "react";
-import Uploady from "@rpldy/uploady";
+import Uploady, { UPLOADER_EVENTS } from "@rpldy/uploady";
 
 const MyApp = () => {
     const listeners = useMemo(() => ({

@@ -1,6 +1,6 @@
 # Dynamic Parameters
 
-Uploady allow's you to inject upload related parameters/options dynamically.
+Uploady allows you to inject upload related parameters/options dynamically.
 This is useful when different headers or parameters are needed based on the uploaded data.
 
 The relevant event for this is: [REQUEST_PRE_SEND](../packages/uploader#uploader_eventsrequest_pre_send) and the relevant hook: 
@@ -59,6 +59,8 @@ const MyApp = () => {
 ```
 
 ## Using hook
+
+> note that a component using this hook should be wrapped by an <Uploady> component
 
 ```javascript
     import { useRequestPreSend } from "@rpldy/uploady";

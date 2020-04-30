@@ -23,8 +23,7 @@
     "@rpldy/shared": "^0.1.9"
   },
   "devDependencies": {
-    "flow-bin": "^0.123.0",
-    "immer": "^6.0.3"
+    "flow-bin": "^0.123.0"
   },
   "publishConfig": {
     "access": "public"

@@ -201,6 +201,7 @@ module.exports = {
             "rules": {
                 "no-empty": 0,
                 "import/first": 0,
+                "no-new-object": 0,
                 "no-mixed-spaces-and-tabs": 0,
                 "object-curly-spacing": 0,
                 "no-unexpected-multiline": 0,

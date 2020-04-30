@@ -31,7 +31,7 @@ export {
     devFreeze,
     merge,
     clone,
-    produce,
+    getUpdateable,
 } from "./utils";
 
 export type {

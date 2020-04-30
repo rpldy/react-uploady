@@ -49,7 +49,7 @@ module.exports = {
                 config: {
                     externals: ["react", "react-dom"],
                 },
-                maxSize: 12500,
+                maxSize: 13000,
             },
 
             /**
@@ -96,7 +96,7 @@ module.exports = {
                         externals: ["react", "react-dom"],
                     };
                 },
-                maxSize: 16500,
+                maxSize: 17500,
             },
 
             //TODO: find a way to make this work with global object assignment (webpack externals root)
@@ -179,12 +179,6 @@ module.exports = {
                     }
                 ]
             },
-
-            resolve: {
-                alias: {
-                    "immer": path.resolve(__dirname, "packages/shared/src/utils/produce"),
-                }
-            }
         },
 
         production: {

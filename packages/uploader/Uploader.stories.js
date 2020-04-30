@@ -1,16 +1,23 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { withKnobs } from "@storybook/addon-knobs";
-import ScriptTag from "react-script-tag";
+import { UmdBundleScript, UMD_BUNDLES } from "../../story-helpers";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
 
 export const UMD_Core = () => {
+    const [uploaderReady, setUploaderReady] = useState(false);
 
-    return <>
-        <ScriptTag src={}/>
-    </>
+    const onBundleLoad = useCallback(() => {
+        console.log("BUNDLE LOADED !!!! ", window.rpldy);
+        setUploaderReady(true);
+    }, []);
+
+    return <div>
+        <UmdBundleScript bundle={UMD_BUNDLES.CORE} onLoad={onBundleLoad}/>
+
+    </div>
 };
 
 export default {

@@ -29,8 +29,7 @@
   },
   "devDependencies": {
     "flow-bin": "^0.123.0",
-    "immer": "^6.0.3",
-    "react-script-tag": "^1.1.2"
+    "immer": "^6.0.3"
   },
   "publishConfig": {
     "access": "public"

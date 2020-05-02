@@ -41,12 +41,12 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
 		req.onabort = () => reject(req);
 		req.onload = () => resolve(req);
 
-		req.onprogress = (e) => {
-            console.log("################ XHR PROGRESS !!!!!!!!!!! ", e);
-        };
+		// req.onprogress = (e) => {
+        //     console.log("################ XHR PROGRESS !!!!!!!!!!! ", e);
+        // };
 
 		req.upload.onprogress = (e) => {
-            console.log("################ XHR UPLOAD PROGRESS !!!!!!!!!!! ", e);
+            // console.log("################ XHR UPLOAD PROGRESS !!!!!!!!!!! ", e);
 			if (e.lengthComputable && onProgress) {
 				onProgress(e, items.slice());
 			}

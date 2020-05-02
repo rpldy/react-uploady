@@ -110,7 +110,7 @@ workflows:
     create-rpldy:
       jobs:
         - setup
-        - build-and-test
+        - build-and-test:
             requires:
               - setup
         - coverage:

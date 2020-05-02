@@ -33,6 +33,7 @@ jobs:
                 root: .
                 paths:
                   - node_modules
+                  - packages
 
   build-and-test:
     working_directory: *workspace_root
@@ -46,7 +47,6 @@ jobs:
           steps:
             - attach_workspace:
                 at: .
-#            - setup:
             - run:
                 name: Test Code (lint, flow, jest, types)
                 command: yarn test:ci
@@ -61,7 +61,6 @@ jobs:
             - persist_to_workspace:
                 root: .
                 paths:
-#                  - node_modules
                   - .jest-coverage
                   - packages
 
@@ -125,13 +124,14 @@ workflows:
         - cypress/install:
             name: Prepare E2E
             requires:
-              - bundle
+              - setup
             yarn: true
             build: "yarn sb:build"
         - cypress/run:
             name: E2E (cypress)
             requires:
               - Prepare E2E
+              - bundle
             yarn: true
             start: yarn cy:deps:serve
             wait-on: "http://localhost:8001"

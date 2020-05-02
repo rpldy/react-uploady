@@ -129,7 +129,7 @@ workflows:
         - cypress/run:
             name: E2E (cypress)
             requires:
-              - Prepare E2E
+              - Prepare E2E (cypress)
             attach-workspace: true
             yarn: true
             start: yarn cy:deps:serve

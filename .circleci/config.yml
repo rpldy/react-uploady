@@ -94,13 +94,11 @@ workflows:
             filters:
               branches:
                only: master
-        - bundle:
-            requires:
-              - build-and-test
+        - bundle
         - cypress/install:
             name: Prepare E2E
             requires:
-              - build-and-test
+              - bundle
             yarn: true
             build: "yarn sb:build"
         - cypress/run:
@@ -108,7 +106,7 @@ workflows:
             requires:
               - Prepare E2E
             yarn: true
-            start: yarn e2e:serve
+            start: yarn cy:deps:serve
             wait-on: "http://localhost:8001"
             record: true
             parallel: true

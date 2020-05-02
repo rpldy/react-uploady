@@ -8,6 +8,7 @@
         "storybookPath": "/?path=/story/",
         "components": {
             "uploader": "uploader",
+            "uploady": "uploady",
             "uploadButton": "upload-button",
             "chunkedUploady": "chunked-uploady",
             "retryHooks": "retry-hooks",

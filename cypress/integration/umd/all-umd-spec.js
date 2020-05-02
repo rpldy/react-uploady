@@ -1,13 +1,13 @@
 import uploadFile from "../uploadFile";
 
-describe("UMD Core - Bundle", () => {
+describe("UMD UI CORE - Bundle", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploader", "umd-core");
+        cy.visitStory("uploady", "umd-all");
     });
 
-    it("should use upload with uploader", () => {
+    it("should use Uploady and UploadButton to upload file", () => {
         cy.server();
 
         cy.route({
@@ -28,7 +28,13 @@ describe("UMD Core - Bundle", () => {
                 .its("request.body")
                 .should((body) => {
                     expect(body.get("file").name).to.eq(fileName);
-                })
+                });
+
+            cy.get("@iframe")
+                .find("img[data-test='upload-preview']")
+                .should("be.visible")
+                .invoke("attr", "src")
+                .should("match", /blob:/);
         }, "#upload-button");
     });
 });

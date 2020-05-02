@@ -94,9 +94,19 @@ module.exports = {
                         ],
 
                         externals: ["react", "react-dom"],
+
+                        optimization: {
+                            splitChunks: {
+                                cacheGroups: {
+                                    commons: {
+                                        filename: "[name]-all-bundle.js",
+                                    }
+                                }
+                            }
+                        },
                     };
                 },
-                maxSize: 16500,
+                maxSize: 17000,
             },
 
             //TODO: find a way to make this work with global object assignment (webpack externals root)

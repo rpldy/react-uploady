@@ -2,7 +2,7 @@ import React, { useCallback, useState, useRef } from "react";
 import {
     UmdBundleScript,
     localDestination,
-    UMD_BUNDLES,
+    UMD_NAMES,
     addActionLogEnhancer
 } from "../../story-helpers";
 
@@ -35,7 +35,7 @@ export const UMD_Core = () => {
     }, []);
 
     return <div>
-        <UmdBundleScript bundle={UMD_BUNDLES.CORE} onLoad={onBundleLoad}/>
+        <UmdBundleScript bundle={UMD_NAMES.CORE} onLoad={onBundleLoad}/>
 
         <input type="file" ref={inputRef} style={{ display: "none" }}
                onChange={onInputChange}/>

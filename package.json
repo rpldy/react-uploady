@@ -27,11 +27,11 @@
     "types": "yarn ensureTypes && tsc --outDir ./tstest",
     "test": "yarn flow && yarn lint && yarn jest:cov && yarn types",
     "test:ci": "yarn flow && yarn lint && yarn jest:ci && yarn types",
+    "cy:deps:serve": "concurrently --kill-others \"yarn sb:serve\" \"yarn bundle:serve\"",
     "cy:open": "CYPRESS_SB_PORT=9111 cypress open",
     "cy:run": "wait-on http://localhost:9111 -d 3000 && CYPRESS_SB_PORT=9111 cypress run",
     "cy:run:ff": "yarn cy:run --browser firefox",
-    "e2e": "concurrently --success first --kill-others \"yarn sb:start\" \"yarn cy:run\"",
-    "e2e:serve": "concurrently --kill-others \"yarn sb:serve\" \"yarn bundle:serve\"",
+    "e2e": "concurrently --success first --kill-others \"yarn bundle:serve\" \"yarn sb:start\" \"yarn cy:run\"",
     "server": "cd server; PORT=4000 node index.js"
   },
   "private": true,

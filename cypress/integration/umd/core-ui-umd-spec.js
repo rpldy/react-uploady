@@ -1,13 +1,13 @@
 import uploadFile from "../uploadFile";
 
-describe("UMD Core - Bundle", () => {
+describe("UMD UI CORE - Bundle", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploader", "umd-core");
+        cy.visitStory("uploady", "umd-core-ui");
     });
 
-    it("should use upload with uploader", () => {
+    it("should use uploady and upload file", () => {
         cy.server();
 
         cy.route({

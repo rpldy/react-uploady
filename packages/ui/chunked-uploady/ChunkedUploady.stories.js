@@ -1,17 +1,25 @@
 // @flow
-import React from "react";
+import React, { useCallback, useState } from "react";
+import ReactDOM from "react-dom";
 import { withKnobs, number } from "@storybook/addon-knobs";
 import UploadButton from "@rpldy/upload-button";
 import ChunkedUploady, { useRequestPreSend } from "./src"
 import {
     KNOB_GROUPS,
+    UMD_NAMES,
+
     useStoryUploadySetup,
     StoryUploadProgress,
     StoryAbortButton,
+    UmdBundleScript, localDestination, addActionLogEnhancer,
 } from "../../../story-helpers";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
+
+//expose react and react-dom for Uploady bundle
+window.react = React;
+window["react-dom"] = ReactDOM;
 
 const UploadButtonWithUniqueIdHeader = () => {
     useRequestPreSend((data) => {
@@ -76,6 +84,60 @@ export const WithAbortButton = () => {
         <br/>
         <StoryAbortButton/>
     </ChunkedUploady>
+};
+
+//mimic rendering with react and ChunkedUploady loaded through <script> tags
+const renderChunkedUploadyFromBundle = () => {
+    const MyUploadButton = () => {
+
+        rpldy.uploady.useRequestPreSend(() => {
+            return {
+                options: {
+                    destination: {
+                        headers: {
+                            "X-Unique-Upload-Id": `umd-test-${Date.now()}`,
+                        }
+                    }
+                }
+            };
+        });
+
+        const uploadyContext = react.useContext(rpldy.uploady.UploadyContext);
+
+        const onClick = react.useCallback(()=>{
+            uploadyContext.showFileUpload();
+        });
+
+        return react.createElement("button", {id: "upload-button", onClick: onClick, children: "Upload"});
+    };
+
+    const uploadyProps = {
+        debug: true,
+        destination: localDestination().destination,
+        enhancer: addActionLogEnhancer(),
+        chunkSize: 10000,
+    };
+
+    return react.createElement(
+        rpldy.chunkedUploady.ChunkedUploady,
+        uploadyProps,
+        [react.createElement(MyUploadButton)]
+    );
+};
+
+export const UMD_CoreChunkedUI = () => {
+    const [UploadyUI, setUploadyUI] = useState(null);
+
+    const onBundleLoad = useCallback(() => {
+        const result = renderChunkedUploadyFromBundle();
+        setUploadyUI(result);
+    }, []);
+
+    return <div>
+        <UmdBundleScript bundle={UMD_NAMES.ALL} onLoad={onBundleLoad}/>
+
+        {UploadyUI}
+    </div>;
 };
 
 export default {

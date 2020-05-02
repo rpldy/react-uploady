@@ -49,7 +49,7 @@ You can start simple or you can can configure just about every aspect of the upl
 For this purpose, RU provides components, hooks, and plenty of features. 
 You get to choose which ones you need and only install the dependencies required (See [Packages](#packages) details below)
 
-RU has a small footprint (by design):
+RU has a small footprint (by design) with very few (and small) dependencies.
 
 | Bundle         | Minified size | GZipped size
 | -------------- | ------------- | -------------

@@ -141,10 +141,10 @@ workflows:
             yarn: true
             start: yarn cy:deps:serve
             wait-on: "http://localhost:8001"
-#            record: true
-#            parallel: true
-#            parallelism: 2
-#            group: rpldy-ci
+            record: true
+            parallel: true
+            parallelism: 2
+            group: rpldy-ci
             store_artifacts: true
             post-steps:
               - store_test_results:

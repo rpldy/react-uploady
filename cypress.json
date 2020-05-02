@@ -1,6 +1,6 @@
 {
     "port": 8089,
-    "testFiles": "umd/*-spec.js",
+    "testFiles": "**/*-spec.js",
     "chromeWebSecurity": false,
     "video": false,
     "env": {

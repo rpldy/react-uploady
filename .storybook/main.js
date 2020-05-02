@@ -48,7 +48,7 @@ module.exports = {
 
         config.plugins.push(new webpack.DefinePlugin({
             "rpldyVersion": JSON.stringify(await getCurrentNpmVersion()),
-            "LOCAL_PORT": `"${process.ENV.LOCAL_PORT}"`,
+            "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
         }));
 
         // config.devtool = "eval";

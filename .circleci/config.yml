@@ -14,7 +14,10 @@ commands:
         - run: yarn install --pure-lockfile
         - run: yarn bootstrap
         - run: yarn build
-
+  bundle:
+    description: "Create UMD bundles"
+    steps:
+        - run: yarn bundle:prod
 jobs:
   setup:
     working_directory: *workspace_root
@@ -94,9 +97,10 @@ jobs:
           steps:
             - attach_workspace:
                at: .
-            - run:
-                name: Bundle it up
-                command: yarn bundle:prod
+            - bundle
+#            - run:
+#                name: Bundle it up
+#                command: yarn bundle:prod
             - store_artifacts:
                 path: bundle
             - persist_to_workspace:
@@ -128,7 +132,7 @@ workflows:
             build: "yarn sb:build"
             post-install:
             # this sucks! need to find way to use output from bundle job!!!
-              - yarn bundle:prod
+              - bundle
         - cypress/run:
             name: E2E (cypress)
             requires:

@@ -6,7 +6,7 @@ const BASE = "http://localhost:8009/",
 
 export const UMD_BUNDLES = {
     "CORE": `${BASE}rpldy-core.umd.min.js`,
-
+    "CORE_UI": `${BASE}rpldy-ui-core.umd.min.js`,
 };
 
 export default memo(({ bundle, onLoad }) => {

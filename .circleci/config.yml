@@ -108,7 +108,7 @@ workflows:
             requires:
               - Prepare E2E
             yarn: true
-            start: yarn sb:serve
+            start: yarn e2e:serve
             wait-on: "http://localhost:8001"
             record: true
             parallel: true

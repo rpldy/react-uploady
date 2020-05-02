@@ -1,28 +1,51 @@
-import React, { useCallback, useState } from "react";
-import { withKnobs } from "@storybook/addon-knobs";
-import { UmdBundleScript, UMD_BUNDLES } from "../../story-helpers";
+import React, { useCallback, useState, useRef } from "react";
+import {
+    UmdBundleScript,
+    localDestination,
+    UMD_BUNDLES,
+    addActionLogEnhancer
+} from "../../story-helpers";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-
 export const UMD_Core = () => {
     const [uploaderReady, setUploaderReady] = useState(false);
+    const inputRef = useRef(null);
+    const uploaderRef = useRef(null);
 
     const onBundleLoad = useCallback(() => {
-        console.log("BUNDLE LOADED !!!! ", window.rpldy);
+        uploaderRef.current = window.rpldy.createUploader({
+            destination: localDestination().destination,
+            enhancer: addActionLogEnhancer(),
+        });
+
         setUploaderReady(true);
+    }, []);
+
+    const onClick = useCallback(() => {
+        const input = inputRef.current;
+        if (input) {
+            input.click();
+        }
+    }, []);
+
+    const onInputChange = useCallback(() => {
+        uploaderRef.current.add(inputRef.current.files);
     }, []);
 
     return <div>
         <UmdBundleScript bundle={UMD_BUNDLES.CORE} onLoad={onBundleLoad}/>
 
-    </div>
+        <input type="file" ref={inputRef} style={{ display: "none" }}
+               onChange={onInputChange}/>
+
+        {uploaderReady && <button id="upload-button" onClick={onClick}>Upload</button>}
+    </div>;
 };
 
 export default {
     title: "Uploader",
-    decorators: [withKnobs],
     parameters: {
         readme: {
             sidebar: readme,

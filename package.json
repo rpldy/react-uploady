@@ -31,6 +31,7 @@
     "cy:run": "wait-on http://localhost:9111 -d 3000 && CYPRESS_SB_PORT=9111 cypress run",
     "cy:run:ff": "yarn cy:run --browser firefox",
     "e2e": "concurrently --success first --kill-others \"yarn sb:start\" \"yarn cy:run\"",
+    "e2e:serve": "concurrently --kill-others \"yarn sb:serve\" \"yarn bundle:serve\"",
     "server": "cd server; PORT=4000 node index.js"
   },
   "private": true,

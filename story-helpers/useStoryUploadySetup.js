@@ -92,7 +92,7 @@ const DESTINATIONS = {
     [DEV_DEST_OPTIONS.url]: urlDestination,
 };
 
-const addActionLogEnhancer = (enhancer) => {
+export const addActionLogEnhancer = (enhancer) => {
     return enhancer ? composeEnhancers(enhancer, actionLogEnhancer) : actionLogEnhancer;
 };
 

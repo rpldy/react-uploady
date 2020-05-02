@@ -1,6 +1,7 @@
 import useStoryUploadySetup, {
     mockDestination,
     localDestination,
+    addActionLogEnhancer,
     KNOB_GROUPS
 } from "./useStoryUploadySetup";
 import StoryUploadProgress from "./StoryUploadProgress";
@@ -25,5 +26,6 @@ export {
     localDestination,
     useEventsLogUpdater,
     logToCypress,
-    UmdBundleScript
+    UmdBundleScript,
+    addActionLogEnhancer
 };

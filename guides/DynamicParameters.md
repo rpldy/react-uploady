@@ -28,6 +28,9 @@ Therefore, it's possible to only return the new props.
 
 _items_ must be returned fully.
 
+The handler may return the response immediately or as a promise which resolves to the response
+
+
 ## Using event handler
 
 ```javascript
@@ -40,13 +43,14 @@ const MyApp = () => {
 
         //add a param (request field) that will be sent to the serve alongside the uploaded file
         [UPLOADER_EVENTS.REQUEST_PRE_SEND]: () => {
-            return { 
+            //returned object can be wrapped with a promise
+            return Promise.resolve({ 
             	    options: {
                         params: {
                             clientTime: Date.now()
                         }           
                      }
-                 }; 
+                 }); 
         }
     }, []));
 

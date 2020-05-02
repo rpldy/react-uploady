@@ -13,7 +13,7 @@ dist
 output
 build
 bundle/
-umd/
+packages/**/umd
 .history
 storybook-static
 npm-debug.log

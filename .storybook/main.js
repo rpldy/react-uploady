@@ -50,6 +50,8 @@ module.exports = {
             "rpldyVersion": JSON.stringify(await getCurrentNpmVersion()),
         }));
 
+        // config.devtool = "eval";
+
         return config;
     },
 };

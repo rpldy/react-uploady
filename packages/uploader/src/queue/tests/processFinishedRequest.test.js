@@ -17,13 +17,13 @@ describe("onRequestFinished tests", () => {
 			mockNext);
 	});
 
-	const testSingleItem = async (activeIds) => {
+	const testSingleItem = async (activeIds, completed = 100) => {
         const batch = { id: "b1" };
         const response = { success: true };
         const queueState = getQueueState({
             currentBatch: "b1",
             items: {
-                "u1": { batchId: "b1" },
+                "u1": { batchId: "b1", completed, file: {size: 1234} },
             },
             batches: {
                 b1: { batch, batchOptions: {} },
@@ -40,7 +40,7 @@ describe("onRequestFinished tests", () => {
             }
         }], mockNext);
 
-        expect(queueState.getState().items.u1).toEqual({
+        expect(queueState.getState().items.u1).toMatchObject({
             batchId: "b1",
             state: FILE_STATES.FINISHED,
             uploadResponse: { success: true },
@@ -53,17 +53,33 @@ describe("onRequestFinished tests", () => {
                 batchId: "b1",
                 state: FILE_STATES.FINISHED,
                 uploadResponse: response,
+                completed,
+                file: {size: 1234}
             });
         expect(queueState.updateState).toHaveBeenCalledTimes(2);
         expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();
 
         expect(queueState.getState().itemQueue).toHaveLength(0);
         expect(queueState.getState().activeIds).toHaveLength(0);
+
+        return {
+            queueState
+        };
     };
 
 	it("for single item should finalize if last file in batch", async () => {
-        await testSingleItem();
+        const test = await testSingleItem();
+
+        expect(test.queueState.handleItemProgress).not.toHaveBeenCalled();
 	});
+
+    it("should handle item progress if not complete === 100", async() => {
+       const test = await testSingleItem(["u1"], 99);
+
+       const item = test.queueState.getState().items["u1"];
+        expect(test.queueState.handleItemProgress).toHaveBeenCalledWith(
+            item, 100, item.file.size);
+    });
 
     it("for single item should finalize if last file in batch without active id found", async () => {
         await testSingleItem([]);

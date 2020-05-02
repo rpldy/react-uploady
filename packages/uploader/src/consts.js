@@ -18,7 +18,7 @@ export const UPLOADER_EVENTS = {
 	REQUEST_PRE_SEND: "REQUEST_PRE_SEND",
 };
 
-export const PROGRESS_DELAY = 100;
+export const PROGRESS_DELAY = 50;
 
 export const SENDER_EVENTS = {
 	ITEM_PROGRESS: "ITEM_PROGRESS",

@@ -123,9 +123,12 @@ workflows:
         - cypress/install:
             name: Prepare E2E (cypress)
             requires:
-              - bundle
+              - setup
             yarn: true
             build: "yarn sb:build"
+            post-install:
+            # this sucks! need to find way to use output from bundle job!!!
+              - yarn bundle:prod
         - cypress/run:
             name: E2E (cypress)
             requires:

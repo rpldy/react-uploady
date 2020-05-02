@@ -90,6 +90,7 @@ export const WithAbortButton = () => {
 const renderChunkedUploadyFromBundle = () => {
     const MyUploadButton = () => {
 
+        // $FlowFixMe - rpldy
         rpldy.uploady.useRequestPreSend(() => {
             return {
                 options: {
@@ -102,12 +103,14 @@ const renderChunkedUploadyFromBundle = () => {
             };
         });
 
+        // $FlowFixMe - react & rpldy
         const uploadyContext = react.useContext(rpldy.uploady.UploadyContext);
 
         const onClick = react.useCallback(()=>{
             uploadyContext.showFileUpload();
         });
 
+        // $FlowFixMe - react & rpldy
         return react.createElement("button", {id: "upload-button", onClick: onClick, children: "Upload"});
     };
 
@@ -118,7 +121,9 @@ const renderChunkedUploadyFromBundle = () => {
         chunkSize: 10000,
     };
 
+    // $FlowFixMe - react & rpldy
     return react.createElement(
+        // $FlowFixMe - react & rpldy
         rpldy.chunkedUploady.ChunkedUploady,
         uploadyProps,
         [react.createElement(MyUploadButton)]

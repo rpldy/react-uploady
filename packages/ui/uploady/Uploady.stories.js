@@ -1,3 +1,4 @@
+// @flow
 import React, { useCallback, useState } from "react";
 import ReactDOM from "react-dom";
 import {
@@ -17,6 +18,7 @@ window["react-dom"] = ReactDOM;
 //mimic rendering with react and react-uploady loaded through <script> tags
 const renderUploadyFromBundle = () => {
     const MyUploadButton = () => {
+        // $FlowFixMe - react & rpldy
         const uploadyContext = react.useContext(rpldy.UploadyContext);
 
         const onClick = react.useCallback(()=>{
@@ -32,7 +34,9 @@ const renderUploadyFromBundle = () => {
         enhancer: addActionLogEnhancer(),
     };
 
+    // $FlowFixMe - react & rpldy
     return react.createElement(
+        // $FlowFixMe - react & rpldy
         rpldy.Uploady,
         uploadyProps,
         [react.createElement(MyUploadButton)]
@@ -57,9 +61,10 @@ export const UMD_CoreUI = () => {
 
 //mimic rendering with react and react-uploady with UploadButton&UploadPreview loaded through <script> tags
 const renderUploadyAll = () => {
-    console.log(rpldy.uploadButton.UploadButton);
+    // $FlowFixMe - react & rpldy
     const uploadButton = react.createElement(rpldy.uploadButton.UploadButton, {id: "upload-button"});
 
+    // $FlowFixMe - react & rpldy
     const uploadPreview = react.createElement(rpldy.uploadPreview.UploadPreview, {
         id: "upload-preview",
         previewComponentProps:{"data-test": "upload-preview"},

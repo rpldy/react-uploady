@@ -1,5 +1,5 @@
 {
-  "version": "0.1.9",
+  "version": "0.1.10",
   "name": "@rpldy/upload-drop-zone",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -7,7 +7,14 @@
   "module": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
-  "keywords": ["upload", "file upload", "react", "hooks", "drag&drop", "d&d"],
+  "keywords": [
+    "upload",
+    "file upload",
+    "react",
+    "hooks",
+    "drag&drop",
+    "d&d"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/yoavniran/react-uploady.git",
@@ -18,12 +25,12 @@
     "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared-ui": "^0.1.9",
+    "@rpldy/shared-ui": "^0.1.10",
     "html-dir-content": "^0.3.1"
   },
   "devDependencies": {
-    "@rpldy/shared": "^0.1.9",
-    "@rpldy/uploady": "^0.1.9",
+    "@rpldy/shared": "^0.1.10",
+    "@rpldy/uploady": "^0.1.10",
     "@storybook/addon-knobs": "^5.3.18",
     "flow-bin": "^0.123.0",
     "react-dnd": "^10.0.2",

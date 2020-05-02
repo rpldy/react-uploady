@@ -1,5 +1,5 @@
 {
-  "version": "0.1.9",
+  "version": "0.1.10",
   "name": "@rpldy/upload-button",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -7,7 +7,13 @@
   "module": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
-  "keywords": ["upload", "file upload", "react", "hooks", "upload button"],
+  "keywords": [
+    "upload",
+    "file upload",
+    "react",
+    "hooks",
+    "upload button"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/yoavniran/react-uploady.git",
@@ -18,11 +24,11 @@
     "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared-ui": "^0.1.9"
+    "@rpldy/shared-ui": "^0.1.10"
   },
   "devDependencies": {
-    "@rpldy/retry": "^0.1.9",
-    "@rpldy/uploady": "^0.1.9",
+    "@rpldy/retry": "^0.1.10",
+    "@rpldy/uploady": "^0.1.10",
     "@storybook/addon-knobs": "^5.3.18",
     "flow-bin": "^0.123.0",
     "styled-components": "^4.4.1"

@@ -1,5 +1,5 @@
 {
-  "version": "0.1.9",
+  "version": "0.1.10",
   "name": "@rpldy/chunked-sender",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -20,11 +20,11 @@
     "access": "public"
   },
   "dependencies": {
-    "@rpldy/sender": "^0.1.9",
-    "@rpldy/shared": "^0.1.9"
+    "@rpldy/sender": "^0.1.10",
+    "@rpldy/shared": "^0.1.10"
   },
   "devDependencies": {
-    "@rpldy/uploader": "^0.1.9",
+    "@rpldy/uploader": "^0.1.10",
     "flow-bin": "^0.123.0"
   }
 }

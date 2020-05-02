@@ -130,17 +130,17 @@ workflows:
             name: E2E (cypress)
             requires:
               - Prepare E2E
-            post-checkout:
-              - run: ll bundle/
-              - run: ll
+#            post-checkout:
+#              - run: ll bundle/
+#              - run: ll
             attach-workspace: true
             yarn: true
             start: yarn cy:deps:serve
             wait-on: "http://localhost:8001"
-            record: true
-            parallel: true
-            parallelism: 2
-            group: rpldy-ci
+#            record: true
+#            parallel: true
+#            parallelism: 2
+#            group: rpldy-ci
             post-steps:
               - store_test_results:
                   path: cypress/results

@@ -121,18 +121,18 @@ workflows:
             requires:
               - setup
         - cypress/install:
-            name: Prepare E2E
+            name: Prepare E2E (cypress)
             requires:
               - bundle
             yarn: true
             build: "yarn sb:build"
+            post-install:
+              - ls -ll
+              - ls bundle/ -ll
         - cypress/run:
             name: E2E (cypress)
             requires:
               - Prepare E2E
-#            post-checkout:
-#              - run: ll bundle/
-#              - run: ll
             attach-workspace: true
             yarn: true
             start: yarn cy:deps:serve

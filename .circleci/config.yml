@@ -148,9 +148,7 @@ workflows:
             store_artifacts: true
             post-steps:
               - store_test_results:
-                  paths:
-                    - cypress/results
-                    - cypress/screenshots
+                  path: cypress/results
 
 #requires paid plan:
 #executors:

@@ -7,7 +7,12 @@
   "module": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
-  "keywords": ["upload", "file upload", "react", "hooks"],
+  "keywords": [
+    "upload",
+    "file upload",
+    "react",
+    "hooks"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/yoavniran/react-uploady.git",

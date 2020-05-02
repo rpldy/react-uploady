@@ -14,8 +14,30 @@ commands:
         - run: yarn install --pure-lockfile
         - run: yarn bootstrap
         - run: yarn build
-
+  bundle:
+    description: "Create UMD bundles"
+    steps:
+        - run: yarn bundle:prod
 jobs:
+  setup:
+    working_directory: *workspace_root
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/with-cache:
+          cache-version: v1
+          cache-key: yarn.lock
+          steps:
+            - attach_workspace:
+               at: .
+            - setup
+            - persist_to_workspace:
+                root: .
+                paths:
+                  - node_modules
+                  - packages
+
   build-and-test:
     working_directory: *workspace_root
     executor:
@@ -28,7 +50,6 @@ jobs:
           steps:
             - attach_workspace:
                 at: .
-            - setup:
             - run:
                 name: Test Code (lint, flow, jest, types)
                 command: yarn test:ci
@@ -43,7 +64,6 @@ jobs:
             - persist_to_workspace:
                 root: .
                 paths:
-                  - node_modules
                   - .jest-coverage
                   - packages
 
@@ -54,6 +74,8 @@ jobs:
     steps:
       - checkout
       - node/with-cache:
+          cache-version: v1
+          cache-key: yarn.lock
           steps:
             - attach_workspace:
                 at: .
@@ -70,24 +92,29 @@ jobs:
     steps:
       - checkout
       - node/with-cache:
+          cache-version: v1
+          cache-key: yarn.lock
           steps:
             - attach_workspace:
                at: .
-            - run:
-                name: Bundle it up
-                command: yarn bundle:prod
+            - bundle
+#            - run:
+#                name: Bundle it up
+#                command: yarn bundle:prod
             - store_artifacts:
                 path: bundle
             - persist_to_workspace:
                 root: .
                 paths:
-                  - packages
                   - bundle
 
 workflows:
     create-rpldy:
       jobs:
-        - build-and-test
+        - setup
+        - build-and-test:
+            requires:
+              - setup
         - coverage:
             requires:
               - build-and-test
@@ -96,24 +123,29 @@ workflows:
                only: master
         - bundle:
             requires:
-              - build-and-test
+              - setup
         - cypress/install:
-            name: Prepare E2E
+            name: Prepare E2E (cypress)
             requires:
-              - build-and-test
+              - setup
             yarn: true
             build: "yarn sb:build"
+            post-install:
+            # this sucks! need to find way to use output from bundle job!!! doesnt seem possible because cypress orb hardcodes - attach_workspace: at: ~/
+              - bundle
         - cypress/run:
             name: E2E (cypress)
             requires:
-              - Prepare E2E
+              - Prepare E2E (cypress)
+            attach-workspace: true
             yarn: true
-            start: yarn sb:serve
+            start: yarn cy:deps:serve
             wait-on: "http://localhost:8001"
             record: true
             parallel: true
             parallelism: 2
             group: rpldy-ci
+            store_artifacts: true
             post-steps:
               - store_test_results:
                   path: cypress/results

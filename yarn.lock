@@ -9254,11 +9254,6 @@ immer@1.10.0:
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.10.0.tgz#bad67605ba9c810275d91e1c2a47d4582e98286d"
   integrity sha512-O3sR1/opvCDGLEVcvrGTMtLac8GJ5IwZC4puPrLuRj3l7ICKvkmA0vGuU9OW8mV9WIBRnaxp5GJh9IEAaNOoYg==
 
-immer@^6.0.3:
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-6.0.3.tgz#94d5051cd724668160a900d66d85ec02816f29bd"
-  integrity sha512-12VvNrfSrXZdm/BJgi/KDW2soq5freVSf3I1+4CLunUM8mAGx2/0Njy0xBVzi5zewQZiwM7z1/1T+8VaI7NkmQ==
-
 import-cwd@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-cwd/-/import-cwd-2.1.0.tgz#aa6cf36e722761285cb371ec6519f53e2435b0a9"
@@ -13757,6 +13752,11 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+
+react-load-script@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/react-load-script/-/react-load-script-0.0.6.tgz#db6851236aaa25bb622677a2eb51dad4f8d2c258"
+  integrity sha512-aRGxDGP9VoLxcsaYvKWIW+LRrMOzz2eEcubTS4NvQPPugjk2VvMhow0wWTkSl7RxookomD1MwcP4l5UStg5ShQ==
 
 react-popper-tooltip@^2.8.3:
   version "2.10.0"

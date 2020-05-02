@@ -94,6 +94,16 @@ module.exports = {
                         ],
 
                         externals: ["react", "react-dom"],
+
+                        optimization: {
+                            splitChunks: {
+                                cacheGroups: {
+                                    commons: {
+                                        filename: "[name]-all-bundle.js",
+                                    }
+                                }
+                            }
+                        },
                     };
                 },
                 maxSize: 17500,

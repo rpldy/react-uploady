@@ -320,7 +320,7 @@ export const WithFileFilter = () => {
 
     const filterBySize = useCallback((file) => {
         //filter out files larger than 5MB
-        return file.size < 5242880;
+        return !(file instanceof File) || file.size < 5242880;
     }, []);
 
     return <Uploady debug

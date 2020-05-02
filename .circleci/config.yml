@@ -131,7 +131,7 @@ workflows:
             yarn: true
             build: "yarn sb:build"
             post-install:
-            # this sucks! need to find way to use output from bundle job!!!
+            # this sucks! need to find way to use output from bundle job!!! doesnt seem possible because cypress orb hardcodes - attach_workspace: at: ~/
               - bundle
         - cypress/run:
             name: E2E (cypress)
@@ -145,9 +145,12 @@ workflows:
 #            parallel: true
 #            parallelism: 2
 #            group: rpldy-ci
+            store_artifacts: true
             post-steps:
               - store_test_results:
-                  path: cypress/results
+                  paths:
+                    - cypress/results
+                    - cypress/screenshots
 
 #requires paid plan:
 #executors:

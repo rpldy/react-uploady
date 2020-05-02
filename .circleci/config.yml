@@ -43,9 +43,9 @@ jobs:
       - node/with-cache:
           cache-version: v1
           cache-key: yarn.lock
-#          steps:
-#            - attach_workspace:
-#                at: .
+          steps:
+            - attach_workspace:
+                at: .
 #            - setup:
             - run:
                 name: Test Code (lint, flow, jest, types)

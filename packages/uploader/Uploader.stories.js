@@ -40,6 +40,8 @@ export const UMD_Core = () => {
         <input type="file" ref={inputRef} style={{ display: "none" }}
                onChange={onInputChange}/>
 
+        <h2>uploading to: {localDestination().destination.url}</h2>
+
         {uploaderReady && <button id="upload-button" onClick={onClick}>Upload</button>}
     </div>;
 };

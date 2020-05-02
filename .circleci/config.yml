@@ -132,6 +132,7 @@ workflows:
             requires:
               - Prepare E2E
               - bundle
+            attach-workspace: true
             yarn: true
             start: yarn cy:deps:serve
             wait-on: "http://localhost:8001"

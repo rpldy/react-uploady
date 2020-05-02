@@ -2,7 +2,7 @@ import { select, boolean, number, text, object } from "@storybook/addon-knobs";
 import { useMemo } from "react";
 import { composeEnhancers } from "@rpldy/uploady";
 import { createMockSender } from "@rpldy/sender";
-import { actionLogEnhancer } from "./uploadyStoryLogger";
+import { actionLogEnhancer, isCypress } from "./uploadyStoryLogger";
 
 export const isProd = process.env.NODE_ENV === "production";
 
@@ -39,7 +39,7 @@ export const mockDestination = () => ({
 export const localDestination = () => {
     let result;
 
-    if (!isProd) {
+    if (!isProd || isCypress) {
         const long = boolean("long local request (relevant for local only)", false, KNOB_GROUPS.DESTINATION);
 
         result = {

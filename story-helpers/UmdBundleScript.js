@@ -34,6 +34,13 @@ export default memo(({ bundle, onLoad }) => {
     }, []);
 
     return <>
+
+        <p>
+            Fetching polyfill bundle from: {POLYFILLS_MAP[bundle]}
+            <br/>
+            Fetching UMD bundle from: UMD_BUNDLES[bundle]
+        </p>
+
         <Script url={POLYFILLS_MAP[bundle]} onLoad={onPolyfillLoaded}/>
         {polyfillReady && <Script key="secondScript" url={UMD_BUNDLES[bundle]} onLoad={onLoad}/>}
     </>;

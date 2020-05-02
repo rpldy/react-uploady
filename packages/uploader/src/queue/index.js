@@ -1,7 +1,6 @@
 // @flow
 
-import produce from "immer";
-import { logger } from "@rpldy/shared";
+import { logger, getUpdateable } from "@rpldy/shared";
 import { SENDER_EVENTS, UPLOADER_EVENTS } from "../consts";
 import processQueueNext from "./processQueueNext";
 import * as abortMethods from "./abort";
@@ -18,19 +17,19 @@ export default (
     sender: ItemsSender,
     uploaderId: string,
 ) => {
-    let state = {
+    const { state, update } = getUpdateable<State>({
         itemQueue: [],
         currentBatch: null,
         batches: {},
         items: {},
         activeIds: [],
         aborts: {},
-    };
+    });
 
     const getState = () => state;
 
     const updateState = (updater: (State) => void) => {
-        state = produce(state, updater);
+        update(updater);
     };
 
     const add = (item: BatchItem) => {

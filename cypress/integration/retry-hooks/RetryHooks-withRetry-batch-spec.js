@@ -29,6 +29,13 @@ describe("RetryHooks - Retry Upload", () => {
                 cy.wait(3000);
 
                 cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 1 });
+
+                //same batch, second time should do nothing
+                cy.get("@iframe")
+                    .find("li[data-test='batch-retry-0']")
+                    .click();
+
+                cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 3 });
             }, "#upload-button");
         }, "#upload-button");
     });

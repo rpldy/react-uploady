@@ -1,7 +1,7 @@
 import { FILE_STATES, BATCH_STATES } from "../../consts";
 import merge from "../../utils/merge";
 import clone from "../../utils/clone";
-import produce from "../../utils/produce";
+import getUpdateable from "../../utils/updateable";
 
 const invariant = jest.fn();
 
@@ -19,8 +19,10 @@ const utils = jest.genMockFromModule("../../utils");
 
 //keep merge working - dont mock it
 utils.merge.mockImplementation((...args) => merge(...args));
+//keep clone working - dont mock it
 utils.clone.mockImplementation((...args) => clone(...args));
-utils.produce.mockImplementation((...args) => produce(...args));
+//keep updateable working - dont mock it
+utils.getUpdateable.mockImplementation((...args) => getUpdateable(...args));
 
 utils.devFreeze.mockImplementation((obj) => obj);
 

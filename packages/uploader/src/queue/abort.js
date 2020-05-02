@@ -54,7 +54,6 @@ const abortBatch = (queue: QueueState, id: string): void => {
 		&& batch.state !== BATCH_STATES.FINISHED) {
 
 		batch.items.forEach((bi) =>
-			//using state items because batch items are different due to immer
 			callAbortOnItem(queue, bi.id));
 
 		queue.updateState((state) => {

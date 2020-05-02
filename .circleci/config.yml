@@ -16,7 +16,7 @@ commands:
         - run: yarn build
 
 jobs:
-  build-and-test:
+  setup:
     working_directory: *workspace_root
     executor:
       name: node/default
@@ -27,8 +27,26 @@ jobs:
           cache-key: yarn.lock
           steps:
             - attach_workspace:
-                at: .
-            - setup:
+               at: .
+            - setup
+            - persist_to_workspace:
+                root: .
+                paths:
+                  - node_modules
+
+  build-and-test:
+    working_directory: *workspace_root
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/with-cache:
+          cache-version: v1
+          cache-key: yarn.lock
+#          steps:
+#            - attach_workspace:
+#                at: .
+#            - setup:
             - run:
                 name: Test Code (lint, flow, jest, types)
                 command: yarn test:ci
@@ -43,7 +61,7 @@ jobs:
             - persist_to_workspace:
                 root: .
                 paths:
-                  - node_modules
+#                  - node_modules
                   - .jest-coverage
                   - packages
 
@@ -54,6 +72,8 @@ jobs:
     steps:
       - checkout
       - node/with-cache:
+          cache-version: v1
+          cache-key: yarn.lock
           steps:
             - attach_workspace:
                 at: .
@@ -70,6 +90,8 @@ jobs:
     steps:
       - checkout
       - node/with-cache:
+          cache-version: v1
+          cache-key: yarn.lock
           steps:
             - attach_workspace:
                at: .
@@ -87,7 +109,10 @@ jobs:
 workflows:
     create-rpldy:
       jobs:
+        - setup
         - build-and-test
+            requires:
+              - setup
         - coverage:
             requires:
               - build-and-test
@@ -95,6 +120,8 @@ workflows:
               branches:
                only: master
         - bundle
+            requires:
+              - setup
         - cypress/install:
             name: Prepare E2E
             requires:

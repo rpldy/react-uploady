@@ -126,9 +126,6 @@ workflows:
               - bundle
             yarn: true
             build: "yarn sb:build"
-            post-install:
-              - ls -ll
-              - ls bundle/ -ll
         - cypress/run:
             name: E2E (cypress)
             requires:

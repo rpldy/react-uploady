@@ -1,7 +1,7 @@
 import { actions } from "@storybook/addon-actions";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 
-const isCypress = !!window.parent.Cypress;
+export const isCypress = !!window.parent.Cypress;
 
 const logToCypress = (...args) => {
     if (isCypress) {

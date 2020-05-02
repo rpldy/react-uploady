@@ -290,7 +290,7 @@ describe("batchHelpers tests", () => {
 
 			const result = batchHelpers.getBatchFromItemId(queueState, "u2");
 
-			expect(result).toBe(batch);
+			expect(result).toStrictEqual(batch);
 		});
 	});
 
@@ -312,8 +312,8 @@ describe("batchHelpers tests", () => {
 
 			const result = batchHelpers.getBatchDataFromItemId(queueState, "u2");
 
-			expect(result.batch).toBe(batch);
-			expect(result.batchOptions).toBe(batchOptions);
+			expect(result.batch).toStrictEqual(batch);
+			expect(result.batchOptions).toStrictEqual(batchOptions);
 		});
 	});
 

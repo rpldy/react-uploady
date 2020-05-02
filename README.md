@@ -49,14 +49,14 @@ You can start simple or you can can configure just about every aspect of the upl
 For this purpose, RU provides components, hooks, and plenty of features. 
 You get to choose which ones you need and only install the dependencies required (See [Packages](#packages) details below)
 
-RU has a small footprint (by design):
+RU has a small footprint (by design) with very few (and small) dependencies.
 
 | Bundle         | Minified size | GZipped size
 | -------------- | ------------- | -------------
-| core                         | 34.4KB          | 9.7KB
-| core + ui                    | 45KB          | 11.8KB
-| core + ui + chunked support  | 55.9KB          | 14.6KB
-| everything                   | 63.7KB          | 16KB
+| core                         | 35.1KB          | 9.9KB
+| core + ui                    | 45.9KB          | 12.2KB
+| core + ui + chunked support  | 56.8KB          | 14.8KB
+| everything                   | 64.7KB          | 16.2KB
 
 ## Documentation
 
@@ -243,6 +243,8 @@ It's type is defined [here](packages/shared/src/types.js#L7).
 
 See more information in the [Uploady](packages/ui/uploady#props) README.
 
+At the very least, a destination should contain a URL property with the server endpoint.
+
 ### Enhancer
 
 ```javascript
@@ -284,7 +286,8 @@ See this [guide](guides/UMD.md) for more information on how to use.
 
 You will most likely need the polyfill (regenerator & core js) bundle as well (load it first):
 
-https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/polyfills-bundle.js
+- core bundles -> https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/polyfills-bundle.js
+- everything bundle -> https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/polyfills-all-bundle.js
 
 ### unpkg
 
@@ -297,10 +300,11 @@ https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/polyfills-bundle.js
 
 You will most likely need the polyfill (regenerator & core js) bundle as well (load it first):
 
-https://unpkg.com/@rpldy/uploady/umd/polyfills-bundle.js
+- core bundles -> https://unpkg.com/@rpldy/uploady/umd/polyfills-bundle.js
+- everything bundle -> https://unpkg.com/@rpldy/uploady/umd/polyfills-all-bundle.js
 
 > Note that unpkg does a redirect to the latest version in case the URL doesn't already contain it. So don't copy any of the URLs above into your code. 
-> Load in the browser first and then copy the final URL from there.  
+> Instead, load them in the browser first and then copy the final URL from there (after the redirect).  
 
 ## Acknowledgements 
 

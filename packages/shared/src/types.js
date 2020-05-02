@@ -77,7 +77,7 @@ export type Batch = {
     loaded: number,
 };
 
-export type FileFilterMethod = (mixed) => boolean;
+export type FileFilterMethod = (File | string) => boolean;
 
 export type UploadOptions = {|
 	//whether to automatically upload files when they are added (default: true)

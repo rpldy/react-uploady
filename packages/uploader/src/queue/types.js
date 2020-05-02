@@ -23,6 +23,7 @@ export type QueueState = {|
 	trigger: TriggerMethod,
 	cancellable: Cancellable,
 	sender: ItemsSender,
+    handleItemProgress: (BatchItem, number, number) => void,
 |};
 
 export type ProcessNextMethod = (QueueState) => Promise<void>;

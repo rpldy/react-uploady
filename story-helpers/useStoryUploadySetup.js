@@ -2,7 +2,7 @@ import { select, boolean, number, text, object } from "@storybook/addon-knobs";
 import { useMemo } from "react";
 import { composeEnhancers } from "@rpldy/uploady";
 import { createMockSender } from "@rpldy/sender";
-import { actionLogEnhancer } from "./uploadyStoryLogger";
+import { actionLogEnhancer, isCypress } from "./uploadyStoryLogger";
 
 export const isProd = process.env.NODE_ENV === "production";
 
@@ -39,13 +39,13 @@ export const mockDestination = () => ({
 export const localDestination = () => {
     let result;
 
-    if (!isProd) {
+    if (!isProd || isCypress) {
         const long = boolean("long local request (relevant for local only)", false, KNOB_GROUPS.DESTINATION);
 
         result = {
             destinationType: DEV_DEST_OPTIONS.local,
             destination: {
-                url: `http://localhost:${process.env.LOCAL_PORT}/upload${long ? "?long=true" : ""}`,
+                url: `http://localhost:${process.env.LOCAL_PORT || LOCAL_PORT || 4000}/upload${long ? "?long=true" : ""}`,
                 params: { test: true }
             }
         }
@@ -92,7 +92,7 @@ const DESTINATIONS = {
     [DEV_DEST_OPTIONS.url]: urlDestination,
 };
 
-const addActionLogEnhancer = (enhancer) => {
+export const addActionLogEnhancer = (enhancer) => {
     return enhancer ? composeEnhancers(enhancer, actionLogEnhancer) : actionLogEnhancer;
 };
 

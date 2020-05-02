@@ -52,7 +52,7 @@ const getDestinationFromInput = (input: HTMLInputElement): ?DestinationShape => 
         destination.method = method ? method.toUpperCase() : undefined;
         destination.url = url;
 
-        logger.debugLog(`Uploady.useFileInput: using custom input's parent form url ${destination.url || ""} and method ${destination.method || ""}`);
+        logger.debugLog(`Uploady.useFileInput: using custom input's parent form url ${destination.url} and method ${destination.method || ""}`);
     }
 
     return destination;

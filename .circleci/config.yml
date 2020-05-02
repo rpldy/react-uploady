@@ -119,7 +119,7 @@ workflows:
             filters:
               branches:
                only: master
-        - bundle
+        - bundle:
             requires:
               - setup
         - cypress/install:

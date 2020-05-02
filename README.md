@@ -243,6 +243,8 @@ It's type is defined [here](packages/shared/src/types.js#L7).
 
 See more information in the [Uploady](packages/ui/uploady#props) README.
 
+At the very least, a destination should contain a URL property with the server endpoint.
+
 ### Enhancer
 
 ```javascript

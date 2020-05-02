@@ -1,5 +1,4 @@
 // @flow
-
 import { logger, getUpdateable } from "@rpldy/shared";
 import { SENDER_EVENTS, UPLOADER_EVENTS } from "../consts";
 import processQueueNext from "./processQueueNext";
@@ -49,19 +48,20 @@ export default (
         processQueueNext(queueState);
     };
 
-    sender.on(SENDER_EVENTS.ITEM_PROGRESS,
-        (item: BatchItem, completed: number, loaded: number) => {
-            if (state.items[item.id]) {
-                updateState((state: State) => {
-                    const stateItem = state.items[item.id];
-                    stateItem.loaded = loaded;
-                    stateItem.completed = completed;
-                });
+    const handleItemProgress = (item: BatchItem, completed: number, loaded: number) => {
+        if (state.items[item.id]) {
+            updateState((state: State) => {
+                const stateItem = state.items[item.id];
+                stateItem.loaded = loaded;
+                stateItem.completed = completed;
+            });
 
-                //trigger item progress event for the outside
-                trigger(UPLOADER_EVENTS.ITEM_PROGRESS, getState().items[item.id]);
-            }
-        });
+            //trigger item progress event for the outside
+            trigger(UPLOADER_EVENTS.ITEM_PROGRESS, getState().items[item.id]);
+        }
+    };
+
+    sender.on(SENDER_EVENTS.ITEM_PROGRESS, handleItemProgress);
 
     sender.on(SENDER_EVENTS.BATCH_PROGRESS,
         (batch: Batch) => {
@@ -97,6 +97,7 @@ export default (
         trigger,
         cancellable,
         sender,
+        handleItemProgress,
     };
 
     if (logger.isDebugOn()) {

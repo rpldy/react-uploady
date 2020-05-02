@@ -28,6 +28,7 @@ export default (testState, options) => {
         cancellable: jest.fn(),
         sender: {
             send: jest.fn(),
-        }
+        },
+        handleItemProgress: jest.fn(),
     };
 };

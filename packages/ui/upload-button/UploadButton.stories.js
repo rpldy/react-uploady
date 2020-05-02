@@ -315,6 +315,26 @@ export const WithCustomFileInputAndForm = () => {
     </section>
 };
 
+export const WithFileFilter = () => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    const filterBySize = useCallback((file) => {
+        //filter out files larger than 5MB
+        return file.size < 5242880;
+    }, []);
+
+    return <Uploady debug
+                    multiple={multiple}
+                    destination={destination}
+                    enhancer={enhancer}
+                    grouped={grouped}
+                    maxGroupSize={groupSize}
+                    fileFilter={filterBySize}>
+
+        <UploadButton id="upload-button"/>
+    </Uploady>;
+};
+
 export default {
     component: UploadButton,
     title: "Upload Button",

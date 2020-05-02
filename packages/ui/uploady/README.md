@@ -42,7 +42,7 @@ It provides multiple hooks that enable more advanced features and data for clien
 
 | Name (* = mandatory) | Type          | Default       | Description  
 | --------------       | ------------- | ------------- | -------------
-| Uploader Options
+| **Uploader Options**
 | autoUpload           | boolean       | true          | automatically upload files when they are added 
 | destination          | [Destination](../../shared/src/types.js#L7)   | undefined     | configure the end-point to upload to
 | inputFieldName       | string        | "file"        | name (attribute) of the file input field
@@ -58,7 +58,7 @@ It provides multiple hooks that enable more advanced features and data for clien
 | concurrent           | boolean       | false          | issue multiple upload requests simultaneously
 | maxConcurrent        | number        | 2              | maximum allowed simultaneous requests
 | send                 | [SendMethod](../../shared/src/types.js#L100) | @rpldy/sender | how to send files to the server
-| Uploady Options
+| **Uploady Options**
 | debug                | boolean        | false | enable console logs from uploady packages
 | listeners            | Object        | undefined | map of [event](../../uploader/README.md#events) name and event handler
 | customInput          | boolean       | false | whether to use a custom file input (see: [useFileInput](#useFileInput)

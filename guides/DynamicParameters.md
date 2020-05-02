@@ -10,11 +10,8 @@ The handler (event or hook) receives an object:  _{items, options}_
 
 The _items_ array contains the (batch) items that are going to be uploaded in the next request.
 The array will contain more than one item when grouping is configured (by default grouping is turned off).
- 
-The values in the item object can be changed except for the id and batchId properties.
-See BatchItem [type definition](../packages/shared/src/types.js#67). 
 
-> it's hard to find a use case for changing the items, except perhaps to modify the _url_ property of URL uploads.
+> items info can be inspected and then changes to the options can be made. The items array itself should not be modified. 
 
 The _options_ object contains the upload options attached to the batch the items belong to.
 Options related to the upload can be changed, for example destination headers or params.
@@ -26,7 +23,6 @@ in case a change was made. In case no change/addition was made the handler doesn
 For the _options_, the returned object will be merged into the data held by the uploader.
 Therefore, it's possible to only return the new props.
 
-_items_ must be returned fully.
 
 The handler may return the response immediately or as a promise which resolves to the response
 

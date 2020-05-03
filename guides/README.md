@@ -2,6 +2,8 @@
 
 * [Different Configurations](DifferentConfiguration.md) - Use different configurations with multiple upload buttons (and other inputs)
     
+* [Drag and Drop](DragAndDrop.md) - D&D using 3rd party library with react-uploady
+    
 * [Dynamically Cancel Upload](DynamicallyCancelUpload.md) - Programmatically cancel an upload before it begins 
 
 * [Dynamic Parameters](DynamicParameters.md) - Change upload options for existing uploads
@@ -12,7 +14,7 @@
 
 * [Progress UI](ProgressUI.md) - Show upload progress in the UI
 
-* [Retry Failed Item](RetryFailedItem.md) - Store failed item id and use it to retry upload
+* [Retry Failed Item](RetryFailedItem.md) - Enable retries for failed uploads 
 
 * [UMD Bundle](UMD) - Load React-Uploady as a UMD bundle
 

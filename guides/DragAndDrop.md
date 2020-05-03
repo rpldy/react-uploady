@@ -10,7 +10,7 @@ If you wish to use a 3rd party library to manage the D&D interaction while using
 
 This example shows how to use the popular react-dnd library.
 
-It uses the [UploadyContext API](uploadycontext-api) to initiate the upload when the file is dropped.
+It uses the [UploadyContext API](../packages/ui/uploady#uploadycontext-api) to initiate the upload when the file is dropped.
 
 ```javascript
 import React from "react";

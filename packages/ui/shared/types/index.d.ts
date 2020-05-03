@@ -24,7 +24,7 @@ export type UploadyContextType = {
 
 type EventHook<T> = (cb: (obj: T) => void) => void;
 type CancellableHook<T> = (cb: (obj: T) => boolean | void) => void;
-type EventHookWithState<T> = (cb: (obj: T) => void) => T;
+type EventHookWithState<T> = (cb?: (obj: T) => void) => T;
 
 type ItemEventHook = EventHook<BatchItem>;
 type ItemCancellableEventHook = CancellableHook<BatchItem>;

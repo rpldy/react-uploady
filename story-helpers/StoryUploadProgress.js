@@ -9,7 +9,6 @@ const StyledProgressCircle = styled(Circle)`
   height: 100px;
 `;
 
-//TODO: Wont work for 'concurrent = true' - progress for one request can override the other's
 const StoryUploadProgress = () => {
     const [uploads, setUploads] = React.useState({});
     const progressData = useItemProgressListener((item) => {

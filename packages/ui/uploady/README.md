@@ -324,7 +324,9 @@ Called every time progress data is received for this file upload
     import { useItemProgressListener } from "@rpldy/uploady";
 
     const MyComponent = () => {
-        const item = useItemProgressListener((item) => {});
+        const item = useItemProgressListener((item) => {
+        	//callback is optional for this hook
+        });
     
         console.log(`item ${item.id} is ${item.completed}% done and ${item.loaded} bytes uploaded`)
     

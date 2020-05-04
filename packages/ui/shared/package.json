@@ -1,5 +1,5 @@
 {
-    "version": "0.1.10",
+    "version": "0.1.11",
     "name": "@rpldy/shared-ui",
     "description": "",
     "author": "yoav niran (https://github.com/yoavniran)",
@@ -18,7 +18,7 @@
     },
     "dependencies": {
         "@rpldy/shared": "^0.1.10",
-        "@rpldy/uploader": "^0.1.10"
+        "@rpldy/uploader": "^0.1.11"
     },
     "devDependencies": {
         "flow-bin": "^0.123.0"

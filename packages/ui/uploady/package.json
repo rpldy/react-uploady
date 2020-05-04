@@ -1,5 +1,5 @@
 {
-  "version": "0.1.10",
+  "version": "0.1.11",
   "name": "@rpldy/uploady",
   "description": "",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -25,8 +25,8 @@
   "dependencies": {
     "@rpldy/life-events": "^0.1.10",
     "@rpldy/shared": "^0.1.10",
-    "@rpldy/shared-ui": "^0.1.10",
-    "@rpldy/uploader": "^0.1.10"
+    "@rpldy/shared-ui": "^0.1.11",
+    "@rpldy/uploader": "^0.1.11"
   },
   "peerDependencies": {
     "react": ">=16.8.x",

@@ -38,7 +38,7 @@
 ## Intro
 
 <p align="center">
-    React-Uploady let's you can build (client-side) file-upload features with just a few lines of code.
+    React-Uploady enables you to build (client-side) file-upload features with just a few lines of code.
     RU provides the foundations needed to upload files from the browser - The rest is up to you.
 </p>
 

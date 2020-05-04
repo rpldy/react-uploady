@@ -23,10 +23,12 @@
 
 # Uploader
 
-The processing and queuing engine.
-The Uploader creates batches from the files passed to it for upload. 
-It will handle the processing and send the files to be uploaded to the server.
-Uploader fires Batch & BatchItem lifecycle [events](#events) that can be listened to as well cancel uploads dynamically. 
+The Uploader is the processing and queuing engine for React-Uploady.
+When files are handed to the Uploader, it will represent each file as a Batch Item and group them together in Batches.
+This is for the most part internal to the uploading mechanism. 
+
+The Uploader fires Batch & BatchItem lifecycle [events](#events) that can be registered to. 
+Some of these events also allow to cancel uploads dynamically. 
 
 _If you're looking to integrate file upload with your React app, you'd probably want to head over to the [@rpldy/uploady README](../ui/uploady).
 

@@ -11,7 +11,7 @@
     "bundle:serve:ci": "echo TMP BUILD DIR ------; ls /tmp/build -ll; echo DIR BUNDLE -------; ls /tmp/build/bundle -ll; http-server /tmp/build/bundle -p 8009",
     "build": "lerna exec --stream -- FORCE_COLOR=1 NODE_ENV=production yarn build;",
     "clean": "rimraf bundle; lerna exec --stream -- rimraf lib umd",
-    "release": "yarn bootstrap; yarn clean; yarn build; yarn bundle:prod; yarn flow:copy",
+    "release": "yarn bootstrap; yarn clean; yarn build; yarn bundle:prod; yarn flow:copy; lerna publish",
     "sb:start": "start-storybook -p 9111 --ci",
     "sb:build": "build-storybook -c .storybook -o .sb-static",
     "sb:bw": "yarn sb:build --watch",

@@ -14,7 +14,7 @@
 
 * [Progress UI](ProgressUI.md) - Show upload progress in the UI
 
-* [Retry Failed Item](RetryFailedItem.md) - Enable retries for failed uploads 
+* [Retry Failed Uploads](RetryFailedUploads.md) - Enable retries for failed uploads 
 
 * [UMD Bundle](UMD) - Load React-Uploady as a UMD bundle
 

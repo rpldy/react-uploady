@@ -16,7 +16,7 @@
 
 * [Retry Failed Uploads](RetryFailedUploads.md) - Enable retries for failed uploads 
 
-* [UMD Bundle](UMD) - Load React-Uploady as a UMD bundle
+* [UMD Bundle](UMD.md) - Load React-Uploady as a UMD bundle
 
 * [Upload Enhancers](UploaderEnhancers.md) - Write your own Upload Enhancer
 

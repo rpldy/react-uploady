@@ -1,15 +1,40 @@
 // @flow
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useContext } from "react";
 import ReactDOM from "react-dom";
 import {
     UmdBundleScript,
     localDestination,
     UMD_NAMES,
-    addActionLogEnhancer
+    addActionLogEnhancer, useStoryUploadySetup
 } from "../../../story-helpers";
+import Uploady, { UploadyContext } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
+
+const ContextUploadButton = () => {
+    const uploadyContext = useContext(UploadyContext);
+
+    const onClick = useCallback(() => {
+        uploadyContext.showFileUpload();
+    }, [uploadyContext]);
+
+    return <button onClick={onClick}>Custom Upload Button</button>
+};
+
+export const ButtonWithContextApi = () => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}>
+        <ContextUploadButton/>
+    </Uploady>
+};
 
 //expose react and react-dom for Uploady bundle
 window.react = React;
@@ -21,11 +46,15 @@ const renderUploadyFromBundle = () => {
         // $FlowFixMe - react & rpldy
         const uploadyContext = react.useContext(rpldy.UploadyContext);
 
-        const onClick = react.useCallback(()=>{
+        const onClick = react.useCallback(() => {
             uploadyContext.showFileUpload();
         });
 
-        return react.createElement("button", {id: "upload-button", onClick: onClick, children: "Upload"});
+        return react.createElement("button", {
+            id: "upload-button",
+            onClick: onClick,
+            children: "Upload"
+        });
     };
 
     const uploadyProps = {
@@ -62,12 +91,12 @@ export const UMD_CoreUI = () => {
 //mimic rendering with react and react-uploady with UploadButton&UploadPreview loaded through <script> tags
 const renderUploadyAll = () => {
     // $FlowFixMe - react & rpldy
-    const uploadButton = react.createElement(rpldy.uploadButton.UploadButton, {id: "upload-button"});
+    const uploadButton = react.createElement(rpldy.uploadButton.UploadButton, { id: "upload-button" });
 
     // $FlowFixMe - react & rpldy
     const uploadPreview = react.createElement(rpldy.uploadPreview.UploadPreview, {
         id: "upload-preview",
-        previewComponentProps:{"data-test": "upload-preview"},
+        previewComponentProps: { "data-test": "upload-preview" },
     });
 
     const uploadyProps = {

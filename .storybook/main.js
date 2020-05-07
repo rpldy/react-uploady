@@ -1,4 +1,5 @@
 const glob = require("fast-glob"),
+    path = require("path"),
     webpack = require("webpack"),
     pacote = require("pacote");
 
@@ -13,8 +14,7 @@ const getCurrentNpmVersion = async () => {
             `${manifest.name} ${manifest.version}`,
             `${uploader} ${manifest.dependencies[uploader].replace(/[\^~]/, "")}`
         ];
-    }
-    catch (e) {
+    } catch (e) {
         console.error("FAILED TO GET NPM VERSION !!!!!", e);
     }
 
@@ -23,9 +23,11 @@ const getCurrentNpmVersion = async () => {
 
 module.exports = {
     stories: async () => {
-        const paths = await glob(["./packages/**/*.stories.js", "!**/node_modules"]);
-        return ["./welcome.story.js"]
-            .concat(paths.map((p) => `.${p}`));
+        const paths = await glob(
+            ["../packages/**/*.stories.js", "!**/node_modules"],
+            { cwd: path.join(process.cwd(), ".storybook") });
+
+        return ["./welcome.story.js"].concat(paths);
     },
 
     addons: [

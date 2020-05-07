@@ -1,5 +1,4 @@
-export default (fileName, cb, button = "button", iframe = "@iframe") => {
-
+const uploadFile = (fileName, cb, button = "button", iframe = "@iframe", options = {}) => {
     cy.get(iframe)
         .find(button)
         .should("be.visible")
@@ -12,10 +11,26 @@ export default (fileName, cb, button = "button", iframe = "@iframe") => {
         .as("fInput");
 
     cy.fixture(fileName, "base64").then((fileContent) => {
-        cy.get("@fInput").upload(
-            { fileContent, fileName, mimeType: "image/jpeg" },
-            { subjectType: "input" });
+        let files = [{ fileContent, fileName, mimeType: "image/jpeg" }];
+
+        if (options.times) {
+            files = files.concat(new Array(options.times - 1)
+                .fill(null)
+                .map((f, i) => ({
+                    fileContent,
+                    fileName: fileName.replace(".", `${i+2}.`),
+                    mimeType: "image/jpeg"
+                })));
+        }
+
+        cy.get("@fInput").upload(files, { subjectType: "input" });
 
         cb();
     });
 };
+
+export const uploadFileTimes = (fileName, cb, times, button = "button", iframe = "@iframe", options = {}) => {
+    return uploadFile(fileName, cb, button, iframe, { times });
+};
+
+export default uploadFile;

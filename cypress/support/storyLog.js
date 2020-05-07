@@ -64,29 +64,35 @@ Cypress.Commands.add("assertLogPattern", { prevSubject: true }, (storyLog, patte
 
     options = Object.assign({}, {
         times: 1,
+        index: -1,
         different: false,
     }, options);
 
-    console.log("assertItemStartFinish received log", storyLog, options);
+    console.log("assertLogPattern received log", storyLog, options);
 
-    const matches = storyLog.reduce((res, line) => {
+    const matches = storyLog.reduce((res, line, index) => {
         const arg = line.args.find((a) => typeof a === "string" && pattern.test(a));
         if (arg) {
-            res.push(arg);
+            res.push({ arg, index });
         }
         return res;
     }, []);
 
-    expect(matches.length).to.equal(options.times, `expect to find match: ${pattern} in log ${options.times} times`);
+    if (~options.index) {
+        const inLine = matches.find(({index}) => index === options.index);
+        expect(inLine.index, `expect pattern match to be in index: ${options.index}`).to.eq(options.index);
+    } else {
+        expect(matches.length).to.equal(options.times, `expect to find match: ${pattern} in log ${options.times} times`);
 
-    if (options.different) {
-        const checked = [];
-        const found = matches.find((m) => {
-            const same = !!~checked.indexOf(m);
-            checked.push(m)
-            return same;
-        });
+        if (options.different) {
+            const checked = [];
+            const found = matches.find((m) => {
+                const same = !!~checked.indexOf(m.arg); //check before we put into the checked array
+                checked.push(m.arg);
+                return same;
+            });
 
-        expect(found, "expect pattern matches to all be different").to.be.undefined
+            expect(found, "expect pattern matches to all be different").to.be.undefined
+        }
     }
 });

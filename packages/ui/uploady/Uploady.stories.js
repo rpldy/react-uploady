@@ -16,7 +16,7 @@ const ContextUploadButton = () => {
     const uploadyContext = useContext(UploadyContext);
 
     const onClick = useCallback(() => {
-        uploadyContext.showFileUpload();
+        uploadyContext?.showFileUpload();
     }, [uploadyContext]);
 
     return <button onClick={onClick}>Custom Upload Button</button>

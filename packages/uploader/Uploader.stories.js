@@ -25,7 +25,7 @@ export const WithCustomUI = () => {
     }, []);
 
     const onInputChange = useCallback(() => {
-        uploaderRef.current.add(inputRef.current.files);
+        uploaderRef.current?.add(inputRef.current?.files);
     }, []);
 
     useEffect(() => {
@@ -33,7 +33,7 @@ export const WithCustomUI = () => {
             enhancer,
             destination,
             grouped,
-            groupSize
+            maxGroupSize: groupSize
         });
     }, [enhancer, destination, grouped, groupSize]);
 
@@ -66,7 +66,7 @@ export const UMD_Core = () => {
     }, []);
 
     const onInputChange = useCallback(() => {
-        uploaderRef.current.add(inputRef.current.files);
+        uploaderRef.current?.add(inputRef.current?.files);
     }, []);
 
     return <div>

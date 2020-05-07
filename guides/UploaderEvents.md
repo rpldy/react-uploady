@@ -1,4 +1,4 @@
-#Uploader Events
+# Uploader Events
 
 When files are added to the upload queue, they are organized in batches and each file is represented by a batch item.
 

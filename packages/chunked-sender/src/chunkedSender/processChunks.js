@@ -2,9 +2,11 @@
 import { logger, throttle } from "@rpldy/shared";
 import getChunks from "./getChunks";
 import sendChunks from "./sendChunks";
+import { CHUNKED_SENDER_TYPE } from "../consts";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { OnProgress, SendOptions, SendResult } from "@rpldy/sender";
+import type { TriggerMethod } from "@rpldy/life-events";
 import type { MandatoryChunkedOptions } from "../types";
 import type { State, ChunksSendResponse, Chunk } from "./types";
 
@@ -27,7 +29,8 @@ export const abortChunkedRequest = (state: State, item: BatchItem) => {
 export const process = (
     state: State,
     item: BatchItem,
-    onProgress: OnProgress
+    onProgress: OnProgress,
+    trigger: TriggerMethod,
 ): ChunksSendResponse => {
     const onChunkProgress = throttle(
         (e, chunks: Chunk[]) => {
@@ -45,7 +48,7 @@ export const process = (
         100, true);
 
     const sendPromise = new Promise((resolve) => {
-        sendChunks(state, item, onChunkProgress, resolve);
+        sendChunks(state, item, onChunkProgress, resolve, trigger);
     });
 
     return {
@@ -59,7 +62,8 @@ export default (
     chunkedOptions: MandatoryChunkedOptions,
     url: string,
     sendOptions: SendOptions,
-    onProgress: OnProgress
+    onProgress: OnProgress,
+    trigger: TriggerMethod
 ): SendResult => {
     const chunks = getChunks(item, chunkedOptions);
     logger.debugLog(`chunkedSender: created ${chunks.length} chunks for: ${item.file.name}`);
@@ -77,11 +81,12 @@ export default (
         ...chunkedOptions,
     };
 
-    const { sendPromise, abort } = process(state, item, onProgress);
+    const { sendPromise, abort } = process(state, item, onProgress, trigger);
 
     return {
         request: sendPromise,
         abort,
+        senderType: CHUNKED_SENDER_TYPE,
     };
 };
 

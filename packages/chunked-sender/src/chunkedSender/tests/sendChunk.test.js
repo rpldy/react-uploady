@@ -2,6 +2,7 @@ import { createBatchItem } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock
 import send from "@rpldy/sender";
 import ChunkedSendError from "../ChunkedSendError";
 import { getChunkDataFromFile } from "../../utils";
+import { CHUNK_EVENTS } from "../../consts";
 import sendChunk from "../sendChunk";
 
 jest.mock("@rpldy/sender", () => jest.fn());
@@ -33,8 +34,10 @@ describe("sendChunk tests", () => {
 			getChunkDataFromFile.mockReturnValueOnce(fileData);
 		}
 
+		const trigger = jest.fn();
+
 		createBatchItem.mockReturnValueOnce(chunkItem);
-		sendChunk(chunk, { file }, url, sendOptions, onProgress);
+		sendChunk(chunk, { file }, url, sendOptions, onProgress, trigger);
 
         if (!data) {
             expect(getChunkDataFromFile).toHaveBeenCalledWith(file, chunk.start, chunk.end);
@@ -59,6 +62,12 @@ describe("sendChunk tests", () => {
 		    ...chunk,
             data: fileData,
         }]);
+
+		expect(trigger).toHaveBeenCalledWith(CHUNK_EVENTS.CHUNK_START, {
+		    id: chunk.id,
+            start: chunk.start,
+            end: chunk.end
+        });
 	});
 
 

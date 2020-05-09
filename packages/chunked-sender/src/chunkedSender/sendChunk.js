@@ -1,11 +1,11 @@
 // @flow
-
-import { createBatchItem, logger } from "@rpldy/shared";
-import send from "@rpldy/sender";
+import { triggerUpdater, createBatchItem, logger, merge, pick } from "@rpldy/shared";
+import xhrSend from "@rpldy/sender";
 import { getChunkDataFromFile } from "../utils";
-
+import { CHUNK_EVENTS } from "../consts";
 import type { BatchItem } from "@rpldy/shared";
 import type { OnProgress, SendOptions, SendResult } from "@rpldy/sender";
+import type { TriggerMethod } from "@rpldy/life-events";
 import type { Chunk } from "./types";
 import ChunkedSendError from "./ChunkedSendError";
 
@@ -18,6 +18,7 @@ export default (
     url: string,
     sendOptions: SendOptions,
     onProgress: OnProgress,
+    trigger: TriggerMethod,
 ): SendResult => {
     if (!chunk.data) {
         //slice the chunk based on bit position
@@ -45,5 +46,24 @@ export default (
         onProgress(e, [chunk]);
     };
 
-    return send([chunkItem], url, sendOptions, onChunkProgress);
+    const updatedSendOptionsPromise = triggerUpdater(trigger, CHUNK_EVENTS.CHUNK_START, { chunk: pick(chunk, ["id", "start", "end"]), sendOptions, url });
+
+    const xhrResult = updatedSendOptionsPromise
+        .then((updated) => xhrSend(
+            [chunkItem],
+            updated.url || url,
+            merge({}, sendOptions, updated.sendOptions),
+            onChunkProgress));
+
+    const abort = () => {
+        xhrResult.then(({ abort }) => abort());
+        //confirm abort was/be called
+        return true;
+    };
+
+    return {
+        //wrap with another promise since we need to wait for the trigger updater promise too
+        request: new Promise((resolve) => xhrResult.then(resolve)),
+        abort,
+    };
 };

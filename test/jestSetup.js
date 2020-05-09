@@ -20,3 +20,8 @@ global.clearJestMocks = (...mocks) => {
 global.shallow = shallow;
 global.mount = mount;
 global.testCustomHook = testCustomHook;
+
+process.on("unhandledRejection", (err) => {
+    console.log("!!!!!!!! TEST OR CODE DIDNT HANDLE REJECTION !!!!!!! ", err);
+    process.exit(1);
+});

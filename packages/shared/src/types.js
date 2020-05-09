@@ -111,3 +111,10 @@ export type Cancellable = (string, ...args: mixed[]) => Promise<boolean>;
 export type Updater<T> = (string, ...args: mixed[]) => Promise<?T>;
 
 export type GetExact<T> = T & $Shape<T>;
+
+export type RequestOptions = {
+    method?: string,
+    headers?: Object,
+    withCredentials?: boolean,
+    preSend?: (XMLHttpRequest) => void,
+};

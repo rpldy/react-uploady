@@ -15,7 +15,7 @@ type ItemsSendData = {
 
 const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], options: CreateOptions): Promise<ItemsSendData> => {
     // $FlowFixMe - https://github.com/facebook/flow/issues/8215
-    const updated: {items?: BatchItem[], options?: CreateOptions } = await triggerUpdater<BatchItem[]>(
+    const updated: {items?: BatchItem[], options?: CreateOptions } = await triggerUpdater<BatchItem[], CreateOptions>(
         queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, { items, options });
 
     if (updated) {

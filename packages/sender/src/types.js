@@ -23,8 +23,8 @@ export type MandatoryMockOptions = $ObjMap<MockOptions, NonMaybeTypeFunc>;
 export type SendResult = {
     request: Promise<UploadData>,
     abort: () => boolean,
+    senderType: string,
 };
-
 
 export type SendOptions = {
     method: string,

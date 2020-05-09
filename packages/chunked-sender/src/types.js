@@ -1,14 +1,16 @@
 // @flow
+import type { SendMethod } from "@rpldy/sender";
+import type { OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
 
 export type ChunkedOptions = {|
-	//whether to divide the uploaded file into chunks (default: true)
-	chunked?: boolean,
-	//the maximum chunk size (default: 5242880 bytes)
-	chunkSize?: number,
-	//the number of times to retry a failed chunk (default: 0)
-	retries?: number,
-	//the number of chunks to upload in parallel (default: 0)
-	parallel?: number,
+    //whether to divide the uploaded file into chunks (default: true)
+    chunked?: boolean,
+    //the maximum chunk size (default: 5242880 bytes)
+    chunkSize?: number,
+    //the number of times to retry a failed chunk (default: 0)
+    retries?: number,
+    //the number of chunks to upload in parallel (default: 0)
+    parallel?: number,
 |};
 
 export type MandatoryChunkedOptions = {|
@@ -17,3 +19,16 @@ export type MandatoryChunkedOptions = {|
     retries: number,
     parallel: number,
 |};
+
+export type ChunkedSender = {
+    send: SendMethod,
+    on: OnAndOnceMethod,
+    once: OnAndOnceMethod,
+    off: OffMethod,
+};
+
+export type ChunkEventData = {
+    id: string,
+    start: number,
+    end: number,
+}

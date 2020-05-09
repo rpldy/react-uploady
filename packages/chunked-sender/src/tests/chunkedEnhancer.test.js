@@ -9,7 +9,7 @@ describe("chunkedEnhancer tests", () => {
         const options = { chunkSize: 111 };
         const uploader = { update: jest.fn() };
 
-        chunkedSender.mockReturnValueOnce("chunkedSend");
+        chunkedSender.mockReturnValueOnce({send: "chunkedSend"});
 
         const enhancer = getChunkedEnhancer(options);
         const result = enhancer(uploader);

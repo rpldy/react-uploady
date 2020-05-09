@@ -1,5 +1,6 @@
 // @flow
-import { logger, FILE_STATES } from "@rpldy/shared";
+import { logger, FILE_STATES, request, pick } from "@rpldy/shared";
+import { XHR_SENDER_TYPE } from "../consts";
 import prepareFormData from "./prepareFormData";
 
 import type {
@@ -21,43 +22,53 @@ type SendRequest = {
 
 export const SUCCESS_CODES = [200, 201, 202, 203, 204];
 
-const setHeaders = (req, options: SendOptions) => {
-	const headers = {
-		...(options.headers || {}),
-	};
-
-	Object.keys(headers).forEach((name) =>
-		req.setRequestHeader(name, headers[name]));
-};
+// const setHeaders = (req, options: SendOptions) => {
+// 	const headers = {
+// 		...(options.headers || {}),
+// 	};
+//
+// 	Object.keys(headers).forEach((name) =>
+// 		req.setRequestHeader(name, headers[name]));
+// };
 
 const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onProgress: ?OnProgress): SendRequest => {
-	const req = new XMLHttpRequest();
-
-	const pXhr = new Promise((resolve, reject) => {
+	// const req = new XMLHttpRequest();
+    //
+	// const pXhr = new Promise((resolve, reject) => {
 		const formData = prepareFormData(items, options);
-
-		req.onerror = () => reject(req);
-		req.ontimeout = () => reject(req);
-		req.onabort = () => reject(req);
-		req.onload = () => resolve(req);
-
-		req.upload.onprogress = (e) => {
-			if (e.lengthComputable && onProgress) {
-				onProgress(e, items.slice());
-			}
-		};
-
-		req.open(options.method, url);
-		setHeaders(req, options);
-		req.withCredentials = !!options.withCredentials;
-		req.send(formData);
-	});
+    //
+	// 	req.onerror = () => reject(req);
+	// 	req.ontimeout = () => reject(req);
+	// 	req.onabort = () => reject(req);
+	// 	req.onload = () => resolve(req);
+    //
+	// 	req.upload.onprogress = (e) => {
+	// 		if (e.lengthComputable && onProgress) {
+	// 			onProgress(e, items.slice());
+    // 		}
+    // 	};
+    //
+    // 	req.open(options.method, url);
+    // 	setHeaders(req, options);
+    // 	req.withCredentials = !!options.withCredentials;
+    // 	req.send(formData);
+    // });
+    const pXhr = request(url, formData, {
+        ...pick(options, ["method", "headers", "withCredentials"]),
+        preSend: (req) => {
+            req.upload.onprogress = (e) => {
+                if (e.lengthComputable && onProgress) {
+                    onProgress(e, items.slice());
+                }
+            };
+        },
+    });
 
 	return {
 		url,
 		count: items.length,
 		pXhr,
-		xhr: req,
+		xhr: pXhr.xhr, //req,
 		aborted: false,
 	};
 };
@@ -153,5 +164,6 @@ export default (items: BatchItem[], url: string, options: SendOptions, onProgres
 	return {
 		request: processResponse(request, options),
 		abort: () => abortRequest(request),
+        senderType: XHR_SENDER_TYPE,
 	};
 };

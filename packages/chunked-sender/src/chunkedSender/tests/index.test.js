@@ -1,6 +1,6 @@
 import send from "@rpldy/sender";
 import processChunks from "../processChunks";
-import getChunkedSend from "../";
+import createChunkedSender from "../";
 
 jest.mock("@rpldy/sender", () => jest.fn());
 
@@ -16,7 +16,7 @@ describe("chunkedSender index tests", () => {
 		onProgress = {};
 
 	const doChunkedSend = (items, chunkedOptions = {}) => {
-		const send = getChunkedSend(chunkedOptions);
+		const { send } = createChunkedSender(chunkedOptions);
 		return send(items, url, sendOptions, onProgress);
 	};
 
@@ -66,6 +66,6 @@ describe("chunkedSender index tests", () => {
 		const result = doChunkedSend(items, chunkedOptions);
 		expect(result).toBe(true);
 		expect(send).not.toHaveBeenCalled();
-		expect(processChunks).toHaveBeenCalledWith(items[0], chunkedOptions, url, sendOptions, onProgress);
+		expect(processChunks).toHaveBeenCalledWith(items[0], chunkedOptions, url, sendOptions, onProgress, expect.any(Function));
 	});
 });

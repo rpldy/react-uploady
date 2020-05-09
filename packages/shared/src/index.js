@@ -7,6 +7,7 @@ import * as logger from "./logger";
 import triggerCancellable from "./triggerCancellable";
 import triggerUpdater from "./triggerUpdater";
 import createBatchItem from "./batchItem";
+import request from "./request";
 
 export {
     BATCH_STATES,
@@ -23,6 +24,7 @@ export {
     triggerCancellable,
     triggerUpdater,
     createBatchItem,
+    request,
 };
 
 export {
@@ -32,6 +34,7 @@ export {
     merge,
     clone,
     getUpdateable,
+    pick,
 } from "./utils";
 
 export type {

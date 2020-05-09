@@ -443,7 +443,9 @@ describe("processQueueNext tests", () => {
 		loadNewBatchForItem.mockResolvedValueOnce(false);
 
 		cancelBatchForItem.mockImplementationOnce(() => {
-			queueState.state.itemQueue = []; //clear queue process next doesnt work recursively
+		    queueState.updateState((state) => {
+		        state.itemQueue = []; //clear queue process so next doesnt work recursively
+            });
 		});
 
 		await processQueueNext(queueState);

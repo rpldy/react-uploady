@@ -6,6 +6,7 @@ import devFreeze from "./devFreeze";
 import merge from "./merge";
 import clone from "./clone";
 import getUpdateable from "./updateable";
+import pick from "./pick";
 
 export {
     isFunction,
@@ -14,4 +15,5 @@ export {
     merge,
     clone,
     getUpdateable,
+    pick,
 };

@@ -1,5 +1,6 @@
 // @flow
 import { logger, FILE_STATES } from "@rpldy/shared";
+import { MOCK_SENDER_TYPE } from "../consts";
 import { MOCK_DEFAULTS } from "./defaults";
 
 import type { UploadData, BatchItem, } from "@rpldy/shared";
@@ -138,6 +139,7 @@ export default (options?: MockOptions) => {
 		return {
 			request: processResponse(request, mockOptions),
 			abort: request.abort,
+            senderType: MOCK_SENDER_TYPE,
 		};
 	};
 

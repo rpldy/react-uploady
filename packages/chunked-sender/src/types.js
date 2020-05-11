@@ -1,5 +1,6 @@
 // @flow
-import type { SendMethod } from "@rpldy/sender";
+import type { BatchItem } from "@rpldy/shared";
+import type { SendMethod, SendOptions } from "@rpldy/sender";
 import type { OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
 
 export type ChunkedOptions = {|
@@ -31,4 +32,11 @@ export type ChunkEventData = {
     id: string,
     start: number,
     end: number,
-}
+};
+
+export type ChunkStartEventData = {
+    item: BatchItem,
+    chunk: ChunkEventData,
+    sendOptions: SendOptions,
+    url: string,
+};

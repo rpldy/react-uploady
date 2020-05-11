@@ -15,6 +15,8 @@ const logger = {
 const triggerCancellable = jest.fn();
 const triggerUpdater = jest.fn();
 const createBatchItem = jest.fn();
+const request = jest.fn();
+const parseResponseHeaders = jest.fn();
 
 const utils = jest.genMockFromModule("../../utils");
 
@@ -41,6 +43,9 @@ const sharedMock = {
 
 	createBatchItem,
 
+    request,
+    parseResponseHeaders,
+
 	...utils,
 };
 
@@ -57,6 +62,9 @@ export {
 	triggerUpdater,
 
 	createBatchItem,
+
+    request,
+    parseResponseHeaders,
 
 	utils,
 };

@@ -2,22 +2,25 @@
 import createChunkedSender from "./chunkedSender";
 import getChunkedEnhancer from "./getChunkedEnhancer";
 import { CHUNKING_SUPPORT } from "./utils";
-import { CHUNKED_SENDER_TYPE } from "./consts";
+import { CHUNK_EVENTS, CHUNKED_SENDER_TYPE } from "./consts";
 
 export default getChunkedEnhancer;
 
 export {
-    getChunkedEnhancer,
-    createChunkedSender,
+    CHUNK_EVENTS,
     CHUNKING_SUPPORT,
     CHUNKED_SENDER_TYPE,
+
+    getChunkedEnhancer,
+    createChunkedSender,
 };
 
 export type {
     ChunkedOptions,
     MandatoryChunkedOptions,
     ChunkedSender,
-    ChunkEventData
+    ChunkEventData,
+    ChunkStartEventData,
 } from "./types";
 
 export type {

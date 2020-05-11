@@ -6,6 +6,7 @@ import { CHUNK_EVENTS } from "../consts";
 import type { BatchItem } from "@rpldy/shared";
 import type { OnProgress, SendOptions, SendResult } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
+import type { ChunkStartEventData } from "../types";
 import type { Chunk } from "./types";
 import ChunkedSendError from "./ChunkedSendError";
 
@@ -46,24 +47,26 @@ export default (
         onProgress(e, [chunk]);
     };
 
-    const updatedSendOptionsPromise = triggerUpdater(trigger, CHUNK_EVENTS.CHUNK_START, { chunk: pick(chunk, ["id", "start", "end"]), sendOptions, url });
+    const updatedSendOptionsPromise = triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, { item, chunk: pick(chunk, ["id", "start", "end"]), sendOptions, url });
 
     const xhrResult = updatedSendOptionsPromise
+        // $FlowFixMe - https://github.com/facebook/flow/issues/8215
         .then((updated) => xhrSend(
             [chunkItem],
-            updated.url || url,
-            merge({}, sendOptions, updated.sendOptions),
+            updated?.url || url,
+            merge({}, sendOptions, updated?.sendOptions),
             onChunkProgress));
 
     const abort = () => {
         xhrResult.then(({ abort }) => abort());
-        //confirm abort was/be called
         return true;
     };
 
     return {
         //wrap with another promise since we need to wait for the trigger updater promise too
-        request: new Promise((resolve) => xhrResult.then(resolve)),
+        request: new Promise((resolve) => xhrResult.then(({ request }) => resolve(request))),
         abort,
+        //this type isnt relevant because it isnt exposed
+        senderType: "chunk-passthrough-sender",
     };
 };

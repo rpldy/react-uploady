@@ -1,7 +1,8 @@
 // @flow
 import { getUpdateable } from "@rpldy/shared";
-import { CHUNKING_SUPPORT  } from "@rpldy/chunked-sender";
+import { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
 import handleEvents from "./handleEvents";
+import handleTusUpload from "./handleTusUpload";
 
 import type { BatchItem } from "@rpldy/shared";
 import type {
@@ -18,7 +19,7 @@ export default (uploader: UploaderType, chunkedSender: ChunkedSender, options: T
 
     const { state, update } = getUpdateable({
         options,
-        // items: [],
+        //featureDetection
     });
 
     const tusState: TusState = {
@@ -28,29 +29,22 @@ export default (uploader: UploaderType, chunkedSender: ChunkedSender, options: T
 
     handleEvents(tusState, chunkedSender);
 
-    const tusSend =  (
+    const tusSend = (
         items: BatchItem[],
         url: string,
         sendOptions: SendOptions,
         onProgress: OnProgress
     ): SendResult => {
+        let result;
 
         //TUS only supports a single file upload (no grouping)
         if (items.length === 1) {
-
-
-
-            if (options.parallel) {
-                //TODO: if has feature detection results - check if parallel ext supported by server
-            } else {
-
-            }
+            result = handleTusUpload(items, url, sendOptions, onProgress, tusState);
+        } else {
+            result = chunkedSender.send(items, url, sendOptions, onProgress);
         }
 
-        return chunkedSender.send(items, url, sendOptions, onProgress);
-
-        //create upload
-        //resume upload if exists
+        return result;
     };
 
     return CHUNKING_SUPPORT ?
@@ -59,7 +53,6 @@ export default (uploader: UploaderType, chunkedSender: ChunkedSender, options: T
         //chunking isn't supported, let the chunked-sender delegate to the xhr sender
         chunkedSender.send;
 };
-
 
 
 //register to chunked sender: on chunk start, on chunk finish

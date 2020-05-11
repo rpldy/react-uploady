@@ -1,29 +1,21 @@
 // @flow
-import type { RequestOptions } from "./types";
+import type { RequestOptions } from "../types";
 
-const setHeaders = (req, headers: Object) => {
+const setHeaders = (req, headers: Object): ?Headers => {
     if (headers) {
         Object.keys(headers).forEach((name) =>
             req.setRequestHeader(name, headers[name]));
     }
 };
 
-export default (url, data, options: RequestOptions) => { //method = "GET", data?: any, headers: Object = {}, withCredentials?: boolean) => {
+export default (url: string, data?: mixed, options: RequestOptions = {}): Promise<XMLHttpRequest> => {
     const req = new XMLHttpRequest();
 
     const pXhr = new Promise((resolve, reject) => {
-        // const formData = prepareFormData(items, options);
-
         req.onerror = () => reject(req);
         req.ontimeout = () => reject(req);
         req.onabort = () => reject(req);
         req.onload = () => resolve(req);
-
-        // req.upload.onprogress = (e) => {
-        //     if (e.lengthComputable && onProgress) {
-        //         onProgress(e, items.slice());
-        //     }
-        // };
 
         req.open((options.method || "GET"), url);
         setHeaders(req, options.headers);
@@ -36,6 +28,7 @@ export default (url, data, options: RequestOptions) => { //method = "GET", data?
         req.send(data);
     });
 
+    // $FlowFixMe - adding xhr to Promise
     pXhr.xhr = req;
     return pXhr;
 };

@@ -3,7 +3,7 @@
 import type { TusOptions } from "../types";
 
 export type State = {
-    Options: TusOptions,
+    options: TusOptions,
 };
 
 export type TusState = {

@@ -1,13 +1,10 @@
 // @flow
 
 import { CHUNKING_SUPPORT, CHUNK_EVENTS, } from "@rpldy/chunked-sender";
-import type { ChunkedSender, ChunkEventData, SendOptions } from "@rpldy/chunked-sender";
+import type { ChunkedSender, ChunkEventData, ChunkStartEventData } from "@rpldy/chunked-sender";
 import type { TusState } from "./types";
 
-type ChunkStartEventData = {
-    chunk: ChunkEventData,
-    sendOptions: SendOptions,
-};
+
 
 export default (tusState: TusState, chunkedSender: ChunkedSender) => {
 

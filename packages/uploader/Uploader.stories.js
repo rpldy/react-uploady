@@ -1,5 +1,6 @@
 // @flow
 import React, { useCallback, useState, useRef, useEffect } from "react";
+import { withKnobs } from "@storybook/addon-knobs";
 import {
     UmdBundleScript,
     localDestination,
@@ -83,6 +84,7 @@ export const UMD_Core = () => {
 
 export default {
     title: "Uploader",
+    decorators: [withKnobs],
     parameters: {
         readme: {
             sidebar: readme,

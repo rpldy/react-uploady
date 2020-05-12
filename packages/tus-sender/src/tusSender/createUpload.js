@@ -10,7 +10,9 @@ export default async (item: BatchItem, url: string, tusState: TusState, sendOpti
     let result = false;
 
     const { options } = tusState.getState();
-    const headers = {};
+    const headers = {
+        "tus-resumable": options.version,
+    };
 
     if (options.deferLength) {
         headers["Upload-Defer-Length"] = 1;
@@ -22,15 +24,19 @@ export default async (item: BatchItem, url: string, tusState: TusState, sendOpti
     //TODO: need to support https://tus.io/protocols/resumable-upload.html#creation-with-upload
 
     logger.debugLog(`tusSender.create - creating upload for ${item.id} at: ${url}`);
+    let createResponse;
 
-    const createResponse = await request(url, null, { method: "POST", headers });
+    try {
+        createResponse = await request(url, null, { method: "POST", headers });
+    } catch (ex) {
+        logger.debugLog(`tusSender.create - create upload failed`, ex);
+    }
 
-    if (~SUCCESS_CODES.indexOf(createResponse.status)) {
+    if (createResponse && ~SUCCESS_CODES.indexOf(createResponse.status)) {
         const resLocation = createResponse.getHeader("Location");
         logger.debugLog(`tusSender.create - successfully created upload for item: ${item.id} - location = ${resLocation}`);
 
         //const uploadUrl = resolveUploadUrl(url, resLocation);
-
 
         //TODO: update state with create response for item (upload url)
 

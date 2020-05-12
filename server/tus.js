@@ -7,7 +7,7 @@ const port = process.env.PORT;
 const tusServer = new tus.Server();
 
 tusServer.datastore = new tus.FileStore({
-    path: "/files"
+    path: "/tusFiles"
 });
 
 tusApp.all("*", tusServer.handle.bind(tusServer));

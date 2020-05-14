@@ -30,6 +30,7 @@ export type ProgressInfo = {
 };
 
 export type UploadData = {
+    status: number,
 	state: FileState,
 	response: any,
 };

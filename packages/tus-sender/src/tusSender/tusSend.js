@@ -1,6 +1,7 @@
 // @flow
-import { getUpdateable } from "@rpldy/shared";
+import { getUpdateable, logger } from "@rpldy/shared";
 import { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
+import xhrSend from "@rpldy/sender";
 import handleEvents from "./handleEvents";
 import handleTusUpload from "./handleTusUpload";
 
@@ -13,19 +14,24 @@ import type {
 } from "@rpldy/chunked-sender";
 import type { UploaderType } from "@rpldy/uploader";
 import type { TusOptions } from "../types";
-import type { TusState } from "./types";
+import type { State, TusState } from "./types";
+import { TUS_SENDER_TYPE } from "./consts";
 
-export default (uploader: UploaderType, chunkedSender: ChunkedSender, options: TusOptions) => {
-
+const initializeState = (options: TusOptions): TusState => {
     const { state, update } = getUpdateable({
         options,
+        items: {},
         //featureDetection
     });
 
-    const tusState: TusState = {
-        getState: () => state,
+    return {
+        getState: (): State => state,
         updateState: update,
     };
+};
+
+export default (uploader: UploaderType, chunkedSender: ChunkedSender, options: TusOptions) => {
+    const tusState = initializeState(options);
 
     handleEvents(tusState, chunkedSender);
 
@@ -37,25 +43,28 @@ export default (uploader: UploaderType, chunkedSender: ChunkedSender, options: T
     ): SendResult => {
         let result;
 
-        //TUS only supports a single file upload (no grouping)
-        if (items.length === 1) {
-            result = handleTusUpload(items, url, sendOptions, onProgress, tusState);
-        } else {
+        if (items.length > 1 || items[0].url) {
+            //ignore this upload - let the chunked sender handle it
             result = chunkedSender.send(items, url, sendOptions, onProgress);
+        } else {
+            //TUS only supports a single file upload (no grouping)
+            logger.debugLog(`tusSender: sending file using TUS protocol`);
+            const { request, abort } = handleTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender);
+
+            result = {
+                request,
+                abort,
+                senderType: TUS_SENDER_TYPE,
+            };
         }
 
         return result;
     };
 
-    return CHUNKING_SUPPORT ?
-        //chunking is supported, we can use TUS
-        tusSend :
-        //chunking isn't supported, let the chunked-sender delegate to the xhr sender
-        chunkedSender.send;
+    return CHUNKING_SUPPORT ? tusSend : xhrSend;
 };
 
 
-//register to chunked sender: on chunk start, on chunk finish
 //register to uploader item abort ? or just use the request response promise?
 
 

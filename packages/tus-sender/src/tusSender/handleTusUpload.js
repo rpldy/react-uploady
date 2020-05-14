@@ -1,44 +1,64 @@
 // @flow
+import { logger } from "@rpldy/shared";
 import createUpload from "./createUpload";
-import { TUS_SENDER_TYPE } from "./consts";
 
 import type { SendOptions } from "@rpldy/sender";
-import type { BatchItem } from "@rpldy/shared";
-import type { OnProgress } from "@rpldy/chunked-sender";
-import type { TusState } from "./types";
+import type { BatchItem, UploadData } from "@rpldy/shared";
+import type { ChunkedSender, OnProgress } from "@rpldy/chunked-sender";
+import type { State, TusState } from "./types";
 
-//create upload
-//resume upload if exists
-
+//TODO - resume if options.resume and fingerprint match
 //TODO - need to handle relative link in resume/parallel
-
-
+//TODO: if has feature detection results - check if parallel ext supported by server - if not - disable options.parallel
+//TODO - need to cleanup - use item finish (abort/cancel?) to know if can be removed !
 
 export default (items: BatchItem[],
-                      url: string,
-                      sendOptions: SendOptions,
-                      onProgress: OnProgress,
-                      tusState: TusState
+                url: string,
+                sendOptions: SendOptions,
+                onProgress: OnProgress,
+                tusState: TusState,
+                chunkedSender: ChunkedSender,
 ) => {
-    const request = new Promise((resolve) => {
-        const { options } = tusState.getState();
+    //allow ref to chunkedSend abort to be set async
+    let abortChunked;
+    const item = items[0];
 
-        createUpload(items[0], url, tusState, sendOptions)
-            .then(() => {
-                if (options.parallel) {
-                    //TODO: if has feature detection results - check if parallel ext supported by server
-                } else {
+    const { createRequest, abortCreate } = createUpload(item, url, tusState, sendOptions);
 
-                }
-            });
+    const uploadRequest = new Promise((resolve, reject) => {
+        createRequest.then((created) => {
+            logger.debugLog(`tusSender.handler: create request finished. sending item ${item.id} as chunked`, created);
+
+            if (created) {
+                const chunkedResult = chunkedSender.send(items, url, sendOptions, onProgress);
+
+                abortChunked = chunkedResult.abort;
+
+                chunkedResult.request
+                    .catch(reject)
+                    .then(resolve);
+            }
+        });
     });
 
-    return {
-        //TODO: DUMMY RESPONSE !!!!
+    const abort = () => {
+        logger.debugLog(`tusSender.handler: abort called for item: ${item.id}`);
+        abortCreate();
 
-        request,
-        abort: () => {},
-        senderType: TUS_SENDER_TYPE,
+        createRequest
+            .then((created) => {
+                if (created && abortChunked) {
+                    logger.debugLog(`tusSender.handler: aborting chunked upload for item:  ${item.id}`);
+                    abortChunked();
+                }
+            });
+
+        return true;
+    };
+
+    return {
+        request: uploadRequest,
+        abort,
     };
 };
 

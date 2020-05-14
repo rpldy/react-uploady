@@ -32,7 +32,10 @@ export {
     isFunction,
     isSamePropInArrays,
     devFreeze,
+
     merge,
+    getMerge,
+
     clone,
     getUpdateable,
     pick,
@@ -57,3 +60,7 @@ export type {
     GetExact,
     FileFilterMethod,
 } from "./types";
+
+export type {
+    MergeOptions
+} from "./utils/merge";

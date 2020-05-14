@@ -101,6 +101,7 @@ const processResponse = (request, options: MandatoryMockOptions): Promise<Upload
 		logger.debugLog("uploady.mockSender: mock request finished successfully");
 
 		return {
+            status: options.responseStatus || 200,
 			state: FILE_STATES.FINISHED,
 			response: {
 				...mockResponse,
@@ -116,6 +117,7 @@ const processResponse = (request, options: MandatoryMockOptions): Promise<Upload
 			logger.debugLog("uploady.mockSender: mock request was aborted");
 
 			return {
+			    status: 0,
 				state: FILE_STATES.CANCELLED,
 				response: "abort",
 			};

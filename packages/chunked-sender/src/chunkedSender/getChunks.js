@@ -6,7 +6,8 @@ import type { Chunk } from "./types";
 
 export default (item: BatchItem, options: MandatoryChunkedOptions): Chunk[] => {
 	const { chunkSize } = options,
-		count = Math.ceil(item.file.size / chunkSize);
+		count = item.file.size <= chunkSize ? 1 :
+            Math.ceil(item.file.size / chunkSize);
 
 	return new Array(count).fill(null)
 		.map((n, index) => {

@@ -62,7 +62,7 @@ const parseResponseJson = (response: string, headers: ?Headers, options: SendOpt
 };
 
 const processResponse = async (sendRequest: SendRequest, options: SendOptions): Promise<UploadData> => {
-    let state, response;
+    let state, response, status;
 
     try {
         const xhr = await sendRequest.pXhr;
@@ -71,6 +71,8 @@ const processResponse = async (sendRequest: SendRequest, options: SendOptions): 
 
         state = ~SUCCESS_CODES.indexOf(xhr.status) ?
             FILE_STATES.FINISHED : FILE_STATES.ERROR;
+
+        status = xhr.status;
 
         const resHeaders = parseResponseHeaders(xhr);
 
@@ -90,6 +92,7 @@ const processResponse = async (sendRequest: SendRequest, options: SendOptions): 
     }
 
     return {
+        status,
         state,
         response,
     };

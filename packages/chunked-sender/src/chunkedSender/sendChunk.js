@@ -1,5 +1,5 @@
 // @flow
-import { triggerUpdater, createBatchItem, logger, merge, pick } from "@rpldy/shared";
+import { triggerUpdater, createBatchItem, logger, getMerge, pick } from "@rpldy/shared";
 import xhrSend from "@rpldy/sender";
 import { getChunkDataFromFile } from "../utils";
 import { CHUNK_EVENTS } from "../consts";
@@ -12,6 +12,8 @@ import ChunkedSendError from "./ChunkedSendError";
 
 const getContentRangeValue = (chunk, data, item) =>
     `bytes ${chunk.start}-${chunk.start + data.size - 1}/${item.file.size}`;
+
+const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
 export default (
     chunk: Chunk,
@@ -54,7 +56,7 @@ export default (
         .then((updated) => xhrSend(
             [chunkItem],
             updated?.url || url,
-            merge({}, sendOptions, updated?.sendOptions),
+            mergeWithUndefined({}, sendOptions, updated?.sendOptions),
             onChunkProgress));
 
     const abort = () => {

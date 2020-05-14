@@ -19,6 +19,9 @@ export type TusOptions = {
 
     //https://tus.io/protocols/resumable-upload.html#upload-defer-length (default: false)
     deferLength?: boolean,
+
+    //whether to use X-HTTP-Method-Override header instead of PATCH (default: false)
+    overrideMethod?: boolean,
 };
 
 

@@ -1,12 +1,13 @@
 // @flow
 import { FILE_STATES, logger, pick } from "@rpldy/shared";
 
+import type { BatchItem } from "@rpldy/shared";
 import type { SendResult } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { State } from "./types";
 import { CHUNK_EVENTS } from "../consts";
 
-export default async (state: State, chunkId: string, chunkSendResult: SendResult, trigger: TriggerMethod) => {
+export default async (state: State, item: BatchItem, chunkId: string, chunkSendResult: SendResult, trigger: TriggerMethod) => {
 	state.requests[chunkId] = {
 		id: chunkId,
 		abort: chunkSendResult.abort,
@@ -23,7 +24,13 @@ export default async (state: State, chunkId: string, chunkSendResult: SendResult
 		if (result.state === FILE_STATES.FINISHED) {
 			//remove chunk so eventually there are no more chunks to send
 			const spliced = state.chunks.splice(index, 1);
-            trigger(CHUNK_EVENTS.CHUNK_FINISH, pick(spliced[0], ["id", "start", "end"]));
+
+			trigger(CHUNK_EVENTS.CHUNK_FINISH, {
+                chunk: pick(spliced[0], ["id", "start", "end"]),
+                item,
+                uploadData: result,
+            });
+
 		} else if (result.state !== FILE_STATES.ABORTED) {
 			//increment attempt in case chunk failed (and not aborted)
 			state.chunks[index].attempt += 1;

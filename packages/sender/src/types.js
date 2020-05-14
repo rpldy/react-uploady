@@ -15,7 +15,8 @@ export type MockOptions = {|
 	//the mock intervals (percentages) to emit progress events on (default: [10, 25, 50, 75, 100])
 	progressIntervals?: number[],
 	//the mock server response to use (default: {"mock": true, "success": true})
-	response?: any
+	response?: any,
+    responseStatus?: number,
 |};
 
 export type MandatoryMockOptions = $ObjMap<MockOptions, NonMaybeTypeFunc>;

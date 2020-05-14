@@ -41,4 +41,17 @@ describe("getChunks tests", () => {
 		expect(chunks[0].id).toBe("bi1_chunk-0");
 	});
 
+    it("should return one chunk if file equal to chunk size", () => {
+
+        const chunks = getChunks(
+            { id: "bi1", file: { size: 500 } },
+            { chunkSize: 500 });
+
+        expect(chunks.length).toBe(1);
+
+        expect(chunks[0].start).toBe(0);
+        expect(chunks[0].end).toBe(500);
+        expect(chunks[0].id).toBe("bi1_chunk-0");
+    });
+
 });

@@ -1,5 +1,11 @@
 // @flow
-import { triggerUpdater, isSamePropInArrays, merge, FILE_STATES, logger } from "@rpldy/shared";
+import {
+    triggerUpdater,
+    isSamePropInArrays,
+    FILE_STATES,
+    logger,
+    getMerge
+} from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 
@@ -12,6 +18,8 @@ type ItemsSendData = {
     items: BatchItem[],
     options: CreateOptions
 }
+
+const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
 const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], options: CreateOptions): Promise<ItemsSendData> => {
     // $FlowFixMe - https://github.com/facebook/flow/issues/8215
@@ -31,7 +39,7 @@ const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], optio
         }
 
         if (updated.options) {
-            options = merge({}, options, updated.options);
+            options = mergeWithUndefined({}, options, updated.options);
         }
     }
 

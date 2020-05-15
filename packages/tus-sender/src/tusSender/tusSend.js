@@ -67,20 +67,3 @@ export default (uploader: UploaderType, chunkedSender: ChunkedSender, options: T
 
 //register to uploader item abort ? or just use the request response promise?
 
-
-/**
-
- perform options request - beginning of session
- * make this configurable
- - store per server : extensions, version,
-
-
- Upload
-
- - creation || creation-with-upload
- - checksum ???
-
-
- Expiration ???
-
- **/

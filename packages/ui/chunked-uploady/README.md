@@ -11,8 +11,8 @@
 
 # Chunked Uploady
 
-This package is identical to the main [Uploady](../uploady) package. It's provided as a convenient alternative
-to be used in case chunked upload is desired. 
+This package is provided as a convenient alternative to the main [Uploady](../uploady) package. 
+To be used in case chunked upload is required.
 
 The server that is accepting the upload must also support chunked uploads. 
 The original file is broken down into smaller blobs, which are sent in different requests. 

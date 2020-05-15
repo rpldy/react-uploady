@@ -38,11 +38,12 @@ export default (tusState: TusState, chunkedSender: ChunkedSender) => {
 
             const { items, options } = tusState.getState(),
                 itemInfo = items[item.id],
-                // url = itemInfo.uploadUrl,
                 headers = {
                     "tus-resumable": options.version,
-                    "Upload-Offset": itemInfo.offset, //chunk.start,
+                    //use chunk.start in case of parallel
+                    "Upload-Offset": itemInfo.offset || chunk.start,
                     "Content-Type": "application/offset+octet-stream",
+                    //TUS doesnt expect content-range header and may not whitelist for CORS
                     "Content-Range": undefined,
                 };
 
@@ -64,7 +65,7 @@ export default (tusState: TusState, chunkedSender: ChunkedSender) => {
 
         chunkedSender.on(CHUNK_EVENTS.CHUNK_FINISH, ({ item, chunk, uploadData }: ChunkFinishEventData) => {
             const { status, response } = uploadData;
-            logger.debugLog(`tusSender.handleEvents: received upload response (code: ${status}) for : ${item.id}`, response);
+            logger.debugLog(`tusSender.handleEvents: received upload response (code: ${status}) for : ${item.id}, chunk: ${chunk.id}`, response);
 
             if (~SUCCESS_CODES.indexOf(status) && response.headers) {
                 tusState.updateState((state: State) => {

@@ -7,4 +7,6 @@ export const DEFAULT_OPTIONS = devFreeze({
     version: "1.0.0",
     // extensions: null,
     deferLength: false,
+
+    storagePrefix: "__tus-resumable__",
 });

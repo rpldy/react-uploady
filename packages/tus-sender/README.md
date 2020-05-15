@@ -27,3 +27,17 @@ supports version 1.0.0 of the [TUS protocol](https://tus.io/protocols/resumable-
 #NPM:
   $ npm i @rpldy/tus-sender
 ``` 
+
+## TUS Protocol
+
+On top of the Core Protocol, Uploady supports the following extensions:
+
+- [Creation](https://tus.io/protocols/resumable-upload.html#creation)
+- [Creation with Upload ](https://tus.io/protocols/resumable-upload.html#creation-with-upload)
+- [Concatenation](https://tus.io/protocols/resumable-upload.html#concatenation)
+- [Expiration](https://tus.io/protocols/resumable-upload.html#expiration)
+
+## Options
+
+
+## Example

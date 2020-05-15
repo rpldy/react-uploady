@@ -18,3 +18,16 @@ export type TusState = {
     getState: () => State,
     updateState: ((State) => void),
 };
+
+export type InitData = {
+    uploadUrl: string,
+    offset: number,
+    isNew: boolean,
+    isDone: boolean,
+    canResume: boolean,
+};
+
+export type InitUploadResult = {
+    initRequest: Promise<?InitData>,
+    abortInit: ()=>boolean,
+};

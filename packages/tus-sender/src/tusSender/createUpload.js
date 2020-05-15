@@ -3,8 +3,7 @@ import { logger, request } from "@rpldy/shared";
 import { SUCCESS_CODES } from "./consts";
 
 import type { BatchItem } from "@rpldy/shared";
-import type { State, TusState } from "./types";
-import type { SendOptions } from "@rpldy/sender";
+import type { State, TusState, InitUploadResult  } from "./types";
 
 export const resolveUploadUrl = (createUrl, location) => {
     let uploadUrl;
@@ -21,7 +20,7 @@ export const resolveUploadUrl = (createUrl, location) => {
     return uploadUrl;
 };
 
-const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: TusState, createResponse) => {
+const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: TusState, createResponse: XMLHttpRequest) => {
     const uploadUrl = resolveUploadUrl(url, createResponse.getResponseHeader("Location"));
 
     logger.debugLog(`tusSender.create - successfully created upload for item: ${item.id} - upload url = ${uploadUrl}`);
@@ -35,9 +34,15 @@ const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: 
             offset: 0,
         };
     });
+
+    return {
+        offset: 0,
+        uploadUrl,
+        isNew: true,
+    };
 };
 
-export default (item: BatchItem, url: string, tusState: TusState, sendOptions: SendOptions) => {
+export default (item: BatchItem, url: string, tusState: TusState): InitUploadResult => {
     const { options } = tusState.getState();
     const headers = {
         "tus-resumable": options.version,
@@ -49,9 +54,6 @@ export default (item: BatchItem, url: string, tusState: TusState, sendOptions: S
         headers["Upload-Length"] = item.file.size;
     }
 
-    //TODO support "Upload-Metadata" header - get from sendOptions.params (might need to remove it from params before passing to chunked sender)
-    //TODO: need to support https://tus.io/protocols/resumable-upload.html#creation-with-upload
-
     logger.debugLog(`tusSender.create - creating upload for ${item.id} at: ${url}`);
 
     const pXhr = request(url, null, { method: "POST", headers });
@@ -60,11 +62,10 @@ export default (item: BatchItem, url: string, tusState: TusState, sendOptions: S
 
     const createRequest = pXhr
         .then((createResponse) => {
-            let result = false;
+            let result = null;
 
             if (createResponse && ~SUCCESS_CODES.indexOf(createResponse.status)) {
-                handleSuccessfulCreateResponse(item, url, tusState, createResponse);
-                result = true;
+                result = handleSuccessfulCreateResponse(item, url, tusState, createResponse);
             } else {
                 logger.debugLog(`tusSender.create: create upload failed for item: ${item.id}`, createResponse);
             }
@@ -73,7 +74,6 @@ export default (item: BatchItem, url: string, tusState: TusState, sendOptions: S
         })
         .catch((error) => {
             logger.debugLog(`tusSender.create: create upload failed`, error);
-            return false;
         })
         .finally(()=> {
             createFinished = true;

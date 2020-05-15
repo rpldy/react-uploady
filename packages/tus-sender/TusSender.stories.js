@@ -6,6 +6,8 @@ import createUploader, { composeEnhancers } from "@rpldy/uploader";
 import { useStoryUploadySetup, DESTINATION_TYPES } from "../../story-helpers";
 import getTusEnhancer from "./src";
 
+import { Upload as Tus } from "tus-js-client";
+
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
@@ -44,6 +46,34 @@ export const WithTusSender = () => {
         <p>Uses Uploader & TUS Sender</p>
         <input type="file" ref={inputRef} style={{ display: "none" }} onChange={onInputChange}/>
         <button id="upload-button" onClick={onClick}>Upload with TUS</button>
+    </div>
+};
+
+export const WithTusJsClient  = () => {
+    const inputRef = useRef(null);
+
+    const onInputChange = useCallback(() => {
+
+        const upload = new Tus(inputRef.current.files[0], {
+            endpoint: "http://localhost:4000/upload",
+            chunkSize: 5242880,
+
+            onError: error => {
+                console.log("Failed because: ", error);
+            },
+
+            onSuccess: () => {
+                console.log("Success", upload);
+            }
+        });
+
+        upload.start();
+
+    }, []);
+
+    return <div>
+        <p>Uses TUS JS Client</p>
+        <input type="file" ref={inputRef} onChange={onInputChange}/>
     </div>
 };
 

@@ -3,10 +3,11 @@ import { logger } from "@rpldy/shared";
 import createUpload from "./createUpload";
 
 import type { SendOptions } from "@rpldy/sender";
-import type { BatchItem, UploadData } from "@rpldy/shared";
+import type { BatchItem } from "@rpldy/shared";
 import type { ChunkedSender, OnProgress } from "@rpldy/chunked-sender";
-import type { State, TusState } from "./types";
+import type { TusState } from "./types";
 
+//TODO - add metadata from file (name, size, date)
 //TODO - resume if options.resume and fingerprint match
 //TODO - need to handle relative link in resume/parallel
 //TODO: if has feature detection results - check if parallel ext supported by server - if not - disable options.parallel

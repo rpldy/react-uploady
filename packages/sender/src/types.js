@@ -35,6 +35,7 @@ export type SendOptions = {
     forceJsonResponse: ?boolean,
     withCredentials: ?boolean,
     formatGroupParamName: ?FormatParamGroupNameMethod,
+    sendWithFormData?: boolean,
 };
 
 export type SenderProgressEvent = { total: number, loaded: number };

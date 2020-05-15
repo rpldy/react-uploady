@@ -23,6 +23,7 @@ export default (
     onProgress: OnProgress,
     trigger: TriggerMethod,
 ): SendResult => {
+
     if (!chunk.data) {
         //slice the chunk based on bit position
         chunk.data = getChunkDataFromFile(item.file, chunk.start, chunk.end);
@@ -49,7 +50,12 @@ export default (
         onProgress(e, [chunk]);
     };
 
-    const updatedSendOptionsPromise = triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, { item, chunk: pick(chunk, ["id", "start", "end"]), sendOptions, url });
+    const updatedSendOptionsPromise = triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, {
+        item,
+        chunk: pick(chunk, ["id", "start", "end"]),
+        sendOptions,
+        url
+    });
 
     const xhrResult = updatedSendOptionsPromise
         // $FlowFixMe - https://github.com/facebook/flow/issues/8215

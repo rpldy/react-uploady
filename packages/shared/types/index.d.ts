@@ -24,6 +24,7 @@ export interface UploadOptions {
     params?: object;
     forceJsonResponse?: boolean;
     withCredentials?: boolean;
+    sendWithFormData?: boolean;
 }
 
 export enum BatchState {

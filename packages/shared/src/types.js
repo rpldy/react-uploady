@@ -103,6 +103,8 @@ export type UploadOptions = {|
 	forceJsonResponse?: boolean,
 	//whether to set XHR withCredentials to true (default: false)
 	withCredentials?: boolean,
+    //whether file/url data will be sent as part of formdata (default: true)
+    sendWithFormData?: boolean,
 |};
 
 export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];

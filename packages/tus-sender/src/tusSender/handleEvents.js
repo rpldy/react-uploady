@@ -54,6 +54,7 @@ export default (tusState: TusState, chunkedSender: ChunkedSender) => {
 
             return {
                 sendOptions: {
+                    sendWithFormData: false,
                     method: options.overrideMethod ? "POST" : PATCH,
                     headers,
                 },

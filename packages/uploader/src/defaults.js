@@ -19,4 +19,5 @@ export const DEFAULT_OPTIONS = devFreeze({
     withCredentials: false,
     destination: {},
     send: null,
+    sendWithFormData: true,
 });

@@ -22,10 +22,26 @@ type SendRequest = {
 
 export const SUCCESS_CODES = [200, 201, 202, 203, 204];
 
-const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onProgress: ?OnProgress): SendRequest => {
-    const formData = prepareFormData(items, options);
+const getRequestData = (items: BatchItem[], options: SendOptions) => {
+    let data;
 
-    const pXhr = request(url, formData, {
+    if (options.sendWithFormData) {
+        data = prepareFormData(items, options);
+    } else {
+        if (items.length > 1) {
+            throw new Error(`XHR Sender - Request without form data can only contain 1 item. received ${items.length}`);
+        }
+        const item = items[0];
+        data = item.file || item.url;
+    }
+
+    return data;
+};
+
+const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onProgress: ?OnProgress): SendRequest => {
+    const requestData = getRequestData(items, options);
+
+    const pXhr = request(url, requestData, {
         ...pick(options, ["method", "headers", "withCredentials"]),
         preSend: (req) => {
             req.upload.onprogress = (e) => {

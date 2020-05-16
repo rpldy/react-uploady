@@ -5,9 +5,9 @@ import sendChunks from "./sendChunks";
 import { CHUNKED_SENDER_TYPE } from "../consts";
 
 import type { BatchItem } from "@rpldy/shared";
-import type { OnProgress, SendOptions, SendResult } from "@rpldy/sender";
+import type { OnProgress, SendResult } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
-import type { MandatoryChunkedOptions } from "../types";
+import type { MandatoryChunkedOptions, ChunkedSendOptions } from "../types";
 import type { State, ChunksSendResponse, Chunk } from "./types";
 
 export const abortChunkedRequest = (state: State, item: BatchItem) => {
@@ -61,11 +61,11 @@ export default (
     item: BatchItem,
     chunkedOptions: MandatoryChunkedOptions,
     url: string,
-    sendOptions: SendOptions,
+    sendOptions: ChunkedSendOptions,
     onProgress: OnProgress,
     trigger: TriggerMethod
 ): SendResult => {
-    const chunks = getChunks(item, chunkedOptions);
+    const chunks = getChunks(item, chunkedOptions, sendOptions.startByte);
     logger.debugLog(`chunkedSender: created ${chunks.length} chunks for: ${item.file.name}`);
 
     const state = {

@@ -17,12 +17,12 @@ const getPersistKey = (item: BatchItem, options: TusOptions) => {
 
 const persistResumable = (item: BatchItem, uploadUrl: string, options: TusOptions) => {
     if (options.resume) {
-        safeLocalStorage.setItem(getPersistKey(item, options), {
-            //not used for anything, just metadata
+        safeLocalStorage.setItem(getPersistKey(item, options), JSON.stringify({
+            //time not used for anything, just metadata
             time: Date.now(),
             expiration: 0,
             uploadUrl,
-        });
+        }));
     }
 };
 

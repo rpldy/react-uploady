@@ -63,7 +63,3 @@ export default (uploader: UploaderType, chunkedSender: ChunkedSender, options: T
 
     return CHUNKING_SUPPORT ? tusSend : xhrSend;
 };
-
-
-//register to uploader item abort ? or just use the request response promise?
-

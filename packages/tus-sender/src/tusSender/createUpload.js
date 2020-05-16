@@ -89,7 +89,7 @@ export default (item: BatchItem, url: string, tusState: TusState): InitUploadRes
     };
 
     return {
-        createRequest,
-        abortCreate,
+        request: createRequest,
+        abort: abortCreate,
     };
 };

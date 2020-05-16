@@ -14,6 +14,12 @@ export type ChunkedOptions = {|
     parallel?: number,
 |};
 
+export type ChunkedSendOptions = {|
+    ...SendOptions,
+    //the byte to start from (designed for resumable) (default: 0)
+    startByte?: number
+|};
+
 export type MandatoryChunkedOptions = {|
     chunked: boolean,
     chunkSize: number,

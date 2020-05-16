@@ -35,7 +35,7 @@
     "cy:run:ff": "yarn cy:run --browser firefox",
     "e2e": "concurrently --success first --kill-others \"yarn bundle:serve\" \"yarn sb:start\" \"yarn cy:run\"",
     "server": "cd server; PORT=4000 node index.js",
-    "tus": "cd server; DEBUG=tus-node-server PORT=4000 node tus.js"
+    "tus": "cd server; DEBUG=tus-node-server* PORT=4000 node tus.js"
   },
   "private": true,
   "workspaces": [

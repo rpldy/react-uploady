@@ -20,6 +20,8 @@ export type TusOptions = {
     overrideMethod?: boolean,
     //the key prefix to use for persisting resumable info about files (default: "__tus-resumable__")
     storagePrefix?: string,
+    //milliseconds to wait before retrying a locked resumable file (default: 2000)
+    lockedRetryDelay?: number,
 };
 
 

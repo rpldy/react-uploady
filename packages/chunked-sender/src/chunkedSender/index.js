@@ -7,13 +7,13 @@ import { getMandatoryOptions } from "../utils";
 import processChunks from "./processChunks";
 
 import type { BatchItem } from "@rpldy/shared";
-import type { OnProgress, SendOptions, SendResult } from "@rpldy/sender";
-import type { ChunkedOptions, ChunkedSender } from "../types";
+import type { OnProgress, SendResult } from "@rpldy/sender";
+import type { ChunkedOptions, ChunkedSender, ChunkedSendOptions } from "../types";
 
 export default (chunkedOptions: ?ChunkedOptions): ChunkedSender => {
     const options = getMandatoryOptions(chunkedOptions);
 
-    const send = (items: BatchItem[], url: string, sendOptions: SendOptions, onProgress: OnProgress): SendResult => {
+    const send = (items: BatchItem[], url: string, sendOptions: ChunkedSendOptions, onProgress: OnProgress): SendResult => {
         let result;
 
         if (!options.chunked || items.length > 1 || items[0].url) {

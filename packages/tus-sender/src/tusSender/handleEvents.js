@@ -4,7 +4,7 @@ import { CHUNKING_SUPPORT, CHUNK_EVENTS, } from "@rpldy/chunked-sender";
 import { SUCCESS_CODES } from "./consts";
 
 import type { ChunkedSender, ChunkStartEventData, ChunkFinishEventData } from "@rpldy/chunked-sender";
-import type { TusState } from "./types";
+import type { TusState, State } from "./types";
 
 const PATCH = "PATCH";
 
@@ -45,11 +45,8 @@ export default (tusState: TusState, chunkedSender: ChunkedSender) => {
                     "Content-Type": "application/offset+octet-stream",
                     //TUS doesnt expect content-range header and may not whitelist for CORS
                     "Content-Range": undefined,
+                    "X-HTTP-Method-Override": options.overrideMethod ? PATCH : undefined,
                 };
-
-            if (options.overrideMethod) {
-                headers["X-HTTP-Method-Override"] = PATCH;
-            }
 
             logger.debugLog(`tusSender.handleEvents: chunk start handler - chunk start = ${chunk.start}, tus offset = ${itemInfo.offset}`);
 

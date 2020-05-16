@@ -18,7 +18,7 @@ import type { State, TusState } from "./types";
 import { TUS_SENDER_TYPE } from "./consts";
 
 const initializeState = (options: TusOptions): TusState => {
-    const { state, update } = getUpdateable({
+    const { state, update } = getUpdateable<State>({
         options,
         items: {},
         //featureDetection

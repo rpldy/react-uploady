@@ -3,7 +3,7 @@ import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { SendMethod, SendOptions } from "@rpldy/sender";
 import type { OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
 
-export type ChunkedOptions = {|
+export type ChunkedOptions = {
     //whether to divide the uploaded file into chunks (default: true)
     chunked?: boolean,
     //the maximum chunk size (default: 5242880 bytes)
@@ -12,10 +12,10 @@ export type ChunkedOptions = {|
     retries?: number,
     //the number of chunks to upload in parallel (default: 0)
     parallel?: number,
-|};
+};
 
 export type ChunkedSendOptions = {|
-    ...SendOptions,
+    ...$Exact<SendOptions>,
     //the byte to start from (designed for resumable) (default: 0)
     startByte?: number
 |};

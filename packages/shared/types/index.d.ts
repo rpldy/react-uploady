@@ -83,6 +83,7 @@ export type BatchItem = BatchUrl & BatchFile;
 export type Trigger<T> = (name: string, ...args: unknown[]) => Promise<T | null | undefined>[];
 
 export type UploadData = {
+    status: number;
     state: FileState;
     response: any;
 };

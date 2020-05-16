@@ -93,7 +93,7 @@ const reportCancelledItems = (queue: QueueState, items: BatchItem[], cancelledRe
     if (cancelledItemsIds.length) {
         const finishedData = cancelledItemsIds.map((id: string) => ({
             id,
-            info: { state: FILE_STATES.CANCELLED, response: "cancel" },
+            info: { status: 0, state: FILE_STATES.CANCELLED, response: "cancel" },
         }));
 
         processFinishedRequest(queue, finishedData, next); //report out info about cancelled items

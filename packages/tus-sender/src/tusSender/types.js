@@ -7,6 +7,7 @@ export type ItemInfo = {
     uploadUrl: string,
     size: number,
     offset: number,
+    abort?: () => boolean,
 };
 
 export type State = {
@@ -16,18 +17,18 @@ export type State = {
 
 export type TusState = {
     getState: () => State,
-    updateState: ((State) => void),
+    updateState: ((State) => void) => State,
 };
 
-export type InitData = {
-    uploadUrl: string,
-    offset: number,
-    isNew: boolean,
-    isDone: boolean,
-    canResume: boolean,
-};
+export type InitData = {|
+    uploadUrl?: string,
+    offset?: number,
+    isNew?: boolean,
+    isDone?: boolean,
+    canResume?: boolean,
+|};
 
 export type InitUploadResult = {
-    initRequest: Promise<?InitData>,
-    abortInit: ()=>boolean,
+    request: Promise<?InitData>,
+    abort: ()=>boolean,
 };

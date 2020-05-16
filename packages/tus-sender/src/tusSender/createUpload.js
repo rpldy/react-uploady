@@ -5,7 +5,7 @@ import { SUCCESS_CODES } from "./consts";
 import type { BatchItem } from "@rpldy/shared";
 import type { State, TusState, InitUploadResult  } from "./types";
 
-export const resolveUploadUrl = (createUrl, location) => {
+export const resolveUploadUrl = (createUrl: string, location: string) => {
     let uploadUrl;
 
     if (/^(http:|https:)?\/\//.test(location)) {
@@ -46,13 +46,9 @@ export default (item: BatchItem, url: string, tusState: TusState): InitUploadRes
     const { options } = tusState.getState();
     const headers = {
         "tus-resumable": options.version,
+        "Upload-Defer-Length": options.deferLength ? 1 : undefined,
+        "Upload-Length": !options.deferLength ? item.file.size : undefined,
     };
-
-    if (options.deferLength) {
-        headers["Upload-Defer-Length"] = 1;
-    } else {
-        headers["Upload-Length"] = item.file.size;
-    }
 
     logger.debugLog(`tusSender.create - creating upload for ${item.id} at: ${url}`);
 
@@ -82,6 +78,7 @@ export default (item: BatchItem, url: string, tusState: TusState): InitUploadRes
     const abortCreate = () => {
         if (!createFinished) {
             logger.debugLog(`tusSender.create: aborting create request for item: ${item.id}`);
+            // $FlowFixMe
             pXhr.xhr.abort();
         }
 

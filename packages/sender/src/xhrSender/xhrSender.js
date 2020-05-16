@@ -78,7 +78,8 @@ const parseResponseJson = (response: string, headers: ?Headers, options: SendOpt
 };
 
 const processResponse = async (sendRequest: SendRequest, options: SendOptions): Promise<UploadData> => {
-    let state, response, status;
+    let state, response,
+        status = 0;
 
     try {
         const xhr = await sendRequest.pXhr;

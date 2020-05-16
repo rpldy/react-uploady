@@ -21,7 +21,7 @@ checkSupport();
 const methods = ["key", "getItem", "setItem", "removeItem", "clear"];
 
 const safeLocalStorage = methods.reduce((res, method) => {
-    res[method] = (...args) =>
+    res[method] = (...args: mixed[]) =>
         isSupported ? window.localStorage[method](...args) : null;
 
     return res;

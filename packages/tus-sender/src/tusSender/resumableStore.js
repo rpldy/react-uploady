@@ -1,6 +1,6 @@
 // @flow
 import { logger, safeLocalStorage } from "@rpldy/shared";
-
+import { DEFAULT_OPTIONS } from "../defaults";
 import type { BatchItem } from "@rpldy/shared";
 import type { TusOptions } from "../types";
 
@@ -12,7 +12,7 @@ const getPersistKey = (item: BatchItem, options: TusOptions) => {
         item.file.lastModified,
     ].join("/");
 
-    return `${options.storagePrefix}${itemKey}`;
+    return `${options.storagePrefix || DEFAULT_OPTIONS.storagePrefix}${itemKey}`;
 };
 
 const persistResumable = (item: BatchItem, uploadUrl: string, options: TusOptions) => {

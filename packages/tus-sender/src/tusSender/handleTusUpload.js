@@ -14,9 +14,11 @@ import type { TusState, InitData } from "./types";
 //TODO - persist feature detection in session state per server(url)
 //TODO - need to cleanup - use item finish (abort/cancel?) to know if can be removed !
 //TODO - support "Upload-Metadata" header - get from sendOptions.params
+//TODO - support defer length - add length in the end
 //TODO - need to support https://tus.io/protocols/resumable-upload.html#creation-with-upload
 //TODO - support Upload-Expires - store expiration and dont allow to resume expired
 //TODO - E2E - test resume/abort/resume-done works
+//TODO - E2E - test resume with delay
 
 const doChunkedUploadForItem = (
     items: BatchItem[],
@@ -30,10 +32,10 @@ const doChunkedUploadForItem = (
     const item = items[0];
     logger.debugLog(`tusSender.handler: init request finished. sending item ${item.id} as chunked`, initData);
 
-    if (initData.isNew) {
+    if (initData.isNew && initData.uploadUrl) {
         persistResumable(item, initData.uploadUrl, tusState.getState().options);
     }
-    else {
+    else if (initData.canResume) {
         sendOptions = {
             ...sendOptions,
             startByte: initData.offset,
@@ -60,7 +62,7 @@ const handleInitResult = (
     initRequest,
     isResume?: boolean,
 ) =>
-    initRequest.then(async (initData: InitData) => {
+    initRequest.then(async (initData: ?InitData) => {
         let request,
             resumeFailed = false;
 
@@ -78,12 +80,6 @@ const handleInitResult = (
                 request = doChunkedUploadForItem(items, url, sendOptions, onProgress, tusState, chunkedSender, initData);
             }
         } else {
-            request = Promise.resolve({
-                status: 0,
-                state: FILE_STATES.ERROR,
-                response: "TUS initialize failed",
-            });
-
             resumeFailed = isResume;
         }
 
@@ -94,7 +90,11 @@ const handleInitResult = (
             request = await handleInitResult(items, url, sendOptions, onProgress, tusState, chunkedSender, createRequest);
         }
 
-        return request;
+        return request || Promise.resolve({
+            status: 0,
+            state: FILE_STATES.ERROR,
+            response: "TUS initialize failed",
+        });
     });
 
 export default (items: BatchItem[],

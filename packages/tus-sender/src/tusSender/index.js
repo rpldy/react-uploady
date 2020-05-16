@@ -6,7 +6,7 @@ import getTusSend from "./tusSend";
 import type { UploaderType } from "@rpldy/uploader";
 import type { TusOptions } from "../types";
 
-export default (uploader: UploaderType, options: TusOptions) => {
+export default (uploader: UploaderType, options: ?TusOptions) => {
     options = getMandatoryOptions(options);
     const chunkedSender = createChunkedSender(options);
 

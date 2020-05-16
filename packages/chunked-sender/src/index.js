@@ -21,6 +21,7 @@ export type {
     ChunkedSender,
     ChunkEventData,
     ChunkStartEventData,
+    ChunkFinishEventData,
 } from "./types";
 
 export type {

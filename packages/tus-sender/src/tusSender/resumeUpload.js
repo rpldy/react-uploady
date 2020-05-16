@@ -47,7 +47,7 @@ const resumeWithDelay = (item, url, tusState, attempt) =>
     new Promise((resolve) => {
         setTimeout(() => {
             makeResumeRequest(item, url, tusState, attempt)
-                .then(resolve);
+                .request.then(resolve);
         }, tusState.getState().options.lockedRetryDelay);
     });
 
@@ -70,7 +70,7 @@ const makeResumeRequest = (item: BatchItem, url: string, tusState: TusState, att
             if (resumeResponse && ~SUCCESS_CODES.indexOf(resumeResponse.status)) {
                 result = handleSuccessfulResumeResponse(item, url, tusState, resumeResponse);
             } else if (resumeResponse?.status === 423 && attempt === 0) {
-                logger.debugLog(`tusSender.resume: upload is locked for item: ${item.id}. Will retry in ${options.lockedRetryDelay}`, resumeResponse);
+                logger.debugLog(`tusSender.resume: upload is locked for item: ${item.id}. Will retry in ${+options.lockedRetryDelay}`, resumeResponse);
                 //Make one more attempt at resume
                 result = await resumeWithDelay(item,  url, tusState, 1);
             } else {
@@ -98,10 +98,10 @@ const makeResumeRequest = (item: BatchItem, url: string, tusState: TusState, att
             resumeFinished = true;
         });
 
-
     const abortResume = () => {
         if (!resumeFinished) {
             logger.debugLog(`tusSender.resume: aborting resume request for item: ${item.id}`);
+            // $FlowFixMe
             pXhr.xhr.abort();
         }
 

@@ -10,7 +10,7 @@ export default (item: BatchItem, options: MandatoryChunkedOptions, startByte: ?n
     const size = startByte ? item.file.size - startByte : item.file.size;
 
     if (size <= 0) {
-        throw new ChunkedSendError(`start byte ${startByte} is invalid. File size: ${item.file.size}`);
+        throw new ChunkedSendError(`start byte ${startByte || 0} is invalid. File size: ${item.file.size}`);
     }
 
     const count = size <= chunkSize ? 1 :

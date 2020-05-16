@@ -51,11 +51,11 @@ export const WithTusSender = () => {
 };
 
 export const WithTusJsClient  = () => {
-    const inputRef = useRef(null);
+    const inputRef = useRef();
 
     const onInputChange = useCallback(() => {
 
-        const upload = new Tus(inputRef.current.files[0], {
+        const upload = new Tus(inputRef.current?.files[0], {
             endpoint: "http://localhost:4000/upload",
             chunkSize: 5242880,
 

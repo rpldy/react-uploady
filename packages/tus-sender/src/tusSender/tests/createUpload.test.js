@@ -1,4 +1,5 @@
-import createUpload, { resolveUploadUrl } from "../createUpload";
+// import { request } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import  { resolveUploadUrl } from "../createUpload";
 
 describe("createUpload tests", () => {
 
@@ -8,7 +9,7 @@ describe("createUpload tests", () => {
             "//", "http://", "https://"
         ])("should return full URL as is", (prefix) => {
             const loc = `${prefix}www.test.com/upload/123`;
-            expect(resolveUploadUrl("" ,loc))
+            expect(resolveUploadUrl("", loc))
                 .toEqual(loc);
         });
 
@@ -29,5 +30,8 @@ describe("createUpload tests", () => {
         });
     });
 
+    describe("createUpload tests", () => {
 
+
+    });
 });

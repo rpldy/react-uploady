@@ -32,6 +32,7 @@ describe("request tests", () => {
             method: "GET",
             headers: {
                 foo: "bar",
+                empty: undefined,
             },
             withCredentials: false,
             ...options
@@ -45,6 +46,7 @@ describe("request tests", () => {
 
         if (options.headers) {
             expect(testXhr.setRequestHeader).toHaveBeenCalledWith("foo", "bar");
+            expect(testXhr.setRequestHeader).not.toHaveBeenCalledWith("empty", undefined);
         }
 
         const assertRequest = () => {

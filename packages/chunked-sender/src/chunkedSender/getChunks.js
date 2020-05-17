@@ -5,12 +5,12 @@ import type { BatchItem } from "@rpldy/shared";
 import type { MandatoryChunkedOptions } from "../types";
 import type { Chunk } from "./types";
 
-export default (item: BatchItem, options: MandatoryChunkedOptions, startByte: ?number): Chunk[] => {
+export default (item: BatchItem, options: MandatoryChunkedOptions, startByte: number = 0): Chunk[] => {
     const { chunkSize } = options;
     const size = startByte ? item.file.size - startByte : item.file.size;
 
     if (size <= 0) {
-        throw new ChunkedSendError(`start byte ${startByte || 0} is invalid. File size: ${item.file.size}`);
+        throw new ChunkedSendError(`start byte ${startByte} is invalid. File size: ${item.file.size}`);
     }
 
     const count = size <= chunkSize ? 1 :

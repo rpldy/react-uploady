@@ -1,12 +1,10 @@
-// import safeLocalStorage from "./localStorage";
-
 describe("localStorage tests", () => {
 
     describe("supported tests", () => {
         let safeLocalStorage;
 
         beforeAll(() => {
-            safeLocalStorage = require("./localStorage");
+            safeLocalStorage = require("./localStorage").default;
         });
 
         it("should be supported", () => {

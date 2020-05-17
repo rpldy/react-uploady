@@ -154,7 +154,9 @@ describe("sendChunks tests", () => {
 
             await handleChunk(state, {}, {}, resolve, { id: chunkId }, trigger);
 
-            expect(handleChunkRequest).toHaveBeenCalledWith(state, chunkId, result, trigger);
+            const item = {};
+
+            expect(handleChunkRequest).toHaveBeenCalledWith(state, item, chunkId, result, trigger);
 
             expect(state.finished).toBe(true);
 

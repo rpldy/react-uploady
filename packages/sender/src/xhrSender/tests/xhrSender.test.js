@@ -1,3 +1,4 @@
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "doTest"] }] */
 import {
     FILE_STATES,
     request,
@@ -19,18 +20,19 @@ describe("xhrSender tests", () => {
         parseResponseHeaders.mockReset();
     });
 
-    const doTest = (options = {}, responseHeaders) => {
+    const doTest = (options = {}, responseHeaders, items) => {
         options = {
             method: "GET",
             headers: {
                 foo: "bar",
             },
             withCredentials: true,
+            sendWithFormData: true,
             ...options
         };
 
         const mockProgress = jest.fn();
-        const items = [{ id: "u1" }, { id: "u2" }];
+        items = items || [{ id: "u1" }, { id: "u2" }];
 
         const url = "test.com";
 
@@ -57,14 +59,18 @@ describe("xhrSender tests", () => {
 
         const sendResult = send(items, url, options, mockProgress);
 
-        expect(request).toHaveBeenCalledWith(url, { test: true }, {
-            method: options.method,
-            headers: options.headers,
-            withCredentials: options.withCredentials,
-            preSend: expect.any(Function),
-        });
+        expect(request).toHaveBeenCalledWith(url,
+            options.sendWithFormData ? { test: true } : (items[0].file || items[0].url),
+            {
+                method: options.method,
+                headers: options.headers,
+                withCredentials: options.withCredentials,
+                preSend: expect.any(Function),
+            });
 
-        expect(prepareFormData).toHaveBeenCalledWith(items, options);
+        if (options.sendWithFormData) {
+            expect(prepareFormData).toHaveBeenCalledWith(items, options);
+        }
 
         return {
             sendResult,
@@ -94,7 +100,8 @@ describe("xhrSender tests", () => {
 
             expect(result).toEqual({
                 state: FILE_STATES.FINISHED,
-                response: { data: { "success": true }, headers: test.responseHeaders }
+                response: { data: { "success": true }, headers: test.responseHeaders },
+                status: code,
             });
 
             request.mock.calls[0][2].preSend(test.xhr);
@@ -190,6 +197,45 @@ describe("xhrSender tests", () => {
 
             const result = await test.sendResult.request;
             expect(result.state).toEqual(FILE_STATES.ERROR);
+        });
+    });
+
+    describe("without formdata tests", () => {
+
+        it("should send single item file", async () => {
+            const test = doTest({ sendWithFormData: false }, null, [{ id: "u1", file: "file" }]);
+
+            const responseData = { success: true };
+            test.xhr.status = 200;
+            test.xhr.response = JSON.stringify(responseData);
+
+            test.xhrResolve();
+
+            const result = await test.sendResult.request;
+
+            expect(result).toEqual({
+                state: FILE_STATES.FINISHED,
+                response: { data: { "success": true }, headers: test.responseHeaders },
+                status: 200,
+            });
+        });
+
+        it("should send single item url", async () => {
+            const test = doTest({ sendWithFormData: false }, null, [{ id: "u1", url: "url" }]);
+
+            const responseData = { success: true };
+            test.xhr.status = 200;
+            test.xhr.response = JSON.stringify(responseData);
+
+            test.xhrResolve();
+
+            await test.sendResult.request;
+        });
+
+        it("should throw error on multiple items", () => {
+            expect(() => {
+                doTest({ sendWithFormData: false });
+            }).toThrow();
         });
     });
 });

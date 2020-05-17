@@ -3,6 +3,7 @@ import { logger, request } from "@rpldy/shared";
 import { SUCCESS_CODES } from "./consts";
 
 import type { BatchItem } from "@rpldy/shared";
+import type { SendOptions } from "@rpldy/sender";
 import type { State, TusState, InitUploadResult  } from "./types";
 
 export const resolveUploadUrl = (createUrl: string, location: string) => {
@@ -42,12 +43,22 @@ const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: 
     };
 };
 
-export default (item: BatchItem, url: string, tusState: TusState): InitUploadResult => {
+export const getUploadMetadata = (sendOptions: SendOptions) => {
+    const keys = sendOptions.params && Object.keys(sendOptions.params);
+
+    return keys?.length ?
+            keys.map((name) => `${name} ${btoa(sendOptions.params[name])}`)
+            .join(",") :
+        undefined;
+};
+
+export default (item: BatchItem, url: string, tusState: TusState, sendOptions: SendOptions): InitUploadResult => {
     const { options } = tusState.getState();
     const headers = {
         "tus-resumable": options.version,
         "Upload-Defer-Length": options.deferLength ? 1 : undefined,
         "Upload-Length": !options.deferLength ? item.file.size : undefined,
+        "Upload-Metadata": getUploadMetadata(sendOptions),
     };
 
     logger.debugLog(`tusSender.create - creating upload for ${item.id} at: ${url}`);
@@ -70,8 +81,10 @@ export default (item: BatchItem, url: string, tusState: TusState): InitUploadRes
         })
         .catch((error) => {
             logger.debugLog(`tusSender.create: create upload failed`, error);
+            //intentionally return null on error. handler will cope
+            return null;
         })
-        .finally(()=> {
+        .finally(() => {
             createFinished = true;
         });
 

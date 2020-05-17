@@ -9,14 +9,14 @@ import type { BatchItem } from "@rpldy/shared";
 import type { ChunkedSender, OnProgress } from "@rpldy/chunked-sender";
 import type { TusState, InitData } from "./types";
 
+//TODO - need to cleanup - use item finish (abort/cancel?) to know if can be removed !
+//TODO - support defer length - add length in the end
+//TODO - need to support creation with upload https://tus.io/protocols/resumable-upload.html#creation-with-upload
 //TODO - support parallel uploads
+//TODO - support Upload-Expires - store expiration and dont allow to resume expired
 //TODO - if has feature detection results - for example: check if parallel ext supported by server - if not - disable options.parallel
 //TODO - persist feature detection in session state per server(url)
-//TODO - need to cleanup - use item finish (abort/cancel?) to know if can be removed !
-//TODO - support "Upload-Metadata" header - get from sendOptions.params
-//TODO - support defer length - add length in the end
-//TODO - need to support https://tus.io/protocols/resumable-upload.html#creation-with-upload
-//TODO - support Upload-Expires - store expiration and dont allow to resume expired
+//TODO - unit tests ~100%
 //TODO - E2E - test resume/abort/resume-done works
 //TODO - E2E - test resume with delay
 
@@ -85,7 +85,7 @@ const handleInitResult = (
 
         if (resumeFailed) {
             logger.debugLog(`tusSender.handler: resume init failed. Will try creating a new upload for item: ${items[0].id}`);
-            const { request: createRequest } = createUpload(items[0], url, tusState);
+            const { request: createRequest } = createUpload(items[0], url, tusState, sendOptions);
             //currently, this second init request (after failed resume) cannot be aborted
             request = await handleInitResult(items, url, sendOptions, onProgress, tusState, chunkedSender, createRequest);
         }
@@ -111,7 +111,7 @@ export default (items: BatchItem[],
         //init resumable upload - this file has already started uploading
         resumeUpload(item, persistedUrl, tusState) :
         //init new upload - first time uploading this file
-        createUpload(item, url, tusState);
+        createUpload(item, url, tusState, sendOptions);
 
     const uploadRequest = handleInitResult(
         items,

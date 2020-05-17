@@ -28,6 +28,10 @@ export const WithTusSender = () => {
         uploaderRef.current = createUploader({
             enhancer: enhancer ? composeEnhancers(enhancer, tusEnhancer) : tusEnhancer,
             destination,
+            params: {
+                source: "rpldy",
+                test: "storybook"
+            }
         });
     }, [enhancer, destination, destinationType]);
 

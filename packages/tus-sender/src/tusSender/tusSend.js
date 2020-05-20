@@ -1,9 +1,9 @@
 // @flow
-import { getUpdateable, logger } from "@rpldy/shared";
+import { logger } from "@rpldy/shared";
 import { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
 import xhrSend from "@rpldy/sender";
-import handleEvents from "./handleEvents";
-import handleTusUpload from "./handleTusUpload";
+import initTusUpload from "./initTusUpload";
+// import handleTusUpload from "./handleTusUpload";
 
 import type { BatchItem } from "@rpldy/shared";
 import type {
@@ -12,29 +12,10 @@ import type {
     SendOptions,
     SendResult,
 } from "@rpldy/chunked-sender";
-import type { UploaderType } from "@rpldy/uploader";
-import type { TusOptions } from "../types";
-import type { State, TusState } from "./types";
+import type { TusState } from "./types";
 import { TUS_SENDER_TYPE } from "./consts";
 
-const initializeState = (options: TusOptions): TusState => {
-    const { state, update } = getUpdateable<State>({
-        options,
-        items: {},
-        //featureDetection
-    });
-
-    return {
-        getState: (): State => state,
-        updateState: update,
-    };
-};
-
-export default (uploader: UploaderType, chunkedSender: ChunkedSender, options: TusOptions) => {
-    const tusState = initializeState(options);
-
-    handleEvents(tusState, chunkedSender);
-
+export default (chunkedSender: ChunkedSender, tusState: TusState) => {
     const tusSend = (
         items: BatchItem[],
         url: string,
@@ -49,7 +30,7 @@ export default (uploader: UploaderType, chunkedSender: ChunkedSender, options: T
         } else {
             //TUS only supports a single file upload (no grouping)
             logger.debugLog(`tusSender: sending file using TUS protocol`);
-            const { request, abort } = handleTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender);
+            const { request, abort } = initTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender);
 
             result = {
                 request,

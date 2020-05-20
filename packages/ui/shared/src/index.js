@@ -18,6 +18,7 @@ export {
     useItemCancelListener,
     useItemErrorListener,
     useItemAbortListener,
+    useItemFinalizeListener,
 
     useRequestPreSend,
 } from "./eventListenerHooks";

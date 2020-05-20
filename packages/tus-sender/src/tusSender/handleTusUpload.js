@@ -1,22 +1,20 @@
 // @flow
 import { FILE_STATES, logger } from "@rpldy/shared";
-import createUpload from "./createUpload";
-import resumeUpload from "./resumeUpload";
-import { persistResumable, retrieveResumable } from "./resumableStore";
+import createUpload from "./initTusUpload/createUpload";
+import { persistResumable } from "./resumableStore";
 
 import type { SendOptions } from "@rpldy/sender";
 import type { BatchItem } from "@rpldy/shared";
 import type { ChunkedSender, OnProgress } from "@rpldy/chunked-sender";
 import type { TusState, InitData } from "./types";
 
-//TODO - need to cleanup - use item finish (abort/cancel?) to know if can be removed !
-//TODO - support defer length - add length in the end
 //TODO - need to support creation with upload https://tus.io/protocols/resumable-upload.html#creation-with-upload
 //TODO - support parallel uploads
 //TODO - support Upload-Expires - store expiration and dont allow to resume expired
 //TODO - if has feature detection results - for example: check if parallel ext supported by server - if not - disable options.parallel
 //TODO - persist feature detection in session state per server(url)
 //TODO - unit tests ~100%
+//TODO - typescript definitions + test
 //TODO - E2E - test resume/abort/resume-done works
 //TODO - E2E - test resume with delay
 
@@ -29,13 +27,14 @@ const doChunkedUploadForItem = (
     chunkedSender: ChunkedSender,
     initData: InitData,
 ) => {
+	const { options }  = tusState.getState();
     const item = items[0];
     logger.debugLog(`tusSender.handler: init request finished. sending item ${item.id} as chunked`, initData);
 
     if (initData.isNew && initData.uploadUrl) {
-        persistResumable(item, initData.uploadUrl, tusState.getState().options);
+        persistResumable(item, initData.uploadUrl, options);
     }
-    else if (initData.canResume) {
+    else if (initData.canResume || (options.sendDataOnCreate && initData.offset)) {
         sendOptions = {
             ...sendOptions,
             startByte: initData.offset,
@@ -52,7 +51,7 @@ const doChunkedUploadForItem = (
     return chunkedResult.request;
 };
 
-const handleInitResult = (
+const handleTusUpload = (
     items: BatchItem[],
     url: string,
     sendOptions: SendOptions,
@@ -87,7 +86,7 @@ const handleInitResult = (
             logger.debugLog(`tusSender.handler: resume init failed. Will try creating a new upload for item: ${items[0].id}`);
             const { request: createRequest } = createUpload(items[0], url, tusState, sendOptions);
             //currently, this second init request (after failed resume) cannot be aborted
-            request = await handleInitResult(items, url, sendOptions, onProgress, tusState, chunkedSender, createRequest);
+            request = await handleTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender, createRequest);
         }
 
         return request || Promise.resolve({
@@ -97,57 +96,5 @@ const handleInitResult = (
         });
     });
 
-export default (items: BatchItem[],
-                url: string,
-                sendOptions: SendOptions,
-                onProgress: OnProgress,
-                tusState: TusState,
-                chunkedSender: ChunkedSender,
-) => {
-    const item = items[0];
-    const persistedUrl = retrieveResumable(item, tusState.getState().options);
-
-    const { request: initRequest, abort: abortInit } = persistedUrl ?
-        //init resumable upload - this file has already started uploading
-        resumeUpload(item, persistedUrl, tusState) :
-        //init new upload - first time uploading this file
-        createUpload(item, url, tusState, sendOptions);
-
-    const uploadRequest = handleInitResult(
-        items,
-        url,
-        sendOptions,
-        onProgress,
-        tusState,
-        chunkedSender,
-        initRequest,
-        !!persistedUrl,
-    );
-
-    const abort = () => {
-        logger.debugLog(`tusSender.handler: abort called for item: ${item.id}`);
-        //attempt to abort create/resume call if its still running
-        abortInit();
-
-        initRequest
-            .then((data) => {
-                if (data) {
-                    logger.debugLog(`tusSender.handler: aborting chunked upload for item:  ${item.id}`);
-
-                    const abortChunked = tusState.getState().items[item.id].abort;
-
-                    if (abortChunked) {
-                        abortChunked();
-                    }
-                }
-            });
-
-        return true;
-    };
-
-    return {
-        request: uploadRequest,
-        abort,
-    };
-};
+export default handleTusUpload;
 

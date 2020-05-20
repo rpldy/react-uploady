@@ -95,7 +95,7 @@ describe("sendChunks tests", () => {
         it("should send chunk when no in progress", async () => {
             const chunk = {};
             const { state, item, onProgress, trigger } = await doSend([chunk]);
-            expect(sendChunk).toHaveBeenCalledWith(chunk, item, "test.com", state.sendOptions, onProgress, trigger);
+            expect(sendChunk).toHaveBeenCalledWith(chunk, state, item, onProgress, trigger);
         });
 
         it("should send chunk when parallel allowed", async() => {
@@ -104,7 +104,7 @@ describe("sendChunks tests", () => {
                 requests: { c1: {} },
                 parallel: 2
             });
-            expect(sendChunk).toHaveBeenCalledWith(chunk, item, "test.com", state.sendOptions, onProgress, trigger);
+            expect(sendChunk).toHaveBeenCalledWith(chunk, state, item, onProgress, trigger);
         });
 
         it("should send chunk if parallel allowed", async () => {
@@ -113,8 +113,8 @@ describe("sendChunks tests", () => {
                 requests: { c1: {} },
                 parallel: 2
             });
-            expect(sendChunk).toHaveBeenCalledWith(chunk, item, "test.com", state.sendOptions, onProgress, trigger);
-            expect(sendChunk).toHaveBeenCalledWith(chunk2, item, "test.com", state.sendOptions, onProgress, trigger);
+            expect(sendChunk).toHaveBeenCalledWith(chunk, state, item,  onProgress, trigger);
+            expect(sendChunk).toHaveBeenCalledWith(chunk2, state, item, onProgress, trigger);
         });
 
         it("should resolve with chunk failed error in case sendChunk throws", async () => {
@@ -191,4 +191,3 @@ describe("sendChunks tests", () => {
         });
     });
 });
-

@@ -1,11 +1,10 @@
 /* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "testSingleItem"] }] */
-
 import getQueueState from "./mocks/getQueueState.mock";
 import "./mocks/batchHelpers.mock";
 import { FILE_STATES } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../../consts";
-import processFinishedRequest from "../processFinishedRequest";
 import { cleanUpFinishedBatch } from "../batchHelpers";
+import processFinishedRequest, { FILE_STATE_TO_EVENT_MAP } from "../processFinishedRequest";
 
 describe("onRequestFinished tests", () => {
 
@@ -48,14 +47,18 @@ describe("onRequestFinished tests", () => {
 
         expect(cleanUpFinishedBatch).toHaveBeenCalledTimes(1);
         expect(mockNext).toHaveBeenCalledTimes(1);
-        expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH,
-            {
-                batchId: "b1",
-                state: FILE_STATES.FINISHED,
-                uploadResponse: response,
-                completed,
-                file: {size: 1234}
-            });
+
+        const finishedItem = {
+            batchId: "b1",
+            state: FILE_STATES.FINISHED,
+            uploadResponse: response,
+            completed,
+            file: {size: 1234}
+        };
+
+        expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, finishedItem);
+        expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, finishedItem);
+
         expect(queueState.updateState).toHaveBeenCalledTimes(2);
         expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();
 
@@ -121,66 +124,74 @@ describe("onRequestFinished tests", () => {
 		expect(queueState.getState().activeIds).toHaveLength(0);
 	});
 
-	it("for group should trigger and finalize ", async () => {
+    describe("finalize with fail state tests", () => {
+        it.each([
+            FILE_STATES.ABORTED,
+            FILE_STATES.CANCELLED,
+            FILE_STATES.ERROR,
+        ])("for group should trigger and finalize ", async (failState) => {
 
-		const batch = { id: "b1" };
-		const response = { success: true };
-		const response2 = { success: false };
+            const batch = { id: "b1" };
+            const response = { success: true };
+            const response2 = { success: false };
 
-		const queueState = getQueueState({
-			currentBatch: "b1",
-			items: {
-				"u1": { batchId: "b1" },
-				"u2": { batchId: "b1" },
-			},
-			batches: {
-				b1: { batch, batchOptions: {} },
-			},
-			itemQueue: ["u1", "u2"],
-			activeIds: ["u1", "u2"],
-		});
+            const queueState = getQueueState({
+                currentBatch: "b1",
+                items: {
+                    "u1": { batchId: "b1" },
+                    "u2": { batchId: "b1" },
+                },
+                batches: {
+                    b1: { batch, batchOptions: {} },
+                },
+                itemQueue: ["u1", "u2"],
+                activeIds: ["u1", "u2"],
+            });
 
-		await processFinishedRequest(queueState, [{
-			id: "u1",
-			info: {
-				state: FILE_STATES.FINISHED,
-				response,
-			}
-		},
-			{
-				id: "u2",
-				info: {
-					state: FILE_STATES.ERROR,
-					response: response2,
-				}
-			}], mockNext);
+            await processFinishedRequest(queueState, [{
+                id: "u1",
+                info: {
+                    state: FILE_STATES.FINISHED,
+                    response,
+                }
+            },
+                {
+                    id: "u2",
+                    info: {
+                        state: failState,
+                        response: response2,
+                    }
+                }], mockNext);
 
-		const item1 = {
-			batchId: "b1",
-			state: FILE_STATES.FINISHED,
-			uploadResponse: response,
-		};
-		expect(queueState.getState().items.u1).toEqual(item1);
+            const item1 = {
+                batchId: "b1",
+                state: FILE_STATES.FINISHED,
+                uploadResponse: response,
+            };
+            expect(queueState.getState().items.u1).toEqual(item1);
 
-		const item2 = {
-			batchId: "b1",
-			state: FILE_STATES.ERROR,
-			uploadResponse: response2
-		};
+            const item2 = {
+                batchId: "b1",
+                state: failState,
+                uploadResponse: response2
+            };
 
-		expect(queueState.getState().items.u2).toEqual(item2);
+            expect(queueState.getState().items.u2).toEqual(item2);
 
-		expect(cleanUpFinishedBatch).toHaveBeenCalledTimes(1);
-		expect(mockNext).toHaveBeenCalledTimes(1);
-		expect(queueState.trigger).toHaveBeenNthCalledWith(1, UPLOADER_EVENTS.ITEM_FINISH, item1);
-		expect(queueState.trigger).toHaveBeenNthCalledWith(2, UPLOADER_EVENTS.ITEM_ERROR, item2);
-		expect(queueState.updateState).toHaveBeenCalledTimes(4);
-		expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();
+            expect(cleanUpFinishedBatch).toHaveBeenCalledTimes(1);
+            expect(mockNext).toHaveBeenCalledTimes(1);
+            expect(queueState.trigger).toHaveBeenNthCalledWith(1, UPLOADER_EVENTS.ITEM_FINISH, item1);
+            expect(queueState.trigger).toHaveBeenNthCalledWith(2, UPLOADER_EVENTS.ITEM_FINALIZE, item1);
+            expect(queueState.trigger).toHaveBeenNthCalledWith(3, FILE_STATE_TO_EVENT_MAP[failState], item2);
+            expect(queueState.trigger).toHaveBeenNthCalledWith(4, UPLOADER_EVENTS.ITEM_FINALIZE, item2);
 
-		expect(queueState.getState().itemQueue).toHaveLength(0);
-		expect(queueState.getState().activeIds).toHaveLength(0);
+            expect(queueState.updateState).toHaveBeenCalledTimes(4);
+            expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();
 
-	});
+            expect(queueState.getState().itemQueue).toHaveLength(0);
+            expect(queueState.getState().activeIds).toHaveLength(0);
+        });
+    });
 
 	it("should do not trigger event if id not found in items", async () => {
 

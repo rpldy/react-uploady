@@ -1,7 +1,7 @@
 // @flow
 import createChunkedSender from "./chunkedSender";
 import getChunkedEnhancer from "./getChunkedEnhancer";
-import { CHUNKING_SUPPORT } from "./utils";
+import { CHUNKING_SUPPORT, getChunkDataFromFile } from "./utils";
 import { CHUNK_EVENTS, CHUNKED_SENDER_TYPE } from "./consts";
 
 export default getChunkedEnhancer;
@@ -13,6 +13,7 @@ export {
 
     getChunkedEnhancer,
     createChunkedSender,
+	getChunkDataFromFile,
 };
 
 export type {

@@ -1,10 +1,11 @@
 // @flow
 import { logger, request } from "@rpldy/shared";
-import { SUCCESS_CODES } from "./consts";
+import { getChunkDataFromFile } from "@rpldy/chunked-sender";
+import { SUCCESS_CODES } from "../consts";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
-import type { State, TusState, InitUploadResult  } from "./types";
+import type { State, TusState, InitUploadResult  } from "../types";
 
 export const resolveUploadUrl = (createUrl: string, location: string) => {
     let uploadUrl;
@@ -23,8 +24,14 @@ export const resolveUploadUrl = (createUrl: string, location: string) => {
 
 const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: TusState, createResponse: XMLHttpRequest) => {
     const uploadUrl = resolveUploadUrl(url, createResponse.getResponseHeader("Location"));
+	let offset = 0;
 
     logger.debugLog(`tusSender.create - successfully created upload for item: ${item.id} - upload url = ${uploadUrl}`);
+
+    if (tusState.getState().options.sendDataOnCreate) {
+		const resOffset = parseInt(createResponse.getResponseHeader("Upload-Offset"));
+		offset = !isNaN(resOffset) ? resOffset : offset;
+	}
 
     tusState.updateState((state: State) => {
         //update state with create response for item (upload url)
@@ -32,12 +39,12 @@ const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: 
             id: item.id,
             uploadUrl,
             size: item.file.size,
-            offset: 0,
+            offset,
         };
     });
 
     return {
-        offset: 0,
+        offset,
         uploadUrl,
         isNew: true,
     };
@@ -59,11 +66,22 @@ export default (item: BatchItem, url: string, tusState: TusState, sendOptions: S
         "Upload-Defer-Length": options.deferLength ? 1 : undefined,
         "Upload-Length": !options.deferLength ? item.file.size : undefined,
         "Upload-Metadata": getUploadMetadata(sendOptions),
+		"Content-Type": options.sendDataOnCreate ? "application/offset+octet-stream" : undefined
     };
+
+    let data = null;
 
     logger.debugLog(`tusSender.create - creating upload for ${item.id} at: ${url}`);
 
-    const pXhr = request(url, null, { method: "POST", headers });
+    if (options.sendDataOnCreate) {
+		logger.debugLog(`tusSender.create - adding first chunk to create request`);
+
+		data = options.chunkSize < item.file.size ?
+			getChunkDataFromFile(item.file, 0, options.chunkSize) :
+			item.file;
+	}
+
+    const pXhr = request(url, data, { method: "POST", headers });
 
     let createFinished = false;
 

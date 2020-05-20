@@ -48,7 +48,7 @@ module.exports = {
                 "args": "none"
             }
         ],
-        "eqeqeq": 0,
+        "eqeqeq": 2,
         "no-var": 2,
         "no-process-exit": 0,
         "no-underscore-dangle": 0,
@@ -93,6 +93,7 @@ module.exports = {
         "react/no-unknown-property": 2,
         "react/prop-types": 0,
         "react/jsx-quotes": 0,
+		"react/boolean-prop-naming": 2,
         "react/jsx-closing-bracket-location": 0,
         "react/jsx-equals-spacing": [
             1,
@@ -154,7 +155,8 @@ module.exports = {
         "jsx-a11y/no-static-element-interactions": 0,
         "jsx-a11y/alt-text": 0,
         "jsx-a11y/media-has-caption": 0,
-        "jsx-a11y/anchor-is-valid": 1
+        "jsx-a11y/anchor-is-valid": 1,
+		"max-len": [2, 155]
     },
 
     "overrides": [

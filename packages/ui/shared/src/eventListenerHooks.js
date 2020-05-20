@@ -22,6 +22,7 @@ const useItemFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_FIN
 const useItemCancelListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_CANCEL);
 const useItemErrorListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_ERROR);
 const useItemAbortListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_ABORT);
+const useItemFinalizeListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_FINALIZE);
 
 const useItemProgressListener = generateUploaderEventHookWithState(
     UPLOADER_EVENTS.ITEM_PROGRESS,
@@ -43,6 +44,7 @@ export {
     useItemCancelListener,
     useItemErrorListener,
     useItemAbortListener,
+    useItemFinalizeListener,
 
     useRequestPreSend,
 };

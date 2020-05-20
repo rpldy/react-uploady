@@ -26,6 +26,7 @@ describe("sendChunk tests", () => {
     const testSendChunk =  async (data, chunkStartData = {}) => {
         const url = "test.com",
             chunk = { id: "c1", start: 1, end: 10, data },
+			chunks = [{}, {}, chunk],
             fileData = data || {size: 10},
             file = { size: 400 },
             chunkItem = {id: "ci-1"},
@@ -41,7 +42,7 @@ describe("sendChunk tests", () => {
         createBatchItem.mockReturnValueOnce(chunkItem);
         xhrSend.mockResolvedValueOnce(xhrSendResult);
 
-        const sendResult = sendChunk(chunk, { file }, url, sendOptions, onProgress, trigger);
+		const sendResult = sendChunk(chunk, { url, sendOptions, chunks }, { file }, onProgress, trigger);
 
         const result = await sendResult.request;
 
@@ -84,6 +85,8 @@ describe("sendChunk tests", () => {
             },
             sendOptions: updatedSendOptions,
             url,
+			chunkCount: 3,
+			chunkIndex: 2,
         });
     };
 
@@ -114,7 +117,7 @@ describe("sendChunk tests", () => {
         const chunk = { id: "c1", start: 1, end: 10, data: null };
 
         expect(() => {
-            sendChunk(chunk, { file: {} }, "url", {});
+            sendChunk(chunk, {url: "url"}, { file: {} },  {});
         }).toThrow(ChunkedSendError);
     });
 
@@ -132,7 +135,7 @@ describe("sendChunk tests", () => {
             triggerUpdater
                 .mockResolvedValueOnce({ });
 
-            const sendResult = sendChunk(chunk, { file }, url, sendOptions, onProgress);
+            const sendResult = sendChunk(chunk, { url, sendOptions, chunks: [chunk] }, { file }, onProgress);
 
             await sendResult.abort();
 
@@ -149,7 +152,7 @@ describe("sendChunk tests", () => {
             triggerUpdater
                 .mockResolvedValueOnce({ });
 
-            const sendResult = sendChunk(chunk, { file }, url, sendOptions, onProgress);
+			const sendResult = sendChunk(chunk, { url, sendOptions, chunks: [chunk] }, { file }, onProgress);
 
             await sendResult.request;
             await sendResult.abort();

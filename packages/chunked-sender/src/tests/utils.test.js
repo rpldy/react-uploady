@@ -1,5 +1,4 @@
 import { DEFAULT_OPTIONS } from "../defaults";
-// import * as utils from "../utils";
 
 describe("utils tests", () => {
     let utils, mockBlobSlice;

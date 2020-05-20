@@ -257,7 +257,7 @@ Enhancers are functions that can ehance an uploader instance. They are also pass
 
 As they are applied when the uploader instance is created, they can change the way uploader does things or pass different defaults. 
 
-See this [guide](guides/Enhancers.md) for more practical information and sample code.
+See this [guide](guides/UploaderEnhancers.md) for more practical information and sample code.
 
 ### Batch
 

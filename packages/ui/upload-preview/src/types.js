@@ -24,9 +24,11 @@ export type PreviewOptions = {|
 	maxPreviewImageSize?: number,
 	//the maximum file size (in kb) to attempt to load a upload-preview for a video (default: 100,000,000)
 	maxPreviewVideoSize?: number,
-	//URL to use or function to call with the file to determine fallback for invalid file URLs, none-images or too large files to upload-preview (maxPreviewImageSize)
+	//URL to use or function to call with the file to determine fallback for
+	// invalid file URLs, none-images or too large files to upload-preview (maxPreviewImageSize)
 	fallbackUrl?: string | FallbackMethod,
-	//the image mime-types to load previews for (default: ["image/jpeg", "image/webp", "image/gif", "image/png", "image/apng", "image/bmp", "image/x-icon", "image/svg+xml"])
+	//the image mime-types to load previews for
+	// (default: ["image/jpeg", "image/webp", "image/gif", "image/png", "image/apng", "image/bmp", "image/x-icon", "image/svg+xml"])
 	imageMimeTypes?: string[],
 	//the video mime-types to load upload-preview for (default: ["video/mp4", "video/webm", "video/ogg"])
 	videoMimeTypes?: string[],

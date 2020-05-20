@@ -45,6 +45,8 @@ export type ChunkStartEventData = {
     chunk: ChunkEventData,
     sendOptions: SendOptions,
     url: string,
+	chunkIndex: number,
+	chunkCount: number,
 };
 
 export type ChunkFinishEventData = {

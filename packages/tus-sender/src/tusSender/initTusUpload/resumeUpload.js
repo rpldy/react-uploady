@@ -18,7 +18,7 @@ const handleSuccessfulResumeResponse = (item: BatchItem, url: string, tusState: 
     if (!isNaN(offset)) {
         const length = parseInt(resumeResponse.getResponseHeader("Upload-Length"));
 
-        if (!isNaN(length)) {
+        if (!isNaN(length) || tusState.getState().options.deferLength) {
             isDone = offset === length;
             canResume = !isDone;
 

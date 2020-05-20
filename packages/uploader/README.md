@@ -233,7 +233,7 @@ Triggered when item starts uploading (just before)
 
 ### UPLOADER_EVENTS.ITEM_FINISH
 
-Triggered when item finished uploading
+Triggered when item finished uploading successfully
 
 - Parameters: _(item)_
 
@@ -264,6 +264,13 @@ Triggered in case item upload failed
 ### UPLOADER_EVENTS.ITEM_ABORT
     
 Triggered in case [abort](#abort) was called
+
+- Parameters: _(item)_
+
+### UPLOADER_EVENTS.ITEM_FINALIZE
+
+Triggered for item when uploading is done due to: finished, error, cancel or abort
+Use this event if you want to handle the state of the item being done for any reason.
 
 - Parameters: _(item)_
 

@@ -383,6 +383,22 @@ Called in case [abort](#abort) was called
     };
 ``` 
 
+### useItemFinalizeListener (event hook)
+
+Called for item when uploading is done due to: finished, error, cancel or abort
+
+```javascript
+    import { useItemFinalizeListener } from "@rpldy/uploady";
+
+    const MyComponent = () => {
+        useItemFinalizeListener((item) => {
+            console.log(`item ${item.id} is done with state: ${item.state}`);  
+        });
+
+        //...    
+    };
+``` 
+
 ### useRequestPreSend (event hook)
 
 Called before a group of items is going to be uploaded

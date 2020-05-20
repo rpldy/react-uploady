@@ -9,7 +9,7 @@ export default (initState = {}) => {
     };
 
     return {
-        getState: () => state,
-        updateState: (updater) => updater(state)
+        getState: jest.fn(() => state),
+        updateState: jest.fn((updater) => updater(state)),
     }
 };

@@ -4,10 +4,10 @@ import xhrSend from "@rpldy/sender";
 import { getChunkDataFromFile } from "../utils";
 import { CHUNK_EVENTS } from "../consts";
 import type { BatchItem } from "@rpldy/shared";
-import type { OnProgress, SendOptions, SendResult } from "@rpldy/sender";
+import type { OnProgress, SendResult } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { ChunkStartEventData } from "../types";
-import type { Chunk } from "./types";
+import type { Chunk, State } from "./types";
 import ChunkedSendError from "./ChunkedSendError";
 
 const getContentRangeValue = (chunk, data, item) =>
@@ -16,13 +16,14 @@ const getContentRangeValue = (chunk, data, item) =>
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
 export default (
-    chunk: Chunk,
+	chunk: Chunk,
+	state: State,
     item: BatchItem,
-    url: string,
-    sendOptions: SendOptions,
     onProgress: OnProgress,
     trigger: TriggerMethod,
 ): SendResult => {
+	let sendOptions = state.sendOptions;
+	const { url } = state;
 
     if (!chunk.data) {
         //slice the chunk based on bit position
@@ -50,11 +51,15 @@ export default (
         onProgress(e, [chunk]);
     };
 
+    const chunkIndex = state.chunks.indexOf(chunk);
+
     const updatedSendOptionsPromise = triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, {
         item,
         chunk: pick(chunk, ["id", "start", "end"]),
         sendOptions,
-        url
+        url,
+		chunkIndex,
+		chunkCount: state.chunks.length,
     });
 
     const xhrResult = updatedSendOptionsPromise

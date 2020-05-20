@@ -18,10 +18,10 @@ export type TusOptions = {
     deferLength?: boolean,
     //whether to use X-HTTP-Method-Override header instead of PATCH (default: false)
     overrideMethod?: boolean,
+	//whether to send data already with the creation request (default: false)
+	sendDataOnCreate?: boolean,
     //the key prefix to use for persisting resumable info about files (default: "__tus-resumable__")
     storagePrefix?: string,
     //milliseconds to wait before retrying a locked resumable file (default: 2000)
     lockedRetryDelay?: number,
 };
-
-

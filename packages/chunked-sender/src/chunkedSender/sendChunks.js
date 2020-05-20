@@ -42,7 +42,7 @@ const resolveOnAllChunksFinished = (state: State, item: BatchItem, resolve): boo
 };
 
 export const handleChunk = async (state: State, item: BatchItem, onProgress: OnProgress, resolve: (any) => void, chunk: Chunk, trigger: TriggerMethod) => {
-    const chunkSendResult = sendChunk(chunk, item, state.url, state.sendOptions, onProgress, trigger);
+    const chunkSendResult = sendChunk(chunk, state, item, onProgress, trigger);
     await handleChunkRequest(state, item, chunk.id, chunkSendResult, trigger);
 
     if (!resolveOnAllChunksFinished(state, item, resolve)) {

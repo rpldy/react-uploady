@@ -2,7 +2,6 @@ import { invariant } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { uploader } from "@rpldy/uploader/src/tests/mocks/rpldy-uploader.mock";
 import { createContextApi } from "../UploadyContext";
 
-
 describe("UploadyContext tests", () => {
 
     const fileInput = {
@@ -34,7 +33,7 @@ describe("UploadyContext tests", () => {
         );
     });
 
-    it("should call upload on uploader", () => {
+    it("upload should call add on uploader", () => {
         const contextApi = getTestContext();
 
         const files = [1, 2],
@@ -45,7 +44,14 @@ describe("UploadyContext tests", () => {
         expect(uploader.add).toHaveBeenCalledWith(files, options);
     });
 
-    it("should call abort on uploader", () => {
+	it("processPending should call upload on uploader", () => {
+		const contextApi = getTestContext();
+
+		contextApi.processPending();
+		expect(uploader.upload).toHaveBeenCalled();
+	});
+
+	it("should call abort on uploader", () => {
         getTestContext().abort("123");
         expect(uploader.abort).toHaveBeenCalledWith("123");
     });

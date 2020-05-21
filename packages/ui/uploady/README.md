@@ -130,6 +130,12 @@ Show the native file selection dialog. Optionally Pass options as a parameter to
 _(files: UploadInfo | UploadInfo[], addOptions: ?UploadOptions) => void_
 
 Upload file(s). Optionally Pass options as the second parameter to override options set as props on the <Uploady/> component.
+
+#### processPending
+
+_() => void_
+
+Start uploading batches that were added with autoUpload = false
     
 #### setOptions 
 

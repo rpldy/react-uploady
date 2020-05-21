@@ -12,6 +12,7 @@ export type UploadyContextType = {
     hasUploader: () => boolean,
 	showFileUpload: (?UploadOptions) => void,
 	upload: AddUploadFunction,
+	processPending: () => void,
     setOptions: (CreateOptions) => void,
     getOptions: () => CreateOptions,
 	on: OnAndOnceMethod,

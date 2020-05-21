@@ -1,5 +1,13 @@
 // @flow
-import React, { Component, useMemo, useState, useRef, useCallback, forwardRef } from "react";
+import React, {
+	Component,
+	useMemo,
+	useState,
+	useRef,
+	useCallback,
+	forwardRef,
+	useContext
+} from "react";
 import styled from "styled-components";
 import { withKnobs } from "@storybook/addon-knobs";
 import Uploady, {
@@ -35,8 +43,32 @@ export const Simple = () => {
                     maxGroupSize={groupSize}
                     fileInputId={"rpldyInput"}>
 
-        <UploadButton/>
+        <UploadButton />
     </Uploady>;
+};
+
+const ProcessPending = () => {
+	const context= useContext(UploadyContext);
+	return <button onClick={() => {
+		context && context.processPending();
+	}}>PROCESS PENDING</button>
+}
+
+export const WithoutAutoUpload = () => {
+	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+	return <Uploady debug
+					multiple={multiple}
+					destination={destination}
+					enhancer={enhancer}
+					grouped={grouped}
+					maxGroupSize={groupSize}
+					fileInputId={"rpldyInput"}>
+
+		<UploadButton autoUpload={false}/>
+		<br/>
+		<ProcessPending/>
+	</Uploady>;
 };
 
 const StyledUploadButton = styled(UploadButton)`

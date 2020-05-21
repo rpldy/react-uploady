@@ -1,7 +1,7 @@
 {
-  "version": "0.1.10",
+  "version": "0.1.12",
   "name": "@rpldy/shared",
-  "description": "",
+  "description": "internal set of utils+types for react-uploady",
   "author": "yoav niran (https://github.com/yoavniran)",
   "main": "lib/index.js",
   "module": "src/index.js",
@@ -9,12 +9,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yoavniran/react-uploady.git",
+    "url": "https://github.com/rpldy/react-uploady.git",
     "directory": "packages/shared"
   },
   "scripts": {
     "build": "node ../../scripts/build.js",
-    "flow:copy": "flow-copy-source ./src ./lib; cp src/types.js lib/types.js"
+    "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "devDependencies": {
     "flow-bin": "^0.123.0"

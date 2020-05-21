@@ -3,7 +3,7 @@ import { logger } from "@rpldy/shared";
 import { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
 import xhrSend from "@rpldy/sender";
 import initTusUpload from "./initTusUpload";
-// import handleTusUpload from "./handleTusUpload";
+import { TUS_SENDER_TYPE } from "./consts";
 
 import type { BatchItem } from "@rpldy/shared";
 import type {
@@ -13,7 +13,6 @@ import type {
     SendResult,
 } from "@rpldy/chunked-sender";
 import type { TusState } from "./types";
-import { TUS_SENDER_TYPE } from "./consts";
 
 export default (chunkedSender: ChunkedSender, tusState: TusState) => {
     const tusSend = (

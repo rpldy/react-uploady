@@ -78,6 +78,10 @@ Our __[Storybook](https://react-uploady-storybook.netlify.com/)__ has many examp
 
 Checkout our __[Guides](guides)__ section for additional examples & information.
 
+### Changelog
+
+For a list of versions and changes see the [CHANGELOG](CHANGELOG.md)
+
 ## Installation
 
 React-uploady is a mono-repo, and as such provides multiple packages with different functionality.

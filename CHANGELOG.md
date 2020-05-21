@@ -2,7 +2,7 @@
 
 ### Features
 
-- `[shared-ui]` added _processPending_ function to UploadyContext ([#42](https://github.com/rpldy/react-uploady/pull/42))
+- `[shared-ui]` added _[processPending](packages/ui/uploady#processpending)_ function to UploadyContext ([#42](https://github.com/rpldy/react-uploady/pull/42))
 
 ### Chore & Maintenance
 

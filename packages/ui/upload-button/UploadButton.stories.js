@@ -50,7 +50,7 @@ export const Simple = () => {
 const ProcessPending = () => {
 	const context= useContext(UploadyContext);
 	return <button onClick={() => {
-		context.processPending();
+		context && context.processPending();
 	}}>PROCESS PENDING</button>
 }
 

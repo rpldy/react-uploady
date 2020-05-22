@@ -14,20 +14,10 @@ const PROD_DEST_OPTIONS = [
     DESTINATION_TYPES.url
 ];
 
-//     {
-//     "mock": "mock",
-//     "cloudinary": "cloudinary",
-//     "url": "url",
-// };
-
 const DEV_DEST_OPTIONS = [
     ...PROD_DEST_OPTIONS,
     DESTINATION_TYPES.local,
 ];
-//     {
-//     ...PROD_DEST_OPTIONS,
-//     "local": "local",
-// };
 
 const mockSenderEnhancer = (uploader) => {
     const mockSender = createMockSender({ delay: 1000 });
@@ -41,11 +31,13 @@ export const mockDestination = () => ({
     enhancer: mockSenderEnhancer
 });
 
-export const localDestination = () => {
+export const localDestination = ({noLong = false}) => {
+	console.log("GETTING LOCAL DESTINATION ", noLong);
+
     let result;
 
     if (!isProd || isCypress) {
-        const long = boolean("long local request (relevant for local only)", false, KNOB_GROUPS.DESTINATION);
+        const long = !noLong && boolean("long local request (relevant for local only)", false, KNOB_GROUPS.DESTINATION);
 
         result = {
             destinationType: DESTINATION_TYPES.local,
@@ -101,7 +93,7 @@ export const addActionLogEnhancer = (enhancer) => {
     return enhancer ? composeEnhancers(enhancer, actionLogEnhancer) : actionLogEnhancer;
 };
 
-const getDestinationOptions = (destinations = null) => {
+const getDestinationOptions = ({destinations = null}) => {
     const types = destinations && destinations.length ? destinations : (isProd ? PROD_DEST_OPTIONS : DEV_DEST_OPTIONS)
 
     return types.reduce((res, t) => {
@@ -111,8 +103,8 @@ const getDestinationOptions = (destinations = null) => {
 };
 
 const useStoryUploadySetup = (options = {}) => {
-    const type = select("destination", getDestinationOptions(options.destinations), DESTINATION_TYPES.mock, KNOB_GROUPS.DESTINATION),
-        { destination, enhancer, destinationType } = DESTINATIONS[type](),
+    const type = select("destination", getDestinationOptions(options), DESTINATION_TYPES.mock, KNOB_GROUPS.DESTINATION),
+        { destination, enhancer, destinationType } = DESTINATIONS[type](options),
         multiple = boolean("multiple files", true, KNOB_GROUPS.SETTINGS),
         grouped = !options.noGroup && boolean("group files in single request", false, KNOB_GROUPS.SETTINGS),
         groupSize = !options.noGroup && number("max in group", 2, {}, KNOB_GROUPS.SETTINGS);

@@ -59,13 +59,13 @@ export const getUploadMetadata = (sendOptions: SendOptions) => {
         undefined;
 };
 
-export default (item: BatchItem, url: string, tusState: TusState, sendOptions: SendOptions): InitUploadResult => {
+export default (item: BatchItem, url: string, tusState: TusState, sendOptions: SendOptions, parallelIdentifier: ?string): InitUploadResult => {
     const { options } = tusState.getState();
     const headers = {
         "tus-resumable": options.version,
         "Upload-Defer-Length": options.deferLength ? 1 : undefined,
         "Upload-Length": !options.deferLength ? item.file.size : undefined,
-        "Upload-Metadata": getUploadMetadata(sendOptions),
+        "Upload-Metadata": parallelIdentifier ? undefined : getUploadMetadata(sendOptions),
 		"Content-Type": options.sendDataOnCreate ? "application/offset+octet-stream" : undefined
     };
 

@@ -8,11 +8,17 @@ import type { BatchItem } from "@rpldy/shared";
 import type { ChunkedSender, OnProgress } from "@rpldy/chunked-sender";
 import type { TusState, InitData } from "./types";
 
-//TODO - need to support creation with upload https://tus.io/protocols/resumable-upload.html#creation-with-upload
 //TODO - support parallel uploads
+		//TODO: persist chunk to resumable store using file fingerprint + chunk size + chunk index
+		//TODO: send final post request with "Upload-Concat", `final; + all chunk urls
+		//TODO: add metadata only to the final post (not in the create per chunk)
+		//TODO:  handle server already has file for parallelized chunk
+
 //TODO - support Upload-Expires - store expiration and dont allow to resume expired
 //TODO - if has feature detection results - for example: check if parallel ext supported by server - if not - disable options.parallel
+	// - Tus-Max-Size
 //TODO - persist feature detection in session state per server(url)
+//TODO tus-uploady - useClearResumableStore - delete all resumable storage itemss
 //TODO - unit tests ~100%
 //TODO - typescript definitions + test
 //TODO - E2E - test resume/abort/resume-done works
@@ -60,6 +66,7 @@ const handleTusUpload = (
     chunkedSender: ChunkedSender,
     initRequest,
     isResume?: boolean,
+	parallelIdentifier: ?string,
 ) =>
     initRequest.then(async (initData: ?InitData) => {
         let request,
@@ -74,10 +81,16 @@ const handleTusUpload = (
                     response: "TUS server has file",
                 });
             } else if (!initData.isNew && !initData.canResume) {
-                resumeFailed = true;
-            } else {
-                request = doChunkedUploadForItem(items, url, sendOptions, onProgress, tusState, chunkedSender, initData);
-            }
+				resumeFailed = true;
+			} else if (parallelIdentifier) {
+				logger.debugLog(`tusSender.handler: created `);
+				request = Promise.resolve({
+					status: 200,
+					response: "TUS server created upload for parallelized part",
+				});
+			} else {
+				request = doChunkedUploadForItem(items, url, sendOptions, onProgress, tusState, chunkedSender, initData);
+			}
         } else {
             resumeFailed = isResume;
         }

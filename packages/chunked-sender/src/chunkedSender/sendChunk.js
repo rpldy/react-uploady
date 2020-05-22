@@ -15,6 +15,51 @@ const getContentRangeValue = (chunk, data, item) =>
 
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
+const uploadChunkWithUpdatedData = async (
+	chunk: Chunk,
+	state: State,
+	item: BatchItem,
+	onProgress: OnProgress,
+	trigger: TriggerMethod,
+): Promise<SendResult> => {
+	const data = chunk.data; //things we do for flow...
+
+	const sendOptions = {
+		...state.sendOptions,
+		headers: {
+			...state.sendOptions.headers,
+			"Content-Range": getContentRangeValue(chunk, data, item),
+		}
+	};
+
+	const chunkItem = createBatchItem(data, chunk.id);
+
+	const onChunkProgress = (e) => {
+		onProgress(e, [chunk]);
+	};
+
+	const chunkIndex = state.chunks.indexOf(chunk);
+
+	// $FlowFixMe - https://github.com/facebook/flow/issues/8215
+	const updatedData = await triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, {
+		item,
+		chunk: pick(chunk, ["id", "start", "end"]),
+		chunkItem,
+		sendOptions,
+		url: state.url,
+		chunkIndex,
+		chunkCount: state.chunks.length,
+		onProgress,
+	});
+
+	//upload the chunk to the server
+	return xhrSend(
+		[chunkItem],
+		updatedData?.url || state.url,
+		mergeWithUndefined({}, sendOptions, updatedData?.sendOptions),
+		onChunkProgress);
+};
+
 export default (
 	chunk: Chunk,
 	state: State,
@@ -22,9 +67,6 @@ export default (
     onProgress: OnProgress,
     trigger: TriggerMethod,
 ): SendResult => {
-	let sendOptions = state.sendOptions;
-	const { url } = state;
-
     if (!chunk.data) {
         //slice the chunk based on bit position
         chunk.data = getChunkDataFromFile(item.file, chunk.start, chunk.end);
@@ -34,50 +76,17 @@ export default (
         throw new ChunkedSendError("chunk failure - failed to slice");
     }
 
-    const data = chunk.data; //things we do for flow...
-    const chunkItem = createBatchItem(data, chunk.id);
+    logger.debugLog(`chunkedSender.sendChunk: about to send chunk ${chunk.id} [${chunk.start}-${chunk.end}] to: ${state.url}`);
 
-    logger.debugLog(`chunkedSender: about to send chunk ${chunk.id} [${chunk.start}-${chunk.end}] to: ${url}`);
-
-    sendOptions = {
-        ...sendOptions,
-        headers: {
-            ...sendOptions.headers,
-            "Content-Range": getContentRangeValue(chunk, data, item),
-        }
-    };
-
-    const onChunkProgress = (e) => {
-        onProgress(e, [chunk]);
-    };
-
-    const chunkIndex = state.chunks.indexOf(chunk);
-
-    const updatedSendOptionsPromise = triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, {
-        item,
-        chunk: pick(chunk, ["id", "start", "end"]),
-        sendOptions,
-        url,
-		chunkIndex,
-		chunkCount: state.chunks.length,
-    });
-
-    const xhrResult = updatedSendOptionsPromise
-        // $FlowFixMe - https://github.com/facebook/flow/issues/8215
-        .then((updated) => xhrSend(
-            [chunkItem],
-            updated?.url || url,
-            mergeWithUndefined({}, sendOptions, updated?.sendOptions),
-            onChunkProgress));
+	const chunkXhrRequest = uploadChunkWithUpdatedData(chunk, state, item, onProgress, trigger);
 
     const abort = () => {
-        xhrResult.then(({ abort }) => abort());
+		chunkXhrRequest.then(({ abort }) => abort());
         return true;
     };
 
     return {
-        //wrap with another promise since we need to wait for the trigger updater promise too
-        request: new Promise((resolve) => xhrResult.then(({ request }) => resolve(request))),
+        request: chunkXhrRequest.then(({ request }) => request),
         abort,
         //this type isnt relevant because it isnt exposed
         senderType: "chunk-passthrough-sender",

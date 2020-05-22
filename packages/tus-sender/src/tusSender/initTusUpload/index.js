@@ -16,15 +16,19 @@ export default (items: BatchItem[],
 				onProgress: OnProgress,
 				tusState: TusState,
 				chunkedSender: ChunkedSender,
+				parallelIdentifier: string = null
 ) => {
-	const item = items[0];
-	const persistedUrl = retrieveResumable(item, tusState.getState().options);
+	const { options } = tusState.getState(),
+		item = items[0],
+		// isParallel = !parallelIdentifier && options.parallel > 1,
+		//we dont use resume for parallelized chunks
+		persistedUrl = retrieveResumable(item, options, parallelIdentifier);
 
-	const { request: initRequest, abort: abortInit } = persistedUrl ?
+	const initCall = persistedUrl ?
 		//init resumable upload - this file has already started uploading
-		resumeUpload(item, persistedUrl, tusState) :
+		resumeUpload(item, persistedUrl, tusState, parallelIdentifier) :
 		//init new upload - first time uploading this file
-		createUpload(item, url, tusState, sendOptions);
+		createUpload(item, url, tusState, sendOptions, parallelIdentifier);
 
 	const uploadRequest = handleTusUpload(
 		items,
@@ -33,16 +37,17 @@ export default (items: BatchItem[],
 		onProgress,
 		tusState,
 		chunkedSender,
-		initRequest,
+		initCall.request,
 		!!persistedUrl,
+		parallelIdentifier
 	);
 
 	const abort = () => {
 		logger.debugLog(`tusSender.handler: abort called for item: ${item.id}`);
 		//attempt to abort create/resume call if its still running
-		abortInit();
+		initCall.abort();
 
-		initRequest
+		initCall.request
 			.then((data) => {
 				if (data) {
 					logger.debugLog(`tusSender.handler: aborting chunked upload for item:  ${item.id}`);

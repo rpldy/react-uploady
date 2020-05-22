@@ -31,8 +31,8 @@ const initializeState = (uploader: UploaderType, options: TusOptions): TusState 
 const getResolvedOptions = (options: ?TusOptions): TusOptions => {
 	options = getMandatoryOptions(options);
 
-	if (options.sendDataOnCreate && options.deferLength){
-		logger.debugLog(`tusSender: turning off deferLength - cannot be used when sendDataOnCreate is enabled`);
+	if ((options.sendDataOnCreate || options.parallel) && options.deferLength) {
+		logger.debugLog(`tusSender: turning off deferLength - cannot be used when sendDataOnCreate or parallel is enabled`);
 		options.deferLength = false;
 	}
 

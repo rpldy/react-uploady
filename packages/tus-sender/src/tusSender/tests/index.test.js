@@ -86,4 +86,19 @@ describe("tusSender index tests", () => {
 			deferLength: false,
 		});
 	});
+
+	it("should disable deferLength with parallel", () => {
+		const { options } = doTest({
+			parallel: true,
+			deferLength: true,
+		});
+
+		const tusState = handleEvents.mock.calls[0][1];
+
+		const state = tusState.getState();
+		expect(state.options).toEqual({
+			...options,
+			deferLength: false,
+		});
+	});
 });

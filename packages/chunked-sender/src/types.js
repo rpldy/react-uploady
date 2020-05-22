@@ -43,6 +43,7 @@ export type ChunkEventData = {
 export type ChunkStartEventData = {
     item: BatchItem,
     chunk: ChunkEventData,
+	chunkItem: BatchItem,
     sendOptions: SendOptions,
     url: string,
 	chunkIndex: number,

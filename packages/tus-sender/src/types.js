@@ -13,7 +13,7 @@ export type TusOptions = {
     // //TUS server extensions - override feature detection
     // extensions?: string[],
     //whether to resume an incomplete upload in case a local key is found
-    resume: boolean,
+    resume?: boolean,
     //https://tus.io/protocols/resumable-upload.html#upload-defer-length (default: false)
     deferLength?: boolean,
     //whether to use X-HTTP-Method-Override header instead of PATCH (default: false)

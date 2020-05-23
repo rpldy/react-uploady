@@ -41,10 +41,13 @@ describe("handleEvents tests ", () => {
 	describe("with chunk support", () => {
 		beforeAll(() => {
 			jest.resetModules();
+
 			jest.mock("@rpldy/chunked-sender", () => ({
 				CHUNK_EVENTS: mockChunkEvents,
 				CHUNKING_SUPPORT: true,
 			}));
+
+			jest.mock("../initTusUpload", () => jest.fn());
 
 			handleEvents = require("../handleEvents").default;
 		});
@@ -62,6 +65,31 @@ describe("handleEvents tests ", () => {
 				uploader.on.mockImplementationOnce((name, cb) => {
 					cb({ id: "i1" });
 					expect(tusState.getState().items.i1).toBeUndefined();
+				});
+
+				handleEvents(uploader, tusState, chunkedSender);
+				expect(uploader.on).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, expect.any(Function));
+			});
+
+			it("should delete linked parallelChunks from state", () => {
+				const tusState = getTusState({
+					items: {
+						"i1": {
+							id: "i1",
+							parallelChunks: ["i1-c1", "i1-c2"],
+						},
+						"i1-c1": {id: "i1-c1"},
+						"i1-c2": {id: "i1-c2"},
+						"i2-c1": {id: "i2-c1"},
+					}
+				});
+
+				uploader.on.mockImplementationOnce((name, cb) => {
+					cb({ id: "i1" });
+					expect(tusState.getState().items.i1).toBeUndefined();
+					expect(tusState.getState().items["i1-c1"]).toBeUndefined();
+					expect(tusState.getState().items["i1-c2"]).toBeUndefined();
+					expect(tusState.getState().items["i2-c1"]).toBeDefined();
 				});
 
 				handleEvents(uploader, tusState, chunkedSender);
@@ -152,9 +180,9 @@ describe("handleEvents tests ", () => {
 					}
 				});
 
-				chunkedSender.on.mockImplementation((name, cb) => {
+				chunkedSender.on.mockImplementation( async(name, cb) => {
 					if (name === mockChunkEvents.CHUNK_START) {
-						const result = cb({
+						const result = await cb({
 							chunk: {
 								start: 1234,
 							},
@@ -189,9 +217,9 @@ describe("handleEvents tests ", () => {
 					}
 				});
 
-				chunkedSender.on.mockImplementation((name, cb) => {
+				chunkedSender.on.mockImplementation(async (name, cb) => {
 					if (name === mockChunkEvents.CHUNK_START) {
-						const result = cb({
+						const result = await cb({
 							chunk: {
 								start: 1234,
 							},
@@ -223,9 +251,9 @@ describe("handleEvents tests ", () => {
 					}
 				});
 
-				chunkedSender.on.mockImplementation((name, cb) => {
+				chunkedSender.on.mockImplementation(async (name, cb) => {
 					if (name === mockChunkEvents.CHUNK_START) {
-						const result = cb({
+						const result = await cb({
 							chunk: {
 								start: 1234,
 							},
@@ -256,9 +284,9 @@ describe("handleEvents tests ", () => {
 					}
 				});
 
-				chunkedSender.on.mockImplementation((name, cb) => {
+				chunkedSender.on.mockImplementation(async (name, cb) => {
 					if (name === mockChunkEvents.CHUNK_START) {
-						const result = cb({
+						const result = await cb({
 							chunk: {
 								start: 1234,
 							},

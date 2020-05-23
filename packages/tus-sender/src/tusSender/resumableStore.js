@@ -18,7 +18,7 @@ const getPersistKey = (item: BatchItem, options: TusOptions, identifier: ?string
     return `${options.storagePrefix || DEFAULT_OPTIONS.storagePrefix}${itemKey}`;
 };
 
-const persistResumable = (item: BatchItem, uploadUrl: string, options: TusOptions, identifier?: string) => {
+const persistResumable = (item: BatchItem, uploadUrl: string, options: TusOptions, identifier: ?string) => {
     if (options.resume) {
 		safeLocalStorage.setItem(getPersistKey(item, options, identifier),
 			JSON.stringify({
@@ -30,7 +30,7 @@ const persistResumable = (item: BatchItem, uploadUrl: string, options: TusOption
 	}
 };
 
-const updateResumableData = (item: BatchItem, options: TusOptions, data: Object, identifier?: string) => {
+const updateResumableData = (item: BatchItem, options: TusOptions, data: Object, identifier: ?string) => {
     const key = getPersistKey(item, options, identifier);
 
     const stored = safeLocalStorage.getItem(key);
@@ -45,7 +45,7 @@ const updateResumableData = (item: BatchItem, options: TusOptions, data: Object,
     }
 };
 
-const retrieveResumable = (item: BatchItem, options: TusOptions, identifier?: string) => {
+const retrieveResumable = (item: BatchItem, options: TusOptions, identifier: ?string) => {
     let uploadUrl;
     const key = getPersistKey(item, options, identifier);
 
@@ -68,7 +68,7 @@ const retrieveResumable = (item: BatchItem, options: TusOptions, identifier?: st
     return uploadUrl;
 };
 
-const removeResumable = (item: BatchItem, options: TusOptions, identifier?: string) => {
+const removeResumable = (item: BatchItem, options: TusOptions, identifier: ?string) => {
     const key = getPersistKey(item, options, identifier);
     safeLocalStorage.removeItem(key);
 };

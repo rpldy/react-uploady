@@ -1,6 +1,6 @@
 // @flow
 import type { BatchItem, UploadData } from "@rpldy/shared";
-import type { SendMethod, SendOptions } from "@rpldy/sender";
+import type { SendMethod, SendOptions, OnProgress } from "@rpldy/sender";
 import type { OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
 
 export type ChunkedOptions = {
@@ -48,6 +48,7 @@ export type ChunkStartEventData = {
     url: string,
 	chunkIndex: number,
 	chunkCount: number,
+	onProgress: OnProgress
 };
 
 export type ChunkFinishEventData = {

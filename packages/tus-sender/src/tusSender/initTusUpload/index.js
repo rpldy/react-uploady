@@ -8,7 +8,19 @@ import handleTusUpload from "../handleTusUpload";
 import type { BatchItem } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
 import type { ChunkedSender, OnProgress } from "@rpldy/chunked-sender";
-import type { TusState } from "../types";
+import type { TusState, State } from "../types";
+
+const createStateItemData = (item: BatchItem, tusState: TusState) => {
+	tusState.updateState((state: State) => {
+		state.items[item.id] = {
+			id: item.id,
+			uploadUrl: null,
+			size: item.file.size,
+			offset: 0,
+			parallelChunks: [],
+		};
+	});
+};
 
 export default (items: BatchItem[],
 				url: string,
@@ -16,19 +28,35 @@ export default (items: BatchItem[],
 				onProgress: OnProgress,
 				tusState: TusState,
 				chunkedSender: ChunkedSender,
-				parallelIdentifier: string = null
+				parallelIdentifier: ?string = null
 ) => {
 	const { options } = tusState.getState(),
+		//parallel upload when we're seeing the batch item, not the parallel chunk items
+		isParallel = +options.parallel > 1 && !parallelIdentifier,
 		item = items[0],
-		// isParallel = !parallelIdentifier && options.parallel > 1,
 		//we dont use resume for parallelized chunks
-		persistedUrl = retrieveResumable(item, options, parallelIdentifier);
+		persistedUrl = !isParallel && retrieveResumable(item, options, parallelIdentifier);
 
-	const initCall = persistedUrl ?
-		//init resumable upload - this file has already started uploading
-		resumeUpload(item, persistedUrl, tusState, parallelIdentifier) :
-		//init new upload - first time uploading this file
-		createUpload(item, url, tusState, sendOptions, parallelIdentifier);
+	createStateItemData(item, tusState);
+
+	let initCall;
+
+	if (isParallel) {
+		//we dont need a create call for parallel uploads. Each chunk will have one
+		initCall = {
+			request: Promise.resolve({
+				isNew: true,
+			}),
+			abort: () => true,
+		};
+	}
+	else {
+		initCall = persistedUrl ?
+			//init resumable upload - this file has already started uploading
+			resumeUpload(item, persistedUrl, tusState, parallelIdentifier) :
+			//init new upload - first time uploading this file
+			createUpload(item, url, tusState, sendOptions, parallelIdentifier);
+	}
 
 	const uploadRequest = handleTusUpload(
 		items,

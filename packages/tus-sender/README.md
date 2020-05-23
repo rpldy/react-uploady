@@ -32,10 +32,10 @@ supports version 1.0.0 of the [TUS protocol](https://tus.io/protocols/resumable-
 
 On top of the Core Protocol, Uploady supports the following extensions:
 
-- [Creation](https://tus.io/protocols/resumable-upload.html#creation)
-- [Creation with Upload ](https://tus.io/protocols/resumable-upload.html#creation-with-upload)
-- [Concatenation](https://tus.io/protocols/resumable-upload.html#concatenation)
-- [Expiration](https://tus.io/protocols/resumable-upload.html#expiration)
+- [Creation](https://tus.io/protocols/resumable-upload.html#creation) (creation)
+- [Creation with Upload](https://tus.io/protocols/resumable-upload.html#creation-with-upload) (creation-with-upload)
+- [Concatenation](https://tus.io/protocols/resumable-upload.html#concatenation) (concatenation)
+- [Creation Defer Length](https://tus.io/protocols/resumable-upload.html#upload-defer-length) (creation-defer-length)
 
 ## Options
 

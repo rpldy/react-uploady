@@ -2,6 +2,7 @@
 import { logger, request } from "@rpldy/shared";
 import { getChunkDataFromFile } from "@rpldy/chunked-sender";
 import { SUCCESS_CODES } from "../consts";
+import { getUploadMetadata } from "../utils";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
@@ -26,7 +27,7 @@ const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: 
     const uploadUrl = resolveUploadUrl(url, createResponse.getResponseHeader("Location"));
 	let offset = 0;
 
-    logger.debugLog(`tusSender.create - successfully created upload for item: ${item.id} - upload url = ${uploadUrl}`);
+    logger.debugLog(`tusSender.create: successfully created upload for item: ${item.id} - upload url = ${uploadUrl}`);
 
     if (tusState.getState().options.sendDataOnCreate) {
 		const resOffset = parseInt(createResponse.getResponseHeader("Upload-Offset"));
@@ -34,13 +35,9 @@ const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: 
 	}
 
     tusState.updateState((state: State) => {
-        //update state with create response for item (upload url)
-        state.items[item.id] = {
-            id: item.id,
-            uploadUrl,
-            size: item.file.size,
-            offset,
-        };
+        //update state with create response for item
+		state.items[item.id].uploadUrl = uploadUrl;
+		state.items[item.id].offset = offset;
     });
 
     return {
@@ -48,15 +45,6 @@ const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: 
         uploadUrl,
         isNew: true,
     };
-};
-
-export const getUploadMetadata = (sendOptions: SendOptions) => {
-    const keys = sendOptions.params && Object.keys(sendOptions.params);
-
-    return keys?.length ?
-            keys.map((name) => `${name} ${btoa(sendOptions.params[name])}`)
-            .join(",") :
-        undefined;
 };
 
 export default (item: BatchItem, url: string, tusState: TusState, sendOptions: SendOptions, parallelIdentifier: ?string): InitUploadResult => {
@@ -75,9 +63,10 @@ export default (item: BatchItem, url: string, tusState: TusState, sendOptions: S
 
     if (options.sendDataOnCreate) {
 		logger.debugLog(`tusSender.create - adding first chunk to create request`);
+		const chunkSize = +options.chunkSize;
 
-		data = options.chunkSize < item.file.size ?
-			getChunkDataFromFile(item.file, 0, options.chunkSize) :
+		data = chunkSize < item.file.size ?
+			getChunkDataFromFile(item.file, 0, chunkSize) :
 			item.file;
 	}
 

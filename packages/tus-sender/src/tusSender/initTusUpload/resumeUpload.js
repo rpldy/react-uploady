@@ -23,14 +23,10 @@ const handleSuccessfulResumeResponse = (item: BatchItem, url: string, tusState: 
             canResume = !isDone;
 
             tusState.updateState((state: State) => {
-                //update state with resume response for item (upload url)
-                state.items[item.id] = {
-                    id: item.id,
-                    uploadUrl: url,
-                    size: item.file.size,
-                    offset,
-                };
-            });
+				//update state with resume response for item
+				state.items[item.id].uploadUrl = url;
+				state.items[item.id].offset = offset;
+			});
         }
     }
 

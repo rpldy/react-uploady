@@ -27,6 +27,7 @@ export default (item: BatchItem, options: MandatoryChunkedOptions, startByte: nu
                 data: null,
                 attempt: 0,
                 uploaded: 0,
+				index,
             };
         });
 };

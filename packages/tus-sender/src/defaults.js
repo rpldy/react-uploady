@@ -12,4 +12,5 @@ export const DEFAULT_OPTIONS = devFreeze({
 	sendDataOnCreate: false,
     storagePrefix: "__rpldy-tus__",
     lockedRetryDelay: 2000,
+	forgetOnSuccess: false,
 });

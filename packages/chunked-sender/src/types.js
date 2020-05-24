@@ -38,6 +38,7 @@ export type ChunkEventData = {
     id: string,
     start: number,
     end: number,
+	index: number,
 };
 
 export type ChunkStartEventData = {
@@ -46,7 +47,6 @@ export type ChunkStartEventData = {
 	chunkItem: BatchItem,
     sendOptions: SendOptions,
     url: string,
-	chunkIndex: number,
 	chunkCount: number,
 	onProgress: OnProgress
 };

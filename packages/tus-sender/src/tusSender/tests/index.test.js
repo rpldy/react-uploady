@@ -16,6 +16,14 @@ jest.mock("../handleEvents", () => jest.fn());
 
 describe("tusSender index tests", () => {
 
+	beforeEach(() => {
+		clearJestMocks(
+			createChunkedSender,
+			handleEvents,
+			getTusSend
+		);
+	});
+
 	const doTest = (options) => {
 		const uploader = {};
 
@@ -68,7 +76,6 @@ describe("tusSender index tests", () => {
 		const state = tusState.getState();
 		expect(state.options).toEqual({
 			...options,
-			deferLength: true,
 		});
 	});
 

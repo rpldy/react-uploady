@@ -1,6 +1,7 @@
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { CHUNK_EVENTS as mockChunkEvents } from "@rpldy/chunked-sender";
 import getTusState from "./tusState.mock";
+import { FILE_STATES } from "@rpldy/shared";
 
 describe("handleEvents tests ", () => {
 	let handleEvents;
@@ -39,6 +40,9 @@ describe("handleEvents tests ", () => {
 	});
 
 	describe("with chunk support", () => {
+		const mockRemoveResueable = jest.fn(),
+			mockInitTus = jest.fn();
+
 		beforeAll(() => {
 			jest.resetModules();
 
@@ -47,9 +51,19 @@ describe("handleEvents tests ", () => {
 				CHUNKING_SUPPORT: true,
 			}));
 
-			jest.mock("../initTusUpload", () => jest.fn());
+			jest.mock("../resumableStore", ()=>({
+				removeResumable: mockRemoveResueable,
+			}));
+
+			jest.mock("../initTusUpload", () => mockInitTus);
 
 			handleEvents = require("../handleEvents").default;
+		});
+
+		beforeEach(() => {
+			clearJestMocks(
+				mockRemoveResueable
+			);
 		});
 
 		describe("uploader ITEM_FINALIZE tests", () => {
@@ -58,6 +72,7 @@ describe("handleEvents tests ", () => {
 					items: {
 						"i1": {
 							offset: 0,
+							parallelChunks: []
 						}
 					}
 				});
@@ -65,6 +80,7 @@ describe("handleEvents tests ", () => {
 				uploader.on.mockImplementationOnce((name, cb) => {
 					cb({ id: "i1" });
 					expect(tusState.getState().items.i1).toBeUndefined();
+					expect(mockRemoveResueable).not.toHaveBeenCalled();
 				});
 
 				handleEvents(uploader, tusState, chunkedSender);
@@ -107,6 +123,31 @@ describe("handleEvents tests ", () => {
 				handleEvents(uploader, tusState, chunkedSender);
 				expect(uploader.on).toHaveBeenCalled();
 			});
+
+			it("should remove storage url for forgetOnSuccess", () => {
+				const item = {
+					offset: 0,
+					parallelChunks: []
+				};
+
+				const tusState = getTusState({
+					items: {
+						"i1": item,
+					},
+					options: {
+						forgetOnSuccess: true
+					}
+				});
+
+				uploader.on.mockImplementationOnce((name, cb) => {
+					cb({ id: "i1" });
+					expect(tusState.getState().items.i1).toBeUndefined();
+					expect(mockRemoveResueable).toHaveBeenCalledWith({ id: "i1" }, tusState.getState().options);
+				});
+
+				handleEvents(uploader, tusState, chunkedSender);
+				expect(uploader.on).toHaveBeenCalled();
+			});
 		});
 
 		describe("chunkedSender CHUNK_FINISH tests", () => {
@@ -118,6 +159,7 @@ describe("handleEvents tests ", () => {
 					items: {
 						"i1": {
 							offset: 0,
+							test: 111
 						}
 					}
 				});
@@ -158,6 +200,41 @@ describe("handleEvents tests ", () => {
 						});
 
 						expect(tusState.updateState).not.toHaveBeenCalled();
+					}
+				});
+
+				handleEvents(uploader, tusState, chunkedSender);
+
+				expect(chunkedSender.on).toHaveBeenCalled();
+			});
+
+			it("should remove parallel chunk storage url for forgetOnSuccess", () => {
+
+				const tusState = getTusState({
+					items: {
+						"i1": {
+							offset: 0,
+							parallelChunks: []
+						}
+					},
+					options: {
+						chunkSize: 124,
+						parallel: 2,
+						forgetOnSuccess: true,
+					}
+				});
+
+				chunkedSender.on.mockImplementation((name, cb) => {
+					if (name === mockChunkEvents.CHUNK_FINISH) {
+						const data = {
+							chunk: {index: 1},
+							item: { id: "i1" },
+						};
+
+						cb(data);
+
+						expect(mockRemoveResueable)
+							.toHaveBeenCalledWith(data.item, tusState.getState().options, `_prlChunk_124_1`);
 					}
 				});
 
@@ -289,9 +366,9 @@ describe("handleEvents tests ", () => {
 						const result = await cb({
 							chunk: {
 								start: 1234,
+								index: 2
 							},
 							item: { id: "i1", file: { size: 999 } },
-							chunkIndex: 2,
 							chunkCount: 3,
 						});
 
@@ -300,6 +377,104 @@ describe("handleEvents tests ", () => {
 						expect(result.sendOptions.method).toBe("PATCH");
 
 						expect(result.sendOptions.headers["Upload-Length"]).toBe(999);
+					}
+				});
+
+				handleEvents(uploader, tusState, chunkedSender);
+
+				expect(chunkedSender.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
+			});
+
+			it("parallel - should update send options for parallelized chunk", () => {
+				const tusState = getTusState({
+					items: {
+						"i1": {
+							uploadUrl: "upload.url",
+							parallelChunks: []
+						},
+						"ci1": {
+							uploadUrl: "chunk.url",
+						}
+					},
+					options: {
+						parallel: 2,
+					}
+				});
+
+				chunkedSender.on.mockImplementation(async (name, cb) => {
+					if (name === mockChunkEvents.CHUNK_START) {
+
+						mockInitTus.mockReturnValueOnce({
+							request: Promise.resolve({
+								state: FILE_STATES.UPLOADING
+							})
+						});
+
+						const data = {
+							chunk: {
+								id: "i1"
+							},
+							chunkItem: {
+								id: "ci1"
+							},
+							item: { id: "i1", file: { size: 999 } },
+						};
+
+						const result = await cb(data);
+
+						expect(result.url).toBe("chunk.url");
+						expect(result.sendOptions.sendWithFormData).toBe(false);
+						expect(result.sendOptions.method).toBe("PATCH");
+						expect(result.sendOptions.headers["Upload-Offset"]).toBe(0);
+						expect(result.sendOptions.headers["Upload-Length"]).toBe(undefined);
+						expect(result.sendOptions.headers["Upload-Concat"]).toBe("partial");
+
+						expect(tusState.getState().items["i1"].parallelChunks[0])
+							.toBe(data.chunkItem.id);
+					}
+				});
+
+				handleEvents(uploader, tusState, chunkedSender);
+
+				expect(chunkedSender.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
+			});
+
+			it("parallel - should return false when chunk already finished", () => {
+
+				const tusState = getTusState({
+					items: {
+						"i1": {
+							offset: 0,
+							uploadUrl: "upload.url",
+							parallelChunks: [],
+						}
+					},
+					options: {
+						parallel: 2,
+					}
+				});
+
+				chunkedSender.on.mockImplementation(async (name, cb) => {
+					if (name === mockChunkEvents.CHUNK_START) {
+						const data = {
+							chunk: {
+								start: 1234,
+							},
+							chunkItem: {
+								id: "ci1",
+							},
+							item: { id: "i1" },
+						};
+
+						mockInitTus.mockReturnValueOnce({
+							request: Promise.resolve({state: FILE_STATES.FINISHED}),
+						});
+
+						const result = await cb(data);
+
+						expect(result).toBe(false);
+						expect(tusState.getState().items["i1"].parallelChunks[0])
+							.toBe(data.chunkItem.id);
 					}
 				});
 

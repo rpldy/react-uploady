@@ -9,16 +9,16 @@ import type { BatchItem } from "@rpldy/shared";
 import type { ChunkedSender, OnProgress } from "@rpldy/chunked-sender";
 import type { TusState, InitData } from "./types";
 
-//TODO - add forgetOnSuccess option - to remove successful upload from resumable-store
 //TODO - if has feature detection results - for example: check if parallel ext supported by server - if not - disable options.parallel
-// - Tus-Max-Size
 //TODO - persist feature detection in session state per server(url)
 //TODO tus-uploady - useClearResumableStore - delete all resumable storage itemss
 //TODO - unit tests ~100%
 //TODO - typescript definitions + test
 //TODO - E2E - test resume/abort/resume-done works
 //TODO - E2E - test resume with delay
-//TODO - test parallel + sendDataOnCreate together !
+//TODO - E2E - test forget on success
+//TODO - E2E - test parallel upload
+//TODO - E2E parallel + sendDataOnCreate together !
 
 const doChunkedUploadForItem = (
 	items: BatchItem[],

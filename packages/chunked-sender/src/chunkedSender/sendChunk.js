@@ -59,7 +59,7 @@ const uploadChunkWithUpdatedData = async (
 	// $FlowFixMe - https://github.com/facebook/flow/issues/8215
 	const updatedData = await triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, {
 		item,
-		chunk: pick(chunk, ["id", "start", "end"]),
+		chunk: pick(chunk, ["id", "start", "end", "index"]),
 		chunkItem,
 		sendOptions,
 		url: state.url,

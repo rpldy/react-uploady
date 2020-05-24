@@ -1,7 +1,7 @@
 import { request } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { getChunkDataFromFile } from "@rpldy/chunked-sender";
 import createMockState from "../../tests/tusState.mock";
-import createUpload, { resolveUploadUrl, getUploadMetadata } from "../createUpload";
+import createUpload, { resolveUploadUrl } from "../createUpload";
 
 jest.mock("@rpldy/chunked-sender", () => ({
 	getChunkDataFromFile: jest.fn(),
@@ -35,21 +35,6 @@ describe("createUpload tests", () => {
 		});
 	});
 
-	describe("getUploadMetadata tests", () => {
-		it("should return undefined if no params", () => {
-			expect(getUploadMetadata({})).toBeUndefined();
-		});
-
-		it("should return undefined if empty params", () => {
-			expect(getUploadMetadata({ params: {} })).toBeUndefined();
-		});
-
-		it("should return encoded string for params", () => {
-			const options = { params: { test: "a", foo: "bar", "empty": "" } };
-			expect(getUploadMetadata(options)).toBe("test YQ==,foo YmFy,empty ");
-		});
-	});
-
 	describe("createUpload tests", () => {
 
 		beforeEach(() => {
@@ -58,7 +43,7 @@ describe("createUpload tests", () => {
 			);
 		});
 
-		const doCreateTest = async (config = {}) => {
+		const doCreateTest = async (config = {}, parallelId = null) => {
 
 			config = {
 				status: 200,
@@ -68,6 +53,7 @@ describe("createUpload tests", () => {
 				sendDataOnCreate: false,
 				chunkSize: 200,
 				fileSize: 123,
+				noResOffset: false,
 				...config
 			};
 
@@ -100,20 +86,22 @@ describe("createUpload tests", () => {
 					sendDataOnCreate: config.sendDataOnCreate,
 					chunkSize: config.chunkSize,
 				},
-				items: {}
+				items: {
+					"bi1": {}
+				}
 			});
 			const item = { id: "bi1", file: { size: config.fileSize } };
 
 			const createResult = createUpload(item, url, state, {
 				params: config.metadata
-			});
+			}, parallelId);
 
 			const location = "/test";
 
 			xhrResponse
 				.getResponseHeader
 				.mockImplementation((name) => {
-					return name === "Upload-Offset" ? 1234 : location;
+					return name === "Upload-Offset" ? (config.noResOffset ? "bla" : 1234) : location;
 				});
 
 			const requestResult = config.resolveRequest ?
@@ -135,9 +123,7 @@ describe("createUpload tests", () => {
 		it("should handle successful create", async () => {
 			const {
 				requestResult,
-				location,
 				state,
-				item,
 				url,
 				createResult,
 				xhr,
@@ -152,8 +138,6 @@ describe("createUpload tests", () => {
 					"Content-Type": undefined
 				}
 			});
-
-			expect(state.getState().items[item.id].uploadUrl).toBe(url + location);
 
 			expect(requestResult).toEqual({
 				offset: 0,
@@ -286,6 +270,37 @@ describe("createUpload tests", () => {
 					"Upload-Metadata": "test MTIz",
 					"Content-Type": undefined
 				}
+			});
+		});
+
+		it("should not send metadata for parallel chunk", async() => {
+
+			const {
+				url,
+				state,
+			} = await doCreateTest({metadata: {test: 123}}, "pId1");
+
+			expect(request).toHaveBeenCalledWith(url, null, {
+				method: "POST", headers: {
+					"tus-resumable": state.getState().options.version,
+					"Upload-Defer-Length": undefined,
+					"Upload-Length": 123,
+					"Upload-Metadata": undefined,
+					"Content-Type": undefined
+				}
+			});
+		});
+
+		it("should handle invalid offset response header", async () => {
+
+			const {
+				requestResult
+			} = await doCreateTest({sendDataOnCreate: true, noResOffset: true});
+
+			expect(requestResult).toEqual({
+				offset: 0,
+				uploadUrl: "http://upload/test",
+				isNew: true,
 			});
 		});
 	});

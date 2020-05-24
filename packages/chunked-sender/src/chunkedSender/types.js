@@ -10,7 +10,8 @@ export type Chunk = {
     end: number,
     data: ?Blob,
     attempt: number,
-    uploaded: number
+    uploaded: number,
+	index: number,
 };
 
 export type State = {|

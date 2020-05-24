@@ -1,4 +1,9 @@
-import { createBatchItem, triggerUpdater, utils } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import {
+	createBatchItem,
+	FILE_STATES,
+	triggerUpdater,
+	utils
+} from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import xhrSend from "@rpldy/sender";
 import ChunkedSendError from "../ChunkedSendError";
 import { getChunkDataFromFile } from "../../utils";
@@ -46,8 +51,6 @@ describe("sendChunk tests", () => {
 
         const result = await sendResult.request;
 
-        expect(result).toEqual({ xhrSend: true });
-
         if (!data) {
             expect(getChunkDataFromFile).toHaveBeenCalledWith(file, chunk.start, chunk.end);
         }
@@ -62,19 +65,21 @@ describe("sendChunk tests", () => {
             }
         };
 
-        expect(xhrSend).toHaveBeenCalledWith(
-            [chunkItem],
-            chunkStartData.url || url,
-            utils.merge({}, updatedSendOptions, chunkStartData.sendOptions),
-            expect.any(Function)
-        );
+        if (chunkStartData !== false ) {
+			expect(xhrSend).toHaveBeenCalledWith(
+				[chunkItem],
+				chunkStartData.url || url,
+				utils.merge({}, updatedSendOptions, chunkStartData.sendOptions),
+				expect.any(Function)
+			);
 
-        const progressEvent = { loaded: 123 };
-        xhrSend.mock.calls[0][3](progressEvent);
-        expect(onProgress).toHaveBeenCalledWith(progressEvent, [{
-            ...chunk,
-            data: fileData,
-        }]);
+			const progressEvent = { loaded: 123 };
+			xhrSend.mock.calls[0][3](progressEvent);
+			expect(onProgress).toHaveBeenCalledWith(progressEvent, [{
+				...chunk,
+				data: fileData,
+			}]);
+		}
 
         expect(triggerUpdater).toHaveBeenCalledWith(trigger, CHUNK_EVENTS.CHUNK_START, {
             item: { file },
@@ -87,18 +92,26 @@ describe("sendChunk tests", () => {
             url,
 			chunkCount: 3,
 			chunkIndex: 2,
+			chunkItem,
+			onProgress
         });
+
+        return {
+        	result,
+			sendResult,
+		};
     };
 
 	it.each([
 		null,
 		{size: 9},
 	])("should send chunk with data = %s", async (data) => {
-       await testSendChunk(data);
+       const { result } = await testSendChunk(data);
+		expect(result).toEqual({ xhrSend: true });
 	});
 
     it("should use updated values from chunk start event updater", async () => {
-        await testSendChunk({size: 9}, {
+		const { result } = await testSendChunk({size: 9}, {
             url: "updated.com",
             sendOptions: {
                 headers: {
@@ -107,11 +120,24 @@ describe("sendChunk tests", () => {
             },
         });
 
+		expect(result).toEqual({ xhrSend: true });
+
         expect(xhrSend.mock.calls[0][1]).toBe("updated.com");
         expect(xhrSend.mock.calls[0][2].headers.another).toBe(true);
     });
 
-    it("should throw if failed to slice chunk", () => {
+	it("should skip chunk when event updater returns false ", async() => {
+		const { result, sendResult } = await testSendChunk({size: 9}, false);
+
+		expect(xhrSend).not.toHaveBeenCalled();
+
+		expect(result.state).toBe(FILE_STATES.FINISHED);
+		expect(result.status).toBe(200);
+
+		expect(sendResult.abort()).toBe(true);
+	});
+
+	it("should throw if failed to slice chunk", () => {
 
         getChunkDataFromFile.mockReturnValueOnce(null);
         const chunk = { id: "c1", start: 1, end: 10, data: null };

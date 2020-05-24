@@ -26,7 +26,7 @@ export default async (state: State, item: BatchItem, chunkId: string, chunkSendR
 			const spliced = state.chunks.splice(index, 1);
 
 			trigger(CHUNK_EVENTS.CHUNK_FINISH, {
-                chunk: pick(spliced[0], ["id", "start", "end"]),
+                chunk: pick(spliced[0], ["id", "start", "end", "index"]),
                 item,
                 uploadData: result,
             });

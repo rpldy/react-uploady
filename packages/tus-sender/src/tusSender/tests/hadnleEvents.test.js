@@ -242,6 +242,39 @@ describe("handleEvents tests ", () => {
 
 				expect(chunkedSender.on).toHaveBeenCalled();
 			});
+
+			it("should do nothing for parallel", () => {
+
+				const tusState = getTusState({
+					items: {
+						"i1": {
+							offset: 0,
+							parallelChunks: []
+						}
+					},
+					options: {
+						chunkSize: 124,
+						parallel: 2,
+					}
+				});
+
+				chunkedSender.on.mockImplementation((name, cb) => {
+					if (name === mockChunkEvents.CHUNK_FINISH) {
+						const data = {
+							chunk: {index: 1},
+							item: { id: "i1" },
+						};
+
+						cb(data);
+						expect(tusState.updateState).not.toHaveBeenCalled();
+						expect(mockRemoveResueable).not.toHaveBeenCalled();
+					}
+				});
+
+				handleEvents(uploader, tusState, chunkedSender);
+
+				expect(chunkedSender.on).toHaveBeenCalled();
+			});
 		});
 
 		describe("chunkedSender CHUNK_START tests", () => {

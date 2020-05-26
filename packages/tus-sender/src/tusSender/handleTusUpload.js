@@ -48,6 +48,7 @@ const doChunkedUploadForItem = (
 	const chunkedResult = chunkedSender.send(items, url, sendOptions, onProgress);
 
 	tusState.updateState((state) => {
+		//keep the abort from chunked sender
 		state.items[item.id].abort = chunkedResult.abort;
 	});
 
@@ -73,7 +74,7 @@ const handleParallelizedChunkInit = (items: BatchItem[], tusState: TusState, ini
 	});
 };
 
-const handleTusUpload = (
+const handleTusUpload = async (
 	items: BatchItem[],
 	url: string,
 	sendOptions: SendOptions,
@@ -83,44 +84,45 @@ const handleTusUpload = (
 	initRequest: Promise<?InitData>,
 	isResume?: boolean,
 	parallelIdentifier: ?string,
-) =>
-	initRequest.then(async (initData: ?InitData) => {
-		let request,
-			resumeFailed = false;
+) => {
+	const initData: ?InitData = await initRequest;
 
-		if (initData) {
-			if (initData.isDone) {
-				logger.debugLog(`tusSender.handler: resume found server has completed file for item: ${items[0].id}`, items[0]);
-				request = Promise.resolve({
-					status: 200,
-					state: FILE_STATES.FINISHED,
-					response: "TUS server has file",
-				});
-			} else if (!initData.isNew && !initData.canResume) {
-				resumeFailed = true;
-			} else if (parallelIdentifier) {
-				//important! we dont do another chunked upload, this is already inside a parallel chunk upload flow
-				request = handleParallelizedChunkInit(items, tusState, initData, parallelIdentifier);
-			} else {
-				request = doChunkedUploadForItem(items, url, sendOptions, onProgress, tusState, chunkedSender, initData);
-			}
+	let request,
+		resumeFailed = false;
+
+	if (initData) {
+		if (initData.isDone) {
+			logger.debugLog(`tusSender.handler: resume found server has completed file for item: ${items[0].id}`, items[0]);
+			request = Promise.resolve({
+				status: 200,
+				state: FILE_STATES.FINISHED,
+				response: "TUS server has file",
+			});
+		} else if (!initData.isNew && !initData.canResume) {
+			resumeFailed = true;
+		} else if (parallelIdentifier) {
+			//no need for another chunked upload - we're already inside a parallel chunk upload flow (initiated by chunk start handler - handleEvents)
+			request = handleParallelizedChunkInit(items, tusState, initData, parallelIdentifier);
 		} else {
-			resumeFailed = isResume;
+			request = doChunkedUploadForItem(items, url, sendOptions, onProgress, tusState, chunkedSender, initData);
 		}
+	} else {
+		resumeFailed = isResume;
+	}
 
-		if (resumeFailed) {
-			logger.debugLog(`tusSender.handler: resume init failed. Will try creating a new upload for item: ${items[0].id}`);
-			const { request: createRequest } = createUpload(items[0], url, tusState, sendOptions);
-			//currently, this second init request (after failed resume) cannot be aborted
-			request = await handleTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender, createRequest);
-		}
+	if (resumeFailed) {
+		logger.debugLog(`tusSender.handler: resume init failed. Will try creating a new upload for item: ${items[0].id}`);
+		const { request: createRequest } = createUpload(items[0], url, tusState, sendOptions);
+		//currently, this second init request (after failed resume) cannot be aborted
+		request = await handleTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender, createRequest);
+	}
 
-		return request || Promise.resolve({
-			status: 0,
-			state: FILE_STATES.ERROR,
-			response: "TUS initialize failed",
-		});
+	return request || Promise.resolve({
+		status: 0,
+		state: FILE_STATES.ERROR,
+		response: "TUS initialize failed",
 	});
+};
 
 export default handleTusUpload;
 

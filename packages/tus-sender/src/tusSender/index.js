@@ -36,6 +36,9 @@ const getResolvedOptions = (options: ?TusOptions): TusOptions => {
 		options.deferLength = false;
 	}
 
+	//force chunked for TUS
+	options.chunked = true;
+
 	return options;
 };
 

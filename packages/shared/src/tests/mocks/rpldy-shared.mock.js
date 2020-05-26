@@ -20,7 +20,7 @@ const parseResponseHeaders = jest.fn();
 
 const utils = jest.genMockFromModule("../../utils");
 
-const safeLocalStorage = jest.genMockFromModule("../../storage/localStorage");
+const safeLocalStorage = jest.genMockFromModule("../../storage/localStorage").default;
 
 //keep merge working - dont mock it
 utils.merge.mockImplementation((...args) => merge(...args));

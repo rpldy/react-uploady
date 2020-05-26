@@ -37,6 +37,39 @@ describe("localStorage tests", () => {
         });
     });
 
+	describe("no localStorage", () => {
+		const orgStorage = window.localStorage;
+		let safeLocalStorage;
+
+		beforeAll(() => {
+			delete window.localStorage;
+			delete global._localStorage;
+
+			jest.resetModules();
+			safeLocalStorage = require("./localStorage").default;
+		});
+
+		afterAll(() => {
+			window.localStorage = global._localStorage = orgStorage;
+		});
+
+		it("should be unsupported", () => {
+			expect(safeLocalStorage.isSupported).toBe(false);
+		});
+
+		it("length should always be 0", () => {
+			safeLocalStorage.setItem("test", "123");
+			safeLocalStorage.setItem("test2", "1234");
+			expect(safeLocalStorage.length).toBe(0);
+		});
+
+		it("should always return null", () => {
+			safeLocalStorage.setItem("test", "123");
+			expect(safeLocalStorage.getItem("test")).toBe(null);
+			expect(safeLocalStorage.getItem("test2")).toBe(null);
+		});
+	});
+
     describe("unsupported tests", () => {
         const orgStorage = window.localStorage;
         let safeLocalStorage;

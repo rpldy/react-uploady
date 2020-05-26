@@ -5,15 +5,15 @@ import { removeResumable  } from "../resumableStore";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { InitUploadResult, State, TusState } from "../types";
+import type { TusOptions } from "../../types";
 
 const handleSuccessfulResumeResponse = (item: BatchItem, url: string, tusState: TusState, resumeResponse: XMLHttpRequest) => {
     let canResume = false,
-        isDone = false,
-        offset;
+        isDone = false;
 
     logger.debugLog(`tusSender.resume - successfully initiated resume for item: ${item.id} - upload url = ${url}`);
 
-    offset = parseInt(resumeResponse.getResponseHeader("Upload-Offset"));
+    const offset = parseInt(resumeResponse.getResponseHeader("Upload-Offset"));
 
     if (!isNaN(offset)) {
         const length = parseInt(resumeResponse.getResponseHeader("Upload-Length"));
@@ -47,15 +47,26 @@ const resumeWithDelay = (item: BatchItem, url: string, tusState: TusState, paral
         }, tusState.getState().options.lockedRetryDelay);
     });
 
+const handleResumeFail = (item: BatchItem, options: TusOptions, parallelIdentifier: ?string) => {
+	removeResumable(item, options, parallelIdentifier);
+
+	return {
+		isNew: false,
+		canResume: false,
+	};
+};
+
 const makeResumeRequest = (item: BatchItem, url: string, tusState: TusState, parallelIdentifier: ?string, attempt: number) =>  {
     const { options } = tusState.getState();
-    const headers = {
-        "tus-resumable": options.version,
-    };
 
     logger.debugLog(`tusSender.resume - resuming upload for ${item.id}${parallelIdentifier ? `-${parallelIdentifier}` : ""} at: ${url}`);
 
-    const pXhr = request(url, null, { method: "HEAD", headers });
+    const pXhr = request(url, null, {
+		method: "HEAD",
+		headers: {
+			"tus-resumable": options.version,
+		}
+	});
 
     let resumeFinished = false;
 
@@ -71,24 +82,14 @@ const makeResumeRequest = (item: BatchItem, url: string, tusState: TusState, par
                 result = await resumeWithDelay(item,  url, tusState, parallelIdentifier, 1);
             } else {
                 logger.debugLog(`tusSender.resume: failed for item: ${item.id}${parallelIdentifier ? `-${parallelIdentifier}` : ""}`, resumeResponse);
-
-                removeResumable(item, options, parallelIdentifier);
-
-                result = {
-                    isNew: false,
-                    canResume: false,
-                };
+                result = handleResumeFail(item, options, parallelIdentifier);
             }
 
             return result;
         })
         .catch((error) => {
-            logger.debugLog(`tusSender.resume: resume upload failed`, error);
-
-            return {
-                isNew: false,
-                canResume: false,
-            };
+            logger.debugLog(`tusSender.resume: resume upload failed unexpectedly`, error);
+            return handleResumeFail(item, options, parallelIdentifier);
         })
         .finally(()=> {
             resumeFinished = true;

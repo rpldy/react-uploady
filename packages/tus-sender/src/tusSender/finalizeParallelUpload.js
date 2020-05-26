@@ -22,8 +22,9 @@ export default async (
 
 		if (itemData) {
 			const chunkItemIds = itemData.parallelChunks;
-			const parallelUploadUrls = chunkItemIds.map((chunkId: string) =>
-				items[chunkId].uploadUrl);
+			const parallelUploadUrls = chunkItemIds
+				.filter((chunkId: string) => items[chunkId]?.uploadUrl)
+				.map((chunkId: string) => items[chunkId].uploadUrl);
 
 			if (parallelUploadUrls.length !== chunkItemIds.length) {
 				throw new Error(`tusSender: something went wrong. found only ${parallelUploadUrls.length} upload urls for ${chunkItemIds.length} chunks`);
@@ -55,24 +56,27 @@ export default async (
 
 			try {
 				finalizeResponse = await pXhr;
-			}
-			catch (ex) {
+			} catch (ex) {
 				logger.debugLog(`tusSender.finalizeParallel: finalize request failed unexpectedly!`, ex);
-				finalizeResponse = { status: 0, response: ex.message };
+				finalizeResponse = { status: 0, response: (ex.message || ex) };
 			}
 
-			if (finalizeResponse &&
-				~SUCCESS_CODES.indexOf(finalizeResponse.status) &&
+			const successCode = finalizeResponse &&
+				!!~SUCCESS_CODES.indexOf(finalizeResponse.status);
+
+			const resLocation = successCode &&
 				finalizeResponse.getResponseHeader &&
-				finalizeResponse.getResponseHeader("Location")) {
-				logger.debugLog(`tusSender.finalizeParallel: successfully finalized parallel upload`);
+				finalizeResponse.getResponseHeader("Location");
+
+			if (resLocation) {
+				logger.debugLog(`tusSender.finalizeParallel: successfully finalized parallel upload`, resLocation);
 			} else {
 				logger.debugLog(`tusSender.finalizeParallel: parallel upload finalize failed!`, finalizeResponse.status);
 
 				result = {
 					status: finalizeResponse.status,
 					state: FILE_STATES.ERROR,
-					response: finalizeResponse.response,
+					response: finalizeResponse.response || (successCode && !resLocation ? "No valid location header for finalize request" : ""),
 				};
 			}
 		}

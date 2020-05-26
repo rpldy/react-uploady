@@ -1,14 +1,15 @@
 import { createChunkedSender } from "@rpldy/chunked-sender";
+import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import getTusSend from "../tusSend";
 import handleEvents from "../handleEvents";
 import createTusSender from "../index";
 
 jest.mock("@rpldy/chunked-sender", () => ({
-    createChunkedSender: jest.fn(),
+	createChunkedSender: jest.fn(),
 }));
 
 jest.mock("../../utils", () => ({
-    getMandatoryOptions: jest.fn((opts) => opts)
+	getMandatoryOptions: jest.fn((opts) => ({ ...opts }))
 }));
 
 jest.mock("../tusSend", () => jest.fn());
@@ -40,8 +41,6 @@ describe("tusSender index tests", () => {
 
 		const sender = createTusSender(uploader, options);
 
-		expect(createChunkedSender).toHaveBeenCalledWith(options);
-
 		sender.send();
 
 		return {
@@ -52,7 +51,9 @@ describe("tusSender index tests", () => {
 		};
 	};
 
-    it("should return tus send", () => {
+	it("should return tus send", () => {
+		logger.isDebugOn.mockReturnValueOnce(true);
+
 		const { tusSend, uploader, chunkedSender, options } = doTest();
 
 		expect(tusSend).toHaveBeenCalled();
@@ -62,8 +63,11 @@ describe("tusSender index tests", () => {
 
 		const state = tusState.getState();
 		expect(state.items).toEqual({});
-		expect(state.options).toEqual(options);
-    });
+
+		const usedOptions = { ...options, chunked: true };
+		expect(state.options).toEqual(usedOptions);
+		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions);
+	});
 
 	it("should pass deferLength", () => {
 		const { options } = doTest({
@@ -74,9 +78,10 @@ describe("tusSender index tests", () => {
 		const tusState = handleEvents.mock.calls[0][1];
 
 		const state = tusState.getState();
-		expect(state.options).toEqual({
-			...options,
-		});
+
+		const usedOptions = { ...options, chunked: true };
+		expect(state.options).toEqual(usedOptions);
+		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions);
 	});
 
 	it("should disable deferLength with sendDataOnCreate", () => {
@@ -88,10 +93,15 @@ describe("tusSender index tests", () => {
 		const tusState = handleEvents.mock.calls[0][1];
 
 		const state = tusState.getState();
-		expect(state.options).toEqual({
+
+		const usedOptions = {
 			...options,
 			deferLength: false,
-		});
+			chunked: true
+		};
+
+		expect(state.options).toEqual(usedOptions);
+		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions);
 	});
 
 	it("should disable deferLength with parallel", () => {
@@ -103,9 +113,14 @@ describe("tusSender index tests", () => {
 		const tusState = handleEvents.mock.calls[0][1];
 
 		const state = tusState.getState();
-		expect(state.options).toEqual({
+
+		const usedOptions = {
 			...options,
 			deferLength: false,
-		});
+			chunked: true
+		};
+
+		expect(state.options).toEqual(usedOptions);
+		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions);
 	});
 });

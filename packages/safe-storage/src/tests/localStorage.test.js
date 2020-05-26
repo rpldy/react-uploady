@@ -4,7 +4,7 @@ describe("localStorage tests", () => {
         let safeLocalStorage;
 
         beforeAll(() => {
-            safeLocalStorage = require("./localStorage").default;
+            safeLocalStorage = require("../localStorage").default;
         });
 
         it("should be supported", () => {
@@ -46,7 +46,7 @@ describe("localStorage tests", () => {
 			delete global._localStorage;
 
 			jest.resetModules();
-			safeLocalStorage = require("./localStorage").default;
+			safeLocalStorage = require("../localStorage").default;
 		});
 
 		afterAll(() => {
@@ -82,7 +82,7 @@ describe("localStorage tests", () => {
             };
 
             jest.resetModules();
-            safeLocalStorage = require("./localStorage").default;
+            safeLocalStorage = require("../localStorage").default;
         });
 
         afterAll(() => {

@@ -3,11 +3,13 @@ import type { ChunkedOptions } from "@rpldy/chunked-sender";
 
 export type TusOptions = {
     ...ChunkedOptions,
-    //whether to perform OPTIONS request in beginning of session (default: false)
-    //returned results will override some of the options
+	//TUS server version (default: "1.0.0")
+	version?: string,
+	//whether to perform OPTIONS request in beginning of session (default: false)
+    //returned results may override some of the options
     featureDetection?: boolean,
-    //TUS server version (default: "1.0.0")
-    version?: string,
+	//URL to query for TUS server feature detection, in case different from upload URL (default: null)
+	featureDetectionUrl?: ?string,
     //whether to resume an incomplete upload in case a local key is found
     resume?: boolean,
     //https://tus.io/protocols/resumable-upload.html#upload-defer-length (default: false)

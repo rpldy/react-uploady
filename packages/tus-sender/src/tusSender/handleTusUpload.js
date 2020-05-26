@@ -11,8 +11,6 @@ import type { TusState, InitData } from "./types";
 
 //TODO - if has feature detection results - for example: check if parallel ext supported by server - if not - disable options.parallel
 //TODO - persist feature detection in session state per server(url)
-//TODO tus-uploady - useClearResumableStore - delete all resumable storage itemss
-//TODO - unit tests ~100%
 //TODO - typescript definitions + test
 //TODO - E2E - test resume/abort/resume-done works
 //TODO - E2E - test resume with delay

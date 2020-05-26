@@ -20,8 +20,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@rpldy/tus-sender": "^0.1.11",
-    "@rpldy/shared": "^0.1.10"
+    "@rpldy/shared": "^0.1.10",
+    "@rpldy/tus-sender": "^0.2.0"
   },
   "devDependencies": {
     "@rpldy/uploader": "^0.1.11",

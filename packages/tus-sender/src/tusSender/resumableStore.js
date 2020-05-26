@@ -1,6 +1,8 @@
 // @flow
-import { logger, safeLocalStorage } from "@rpldy/shared";
+import { logger } from "@rpldy/shared";
+import { safeLocalStorage } from "@rpldy/safe-storage";
 import { DEFAULT_OPTIONS } from "../defaults";
+
 import type { BatchItem } from "@rpldy/shared";
 import type { TusOptions } from "../types";
 

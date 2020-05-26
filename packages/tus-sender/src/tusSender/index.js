@@ -13,7 +13,10 @@ const initializeState = (uploader: UploaderType, options: TusOptions): TusState 
 	const { state, update } = getUpdateable<State>({
 		options,
 		items: {},
-		//featureDetection
+		featureDetection: {
+			extensions: null,
+			pending: false,
+		}
 	});
 
 	const tusState = {

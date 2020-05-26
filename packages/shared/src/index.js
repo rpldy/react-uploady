@@ -1,5 +1,4 @@
 // @flow
-
 import invariant from "invariant";
 import throttle from "just-throttle";
 import { BATCH_STATES, FILE_STATES } from "./consts";
@@ -8,7 +7,6 @@ import triggerCancellable from "./triggerCancellable";
 import triggerUpdater from "./triggerUpdater";
 import createBatchItem from "./batchItem";
 import request, { parseResponseHeaders } from "./request";
-import { safeLocalStorage } from "./storage";
 
 export {
     BATCH_STATES,
@@ -27,7 +25,6 @@ export {
     createBatchItem,
     request,
     parseResponseHeaders,
-    safeLocalStorage,
 };
 
 export {

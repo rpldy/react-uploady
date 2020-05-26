@@ -1,4 +1,4 @@
-import { safeLocalStorage } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { safeLocalStorage } from "@rpldy/safe-storage/src/tests/mocks/safeStorage.mock";
 import { DEFAULT_OPTIONS } from "../../defaults";
 import {
 	persistResumable,
@@ -36,9 +36,7 @@ describe("resumeableStore tests", () => {
 	describe("persistResumable tests", () => {
 
 		it("should persist url for item with default prefix ", () => {
-
 			persistResumable(item, uploadUrl, { resume: true });
-
 
 			expect(safeLocalStorage.setItem)
 				.toHaveBeenCalledWith(DEFAULT_OPTIONS.storagePrefix + "a/b/c/d", expect.any(String));
@@ -81,7 +79,7 @@ describe("resumeableStore tests", () => {
 		});
 
 		it("should return undefined if resume = false", () => {
-			const url = retrieveResumable(item, { });
+			const url = retrieveResumable(item, {});
 			expect(url).toBeUndefined();
 			expect(safeLocalStorage.getItem).not.toHaveBeenCalled();
 		});
@@ -99,7 +97,7 @@ describe("resumeableStore tests", () => {
 				.mockReturnValueOnce("something-else")
 				.mockReturnValueOnce((prefix || DEFAULT_OPTIONS.storagePrefix) + "456");
 
-			clearResumables({storagePrefix: prefix});
+			clearResumables({ storagePrefix: prefix });
 
 			expect(safeLocalStorage.removeItem).toHaveBeenCalledTimes(2);
 		});

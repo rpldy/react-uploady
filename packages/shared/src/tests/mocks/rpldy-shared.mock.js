@@ -20,8 +20,6 @@ const parseResponseHeaders = jest.fn();
 
 const utils = jest.genMockFromModule("../../utils");
 
-const safeLocalStorage = jest.genMockFromModule("../../storage/localStorage").default;
-
 //keep merge working - dont mock it
 utils.merge.mockImplementation((...args) => merge(...args));
 utils.getMerge.mockImplementation((...args) => getMerge(...args));
@@ -50,8 +48,6 @@ const sharedMock = {
     parseResponseHeaders,
 
     ...utils,
-
-    safeLocalStorage,
 };
 
 jest.doMock("@rpldy/shared", () => sharedMock);
@@ -72,6 +68,4 @@ export {
     parseResponseHeaders,
 
     utils,
-
-    safeLocalStorage,
 };

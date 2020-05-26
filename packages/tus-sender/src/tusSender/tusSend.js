@@ -4,6 +4,7 @@ import { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
 import xhrSend from "@rpldy/sender";
 import initTusUpload from "./initTusUpload";
 import { TUS_SENDER_TYPE } from "./consts";
+import doFeatureDetection from "./featureDetection";
 
 import type { BatchItem } from "@rpldy/shared";
 import type {
@@ -13,6 +14,33 @@ import type {
 	SendResult,
 } from "@rpldy/chunked-sender";
 import type { TusState } from "./types";
+
+const doUpload = (
+	items,
+	url,
+	sendOptions,
+	onProgress,
+	tusState,
+	chunkedSender,
+	fdRequest
+) => {
+	let tusAbort;
+
+	const callInit = () => {
+		const tusResult = initTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender);
+		tusAbort = tusResult.abort;
+		return tusResult.request;
+	};
+
+	return {
+		request: fdRequest ?
+			fdRequest.request.then(callInit, callInit) : callInit(),
+
+		abort: () => tusAbort ?
+			tusAbort() :
+			fdRequest?.abort(),
+	};
+};
 
 export default (chunkedSender: ChunkedSender, tusState: TusState) => {
 	const tusSend = (
@@ -29,7 +57,19 @@ export default (chunkedSender: ChunkedSender, tusState: TusState) => {
 		} else {
 			//TUS only supports a single file upload (no grouping)
 			logger.debugLog(`tusSender: sending file using TUS protocol`);
-			const { request, abort } = initTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender);
+
+			let fdRequest = tusState.getState().options.featureDetection ?
+				doFeatureDetection(url, tusState) :
+				null;
+
+			const { request, abort } = doUpload(
+				items,
+				url,
+				sendOptions,
+				onProgress,
+				tusState,
+				chunkedSender,
+				fdRequest);
 
 			result = {
 				request,

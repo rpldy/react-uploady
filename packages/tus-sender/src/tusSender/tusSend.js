@@ -38,7 +38,7 @@ const doUpload = (
 
 		abort: () => tusAbort ?
 			tusAbort() :
-			fdRequest?.abort(),
+			fdRequest?.abort() || false,
 	};
 };
 

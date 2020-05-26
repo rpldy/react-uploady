@@ -4,8 +4,6 @@ import { SUCCESS_CODES, KNOWN_EXTENSIONS } from "./consts";
 
 import type { TusState } from "./types";
 
-const KNOWN_EXT_KEYS = Object.keys(KNOWN_EXTENSIONS);
-
 const optionsConverter = {
 	[KNOWN_EXTENSIONS.CONCATENATION]: (extensions: string[], tusState: TusState) => {
 	},
@@ -30,10 +28,8 @@ const handleResponse = async (pXhr: Promise<XMLHttpRequest>, tusState: TusState)
 
 				const extArr = tusExtensions.split(",");
 
-				KNOWN_EXT_KEYS.forEach((key) => {
-					if (optionsConverter[key]) {
-						optionsConverter[key](extArr, tusState);
-					}
+				Object.keys(optionsConverter).forEach((key: string) => {
+					optionsConverter[key](extArr, tusState);
 				});
 			}
 

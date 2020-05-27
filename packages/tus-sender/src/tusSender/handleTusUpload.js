@@ -10,13 +10,6 @@ import type { ChunkedSender, OnProgress } from "@rpldy/chunked-sender";
 import type { TusState } from "../types";
 import type { InitData } from "./types";
 
-//TODO - typescript definitions + test
-//TODO - E2E - test resume/abort/resume-done works
-//TODO - E2E - test resume with delay
-//TODO - E2E - test forget on success
-//TODO - E2E - test parallel upload
-//TODO - E2E parallel + sendDataOnCreate together !
-
 const doChunkedUploadForItem = (
 	items: BatchItem[],
 	url: string,

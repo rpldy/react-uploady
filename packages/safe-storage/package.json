@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.1.12",
   "name": "@rpldy/safe-storage",
   "description": "safe (dont throw) versions of local and session storage",
   "author": "yoav niran (https://github.com/yoavniran)",

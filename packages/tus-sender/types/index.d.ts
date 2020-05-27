@@ -1,10 +1,11 @@
 import { UploaderEnhancer } from "@rpldy/uploader";
 import { ChunkedOptions } from "@rpldy/chunked-sender";
 
-export interface TusOptions extends ChunkedOptions{
+export interface TusOptions extends ChunkedOptions {
     version?: string;
     featureDetection?: boolean;
     featureDetectionUrl?: string | null;
+    onFeaturesDetected?: (extensions: string[]) => TusOptions | void;
     resume?: boolean;
     deferLength?: boolean;
     overrideMethod?: boolean;

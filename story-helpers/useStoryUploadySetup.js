@@ -31,7 +31,7 @@ export const mockDestination = () => ({
     enhancer: mockSenderEnhancer
 });
 
-export const localDestination = ({noLong = false}) => {
+export const localDestination = ({noLong = false} = {}) => {
 	console.log("GETTING LOCAL DESTINATION ", noLong);
 
     let result;

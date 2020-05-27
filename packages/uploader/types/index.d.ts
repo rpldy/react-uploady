@@ -19,6 +19,7 @@ export type SendOptions = {
     forceJsonResponse?: boolean;
     withCredentials?: boolean;
     formatGroupParamName?: FormatParamGroupNameMethod;
+    sendWithFormData: boolean;
 };
 
 export type UploadAddMethod = (files: UploadInfo | UploadInfo[], addOptions?: UploadOptions) => Promise<void>

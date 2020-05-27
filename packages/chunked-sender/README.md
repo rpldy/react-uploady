@@ -28,3 +28,12 @@ These will be handed over to the default [@rpldy/sender]()
 #NPM:
   $ npm i @rpldy/chunked-sender
 ``` 
+
+## Options
+
+| Name (* = mandatory) | Type          | Default       | Description  
+| --------------       | ------------- | ------------- | ------------
+| chunked               | boolean       | true          | chunk uploads. setting to false will return to default sending behavior
+| chunkSize             | number        | 5242880      | the chunk size. relevant when uploaded file is larger than the value
+| retries               | number        | 0             | how many times to retry sending a failed chunk
+| parallel              | number        | 0             | how many (chunk) requests to send simultaneously

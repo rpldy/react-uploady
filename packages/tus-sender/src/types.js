@@ -25,7 +25,7 @@ export type TusOptions = {
     storagePrefix?: string,
     //milliseconds to wait before retrying a locked resumable file (default: 2000)
     lockedRetryDelay?: number,
-	//whether to remove URL from localStorage when upload finishes successfully
+	//whether to remove URL from localStorage when upload finishes successfully (default: false)
 	forgetOnSuccess?: boolean,
 };
 

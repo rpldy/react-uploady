@@ -37,7 +37,7 @@ module.exports = {
             "core": {
                 pkgs: [PKGS.LIFE_EVENTS, PKGS.SHARED, PKGS.SENDER, PKGS.UPLOADER],
                 target: PKGS.UPLOADER,
-                maxSize: 10500,
+                maxSize: 11000,
             },
 
             /**
@@ -49,7 +49,7 @@ module.exports = {
                 config: {
                     externals: ["react", "react-dom"],
                 },
-                maxSize: 13000,
+                maxSize: 13500,
             },
 
             /**
@@ -61,7 +61,7 @@ module.exports = {
                 config: {
                     externals: ["react", "react-dom"],
                 },
-                maxSize: 15500,
+                maxSize: 16500,
             },
 
             /**
@@ -106,7 +106,7 @@ module.exports = {
                         },
                     };
                 },
-                maxSize: 17500,
+                maxSize: 22500,
             },
 
             //TODO: find a way to make this work with global object assignment (webpack externals root)

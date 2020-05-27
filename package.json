@@ -117,7 +117,6 @@
     "storybook-readme": "^5.0.8",
     "storybook-styled-components": "^1.1.4",
     "styled-components": "^4.4.1",
-    "tus-js-client": "^2.1.1",
     "typescript": "^3.8.3",
     "virtual-module-webpack-plugin": "^0.4.1",
     "wait-on": "^4.0.2",

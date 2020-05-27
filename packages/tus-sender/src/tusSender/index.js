@@ -6,8 +6,7 @@ import handleEvents from "./handleEvents";
 import getTusSend from "./tusSend";
 
 import type { UploaderType } from "@rpldy/uploader";
-import type { TusOptions } from "../types";
-import type { State, TusState } from "./types";
+import type { TusOptions, State, TusState } from "../types";
 
 const initializeState = (uploader: UploaderType, options: TusOptions): TusState => {
 	const { state, update } = getUpdateable<State>({
@@ -15,7 +14,8 @@ const initializeState = (uploader: UploaderType, options: TusOptions): TusState 
 		items: {},
 		featureDetection: {
 			extensions: null,
-			pending: false,
+			version: null,
+			processed: false,
 		}
 	});
 

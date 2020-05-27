@@ -2,7 +2,7 @@ import { FILE_STATES } from "@rpldy/shared";
 import createUpload from "../initTusUpload/createUpload";
 import { persistResumable } from "../resumableStore";
 import finalizeParallelUpload from "../finalizeParallelUpload";
-import createMockState from "../tests/tusState.mock";
+import createMockState from "../../tests/tusState.mock";
 import handleTusUpload from "../handleTusUpload";
 
 jest.mock("../initTusUpload/createUpload", () => jest.fn());

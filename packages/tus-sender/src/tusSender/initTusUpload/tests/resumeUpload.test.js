@@ -1,5 +1,5 @@
 import { request } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
-import createMockState from "../../tests/tusState.mock";
+import createMockState from "../../../tests/tusState.mock";
 import { removeResumable } from "../../resumableStore";
 import resumeUpload from "../resumeUpload";
 

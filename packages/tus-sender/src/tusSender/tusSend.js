@@ -3,8 +3,8 @@ import { logger } from "@rpldy/shared";
 import { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
 import xhrSend from "@rpldy/sender";
 import initTusUpload from "./initTusUpload";
-import { TUS_SENDER_TYPE } from "./consts";
-import doFeatureDetection from "./featureDetection";
+import { TUS_SENDER_TYPE } from "../consts";
+import doFeatureDetection from "../featureDetection";
 
 import type { BatchItem } from "@rpldy/shared";
 import type {
@@ -13,7 +13,7 @@ import type {
 	SendOptions,
 	SendResult,
 } from "@rpldy/chunked-sender";
-import type { TusState } from "./types";
+import type { TusState } from "../types";
 
 const doUpload = (
 	items,

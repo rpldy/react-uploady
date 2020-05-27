@@ -1,5 +1,5 @@
-import { TUS_SENDER_TYPE } from "../consts";
-import createMockState from "./tusState.mock";
+import { TUS_SENDER_TYPE } from "../../consts";
+import createMockState from "../../tests/tusState.mock";
 
 describe("tusSend tests", () => {
 	let getTusSend, xhrSend;
@@ -36,11 +36,11 @@ describe("tusSend tests", () => {
 
 			jest.mock("@rpldy/sender", () => jest.fn());
 			jest.mock("../initTusUpload", () => jest.fn());
-			jest.mock("../featureDetection", () => jest.fn());
+			jest.mock("../../featureDetection", () => jest.fn());
 
 			getTusSend = require("../tusSend").default;
 			initTusUpload = require("../initTusUpload");
-			doFeatureDetection = require("../featureDetection");
+			doFeatureDetection = require("../../featureDetection");
 		});
 
 		beforeEach(() => {

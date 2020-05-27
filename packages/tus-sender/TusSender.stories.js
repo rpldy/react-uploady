@@ -34,34 +34,34 @@ const useUploaderWithTus = (tusOptions = {}) => {
 	}, [enhancer, destination, destinationType]);
 
 	return uploaderRef;
-} ;
+};
 
 export const WithTusSender = () => {
-    const inputRef = useRef(null);
+	const inputRef = useRef(null);
 	const uploaderRef = useUploaderWithTus();
 
-    const onClick = useCallback(() => {
-        const input = inputRef.current;
-        if (input) {
-            input.value = "";
-            input.click();
-        }
-    }, []);
+	const onClick = useCallback(() => {
+		const input = inputRef.current;
+		if (input) {
+			input.value = "";
+			input.click();
+		}
+	}, []);
 
-    const onInputChange = useCallback(() => {
-        uploaderRef.current?.add(inputRef.current?.files);
-    }, []);
+	const onInputChange = useCallback(() => {
+		uploaderRef.current?.add(inputRef.current?.files);
+	}, []);
 
-    return <div>
-        <p>Uses Uploader & TUS Sender</p>
-        <input type="file" ref={inputRef} style={{ display: "none" }} onChange={onInputChange}/>
-        <button id="upload-button" onClick={onClick}>Upload with TUS</button>
-    </div>
+	return <div>
+		<p>Uses Uploader & TUS Sender</p>
+		<input type="file" ref={inputRef} style={{ display: "none" }} onChange={onInputChange}/>
+		<button id="upload-button" onClick={onClick}>Upload with TUS</button>
+	</div>
 };
 
 export const WithTusDataOnCreate = () => {
 	const inputRef = useRef(null);
-	const uploaderRef = useUploaderWithTus({sendDataOnCreate: true});
+	const uploaderRef = useUploaderWithTus({ sendDataOnCreate: true });
 
 	const onClick = useCallback(() => {
 		const input = inputRef.current;
@@ -84,7 +84,7 @@ export const WithTusDataOnCreate = () => {
 
 export const WithTusConcatenation = () => {
 	const inputRef = useRef(null);
-	const uploaderRef = useUploaderWithTus({parallel: 2});
+	const uploaderRef = useUploaderWithTus({ parallel: 2 });
 
 	const onClick = useCallback(() => {
 		const input = inputRef.current;
@@ -100,6 +100,36 @@ export const WithTusConcatenation = () => {
 
 	return <div>
 		<p>Uses Uploader & TUS Sender with data on create</p>
+		<input type="file" ref={inputRef} style={{ display: "none" }} onChange={onInputChange}/>
+		<button id="upload-button" onClick={onClick}>Upload with TUS</button>
+	</div>
+};
+
+export const WithFeatureDetection = () => {
+	const inputRef = useRef(null);
+	const uploaderRef = useUploaderWithTus({
+		featureDetection: true,
+		onFeaturesDetected: (extensions) => {
+			return ~extensions.indexOf("concatenation") ?
+				{ parallel: 2 } :
+				null;
+		}
+	});
+
+	const onClick = useCallback(() => {
+		const input = inputRef.current;
+		if (input) {
+			input.value = "";
+			input.click();
+		}
+	}, []);
+
+	const onInputChange = useCallback(() => {
+		uploaderRef.current?.add(inputRef.current?.files);
+	}, []);
+
+	return <div>
+		<p>Uses Uploader & TUS Sender with server feature detection</p>
 		<input type="file" ref={inputRef} style={{ display: "none" }} onChange={onInputChange}/>
 		<button id="upload-button" onClick={onClick}>Upload with TUS</button>
 	</div>
@@ -134,17 +164,17 @@ export const WithTusConcatenation = () => {
 // };
 
 export default {
-    title: "TUS Sender",
-    decorators: [withKnobs],
-    parameters: {
-        readme: {
-            sidebar: readme,
-        },
-        options: {
-            showPanel: true,
-            //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-            theme: {}
-        },
-    },
+	title: "TUS Sender",
+	decorators: [withKnobs],
+	parameters: {
+		readme: {
+			sidebar: readme,
+		},
+		options: {
+			showPanel: true,
+			//needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
+			theme: {}
+		},
+	},
 };
 

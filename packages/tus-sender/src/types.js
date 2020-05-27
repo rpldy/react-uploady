@@ -1,5 +1,6 @@
 // @flow
 import type { ChunkedOptions } from "@rpldy/chunked-sender";
+import type { ItemInfo } from "./tusSender/types";
 
 export type TusOptions = {
     ...ChunkedOptions,
@@ -10,8 +11,10 @@ export type TusOptions = {
     featureDetection?: boolean,
 	//URL to query for TUS server feature detection, in case different from upload URL (default: null)
 	featureDetectionUrl?: ?string,
-    //whether to resume an incomplete upload in case a local key is found
-    resume?: boolean,
+    //optional callback to return different options based on server declared extensions
+	onFeaturesDetected?: (string[]) => ?TusOptions,
+	//whether to resume an incomplete upload in case a local key is found
+	resume?: boolean,
     //https://tus.io/protocols/resumable-upload.html#upload-defer-length (default: false)
     deferLength?: boolean,
     //whether to use X-HTTP-Method-Override header instead of PATCH (default: false)
@@ -24,4 +27,24 @@ export type TusOptions = {
     lockedRetryDelay?: number,
 	//whether to remove URL from localStorage when upload finishes successfully
 	forgetOnSuccess?: boolean,
+};
+
+export type RequestResult<T> = {
+	request: Promise<T>,
+	abort: () => boolean,
+}
+
+export type State = {
+	options: TusOptions,
+	items: { [string]: ItemInfo },
+	featureDetection: {
+		extensions: ?string,
+		version: ?string,
+		processed: boolean,
+	},
+};
+
+export type TusState = {
+	getState: () => State,
+	updateState: ((State) => void) => State,
 };

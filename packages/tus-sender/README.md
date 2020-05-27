@@ -40,4 +40,22 @@ On top of the Core Protocol, Uploady supports the following extensions:
 ## Options
 
 
+## Feature Detection
+
+will request extensions from server
+
+by default will turn off options that the server doesnt support
+
+- KNOWN_EXTENSIONS.CONCATENATION - parallel
+
+- CREATION_WITH_UPLOAD - sendDataOnCreate
+
+- CREATION_DEFER_LENGTH - deferLength
+
+unless onFeaturesDetected option is provided - then its up to you to handle the options (turn on/off)
+the object returned by the onFeaturesDetected callback will be merged into the existing options 
+
+For this to work when the TUS server is served from a different origin than the page making the request, 
+the server must allow these headers: __Tus-Extension__ and __Tus-Version__ to be read over CORS. Otherwise, it will not work and feature detection will be skipped.
+
 ## Example

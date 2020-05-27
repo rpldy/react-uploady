@@ -5,6 +5,7 @@ export default (initState = {}) => {
             version: "1",
             ...initState?.options,
         },
+		featureDetection: {},
         ...initState
     };
 

@@ -4,16 +4,15 @@ import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { CHUNKING_SUPPORT, CHUNK_EVENTS, } from "@rpldy/chunked-sender";
 import { removeResumable } from "./resumableStore";
 import initTusUpload from "./initTusUpload";
-import { SUCCESS_CODES } from "./consts";
+import { SUCCESS_CODES } from "../consts";
 
 import type {
 	ChunkedSender,
 	ChunkStartEventData,
 	ChunkFinishEventData
 } from "@rpldy/chunked-sender";
-import type { TusState, State } from "./types";
 import type { UploaderType } from "@rpldy/uploader";
-import type { TusOptions } from "../types";
+import type { TusOptions, TusState, State } from "../types";
 
 const PATCH = "PATCH";
 

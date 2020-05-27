@@ -7,10 +7,9 @@ import finalizeParallelUpload from "./finalizeParallelUpload";
 import type { SendOptions } from "@rpldy/sender";
 import type { BatchItem } from "@rpldy/shared";
 import type { ChunkedSender, OnProgress } from "@rpldy/chunked-sender";
-import type { TusState, InitData } from "./types";
+import type { TusState } from "../types";
+import type { InitData } from "./types";
 
-//TODO - if has feature detection results - for example: check if parallel ext supported by server - if not - disable options.parallel
-//TODO - persist feature detection in session state per server(url)
 //TODO - typescript definitions + test
 //TODO - E2E - test resume/abort/resume-done works
 //TODO - E2E - test resume with delay

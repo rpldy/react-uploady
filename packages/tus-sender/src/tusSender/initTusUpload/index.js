@@ -8,7 +8,7 @@ import handleTusUpload from "../handleTusUpload";
 import type { BatchItem } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
 import type { ChunkedSender, OnProgress } from "@rpldy/chunked-sender";
-import type { TusState, State } from "../types";
+import type { TusState, State } from "../../types";
 
 const createStateItemData = (item: BatchItem, tusState: TusState) => {
 	tusState.updateState((state: State) => {

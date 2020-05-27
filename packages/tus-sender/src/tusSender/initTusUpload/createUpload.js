@@ -1,12 +1,13 @@
 // @flow
 import { logger, request } from "@rpldy/shared";
 import { getChunkDataFromFile } from "@rpldy/chunked-sender";
-import { SUCCESS_CODES } from "../consts";
+import { SUCCESS_CODES } from "../../consts";
 import { getUploadMetadata } from "../utils";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
-import type { State, TusState, InitUploadResult  } from "../types";
+import type { InitUploadResult  } from "../types";
+import type { State, TusState } from "../../types";
 
 export const resolveUploadUrl = (createUrl: string, location: string) => {
     let uploadUrl;

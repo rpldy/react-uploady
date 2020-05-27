@@ -1,6 +1,6 @@
 import { request } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { getChunkDataFromFile } from "@rpldy/chunked-sender";
-import createMockState from "../../tests/tusState.mock";
+import createMockState from "../../../tests/tusState.mock";
 import createUpload, { resolveUploadUrl } from "../createUpload";
 
 jest.mock("@rpldy/chunked-sender", () => ({

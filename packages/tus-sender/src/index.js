@@ -1,7 +1,7 @@
 // @flow
 
 import getTusEnhancer from "./getTusEnhancer";
-import { TUS_SENDER_TYPE } from "./tusSender/consts";
+import { TUS_SENDER_TYPE } from "./consts";
 
 export {
     TUS_SENDER_TYPE,
@@ -10,8 +10,3 @@ export {
 };
 
 export default getTusEnhancer;
-
-export type {
-    TusOptions,
-
-} from "./types";

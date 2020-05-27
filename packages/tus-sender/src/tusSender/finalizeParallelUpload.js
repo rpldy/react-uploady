@@ -1,11 +1,11 @@
 // @flow
 import { request, logger, FILE_STATES } from "@rpldy/shared";
 import { getUploadMetadata } from "./utils";
-import { SUCCESS_CODES } from "./consts";
+import { SUCCESS_CODES } from "../consts";
 
 import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
-import type { TusState } from "./types";
+import type { TusState } from "../types";
 
 export default async (
 	item: BatchItem,

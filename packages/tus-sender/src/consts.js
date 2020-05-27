@@ -12,3 +12,4 @@ export const KNOWN_EXTENSIONS = {
 	CREATION_DEFER_LENGTH: "creation-defer-length",
 };
 
+export const FD_STORAGE_PREFIX = "rpldy_tus_fd_";

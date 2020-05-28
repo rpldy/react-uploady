@@ -24,15 +24,12 @@ describe("UMD Core - Bundle", () => {
             cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 1 });
             cy.storyLog().assertLogPattern(/ITEM_START/, { times: 1 });
 
-            cy.wait("@uploadReq")
-				.then((req) => {
-					cy.log("request body = " + req.request.body.name, req.request.body);
-					expect(req.request.body.name).to.eq(fileName);
-				});
-                // .its("request.body")
-                // .should((body) => {
-                //     expect(body.get("file").name).to.eq(fileName);
-                // })
+            cy.wait("@uploadReq").its("status").should("eq", 200);
+
+			cy.get("@uploadReq").its("request.body")
+                .should((body) => {
+                    expect(body.name).to.eq(fileName);
+                });
         }, "#upload-button");
     });
 });

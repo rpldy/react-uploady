@@ -26,9 +26,9 @@ describe("UMD UI CORE - Bundle", () => {
 
 			cy.wait("@uploadReq").its("status").should("eq", 200);
 
-			cy.get("@uploadReq").its("request.body")
-				.should((body) => {
-					expect(body.name).to.eq(fileName);
+			cy.get("@uploadReq")
+				.then((req) => {
+					expect(req.request.body.name).to.eq(fileName);
 				});
         }, "#upload-button");
     });

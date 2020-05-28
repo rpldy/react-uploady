@@ -135,34 +135,6 @@ export const WithFeatureDetection = () => {
 	</div>
 };
 
-// export const WithTusJsClient  = () => {
-//     const inputRef = useRef();
-//
-//     const onInputChange = useCallback(() => {
-//
-//         const upload = new Tus(inputRef.current?.files[0], {
-//             endpoint: "http://localhost:4000/upload",
-//             chunkSize: 5242880,
-//
-//             onError: error => {
-//                 console.log("Failed because: ", error);
-//             },
-//
-//             onSuccess: () => {
-//                 console.log("Success", upload);
-//             }
-//         });
-//
-//         upload.start();
-//
-//     }, []);
-//
-//     return <div>
-//         <p>Uses TUS JS Client</p>
-//         <input type="file" ref={inputRef} onChange={onInputChange}/>
-//     </div>
-// };
-
 export default {
 	title: "TUS Sender",
 	decorators: [withKnobs],

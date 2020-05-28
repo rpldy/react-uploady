@@ -26,6 +26,7 @@ describe("UMD Core - Bundle", () => {
 
             cy.wait("@uploadReq")
 				.then((req) => {
+					cy.log("request body = " + req.request.body.name, req.request.body);
 					expect(req.request.body.name).to.eq(fileName);
 				});
                 // .its("request.body")

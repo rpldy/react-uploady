@@ -262,10 +262,10 @@ describe("processBatchItems tests", () => {
 
         expect(processFinishedRequest)
             .toHaveBeenCalledWith(queueState,
-                [{ id: "u1", info: { state: FILE_STATES.CANCELLED, response: "cancel" } },
+                [{ id: "u1", info: { state: FILE_STATES.CANCELLED, response: "cancel", status: 0 } },
                     {
                         id: "u2",
-                        info: { state: FILE_STATES.CANCELLED, response: "cancel" }
+                        info: { state: FILE_STATES.CANCELLED, response: "cancel", status: 0}
                     }], mockNext);
 
         expect(queueState.state.activeIds).toHaveLength(0);
@@ -301,7 +301,7 @@ describe("processBatchItems tests", () => {
             .toHaveBeenCalledWith(queueState,
                 [{
                     id: "u2",
-                    info: { state: FILE_STATES.CANCELLED, response: "cancel" }
+                    info: { state: FILE_STATES.CANCELLED, response: "cancel", status: 0 }
                 }], mockNext);
 
         expect(queueState.getState().activeIds).toEqual(["u1"]);

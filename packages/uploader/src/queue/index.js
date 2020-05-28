@@ -101,7 +101,7 @@ export default (
     };
 
     if (logger.isDebugOn()) {
-        window[`__${uploaderId}_queue_state`] = queueState;
+        window[`__rpldy_${uploaderId}_queue_state`] = queueState;
     }
 
     const abortItem = (id: string) => {

@@ -3,6 +3,7 @@ import { BatchItem, FormatParamGroupNameMethod, UploadData } from "@rpldy/shared
 export type SendResult = {
     request: Promise<UploadData>;
     abort: () => boolean;
+    senderType: string;
 };
 
 export type SenderProgressEvent = {

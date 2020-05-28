@@ -30,6 +30,7 @@ export type ProgressInfo = {
 };
 
 export type UploadData = {
+    status: number,
 	state: FileState,
 	response: any,
 };
@@ -102,6 +103,8 @@ export type UploadOptions = {|
 	forceJsonResponse?: boolean,
 	//whether to set XHR withCredentials to true (default: false)
 	withCredentials?: boolean,
+    //whether file/url data will be sent as part of formdata (default: true)
+    sendWithFormData?: boolean,
 |};
 
 export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];
@@ -111,3 +114,10 @@ export type Cancellable = (string, ...args: mixed[]) => Promise<boolean>;
 export type Updater<T> = (string, ...args: mixed[]) => Promise<?T>;
 
 export type GetExact<T> = T & $Shape<T>;
+
+export type RequestOptions = {
+    method?: string,
+    headers?: Object,
+    withCredentials?: boolean,
+    preSend?: (XMLHttpRequest) => void,
+};

@@ -1,9 +1,9 @@
+import { FILE_STATES } from "@rpldy/shared";
 import ChunkedSendError from "../ChunkedSendError";
 import handleChunkRequest from "../handleChunkRequest";
 import getChunksToSend from "../getChunksToSend";
 import sendChunk from "../sendChunk";
 import sendChunks, { handleChunk } from "../sendChunks";
-import { FILE_STATES } from "@rpldy/shared";
 
 jest.mock("../handleChunkRequest", () => jest.fn());
 jest.mock("../getChunksToSend", () => jest.fn());
@@ -85,34 +85,36 @@ describe("sendChunks tests", () => {
                 ...state,
             };
 
-            await sendChunks(state, item, onProgress, resolve);
+            const trigger = noop();
 
-            return { state, item, onProgress };
+            await sendChunks(state, item, onProgress, resolve, trigger);
+
+            return { state, item, onProgress, trigger };
         };
 
         it("should send chunk when no in progress", async () => {
             const chunk = {};
-            const { state, item, onProgress } = await doSend([chunk]);
-            expect(sendChunk).toHaveBeenCalledWith(chunk, item, "test.com", state.sendOptions, onProgress);
+            const { state, item, onProgress, trigger } = await doSend([chunk]);
+            expect(sendChunk).toHaveBeenCalledWith(chunk, state, item, onProgress, trigger);
         });
 
         it("should send chunk when parallel allowed", async() => {
             const chunk = {};
-            const { state, item, onProgress } = await doSend([chunk], {
+            const { state, item, onProgress, trigger } = await doSend([chunk], {
                 requests: { c1: {} },
                 parallel: 2
             });
-            expect(sendChunk).toHaveBeenCalledWith(chunk, item, "test.com", state.sendOptions, onProgress);
+            expect(sendChunk).toHaveBeenCalledWith(chunk, state, item, onProgress, trigger);
         });
 
         it("should send chunk if parallel allowed", async () => {
             const chunk = {}, chunk2 = {};
-            const { state, item, onProgress } = await doSend([chunk, chunk2], {
+            const { state, item, onProgress, trigger } = await doSend([chunk, chunk2], {
                 requests: { c1: {} },
                 parallel: 2
             });
-            expect(sendChunk).toHaveBeenCalledWith(chunk, item, "test.com", state.sendOptions, onProgress);
-            expect(sendChunk).toHaveBeenCalledWith(chunk2, item, "test.com", state.sendOptions, onProgress);
+            expect(sendChunk).toHaveBeenCalledWith(chunk, state, item,  onProgress, trigger);
+            expect(sendChunk).toHaveBeenCalledWith(chunk2, state, item, onProgress, trigger);
         });
 
         it("should resolve with chunk failed error in case sendChunk throws", async () => {
@@ -148,9 +150,13 @@ describe("sendChunks tests", () => {
             const chunkId = "c1";
 
             const resolve = jest.fn();
-            await handleChunk(state, {}, {}, resolve, { id: chunkId });
+            const trigger = jest.fn();
 
-            expect(handleChunkRequest).toHaveBeenCalledWith(state, chunkId, result);
+            await handleChunk(state, {}, {}, resolve, { id: chunkId }, trigger);
+
+            const item = {};
+
+            expect(handleChunkRequest).toHaveBeenCalledWith(state, item, chunkId, result, trigger);
 
             expect(state.finished).toBe(true);
 
@@ -171,8 +177,12 @@ describe("sendChunks tests", () => {
                 chunks: [1, 2],
             };
 
+            const trigger = jest.fn();
             const resolve = jest.fn();
-            await handleChunk(state, {}, {}, resolve, { id: "c1" });
+
+            const chunk = { id: "c1", start: 1, end: 2 };
+
+            await handleChunk(state, {}, {}, resolve, chunk, trigger);
 
             expect(state.finished).toBeFalsy();
             expect(resolve).not.toHaveBeenCalled();
@@ -181,4 +191,3 @@ describe("sendChunks tests", () => {
         });
     });
 });
-

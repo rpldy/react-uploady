@@ -1,5 +1,6 @@
 // @flow
 import { logger, FILE_STATES } from "@rpldy/shared";
+import { MOCK_SENDER_TYPE } from "../consts";
 import { MOCK_DEFAULTS } from "./defaults";
 
 import type { UploadData, BatchItem, } from "@rpldy/shared";
@@ -100,6 +101,7 @@ const processResponse = (request, options: MandatoryMockOptions): Promise<Upload
 		logger.debugLog("uploady.mockSender: mock request finished successfully");
 
 		return {
+            status: options.responseStatus || 200,
 			state: FILE_STATES.FINISHED,
 			response: {
 				...mockResponse,
@@ -115,8 +117,9 @@ const processResponse = (request, options: MandatoryMockOptions): Promise<Upload
 			logger.debugLog("uploady.mockSender: mock request was aborted");
 
 			return {
-				state: FILE_STATES.CANCELLED,
-				response: "abort",
+                status: 0,
+                state: FILE_STATES.CANCELLED,
+                response: "abort",
 			};
 		});
 };
@@ -138,6 +141,7 @@ export default (options?: MockOptions) => {
 		return {
 			request: processResponse(request, mockOptions),
 			abort: request.abort,
+            senderType: MOCK_SENDER_TYPE,
 		};
 	};
 

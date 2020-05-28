@@ -1,199 +1,241 @@
-import { FILE_STATES } from "@rpldy/shared";
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "doTest"] }] */
+import {
+    FILE_STATES,
+    request,
+    parseResponseHeaders
+} from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import send, { SUCCESS_CODES } from "../xhrSender";
+import prepareFormData from "../prepareFormData";
 
 jest.mock("../prepareFormData", () => jest.fn());
-import send, { SUCCESS_CODES } from "../xhrSender";
-import mockPrepareFormData from "../prepareFormData";
 
 describe("xhrSender tests", () => {
 
-    const mockXhr = (fn) => {
-        window.XMLHttpRequest = function () {
-            const xhr = {
-                upload: {},
-                setRequestHeader: jest.fn(),
-                open: jest.fn(),
-                send: jest.fn(),
-                getAllResponseHeaders: jest.fn(),
-                abort: jest.fn(() => {
-                    xhr.onabort();
-                }),
-            };
+    beforeEach(() => {
+        clearJestMocks(
+            request,
+            parseResponseHeaders
+        );
 
-            fn(xhr);
+        parseResponseHeaders.mockReset();
+    });
 
-            return xhr;
-        };
-    };
-
-    const doTest = (tester, ex = false, options = {}) => {
-        let testXhr;
-
-        mockXhr((xhr) => {
-            testXhr = xhr;
-        });
-
+    const doTest = (options = {}, responseHeaders, items) => {
         options = {
             method: "GET",
             headers: {
                 foo: "bar",
             },
             withCredentials: true,
+            sendWithFormData: true,
             ...options
         };
 
         const mockProgress = jest.fn();
-        const items = [{ id: "u1" }, { id: "u2" }];
+        items = items || [{ id: "u1" }, { id: "u2" }];
 
         const url = "test.com";
 
+        prepareFormData.mockReturnValueOnce({ test: true });
+
+        responseHeaders = responseHeaders || { "content-type": "application/json" };
+        parseResponseHeaders.mockReturnValueOnce(responseHeaders);
+
+        let xhrResolve, xhrReject;
+
+        const xhr = {
+            upload: {},
+            abort: jest.fn(() => xhrReject()),
+        };
+
+        const pXhr = new Promise((resolve, reject) => {
+            xhrResolve = () => resolve(xhr);
+            xhrReject = () => reject(xhr);
+        });
+
+        pXhr.xhr = xhr;
+
+        request.mockReturnValueOnce(pXhr);
+
         const sendResult = send(items, url, options, mockProgress);
 
-        testXhr.getAllResponseHeaders.mockReturnValueOnce(
-            `content-type: application/json
-x-header: test`);
+        expect(request).toHaveBeenCalledWith(url,
+            options.sendWithFormData ? { test: true } : (items[0].file || items[0].url),
+            {
+                method: options.method,
+                headers: options.headers,
+                withCredentials: options.withCredentials,
+                preSend: expect.any(Function),
+            });
 
-        expect(mockPrepareFormData).toHaveBeenCalledWith(items, options);
-
-        if (options.headers) {
-            expect(testXhr.setRequestHeader).toHaveBeenCalledWith("foo", "bar");
+        if (options.sendWithFormData) {
+            expect(prepareFormData).toHaveBeenCalledWith(items, options);
         }
-
-        sendResult.request.then((data) => {
-            expect(testXhr.open).toHaveBeenCalledWith(options.method, url);
-            expect(testXhr.withCredentials).toBe(!!options.withCredentials);
-
-            if (!ex) {
-                expect(data.response.headers).toEqual({
-                    "content-type": "application/json",
-                    "x-header": "test",
-                });
-            }
-
-            tester(data);
-        });
 
         return {
             sendResult,
-            testXhr,
+            xhr,
+            pXhr,
+            xhrResolve,
+            xhrReject,
             mockProgress,
             options,
             items,
+            responseHeaders
         };
     };
 
     describe("success tests", () => {
         it.each(SUCCESS_CODES)
-        ("should make request successfully for code: %s", (code, done) => {
+        ("should make request successfully for code: %s", async (code) => {
+            const test = doTest();
 
             const responseData = { success: true };
+            test.xhr.status = code;
+            test.xhr.response = JSON.stringify(responseData);
 
-            const test = doTest((data) => {
-                expect(data.state).toEqual(FILE_STATES.FINISHED);
-                expect(data.response.data).toEqual(responseData);
+            test.xhrResolve();
 
-                done();
+            const result = await test.sendResult.request;
+
+            expect(result).toEqual({
+                state: FILE_STATES.FINISHED,
+                response: { data: { "success": true }, headers: test.responseHeaders },
+                status: code,
             });
 
-            test.testXhr.status = code;
-            test.testXhr.response = JSON.stringify(responseData);
-
-            test.testXhr.onload();
+            request.mock.calls[0][2].preSend(test.xhr);
 
             const progressEvent = { lengthComputable: true, loaded: 100 };
-            test.testXhr.upload.onprogress(progressEvent);
+            test.xhr.upload.onprogress(progressEvent);
             expect(test.mockProgress).toHaveBeenCalledWith(progressEvent, test.items);
 
-            test.testXhr.upload.onprogress({});
+            test.xhr.upload.onprogress({});
             expect(test.mockProgress).toHaveBeenCalledTimes(1);
         });
     });
 
     describe("abort tests", () => {
-        it("should abort running upload", () => {
-            return new Promise((done) => {
-                const test = doTest((data) => {
-                    expect(test.testXhr.abort).toHaveBeenCalled();
-                    expect(data.state).toBe(FILE_STATES.ABORTED);
-                    expect(data.response).toBe("aborted");
+        it("should abort running upload", async () => {
+            const test = doTest();
 
-                    done();
-                }, true);
+            test.xhr.readyState = 1;
+            test.sendResult.abort();
 
-                test.testXhr.readyState = 1;
-                test.sendResult.abort();
-            });
+            const result = await test.sendResult.request;
+            expect(result.state).toBe(FILE_STATES.ABORTED);
+            expect(result.response).toBe("aborted");
         });
 
         it("should not abort already finished upload", () => {
             const test = doTest();
 
-            test.testXhr.readyState = 4;
+            test.xhr.readyState = 4;
             test.sendResult.abort();
 
-            expect(test.testXhr.abort).not.toHaveBeenCalled();
+            expect(test.xhr.abort).not.toHaveBeenCalled();
         });
     });
 
-    it("should try parse json with forceJsonResponse", () => {
-        return new Promise((done) => {
+    describe("json parse tests", () => {
+
+        it("should try parse json with forceJsonResponse", async () => {
+
             const responseData = { success: true };
 
-            const test = doTest((data) => {
-                expect(data.state).toEqual(FILE_STATES.FINISHED);
-                expect(data.response.data).toEqual(responseData);
+            const test = doTest({ forceJsonResponse: true }, {});
 
-                done();
-            }, false, {
-                headers: null,
-                forceJsonResponse: true,
-            });
+            test.xhr.status = 200;
+            test.xhr.response = JSON.stringify(responseData);
+            test.xhrResolve();
 
-            test.testXhr.status = 200;
-            test.testXhr.response = JSON.stringify(responseData);
+            const result = await test.sendResult.request;
 
-            test.testXhr.onload();
+            expect(result.state).toEqual(FILE_STATES.FINISHED);
+            expect(result.response.data).toEqual(responseData);
+        });
+
+        it("should not parse if no header and no force", async () => {
+
+            const responseData = { success: true };
+
+            const test = doTest({}, {});
+
+            test.xhr.status = 200;
+            test.xhr.response = JSON.stringify(responseData);
+            test.xhrResolve();
+
+            const result = await test.sendResult.request;
+
+            expect(result.state).toEqual(FILE_STATES.FINISHED);
+            expect(result.response.data).toEqual(JSON.stringify(responseData));
         });
     });
 
-    it("should handle request failure", () => {
-        return new Promise((done) => {
+    describe("request error & failure tests", () => {
+
+        it("should handle request failure", async () => {
             const responseData = { failure: true };
 
-            const test = doTest((data) => {
-                expect(data.state).toEqual(FILE_STATES.ERROR);
-                expect(data.response.data).toEqual(responseData);
+            const test = doTest();
 
-                done();
+            test.xhr.status = 400;
+            test.xhr.response = JSON.stringify(responseData);
+
+            test.xhrResolve();
+
+            const result = await test.sendResult.request;
+
+            expect(result.state).toEqual(FILE_STATES.ERROR);
+            expect(result.response.data).toEqual(responseData);
+        });
+
+        it("should handle error", async () => {
+            const test = doTest();
+
+            test.xhrReject();
+
+            const result = await test.sendResult.request;
+            expect(result.state).toEqual(FILE_STATES.ERROR);
+        });
+    });
+
+    describe("without formdata tests", () => {
+
+        it("should send single item file", async () => {
+            const test = doTest({ sendWithFormData: false }, null, [{ id: "u1", file: "file" }]);
+
+            const responseData = { success: true };
+            test.xhr.status = 200;
+            test.xhr.response = JSON.stringify(responseData);
+
+            test.xhrResolve();
+
+            const result = await test.sendResult.request;
+
+            expect(result).toEqual({
+                state: FILE_STATES.FINISHED,
+                response: { data: { "success": true }, headers: test.responseHeaders },
+                status: 200,
             });
-
-            test.testXhr.status = 400;
-            test.testXhr.response = JSON.stringify(responseData);
-
-            test.testXhr.onload();
         });
-    });
 
-    it("should handle error", () => {
-        return new Promise((done) => {
-            const test = doTest((data) => {
-                expect(data.state).toEqual(FILE_STATES.ERROR);
+        it("should send single item url", async () => {
+            const test = doTest({ sendWithFormData: false }, null, [{ id: "u1", url: "url" }]);
 
-                done();
-            }, true);
+            const responseData = { success: true };
+            test.xhr.status = 200;
+            test.xhr.response = JSON.stringify(responseData);
 
-            test.testXhr.onerror();
+            test.xhrResolve();
+
+            await test.sendResult.request;
         });
-    });
 
-    it("should handle timeout", () => {
-        return new Promise((done) => {
-            const test = doTest((data) => {
-                expect(data.state).toEqual(FILE_STATES.ERROR);
-
-                done();
-            }, true);
-
-            test.testXhr.ontimeout();
+        it("should throw error on multiple items", () => {
+            expect(() => {
+                doTest({ sendWithFormData: false });
+            }).toThrow();
         });
     });
 });

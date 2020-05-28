@@ -22,7 +22,7 @@ type Updateable<T> = {
 }
 
 /**
- * deep proxies an object so it is only updateable through an update callback
+ * deep proxies an object so it is only updateable through an update callback.
  * outside an updater, it is impossible to make changes
  *
  * This a very (very) basic and naive replacement for Immer

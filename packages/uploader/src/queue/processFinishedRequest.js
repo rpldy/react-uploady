@@ -7,7 +7,7 @@ import { cleanUpFinishedBatch } from "./batchHelpers";
 import type { UploadData } from "@rpldy/shared";
 import type { ProcessNextMethod, QueueState } from "./types";
 
-const FILE_STATE_TO_EVENT_MAP = {
+export const FILE_STATE_TO_EVENT_MAP = {
     [FILE_STATES.ADDED]: UPLOADER_EVENTS.ITEM_START,
     [FILE_STATES.FINISHED]: UPLOADER_EVENTS.ITEM_FINISH,
     [FILE_STATES.ERROR]: UPLOADER_EVENTS.ITEM_ERROR,
@@ -15,6 +15,13 @@ const FILE_STATE_TO_EVENT_MAP = {
     [FILE_STATES.ABORTED]: UPLOADER_EVENTS.ITEM_ABORT,
     [FILE_STATES.UPLOADING]: UPLOADER_EVENTS.ITEM_PROGRESS,
 };
+
+const ITEM_FINALIZE_STATES = [
+  FILE_STATES.FINISHED,
+  FILE_STATES.ERROR,
+  FILE_STATES.CANCELLED,
+  FILE_STATES.ABORTED
+];
 
 type FinishData = { id: string, info: UploadData };
 
@@ -32,6 +39,7 @@ export default (queue: QueueState, finishedData: FinishData[], next: ProcessNext
                 item.uploadResponse = info.response;
             });
 
+            //get most up-to-date item data
             const item = queue.getState().items[id];
 
             if (info.state === FILE_STATES.FINISHED && item.completed < 100) {
@@ -39,7 +47,13 @@ export default (queue: QueueState, finishedData: FinishData[], next: ProcessNext
                 queue.handleItemProgress(item, 100, item.file ? item.file.size : 0);
             }
 
+            //trigger UPLOADER EVENT for item based on its state
             queue.trigger(FILE_STATE_TO_EVENT_MAP[item.state], item);
+
+            if (~ITEM_FINALIZE_STATES.indexOf(item.state)) {
+                //trigger FINALIZE event
+                queue.trigger(UPLOADER_EVENTS.ITEM_FINALIZE, item);
+            }
         }
 
         const index = state.itemQueue.indexOf(id);

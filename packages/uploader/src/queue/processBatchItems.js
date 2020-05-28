@@ -1,5 +1,11 @@
 // @flow
-import { triggerUpdater, isSamePropInArrays, merge, FILE_STATES, logger } from "@rpldy/shared";
+import {
+    triggerUpdater,
+    isSamePropInArrays,
+    FILE_STATES,
+    logger,
+    getMerge
+} from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 
@@ -13,9 +19,11 @@ type ItemsSendData = {
     options: CreateOptions
 }
 
+const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
+
 const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], options: CreateOptions): Promise<ItemsSendData> => {
     // $FlowFixMe - https://github.com/facebook/flow/issues/8215
-    const updated: {items?: BatchItem[], options?: CreateOptions } = await triggerUpdater<BatchItem[]>(
+    const updated: {items?: BatchItem[], options?: CreateOptions } = await triggerUpdater<BatchItem[], CreateOptions>(
         queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, { items, options });
 
     if (updated) {
@@ -31,7 +39,7 @@ const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], optio
         }
 
         if (updated.options) {
-            options = merge({}, options, updated.options);
+            options = mergeWithUndefined({}, options, updated.options);
         }
     }
 
@@ -85,7 +93,7 @@ const reportCancelledItems = (queue: QueueState, items: BatchItem[], cancelledRe
     if (cancelledItemsIds.length) {
         const finishedData = cancelledItemsIds.map((id: string) => ({
             id,
-            info: { state: FILE_STATES.CANCELLED, response: "cancel" },
+            info: { status: 0, state: FILE_STATES.CANCELLED, response: "cancel" },
         }));
 
         processFinishedRequest(queue, finishedData, next); //report out info about cancelled items

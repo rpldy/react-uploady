@@ -23,6 +23,7 @@ describe("eventListenerHooks tests", () => {
             [UPLOADER_EVENTS.ITEM_FINISH],
             [UPLOADER_EVENTS.ITEM_CANCEL],
             [UPLOADER_EVENTS.ITEM_ERROR],
+            [UPLOADER_EVENTS.ITEM_FINALIZE],
             [UPLOADER_EVENTS.REQUEST_PRE_SEND],
         ])("should generate hook for: %s", (event) => {
             expect(generateUploaderEventHook).toHaveBeenCalledWith(event);

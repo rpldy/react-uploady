@@ -1,5 +1,4 @@
 // @flow
-
 import invariant from "invariant";
 import throttle from "just-throttle";
 import { BATCH_STATES, FILE_STATES } from "./consts";
@@ -7,6 +6,7 @@ import * as logger from "./logger";
 import triggerCancellable from "./triggerCancellable";
 import triggerUpdater from "./triggerUpdater";
 import createBatchItem from "./batchItem";
+import request, { parseResponseHeaders } from "./request";
 
 export {
     BATCH_STATES,
@@ -23,15 +23,21 @@ export {
     triggerCancellable,
     triggerUpdater,
     createBatchItem,
+    request,
+    parseResponseHeaders,
 };
 
 export {
     isFunction,
     isSamePropInArrays,
     devFreeze,
+
     merge,
+    getMerge,
+
     clone,
     getUpdateable,
+    pick,
 } from "./utils";
 
 export type {
@@ -53,3 +59,7 @@ export type {
     GetExact,
     FileFilterMethod,
 } from "./types";
+
+export type {
+    MergeOptions
+} from "./utils/merge";

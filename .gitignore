@@ -29,11 +29,14 @@ packages/**/lib
 packages/**/.flowconfig
 packages/**/LICENSE.md
 
-test.js
+/test.js
+/experiment.js
 
 cypress/videos/
 cypress/screenshots/
 cypress/examples
 
 tstest/
+
+server/tusFiles/
 

@@ -1,15 +1,15 @@
 // @flow
-import chunkedSender from "./chunkedSender";
+import createChunkedSender from "./chunkedSender";
 
 import type { UploaderType } from "@rpldy/uploader";
 import type { ChunkedOptions } from "./types";
 
 export default (options: ChunkedOptions) => {
-    const chunkedSend = chunkedSender(options);
+    const sender = createChunkedSender(options);
 
     //return uploader enhancer
     return (uploader: UploaderType): UploaderType => {
-        uploader.update({ send: chunkedSend });
+        uploader.update({ send: sender.send });
         return uploader;
     };
 };

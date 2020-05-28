@@ -23,9 +23,9 @@ const uploadFile = (fileName, cb, button = "button", iframe = "@iframe", options
                 })));
         }
 
-        cy.get("@fInput").upload(files, { subjectType: "input" });
-
-        cb();
+        cy.get("@fInput")
+			.upload(files, { subjectType: "input" })
+			.then(cb);
     });
 };
 

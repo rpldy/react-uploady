@@ -59,7 +59,7 @@ describe("queue tests", () => {
         expect(state.items["u1"]).toBe(batch.items[0]);
         expect(state.items["u2"]).toBe(batch.items[1]);
 
-        expect(window[`__${uploaderId}_queue_state`]).toBe(queueState);
+        expect(window[`__rpldy_${uploaderId}_queue_state`]).toBe(queueState);
 
         expect(mockSenderOn).toHaveBeenCalledWith(SENDER_EVENTS.ITEM_PROGRESS, expect.any(Function));
         expect(mockSenderOn).toHaveBeenCalledWith(SENDER_EVENTS.BATCH_PROGRESS, expect.any(Function));

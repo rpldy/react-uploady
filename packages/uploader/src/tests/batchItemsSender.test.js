@@ -64,6 +64,7 @@ describe("batchItemsSender tests", () => {
             withCredentials: options.withCredentials,
             formatGroupParamName: options.formatGroupParamName,
             headers: options.destination.headers,
+			sendWithFormData: options.sendWithFormData,
         }, expect.any(Function));
 
         return {
@@ -92,6 +93,7 @@ describe("batchItemsSender tests", () => {
             forceJsonResponse: true,
             withCredentials: true,
             formatGroupParamName: "format group name",
+			sendWithFormData: true,
         });
 
         expect(mockSend).not.toHaveBeenCalled();

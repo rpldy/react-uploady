@@ -1,5 +1,6 @@
 // @flow
-import { logger, FILE_STATES } from "@rpldy/shared";
+import { logger, FILE_STATES, request, parseResponseHeaders, pick } from "@rpldy/shared";
+import { XHR_SENDER_TYPE } from "../consts";
 import prepareFormData from "./prepareFormData";
 
 import type {
@@ -21,63 +22,47 @@ type SendRequest = {
 
 export const SUCCESS_CODES = [200, 201, 202, 203, 204];
 
-const setHeaders = (req, options: SendOptions) => {
-	const headers = {
-		...(options.headers || {}),
-	};
+const getRequestData = (items: BatchItem[], options: SendOptions) => {
+	let data;
 
-	Object.keys(headers).forEach((name) =>
-		req.setRequestHeader(name, headers[name]));
+	if (options.sendWithFormData) {
+		logger.debugLog(`uploady.sender: sending ${items.length} item(s) as form data`);
+		data = prepareFormData(items, options);
+	} else {
+		if (items.length > 1) {
+			throw new Error(`XHR Sender - Request without form data can only contain 1 item. received ${items.length}`);
+		}
+
+		const item = items[0];
+		logger.debugLog(`uploady.sender: sending item ${item.id} as request body`);
+		data = item.file || item.url;
+	}
+
+	return data;
 };
 
 const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onProgress: ?OnProgress): SendRequest => {
-	const req = new XMLHttpRequest();
+	const requestData = getRequestData(items, options);
 
-	const pXhr = new Promise((resolve, reject) => {
-		const formData = prepareFormData(items, options);
-
-		req.onerror = () => reject(req);
-		req.ontimeout = () => reject(req);
-		req.onabort = () => reject(req);
-		req.onload = () => resolve(req);
-
-		req.upload.onprogress = (e) => {
-			if (e.lengthComputable && onProgress) {
-				onProgress(e, items.slice());
-			}
-		};
-
-		req.open(options.method, url);
-		setHeaders(req, options);
-		req.withCredentials = !!options.withCredentials;
-		req.send(formData);
+	const pXhr = request(url, requestData, {
+		...pick(options, ["method", "headers", "withCredentials"]),
+		preSend: (req) => {
+			req.upload.onprogress = (e) => {
+				if (e.lengthComputable && onProgress) {
+					onProgress(e, items.slice());
+				}
+			};
+		},
 	});
 
 	return {
 		url,
 		count: items.length,
 		pXhr,
-		xhr: req,
+		// $FlowFixMe -
+		xhr: pXhr.xhr,
 		aborted: false,
 	};
-};
-
-const getResponseHeaders = (xhr: XMLHttpRequest): ?Headers => {
-	let resHeaders;
-
-	try {
-		resHeaders = xhr.getAllResponseHeaders().trim()
-			.split(/[\r\n]+/)
-			.reduce((res, line: string) => {
-				const [key, val] = line.split(": ");
-				res[key] = val;
-				return res;
-			}, {});
-	} catch (ex) {
-		logger.debugLog("uploady.sender: failed to read response headers", xhr);
-	}
-
-	return resHeaders;
 };
 
 const parseResponseJson = (response: string, headers: ?Headers, options: SendOptions): string | Object => {
@@ -95,29 +80,31 @@ const parseResponseJson = (response: string, headers: ?Headers, options: SendOpt
 	return parsed;
 };
 
-const processResponse = async (request: SendRequest, options: SendOptions): Promise<UploadData> => {
-	let state, response;
+const processResponse = async (sendRequest: SendRequest, options: SendOptions): Promise<UploadData> => {
+	let state, response,
+		status = 0;
 
 	try {
-		const xhr = await request.pXhr;
+		const xhr = await sendRequest.pXhr;
 
 		logger.debugLog("uploady.sender: received upload response ", xhr);
 
 		state = ~SUCCESS_CODES.indexOf(xhr.status) ?
 			FILE_STATES.FINISHED : FILE_STATES.ERROR;
 
-		const resHeaders = getResponseHeaders(xhr);
+		status = xhr.status;
+
+		const resHeaders = parseResponseHeaders(xhr);
 
 		response = {
 			data: parseResponseJson(xhr.response, resHeaders, options),
 			headers: resHeaders,
 		};
 	} catch (ex) {
-		if (request.aborted ){
+		if (sendRequest.aborted) {
 			state = FILE_STATES.ABORTED;
 			response = "aborted";
-		}
-		else {
+		} else {
 			logger.debugLog("uploady.sender: upload failed: ", ex);
 			state = FILE_STATES.ERROR;
 			response = ex;
@@ -125,20 +112,21 @@ const processResponse = async (request: SendRequest, options: SendOptions): Prom
 	}
 
 	return {
+		status,
 		state,
 		response,
 	};
 };
 
-const abortRequest = (request: SendRequest) => {
+const abortRequest = (sendRequest: SendRequest) => {
 	let abortCalled = false;
-	const { aborted, xhr } = request;
+	const { aborted, xhr } = sendRequest;
 
 	if (!aborted && xhr.readyState && xhr.readyState !== 4) {
-		logger.debugLog(`uploady.sender: cancelling request with ${request.count} items to: ${request.url}`);
+		logger.debugLog(`uploady.sender: cancelling request with ${sendRequest.count} items to: ${sendRequest.url}`);
 
 		xhr.abort();
-		request.aborted = true;
+		sendRequest.aborted = true;
 		abortCalled = true;
 	}
 
@@ -148,10 +136,11 @@ const abortRequest = (request: SendRequest) => {
 export default (items: BatchItem[], url: string, options: SendOptions, onProgress?: OnProgress): SendResult => {
 	logger.debugLog("uploady.sender: sending file: ", { items, url, options, });
 
-	const request = makeRequest(items, url, options, onProgress);
+	const sendRequest = makeRequest(items, url, options, onProgress);
 
 	return {
-		request: processResponse(request, options),
-		abort: () => abortRequest(request),
+		request: processResponse(sendRequest, options),
+		abort: () => abortRequest(sendRequest),
+		senderType: XHR_SENDER_TYPE,
 	};
 };

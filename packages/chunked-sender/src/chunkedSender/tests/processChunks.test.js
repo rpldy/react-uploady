@@ -24,11 +24,12 @@ describe("processChunks tests", () => {
 			url = "test.com",
 			sendOptions = {},
 			chunks = [1,2,3],
-			onProgress = jest.fn();
+			onProgress = jest.fn(),
+            trigger = jest.fn();
 
 		getChunks.mockReturnValueOnce(chunks);
 
-		const result = processChunks(item, chunkedOptions, url, sendOptions, onProgress);
+		const result = processChunks(item, chunkedOptions, url, sendOptions, onProgress, trigger);
 
 		expect(result.abort).toBeInstanceOf(Function);
 		expect(result.request).toBeInstanceOf(Promise);
@@ -44,7 +45,7 @@ describe("processChunks tests", () => {
 			url,
 			sendOptions,
 			...chunkedOptions,
-		}, item, expect.any(Function), expect.any(Function));
+		}, item, expect.any(Function), expect.any(Function), expect.any(Function));
 	});
 
 	describe("process tests", () => {
@@ -58,10 +59,11 @@ describe("processChunks tests", () => {
 			};
 			const item = { file: { size: 1000 }};
 			const onProgress = jest.fn();
+			const trigger = jest.fn();
 
-			process(state, item, onProgress);
+			process(state, item, onProgress, trigger);
 
-			expect(sendChunks).toHaveBeenCalledWith(state, item, expect.any(Function), expect.any(Function));
+			expect(sendChunks).toHaveBeenCalledWith(state, item, expect.any(Function), expect.any(Function), expect.any(Function));
 
 			const onChunkProgress = sendChunks.mock.calls[0][2];
 
@@ -163,5 +165,4 @@ describe("processChunks tests", () => {
 			expect(state.aborted).toBe(true);
 		});
 	});
-
 });

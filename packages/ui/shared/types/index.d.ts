@@ -48,6 +48,7 @@ export const useItemProgressListener: ItemEventHookWithState;
 export const useItemCancelListener: ItemEventHook;
 export const useItemErrorListener: ItemEventHook;
 export const useItemAbortListener: ItemEventHook;
+export const useItemFinalizeListener: ItemEventHook;
 
 type PreSendData = {items: BatchItem[]; options: CreateOptions};
 

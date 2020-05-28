@@ -1,16 +1,10 @@
 import React, { useCallback, useState, memo } from "react";
 import Script from "react-load-script";
+import { UMD_NAMES } from "./consts";
 
 const BASE = "http://localhost:8009/",
     POLYFILLS = `${BASE}polyfills-bundle.js`,
     ALL_POLYFILLS = `${BASE}polyfills-all-bundle.js`;
-
-export const UMD_NAMES = {
-    "CORE": "CORE",
-    "CORE_UI": "CORE_UI",
-    "CORE_CHUNKED_UI": "CORE_CHUNKED_UI",
-    "ALL": "ALL",
-}
 
 const UMD_BUNDLES = {
     [UMD_NAMES.CORE]: `${BASE}rpldy-core.umd.min.js`,

@@ -2,27 +2,22 @@ import { select, boolean, number, text, object } from "@storybook/addon-knobs";
 import { useMemo } from "react";
 import { composeEnhancers } from "@rpldy/uploady";
 import { createMockSender } from "@rpldy/sender";
+import { DESTINATION_TYPES, KNOB_GROUPS} from "./consts";
 import { actionLogEnhancer, isCypress } from "./uploadyStoryLogger";
-
-export const isProd = process.env.NODE_ENV === "production";
-
-export const KNOB_GROUPS = {
-    DESTINATION: "Upload Destination",
-    SETTINGS: "Upload Settings",
-};
+import { isProd } from "./helpers";
 
 console.log(`** React Uploady - storybook helper running in ${isProd ? "production" : "development"} mode. **`);
 
-const PROD_DEST_OPTIONS = {
-    "mock": "mock",
-    "cloudinary": "cloudinary",
-    "url": "url",
-};
+const PROD_DEST_OPTIONS = [
+    DESTINATION_TYPES.mock,
+    DESTINATION_TYPES.cloudinary,
+    DESTINATION_TYPES.url
+];
 
-const DEV_DEST_OPTIONS = {
+const DEV_DEST_OPTIONS = [
     ...PROD_DEST_OPTIONS,
-    "local": "local",
-};
+    DESTINATION_TYPES.local,
+];
 
 const mockSenderEnhancer = (uploader) => {
     const mockSender = createMockSender({ delay: 1000 });
@@ -31,19 +26,21 @@ const mockSenderEnhancer = (uploader) => {
 };
 
 export const mockDestination = () => ({
-    destinationType: DEV_DEST_OPTIONS.mock,
+    destinationType: DESTINATION_TYPES.mock,
     destination: { url: "http://react-uploady-dummy-server.comm" },
     enhancer: mockSenderEnhancer
 });
 
-export const localDestination = () => {
+export const localDestination = ({noLong = false} = {}) => {
+	console.log("GETTING LOCAL DESTINATION ", noLong);
+
     let result;
 
     if (!isProd || isCypress) {
-        const long = boolean("long local request (relevant for local only)", false, KNOB_GROUPS.DESTINATION);
+        const long = !noLong && boolean("long local request (relevant for local only)", false, KNOB_GROUPS.DESTINATION);
 
         result = {
-            destinationType: DEV_DEST_OPTIONS.local,
+            destinationType: DESTINATION_TYPES.local,
             destination: {
                 url: `http://localhost:${process.env.LOCAL_PORT || LOCAL_PORT || 4000}/upload${long ? "?long=true" : ""}`,
                 params: { test: true }
@@ -61,7 +58,7 @@ const cldDestination = () => {
     const folder = text("(cloudinary) folder", process.env.CLD_TEST_FOLDER || "", KNOB_GROUPS.DESTINATION);
 
     return {
-        destinationType: DEV_DEST_OPTIONS.cloudinary,
+        destinationType: DESTINATION_TYPES.cloudinary,
         destination: {
             url: `https://api.cloudinary.com/v1_1/${cloudName}/upload`,
             params: {
@@ -72,12 +69,12 @@ const cldDestination = () => {
     };
 };
 
-const urlDestination = () => {
+export const urlDestination = () => {
     const url = text('upload url', "", KNOB_GROUPS.DESTINATION);
     const params = object("params", { foo: "bar" }, KNOB_GROUPS.DESTINATION);
 
     return {
-        destinationType: DEV_DEST_OPTIONS.url,
+        destinationType: DESTINATION_TYPES.url,
         destination: {
             url,
             params,
@@ -86,19 +83,28 @@ const urlDestination = () => {
 };
 
 const DESTINATIONS = {
-    [DEV_DEST_OPTIONS.mock]: mockDestination,
-    [DEV_DEST_OPTIONS.cloudinary]: cldDestination,
-    [DEV_DEST_OPTIONS.local]: localDestination,
-    [DEV_DEST_OPTIONS.url]: urlDestination,
+    [DESTINATION_TYPES.mock]: mockDestination,
+    [DESTINATION_TYPES.cloudinary]: cldDestination,
+    [DESTINATION_TYPES.local]: localDestination,
+    [DESTINATION_TYPES.url]: urlDestination,
 };
 
 export const addActionLogEnhancer = (enhancer) => {
     return enhancer ? composeEnhancers(enhancer, actionLogEnhancer) : actionLogEnhancer;
 };
 
+const getDestinationOptions = ({destinations = null}) => {
+    const types = destinations && destinations.length ? destinations : (isProd ? PROD_DEST_OPTIONS : DEV_DEST_OPTIONS)
+
+    return types.reduce((res, t) => {
+        res[t] = t;
+        return res;
+    }, {});
+};
+
 const useStoryUploadySetup = (options = {}) => {
-    const type = select("destination", isProd ? PROD_DEST_OPTIONS : DEV_DEST_OPTIONS, DEV_DEST_OPTIONS.mock, KNOB_GROUPS.DESTINATION),
-        { destination, enhancer } = DESTINATIONS[type](),
+    const type = select("destination", getDestinationOptions(options), DESTINATION_TYPES.mock, KNOB_GROUPS.DESTINATION),
+        { destination, enhancer, destinationType } = DESTINATIONS[type](options),
         multiple = boolean("multiple files", true, KNOB_GROUPS.SETTINGS),
         grouped = !options.noGroup && boolean("group files in single request", false, KNOB_GROUPS.SETTINGS),
         groupSize = !options.noGroup && number("max in group", 2, {}, KNOB_GROUPS.SETTINGS);
@@ -109,8 +115,9 @@ const useStoryUploadySetup = (options = {}) => {
             enhancer: addActionLogEnhancer(enhancer),
             grouped,
             groupSize,
+            destinationType
         }),
-        [type, multiple, grouped, groupSize, destination, enhancer]);
+        [type, multiple, grouped, groupSize, destination, enhancer, destinationType]);
 };
 
 export default useStoryUploadySetup;

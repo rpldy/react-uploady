@@ -7,6 +7,7 @@ import sendChunk from "./sendChunk";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { OnProgress } from "@rpldy/sender";
+import type { TriggerMethod } from "@rpldy/life-events";
 import type { Chunk, State } from "./types";
 
 const resolveOnError = (resolve, ex) => {
@@ -23,7 +24,7 @@ const resolveOnError = (resolve, ex) => {
     }
 };
 
-const resolveOnChunksFinished = (state: State, item: BatchItem, resolve): boolean => {
+const resolveOnAllChunksFinished = (state: State, item: BatchItem, resolve): boolean => {
     const finished = !state.chunks.length;
 
     if (finished && !state.error) {
@@ -40,12 +41,13 @@ const resolveOnChunksFinished = (state: State, item: BatchItem, resolve): boolea
     return finished || state.error;
 };
 
-export const handleChunk = async (state: State, item: BatchItem, onProgress: OnProgress, resolve: (any) => void, chunk: Chunk) => {
-    const chunkSendResult = sendChunk(chunk, item, state.url, state.sendOptions, onProgress);
-    await handleChunkRequest(state, chunk.id, chunkSendResult);
+export const handleChunk = async (state: State, item: BatchItem, onProgress: OnProgress, resolve: (any) => void, chunk: Chunk, trigger: TriggerMethod) => {
+    const chunkSendResult = sendChunk(chunk, state, item, onProgress, trigger);
+    await handleChunkRequest(state, item, chunk.id, chunkSendResult, trigger);
 
-    if (!resolveOnChunksFinished(state, item, resolve)) {
-        sendChunks(state, item, onProgress, resolve);
+    if (!resolveOnAllChunksFinished(state, item, resolve)) {
+        //not finished - continue sending remaining chunks
+        sendChunks(state, item, onProgress, resolve, trigger);
     }
 };
 
@@ -54,6 +56,7 @@ const sendChunks = async (
     item: BatchItem,
     onProgress: OnProgress,
     resolve: (any) => void,
+    trigger: TriggerMethod,
 ) => {
     if (!state.finished && !state.aborted) {
         const inProgress = Object.keys(state.requests).length;
@@ -71,7 +74,7 @@ const sendChunks = async (
 
             if (chunks) {
                 chunks.forEach((chunk) => {
-                    handleChunk(state, item, onProgress, resolve, chunk)
+                    handleChunk(state, item, onProgress, resolve, chunk, trigger)
                         .catch((ex) => {
                             state.error = true;
                             resolveOnError(resolve, ex);

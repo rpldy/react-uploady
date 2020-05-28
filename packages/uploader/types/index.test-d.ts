@@ -14,14 +14,14 @@ const testCreateUploader = (): void => {
     console.log(uploader.getOptions());
 };
 
-const testComposeEnhancers = (): void => {
+const testComposeEnhancers = (): UploaderEnhancer => {
 
-    const enhancer1 = (uploader: UploaderType) => {
+    const enhancer1 = (uploader: UploaderType): UploaderType => {
         uploader.update({ maxGroupSize: 4 });
         return uploader;
     };
 
-    const enhancer2 = (uploader: UploaderType, trigger: Trigger<void>) => {
+    const enhancer2 = (uploader: UploaderType, trigger: Trigger<void>): UploaderType => {
         trigger("test");
 
         uploader.registerExtension("ext1", {
@@ -34,6 +34,8 @@ const testComposeEnhancers = (): void => {
     };
 
     const composed: UploaderEnhancer = composeEnhancers(enhancer1, enhancer2);
+
+    return composed;
 };
 
 export {

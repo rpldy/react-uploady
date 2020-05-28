@@ -70,19 +70,20 @@ uploader.add(myFile);
 | --------------       | ------------- | ------------- | -------------
 | autoUpload           | boolean       | true          | automatically upload files when they are added 
 | destination          | [Destination](../../shared/src/types.js#L7)   | undefined     | configure the end-point to upload to
-| inputFieldName       | string        | "file"        | name (attribute) of the file input field
+| inputFieldName       | string        | "file"        | name (attribute) of the file input field (requires sendWithFormData = true)
 | grouped              | boolean       | false         | group multiple files in a single request 
 | maxGroupSize         | number        | 5             | maximum of files to group together in a single request 
 | formatGroupParamName | (number, string) => string | undefined | determine the upload request field name when more than file is grouped in a single upload
 | fileFilter           | (File &#124; string) => boolean | undefined | return false to exclude from batch
 | method               | string        | "POST"        | HTTP method in upload request
-| params               | Object        | undefined     | collection of params to pass along with the upload
+| params               | Object        | undefined     | collection of params to pass along with the upload (requires sendWithFormData = true)
 | forceJsonResponse    | boolean       | false         | parse server response as JSON even if no JSON content-type header received            
 | withCredentials      | boolean       | false         | set XHR withCredentials to true
 | enhancer             | [UploaderEnhancer](../../uploader/src/types.js#L37) | undefined    | uploader [enhancer](../../../README.md#enhancer) function
 | concurrent           | boolean       | false          | issue multiple upload requests simultaneously
 | maxConcurrent        | number        | 2              | maximum allowed simultaneous requests
 | send                 | [SendMethod](../../shared/src/types.js#L100) | @rpldy/sender | how to send files to the server
+| sendWithFormData     | boolean       | true           | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data 
 
 ## Uploader API
 
@@ -232,7 +233,7 @@ Triggered when item starts uploading (just before)
 
 ### UPLOADER_EVENTS.ITEM_FINISH
 
-Triggered when item finished uploading
+Triggered when item finished uploading successfully
 
 - Parameters: _(item)_
 
@@ -263,6 +264,13 @@ Triggered in case item upload failed
 ### UPLOADER_EVENTS.ITEM_ABORT
     
 Triggered in case [abort](#abort) was called
+
+- Parameters: _(item)_
+
+### UPLOADER_EVENTS.ITEM_FINALIZE
+
+Triggered for item when uploading is done due to: finished, error, cancel or abort
+Use this event if you want to handle the state of the item being done for any reason.
 
 - Parameters: _(item)_
 

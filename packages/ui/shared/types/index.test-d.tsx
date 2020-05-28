@@ -13,6 +13,7 @@ import {
     useItemCancelListener,
     useItemErrorListener,
     useItemAbortListener,
+    useItemFinalizeListener,
 
     useRequestPreSend,
 
@@ -77,6 +78,10 @@ const EventHooksTest: React.FC = () => {
 
     useItemAbortListener((item) => {
         console.log(`item ${item.id} was aborted`);
+    });
+
+    useItemFinalizeListener((item) => {
+        console.log(`item ${item.id} is done`);
     });
 
     useRequestPreSend(({ options }) => {

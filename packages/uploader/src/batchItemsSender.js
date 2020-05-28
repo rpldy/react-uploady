@@ -54,6 +54,7 @@ export default (): ItemsSender => {
             withCredentials: batchOptions.withCredentials,
             formatGroupParamName: batchOptions.formatGroupParamName,
             headers: destination?.headers,
+			sendWithFormData: batchOptions.sendWithFormData,
         }, throttledProgress);
     };
 

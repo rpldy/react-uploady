@@ -14,4 +14,5 @@ export const DEFAULT_OPTIONS = devFreeze({
     storagePrefix: "__rpldy-tus__",
     lockedRetryDelay: 2000,
 	forgetOnSuccess: false,
+	ignoreModifiedDateInStorage: false,
 });

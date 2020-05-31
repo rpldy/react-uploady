@@ -1,17 +1,17 @@
 // @flow
 import { logger } from "@rpldy/shared";
 import { safeLocalStorage } from "@rpldy/safe-storage";
-import { DEFAULT_OPTIONS } from "../defaults";
+import { DEFAULT_OPTIONS } from "./defaults";
 
 import type { BatchItem } from "@rpldy/shared";
-import type { TusOptions } from "../types";
+import type { TusOptions } from "./types";
 
 const getPersistKey = (item: BatchItem, options: TusOptions, identifier: ?string) => {
 	const itemKey = [
 		item.file.name,
 		item.file.type,
 		item.file.size,
-		item.file.lastModified,
+		!options.ignoreModifiedDateInStorage ? item.file.lastModified : null,
 		identifier
 	]
 		.filter(Boolean)

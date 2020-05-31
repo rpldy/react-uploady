@@ -1,11 +1,11 @@
 import createTusState from "../../../tests/tusState.mock";
-import { retrieveResumable } from "../../resumableStore";
+import { retrieveResumable } from "../../../resumableStore";
 import handleTusUpload from "../../handleTusUpload";
 import createUpload from "../createUpload";
 import resumeUpload from "../resumeUpload";
 import initTusUpload from "../index";
 
-jest.mock("../../resumableStore", () => ({
+jest.mock("../../../resumableStore", () => ({
 	retrieveResumable: jest.fn(),
 }));
 

@@ -54,6 +54,7 @@ describe("createUpload tests", () => {
 				chunkSize: 200,
 				fileSize: 123,
 				noResOffset: false,
+				parallel: false,
 				...config
 			};
 
@@ -85,6 +86,7 @@ describe("createUpload tests", () => {
 					deferLength: config.deferLength,
 					sendDataOnCreate: config.sendDataOnCreate,
 					chunkSize: config.chunkSize,
+					parallel: config.parallel
 				},
 				items: {
 					"bi1": {}
@@ -140,6 +142,7 @@ describe("createUpload tests", () => {
 			});
 
 			expect(requestResult).toEqual({
+				isDone: false,
 				offset: 0,
 				uploadUrl: "http://upload/test",
 				isNew: true,
@@ -183,6 +186,7 @@ describe("createUpload tests", () => {
 			});
 
 			expect(requestResult).toEqual({
+				isDone: false,
 				offset: 0,
 				uploadUrl: "http://upload/test",
 				isNew: true,
@@ -209,6 +213,7 @@ describe("createUpload tests", () => {
 			});
 
 			expect(requestResult).toEqual({
+				isDone: false,
 				offset: 1234,
 				uploadUrl: "http://upload/test",
 				isNew: true,
@@ -239,6 +244,7 @@ describe("createUpload tests", () => {
 			expect(getChunkDataFromFile).toHaveBeenCalledWith(item.file, 0, 50);
 
 			expect(requestResult).toEqual({
+				isDone: false,
 				offset: 1234,
 				uploadUrl: "http://upload/test",
 				isNew: true,
@@ -298,7 +304,38 @@ describe("createUpload tests", () => {
 			} = await doCreateTest({sendDataOnCreate: true, noResOffset: true});
 
 			expect(requestResult).toEqual({
+				isDone: false,
 				offset: 0,
+				uploadUrl: "http://upload/test",
+				isNew: true,
+			});
+		});
+
+		it("should mark as done for parallel with sendDataOnCreate", async () => {
+			const {
+				url,
+				state,
+				requestResult
+			} = await doCreateTest({
+				parallel: 2,
+				chunkSize: 1234,
+				sendDataOnCreate: true,
+				fileSize: 1234,
+				metadata: {test: 123}}, "pId1");
+
+			expect(request).toHaveBeenCalledWith(url, {"size": 1234}, {
+				method: "POST", headers: {
+					"tus-resumable": state.getState().options.version,
+					"Upload-Defer-Length": undefined,
+					"Upload-Length": 1234,
+					"Upload-Metadata": undefined,
+					"Content-Type": "application/offset+octet-stream"
+				}
+			});
+
+			expect(requestResult).toEqual({
+				isDone: true,
+				offset: 1234,
 				uploadUrl: "http://upload/test",
 				isNew: true,
 			});

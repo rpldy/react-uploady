@@ -56,5 +56,6 @@ export default (uploader: UploaderType, options: ?TusOptions) => {
 
 	return {
 		send,
+		getOptions: () => tusState.getState().options,
 	};
 };

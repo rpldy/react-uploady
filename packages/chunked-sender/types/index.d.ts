@@ -20,4 +20,6 @@ export const getChunkedEnhancer: (options: ChunkedOptions) => UploaderEnhancer;
 
 export const createChunkedSender: (options: ChunkedOptions) => ChunkedSender;
 
+export const CHUNKING_SUPPORT: boolean;
+
 export default getChunkedEnhancer;

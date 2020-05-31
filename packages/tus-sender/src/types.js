@@ -27,6 +27,8 @@ export type TusOptions = {
     lockedRetryDelay?: number,
 	//whether to remove URL from localStorage when upload finishes successfully (default: false)
 	forgetOnSuccess?: boolean,
+	//Whether to ignore File's modified date when creating key for storage (default: false)
+	ignoreModifiedDateInStorage?: boolean,
 };
 
 export type RequestResult<T> = {

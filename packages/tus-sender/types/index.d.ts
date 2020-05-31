@@ -1,5 +1,13 @@
 import { UploaderEnhancer } from "@rpldy/uploader";
-import { ChunkedOptions } from "@rpldy/chunked-sender";
+import { CHUNKING_SUPPORT, ChunkedOptions } from "@rpldy/chunked-sender";
+
+export {
+    CHUNKING_SUPPORT
+};
+
+export {
+    TUS_EXT
+} from "../src/consts";
 
 export interface TusOptions extends ChunkedOptions {
     version?: string;
@@ -13,7 +21,10 @@ export interface TusOptions extends ChunkedOptions {
     storagePrefix?: string;
     lockedRetryDelay?: number;
     forgetOnSuccess?: boolean;
+    ignoreModifiedDateInStorage?: boolean;
 }
+
+export const clearResumables: () => void;
 
 export const getTusEnhancer: (options: TusOptions) => UploaderEnhancer;
 

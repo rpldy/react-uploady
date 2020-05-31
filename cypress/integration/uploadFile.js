@@ -19,7 +19,7 @@ const uploadFile = (fileName, cb, button = "button", iframe = "@iframe", options
                 .map((f, i) => ({
                     fileContent,
                     fileName: fileName.replace(".", `${i+2}.`),
-                    mimeType: "image/jpeg"
+                    mimeType: "image/jpeg",
                 })));
         }
 

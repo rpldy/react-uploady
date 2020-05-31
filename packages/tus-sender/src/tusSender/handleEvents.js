@@ -2,7 +2,7 @@
 import { FILE_STATES, logger } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { CHUNKING_SUPPORT, CHUNK_EVENTS, } from "@rpldy/chunked-sender";
-import { removeResumable } from "./resumableStore";
+import { removeResumable } from "../resumableStore";
 import initTusUpload from "./initTusUpload";
 import { SUCCESS_CODES } from "../consts";
 

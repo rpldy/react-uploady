@@ -127,6 +127,7 @@ export const UMD_ALL = () => {
 };
 
 export default {
+	component: Uploady,
     title: "Uploady",
     parameters: {
         readme: {

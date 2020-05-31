@@ -16,7 +16,9 @@
     "upload",
     "file upload",
     "react",
-    "hooks"
+    "hooks",
+    "resumable",
+    "library"
   ],
   "scripts": {
     "build": "node ../../../scripts/build.js",

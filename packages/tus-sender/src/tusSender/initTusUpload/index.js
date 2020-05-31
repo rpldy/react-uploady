@@ -1,6 +1,6 @@
 // @flow
 import { logger } from "@rpldy/shared";
-import { retrieveResumable } from "../resumableStore";
+import { retrieveResumable } from "../../resumableStore";
 import createUpload from "./createUpload";
 import resumeUpload from "./resumeUpload";
 import handleTusUpload from "../handleTusUpload";

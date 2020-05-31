@@ -56,9 +56,9 @@ It also supports the __Upload-Metadata__ header and will turn the destination __
 | storagePrefix | string | "__rpldy-tus__" | the key prefix to use for persisting resumable info about files
 | lockedRetryDelay | number | 2000 | milliseconds to wait before retrying a locked (423) resumable file
 | forgetOnSuccess   | boolean | false | whether to remove URL from localStorage when upload finishes successfully
+| ignoreModifiedDateInStorage   | boolean   | false     | ignore File's modified date when creating key for storage
 
 > All of the [chunked-sender options](../chunked-sender#options) are supported with this sender
-
 
 > When the chunked-sender parallel param is set to > 1, the Concatenation tus extension will be used.
 >It will send the chunks as different parallel requests that are finalized once done.

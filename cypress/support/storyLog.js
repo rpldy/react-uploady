@@ -36,6 +36,11 @@ const assertStartFinish = (storyLog, startIndex, prop, value) => {
             entry.args[0] === "ITEM_FINISH" && entry.args[1].id === itemId);
 
     expect(matchingFinish, `expect matching ITEM_FINISH for ID: ${itemId}`).to.exist;
+
+    return cy.wrap({
+    	start: storyLog[startIndex],
+		finish: matchingFinish
+	});
 };
 
 Cypress.Commands.add("assertFileItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex = 0) => {

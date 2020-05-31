@@ -30,7 +30,7 @@ Additional information about tus functionality can be found the [tus-sender READ
 | deferLength | boolean | false | defer sending file length to server ([protocol](https://tus.io/protocols/resumable-upload.html#upload-defer-length))
 | overrideMethod | boolean | false | whether to use X-HTTP-Method-Override header instead of PATCH
 | sendDataOnCreate | boolean | false | send first chunk with create request ([protocol](https://tus.io/protocols/resumable-upload.html#creation-with-upload))
-| storagePrefix | string | "__rpldy-tus__" | the key prefix to use for persisting resumable info about files
+| storagePrefix | string | "\_\_rpldy-tus\_\_" | the key prefix to use for persisting resumable info about files
 | lockedRetryDelay | number | 2000 | milliseconds to wait before retrying a locked (423) resumable file
 | forgetOnSuccess   | boolean | false | whether to remove URL from localStorage when upload finishes successfully
 | ignoreModifiedDateInStorage   | boolean   | false     | ignore File's modified date when creating key for storage
@@ -39,7 +39,7 @@ In addition, all [UploadOptions](../../shared/src/types.js#L104) props can be pa
 In order to override configuration passed to the parent Uploady component. 
 See [Uploady documentation](../uploady#props) for detailed list of upload options.   
 
-> All of the [chunked-sender options](../chunked-sender#options) are supported as well
+> All of the [chunked-sender options](../../chunked-sender#options) are supported as well
 
 ## Installation
 

@@ -1,5 +1,5 @@
 {
-  "version": "0.1.12",
+  "version": "0.2.0",
   "name": "@rpldy/chunked-sender",
   "description": "adds chunked upload capabilities on top of the regular XHR uploads",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -20,11 +20,11 @@
     "access": "public"
   },
   "dependencies": {
-    "@rpldy/sender": "^0.1.12",
-    "@rpldy/shared": "^0.1.12"
+    "@rpldy/sender": "^0.2.0",
+    "@rpldy/shared": "^0.2.0"
   },
   "devDependencies": {
-    "@rpldy/uploader": "^0.1.12",
+    "@rpldy/uploader": "^0.2.0",
     "flow-bin": "^0.123.0"
   }
 }

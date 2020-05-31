@@ -142,6 +142,7 @@ After that, you can add additional packages as needed. See below for more detail
 * [@rpldy/shared](packages/shared) - Internal set of utils+types that all packages require  
 * [@rpldy/shared-ui](packages/ui/shared) - Internal set of utils+types that all UI packages require 
 * [@rpldy/live-events](packages/life-events) - provides **cancellable** pub/sub "events" 
+* [@rpldy/safe-storage](packages/safe-storage) - safe (don't throw) versions of local and session storage
 
 ## Examples
 

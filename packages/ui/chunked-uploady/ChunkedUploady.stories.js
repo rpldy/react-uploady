@@ -146,7 +146,7 @@ export const UMD_CoreChunkedUI = () => {
 };
 
 export default {
-    component: UploadButton,
+    component: ChunkedUploady,
     title: "Chunked Uploady",
     decorators: [withKnobs],
     parameters: {

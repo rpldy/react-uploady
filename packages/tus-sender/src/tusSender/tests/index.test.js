@@ -48,6 +48,7 @@ describe("tusSender index tests", () => {
 			uploader,
 			chunkedSender,
 			options,
+			sender,
 		};
 	};
 
@@ -67,6 +68,24 @@ describe("tusSender index tests", () => {
 		const usedOptions = { ...options, chunked: true };
 		expect(state.options).toEqual(usedOptions);
 		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions);
+	});
+
+	it("should return getOptions", () => {
+		const { sender, options } = doTest();
+
+		const tusState = handleEvents.mock.calls[0][1];
+
+		const usedOptions = { ...options, chunked: true };
+		expect(sender.getOptions()).toEqual(usedOptions);
+
+		tusState.updateState((state) => {
+			state.options.deferLength = true;
+		});
+
+		expect(sender.getOptions()).toEqual({
+			...usedOptions,
+			deferLength: true,
+		});
 	});
 
 	it("should pass deferLength", () => {

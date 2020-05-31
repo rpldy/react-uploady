@@ -15,7 +15,7 @@ const getFormFileField = (fd: FormData, items: BatchItem[], options: SendOptions
 
         if (item.file) {
             // $FlowFixMe - ignore flow for not allowing FileLike here
-            fd.set(name, item.file, (item.file ? item.file.name : undefined));
+            fd.set(name, item.file, item.file.name);
         } else if (item.url) {
             fd.set(name, item.url);
         }

@@ -34,6 +34,7 @@
 * [Packages](#packages)
 * [Examples](#examples)
 * [Important Concepts](#important-concepts)
+* [Resumable Uploads](#resumable-uploads)
 * [UMD Bundles](#umd-bundles)
 * [Acknowledgements](#acknowledgements)   
 </details>
@@ -126,7 +127,7 @@ After that, you can add additional packages as needed. See below for more detail
 
 ### Providers
 * [@rpldy/chunked-uploady](packages/ui/chunked-uploady) - Wrapper for Uploady with support for chunked uploads
-* @rpldy/tus-uploady - TODO 
+* [@rpldy/tus-uploady](packages/ui/tus-uploady) - Wrapper for Uploady with support for tus(resumable) uploads  
 
 ### Senders
 * [@rpldy/sender](packages/sender) - XHR sender - Uploady's main file sender. Contains mock sender (for testing purposes)
@@ -276,6 +277,15 @@ A batch can be used to abort the upload of all files inside it. Or can also be r
 
 Each file (or URL) added to the uploader are wrapped by a BatchItem object. They will have a unique ID within the life-time of the uploader instance.
 A BatchItem has its own lifetime [events](packages/ui/uploady#events).
+
+## Resumable Uploads
+
+Rpldy supports resumable uploads through the [tus](https://tus.io/) [protocol](https://tus.io/protocols/resumable-upload.html).
+Instead of using <Uploady> from @rpldy/uploady, use <TusUploady> from @rpldy/tus-uploady and you will have resumable upload support on the client side.
+Your server will also have to support the same protocol for this to work of course.
+
+See the  [@rpldy/tus-uploady](packages/ui/tus-uploady) documentation for more details.
+
 
 ## UMD Bundles
 

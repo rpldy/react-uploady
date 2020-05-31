@@ -7,6 +7,15 @@
   "module": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
+  "keywords": [
+    "upload",
+    "file upload",
+    "react",
+    "hooks",
+    "chunked uploads",
+    "tus",
+    "resumable"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/yoavniran/react-uploady.git",
@@ -21,10 +30,14 @@
   },
   "dependencies": {
     "@rpldy/shared": "^0.1.10",
+    "@rpldy/shared-ui": "^0.1.12",
     "@rpldy/tus-sender": "^0.1.12"
   },
   "devDependencies": {
-    "@rpldy/uploader": "^0.1.11",
+    "@rpldy/upload-button": "^0.1.12",
     "flow-bin": "^0.123.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.x"
   }
 }

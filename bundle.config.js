@@ -106,10 +106,10 @@ module.exports = {
                         },
                     };
                 },
-                maxSize: 22500,
+                maxSize: 23500,
             },
 
-            //TODO: find a way to make this work with global object assignment (webpack externals root)
+            //TODO: find a way to make this work with global object assignment (wepackages/tus-sender/src/tusSender/initTusUpload/createUpload.js:88:94bpack externals root)
             //
             // /**
             //  * Bundle a umd bundle per repo package, without internal dependencies

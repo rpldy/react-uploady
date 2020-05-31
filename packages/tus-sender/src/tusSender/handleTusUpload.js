@@ -1,7 +1,7 @@
 // @flow
 import { FILE_STATES, logger } from "@rpldy/shared";
 import createUpload from "./initTusUpload/createUpload";
-import { persistResumable } from "./resumableStore";
+import { persistResumable } from "../resumableStore";
 import finalizeParallelUpload from "./finalizeParallelUpload";
 
 import type { SendOptions } from "@rpldy/sender";

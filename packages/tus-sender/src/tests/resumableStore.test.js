@@ -1,5 +1,5 @@
 import { safeLocalStorage } from "@rpldy/safe-storage/src/tests/mocks/safeStorage.mock";
-import { DEFAULT_OPTIONS } from "../../defaults";
+import { DEFAULT_OPTIONS } from "../defaults";
 import {
 	persistResumable,
 	retrieveResumable,
@@ -55,6 +55,15 @@ describe("resumeableStore tests", () => {
 			expect(safeLocalStorage.setItem)
 				.toHaveBeenCalledWith("pre_a/b/c/d/123", expect.any(String));
 		});
+
+		it("should persist without lastModified", () => {
+			persistResumable(item, uploadUrl, { resume: true, ignoreModifiedDateInStorage: true });
+
+			expect(safeLocalStorage.setItem)
+				.toHaveBeenCalledWith(DEFAULT_OPTIONS.storagePrefix + "a/b/c", expect.any(String));
+
+			expect(JSON.parse(safeLocalStorage.setItem.mock.calls[0][1]).uploadUrl).toBe(uploadUrl);
+		});
 	});
 
 	describe("retrieveResumable tests", () => {
@@ -83,6 +92,14 @@ describe("resumeableStore tests", () => {
 			expect(url).toBeUndefined();
 			expect(safeLocalStorage.getItem).not.toHaveBeenCalled();
 		});
+
+		it("should return stored data without lastModified", () => {
+			safeLocalStorage.getItem.mockReturnValueOnce(JSON.stringify({ uploadUrl: "bla.com" }));
+			const url = retrieveResumable(item, { resume: true, ignoreModifiedDateInStorage: true }, "123");
+
+			expect(url).toBe("bla.com");
+			expect(safeLocalStorage.getItem).toHaveBeenCalledWith(DEFAULT_OPTIONS.storagePrefix + "a/b/c/123");
+		});
 	});
 
 	describe("clearResumables tests", () => {
@@ -108,5 +125,8 @@ describe("resumeableStore tests", () => {
 		expect(safeLocalStorage.removeItem).toHaveBeenCalledWith(DEFAULT_OPTIONS.storagePrefix + "a/b/c/d/123");
 	});
 
-
+	it("removeResumable should remove stored value without lastModified", () => {
+		removeResumable(item, { resume: true, ignoreModifiedDateInStorage: true }, "123");
+		expect(safeLocalStorage.removeItem).toHaveBeenCalledWith(DEFAULT_OPTIONS.storagePrefix + "a/b/c/123");
+	});
 });

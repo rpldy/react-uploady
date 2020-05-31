@@ -38,6 +38,20 @@ describe("prepareFormData tests", () => {
 		expect(mockFormDataSet).toHaveBeenCalledWith(paramName, items[0].file, items[0].file.name);
 	});
 
+	it("should create FD for File like", () => {
+
+		const items = [{
+			file: {
+				type: "image/jpeh"
+			}
+		}];
+
+		testPrepare(items);
+
+		expect(mockFormDataSet).toHaveBeenCalledTimes(1);
+		expect(mockFormDataSet).toHaveBeenCalledWith(paramName, items[0].file, undefined);
+	});
+
 	it("should create FD for Files", () => {
 
 		const items = [{

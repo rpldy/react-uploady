@@ -51,7 +51,7 @@ describe("handleEvents tests ", () => {
 				CHUNKING_SUPPORT: true,
 			}));
 
-			jest.mock("../resumableStore", ()=>({
+			jest.mock("../../resumableStore", ()=>({
 				removeResumable: mockRemoveResueable,
 			}));
 

@@ -4,7 +4,7 @@ import { getChunkDataFromFile } from "@rpldy/chunked-sender";
 import { SUCCESS_CODES } from "../../consts";
 import { getUploadMetadata } from "../utils";
 
-import type { BatchItem } from "@rpldy/shared";
+import type { BatchItem, FileLike } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
 import type { InitUploadResult  } from "../types";
 import type { State, TusState } from "../../types";
@@ -24,15 +24,19 @@ export const resolveUploadUrl = (createUrl: string, location: string) => {
     return uploadUrl;
 };
 
-const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: TusState, createResponse: XMLHttpRequest) => {
+const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: TusState, createResponse: XMLHttpRequest, sentData: ?FileLike | Blob) => {
+	const { options } = tusState.getState();
     const uploadUrl = resolveUploadUrl(url, createResponse.getResponseHeader("Location"));
-	let offset = 0;
+	let offset = 0,
+		isDone = false;
 
     logger.debugLog(`tusSender.create: successfully created upload for item: ${item.id} - upload url = ${uploadUrl}`);
 
-    if (tusState.getState().options.sendDataOnCreate) {
+    if (options.sendDataOnCreate) {
 		const resOffset = parseInt(createResponse.getResponseHeader("Upload-Offset"));
 		offset = !isNaN(resOffset) ? resOffset : offset;
+		//consider as done when sending parallel chunk as part of the create
+		isDone = +options.parallel > 1 && offset === sentData?.size;
 	}
 
     tusState.updateState((state: State) => {
@@ -45,6 +49,7 @@ const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: 
         offset,
         uploadUrl,
         isNew: true,
+		isDone
     };
 };
 
@@ -80,7 +85,7 @@ export default (item: BatchItem, url: string, tusState: TusState, sendOptions: S
             let result = null;
 
             if (createResponse && ~SUCCESS_CODES.indexOf(createResponse.status)) {
-                result = handleSuccessfulCreateResponse(item, url, tusState, createResponse);
+                result = handleSuccessfulCreateResponse(item, url, tusState, createResponse, data);
             } else {
                 logger.debugLog(`tusSender.create: create upload failed for item: ${item.id}`, createResponse);
             }

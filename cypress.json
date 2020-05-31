@@ -14,7 +14,8 @@
             "retryHooks": "retry-hooks",
             "uploadDropZone": "upload-drop-zone",
             "uploadUrlInput": "upload-url-input",
-            "uploadPreview": "upload-preview"
+            "uploadPreview": "upload-preview",
+            "tusUploady": "tus-uploady"
         }
     },
     "pluginsFile": false,

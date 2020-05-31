@@ -1,7 +1,7 @@
 // @flow
 import { logger, request } from "@rpldy/shared";
 import { SUCCESS_CODES } from "../../consts";
-import { removeResumable } from "../resumableStore";
+import { removeResumable } from "../../resumableStore";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { InitUploadResult } from "../types";

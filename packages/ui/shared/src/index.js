@@ -3,6 +3,9 @@ import UploadyContext, { createContextApi } from "./UploadyContext";
 import useWithForwardRef from "./useWithForwardRef";
 import assertContext from "./assertContext";
 import useUploadOptions from "./useUploadOptions";
+import useAbortItem from "./useAbortItem";
+import useAbortBatch from "./useAbortBatch";
+import useAbortAll from "./useAbortAll";
 
 export {
     useBatchAddListener,
@@ -36,6 +39,10 @@ export {
     assertContext,
 
     useWithForwardRef,
+
+	useAbortAll,
+	useAbortBatch,
+	useAbortItem,
 };
 
 export type {

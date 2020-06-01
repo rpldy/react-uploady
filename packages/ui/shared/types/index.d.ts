@@ -50,7 +50,7 @@ export const useItemErrorListener: ItemEventHook;
 export const useItemAbortListener: ItemEventHook;
 export const useItemFinalizeListener: ItemEventHook;
 
-type PreSendData = {items: BatchItem[]; options: CreateOptions};
+type PreSendData = { items: BatchItem[]; options: CreateOptions };
 
 export const useRequestPreSend: (cb: (data: PreSendData) =>
     { items?: BatchItem[]; options: CreateOptions }) => void;
@@ -60,3 +60,9 @@ export const useUploadOptions: (options?: CreateOptions) => CreateOptions;
 export const UploadyContext: React.Context<UploadyContextType>;
 
 export const assertContext: (context: UploadyContextType) => UploadyContextType;
+
+export const useAbortAll: () => () => boolean;
+
+export const useAbortBatch: () => (batchId: string) => boolean;
+
+export const useAbortItem: () => (itemId: string) => boolean;

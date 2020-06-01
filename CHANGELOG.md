@@ -2,6 +2,8 @@
 
 ## 0.2.1
 
+### Features
+
 - `[uploady]` - useAbortItem hook
 - `[uploady]` - useAbortBatch hook
 - `[uploady]` - useAbortAll hook

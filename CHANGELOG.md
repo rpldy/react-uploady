@@ -1,3 +1,11 @@
+# Changelog
+
+## 0.2.1
+
+- `[uploady]` - useAbortItem hook
+- `[uploady]` - useAbortBatch hook
+- `[uploady]` - useAbortAll hook
+
 ## 0.2.0
 
 ### Features

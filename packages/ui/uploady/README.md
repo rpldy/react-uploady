@@ -439,12 +439,56 @@ See simple example below or this more detailed [guide](../../../guides/DynamicPa
 Shortcut hook to set/get upload options. 
 
 ```javascript
+    import { useUploadOptions } from "@rpldy/uploady";
+
     const MyComponent = () => {
         const options = useUploadOptions({grouped: true, maxGroupSize: 3});
         
         //...       
     };
 ```
+        
+### useAbortItem
+
+Returns abort item method 
+
+```javascript
+    import { useAbortItem } from "@rpldy/uploady";
+    
+const MyComponent = () => {
+        const abortItem = useAbortItem();
+        
+        return <button onClick={() => abortItem("i-123")}>Abort Item</button>       
+    };
+```
+
+### useAbortBatch
+
+Returns abort batch method
+   
+```javascript
+    import { useAbortBatch } from "@rpldy/uploady";
+    
+    const MyComponent = () => {
+        const abortBatch = useAbortBatch();
+        
+        return <button onClick={() => abortBatch("b-123")}>Abort Batch</button>       
+    };
+```
+
+### useAbortAll        
+
+Returns abort all method
+       
+```javascript
+  import { useAbortAll } from "@rpldy/uploady";
+  
+  const MyComponent = () => {
+      const abortAll = useAbortAll();
+      
+      return <button onClick={() => abortAll()}>Abort All</button>       
+  };
+```      
         
 ### useFileInput
 

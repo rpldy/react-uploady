@@ -39,6 +39,11 @@ export {
     useItemCancelListener,
     useItemErrorListener,
     useItemAbortListener,
+    useItemFinalizeListener,
 
     useRequestPreSend,
+
+    useAbortAll,
+    useAbortBatch,
+    useAbortItem,
 } from "@rpldy/shared-ui";

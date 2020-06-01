@@ -215,8 +215,22 @@ const App = () => (<Uploady
 </Uploady>);
 
 ```
+### Add support for resumable(tus) uploads
 
-### Add support for Chunked Uploads
+```javascript
+ import React from "react";
+ import TusUploady from "@rpldy/tus-uploady";
+ import UploadButton from "@rpldy/upload-button";
+ 
+ const App = () => (<TusUploady
+     destination={{ url: "https://my-tus-server/upload" }}
+     chunkSize={2142880}
+     sendDataOnCreate>
+     <UploadButton/>
+ </TusUploady>);
+```
+
+### Add support for chunked uploads
 
 Can be used with servers that support chunked uploads
 

@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.2.2",
   "name": "@rpldy/retry",
   "description": "adds the capability to retry failed uploads",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@rpldy/shared": "^0.2.0",
-    "@rpldy/uploader": "^0.2.0"
+    "@rpldy/uploader": "^0.2.2"
   },
   "devDependencies": {
     "flow-bin": "^0.123.0"

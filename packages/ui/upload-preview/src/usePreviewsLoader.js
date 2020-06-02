@@ -73,7 +73,9 @@ export default (props: PreviewOptions): PreviewData[] => {
             .map((item) => loadPreviewData(item, previewOptions, props.previewComponentProps))
             .filter(Boolean);
 
-        setPreviews(previewsData);
+        setPreviews(props.rememberPreviousBatches ?
+			previews.concat(previewsData) :
+			previewsData);
     });
 
     return previews;

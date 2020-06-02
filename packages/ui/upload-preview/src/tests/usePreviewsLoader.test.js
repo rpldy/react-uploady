@@ -4,157 +4,210 @@ import { PREVIEW_TYPES } from "../consts";
 import usePreviewsLoader from "../usePreviewsLoader";
 
 jest.mock("../utils", () => ({
-    getWithMandatoryOptions: jest.fn((o) => o),
-    getFallbackUrl: jest.fn(),
-    getFileObjectUrlByType: jest.fn(),
+	getWithMandatoryOptions: jest.fn((o) => o),
+	getFallbackUrl: jest.fn(),
+	getFileObjectUrlByType: jest.fn(),
 }));
 
 describe("usePreviewLoader tests", () => {
-    beforeEach(() => {
-        clearJestMocks(
-            useBatchStartListener,
-        );
-    });
+	beforeEach(() => {
+		clearJestMocks(
+			useBatchStartListener,
+		);
+	});
 
-    const testPreviewsLoader = (props = {}, items) => {
+	const testPreviewsLoader = (props = {}, items) => {
 
-        items = items || [
-            { id: "f1", file: {} },
-            { id: "u2", url: "upload2.test" }
-        ];
+		items = items || [
+			{ id: "f1", file: {} },
+			{ id: "u2", url: "upload2.test" }
+		];
 
-        const batch = {
-            items
-        };
+		const batch = {
+			items
+		};
 
-        useBatchStartListener
-            .mockImplementationOnce((cb) => {
-                cb(batch);
-            });
+		useBatchStartListener
+			.mockImplementationOnce((cb) => {
+				cb(batch);
+			});
 
-        const { wrapper, getHookResult } = testCustomHook(usePreviewsLoader, props);
+		const { wrapper, getHookResult } = testCustomHook(usePreviewsLoader, props);
 
-        return {
-            wrapper,
-            getHookResult,
-            items,
-            props,
-            batch,
-        };
-    };
+		return {
+			wrapper,
+			getHookResult,
+			items,
+			props,
+			batch,
+		};
+	};
 
-    it("should load preview for first item in batch only", () => {
+	it("should load preview for first item in batch only", () => {
 
-        getFileObjectUrlByType
-            .mockReturnValueOnce({url: "preview.test"});
+		getFileObjectUrlByType
+			.mockReturnValueOnce({ url: "preview.test" });
 
-        const { getHookResult } = testPreviewsLoader({
-            loadFirstOnly: true,
-        });
+		const { getHookResult } = testPreviewsLoader({
+			loadFirstOnly: true,
+		});
 
-        const previews = getHookResult();
+		const previews = getHookResult();
 
-        expect(previews).toHaveLength(1);
-        expect(previews[0].url).toBe("preview.test");
-        expect(previews[0].props).toBeUndefined();
-    });
+		expect(previews).toHaveLength(1);
+		expect(previews[0].url).toBe("preview.test");
+		expect(previews[0].props).toBeUndefined();
+	});
 
-    it("should load preview for all items in batch", () => {
-        getFileObjectUrlByType
-            .mockReturnValueOnce({url: "preview.test"});
+	it("should load preview for all items in batch", () => {
+		getFileObjectUrlByType
+			.mockReturnValueOnce({ url: "preview.test" });
 
-        const { getHookResult, items } = testPreviewsLoader();
+		const { getHookResult, items } = testPreviewsLoader();
 
-        const previews = getHookResult();
+		const previews = getHookResult();
 
-        expect(previews).toHaveLength(2);
-        expect(previews[0].url).toBe("preview.test");
-        expect(previews[1].url).toBe(items[1].url);
-    });
+		expect(previews).toHaveLength(2);
+		expect(previews[0].url).toBe("preview.test");
+		expect(previews[1].url).toBe(items[1].url);
+	});
 
-    it("should use previewComponentProps as a function", () => {
+	it("should use previewComponentProps as a function", () => {
 
-        getFileObjectUrlByType
-            .mockReturnValueOnce({url: "preview.test", type: "img"});
+		getFileObjectUrlByType
+			.mockReturnValueOnce({ url: "preview.test", type: "img" });
 
-        const { getHookResult, items } = testPreviewsLoader({
-            previewComponentProps: (item, url, type) => ({
-                test: `${item.id}-${url}-${type}`
-            }),
-        });
+		const { getHookResult, items, wrapper } = testPreviewsLoader({
+			previewComponentProps: (item, url, type) => ({
+				test: `${item.id}-${url}-${type}`
+			}),
+		});
 
-        const previews = getHookResult();
+		const previews = getHookResult();
 
-        expect(previews).toHaveLength(2);
-        expect(previews[0].url).toBe("preview.test");
-        expect(previews[0].props).toEqual({test: "f1-preview.test-img"});
-        expect(previews[1].props).toEqual({test: `u2-${items[1].url}-${PREVIEW_TYPES.IMAGE}`});
-    });
+		expect(previews).toHaveLength(2);
+		expect(previews[0].url).toBe("preview.test");
+		expect(previews[0].props).toEqual({ test: "f1-preview.test-img" });
+		expect(previews[1].props).toEqual({ test: `u2-${items[1].url}-${PREVIEW_TYPES.IMAGE}` });
 
-    it("should use previewComponentProps as an object", () => {
-        getFileObjectUrlByType
-            .mockReturnValueOnce({url: "preview.test", type: "img"});
+		const moreItems = [
+			{ id: "f3", file: { name: "1" } },
+			{ id: "f4", file: { name: "2" } }
+		];
 
-        const { getHookResult } = testPreviewsLoader({
-            previewComponentProps: {test: "123"}
-        });
+		const batch = { items: moreItems };
 
-        const previews = getHookResult();
+		useBatchStartListener
+			.mockImplementationOnce((cb) => {
+				cb(batch);
+			});
 
-        expect(previews).toHaveLength(2);
-        expect(previews[0].url).toBe("preview.test");
-        expect(previews[0].props).toEqual({test: "123"});
-        expect(previews[1].props).toEqual({test: "123"});
-    });
+		getFileObjectUrlByType
+			.mockReturnValueOnce({ url: "preview3.test" , type: "img" })
+			.mockReturnValueOnce({ url: "preview4.test", type: "img"  });
 
-    it("should return preview for video", () => {
+		wrapper.setProps({ rememberPreviousBatches: false });
+		wrapper.update();
 
-        getFileObjectUrlByType
-            .mockReturnValueOnce(null)
-            .mockReturnValueOnce({url: "video.test", type: "video"});
+		const newPreviews = getHookResult();
+		expect(newPreviews).toHaveLength(2);
+		expect(newPreviews[0].props).toEqual({ test: "f3-preview3.test-img"});
+		expect(newPreviews[1].props).toEqual({ test: "f4-preview4.test-img" });
+	});
 
-        const { getHookResult, items } = testPreviewsLoader({
-            previewComponentProps: (item, url, type) => ({
-                test: `${item.id}-${url}-${type}`
-            }),
-        });
+	it("should use previewComponentProps as an object", () => {
+		getFileObjectUrlByType
+			.mockReturnValueOnce({ url: "preview.test", type: "img" });
 
-        const previews = getHookResult();
+		const { getHookResult } = testPreviewsLoader({
+			previewComponentProps: { test: "123" }
+		});
 
-        expect(previews).toHaveLength(2);
-        expect(previews[0].url).toBe("video.test");
-        expect(previews[0].props).toEqual({test: "f1-video.test-video"});
-        expect(previews[1].props).toEqual({test: `u2-${items[1].url}-${PREVIEW_TYPES.IMAGE}`});
-    });
+		const previews = getHookResult();
 
-    it("should return fallback url", () => {
+		expect(previews).toHaveLength(2);
+		expect(previews[0].url).toBe("preview.test");
+		expect(previews[0].props).toEqual({ test: "123" });
+		expect(previews[1].props).toEqual({ test: "123" });
+	});
 
-        getFallbackUrl.mockReturnValueOnce({url: "fallback.test", type: "fallback"});
+	it("should return preview for video", () => {
 
-        const { getHookResult, items, props } = testPreviewsLoader({
-            fallbackUrl: "external fallback",
-            previewComponentProps: (item, url, type) => ({
-                test: `${item.id}-${url}-${type}`
-            }),
-        }, [ { id: "f1", file: {name: "test"} }]);
+		getFileObjectUrlByType
+			.mockReturnValueOnce(null)
+			.mockReturnValueOnce({ url: "video.test", type: "video" });
 
-        const previews = getHookResult();
+		const { getHookResult, items } = testPreviewsLoader({
+			previewComponentProps: (item, url, type) => ({
+				test: `${item.id}-${url}-${type}`
+			}),
+		});
 
-        expect(previews).toHaveLength(1);
-        expect(previews[0].url).toBe("fallback.test");
-        expect(previews[0].props).toEqual({test: "f1-fallback.test-fallback"});
+		const previews = getHookResult();
 
-        expect(getFallbackUrl).toHaveBeenCalledWith(props.fallbackUrl, items[0].file);
-    });
+		expect(previews).toHaveLength(2);
+		expect(previews[0].url).toBe("video.test");
+		expect(previews[0].props).toEqual({ test: "f1-video.test-video" });
+		expect(previews[1].props).toEqual({ test: `u2-${items[1].url}-${PREVIEW_TYPES.IMAGE}` });
+	});
 
-    it("should filter preview if no fallback url", () => {
+	it("should return fallback url", () => {
 
-        getFallbackUrl.mockReturnValueOnce(null);
+		getFallbackUrl.mockReturnValueOnce({ url: "fallback.test", type: "fallback" });
 
-        const { getHookResult, items } = testPreviewsLoader();
+		const { getHookResult, items, props } = testPreviewsLoader({
+			fallbackUrl: "external fallback",
+			previewComponentProps: (item, url, type) => ({
+				test: `${item.id}-${url}-${type}`
+			}),
+		}, [{ id: "f1", file: { name: "test" } }]);
 
-        const previews = getHookResult();
-        expect(previews).toHaveLength(1);
-        expect(previews[0].url).toBe(items[1].url);
-    });
+		const previews = getHookResult();
+
+		expect(previews).toHaveLength(1);
+		expect(previews[0].url).toBe("fallback.test");
+		expect(previews[0].props).toEqual({ test: "f1-fallback.test-fallback" });
+
+		expect(getFallbackUrl).toHaveBeenCalledWith(props.fallbackUrl, items[0].file);
+	});
+
+	it("should filter preview if no fallback url", () => {
+
+		getFallbackUrl.mockReturnValueOnce(null);
+
+		const { getHookResult, items } = testPreviewsLoader();
+
+		const previews = getHookResult();
+		expect(previews).toHaveLength(1);
+		expect(previews[0].url).toBe(items[1].url);
+	});
+
+	it("should remember previous batches", () => {
+
+		const { getHookResult, wrapper } = testPreviewsLoader({ rememberPreviousBatches: true });
+		const previews = getHookResult();
+		expect(previews).toHaveLength(1);
+
+		const moreItems = [
+			{ id: "f3", file: { name: "1" } },
+			{ id: "f4", file: { name: "2" } }
+		];
+
+		const batch = { items: moreItems };
+
+		useBatchStartListener
+			.mockImplementationOnce((cb) => {
+				cb(batch);
+			});
+
+		getFileObjectUrlByType
+			.mockReturnValueOnce({ url: "preview3.test" })
+			.mockReturnValueOnce({ url: "preview4.test" });
+
+		wrapper.setProps({ rememberPreviousBatches: true });
+		wrapper.update();
+
+		const newPreviews = getHookResult();
+		expect(newPreviews).toHaveLength(3);
+	});
 });

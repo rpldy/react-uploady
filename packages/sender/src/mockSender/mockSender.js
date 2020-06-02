@@ -118,7 +118,7 @@ const processResponse = (request, options: MandatoryMockOptions): Promise<Upload
 
 			return {
                 status: 0,
-                state: FILE_STATES.CANCELLED,
+                state: FILE_STATES.ABORTED,
                 response: "abort",
 			};
 		});

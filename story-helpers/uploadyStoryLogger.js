@@ -16,7 +16,7 @@ const logToCypress = (...args) => {
 };
 
 const actionLogEnhancer = (uploader) => {
-    const events = actions("ITEM_START", "ITEM_FINISH", "BATCH_ABORT", "BATCH_ADD", "ITEM_CANCEL");
+    const events = actions("ITEM_START", "ITEM_FINISH", "BATCH_ABORT", "BATCH_ADD", "ITEM_CANCEL", "ITEM_ABORT");
 
     uploader.on(UPLOADER_EVENTS.ITEM_START, (item) => {
         events.ITEM_START(item.id, item.file ? item.file.name : item.url);
@@ -37,6 +37,11 @@ const actionLogEnhancer = (uploader) => {
         events.BATCH_ABORT(batch.id, "aborted");
         logToCypress("BATCH_ABORT", batch);
     });
+
+    uploader.on(UPLOADER_EVENTS.ITEM_ABORT, (item) => {
+		events.ITEM_ABORT(item.id, "aborted");
+		logToCypress("ITEM_ABORT", item);
+	});
 
     uploader.on(UPLOADER_EVENTS.ITEM_CANCEL, (item) => {
        events.ITEM_CANCEL(item.id, "cancelled");

@@ -232,8 +232,7 @@ export const WithAbort = () => {
     const { enhancer, destination, multiple } = useStoryUploadySetup();
 
     return <div>
-        <p>Enable the "local destination" with "long local request" knobs to be able to try aborting
-            a running request</p>
+        <p>Be prepared to click the abort button as soon as it appears once upload begins</p>
         <Uploady
             debug
             multiple={multiple}

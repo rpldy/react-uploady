@@ -21,6 +21,7 @@ export type PreviewComponentPropsMethod = (item: BatchItem, url: string, type: P
 export type PreviewComponentPropsOrMethod = object | PreviewComponentPropsMethod;
 
 export interface PreviewOptions {
+    rememberPreviousBatches?: boolean;
     loadFirstOnly?: boolean;
     maxPreviewImageSize?: number;
     maxPreviewVideoSize?: number;

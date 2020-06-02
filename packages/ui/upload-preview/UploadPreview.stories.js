@@ -157,6 +157,41 @@ export const WithUrls = () => {
     </Uploady>;
 };
 
+const PreviewContainer = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	
+	img {
+	    margin: 5px;
+	    max-width: 200px;
+	    height: auto;
+	    max-height: 200px;
+	}
+`;
+
+export const WithRememberPrevious = () => {
+	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+	return <Uploady
+		debug
+		multiple={multiple}
+		destination={destination}
+		enhancer={enhancer}
+		grouped={grouped}
+		maxGroupSize={groupSize}>
+
+		<StyledUploadButton>
+			Upload
+		</StyledUploadButton>
+
+		<PreviewContainer>
+			<UploadPreview
+				rememberPreviousBatches
+				fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
+		</PreviewContainer>
+	</Uploady>;
+};
+
 export default {
     component: UploadPreview,
     title: "Upload Preview",

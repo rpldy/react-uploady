@@ -37,7 +37,8 @@ By default, will present a preview of the file being uploaded in case its an ima
 | videoMimeTypes       | string[]      | [see list below](#default-video-types) | video mime types to load preview for
 | previewComponentProps | [PreviewComponentPropsOrMethod](src/types.js#L18) | undefined | object or function to generate object as additional props for the preview component
 | PreviewComponent      | React.ComponentType<any> | img &#124; video | The component that will show the preview
- 
+| rememberPreviousBatches | boolean | false | show previous batches' previews as opposed to just the last 
+
 ## Example
 
 ```javascript

@@ -18,6 +18,8 @@ export type FallbackMethod = (file: Object) => ?FallbackType;
 export type PreviewComponentPropsOrMethod = Object | (item: BatchItem, url: string, type: PreviewType) => Object
 
 export type PreviewOptions = {|
+	//whether to show previous batches' previews as opposed to just the last (default: false)
+	rememberPreviousBatches?: boolean,
 	//whether to load only the first upload-preview in case of a batch upload (default: false)
 	loadFirstOnly?: boolean,
 	//the maximum file size (in kb) to attempt to load a upload-preview for an image (default: 20,000,000)

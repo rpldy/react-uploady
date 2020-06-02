@@ -2,6 +2,7 @@
 import { devFreeze } from "@rpldy/shared";
 
 export const PREVIEW_DEFAULTS = devFreeze({
+	rememberPreviousBatches: false,
     loadFirstOnly: false,
     maxPreviewImageSize: 2e+7,
     maxPreviewVideoSize: 1e+8,

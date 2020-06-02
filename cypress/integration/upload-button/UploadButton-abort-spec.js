@@ -28,6 +28,7 @@ describe("With Abort", () => {
                     .click();
             });
 
+            cy.storyLog().assertLogPattern(/ITEM_ABORT/);
             cy.storyLog().assertLogPattern(/BATCH_ABORT/);
             cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 0 });
         });

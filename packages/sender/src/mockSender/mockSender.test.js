@@ -171,14 +171,12 @@ describe("mockSender tests", () => {
         const response = result.response;
 
         expect(onProgress).toHaveBeenCalledTimes(1);
-        expect(result.state).toBe(FILE_STATES.CANCELLED);
+        expect(result.state).toBe(FILE_STATES.ABORTED);
         expect(response).toBe("abort");
     });
 
     it("should work without on progress callback", async () => {
         const result = await doMockSend(null, null, false, true).request;
-        // result.response;
-
         expect(onProgress).toHaveBeenCalledTimes(0);
         expect(result.state).toBe(FILE_STATES.FINISHED);
     });

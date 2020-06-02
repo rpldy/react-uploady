@@ -63,4 +63,23 @@ export const composeEnhancers: (...enhancers: UploaderEnhancer[]) => UploaderEnh
 
 export const createUploader: UploaderCreator;
 
+export enum UPLOADER_EVENTS {
+    BATCH_ADD = "BATCH-ADD",
+    BATCH_START = "BATCH-START",
+    BATCH_PROGRESS = "BATCH_PROGRESS",
+    BATCH_FINISH = "BATCH-FINISH",
+    BATCH_ABORT = "BATCH-ABORT",
+    BATCH_CANCEL = "BATCH-CANCEL",
+
+    ITEM_START = "FILE-START",
+    ITEM_CANCEL = "FILE-CANCEL",
+    ITEM_PROGRESS = "FILE-PROGRESS",
+    ITEM_FINISH = "FILE-FINISH",
+    ITEM_ABORT = "FILE-ABORT",
+    ITEM_ERROR = "FILE-ERROR",
+    ITEM_FINALIZE = "FILE-FINALIZE",
+
+    REQUEST_PRE_SEND = "REQUEST_PRE_SEND",
+}
+
 export default createUploader;

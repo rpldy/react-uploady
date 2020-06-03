@@ -1,9 +1,9 @@
 // @flow
-import { BatchItem, FILE_STATES, logger } from "@rpldy/shared";
+import { FILE_STATES, logger } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
 import { cleanUpFinishedBatch } from "./batchHelpers";
 
-import type { UploadData } from "@rpldy/shared";
+import type { UploadData, BatchItem } from "@rpldy/shared";
 import type { ProcessNextMethod, QueueState } from "./types";
 
 export const FILE_STATE_TO_EVENT_MAP = {

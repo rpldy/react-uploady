@@ -18,8 +18,8 @@ const useEventEffect = (event: string, fn: Callback) => {
 	}, [event, fn, on, off]);
 };
 
-const generateUploaderEventHookWithState = (event: string, stateCalculator: (state: any) => any) => {
-	return (fn?: Callback) => {
+const generateUploaderEventHookWithState = (event: string, stateCalculator: (state: any) => any) =>
+	(fn?: Callback, id?: string) => {
 		const [eventState, setEventState] = useState(null);
 
 		const eventCallback = useCallback((...args) => {
@@ -34,21 +34,27 @@ const generateUploaderEventHookWithState = (event: string, stateCalculator: (sta
 
 		return eventState;
 	};
-};
 
 const generateUploaderEventHook = (event: string) =>
-	(fn: Callback) =>
-		useEventEffect(event, fn);
+	(fn: Callback, id?: string) => {
+		const eventCallback = useCallback((eventObj, ...args) => {
+			if (fn && (!id || eventObj.id === id)) {
+				fn(eventObj, ...args);
+			}
+		}, [fn, id]);
+
+		useEventEffect(event, eventCallback);
+	};
 
 const logWarning = (condition: ?any, msg: string) => {
-    if (process.env.NODE_ENV !== "production" && !condition) {
-        // eslint-disable-next-line no-console
-        console.warn(msg);
-    }
+	if (process.env.NODE_ENV !== "production" && !condition) {
+		// eslint-disable-next-line no-console
+		console.warn(msg);
+	}
 };
 
 export {
 	generateUploaderEventHook,
 	generateUploaderEventHookWithState,
-    logWarning,
+	logWarning,
 };

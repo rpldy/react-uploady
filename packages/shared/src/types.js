@@ -16,8 +16,6 @@ export type Destination = {
     method?: ?string,
 };
 
-export type UploadInfo = string | Object;
-
 export type BatchState = $Values<typeof BATCH_STATES>;
 export type FileState = $Values<typeof FILE_STATES>;
 
@@ -46,6 +44,7 @@ type BatchItemBase = {|
 	completed: number,
 	//bytes uploaded
 	loaded: number,
+	recycled: boolean,
 |};
 
 export type FileLike = {
@@ -66,6 +65,8 @@ type BatchFile = {
 };
 
 export type BatchItem = BatchUrl & BatchFile;
+
+export type UploadInfo = string | Object | BatchItem;
 
 export type Batch = {
 	id: string,

@@ -27,14 +27,19 @@ const uploadFailedIds = (uploader: UploaderType, retryState: RetryState, trigger
 
     ids = ids || Object.keys(failed);
 
-    const uploads = ids.map((id) => failed[id] && (failed[id].file || failed[id].url))
+    const uploads = ids.map((id) => failed[id])
         .filter(Boolean);
 
     if (uploads.length) {
-        trigger(RETRY_EVENT, { items: uploads, options });
-        ids.forEach((id) => removeItemFromState(retryState, id));
-        uploader.add(uploads, options);
-    }
+		options = {
+			...(options || null),
+			autoUpload: typeof options?.autoUpload !== "undefined" ? options.autoUpload : true,
+		};
+
+		trigger(RETRY_EVENT, { items: uploads, options });
+		ids.forEach((id) => removeItemFromState(retryState, id));
+		uploader.add(uploads, options);
+	}
 
     return !!uploads.length;
 };
@@ -91,8 +96,8 @@ const registerEvents = (uploader: UploaderType, retryState: RetryState) => {
         });
     };
 
-    uploader.on(UPLOADER_EVENTS.ITEM_CANCEL, onItemFail);
     uploader.on(UPLOADER_EVENTS.ITEM_ERROR, onItemFail);
+    uploader.on(UPLOADER_EVENTS.ITEM_ABORT, onItemFail);
 };
 
 /**

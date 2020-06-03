@@ -19,16 +19,9 @@ describe("useUploader tests", () => {
             enhancer: "123",
         };
 
-        // const enhancer = "123";
+        const { wrapper, getHookResult } = testCustomHook(useUploader, options);
 
-        // const props = {
-        //     ...options,
-        //     enhancer,
-        // };
-
-        const { wrapper, hookResult } = testCustomHook(useUploader, options);
-
-        expect(hookResult).toBe(uploader);
+        expect(getHookResult()).toBe(uploader);
 
         expect(createUploader).toHaveBeenCalledWith(options);
         expect(uploader.update).toHaveBeenCalledWith(options);

@@ -16,30 +16,31 @@ describe("onRequestFinished tests", () => {
 			mockNext);
 	});
 
-	const testSingleItem = async (activeIds, completed = 100) => {
+	const testSingleItem = async (activeIds, completed = 100, itemId = "u1") => {
 		const batch = { id: "b1" };
 		const response = { success: true };
 		const queueState = getQueueState({
 			currentBatch: "b1",
 			items: {
 				"u1": { batchId: "b1", completed, file: { size: 1234 } },
+				"u2": { batchId: "b1", completed, url: "myfile.com" },
 			},
 			batches: {
 				b1: { batch, batchOptions: {} },
 			},
-			itemQueue: ["u1"],
+			itemQueue: [itemId], //, "u2"],
 			activeIds: activeIds || ["u1"],
 		});
 
 		await processFinishedRequest(queueState, [{
-			id: "u1",
+			id: itemId,
 			info: {
 				state: FILE_STATES.FINISHED,
 				response,
 			}
 		}], mockNext);
 
-		expect(queueState.getState().items.u1).toMatchObject({
+		expect(queueState.getState().items[itemId]).toMatchObject({
 			batchId: "b1",
 			state: FILE_STATES.FINISHED,
 			uploadResponse: { success: true },
@@ -53,7 +54,7 @@ describe("onRequestFinished tests", () => {
 			state: FILE_STATES.FINISHED,
 			uploadResponse: response,
 			completed,
-			file: { size: 1234 }
+			...queueState.getState().items[itemId]
 		};
 
 		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, finishedItem);
@@ -82,6 +83,14 @@ describe("onRequestFinished tests", () => {
 		const item = test.queueState.getState().items["u1"];
 		expect(test.queueState.handleItemProgress).toHaveBeenCalledWith(
 			item, 100, item.file.size);
+	});
+
+	it("should handle url item progress if not complete === 100", async () => {
+		const test = await testSingleItem(["u2"], 99, "u2");
+
+		const item = test.queueState.getState().items["u2"];
+		expect(test.queueState.handleItemProgress).toHaveBeenCalledWith(
+			item, 100, 0);
 	});
 
 	it("for single item should finalize if last file in batch without active id found", async () => {

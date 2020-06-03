@@ -239,25 +239,26 @@ const PreviewWithProgress = props => {
 	const [itemState, setItemState] = useState(0);
 
 	useItemProgressListener(item => {
-		if (item && item.id === props.id && item.completed > progress) {
+		// if (item && item.id === props.id && item.completed > progress) {
+		if (item.completed > progress) {
 			setProgress(() => item.completed);
 			setItemState(() =>
 				item.completed === 100 ? STATES.DONE : STATES.PROGRESS
 			);
 		}
-	});
+	}, props.id);
 
-	useItemAbortListener(item => {
-		if (item.id === props.id) {
+	useItemAbortListener((item) => {
+		// if (item.id === props.id) {
 			setItemState(STATES.ABORTED);
-		}
-	});
+		// }
+	}, props.id);
 
 	useItemErrorListener((item) =>{
-		if (item.id === props.id) {
+		// if (item.id === props.id) {
 			setItemState(STATES.ERROR);
-		}
-	})
+		// }
+	}, props.id)
 
 	return (
 		<PreviewItemContainer state={itemState}>
@@ -288,10 +289,10 @@ export const WithRetryAndPreview = () => {
 	enhancer = enhancer ?
 		composeEnhancers(retryEnhancer, enhancer) : retryEnhancer;
 
-	const getPreviewProps = useCallback(
-		({ id, file }) => ({ id, name: file.name }),
-		[]
-	);
+	// const getPreviewProps = useCallback(
+	// 	({ id, file }) => ({ id, name: file.name }),
+	// 	[]
+	// );
 
 	return (
 		<Uploady
@@ -308,7 +309,7 @@ export const WithRetryAndPreview = () => {
 				<PreviewsContainer>
 					<UploadPreview
 						rememberPreviousBatches
-						previewComponentProps={getPreviewProps}
+						// previewComponentProps={getPreviewProps}
 						PreviewComponent={PreviewWithProgress}
 					/>
 				</PreviewsContainer>

@@ -22,19 +22,19 @@ describe("useUploadOptions tests", () => {
         const options = { autoUpload: true };
         context.getOptions.mockReturnValueOnce(options);
 
-        const { hookResult } = testCustomHook(useUploadOptions, () => [options]);
+        const { getHookResult } = testCustomHook(useUploadOptions, () => [options]);
 
         expect(context.setOptions).toHaveBeenCalledWith(options);
-        expect(hookResult).toBe(options);
+        expect(getHookResult()).toBe(options);
     });
 
     it("should not set options when not passed", () => {
         const options = { autoUpload: true };
         context.getOptions.mockReturnValueOnce(options);
 
-        const { hookResult } = testCustomHook(useUploadOptions, () => []);
+        const { getHookResult } = testCustomHook(useUploadOptions, () => []);
 
         expect(context.setOptions).not.toHaveBeenCalled();
-        expect(hookResult).toBe(options);
+        expect(getHookResult()).toBe(options);
     });
 });

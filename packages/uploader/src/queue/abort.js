@@ -2,15 +2,16 @@
 import { BATCH_STATES, FILE_STATES, logger } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
 import { triggerUploaderBatchEvent, getBatchFromState } from "./batchHelpers";
+import processFinishedRequest from "./processFinishedRequest";
 
-import type { QueueState } from "./types";
+import type { ProcessNextMethod, QueueState } from "./types";
 import type { FileState } from "@rpldy/shared";
 
 const isItemInProgress = (state: FileState): boolean =>
 	state === FILE_STATES.ADDED ||
 	state === FILE_STATES.UPLOADING;
 
-const callAbortOnItem = (queue: QueueState, id: string) => {
+const callAbortOnItem = (queue: QueueState, id: string, next: ProcessNextMethod) => {
 	let abortCalled = false;
 
 	const state = queue.getState(),
@@ -22,6 +23,12 @@ const callAbortOnItem = (queue: QueueState, id: string) => {
 		if (item.state === FILE_STATES.UPLOADING) {
 			abortCalled = state.aborts[id]();
 		} else {
+			//manually finish request for added item that hasnt reached the sender yet
+			processFinishedRequest(queue, [{
+				id,
+				info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
+			}], next);
+
 			abortCalled = true;
 		}
 
@@ -34,18 +41,18 @@ const callAbortOnItem = (queue: QueueState, id: string) => {
 	return abortCalled;
 };
 
-const abortAll = (queue: QueueState) => {
+const abortAll = (queue: QueueState, next: ProcessNextMethod) => {
 	const items = queue.getState().items;
 
 	Object.keys(items)
-		.forEach((id) => callAbortOnItem(queue, id));
+		.forEach((id) => callAbortOnItem(queue, id, next));
 };
 
-const abortItem = (queue: QueueState, id: string): boolean => {
-	return callAbortOnItem(queue, id);
+const abortItem = (queue: QueueState, id: string, next: ProcessNextMethod): boolean => {
+	return callAbortOnItem(queue, id, next);
 };
 
-const abortBatch = (queue: QueueState, id: string): void => {
+const abortBatch = (queue: QueueState, id: string, next: ProcessNextMethod): void => {
 	const state = queue.getState(),
 		batchData = state.batches[id],
 		batch = batchData?.batch;
@@ -54,7 +61,7 @@ const abortBatch = (queue: QueueState, id: string): void => {
 		&& batch.state !== BATCH_STATES.FINISHED) {
 
 		batch.items.forEach((bi) =>
-			callAbortOnItem(queue, bi.id));
+			callAbortOnItem(queue, bi.id, next));
 
 		queue.updateState((state) => {
 			getBatchFromState(state, id).state = BATCH_STATES.ABORTED;

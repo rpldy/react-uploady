@@ -55,6 +55,7 @@ describe("usePreviewLoader tests", () => {
 		const previews = getHookResult();
 
 		expect(previews).toHaveLength(1);
+		expect(previews[0].id).toBe("f1");
 		expect(previews[0].url).toBe("preview.test");
 		expect(previews[0].props).toBeUndefined();
 	});
@@ -183,10 +184,12 @@ describe("usePreviewLoader tests", () => {
 	});
 
 	it("should remember previous batches", () => {
+		getFileObjectUrlByType
+			.mockReturnValueOnce({ url: "preview1.test" });
 
 		const { getHookResult, wrapper } = testPreviewsLoader({ rememberPreviousBatches: true });
 		const previews = getHookResult();
-		expect(previews).toHaveLength(1);
+		expect(previews).toHaveLength(2);
 
 		const moreItems = [
 			{ id: "f3", file: { name: "1" } },
@@ -208,6 +211,49 @@ describe("usePreviewLoader tests", () => {
 		wrapper.update();
 
 		const newPreviews = getHookResult();
+		expect(newPreviews).toHaveLength(4);
+
+		expect(newPreviews[0].id).toBe("f1");
+		expect(newPreviews[1].id).toBe("u2");
+		expect(newPreviews[2].id).toBe("f3");
+		expect(newPreviews[3].id).toBe("f4");
+	});
+
+	it("should dedupe recycled items and merge while keeping order", () => {
+		getFileObjectUrlByType
+			.mockReturnValueOnce({ url: "preview1.test" });
+
+		const { getHookResult, wrapper } = testPreviewsLoader({ rememberPreviousBatches: true });
+		const previews = getHookResult();
+		expect(previews).toHaveLength(2);
+		expect(previews[0].id).toBe("f1");
+		expect(previews[0].url).toBe("preview1.test");
+
+		const moreItems = [
+			{ id: "f1", file: { name: "1" } },
+			{ id: "f4", file: { name: "2" } }
+		];
+
+		const batch = { items: moreItems };
+
+		useBatchStartListener
+			.mockImplementationOnce((cb) => {
+				cb(batch);
+			});
+
+		getFileObjectUrlByType
+			.mockReturnValueOnce({ url: "preview3.test" })
+			.mockReturnValueOnce({ url: "preview4.test" });
+
+		wrapper.setProps({ rememberPreviousBatches: true });
+		wrapper.update();
+
+		const newPreviews = getHookResult();
 		expect(newPreviews).toHaveLength(3);
+
+		expect(newPreviews[0].id).toBe("f1");
+		expect(newPreviews[0].url).toBe("preview3.test");
+		expect(newPreviews[1].id).toBe("u2");
+		expect(newPreviews[2].id).toBe("f4");
 	});
 });

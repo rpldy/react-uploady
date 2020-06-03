@@ -19,9 +19,9 @@ describe("useAbortItem tests", () => {
 
 	it("should return abort item", () => {
 
-		const { hookResult } = testCustomHook(useAbortAll);
+		const { getHookResult } = testCustomHook(useAbortAll);
 
-		hookResult();
+		getHookResult()();
 
 		expect(context.abort).toHaveBeenCalled();
 	});

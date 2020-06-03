@@ -30,9 +30,9 @@ const UploadPreview = (props: PreviewProps): Element<"img">[] | Element<Componen
     }, [props.fallbackUrl]);
 
     return previews.map((data: PreviewData): Element<any> => {
-        const { url, type, props: previewProps } = data;
+        const { id, url, type, props: previewProps } = data;
         return PreviewComponent ?
-            <PreviewComponent key={url} url={url} type={type} {...previewProps} /> :
+            <PreviewComponent key={id + url} id={id} url={url} type={type} {...previewProps} /> :
             showBasicPreview(type, url, previewProps, onImagePreviewLoadError);
     });
 };

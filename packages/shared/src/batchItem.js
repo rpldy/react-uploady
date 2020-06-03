@@ -2,6 +2,8 @@
 import { FILE_STATES } from "./consts";
 import type { BatchItem, UploadInfo } from "./types";
 
+const BISYM = Symbol.for("__rpldy-bi__");
+
 let iCounter = 0;
 
 const getBatchItemWithUrl = (batchItem: Object, url: string): BatchItem => {
@@ -18,7 +20,7 @@ const isLikeFile = (f: UploadInfo) => f && (f instanceof Blob || f instanceof Fi
 
 export default (f: UploadInfo, batchId: string): BatchItem => {
 	iCounter += 1;
-	const id = `${batchId}.item-${iCounter}`,
+	const id = f.id ? f.id : `${batchId}.item-${iCounter}`,
 		state = FILE_STATES.ADDED;
 
 	let batchItem = {
@@ -28,7 +30,18 @@ export default (f: UploadInfo, batchId: string): BatchItem => {
 		completed: 0,
 		loaded: 0,
 		aborted: false,
+		recycled: false,
 	};
+
+	Object.defineProperty(batchItem, BISYM, {
+		value: true,
+	});
+
+	if (typeof f === "object" && f[BISYM] === true) {
+		//recycling existing batch item
+		batchItem.recycled = true;
+		f = f.file || f.url;
+	}
 
 	if (typeof f === "string") {
 		batchItem = getBatchItemWithUrl(batchItem, f);

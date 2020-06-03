@@ -1,5 +1,3 @@
-export type UploadInfo = string | object;
-
 export type Destination = {
     url?: string;
     filesParamName?: string;
@@ -27,7 +25,7 @@ export interface UploadOptions {
     sendWithFormData?: boolean;
 }
 
-export enum BatchState {
+export enum BATCH_STATES {
     ADDED = "added",
     PROCESSING = "processing",
     UPLOADING = "uploading",
@@ -40,12 +38,12 @@ export type Batch = {
     id: string;
     uploaderId: string;
     items: BatchItem[];
-    state: BatchState;
+    state: BATCH_STATES;
     completed: number;
     loaded: number;
 };
 
-export enum FileState {
+export enum FILE_STATES {
     ADDED = "added",
     UPLOADING = "uploading",
     CANCELLED = "cancelled",
@@ -57,10 +55,11 @@ export enum FileState {
 interface BatchItemBase {
     id: string;
     batchId: string;
-    state: FileState;
+    state: FILE_STATES;
     uploadResponse?: any;
     completed: number;
     loaded: number;
+    recycled: boolean;
 }
 
 export type FileLike = {
@@ -80,11 +79,13 @@ interface BatchFile extends BatchItemBase {
 
 export type BatchItem = BatchUrl & BatchFile;
 
+export type UploadInfo = string | object | BatchItem;
+
 export type Trigger<T> = (name: string, ...args: unknown[]) => Promise<T | null | undefined>[];
 
 export type UploadData = {
     status: number;
-    state: FileState;
+    state: FILE_STATES;
     response: any;
 };
 

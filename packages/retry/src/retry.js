@@ -32,7 +32,7 @@ const uploadFailedIds = (uploader: UploaderType, retryState: RetryState, trigger
 
     if (uploads.length) {
 		options = {
-			...(options || {}),
+			...(options || null),
 			autoUpload: typeof options?.autoUpload !== "undefined" ? options.autoUpload : true,
 		};
 

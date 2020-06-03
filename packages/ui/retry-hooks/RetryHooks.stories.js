@@ -16,24 +16,20 @@ import UploadPreview from "@rpldy/upload-preview";
 import { StoryUploadProgress, useStoryUploadySetup } from "../../../story-helpers";
 import retryEnhancer, { useBatchRetry, useRetry, useRetryListener } from "./src";
 
-
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
 const RetryUi = () => {
     const [seenItems, setItems] = useState({});
     const [seenBatches, setBatches] = useState([]);
+    const abortItem = useAbortItem();
     const retry = useRetry();
     const retryBatch = useBatchRetry();
 
     useItemStartListener((item) => {
-        let ret;
-
-        const itemIdentity : string = item.file ? item.file.name : item.url;
-
-        if (!seenItems[itemIdentity]) {
+        if (!seenItems[item.id]) {
             setItems((seen) => {
-                return { ...seen, [itemIdentity]: item.id };
+                return { ...seen, [item.id]: item.file ? item.file.name : item.url };
             });
 
             setBatches((batches) => {
@@ -42,11 +38,8 @@ const RetryUi = () => {
                     batches;
             });
 
-            ret = false;
+			abortItem(item.id);
         }
-
-        //cancel all items seen for the first time
-        return ret;
     });
 
     useRetryListener(({ items }) => {
@@ -87,12 +80,12 @@ const RetryUi = () => {
 
         <section>Failed Items:
             <ul>
-                {Object.keys(seenItems).map((name, index) =>
+                {Object.keys(seenItems).map((id, index) =>
                     <li style={{ cursor: "pointer" }}
-                        data-id={seenItems[name]} key={seenItems[name]}
+                        data-id={id} key={id}
                         data-test={`item-retry-${index}`}
                         onClick={onRetryItem}>
-                        cancelled: ({seenItems[name]}) {name}
+                        cancelled: ({id}) {seenItems[id]}
                     </li>)}
             </ul>
         </section>

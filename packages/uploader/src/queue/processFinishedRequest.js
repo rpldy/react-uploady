@@ -1,6 +1,5 @@
 // @flow
-
-import { FILE_STATES, logger } from "@rpldy/shared";
+import { BatchItem, FILE_STATES, logger } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
 import { cleanUpFinishedBatch } from "./batchHelpers";
 
@@ -25,6 +24,9 @@ const ITEM_FINALIZE_STATES = [
 
 type FinishData = { id: string, info: UploadData };
 
+const getIsFinalized = (item: BatchItem) =>
+	!!~ITEM_FINALIZE_STATES.indexOf(item.state);
+
 export default (queue: QueueState, finishedData: FinishData[], next: ProcessNextMethod) => {
     finishedData.forEach((itemData: FinishData) => {
         const state = queue.getState();
@@ -37,6 +39,10 @@ export default (queue: QueueState, finishedData: FinishData[], next: ProcessNext
                 const item = state.items[id];
                 item.state = info.state;
                 item.uploadResponse = info.response;
+
+                if (getIsFinalized(item)) {
+					delete state.aborts[id];
+				}
             });
 
             //get most up-to-date item data
@@ -50,7 +56,7 @@ export default (queue: QueueState, finishedData: FinishData[], next: ProcessNext
             //trigger UPLOADER EVENT for item based on its state
             queue.trigger(FILE_STATE_TO_EVENT_MAP[item.state], item);
 
-            if (~ITEM_FINALIZE_STATES.indexOf(item.state)) {
+            if (getIsFinalized(item)) {
                 //trigger FINALIZE event
                 queue.trigger(UPLOADER_EVENTS.ITEM_FINALIZE, item);
             }

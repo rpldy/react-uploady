@@ -1,7 +1,4 @@
 // @flow
-
-//TODO: NEED TO REMOVE THE ABORT method from the batch items
-
 import { FILE_STATES, logger } from "@rpldy/shared";
 import processBatchItems from "./processBatchItems";
 import {

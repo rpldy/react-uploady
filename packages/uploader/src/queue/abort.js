@@ -21,6 +21,10 @@ const callAbortOnItem = (queue: QueueState, id: string, next: ProcessNextMethod)
 		logger.debugLog(`uploader.queue: aborting item in progress - `, item);
 
 		if (item.state === FILE_STATES.UPLOADING) {
+			queue.updateState((state) => {
+				state.items[id].state = FILE_STATES.ABORTED;
+			});
+
 			abortCalled = state.aborts[id]();
 		} else {
 			//manually finish request for added item that hasnt reached the sender yet
@@ -31,11 +35,6 @@ const callAbortOnItem = (queue: QueueState, id: string, next: ProcessNextMethod)
 
 			abortCalled = true;
 		}
-
-		queue.updateState((state) => {
-			state.items[id].state = FILE_STATES.ABORTED;
-			delete state.aborts[id];
-		});
 	}
 
 	return abortCalled;

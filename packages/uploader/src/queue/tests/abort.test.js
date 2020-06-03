@@ -38,7 +38,6 @@ describe("abort tests", () => {
 			expect(result).toBe(true);
 			expect(mockItemAbort).toHaveBeenCalled();
 			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
-			expect(queue.getState().aborts.u1).toBeUndefined();
 		});
 
 		it("should call abort for added item", () => {
@@ -59,8 +58,7 @@ describe("abort tests", () => {
 
 			expect(result).toBe(true);
 			expect(mockItemAbort).not.toHaveBeenCalled();
-			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
-			expect(queue.getState().aborts.u1).toBeUndefined();
+			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ADDED);
 
 			expect(processFinishedRequest).toHaveBeenCalledWith(queue,
 				[{
@@ -119,11 +117,8 @@ describe("abort tests", () => {
 		expect(mockItemAbort).toHaveBeenCalledTimes(2);
 		expect(queue.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
 		expect(queue.getState().items.u2.state).toBe(FILE_STATES.ABORTED);
-		expect(queue.getState().items.u3.state).toBe(FILE_STATES.ABORTED);
+		expect(queue.getState().items.u3.state).toBe(FILE_STATES.ADDED);
 		expect(queue.getState().items.u4.state).toBe(FILE_STATES.FINISHED);
-		expect(queue.getState().aborts.u1).toBeUndefined();
-		expect(queue.getState().aborts.u2).toBeUndefined();
-		expect(queue.getState().aborts.u3).toBeUndefined();
 
 		expect(processFinishedRequest).toHaveBeenCalledWith(queue,
 			[{
@@ -173,11 +168,9 @@ describe("abort tests", () => {
 			expect(triggerUploaderBatchEvent).toHaveBeenCalledWith(queue, "b1", UPLOADER_EVENTS.BATCH_ABORT);
 			expect(mockItemAbort).toHaveBeenCalledTimes(1);
 			expect(queue.getState().batches.b1.batch.state).toBe(BATCH_STATES.ABORTED);
-			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
+			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ADDED);
 			expect(queue.getState().items.u2.state).toBe(FILE_STATES.ABORTED);
 			expect(queue.getState().items.u3.state).toBe(FILE_STATES.CANCELLED);
-			expect(queue.getState().aborts.u1).toBeUndefined();
-			expect(queue.getState().aborts.u2).toBeUndefined();
 
 			expect(processFinishedRequest).toHaveBeenCalledWith(queue,
 				[{

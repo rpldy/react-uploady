@@ -70,12 +70,13 @@ describe("utils tests", () => {
         });
 
         it("should return preview for mimetype when under max", () => {
-            const file = { type: "image/jpg", size: 100 };
+            const file = { type: "image/jpg", size: 100, name: "file1" };
             const result = getFileObjectUrlByType("type", ["image/jpg"], 1000, file);
 
             expect(result).toEqual({
                 url,
-                type: "type"
+                type: "type",
+				name: "file1",
             });
         });
 

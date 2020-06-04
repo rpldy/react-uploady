@@ -102,6 +102,10 @@ const reportCancelledItems = (queue: QueueState, items: BatchItem[], cancelledRe
     return !!cancelledItemsIds.length;
 };
 
+//make sure item is still pending. Something might have changed while waiting for ITEM_START handling. Maybe someone called abort...
+const getAllowedItem = (id: string, queue: QueueState) =>
+	queue.getState().items[id];
+
 //send group of items to be uploaded
 export default async (queue: QueueState, ids: string[], next: ProcessNextMethod) => {
     const state = queue.getState();
@@ -114,7 +118,8 @@ export default async (queue: QueueState, ids: string[], next: ProcessNextMethod)
         queue.cancellable(UPLOADER_EVENTS.ITEM_START, i)));
 
     let allowedItems: BatchItem[] = cancelledResults
-        .map((isCancelled: boolean, index: number): ?BatchItem => isCancelled ? null : items[index])
+        .map((isCancelled: boolean, index: number): ?BatchItem =>
+			isCancelled ? null : getAllowedItem(items[index].id, queue))
         .filter(Boolean);
 
     if (allowedItems.length) {

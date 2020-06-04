@@ -55,7 +55,7 @@ module.exports = {
         "no-loop-func": 0,
         "no-console": 2,
         "key-spacing": 0,
-        "no-mixed-spaces-and-tabs": 1,
+		"no-mixed-spaces-and-tabs": [2, "smart-tabs"],
         "semi": [
             2,
             "always"

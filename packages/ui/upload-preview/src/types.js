@@ -8,6 +8,7 @@ export type PreviewType = $Values<typeof PREVIEW_TYPES>;
 export type PreviewData = {
 	id: string,
 	url: string,
+	name: string,
 	type: PreviewType,
     props: Object,
 };

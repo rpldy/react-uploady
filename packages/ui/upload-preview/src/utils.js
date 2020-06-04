@@ -25,6 +25,7 @@ const getFallbackUrl = (fallbackProp: ?string | FallbackMethod, file: Object) =>
     if (typeof data === "string") {
         data = {
             url: data,
+			name: file.name,
             type: PREVIEW_TYPES.IMAGE,
         };
     }
@@ -39,6 +40,7 @@ const getFileObjectUrlByType = (type: PreviewType, mimeTypes: string[], max: num
         if (!max || file.size <= max) {
             data = {
                 url: URL.createObjectURL(file),
+				name: file.name,
                 type,
             };
         }

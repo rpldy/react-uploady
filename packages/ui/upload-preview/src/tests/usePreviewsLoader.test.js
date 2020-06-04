@@ -254,6 +254,7 @@ describe("usePreviewLoader tests", () => {
 		expect(newPreviews[0].id).toBe("f1");
 		expect(newPreviews[0].url).toBe("preview3.test");
 		expect(newPreviews[1].id).toBe("u2");
+		expect(newPreviews[1].name).toBe( "upload2.test");
 		expect(newPreviews[2].id).toBe("f4");
 	});
 });

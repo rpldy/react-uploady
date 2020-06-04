@@ -46,6 +46,7 @@ const loadPreviewData = (
     } else {
         data = {
             url: item.url,
+			name: item.url,
             type: PREVIEW_TYPES.IMAGE,
         };
     }

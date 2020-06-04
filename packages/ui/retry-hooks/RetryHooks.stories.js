@@ -1,5 +1,5 @@
 // @flow
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, memo } from "react";
 import styled from "styled-components";
 import { withKnobs } from "@storybook/addon-knobs";
 import { Circle } from "rc-progress";
@@ -227,12 +227,11 @@ const RetryButton = ({ id, state }) => {
 	);
 };
 
-const PreviewWithProgress = props => {
+const ItemPreview = memo((props) => {
 	const [progress, setProgress] = useState(0);
 	const [itemState, setItemState] = useState(0);
 
 	useItemProgressListener(item => {
-		// if (item && item.id === props.id && item.completed > progress) {
 		if (item.completed > progress) {
 			setProgress(() => item.completed);
 			setItemState(() =>
@@ -242,15 +241,11 @@ const PreviewWithProgress = props => {
 	}, props.id);
 
 	useItemAbortListener((item) => {
-		// if (item.id === props.id) {
 		setItemState(STATES.ABORTED);
-		// }
 	}, props.id);
 
 	useItemErrorListener((item) =>{
-		// if (item.id === props.id) {
 		setItemState(STATES.ERROR);
-		// }
 	}, props.id);
 
 	return (
@@ -272,7 +267,7 @@ const PreviewWithProgress = props => {
 			</PreviewItemBar>
 		</PreviewItemContainer>
 	);
-};
+});
 
 export const WithRetryAndPreview = () => {
 	const storySetup = useStoryUploadySetup();
@@ -280,12 +275,7 @@ export const WithRetryAndPreview = () => {
 	let { enhancer } = storySetup;
 
 	enhancer = enhancer ?
-		composeEnhancers(retryEnhancer, enhancer) : retryEnhancer;
-
-	// const getPreviewProps = useCallback(
-	// 	({ id, file }) => ({ id, name: file.name }),
-	// 	[]
-	// );
+		composeEnhancers(retryEnhancer, enhancer) : retryEnhancer
 
 	return (
 		<Uploady
@@ -302,8 +292,7 @@ export const WithRetryAndPreview = () => {
 				<PreviewsContainer>
 					<UploadPreview
 						rememberPreviousBatches
-						// previewComponentProps={getPreviewProps}
-						PreviewComponent={PreviewWithProgress}
+						PreviewComponent={ItemPreview}
 					/>
 				</PreviewsContainer>
 			</div>

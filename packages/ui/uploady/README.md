@@ -213,6 +213,8 @@ Called when batch items start uploading
 
 > This event is _[cancellable](../../uploader/README.md#cancellable-events)_
 
+> This event can be scoped to a specific batch by passing the batch id as a second parameter
+
 ```javascript
     import { useBatchStartListener } from "@rpldy/uploady";
 
@@ -221,6 +223,10 @@ Called when batch items start uploading
             console.log(`batch ${batch.id} started uploading`);  
         });
 
+        //or scoped:
+        useBatchStartListener((batch) => {
+            console.log(`batch ${batch.id} started uploading`);  
+        }, "b-123");
         //...    
     };
 ```
@@ -228,6 +234,8 @@ Called when batch items start uploading
 ### useBatchProgressListener (event hook)
 
 Called every time progress data is received from the upload request(s)
+
+> This event can be scoped to a specific batch by passing the batch id as a second parameter
 
 ```javascript
     import { useBatchProgressListener } from "@rpldy/uploady";
@@ -245,6 +253,8 @@ Called every time progress data is received from the upload request(s)
 
 Called when batch items finished uploading 
 
+> This event can be scoped to a specific batch by passing the batch id as a second parameter
+
 ```javascript
     import { useBatchFinishListener } from "@rpldy/uploady";
 
@@ -261,6 +271,8 @@ Called when batch items finished uploading
 
 Called in case batch was cancelled from BATCH_START event handler
 
+> This event can be scoped to a specific batch by passing the batch id as a second parameter
+
 ```javascript
     import { useBatchCancelledListener } from "@rpldy/uploady";
 
@@ -276,6 +288,8 @@ Called in case batch was cancelled from BATCH_START event handler
 ### useBatchAbortListener (event hook)
 
 Called in case [abortBatch](#abortBatch) was called
+
+> This event can be scoped to a specific batch by passing the batch id as a second parameter
 
 ```javascript
     import { useBatchAbortListener } from "@rpldy/uploady";
@@ -295,6 +309,8 @@ Called when item starts uploading (just before)
 
 > This event is _[cancellable](../../uploader/README.md#cancellable-events)_
 
+> This event can be scoped to a specific batch by passing the item id as a second parameter
+
 ```javascript
     import { useItemStartListener } from "@rpldy/uploady";
 
@@ -302,6 +318,11 @@ Called when item starts uploading (just before)
         useItemStartListener((item) => {
             console.log(`item ${item.id} started uploading`);  
         });
+    
+        //or scoped:
+        useItemStartListener((item) => {
+            console.log(`item ${item.id} started uploading`);  
+        }, "i-123");
 
         //...    
     };
@@ -310,6 +331,8 @@ Called when item starts uploading (just before)
 ### useItemFinishListener (event hook)
 
 Called when item finished uploading
+
+> This event can be scoped to a specific batch by passing the item id as a second parameter
 
 ```javascript
     import { useItemFinishListener } from "@rpldy/uploady";
@@ -326,6 +349,8 @@ Called when item finished uploading
 ### useItemProgressListener (event hook)
 
 Called every time progress data is received for this file upload
+
+> This event can be scoped to a specific batch by passing the item id as a second parameter
 
 ```javascript
     import { useItemProgressListener } from "@rpldy/uploady";
@@ -345,6 +370,8 @@ Called every time progress data is received for this file upload
 
 Called in case item was cancelled from ITEM_START event handler
 
+> This event can be scoped to a specific batch by passing the item id as a second parameter
+
 ```javascript
     import { useItemCancelListener } from "@rpldy/uploady";
 
@@ -360,6 +387,8 @@ Called in case item was cancelled from ITEM_START event handler
 ### useItemErrorListener (event hook)
 
 Called in case item upload failed
+
+> This event can be scoped to a specific batch by passing the item id as a second parameter
 
 ```javascript
     import { useItemErrorListener } from "@rpldy/uploady";
@@ -377,6 +406,8 @@ Called in case item upload failed
 
 Called in case [abort](#abort) was called
 
+> This event can be scoped to a specific batch by passing the item id as a second parameter
+
 ```javascript
     import { useItemAbortListener } from "@rpldy/uploady";
 
@@ -392,6 +423,8 @@ Called in case [abort](#abort) was called
 ### useItemFinalizeListener (event hook)
 
 Called for item when uploading is done due to: finished, error, cancel or abort
+
+> This event can be scoped to a specific batch by passing the item id as a second parameter
 
 ```javascript
     import { useItemFinalizeListener } from "@rpldy/uploady";

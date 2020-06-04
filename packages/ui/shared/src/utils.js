@@ -37,7 +37,7 @@ const generateUploaderEventHookWithState = (event: string, stateCalculator: (sta
 		return eventState;
 	};
 
-const generateUploaderEventHook = (event: string, canScope = true) =>
+const generateUploaderEventHook = (event: string, canScope: boolean = true) =>
 	(fn: Callback, id?: string) => {
 		const eventCallback = useCallback((eventObj, ...args) => {
 			if (fn && (!canScope || !id || eventObj.id === id)) {

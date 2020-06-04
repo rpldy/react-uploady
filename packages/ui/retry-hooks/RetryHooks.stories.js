@@ -207,6 +207,7 @@ const ItemButtons = styled.div`
 const AbortButton = ({ id, state }) => {
 	const abortItem = useAbortItem();
 	const onAbort = useCallback(() => abortItem(id), [id, abortItem]);
+
 	return (
 		<button
 			disabled={state === STATES.ABORTED || state === STATES.DONE}
@@ -220,6 +221,7 @@ const AbortButton = ({ id, state }) => {
 const RetryButton = ({ id, state }) => {
 	const retry = useRetry();
 	const onRetry = useCallback(() => retry(id), [id, retry]);
+
 	return (
 		<button disabled={state !== STATES.ABORTED} onClick={onRetry}>
 			🔃

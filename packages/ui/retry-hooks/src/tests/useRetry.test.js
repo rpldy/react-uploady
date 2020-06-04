@@ -6,11 +6,11 @@ import useRetry from "../useRetry";
 describe("useRetry tests", () => {
 
     it("should throw if ext not registered ", () => {
-        const { error } = testCustomHook(useRetry);
+        const { getError } = testCustomHook(useRetry);
 
         expect(invariant).toHaveBeenCalledWith(undefined, NO_EXT);
 
-        expect(error.message).toBe("Cannot read property 'retry' of undefined");
+        expect(getError().message).toBe("Cannot read property 'retry' of undefined");
     });
 
     it("should return retry from context ", () => {
@@ -18,8 +18,8 @@ describe("useRetry tests", () => {
             retry: "test"
         });
 
-        const { hookResult } = testCustomHook(useRetry);
+        const { getHookResult } = testCustomHook(useRetry);
 
-        expect(hookResult).toBe("test");
+        expect(getHookResult()).toBe("test");
     });
 });

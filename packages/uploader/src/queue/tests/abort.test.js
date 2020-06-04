@@ -1,12 +1,16 @@
+import getQueueState from "./mocks/getQueueState.mock";
+import { BATCH_STATES, FILE_STATES } from "@rpldy/shared";
+import { UPLOADER_EVENTS } from "../../consts";
+import { triggerUploaderBatchEvent, getBatchFromState } from "../batchHelpers";
+import processFinishedRequest from "../processFinishedRequest";
+import * as abortMethods from "../abort";
+
 jest.mock("../batchHelpers", () => ({
 	triggerUploaderBatchEvent: jest.fn(),
 	getBatchFromState: jest.fn(),
 }));
-import getQueueState from "./mocks/getQueueState.mock";
-import { BATCH_STATES, FILE_STATES } from "@rpldy/shared";
-import * as abortMethods from "../abort";
-import { UPLOADER_EVENTS } from "../../consts";
-import { triggerUploaderBatchEvent, getBatchFromState } from "../batchHelpers";
+
+jest.mock("../processFinishedRequest", () => jest.fn());
 
 describe("abort tests", () => {
 	const mockItemAbort = jest.fn(() => true);
@@ -34,7 +38,6 @@ describe("abort tests", () => {
 			expect(result).toBe(true);
 			expect(mockItemAbort).toHaveBeenCalled();
 			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
-			expect(queue.getState().aborts.u1).toBeUndefined();
 		});
 
 		it("should call abort for added item", () => {
@@ -49,12 +52,19 @@ describe("abort tests", () => {
 				}
 			});
 
-			const result = abortMethods.abortItem(queue, "u1");
+			const next = "next";
+
+			const result = abortMethods.abortItem(queue, "u1", next);
 
 			expect(result).toBe(true);
 			expect(mockItemAbort).not.toHaveBeenCalled();
-			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
-			expect(queue.getState().aborts.u1).toBeUndefined();
+			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ADDED);
+
+			expect(processFinishedRequest).toHaveBeenCalledWith(queue,
+				[{
+					id: "u1",
+					info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
+				}], next);
 		});
 
 		it.each([
@@ -100,16 +110,21 @@ describe("abort tests", () => {
 			}
 		});
 
-		abortMethods.abortAll(queue);
+		const next = "next";
+
+		abortMethods.abortAll(queue, next);
 
 		expect(mockItemAbort).toHaveBeenCalledTimes(2);
 		expect(queue.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
 		expect(queue.getState().items.u2.state).toBe(FILE_STATES.ABORTED);
-		expect(queue.getState().items.u3.state).toBe(FILE_STATES.ABORTED);
+		expect(queue.getState().items.u3.state).toBe(FILE_STATES.ADDED);
 		expect(queue.getState().items.u4.state).toBe(FILE_STATES.FINISHED);
-		expect(queue.getState().aborts.u1).toBeUndefined();
-		expect(queue.getState().aborts.u2).toBeUndefined();
-		expect(queue.getState().aborts.u3).toBeUndefined();
+
+		expect(processFinishedRequest).toHaveBeenCalledWith(queue,
+			[{
+				id: "u3",
+				info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
+			}], next);
 	});
 
 	describe("batch abort tests", () => {
@@ -146,16 +161,22 @@ describe("abort tests", () => {
 				}
 			});
 
-			abortMethods.abortBatch(queue, "b1");
+			const next = "next";
+
+			abortMethods.abortBatch(queue, "b1", next);
 
 			expect(triggerUploaderBatchEvent).toHaveBeenCalledWith(queue, "b1", UPLOADER_EVENTS.BATCH_ABORT);
 			expect(mockItemAbort).toHaveBeenCalledTimes(1);
 			expect(queue.getState().batches.b1.batch.state).toBe(BATCH_STATES.ABORTED);
-			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
+			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ADDED);
 			expect(queue.getState().items.u2.state).toBe(FILE_STATES.ABORTED);
 			expect(queue.getState().items.u3.state).toBe(FILE_STATES.CANCELLED);
-			expect(queue.getState().aborts.u1).toBeUndefined();
-			expect(queue.getState().aborts.u2).toBeUndefined();
+
+			expect(processFinishedRequest).toHaveBeenCalledWith(queue,
+				[{
+					id: "u1",
+					info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
+				}], next);
 		});
 
 		it("shouldnt abort if already finished or cancelled", () => {

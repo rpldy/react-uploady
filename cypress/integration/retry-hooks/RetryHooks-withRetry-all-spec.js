@@ -5,7 +5,7 @@ describe("RetryHooks - Retry Upload", () => {
         fileName2 = "sea.jpg";
 
     before(() => {
-        cy.visitStory("retryHooks", "with-retry"); //&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url&knob-chunk size (bytes)_Upload Settings=50000");
+        cy.visitStory("retryHooks", "with-retry");
     });
 
     it("should retry all failed uploads", () => {
@@ -19,7 +19,7 @@ describe("RetryHooks - Retry Upload", () => {
 
                 cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 2 });
                 cy.storyLog().assertLogPattern(/ITEM_START/, { times: 2 });
-                cy.storyLog().assertLogPattern(/ITEM_CANCEL/, { times: 2 });
+                cy.storyLog().assertLogPattern(/ITEM_ABORT/, { times: 2 });
 
                 cy.get("@iframe")
                     .find("#retry-all")

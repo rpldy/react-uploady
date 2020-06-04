@@ -1,5 +1,5 @@
 {
-  "version": "0.2.1",
+  "version": "0.2.2",
   "name": "@rpldy/uploady",
   "description": "wrapper&context component to expose and provide react-uploady functionality",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -27,8 +27,8 @@
   "dependencies": {
     "@rpldy/life-events": "^0.2.0",
     "@rpldy/shared": "^0.2.0",
-    "@rpldy/shared-ui": "^0.2.1",
-    "@rpldy/uploader": "^0.2.0"
+    "@rpldy/shared-ui": "^0.2.2",
+    "@rpldy/uploader": "^0.2.2"
   },
   "peerDependencies": {
     "react": ">=16.8.x",

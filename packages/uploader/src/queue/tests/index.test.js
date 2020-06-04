@@ -65,7 +65,20 @@ describe("queue tests", () => {
         expect(mockSenderOn).toHaveBeenCalledWith(SENDER_EVENTS.BATCH_PROGRESS, expect.any(Function));
     });
 
-    it("should update state", () => {
+	it("should throw if item id already exists", () => {
+		const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
+
+		const batch = { items: [{ id: "u1" }, { id: "u2" }] },
+			batchOptions = { concurrent: true };
+
+		queue.uploadBatch(batch, batchOptions);
+
+		expect(() => {
+			queue.uploadBatch(batch, batchOptions);
+		}).toThrow("Uploader queue conflict - item u1 already exists");
+	});
+
+	it("should update state", () => {
 
         const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
@@ -83,13 +96,13 @@ describe("queue tests", () => {
         const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
         queue.abortItem("u1");
-        expect(abortMethods.abortItem).toHaveBeenCalledWith(expect.any(Object), "u1");
+        expect(abortMethods.abortItem).toHaveBeenCalledWith(expect.any(Object), "u1", processQueueNext);
 
         queue.abortAll();
-        expect(abortMethods.abortAll).toHaveBeenCalledWith(expect.any(Object));
+        expect(abortMethods.abortAll).toHaveBeenCalledWith(expect.any(Object), processQueueNext);
 
         queue.abortBatch("b1");
-        expect(abortMethods.abortBatch).toHaveBeenCalledWith(expect.any(Object), "b1");
+        expect(abortMethods.abortBatch).toHaveBeenCalledWith(expect.any(Object), "b1", processQueueNext);
     });
 
     it("getCurrentActiveCount should return active count", () => {

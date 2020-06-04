@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.2
+
+### Features
+
+- `[upload-preview]` - added rememberPreviousBatches prop
+
+### Bug fixes
+
+- `[sender]` - fixed missing item abort event
+
 ## 0.2.1
 
 ### Features

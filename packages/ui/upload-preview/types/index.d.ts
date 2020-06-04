@@ -7,6 +7,8 @@ export enum PreviewType {
 }
 
 export type PreviewData = {
+    id: string;
+    name: string;
     url: string;
     type: PreviewType;
     props: object;

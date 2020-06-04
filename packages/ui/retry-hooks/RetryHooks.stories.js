@@ -1,12 +1,20 @@
 // @flow
 import React, { useCallback, useState } from "react";
-import { useItemStartListener } from "@rpldy/shared-ui";
-import UploadButton from "@rpldy/upload-button";
+import styled from "styled-components";
+import { withKnobs } from "@storybook/addon-knobs";
+import { Circle } from "rc-progress";
 import { composeEnhancers } from "@rpldy/uploader";
-import Uploady from "@rpldy/uploady";
+import Uploady, {
+	useItemStartListener,
+	useItemProgressListener,
+	useItemAbortListener,
+	useItemErrorListener,
+	useAbortItem,
+} from "@rpldy/uploady";
+import UploadButton from "@rpldy/upload-button";
+import UploadPreview from "@rpldy/upload-preview";
 import { StoryUploadProgress, useStoryUploadySetup } from "../../../story-helpers";
 import retryEnhancer, { useBatchRetry, useRetry, useRetryListener } from "./src";
-import { withKnobs } from "@storybook/addon-knobs";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
@@ -14,17 +22,14 @@ import readme from "./README.md";
 const RetryUi = () => {
     const [seenItems, setItems] = useState({});
     const [seenBatches, setBatches] = useState([]);
+    const abortItem = useAbortItem();
     const retry = useRetry();
     const retryBatch = useBatchRetry();
 
     useItemStartListener((item) => {
-        let ret;
-
-        const itemIdentity : string = item.file ? item.file.name : item.url;
-
-        if (!seenItems[itemIdentity]) {
+        if (!seenItems[item.id]) {
             setItems((seen) => {
-                return { ...seen, [itemIdentity]: item.id };
+                return { ...seen, [item.id]: item.file ? item.file.name : item.url };
             });
 
             setBatches((batches) => {
@@ -33,11 +38,8 @@ const RetryUi = () => {
                     batches;
             });
 
-            ret = false;
+			abortItem(item.id);
         }
-
-        //cancel all items seen for the first time
-        return ret;
     });
 
     useRetryListener(({ items }) => {
@@ -78,12 +80,12 @@ const RetryUi = () => {
 
         <section>Failed Items:
             <ul>
-                {Object.keys(seenItems).map((name, index) =>
+                {Object.keys(seenItems).map((id, index) =>
                     <li style={{ cursor: "pointer" }}
-                        data-id={seenItems[name]} key={seenItems[name]}
+                        data-id={id} key={id}
                         data-test={`item-retry-${index}`}
                         onClick={onRetryItem}>
-                        cancelled: ({seenItems[name]}) {name}
+                        cancelled: ({id}) {seenItems[id]}
                     </li>)}
             </ul>
         </section>
@@ -110,6 +112,202 @@ export const WithRetry = () => {
 
         <RetryUi />
     </Uploady>
+};
+
+const STATES = {
+	PROGRESS: "PROGRESS",
+	DONE: "DONE",
+	ABORTED: "ABORTED",
+	ERROR: "ERROR",
+};
+
+const STATE_COLORS = {
+	[STATES.PROGRESS]: "#f4e4a4",
+	[STATES.DONE]: "#a5f7b3",
+	[STATES.ABORTED]: "#f7cdcd",
+	[STATES.ERROR]: "#ee4c4c",
+};
+
+const StyledCircle = styled(Circle)`
+  width: 32px;
+  height: 32px;
+`;
+
+const PreviewsContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  border-top: 1px solid #0c86c1;
+  margin-top: 10px;
+`;
+
+const PreviewImageWrapper = styled.div`
+  height: 150px;
+  text-align: center;
+  width: 100%;
+`;
+
+const PreviewImage = styled.img`
+  max-width: 200px;
+  height: auto;
+  max-height: 140px;
+`;
+
+const PreviewItemContainer = styled.div`
+  width: 220px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: ${({ state }) => (state ? STATE_COLORS[state] : "#c3d2dd")} 0px
+    8px 5px -2px;
+  position: relative;
+  align-items: center;
+  margin: 0 10px 10px 0;
+`;
+
+const ImageName = styled.span`
+  position: absolute;
+  top: 10px;
+  font-size: 12px;
+  padding: 3px;
+  background-color: #25455bab;
+  width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #fff;
+`;
+
+const PreviewItemBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  width: 100%;
+  box-shadow: #5dbdec 0px -3px 2px -2px;
+`;
+
+const ItemButtons = styled.div`
+  button {
+    width: 52px;
+    height: 34px;
+    font-size: 26px;
+    line-height: 26px;
+    cursor: pointer;
+    margin-right: 4px;
+    
+    :disabled {
+      cursor: not-allowed;
+      background-color: grey;
+      color: grey;
+    }
+  }
+`;
+
+const AbortButton = ({ id, state }) => {
+	const abortItem = useAbortItem();
+	const onAbort = useCallback(() => abortItem(id), [id, abortItem]);
+	return (
+		<button
+			disabled={state === STATES.ABORTED || state === STATES.DONE}
+			onClick={onAbort}
+		>
+			🛑
+		</button>
+	);
+};
+
+const RetryButton = ({ id, state }) => {
+	const retry = useRetry();
+	const onRetry = useCallback(() => retry(id), [id, retry]);
+	return (
+		<button disabled={state !== STATES.ABORTED} onClick={onRetry}>
+			🔃
+		</button>
+	);
+};
+
+const PreviewWithProgress = props => {
+	const [progress, setProgress] = useState(0);
+	const [itemState, setItemState] = useState(0);
+
+	useItemProgressListener(item => {
+		if (item && item.id === props.id && item.completed > progress) {
+			setProgress(() => item.completed);
+			setItemState(() =>
+				item.completed === 100 ? STATES.DONE : STATES.PROGRESS
+			);
+		}
+	});
+
+	useItemAbortListener(item => {
+		if (item.id === props.id) {
+			setItemState(STATES.ABORTED);
+		}
+	});
+
+	useItemErrorListener((item) =>{
+		if (item.id === props.id) {
+			setItemState(STATES.ERROR);
+		}
+	})
+
+	return (
+		<PreviewItemContainer state={itemState}>
+			<ImageName>{props.name}</ImageName>
+			<PreviewImageWrapper>
+				<PreviewImage src={props.url} />
+			</PreviewImageWrapper>
+			<PreviewItemBar>
+				<ItemButtons>
+					<AbortButton id={props.id} state={itemState} />
+					<RetryButton id={props.id} state={itemState} />
+				</ItemButtons>
+				<StyledCircle
+					strokeWidth={4}
+					percent={progress}
+					strokeColor={progress === 100 ? "#00a626" : "#2db7f5"}
+				/>
+			</PreviewItemBar>
+		</PreviewItemContainer>
+	);
+};
+
+export const WithRetryAndPreview = () => {
+	const storySetup = useStoryUploadySetup();
+	const { destination, multiple, grouped, groupSize } = storySetup;
+	let { enhancer } = storySetup;
+
+	enhancer = enhancer ?
+		composeEnhancers(retryEnhancer, enhancer) : retryEnhancer;
+
+	const getPreviewProps = useCallback(
+		({ id, file }) => ({ id, name: file.name }),
+		[]
+	);
+
+	return (
+		<Uploady
+			debug
+			destination={destination}
+			multiple={multiple}
+			grouped={grouped}
+			maxGroupSize={groupSize}
+			enhancer={enhancer}
+		>
+			<div className="App">
+				<UploadButton>Upload Files</UploadButton>
+
+				<PreviewsContainer>
+					<UploadPreview
+						rememberPreviousBatches
+						previewComponentProps={getPreviewProps}
+						PreviewComponent={PreviewWithProgress}
+					/>
+				</PreviewsContainer>
+			</div>
+		</Uploady>
+	);
 };
 
 export default {

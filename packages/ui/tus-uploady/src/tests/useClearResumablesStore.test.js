@@ -22,9 +22,9 @@ describe("useClearResumableStore tests", () => {
 			getOptions
 		});
 
-		const { hookResult } = testCustomHook(useClearResumableStore);
+		const { getHookResult } = testCustomHook(useClearResumableStore);
 
-		hookResult();
+		getHookResult()();
 		expect(getOptions).toHaveBeenCalled();
 		expect(clearResumables).toHaveBeenCalled();
 	});

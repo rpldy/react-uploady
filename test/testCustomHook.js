@@ -26,8 +26,7 @@ export default (hook, props) => {
 
     return {
         wrapper,
-        hookResult,
         getHookResult: () => hookResult,
-        error,
+        getError: () => error,
     };
 };

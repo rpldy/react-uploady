@@ -12,9 +12,9 @@
 # Retry
 
 Adds the capability to retry failed uploads.
-Exposes an UploaderEnhancer that adds the retry extension.
+Retry monitors items that have failed due to error or abort.
 
-For usage with your React app, see [@rpldy/retry-hooks](../ui/retry-hooks).
+Retry exposes an UploaderEnhancer that adds the retry extension.
 
 ## Installation
 
@@ -25,3 +25,10 @@ For usage with your React app, see [@rpldy/retry-hooks](../ui/retry-hooks).
 #NPM:
   $ npm i @rpldy/retry
 ``` 
+
+## Usage
+
+For usage with your React app, see [@rpldy/retry-hooks](../ui/retry-hooks).
+
+manual usage (outside React) is less practical as it requires familiarity with the internals of this package
+which is unadvisable at the moment.

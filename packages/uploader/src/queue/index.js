@@ -31,12 +31,16 @@ export default (
         update(updater);
     };
 
-    const add = (item: BatchItem) => {
-        updateState((state) => {
-            state.items[item.id] = item;
-            state.itemQueue.push(item.id);
-        });
-    };
+	const add = (item: BatchItem) => {
+		if (state.items[item.id]) {
+			throw new Error(`Uploader queue conflict - item ${item.id} already exists (recycled: ${String(item.recycled)})`);
+		}
+
+		updateState((state) => {
+			state.items[item.id] = item;
+			state.itemQueue.push(item.id);
+		});
+	};
 
     const uploadBatch = (batch: Batch, batchOptions: CreateOptions) => {
         updateState((state) => {
@@ -105,15 +109,15 @@ export default (
     }
 
     const abortItem = (id: string) => {
-        return abortMethods.abortItem(queueState, id);
+        return abortMethods.abortItem(queueState, id, processQueueNext);
     };
 
     const abortBatch = (id: string) => {
-        abortMethods.abortBatch(queueState, id);
+        abortMethods.abortBatch(queueState, id, processQueueNext);
     };
 
     const abortAll = () => {
-        abortMethods.abortAll(queueState);
+        abortMethods.abortAll(queueState, processQueueNext);
     };
 
     return {

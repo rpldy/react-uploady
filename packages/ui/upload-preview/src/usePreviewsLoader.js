@@ -46,6 +46,7 @@ const loadPreviewData = (
     } else {
         data = {
             url: item.url,
+			name: item.url,
             type: PREVIEW_TYPES.IMAGE,
         };
     }
@@ -58,8 +59,26 @@ const loadPreviewData = (
 
     return data && {
         ...data,
+		id: item.id,
         props
     };
+};
+
+const mergePreviewData = (prev, next) => {
+	const newItems = [];
+
+	//dedupe and merge new with existing
+	next.forEach((n) => {
+		const existingIndex = prev.findIndex((p) => p.id === n.id);
+
+		if (~existingIndex) {
+			prev.splice(existingIndex, 1, n);
+		} else {
+			newItems.push(n);
+		}
+	});
+
+	return prev.concat(newItems);
 };
 
 export default (props: PreviewOptions): PreviewData[] => {
@@ -74,7 +93,7 @@ export default (props: PreviewOptions): PreviewData[] => {
             .filter(Boolean);
 
         setPreviews(props.rememberPreviousBatches ?
-			previews.concat(previewsData) :
+			mergePreviewData(previews, previewsData) :
 			previewsData);
     });
 

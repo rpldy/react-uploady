@@ -229,7 +229,7 @@ const RetryButton = ({ id, state }) => {
 	);
 };
 
-const ItemPreview = memo((props) => {
+const QueueItem = memo((props) => {
 	const [progress, setProgress] = useState(0);
 	const [itemState, setItemState] = useState(0);
 
@@ -294,7 +294,7 @@ export const WithRetryAndPreview = () => {
 				<PreviewsContainer>
 					<UploadPreview
 						rememberPreviousBatches
-						PreviewComponent={ItemPreview}
+						PreviewComponent={QueueItem}
 					/>
 				</PreviewsContainer>
 			</div>

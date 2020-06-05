@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.3
+
+### Features
+
+- `[uploady]` - item/batch event hooks can now be scoped to a specific item
+ 
+### Bug fixes
+
+- `[retry]` - retry sends failed batch item to be retried (not just data)
+- `[uploader]` - retried items are added as recycled items (keeping their original id)
+- `[uploader]` - abort now runs un-started aborted items through same processing pipeline
+- `[uploader]` - handles abort during item start event hander
+- `[uploader]` - better handling of data cleanup inside internals
+- `[upload-preview]` - rememberPreviousBatches merges items, not just concating
+- `[upload-preview]` - upload preview provides item id and file name as part of PreviewComponent props
+
 ## 0.2.2
 
 ### Features

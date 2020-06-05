@@ -117,5 +117,3 @@ export default (uploader: UploaderType, trigger: TriggerMethod): UploaderType =>
 
     return uploader;
 };
-
-

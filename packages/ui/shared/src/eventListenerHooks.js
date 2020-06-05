@@ -7,7 +7,7 @@ import {
 
 import type { Batch, BatchItem } from "@rpldy/shared";
 
-const useBatchAddListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ADD);
+const useBatchAddListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ADD, false);
 const useBatchStartListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);
 const useBatchFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINISH);
 const useBatchCancelledListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_CANCEL);
@@ -28,7 +28,7 @@ const useItemProgressListener = generateUploaderEventHookWithState(
     UPLOADER_EVENTS.ITEM_PROGRESS,
     (item: BatchItem) => ({ ...item }));
 
-const useRequestPreSend = generateUploaderEventHook(UPLOADER_EVENTS.REQUEST_PRE_SEND);
+const useRequestPreSend = generateUploaderEventHook(UPLOADER_EVENTS.REQUEST_PRE_SEND, false);
 
 export {
     useBatchAddListener,

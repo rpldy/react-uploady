@@ -8,6 +8,6 @@ jest.mock("@rpldy/shared-ui", () => ({
 
 describe("useRetryListener hook test", () => {
     it("should generate retry even listener hook", () => {
-        expect(generateUploaderEventHook).toHaveBeenCalledWith(RETRY_EVENT);
+        expect(generateUploaderEventHook).toHaveBeenCalledWith(RETRY_EVENT, false);
     });
 });

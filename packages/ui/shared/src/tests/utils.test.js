@@ -28,12 +28,13 @@ describe("ui-shared utils tests", () => {
 
         it("should register and unregister from uploader event without scope", () => {
             const eventHook = generateUploaderEventHook(event);
-            const callback = jest.fn();
+            const callback = jest.fn(() => "cb-result");
 			const p1 = "a", p2 = "b";
 
 			context.on.mockImplementationOnce((eventName, internalCallback) => {
 				expect(eventName).toBe(event);
-				internalCallback(p1, p2);
+				const cbResult = internalCallback(p1, p2);
+				expect(cbResult).toBe("cb-result");
 			});
 
             const { wrapper } = testCustomHook(eventHook, () => [callback]);
@@ -43,17 +44,20 @@ describe("ui-shared utils tests", () => {
 
             wrapper.unmount();
             expect(context.off).toHaveBeenCalledWith(event, expect.any(Function));
+			expect(callback).toHaveBeenCalled();
         });
 
 		it("should register and unregister from uploader event with scope ", () => {
 			const eventHook = generateUploaderEventHook(event);
-			const callback = jest.fn();
+			const callback = jest.fn(() => "cb-result");
 			const item = { id: "f1" };
 
 			context.on.mockImplementationOnce((eventName, internalCallback) => {
 				expect(eventName).toBe(event);
-				internalCallback(item);
-				internalCallback({ id: "f2" });
+				const cbResult = internalCallback(item);
+				expect(cbResult).toBe("cb-result");
+				const noResult = internalCallback({ id: "f2" });
+				expect(noResult).toBeUndefined();
 			});
 
 			const { wrapper } = testCustomHook(eventHook, () => [callback, "f1"]);
@@ -64,6 +68,7 @@ describe("ui-shared utils tests", () => {
 
 			wrapper.unmount();
 			expect(context.off).toHaveBeenCalledWith(event, expect.any(Function));
+			expect(callback).toHaveBeenCalled();
 		});
 
 		it("should ignore scope for hook with canScope = false", () => {

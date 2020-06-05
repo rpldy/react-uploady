@@ -65,6 +65,12 @@ describe("abort tests", () => {
 					id: "u1",
 					info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
 				}], next);
+
+			expect(processFinishedRequest).toHaveBeenCalledWith(queue,
+				[{
+					id: "u1",
+					info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
+				}], next);
 		});
 
 		it.each([
@@ -125,6 +131,12 @@ describe("abort tests", () => {
 				id: "u3",
 				info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
 			}], next);
+
+		expect(processFinishedRequest).toHaveBeenCalledWith(queue,
+			[{
+				id: "u3",
+				info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
+			}], next);
 	});
 
 	describe("batch abort tests", () => {
@@ -171,6 +183,12 @@ describe("abort tests", () => {
 			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ADDED);
 			expect(queue.getState().items.u2.state).toBe(FILE_STATES.ABORTED);
 			expect(queue.getState().items.u3.state).toBe(FILE_STATES.CANCELLED);
+
+			expect(processFinishedRequest).toHaveBeenCalledWith(queue,
+				[{
+					id: "u1",
+					info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
+				}], next);
 
 			expect(processFinishedRequest).toHaveBeenCalledWith(queue,
 				[{

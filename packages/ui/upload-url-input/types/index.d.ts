@@ -8,7 +8,7 @@ export interface UploadUrlInputProps extends UploadOptions {
     id?: string;
     placeholder?: string;
     validate?: ValidateMethod;
-    uploadRef?: object;
+    uploadRef?: Record<string, unknown>;
     ignoreKeyPress?: boolean;
     ref?: React.RefObject<any>;
 }

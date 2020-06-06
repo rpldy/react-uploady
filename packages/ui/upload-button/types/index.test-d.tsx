@@ -15,14 +15,15 @@ const testMyButton = (): JSX.Element => {
     return <TestButton/>;
 };
 
-const DivUploadButton: React.ComponentType<React.PropsWithRef<UploadButtonProps>> = asUploadButton<UploadButtonProps>(React.forwardRef((props, ref) => {
-    return <div {...props}
-                ref={ref}
-                style={{ border: "1px solid red", width: "200px", cursor: "pointer" }}
-                id="div-upload">
-        {props.children}
-    </div>;
-}));
+const DivUploadButton: React.ComponentType<React.PropsWithRef<UploadButtonProps>> =
+    asUploadButton<UploadButtonProps>(React.forwardRef((props: UploadButtonProps, ref: React.Ref<HTMLDivElement>) => {
+        return <div {...props}
+                    ref={ref}
+                    style={{ border: "1px solid red", width: "200px", cursor: "pointer" }}
+                    id="div-upload">
+            {props.children}
+        </div>;
+    }));
 
 const TestDivButton: React.FC = () => {
     const divRef = React.useRef<HTMLDivElement>();

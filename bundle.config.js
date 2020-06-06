@@ -181,9 +181,13 @@ module.exports = {
                             loader: "babel-loader",
                             options: {
                                 presets: [["@babel/preset-env", {
-                                    useBuiltIns: "usage",
-                                    corejs: 3,
-                                }]]
+                                    useBuiltIns: false,
+                                    // corejs: 3,
+                                }]],
+								plugins: [["@babel/plugin-transform-runtime", {
+									corejs: 3,
+									"version": "^7.10.2"
+								}]]
                             }
                         }
                     }

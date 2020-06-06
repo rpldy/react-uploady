@@ -17,7 +17,7 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js"
   },
   "devDependencies": {
-    "flow-bin": "^0.123.0"
+    "flow-bin": "^0.126.1"
   },
   "publishConfig": {
     "access": "public"

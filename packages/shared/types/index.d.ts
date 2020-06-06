@@ -1,8 +1,8 @@
 export type Destination = {
     url?: string;
     filesParamName?: string;
-    params?: object;
-    headers?: object;
+    params?: Record<string, unknown>;
+    headers?: Record<string, unknown>;
     method?: string;
 };
 
@@ -19,7 +19,7 @@ export interface UploadOptions {
     maxGroupSize?: number;
     fileFilter?: FileFilterMethod;
     method?: string;
-    params?: object;
+    params?: Record<string, unknown>;
     forceJsonResponse?: boolean;
     withCredentials?: boolean;
     sendWithFormData?: boolean;
@@ -79,7 +79,7 @@ interface BatchFile extends BatchItemBase {
 
 export type BatchItem = BatchUrl & BatchFile;
 
-export type UploadInfo = string | object | BatchItem;
+export type UploadInfo = string | FileLike | BatchItem;
 
 export type Trigger<T> = (name: string, ...args: unknown[]) => Promise<T | null | undefined>[];
 

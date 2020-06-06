@@ -27,6 +27,6 @@
   },
   "devDependencies": {
     "@rpldy/uploader": "^0.2.3",
-    "flow-bin": "^0.123.0"
+    "flow-bin": "^0.126.1"
   }
 }

@@ -182,6 +182,7 @@ module.exports = {
                 "flowtype/no-types-missing-file-annotation": 0,
                 "import/no-extraneous-dependencies": 0,
                 "@typescript-eslint/no-explicit-any": 0,
+				"no-console": 0,
             }
         },
         {

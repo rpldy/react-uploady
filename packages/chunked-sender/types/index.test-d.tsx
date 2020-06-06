@@ -15,7 +15,7 @@ const testGetEnhancer = (): void => {
 const testGetSender = (): void => {
     const sender = createChunkedSender({ chunkSize: 123 });
 
-    sender.send([createBatchItem({ name: "test.png" }, "b1")],
+    sender.send([createBatchItem({ name: "test.png", size: 123, type: "image", lastModified: 1234 }, "b1")],
         "test.com",
         {
             method: "POST",

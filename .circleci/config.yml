@@ -6,6 +6,8 @@ orbs:
 references:
   workspace_root: &workspace_root
                     /tmp/build
+  node_version: &node_version
+    "12.16"
 
 commands:
   setup:
@@ -23,7 +25,7 @@ jobs:
     working_directory: *workspace_root
     executor:
       name: node/default
-      tag: "10.14"
+      tag: *node_version
     steps:
       - checkout
       - node/with-cache:
@@ -43,7 +45,7 @@ jobs:
     working_directory: *workspace_root
     executor:
       name: node/default
-      tag: "10.14"
+      tag: *node_version
     steps:
       - checkout
       - node/with-cache:
@@ -73,7 +75,7 @@ jobs:
     working_directory: *workspace_root
     executor:
       name: node/default
-      tag: "10.14"
+      tag: *node_version
     steps:
       - checkout
       - node/with-cache:
@@ -92,7 +94,7 @@ jobs:
     working_directory: *workspace_root
     executor:
       name: node/default
-      tag: "10.14"
+      tag: *node_version
     steps:
       - checkout
       - node/with-cache:

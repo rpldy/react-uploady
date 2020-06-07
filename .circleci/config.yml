@@ -6,6 +6,8 @@ orbs:
 references:
   workspace_root: &workspace_root
                     /tmp/build
+  node_version: &node_version
+    "12.16"
 
 commands:
   setup:
@@ -23,6 +25,7 @@ jobs:
     working_directory: *workspace_root
     executor:
       name: node/default
+      tag: *node_version
     steps:
       - checkout
       - node/with-cache:
@@ -42,6 +45,7 @@ jobs:
     working_directory: *workspace_root
     executor:
       name: node/default
+      tag: *node_version
     steps:
       - checkout
       - node/with-cache:
@@ -71,6 +75,7 @@ jobs:
     working_directory: *workspace_root
     executor:
       name: node/default
+      tag: *node_version
     steps:
       - checkout
       - node/with-cache:
@@ -89,6 +94,7 @@ jobs:
     working_directory: *workspace_root
     executor:
       name: node/default
+      tag: *node_version
     steps:
       - checkout
       - node/with-cache:
@@ -126,6 +132,7 @@ workflows:
             - setup
       - cypress/install:
           name: Prepare E2E (cypress)
+          executor: cypress/base-12-14-0
           requires:
             - setup
           yarn: true
@@ -135,6 +142,7 @@ workflows:
             - bundle
       - cypress/run:
           name: E2E (cypress)
+          executor: cypress/base-12-14-0
           requires:
             - Prepare E2E (cypress)
           attach-workspace: true

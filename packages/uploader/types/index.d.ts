@@ -14,8 +14,8 @@ import { OnAndOnceMethod, OffMethod } from "@rpldy/life-events";
 export type SendOptions = {
     method: string;
     paramName: string;
-    params: object;
-    headers?: object;
+    params: Record<string, unknown>;
+    headers?: Record<string, unknown>;
     forceJsonResponse?: boolean;
     withCredentials?: boolean;
     formatGroupParamName?: FormatParamGroupNameMethod;
@@ -45,7 +45,7 @@ export type UploaderType = {
     once: OnAndOnceMethod;
     off: OffMethod;
     registerExtension: RegisterExtensionMethod;
-    getExtension: (name: unknown) => object;
+    getExtension: (name: unknown) => Record<string, unknown>;
 }
 
 export type UploaderEnhancer = (uploader: UploaderType, trigger: Trigger<any>) => UploaderType;

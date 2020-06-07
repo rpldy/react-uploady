@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BatchItem } from "@rpldy/shared";
+import { BatchItem, FileLike } from "@rpldy/shared";
 
 export enum PreviewType {
     IMAGE = "image",
@@ -11,16 +11,16 @@ export type PreviewData = {
     name: string;
     url: string;
     type: PreviewType;
-    props: object;
+    props: Record<string, unknown>;
 };
 
 export type FallbackType = string | PreviewData;
 
-export type FallbackMethod = (file: object) => FallbackType | void;
+export type FallbackMethod = (file: FileLike) => FallbackType | void;
 
-export type PreviewComponentPropsMethod = (item: BatchItem, url: string, type: PreviewType) => object;
+export type PreviewComponentPropsMethod = (item: BatchItem, url: string, type: PreviewType) => Record<string, unknown>;
 
-export type PreviewComponentPropsOrMethod = object | PreviewComponentPropsMethod;
+export type PreviewComponentPropsOrMethod = Record<string, unknown> | PreviewComponentPropsMethod;
 
 export interface PreviewOptions {
     rememberPreviousBatches?: boolean;

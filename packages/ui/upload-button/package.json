@@ -29,9 +29,9 @@
   "devDependencies": {
     "@rpldy/retry": "^0.2.3",
     "@rpldy/uploady": "^0.2.3",
-    "@storybook/addon-knobs": "^5.3.18",
-    "flow-bin": "^0.123.0",
-    "styled-components": "^4.4.1"
+    "@storybook/addon-knobs": "^5.3.19",
+    "flow-bin": "^0.126.1",
+    "styled-components": "^5.1.1"
   },
   "peerDependencies": {
     "react": ">=16.8.x",

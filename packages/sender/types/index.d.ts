@@ -11,13 +11,13 @@ export type SenderProgressEvent = {
     loaded: number;
 };
 
-export type OnProgress = (e: SenderProgressEvent, objs: object[]) => void;
+export type OnProgress = (e: SenderProgressEvent, objs: Record<string, unknown>[]) => void;
 
 export type SendOptions = {
     method: string;
     paramName: string;
-    params?: object;
-    headers?: object;
+    params?: Record<string, unknown>;
+    headers?: Record<string, unknown>;
     forceJsonResponse?: boolean;
     withCredentials?: boolean;
     formatGroupParamName?: FormatParamGroupNameMethod;

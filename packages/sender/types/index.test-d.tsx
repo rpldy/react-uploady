@@ -1,7 +1,7 @@
 import send, { createMockSender, OnProgress } from "./index";
 import { createBatchItem } from "@rpldy/shared";
 
-const batchItem = createBatchItem({ name: "test.png" }, "b1");
+const batchItem = createBatchItem({ name: "test.png", size: 123, type: "image", lastModified: 1234 }, "b1");
 
 const onProgress: OnProgress = ({ loaded, total }) => {
     console.log("uploaded/completed", { loaded, total });

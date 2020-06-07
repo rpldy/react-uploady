@@ -20,7 +20,7 @@ export type UploadyContextType = {
     off: OffMethod;
     abort: (id?: string) => void;
     abortBatch: (id: string) => void;
-    getExtension: (name: unknown) => object;
+    getExtension: (name: unknown) => Record<string, unknown>;
 };
 
 type EventHook<T> = (cb: (obj: T) => void, id?: string) => void;

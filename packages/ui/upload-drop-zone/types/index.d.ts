@@ -10,7 +10,7 @@ export interface UploadDropZoneProps extends UploadOptions {
     id?: string;
     onDragOverClassName?: string;
     dropHandler?: DropHandlerMethod;
-    htmlDirContentParams?: object;
+    htmlDirContentParams?: Record<string, unknown>;
     children?: JSX.Element | JSX.Element[];
 }
 

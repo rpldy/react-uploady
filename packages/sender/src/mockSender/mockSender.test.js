@@ -44,7 +44,6 @@ describe("mockSender tests", () => {
 
             if (options?.delay === 0) {
                 jest.runAllTimers();
-                jest.runAllImmediates();
             } else {
                 jest.advanceTimersByTime(delay);
             }

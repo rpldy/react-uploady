@@ -56,8 +56,8 @@ describe("queue tests", () => {
 
         expect(state.itemQueue).toEqual(["u1", "u2"]);
 
-        expect(state.items["u1"]).toBe(batch.items[0]);
-        expect(state.items["u2"]).toBe(batch.items[1]);
+        expect(state.items["u1"]).toStrictEqual(batch.items[0]);
+        expect(state.items["u2"]).toStrictEqual(batch.items[1]);
 
         expect(window[`__rpldy_${uploaderId}_queue_state`]).toBe(queueState);
 

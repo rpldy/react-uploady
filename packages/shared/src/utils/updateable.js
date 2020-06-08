@@ -40,7 +40,7 @@ const getUpdateable = <T>(obj: Object): Updateable<T> => {
     const traps = {
         set: (obj, key, value) => {
             if (isUpdateable) {
-                obj[key] = value;
+                obj[key] = deepProxy(value, traps);
             }
 
             return true;
@@ -63,7 +63,7 @@ const getUpdateable = <T>(obj: Object): Updateable<T> => {
         },
     };
 
-    const proxy : T = deepProxy(obj, traps);
+    const proxy : T = process.env.NODE_ENV !== "production" ? deepProxy(obj, traps) : obj;
 
     const update = (fn) => {
         if (isUpdateable) {

@@ -48,5 +48,6 @@ export {
 export type {
     InputRef,
     UploadyContextType,
+	RefObject,
 } from "./types";
 

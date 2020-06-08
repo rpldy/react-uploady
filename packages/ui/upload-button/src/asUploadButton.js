@@ -30,6 +30,6 @@ export default (Component: ComponentType<any>) => {
         />;
     };
 
-    return forwardRef<UploadButtonProps, ?any>(AsUploadButton);
+    return forwardRef<UploadButtonProps, mixed | React$ElementType>(AsUploadButton);
 };
 

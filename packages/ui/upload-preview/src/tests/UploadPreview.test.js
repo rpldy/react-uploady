@@ -20,10 +20,10 @@ describe("UploadPreview tests", () => {
 
     it("should render with simple img preview", () => {
 
-        usePreviewsLoader.mockReturnValueOnce([
+        usePreviewsLoader.mockReturnValueOnce({previews: [
             { url: "test.com", props: { "data-test": "123" } },
             { url: "test2.com", props: { "data-test": "456" } },
-        ]);
+        ]});
 
         const wrapper = mount(<UploadPreview/>);
 
@@ -38,10 +38,10 @@ describe("UploadPreview tests", () => {
 
     it("should render with simple video preview", () => {
 
-        usePreviewsLoader.mockReturnValueOnce([{
+        usePreviewsLoader.mockReturnValueOnce({previews: [{
             url: "video.mp4",
             type: PREVIEW_TYPES.VIDEO,
-        }]);
+        }]});
 
         const wrapper = mount(<UploadPreview/>);
 
@@ -59,10 +59,10 @@ describe("UploadPreview tests", () => {
             </article>;
         };
 
-        usePreviewsLoader.mockReturnValueOnce([
+        usePreviewsLoader.mockReturnValueOnce({previews: [
             { url: "test.com", type: "img", props: { "data-test": "123" } },
             { url: "test2.com", type: "img", props: { "data-test": "456" } },
-        ]);
+        ]});
 
         const wrapper = mount(<UploadPreview
             PreviewComponent={PreviewComp}/>);
@@ -82,9 +82,9 @@ describe("UploadPreview tests", () => {
         const previewUrl = "test.com",
             fbUrl = "fallback.com";
 
-        usePreviewsLoader.mockReturnValueOnce([
+        usePreviewsLoader.mockReturnValueOnce({previews: [
             { url: previewUrl, type: "img", props: { "data-test": "123" } },
-        ]);
+        ]});
 
         const wrapper = mount(<UploadPreview
             fallbackUrl={fbUrl}/>);
@@ -99,5 +99,28 @@ describe("UploadPreview tests", () => {
         wrapper.find("img").props().onError({ target: img });
         expect(img.src).toBe(fbUrl);
     });
+
+	it("should provide methods ref and call onPreviewsChanged", () => {
+
+		const previews =  [
+			{ url: "test.com", props: { "data-test": "123" } },
+			{ url: "test2.com", props: { "data-test": "456" } },
+		];
+
+		usePreviewsLoader.mockReturnValueOnce({previews, clearPreviews: "clear"});
+
+		const onPreviewsChanged = jest.fn();
+
+		const methodsRef = {current: null};
+
+		mount(<UploadPreview
+			onPreviewsChanged={onPreviewsChanged}
+			previewMethodsRef={methodsRef}
+		/>);
+
+		expect(onPreviewsChanged).toHaveBeenCalledWith(previews);
+
+		expect(methodsRef.current.clear).toBe("clear");
+	});
 });
 

@@ -192,6 +192,64 @@ export const WithRememberPrevious = () => {
 	</Uploady>;
 };
 
+/**
+ * separating into component so previews change dont cause
+ * Uploady to re-render
+ */
+const PreviewsWithClear = () => {
+	const previewMethodsRef = useRef();
+	const [previews, setPreviews] = useState([]);
+
+	const onPreviewsChanged = useCallback((previews) => {
+		setPreviews(previews);
+	}, []);
+
+	const onClear = useCallback(() => {
+		if (previewMethodsRef.current?.clear) {
+			previewMethodsRef.current.clear();
+		}
+	}, [previewMethodsRef]);
+
+	const getPreviewProps = useCallback((item, url, type) => {
+		return {
+			alt: `${type} - ${url}`,
+			"data-test": "upload-preview",
+		}
+	}, []);
+
+	return <>
+		<button id="clear-btn" onClick={onClear}>Clear {previews.length} previews</button>
+		<br/>
+		<PreviewContainer>
+			<UploadPreview
+				rememberPreviousBatches
+				previewComponentProps={getPreviewProps}
+				previewMethodsRef={previewMethodsRef}
+				onPreviewsChanged={onPreviewsChanged}
+				fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
+		</PreviewContainer>
+	</>;
+};
+
+export const WithPreviewMethods = () => {
+	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+	return <Uploady
+		debug
+		multiple={multiple}
+		destination={destination}
+		enhancer={enhancer}
+		grouped={grouped}
+		maxGroupSize={groupSize}>
+
+		<StyledUploadButton id="upload-btn">
+			Upload
+		</StyledUploadButton>
+
+		<PreviewsWithClear/>
+	</Uploady>;
+};
+
 export default {
     component: UploadPreview,
     title: "Upload Preview",

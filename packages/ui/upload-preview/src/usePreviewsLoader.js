@@ -1,5 +1,5 @@
 // @flow
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { isFunction } from "@rpldy/shared";
 import { useBatchStartListener } from "@rpldy/shared-ui";
 import { PREVIEW_TYPES } from "./consts";
@@ -12,9 +12,10 @@ import {
 import type { Batch, BatchItem } from "@rpldy/shared";
 import type {
     PreviewComponentPropsOrMethod,
-    PreviewData,
+	PreviewItem,
     PreviewOptions,
     MandatoryPreviewOptions,
+	PreviewData
 } from "./types";
 
 const getFilePreviewUrl = (file, options: MandatoryPreviewOptions) => {
@@ -32,7 +33,7 @@ const getFilePreviewUrl = (file, options: MandatoryPreviewOptions) => {
 const loadPreviewData = (
     item: BatchItem,
     options: MandatoryPreviewOptions,
-    previewComponentProps: PreviewComponentPropsOrMethod): ?PreviewData => {
+    previewComponentProps: PreviewComponentPropsOrMethod): ?PreviewItem => {
 
     let data, props;
 
@@ -81,9 +82,13 @@ const mergePreviewData = (prev, next) => {
 	return prev.concat(newItems);
 };
 
-export default (props: PreviewOptions): PreviewData[] => {
-    const [previews, setPreviews] = useState<PreviewData[]>([]);
+export default (props: PreviewOptions): PreviewData => {
+    const [previews, setPreviews] = useState<PreviewItem[]>([]);
     const previewOptions: MandatoryPreviewOptions = getWithMandatoryOptions(props);
+
+	const clearPreviews = useCallback(() => {
+		setPreviews([]);
+	}, []);
 
     useBatchStartListener((batch: Batch) => {
         const items: BatchItem[] = previewOptions.loadFirstOnly ? batch.items.slice(0, 1) : batch.items;
@@ -97,6 +102,5 @@ export default (props: PreviewOptions): PreviewData[] => {
 			previewsData);
     });
 
-    return previews;
+    return { previews, clearPreviews };
 };
-

@@ -21,3 +21,5 @@
 * [Upload Enhancers](UploaderEnhancers.md) - Write your own Upload Enhancer
 
 * [Uploader Events](UploaderEvents.md) - Register to uploader events
+
+* [Upload Queue](UploadQueue.md) - Show upload queue with preview, retry & abort

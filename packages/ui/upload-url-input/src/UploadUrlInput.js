@@ -2,10 +2,8 @@
 import React, { useRef, useContext, useCallback, forwardRef } from "react";
 import { invariant } from "@rpldy/shared";
 import { UploadyContext, assertContext, useWithForwardRef } from "@rpldy/shared-ui";
-import type { UploadUrlInputProps } from "./types";
 import type { UploadOptions } from "@rpldy/shared";
-
-type UploadMethod = () => void;
+import type { UploadUrlInputProps, UploadMethod } from "./types";
 
 const UploadUrlInput = forwardRef<UploadUrlInputProps, ?HTMLInputElement>(
     (props: UploadUrlInputProps, ref) => {
@@ -44,8 +42,8 @@ const UploadUrlInput = forwardRef<UploadUrlInputProps, ?HTMLInputElement>(
             }
         }, [upload, ignoreKeyPress]);
 
-        const { setRef: setUploadMethodRef } = useWithForwardRef<UploadMethod>(uploadRef);
-        setUploadMethodRef(upload);
+		const { setRef: setUploadMethodRef } = useWithForwardRef<UploadMethod>(uploadRef);
+		setUploadMethodRef(upload);
 
         return <input
             type="text"

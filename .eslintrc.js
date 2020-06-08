@@ -99,7 +99,6 @@ module.exports = {
             1,
             "never"
         ],
-        // "react/jsx-first-prop-new-line": 1,
         "jsx-quotes": 0,
         "react/jsx-sort-prop-types": 0,
         "react/jsx-filename-extension": 0,

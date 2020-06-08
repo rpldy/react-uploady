@@ -2,15 +2,16 @@
 import { useRef, useCallback } from "react";
 import { isFunction } from "@rpldy/shared";
 
+import type { RefObject } from "./types";
 
-type ReturnType<T> = { ref: {current: ?T}, setRef: (T) => void };
+type ReturnType<T> = { ref: RefObject<T>, setRef: (T) => mixed };
 
 /**
  * can be used to support forward ref that can be either a function or an object (useRef, createRef)
  * @param ref {Object | Function}
  */
-const useWithForwardRef = <T>(ref: Object | (T) => { current: T }): ReturnType<T> => {
-    const internalRef = useRef<?T>(null);
+const useWithForwardRef = <T>(ref?: RefObject<T> | (T) => mixed): ReturnType<T> => {
+    const internalRef = useRef<T | null | void>(null);
 
     const setRef = useCallback((elm) => {
             if (ref) {

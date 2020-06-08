@@ -38,6 +38,8 @@ By default, will present a preview of the file being uploaded in case its an ima
 | previewComponentProps | [PreviewComponentPropsOrMethod](src/types.js#L18) | undefined | object or function to generate object as additional props for the preview component
 | PreviewComponent      | React.ComponentType<any> | img &#124; video | The component that will show the preview
 | rememberPreviousBatches | boolean | false | show previous batches' previews as opposed to just the last 
+| previewMethodsRef     | React Ref   | undefined | ref will be set with preview helper [methods](src/types.js#L29)
+| onPreviewsChanged     | (PreviewItem[]) => void | undefined | callback will be called whenever preview items array changes
 
 ## Example
 
@@ -48,14 +50,66 @@ import Uploady from "@rpldy/uploady";
 import UploadPreview from "@rpldy/upload-preview";
 
 export const App = () => (
-     <Uploady>
-      
+     <Uploady destination={{ url: "my-server.com/upload" }}>     
         <UploadPreview
             fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"/>
     </Uploady>
 );
 ```
 
+### Advanced Usage
+
+_The props _rememberPreviousBatches_, _previewMethodsRef_, and _onPreviewsChanged_ make it possible to do more with previews.
+Specifically, the make it possible to create a visual queue of the uploads.
+
+This is especially useful when adding other features such as abort and [retry](../retry-hooks).   
+
+The code below shows how to clear the previews with a button click:
+
+```javascript
+import React from "react";
+import Uploady from "@rpldy/uploady";
+import UploadPreview from "@rpldy/upload-preview";
+import UploadButton from "@rpldy/upload-button";
+
+const PreviewsWithClear = () => {
+	const previewMethodsRef = useRef();
+	const [previews, setPreviews] = useState([]);
+
+	const onPreviewsChanged = useCallback((previews) => {
+		setPreviews(previews);
+	}, []);
+
+	const onClear = useCallback(() => {
+		if (previewMethodsRef.current?.clear) {
+			previewMethodsRef.current.clear();
+		}
+	}, [previewMethodsRef]);
+
+	return <>
+		<button onClick={onClear}>
+            Clear {previews.length} previews
+        </button>
+		<br/>		
+        <UploadPreview
+            rememberPreviousBatches            
+            previewMethodsRef={previewMethodsRef}
+            onPreviewsChanged={onPreviewsChanged}
+        />            		
+	</>;
+};
+
+export const App = () => {	
+	return <Uploady destination={{ url: "my-server.com/upload" }}>
+		<UploadButton />
+		<PreviewsWithClear />
+	</Uploady>;
+};
+
+```
+
+### Custom Preview
+ 
 For an example of using a custom preview component see [this story](http://localhost:9111/?path=/story/upload-preview--with-progress). 
 
 ## Default image types

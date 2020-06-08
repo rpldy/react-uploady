@@ -49,7 +49,7 @@ module.exports = {
         });
 
         config.plugins.push(new webpack.DefinePlugin({
-            "rpldyVersion": JSON.stringify(await getCurrentNpmVersion()),
+            "rpldyVersion": config.mode !== "development" && JSON.stringify(await getCurrentNpmVersion()),
             "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
         }));
 

@@ -6,12 +6,17 @@ export enum PreviewType {
     VIDEO = "video",
 }
 
-export type PreviewData = {
+export type PreviewItem = {
     id: string;
-    name: string;
     url: string;
+    name: string;
     type: PreviewType;
     props: Record<string, unknown>;
+};
+
+export type PreviewData = {
+    previews: PreviewItem[];
+    clearPreviews: () => void;
 };
 
 export type FallbackType = string | PreviewData;
@@ -21,6 +26,10 @@ export type FallbackMethod = (file: FileLike) => FallbackType | void;
 export type PreviewComponentPropsMethod = (item: BatchItem, url: string, type: PreviewType) => Record<string, unknown>;
 
 export type PreviewComponentPropsOrMethod = Record<string, unknown> | PreviewComponentPropsMethod;
+
+export type PreviewMethods = {
+    clear: () => void;
+};
 
 export interface PreviewOptions {
     rememberPreviousBatches?: boolean;
@@ -41,6 +50,8 @@ export type PreviewComponentProps = {
 
 export interface PreviewProps extends PreviewOptions {
     PreviewComponent?: React.ComponentType<PreviewComponentProps>;
+    previewMethodsRef?: React.RefObject<PreviewMethods>;
+    onPreviewsChanged?: (previews: PreviewItem[]) => void;
 }
 
 export const UploadPreview: (props: PreviewProps) => JSX.Element;

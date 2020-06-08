@@ -1,5 +1,5 @@
 // @flow
-import React, { useCallback, useState, memo } from "react";
+import React, { useCallback, useState, useRef, memo } from "react";
 import styled from "styled-components";
 import { withKnobs } from "@storybook/addon-knobs";
 import { Circle } from "rc-progress";
@@ -20,98 +20,98 @@ import retryEnhancer, { useBatchRetry, useRetry, useRetryListener } from "./src"
 import readme from "./README.md";
 
 const RetryUi = () => {
-    const [seenItems, setItems] = useState({});
-    const [seenBatches, setBatches] = useState([]);
-    const abortItem = useAbortItem();
-    const retry = useRetry();
-    const retryBatch = useBatchRetry();
+	const [seenItems, setItems] = useState({});
+	const [seenBatches, setBatches] = useState([]);
+	const abortItem = useAbortItem();
+	const retry = useRetry();
+	const retryBatch = useBatchRetry();
 
-    useItemStartListener((item) => {
-        if (!seenItems[item.id]) {
-            setItems((seen) => {
-                return { ...seen, [item.id]: item.file ? item.file.name : item.url };
-            });
+	useItemStartListener((item) => {
+		if (!seenItems[item.id]) {
+			setItems((seen) => {
+				return { ...seen, [item.id]: item.file ? item.file.name : item.url };
+			});
 
-            setBatches((batches) => {
-                return !~batches.indexOf(item.batchId) ?
-                    batches.concat(item.batchId) :
-                    batches;
-            });
+			setBatches((batches) => {
+				return !~batches.indexOf(item.batchId) ?
+					batches.concat(item.batchId) :
+					batches;
+			});
 
 			abortItem(item.id);
-        }
-    });
+		}
+	});
 
-    useRetryListener(({ items }) => {
-        console.log("##### RETRY EVENT - retrying items: ", items);
-    });
+	useRetryListener(({ items }) => {
+		console.log("##### RETRY EVENT - retrying items: ", items);
+	});
 
-    const onRetryAll = useCallback(() => {
-        retry();
-    }, [retry]);
+	const onRetryAll = useCallback(() => {
+		retry();
+	}, [retry]);
 
-    const onRetryItem = useCallback((e) => {
-        const itemId = e.target.dataset["id"];
-        retry(itemId);
-    }, [retry]);
+	const onRetryItem = useCallback((e) => {
+		const itemId = e.target.dataset["id"];
+		retry(itemId);
+	}, [retry]);
 
-    const onRetryBatch = useCallback((e) => {
-        const batchId = e.target.dataset["id"];
-        retryBatch(batchId);
-    }, [retryBatch]);
+	const onRetryBatch = useCallback((e) => {
+		const batchId = e.target.dataset["id"];
+		retryBatch(batchId);
+	}, [retryBatch]);
 
-    return <>
-        <UploadButton id="upload-button"/>
-        <br/>
-        <button id="retry-all" onClick={onRetryAll}>Retry All</button>
+	return <>
+		<UploadButton id="upload-button"/>
+		<br/>
+		<button id="retry-all" onClick={onRetryAll}>Retry All</button>
 
-        <section>Failed Batches:
-            <ul>
-                {seenBatches.map((bId, index) =>
-                    <li style={{ cursor: "pointer" }}
-                        key={bId}
-                        data-id={bId}
-                        data-test={`batch-retry-${index}`}
-                        onClick={onRetryBatch}>
-                        {bId}
-                    </li>)}
-            </ul>
-        </section>
+		<section>Failed Batches:
+			<ul>
+				{seenBatches.map((bId, index) =>
+					<li style={{ cursor: "pointer" }}
+						key={bId}
+						data-id={bId}
+						data-test={`batch-retry-${index}`}
+						onClick={onRetryBatch}>
+						{bId}
+					</li>)}
+			</ul>
+		</section>
 
-        <section>Failed Items:
-            <ul>
-                {Object.keys(seenItems).map((id, index) =>
-                    <li style={{ cursor: "pointer" }}
-                        data-id={id} key={id}
-                        data-test={`item-retry-${index}`}
-                        onClick={onRetryItem}>
-                        cancelled: ({id}) {seenItems[id]}
-                    </li>)}
-            </ul>
-        </section>
-        <br/>
-        <StoryUploadProgress/>
-    </>
+		<section>Failed Items:
+			<ul>
+				{Object.keys(seenItems).map((id, index) =>
+					<li style={{ cursor: "pointer" }}
+						data-id={id} key={id}
+						data-test={`item-retry-${index}`}
+						onClick={onRetryItem}>
+						cancelled: ({id}) {seenItems[id]}
+					</li>)}
+			</ul>
+		</section>
+		<br/>
+		<StoryUploadProgress/>
+	</>
 };
 
 export const WithRetry = () => {
-    const storySetup = useStoryUploadySetup();
-    const { destination, multiple, grouped, groupSize } = storySetup;
-    let { enhancer } = storySetup;
+	const storySetup = useStoryUploadySetup();
+	const { destination, multiple, grouped, groupSize } = storySetup;
+	let { enhancer } = storySetup;
 
-    enhancer = enhancer ?
-        composeEnhancers(retryEnhancer, enhancer) : retryEnhancer;
+	enhancer = enhancer ?
+		composeEnhancers(retryEnhancer, enhancer) : retryEnhancer;
 
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}
-        grouped={grouped}
-        maxGroupSize={groupSize}>
+	return <Uploady
+		debug
+		multiple={multiple}
+		destination={destination}
+		enhancer={enhancer}
+		grouped={grouped}
+		maxGroupSize={groupSize}>
 
-        <RetryUi />
-    </Uploady>
+		<RetryUi/>
+	</Uploady>
 };
 
 const STATES = {
@@ -153,7 +153,7 @@ const PreviewImage = styled.img`
   max-height: 140px;
 `;
 
-const PreviewItemContainer = styled.div`
+const PreviewItemContainer = styled.article`
   width: 220px;
   padding: 10px;
   display: flex;
@@ -187,8 +187,7 @@ const PreviewItemBar = styled.div`
   box-shadow: #5dbdec 0px -3px 2px -2px;
 `;
 
-const ItemButtons = styled.div`
-  button {
+const Button = styled.button` 
     width: 52px;
     height: 34px;
     font-size: 26px;
@@ -200,33 +199,55 @@ const ItemButtons = styled.div`
       cursor: not-allowed;
       background-color: grey;
       color: grey;
-    }
-  }
+    }  
+`;
+
+const QueueBar = styled.div`
+	width: 100%;
+	height: 40px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
 `;
 
 const AbortButton = ({ id, state }) => {
 	const abortItem = useAbortItem();
 	const onAbort = useCallback(() => abortItem(id), [id, abortItem]);
 
-	return (
-		<button
-			disabled={state === STATES.ABORTED || state === STATES.DONE}
-			onClick={onAbort}
-		>
-			🛑
-		</button>
-	);
+	return <Button
+		disabled={state === STATES.ABORTED || state === STATES.DONE}
+		onClick={onAbort}
+	>
+		🛑
+	</Button>;
 };
 
 const RetryButton = ({ id, state }) => {
 	const retry = useRetry();
 	const onRetry = useCallback(() => retry(id), [id, retry]);
 
-	return (
-		<button disabled={state !== STATES.ABORTED} onClick={onRetry}>
-			🔃
-		</button>
-	);
+	return <Button disabled={state !== STATES.ABORTED} onClick={onRetry}>
+		🔃
+	</Button>;
+};
+
+const ClearPreviewsButton = ({ methods, previews }) => {
+	const disabled = !methods.current?.clear || !previews.length;
+
+	console.log("!!!!!!!!!! rendering CLEAR BUTTON ", {methods, previews, disabled});
+
+	const onClear = useCallback(() => {
+		if (methods.current?.clear) {
+			methods.current.clear()
+		}
+	}, [methods]);
+
+	return <>
+		<Button disabled={disabled} onClick={onClear}>
+			🗑️
+		</Button>
+		({previews.length} items)
+	</>;
 };
 
 const QueueItem = memo((props) => {
@@ -246,7 +267,7 @@ const QueueItem = memo((props) => {
 		setItemState(STATES.ABORTED);
 	}, props.id);
 
-	useItemErrorListener((item) =>{
+	useItemErrorListener((item) => {
 		setItemState(STATES.ERROR);
 	}, props.id);
 
@@ -254,13 +275,13 @@ const QueueItem = memo((props) => {
 		<PreviewItemContainer state={itemState}>
 			<ImageName>{props.name}</ImageName>
 			<PreviewImageWrapper>
-				<PreviewImage src={props.url} />
+				<PreviewImage src={props.url}/>
 			</PreviewImageWrapper>
 			<PreviewItemBar>
-				<ItemButtons>
-					<AbortButton id={props.id} state={itemState} />
-					<RetryButton id={props.id} state={itemState} />
-				</ItemButtons>
+				<div>
+					<AbortButton id={props.id} state={itemState}/>
+					<RetryButton id={props.id} state={itemState}/>
+				</div>
 				<StyledCircle
 					strokeWidth={4}
 					percent={progress}
@@ -270,6 +291,26 @@ const QueueItem = memo((props) => {
 		</PreviewItemContainer>
 	);
 });
+
+const Queue = () => {
+	const [previews, setPreviews] = useState([]);
+	const previewMethodsRef = useRef();
+	const onPreviewsChanged = useCallback((previews) => {
+		setPreviews(previews);
+	}, []);
+
+	return <PreviewsContainer>
+		<QueueBar>
+			<ClearPreviewsButton methods={previewMethodsRef} previews={previews} />
+		</QueueBar>
+		<UploadPreview
+			rememberPreviousBatches
+			PreviewComponent={QueueItem}
+			previewMethodsRef={previewMethodsRef}
+			onPreviewsChanged={onPreviewsChanged}
+		/>
+	</PreviewsContainer>
+};
 
 export const WithRetryAndPreview = () => {
 	const storySetup = useStoryUploadySetup();
@@ -290,27 +331,21 @@ export const WithRetryAndPreview = () => {
 		>
 			<div className="App">
 				<UploadButton>Upload Files</UploadButton>
-
-				<PreviewsContainer>
-					<UploadPreview
-						rememberPreviousBatches
-						PreviewComponent={QueueItem}
-					/>
-				</PreviewsContainer>
+				<Queue/>
 			</div>
 		</Uploady>
 	);
 };
 
 export default {
-    title: "Retry Hooks",
-    decorators: [withKnobs],
-    parameters: {
-        sidebar: readme,
-        options: {
-            showPanel: true,
-            //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-            theme: {}
-        },
-    },
+	title: "Retry Hooks",
+	decorators: [withKnobs],
+	parameters: {
+		sidebar: readme,
+		options: {
+			showPanel: true,
+			//needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
+			theme: {}
+		},
+	},
 };

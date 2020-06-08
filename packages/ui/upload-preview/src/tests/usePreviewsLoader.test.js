@@ -1,3 +1,4 @@
+import { act } from "react-dom/test-utils";
 import { useBatchStartListener } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import { getFallbackUrl, getFileObjectUrlByType } from "../utils";
 import { PREVIEW_TYPES } from "../consts";
@@ -52,7 +53,7 @@ describe("usePreviewLoader tests", () => {
 			loadFirstOnly: true,
 		});
 
-		const previews = getHookResult();
+		const { previews } = getHookResult();
 
 		expect(previews).toHaveLength(1);
 		expect(previews[0].id).toBe("f1");
@@ -66,7 +67,7 @@ describe("usePreviewLoader tests", () => {
 
 		const { getHookResult, items } = testPreviewsLoader();
 
-		const previews = getHookResult();
+		const { previews } = getHookResult();
 
 		expect(previews).toHaveLength(2);
 		expect(previews[0].url).toBe("preview.test");
@@ -84,7 +85,7 @@ describe("usePreviewLoader tests", () => {
 			}),
 		});
 
-		const previews = getHookResult();
+		const { previews } = getHookResult();
 
 		expect(previews).toHaveLength(2);
 		expect(previews[0].url).toBe("preview.test");
@@ -110,7 +111,7 @@ describe("usePreviewLoader tests", () => {
 		wrapper.setProps({ rememberPreviousBatches: false });
 		wrapper.update();
 
-		const newPreviews = getHookResult();
+		const { previews: newPreviews } = getHookResult();
 		expect(newPreviews).toHaveLength(2);
 		expect(newPreviews[0].props).toEqual({ test: "f3-preview3.test-img"});
 		expect(newPreviews[1].props).toEqual({ test: "f4-preview4.test-img" });
@@ -124,7 +125,7 @@ describe("usePreviewLoader tests", () => {
 			previewComponentProps: { test: "123" }
 		});
 
-		const previews = getHookResult();
+		const { previews } = getHookResult();
 
 		expect(previews).toHaveLength(2);
 		expect(previews[0].url).toBe("preview.test");
@@ -144,7 +145,7 @@ describe("usePreviewLoader tests", () => {
 			}),
 		});
 
-		const previews = getHookResult();
+		const { previews } = getHookResult();
 
 		expect(previews).toHaveLength(2);
 		expect(previews[0].url).toBe("video.test");
@@ -163,7 +164,7 @@ describe("usePreviewLoader tests", () => {
 			}),
 		}, [{ id: "f1", file: { name: "test" } }]);
 
-		const previews = getHookResult();
+		const { previews } = getHookResult();
 
 		expect(previews).toHaveLength(1);
 		expect(previews[0].url).toBe("fallback.test");
@@ -178,7 +179,7 @@ describe("usePreviewLoader tests", () => {
 
 		const { getHookResult, items } = testPreviewsLoader();
 
-		const previews = getHookResult();
+		const { previews } = getHookResult();
 		expect(previews).toHaveLength(1);
 		expect(previews[0].url).toBe(items[1].url);
 	});
@@ -188,7 +189,7 @@ describe("usePreviewLoader tests", () => {
 			.mockReturnValueOnce({ url: "preview1.test" });
 
 		const { getHookResult, wrapper } = testPreviewsLoader({ rememberPreviousBatches: true });
-		const previews = getHookResult();
+		const { previews } = getHookResult();
 		expect(previews).toHaveLength(2);
 
 		const moreItems = [
@@ -210,7 +211,7 @@ describe("usePreviewLoader tests", () => {
 		wrapper.setProps({ rememberPreviousBatches: true });
 		wrapper.update();
 
-		const newPreviews = getHookResult();
+		const { previews: newPreviews } = getHookResult();
 		expect(newPreviews).toHaveLength(4);
 
 		expect(newPreviews[0].id).toBe("f1");
@@ -219,12 +220,68 @@ describe("usePreviewLoader tests", () => {
 		expect(newPreviews[3].id).toBe("f4");
 	});
 
+	it("clearPreviews should clear previous", () => {
+		getFileObjectUrlByType
+			.mockReturnValueOnce({ url: "preview1.test" });
+
+		const { getHookResult, wrapper } = testPreviewsLoader({ rememberPreviousBatches: true });
+		const { previews } = getHookResult();
+		expect(previews).toHaveLength(2);
+
+		const moreItems = [
+			{ id: "f3", file: { name: "1" } },
+			{ id: "f4", file: { name: "2" } }
+		];
+
+		useBatchStartListener
+			.mockImplementationOnce((cb) => {
+				cb({ items: moreItems });
+			});
+
+		getFileObjectUrlByType
+			.mockReturnValueOnce({ url: "preview3.test" })
+			.mockReturnValueOnce({ url: "preview4.test" });
+
+		wrapper.setProps({ rememberPreviousBatches: true });
+		wrapper.update();
+
+		const { previews: newPreviews, clearPreviews } = getHookResult();
+		expect(newPreviews).toHaveLength(4);
+
+		act(() => {
+			clearPreviews();
+		});
+
+		const moreItems2 = [
+			{ id: "f5", file: { name: "11" } },
+			{ id: "f6", file: { name: "22" } }
+		];
+
+		useBatchStartListener
+			.mockImplementationOnce((cb) => {
+				cb({ items: moreItems2 });
+			});
+
+		getFileObjectUrlByType
+			.mockReturnValueOnce({ url: "preview5.test" })
+			.mockReturnValueOnce({ url: "preview6.test" });
+
+		wrapper.setProps({ rememberPreviousBatches: true });
+		wrapper.update();
+
+		const { previews: afterClearPreviews } = getHookResult();
+		expect(afterClearPreviews).toHaveLength(2);
+
+		expect(afterClearPreviews[0].id).toBe("f5");
+		expect(afterClearPreviews[1].id).toBe("f6");
+	});
+
 	it("should dedupe recycled items and merge while keeping order", () => {
 		getFileObjectUrlByType
 			.mockReturnValueOnce({ url: "preview1.test" });
 
 		const { getHookResult, wrapper } = testPreviewsLoader({ rememberPreviousBatches: true });
-		const previews = getHookResult();
+		const { previews } = getHookResult();
 		expect(previews).toHaveLength(2);
 		expect(previews[0].id).toBe("f1");
 		expect(previews[0].url).toBe("preview1.test");
@@ -248,7 +305,7 @@ describe("usePreviewLoader tests", () => {
 		wrapper.setProps({ rememberPreviousBatches: true });
 		wrapper.update();
 
-		const newPreviews = getHookResult();
+		const { previews: newPreviews } = getHookResult();
 		expect(newPreviews).toHaveLength(3);
 
 		expect(newPreviews[0].id).toBe("f1");

@@ -1,11 +1,13 @@
 // @flow
 import * as React from "react";
-import type { BatchItem } from "@rpldy/shared";
 import { PREVIEW_TYPES } from "./consts";
+
+import type { BatchItem } from "@rpldy/shared";
+import type { RefObject } from "@rpldy/shared-ui";
 
 export type PreviewType = $Values<typeof PREVIEW_TYPES>;
 
-export type PreviewData = {
+export type PreviewItem = {
 	id: string,
 	url: string,
 	name: string,
@@ -13,11 +15,20 @@ export type PreviewData = {
     props: Object,
 };
 
-export type FallbackType = string | PreviewData;
+export type PreviewData = {
+	previews: PreviewItem[],
+	clearPreviews: () => void,
+};
+
+export type FallbackType = string | PreviewItem;
 
 export type FallbackMethod = (file: Object) => ?FallbackType;
 
 export type PreviewComponentPropsOrMethod = Object | (item: BatchItem, url: string, type: PreviewType) => Object
+
+export type PreviewMethods = {
+	clear: () => void,
+};
 
 export type PreviewOptions = {|
 	//whether to show previous batches' previews as opposed to just the last (default: false)
@@ -42,10 +53,14 @@ export type PreviewOptions = {|
 
 export type PreviewProps =  {|
     ...PreviewOptions,
-	PreviewComponent?: React.ComponentType<any>,
+	//custom component to render the preview (default: img tag)
+	PreviewComponent?: React.ComponentType<$Shape<PreviewItem>>,
+	//ref will be set with API methods (PreviewMethods)
+	previewMethodsRef?: RefObject<PreviewMethods>,
+	//callback that will be called when preview items are loaded or changed
+	onPreviewsChanged?: (PreviewItem[]) => void,
 |};
 
-// export type MandatoryPreviewOptions = $Exact<$ObjMap<PreviewProps, NonMaybeTypeFunc>>;
 export type MandatoryPreviewOptions = {|
     loadFirstOnly: boolean,
     maxPreviewImageSize: number,

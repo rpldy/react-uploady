@@ -50,6 +50,32 @@ In addition, all [UploadOptions](../../shared/src/types.js#L104) props can be pa
 In order to override configuration passed to the parent Uploady component. 
 See [Uploady documentation](../uploady#props) for detailed list of upload options.   
 
+## Hooks
+
+Chunked Uploady provides hooks for chunk life-time events:
+
+### useChunkStartListener 
+
+Called when a chunk is about to be sent to the server
+
+> This event is _[cancellable](../../uploader/README.md#cancellable-events)_
+
+```javascript
+    import { useChunkStartListener } from "@rpldy/chunked-uploady";
+
+    const MyComponent = () => {
+        useChunkStartListener((data) => {
+            return {
+                url: `${data.url}/${data.chunk.index}`
+            };  
+        });   
+    };
+```
+
+### useChunkFinishListener
+
+Called when a chunk has finished uploading
+
 ## Example
 
 ```javascript

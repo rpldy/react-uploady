@@ -1,15 +1,14 @@
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
+import {
+	generateUploaderEventHook,
+	generateUploaderEventHookWithState
+} from "../utils";
+import "../eventListenerHooks";
 
 jest.mock("../utils", () => ({
     generateUploaderEventHook: jest.fn(),
     generateUploaderEventHookWithState: jest.fn(),
 }));
-
-import {
-    generateUploaderEventHook,
-    generateUploaderEventHookWithState
-} from "../utils";
-import "../eventListenerHooks";
 
 describe("eventListenerHooks tests", () => {
     describe("generateUploaderEventHook tests", () => {

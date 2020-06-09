@@ -37,3 +37,30 @@ These will be handed over to the default [@rpldy/sender]()
 | chunkSize             | number        | 5242880      | the chunk size. relevant when uploaded file is larger than the value
 | retries               | number        | 0             | how many times to retry sending a failed chunk
 | parallel              | number        | 0             | how many (chunk) requests to send simultaneously
+
+## Events
+
+Chunked Sender makes it possible to handle chunk life-time events.
+See [uploader events](../uploader/README.md#events) section on more info regarding how to register for events.
+
+## CHUNK_EVENTS.CHUNK_START
+
+Triggered when a chunk is about to be sent to the server
+
+> This event is _[cancellable](../uploader/README.md#cancellable-events)_
+
+The event handler may return an object with the following shape: 
+
+```javascript
+type StartEventResponse = {
+	url: string,
+    sendOptions: ChunkedSendOptions
+}
+``` 
+
+> * [ChunkedSendOptions](src/types.js#L16)
+
+## CHUNK_EVENTS.CHUNK_FINISH
+
+Triggered when a chunk has finished uploading
+

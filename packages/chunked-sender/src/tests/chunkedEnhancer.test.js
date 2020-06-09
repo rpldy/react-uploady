@@ -1,4 +1,4 @@
-import chunkedSender from "../chunkedSender";
+import createChunkedSender from "../chunkedSender";
 import getChunkedEnhancer from "../getChunkedEnhancer";
 
 jest.mock("../chunkedSender", () => jest.fn());
@@ -9,13 +9,13 @@ describe("chunkedEnhancer tests", () => {
         const options = { chunkSize: 111 };
         const uploader = { update: jest.fn() };
 
-        chunkedSender.mockReturnValueOnce({send: "chunkedSend"});
+		createChunkedSender.mockReturnValueOnce({send: "chunkedSend"});
 
         const enhancer = getChunkedEnhancer(options);
-        const result = enhancer(uploader);
+        const result = enhancer(uploader, "trigger");
 
         expect(result).toBe(uploader);
-        expect(chunkedSender).toHaveBeenCalledWith(options);
+        expect(createChunkedSender).toHaveBeenCalledWith(options, "trigger");
         expect(uploader.update).toHaveBeenCalledWith({ send: "chunkedSend" });
     });
 });

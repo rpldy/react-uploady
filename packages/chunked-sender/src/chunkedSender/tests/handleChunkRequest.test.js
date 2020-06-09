@@ -59,7 +59,7 @@ describe("handleChunkRequest tests", () => {
         expect(state.responses[0]).toBe("success");
 
         expect(trigger).toHaveBeenCalledWith(CHUNK_EVENTS.CHUNK_FINISH, {
-            chunk: { id: "c1", start: 1, end: 2 },
+            chunk: { id: "c1", start: 1, end: 2, attempt: 0 },
             item,
             uploadData: response,
         });

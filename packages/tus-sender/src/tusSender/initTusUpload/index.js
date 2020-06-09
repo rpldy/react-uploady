@@ -6,8 +6,7 @@ import resumeUpload from "./resumeUpload";
 import handleTusUpload from "../handleTusUpload";
 
 import type { BatchItem } from "@rpldy/shared";
-import type { SendOptions } from "@rpldy/sender";
-import type { ChunkedSender, OnProgress } from "@rpldy/chunked-sender";
+import type { ChunkedSender, ChunkedSendOptions, OnProgress } from "@rpldy/chunked-sender";
 import type { TusState, State } from "../../types";
 
 const createStateItemData = (item: BatchItem, tusState: TusState) => {
@@ -24,7 +23,7 @@ const createStateItemData = (item: BatchItem, tusState: TusState) => {
 
 export default (items: BatchItem[],
 				url: string,
-				sendOptions: SendOptions,
+				sendOptions: ChunkedSendOptions,
 				onProgress: OnProgress,
 				tusState: TusState,
 				chunkedSender: ChunkedSender,

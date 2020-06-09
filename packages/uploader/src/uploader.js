@@ -34,12 +34,13 @@ let counter = 0;
 
 export default (options?: CreateOptions): UploaderType => {
     counter += 1;
+    const uploaderId = `uploader-${counter}`;
     let enhancerTime = false;
 
     const pendingBatches = [],
         extensions = {};
 
-    logger.debugLog("uploady.uploader: creating new instance", { options, counter });
+    logger.debugLog(`uploady.uploader: creating new instance (${uploaderId})`, { options, counter });
 
     let uploaderOptions: CreateOptions = getMandatoryOptions(options);
 
@@ -126,7 +127,7 @@ export default (options?: CreateOptions): UploaderType => {
 
     let { trigger, target: uploader } = addLife(
         {
-            id: `uploader-${counter}`,
+            id: uploaderId,
             update,
             add,
             upload,

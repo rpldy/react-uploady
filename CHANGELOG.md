@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.4
+
+### Features
+
+- `[upload-preview]` - preview methods: clear (previewMethodsRef)
+- `[upload-preview]` - access to preview items array (onPreviewsChanged)
+
+### Internal
+
+- `[shared]` - updateable - proxy only in dev. proxy additions to state
+
+### Docs
+
+- `[guides]` - Upload Queue guide
+
+
 ## 0.2.3
 
 ### Features

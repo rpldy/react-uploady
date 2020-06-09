@@ -6,6 +6,7 @@
 
 - `[upload-preview]` - preview methods: clear (previewMethodsRef)
 - `[upload-preview]` - access to preview items array (onPreviewsChanged)
+- `[chunked-uploady]` - chunk event hooks (start/finish)
 
 ### Internal
 
@@ -14,7 +15,8 @@
 ### Docs
 
 - `[guides]` - Upload Queue guide
-
+- `[chunked-uploady]` - document chunk event hooks
+- `[chunked-sender]` - document chunk events
 
 ## 0.2.3
 

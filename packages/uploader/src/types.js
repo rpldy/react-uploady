@@ -1,5 +1,4 @@
 // @flow
-
 import type {
     UploadInfo,
     UploadOptions,
@@ -24,7 +23,7 @@ export type CreateOptions =  {|
     //the maximum allowed for simultaneous requests (default: 2)
     maxConcurrent?: number,
     //the send method to use. Allows overriding the method used to send files to the server for example using a mock (default: @rpldy/sender)
-    send?: ?SendMethod,
+    send?: ?SendMethod<any>,
 |};
 
 export type PendingBatch = {

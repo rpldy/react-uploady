@@ -22,6 +22,7 @@ export type {
     ChunkedOptions,
     MandatoryChunkedOptions,
     ChunkedSender,
+	ChunkedSendOptions,
     ChunkEventData,
     ChunkStartEventData,
     ChunkFinishEventData,

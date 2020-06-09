@@ -102,9 +102,13 @@ const getDestinationOptions = ({destinations = null}) => {
     }, {});
 };
 
+const useStoryDestination = (type, { noLong }) => {
+	return useMemo(() => DESTINATIONS[type]({ noLong }), [type, noLong]);
+};
+
 const useStoryUploadySetup = (options = {}) => {
     const type = select("destination", getDestinationOptions(options), DESTINATION_TYPES.mock, KNOB_GROUPS.DESTINATION),
-        { destination, enhancer, destinationType } = DESTINATIONS[type](options),
+        { destination, enhancer, destinationType } = useStoryDestination(type, options),
         multiple = boolean("multiple files", true, KNOB_GROUPS.SETTINGS),
         grouped = !options.noGroup && boolean("group files in single request", false, KNOB_GROUPS.SETTINGS),
         groupSize = !options.noGroup && number("max in group", 2, {}, KNOB_GROUPS.SETTINGS);

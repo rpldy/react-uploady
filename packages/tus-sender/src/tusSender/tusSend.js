@@ -10,7 +10,7 @@ import type { BatchItem } from "@rpldy/shared";
 import type {
 	ChunkedSender,
 	OnProgress,
-	SendOptions,
+	ChunkedSendOptions,
 	SendResult,
 } from "@rpldy/chunked-sender";
 import type { TusState } from "../types";
@@ -46,7 +46,7 @@ export default (chunkedSender: ChunkedSender, tusState: TusState) => {
 	const tusSend = (
 		items: BatchItem[],
 		url: string,
-		sendOptions: SendOptions,
+		sendOptions: ChunkedSendOptions,
 		onProgress: OnProgress
 	): SendResult => {
 		let result;

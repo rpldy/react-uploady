@@ -24,10 +24,10 @@ describe("getTusEnhancer tests", () => {
 			registerExtension: jest.fn(),
 		};
 
-		enhancer(uploader);
+		enhancer(uploader, "trigger");
 
 		expect(uploader.update).toHaveBeenCalledWith({ send });
-		expect(createTusSender).toHaveBeenCalledWith(uploader, options);
+		expect(createTusSender).toHaveBeenCalledWith(uploader, options, "trigger");
 
 		expect(uploader.registerExtension).toHaveBeenCalledWith(TUS_EXT, expect.any(Object));
 

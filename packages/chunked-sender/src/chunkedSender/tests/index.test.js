@@ -13,10 +13,11 @@ jest.mock("../processChunks", () => jest.fn());
 describe("chunkedSender index tests", () => {
 	const url = "test.com",
 		sendOptions = {},
-		onProgress = {};
+		onProgress = {},
+		trigger = "trigger";
 
 	const doChunkedSend = (items, chunkedOptions = {}) => {
-		const { send } = createChunkedSender(chunkedOptions);
+		const { send } = createChunkedSender(chunkedOptions,trigger);
 		return send(items, url, sendOptions, onProgress);
 	};
 
@@ -58,6 +59,6 @@ describe("chunkedSender index tests", () => {
 		const result = doChunkedSend(items, chunkedOptions);
 		expect(result).toBe(true);
 		expect(send).not.toHaveBeenCalled();
-		expect(processChunks).toHaveBeenCalledWith(items[0], chunkedOptions, url, sendOptions, onProgress, expect.any(Function));
+		expect(processChunks).toHaveBeenCalledWith(items[0], chunkedOptions, url, sendOptions, onProgress, "trigger");
 	});
 });

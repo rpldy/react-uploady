@@ -39,7 +39,7 @@ describe("tusSender index tests", () => {
 		getTusSend.mockReturnValueOnce(tusSend);
 		createChunkedSender.mockReturnValueOnce(chunkedSender);
 
-		const sender = createTusSender(uploader, options);
+		const sender = createTusSender(uploader, options, "trigger");
 
 		sender.send();
 
@@ -67,7 +67,7 @@ describe("tusSender index tests", () => {
 
 		const usedOptions = { ...options, chunked: true };
 		expect(state.options).toEqual(usedOptions);
-		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions);
+		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions, "trigger");
 	});
 
 	it("should return getOptions", () => {
@@ -100,7 +100,7 @@ describe("tusSender index tests", () => {
 
 		const usedOptions = { ...options, chunked: true };
 		expect(state.options).toEqual(usedOptions);
-		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions);
+		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions, "trigger");
 	});
 
 	it("should disable deferLength with sendDataOnCreate", () => {
@@ -120,7 +120,7 @@ describe("tusSender index tests", () => {
 		};
 
 		expect(state.options).toEqual(usedOptions);
-		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions);
+		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions, "trigger");
 	});
 
 	it("should disable deferLength with parallel", () => {
@@ -140,6 +140,6 @@ describe("tusSender index tests", () => {
 		};
 
 		expect(state.options).toEqual(usedOptions);
-		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions);
+		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions, "trigger");
 	});
 });

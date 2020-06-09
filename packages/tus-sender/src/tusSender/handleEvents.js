@@ -108,7 +108,7 @@ export default (uploader: UploaderType, tusState: TusState, chunkedSender: Chunk
 			}
 		});
 
-		chunkedSender.on(CHUNK_EVENTS.CHUNK_START, async (data: ChunkStartEventData) => {
+		uploader.on(CHUNK_EVENTS.CHUNK_START, async (data: ChunkStartEventData) => {
 			const { options } = tusState.getState(),
 				isParallel = +options.parallel > 1;
 
@@ -119,7 +119,7 @@ export default (uploader: UploaderType, tusState: TusState, chunkedSender: Chunk
 				updateChunkStartData(tusState, data, isParallel);
 		});
 
-		chunkedSender.on(CHUNK_EVENTS.CHUNK_FINISH, ({ item, chunk, uploadData }: ChunkFinishEventData) => {
+		uploader.on(CHUNK_EVENTS.CHUNK_FINISH, ({ item, chunk, uploadData }: ChunkFinishEventData) => {
 			const { items, options } = tusState.getState(),
 				isParallel = +options.parallel > 1;
 

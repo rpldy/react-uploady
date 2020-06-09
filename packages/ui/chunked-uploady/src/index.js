@@ -9,6 +9,8 @@ export {
 
 export * from "@rpldy/uploady";
 
+export * from "./chunkEventListenerHooks";
+
 export type {
     ChunkedUploadyProps,
 } from "./types";

@@ -4,16 +4,15 @@ import createUpload from "./initTusUpload/createUpload";
 import { persistResumable } from "../resumableStore";
 import finalizeParallelUpload from "./finalizeParallelUpload";
 
-import type { SendOptions } from "@rpldy/sender";
 import type { BatchItem } from "@rpldy/shared";
-import type { ChunkedSender, OnProgress } from "@rpldy/chunked-sender";
+import type { ChunkedSender, ChunkedSendOptions, OnProgress } from "@rpldy/chunked-sender";
 import type { TusState } from "../types";
 import type { InitData } from "./types";
 
 const doChunkedUploadForItem = (
 	items: BatchItem[],
 	url: string,
-	sendOptions: SendOptions,
+	sendOptions: ChunkedSendOptions,
 	onProgress: OnProgress,
 	tusState: TusState,
 	chunkedSender: ChunkedSender,
@@ -67,7 +66,7 @@ const handleParallelizedChunkInit = (items: BatchItem[], tusState: TusState, ini
 const handleTusUpload = async (
 	items: BatchItem[],
 	url: string,
-	sendOptions: SendOptions,
+	sendOptions: ChunkedSendOptions,
 	onProgress: OnProgress,
 	tusState: TusState,
 	chunkedSender: ChunkedSender,

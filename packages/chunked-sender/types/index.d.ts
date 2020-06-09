@@ -1,6 +1,11 @@
+import { BatchItem, UploadData } from "@rpldy/shared";
+import { OnProgress, SendMethod, SendOptions } from "@rpldy/sender";
 import { UploaderEnhancer } from "@rpldy/uploader";
-import { SendMethod } from "@rpldy/sender";
-import { OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
+
+export enum CHUNK_EVENTS {
+    CHUNK_START = "CHUNK_START",
+    CHUNK_FINISH = "CHUNK_FINISH",
+}
 
 export interface ChunkedOptions {
     chunked?: boolean;
@@ -11,9 +16,30 @@ export interface ChunkedOptions {
 
 export type ChunkedSender = {
     send: SendMethod;
-    on: OnAndOnceMethod;
-    once: OnAndOnceMethod;
-    off: OffMethod;
+};
+
+export type ChunkEventData = {
+    id: string;
+    start: number;
+    end: number;
+    index: number;
+    attempt: number;
+};
+
+export type ChunkStartEventData = {
+    item: BatchItem;
+    chunk: ChunkEventData;
+    chunkItem: BatchItem;
+    sendOptions: SendOptions;
+    url: string;
+    chunkCount: number;
+    onProgress: OnProgress
+};
+
+export type ChunkFinishEventData = {
+    item: BatchItem;
+    chunk: ChunkEventData;
+    uploadData: UploadData;
 };
 
 export const getChunkedEnhancer: (options: ChunkedOptions) => UploaderEnhancer;

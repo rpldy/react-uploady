@@ -1,7 +1,6 @@
 // @flow
 import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { SendMethod, SendOptions, OnProgress } from "@rpldy/sender";
-import type { OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
 
 export type ChunkedOptions = {
     //whether to divide the uploaded file into chunks (default: true)
@@ -14,11 +13,11 @@ export type ChunkedOptions = {
     parallel?: number,
 };
 
-export type ChunkedSendOptions = {|
-    ...$Exact<SendOptions>,
+export type ChunkedSendOptions = {
+    ...SendOptions,
     //the byte to start from (designed for resumable) (default: 0)
     startByte?: number
-|};
+};
 
 export type MandatoryChunkedOptions = {|
     chunked: boolean,
@@ -28,10 +27,7 @@ export type MandatoryChunkedOptions = {|
 |};
 
 export type ChunkedSender = {
-    send: SendMethod,
-    on: OnAndOnceMethod,
-    once: OnAndOnceMethod,
-    off: OffMethod,
+    send: SendMethod<ChunkedSendOptions>,
 };
 
 export type ChunkEventData = {
@@ -39,6 +35,7 @@ export type ChunkEventData = {
     start: number,
     end: number,
 	index: number,
+	attempt: number,
 };
 
 export type ChunkStartEventData = {

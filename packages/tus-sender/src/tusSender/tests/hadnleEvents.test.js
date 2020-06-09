@@ -140,17 +140,19 @@ describe("handleEvents tests ", () => {
 				});
 
 				uploader.on.mockImplementationOnce((name, cb) => {
-					cb({ id: "i1" });
-					expect(tusState.getState().items.i1).toBeUndefined();
-					expect(mockRemoveResueable).toHaveBeenCalledWith({ id: "i1" }, tusState.getState().options);
+					if (name === UPLOADER_EVENTS.ITEM_FINALIZE) {
+						cb({ id: "i1" });
+						expect(tusState.getState().items.i1).toBeUndefined();
+						expect(mockRemoveResueable).toHaveBeenCalledWith({ id: "i1" }, tusState.getState().options);
+					}
 				});
 
 				handleEvents(uploader, tusState, chunkedSender);
-				expect(uploader.on).toHaveBeenCalled();
+				expect(uploader.on).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, expect.any(Function));
 			});
 		});
 
-		describe("chunkedSender CHUNK_FINISH tests", () => {
+		describe("uploader CHUNK_FINISH tests", () => {
 			it.each([
 				false,
 				true
@@ -164,7 +166,7 @@ describe("handleEvents tests ", () => {
 					}
 				});
 
-				chunkedSender.on.mockImplementation((name, cb) => {
+				uploader.on.mockImplementation((name, cb) => {
 					if (name === mockChunkEvents.CHUNK_FINISH) {
 						cb({
 							chunk: {},
@@ -185,13 +187,13 @@ describe("handleEvents tests ", () => {
 
 				handleEvents(uploader, tusState, chunkedSender);
 
-				expect(chunkedSender.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_FINISH, expect.any(Function));
+				expect(uploader.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_FINISH, expect.any(Function));
 			});
 
 			it("should handle CHUNK_FINISH and do nothing if item not found", () => {
 				const tusState = getTusState({ items: {} });
 
-				chunkedSender.on.mockImplementation((name, cb) => {
+				uploader.on.mockImplementation((name, cb) => {
 					if (name === mockChunkEvents.CHUNK_FINISH) {
 						cb({
 							chunk: {},
@@ -205,7 +207,7 @@ describe("handleEvents tests ", () => {
 
 				handleEvents(uploader, tusState, chunkedSender);
 
-				expect(chunkedSender.on).toHaveBeenCalled();
+				expect(uploader.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_FINISH, expect.any(Function));
 			});
 
 			it("should remove parallel chunk storage url for forgetOnSuccess", () => {
@@ -224,7 +226,7 @@ describe("handleEvents tests ", () => {
 					}
 				});
 
-				chunkedSender.on.mockImplementation((name, cb) => {
+				uploader.on.mockImplementation((name, cb) => {
 					if (name === mockChunkEvents.CHUNK_FINISH) {
 						const data = {
 							chunk: {index: 1},
@@ -240,7 +242,7 @@ describe("handleEvents tests ", () => {
 
 				handleEvents(uploader, tusState, chunkedSender);
 
-				expect(chunkedSender.on).toHaveBeenCalled();
+				expect(uploader.on).toHaveBeenCalled();
 			});
 
 			it("should do nothing for parallel", () => {
@@ -258,7 +260,7 @@ describe("handleEvents tests ", () => {
 					}
 				});
 
-				chunkedSender.on.mockImplementation((name, cb) => {
+				uploader.on.mockImplementation((name, cb) => {
 					if (name === mockChunkEvents.CHUNK_FINISH) {
 						const data = {
 							chunk: {index: 1},
@@ -273,7 +275,7 @@ describe("handleEvents tests ", () => {
 
 				handleEvents(uploader, tusState, chunkedSender);
 
-				expect(chunkedSender.on).toHaveBeenCalled();
+				expect(uploader.on).toHaveBeenCalled();
 			});
 		});
 
@@ -290,7 +292,7 @@ describe("handleEvents tests ", () => {
 					}
 				});
 
-				chunkedSender.on.mockImplementation( async(name, cb) => {
+				uploader.on.mockImplementation( async(name, cb) => {
 					if (name === mockChunkEvents.CHUNK_START) {
 						const result = await cb({
 							chunk: {
@@ -314,7 +316,7 @@ describe("handleEvents tests ", () => {
 
 				handleEvents(uploader, tusState, chunkedSender);
 
-				expect(chunkedSender.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
+				expect(uploader.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
 			});
 
 			it("should update send options for chunk using chunk start", () => {
@@ -327,7 +329,7 @@ describe("handleEvents tests ", () => {
 					}
 				});
 
-				chunkedSender.on.mockImplementation(async (name, cb) => {
+				uploader.on.mockImplementation(async (name, cb) => {
 					if (name === mockChunkEvents.CHUNK_START) {
 						const result = await cb({
 							chunk: {
@@ -345,7 +347,7 @@ describe("handleEvents tests ", () => {
 
 				handleEvents(uploader, tusState, chunkedSender);
 
-				expect(chunkedSender.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
+				expect(uploader.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
 			});
 
 			it("should update send options with method override", () => {
@@ -361,7 +363,7 @@ describe("handleEvents tests ", () => {
 					}
 				});
 
-				chunkedSender.on.mockImplementation(async (name, cb) => {
+				uploader.on.mockImplementation(async (name, cb) => {
 					if (name === mockChunkEvents.CHUNK_START) {
 						const result = await cb({
 							chunk: {
@@ -378,7 +380,7 @@ describe("handleEvents tests ", () => {
 				});
 
 				handleEvents(uploader, tusState, chunkedSender);
-				expect(chunkedSender.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
+				expect(uploader.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
 			});
 
 			it("should update send options with length deferred", () => {
@@ -394,7 +396,7 @@ describe("handleEvents tests ", () => {
 					}
 				});
 
-				chunkedSender.on.mockImplementation(async (name, cb) => {
+				uploader.on.mockImplementation(async (name, cb) => {
 					if (name === mockChunkEvents.CHUNK_START) {
 						const result = await cb({
 							chunk: {
@@ -415,7 +417,7 @@ describe("handleEvents tests ", () => {
 
 				handleEvents(uploader, tusState, chunkedSender);
 
-				expect(chunkedSender.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
+				expect(uploader.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
 			});
 
 			it("parallel - should update send options for parallelized chunk", () => {
@@ -434,7 +436,7 @@ describe("handleEvents tests ", () => {
 					}
 				});
 
-				chunkedSender.on.mockImplementation(async (name, cb) => {
+				uploader.on.mockImplementation(async (name, cb) => {
 					if (name === mockChunkEvents.CHUNK_START) {
 
 						mockInitTus.mockReturnValueOnce({
@@ -469,7 +471,7 @@ describe("handleEvents tests ", () => {
 
 				handleEvents(uploader, tusState, chunkedSender);
 
-				expect(chunkedSender.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
+				expect(uploader.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
 			});
 
 			it("parallel - should return false when chunk already finished", () => {
@@ -487,7 +489,7 @@ describe("handleEvents tests ", () => {
 					}
 				});
 
-				chunkedSender.on.mockImplementation(async (name, cb) => {
+				uploader.on.mockImplementation(async (name, cb) => {
 					if (name === mockChunkEvents.CHUNK_START) {
 						const data = {
 							chunk: {
@@ -513,7 +515,7 @@ describe("handleEvents tests ", () => {
 
 				handleEvents(uploader, tusState, chunkedSender);
 
-				expect(chunkedSender.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
+				expect(uploader.on).toHaveBeenCalledWith(mockChunkEvents.CHUNK_START, expect.any(Function));
 			});
 		});
 	});

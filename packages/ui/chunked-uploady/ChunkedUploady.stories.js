@@ -3,15 +3,21 @@ import React, { useCallback, useState } from "react";
 import ReactDOM from "react-dom";
 import { withKnobs, number } from "@storybook/addon-knobs";
 import UploadButton from "@rpldy/upload-button";
-import ChunkedUploady, { useRequestPreSend } from "./src"
+import ChunkedUploady, {
+	useRequestPreSend,
+	useChunkStartListener,
+	useChunkFinishListener
+} from "./src";
 import {
-    KNOB_GROUPS,
-    UMD_NAMES,
+	KNOB_GROUPS,
+	UMD_NAMES,
 
-    useStoryUploadySetup,
-    StoryUploadProgress,
-    StoryAbortButton,
-    UmdBundleScript, localDestination, addActionLogEnhancer,
+	useStoryUploadySetup,
+	StoryUploadProgress,
+	StoryAbortButton,
+	UmdBundleScript,
+	localDestination,
+	addActionLogEnhancer,
 } from "../../../story-helpers";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -84,6 +90,35 @@ export const WithAbortButton = () => {
         <br/>
         <StoryAbortButton/>
     </ChunkedUploady>
+};
+
+const ChunkEventLog = () => {
+
+	console.log("RENDERNIG ChunkEventLog !!!!!!!")
+
+	useChunkStartListener((data) => {
+		console.log(`Chunk Start - ${data.chunk.id} - attempt: ${data.chunk.attempt}`, data);
+	});
+
+	useChunkFinishListener((data) => {
+		console.log(`Chunk Finish - ${data.chunk.id} - attempt: ${data.chunk.attempt}`, data);
+	});
+
+	return null;
+};
+
+export const WithChunkEventHooks = () => {
+	const { enhancer, destination, multiple, chunkSize } = useChunkedStoryHelper();
+
+	return <ChunkedUploady
+		debug
+		multiple={multiple}
+		destination={destination}
+		enhancer={enhancer}
+		chunkSize={chunkSize}>
+		<UploadButtonWithUniqueIdHeader/>
+		<ChunkEventLog/>
+	</ChunkedUploady>
 };
 
 //mimic rendering with react and ChunkedUploady loaded through <script> tags

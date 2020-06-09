@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.2.4
+
+### Features
+
+- `[upload-preview]` - preview methods: clear (previewMethodsRef)
+- `[upload-preview]` - access to preview items array (onPreviewsChanged)
+- `[chunked-uploady]` - chunk event hooks (start/finish)
+
+### Internal
+
+- `[shared]` - updateable - proxy only in dev. proxy additions to state
+
+### Docs
+
+- `[guides]` - Upload Queue guide
+- `[chunked-uploady]` - document chunk event hooks
+- `[chunked-sender]` - document chunk events
+
 ## 0.2.3
 
 ### Features

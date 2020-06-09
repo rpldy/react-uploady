@@ -12,7 +12,7 @@ describe("eventListenerHooks tests", () => {
 			CHUNK_EVENTS.CHUNK_START,
 			CHUNK_EVENTS.CHUNK_FINISH,
 		])("should generate chunk event hooks for: %s", (event) => {
-			expect(generateUploaderEventHook).toHaveBeenCalledWith(event);
+			expect(generateUploaderEventHook).toHaveBeenCalledWith(event, false);
 		});
 	});
 });

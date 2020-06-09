@@ -93,9 +93,6 @@ export const WithAbortButton = () => {
 };
 
 const ChunkEventLog = () => {
-
-	console.log("RENDERNIG ChunkEventLog !!!!!!!")
-
 	useChunkStartListener((data) => {
 		console.log(`Chunk Start - ${data.chunk.id} - attempt: ${data.chunk.attempt}`, data);
 	});

@@ -1,9 +1,11 @@
 // @flow
 import React, { useCallback, useState, useRef } from "react";
 import styled from "styled-components";
+import Cropper from "react-easy-crop";
 import { withKnobs, number } from "@storybook/addon-knobs";
 import Uploady, {
     useItemProgressListener,
+	withRequestPreSendUpdate,
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
@@ -14,6 +16,7 @@ import {
     useStoryUploadySetup,
     uploadButtonCss,
     uploadUrlInputCss,
+	cropImage
 } from "../../../story-helpers";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -247,6 +250,68 @@ export const WithPreviewMethods = () => {
 		</StyledUploadButton>
 
 		<PreviewsWithClear/>
+	</Uploady>;
+};
+
+const ImageCropWrapper = styled.div`
+    position: relative;
+    width: 100%;
+    min-height: 500px;
+`;
+
+const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
+	const [crop, setCrop] = useState({ x: 0, y: 0 });
+	const [cropPixels, setCropPixels] = useState(null);
+	const { url, updateRequest, requestData } = props;
+
+	const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+		setCropPixels(croppedAreaPixels);
+	}, [])
+
+	const onUploadCrop = useCallback(async() => {
+		if (updateRequest && cropPixels) {
+			console.log("CONTINUE UPLOAD - ", {
+				updateRequest,
+				cropPixels,
+				requestData
+			});
+
+			const cropped = await cropImage(url, requestData.items[0].file, cropPixels);
+			updateRequest({ items: [cropped] });
+		}
+	},[url, requestData, updateRequest, cropPixels]);
+
+	return <>
+		<ImageCropWrapper>
+			<Cropper
+				image={url}
+				crop={crop}
+				onCropChange={setCrop}
+				onCropComplete={onCropComplete}/>
+		</ImageCropWrapper>
+		<button style={{display: updateRequest && cropPixels ? "block" : "none" }} onClick={onUploadCrop}>
+			Upload Cropped
+		</button>
+	</>;
+});
+
+export const WithCrop = () => {
+	const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+
+	return <Uploady
+		debug
+		multiple={false}
+		destination={destination}
+		enhancer={enhancer}
+		grouped={grouped}
+		maxGroupSize={groupSize}>
+
+		<StyledUploadButton id="upload-btn">
+			Upload
+		</StyledUploadButton>
+
+		<UploadPreview
+			PreviewComponent={ItemPreviewWithCrop} />
 	</Uploady>;
 };
 

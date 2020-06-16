@@ -25,6 +25,7 @@
     "@rpldy/upload-url-input": "^0.2.4",
     "@storybook/addon-knobs": "^5.3.19",
     "flow-bin": "^0.126.1",
+    "react-easy-crop": "^3.0.1",
     "styled-components": "^5.1.1"
   },
   "peerDependencies": {

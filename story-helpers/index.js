@@ -11,6 +11,7 @@ import useEventsLogUpdater from "./useEventsLogUpdater";
 import { logToCypress } from "./uploadyStoryLogger";
 import UmdBundleScript  from "./UmdBundleScript";
 import { isProd } from "./helpers";
+import cropImage from "./cropImage";
 
 export {
     uploadUrlInputCss,
@@ -33,5 +34,6 @@ export {
     useEventsLogUpdater,
     logToCypress,
     UmdBundleScript,
-    addActionLogEnhancer
+    addActionLogEnhancer,
+	cropImage,
 };

@@ -1,5 +1,6 @@
 // @flow
-import { getUpdateable, logger } from "@rpldy/shared";
+import { logger } from "@rpldy/shared";
+import makeUpdateable from "@rpldy/updateable";
 import { createChunkedSender } from "@rpldy/chunked-sender";
 import { getMandatoryOptions } from "../utils";
 import handleEvents from "./handleEvents";
@@ -10,7 +11,7 @@ import type { TusOptions, State, TusState } from "../types";
 import type { TriggerMethod } from "@rpldy/life-events";
 
 const initializeState = (uploader: UploaderType, options: TusOptions): TusState => {
-	const { state, update } = getUpdateable<State>({
+	const { state, update } = makeUpdateable<State>({
 		options,
 		items: {},
 		featureDetection: {

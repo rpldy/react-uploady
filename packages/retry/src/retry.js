@@ -1,5 +1,6 @@
 // @flow
-import { logger, getUpdateable } from "@rpldy/shared";
+import { logger } from "@rpldy/shared";
+import makeUpdateable from "@rpldy/updateable";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { RETRY_EXT, RETRY_EVENT } from "./consts";
 
@@ -74,7 +75,7 @@ const retryBatch = (uploader: UploaderType, retryState: RetryState, trigger: Tri
 };
 
 const createRetryState = (): RetryState => {
-    const { state, update } = getUpdateable<State>({
+    const { state, update } = makeUpdateable<State>({
         batchIdsMap: {},
         failed: {},
     });

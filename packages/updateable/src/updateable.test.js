@@ -174,7 +174,7 @@ describe("updateable tests", () => {
 		process.env.NODE_ENV = "production";
 
 		const initial = getInitial();
-		const {  unwrap } = makeUpdateable(initial);
+		const { unwrap } = makeUpdateable(initial);
 
 		const org = unwrap();
 		expect(org).toBe(initial);
@@ -290,5 +290,26 @@ describe("updateable tests", () => {
 
 		children[2].foo = "bar";
 		expect(children[2].foo).toBe("bar");
+	});
+
+	it("should handle wrap for existing proxy", () => {
+
+		const { state } = makeUpdateable(getInitial());
+		const { state: state2, update } = makeUpdateable(state);
+
+		update((state) => {
+			state.children.push({ test: true });
+		});
+
+		expect(state2.children[2].test).toBe(true);
+		expect(state.children[2].test).toBe(true);
+	});
+
+	it("should do nothing for simple values", () => {
+		const str = unwrap("test");
+		expect(str).toBe("test");
+
+		const num = unwrap(4);
+		expect(num).toBe(4);
 	});
 });

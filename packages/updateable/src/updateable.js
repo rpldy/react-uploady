@@ -5,38 +5,35 @@ import type { Updateable } from "./types";
 const UPD_SYM = Symbol.for("__rpldy-updateable__");
 
 const deepProxy = (obj, traps) => {
-    let proxy;
+	let proxy;
 
-    if (Array.isArray(obj) || isPlainObject(obj)) {
+	if (Array.isArray(obj) || isPlainObject(obj)) {
 		proxy = new Proxy(obj, traps);
 
 		if (!obj[UPD_SYM]) {
 			Object.defineProperty(proxy, UPD_SYM, {
-				get: () => true,
+				// get: () => true,
+				value: true,
 				configurable: true,
 			});
 		}
 
-        Object.keys(obj)
-            .forEach((key) => {
-                obj[key] = deepProxy(obj[key], traps);
-            });
-    }
+		Object.keys(obj)
+			.forEach((key) => {
+				obj[key] = deepProxy(obj[key], traps);
+			});
+	}
 
-    return proxy || obj;
+	return proxy || obj;
 };
 
 const deepUnWrap = (proxy: Object) => {
-	if (Array.isArray(proxy) || isPlainObject(proxy)) {
-		if (proxy[UPD_SYM]) {
-			delete proxy[UPD_SYM];
-		}
+	delete proxy[UPD_SYM];
 
-		Object.keys(proxy)
-			.forEach((key) => {
-				proxy[key] = proxy[key][UPD_SYM] || proxy[key];
-			});
-	}
+	Object.keys(proxy)
+		.forEach((key) => {
+			proxy[key] = proxy[key][UPD_SYM] || proxy[key];
+		});
 
 	return proxy;
 };
@@ -58,22 +55,22 @@ const startUnwrap = (proxy: Object) => proxy[UPD_SYM] || proxy;
  * @returns {{update: update, state: *}}
  */
 export default <T>(obj: Object): Updateable<T> => {
-    let isUpdateable = false;
+	let isUpdateable = false;
 
-    const traps = {
-        set: (obj, key, value) => {
-            if (isUpdateable) {
-                obj[key] = deepProxy(value, traps);
-            }
+	const traps = {
+		set: (obj, key, value) => {
+			if (isUpdateable) {
+				obj[key] = deepProxy(value, traps);
+			}
 
-            return true;
-        },
+			return true;
+		},
 
 		get: (obj, key) => {
 			return key === UPD_SYM ? deepUnWrap(obj) : obj[key];
 		},
 
-        defineProperty: (obj, key, props) => {
+		defineProperty: (obj, key, props) => {
 			if (key === UPD_SYM) {
 				Object.defineProperty(obj, key, props);
 			} else {
@@ -83,43 +80,43 @@ export default <T>(obj: Object): Updateable<T> => {
 			return true;
 		},
 
-        setPrototypeOf: () => {
-            throw new Error("Update state doesnt support setting prototype");
-        },
+		setPrototypeOf: () => {
+			throw new Error("Update state doesnt support setting prototype");
+		},
 
-        deleteProperty: (target, key) => {
-            if (isUpdateable) {
-                delete target[key];
-            }
+		deleteProperty: (target, key) => {
+			if (isUpdateable) {
+				delete target[key];
+			}
 
-            return true;
-        },
-    };
+			return true;
+		},
+	};
 
-    const proxy = process.env.NODE_ENV !== "production" ? deepProxy(obj, traps) : obj;
+	const proxy = process.env.NODE_ENV !== "production" ? deepProxy(obj, traps) : obj;
 
-    const update = (fn) => {
-        if (isUpdateable) {
-            throw new Error("Can't call update on Updateable already being updated!");
-        }
+	const update = (fn) => {
+		if (isUpdateable) {
+			throw new Error("Can't call update on Updateable already being updated!");
+		}
 
-        try {
-            isUpdateable = true;
-            fn(proxy);
-        } finally {
-            isUpdateable = false;
-        }
+		try {
+			isUpdateable = true;
+			fn(proxy);
+		} finally {
+			isUpdateable = false;
+		}
 
-        return proxy;
-    };
+		return proxy;
+	};
 
-    const unwrap = (entry?: Object) => startUnwrap(entry || proxy);
+	const unwrap = (entry?: Object) => startUnwrap(entry || proxy);
 
-    return {
-        state: proxy,
-        update,
+	return {
+		state: proxy,
+		update,
 		unwrap,
-    };
+	};
 };
 
 export {

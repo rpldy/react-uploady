@@ -5,7 +5,7 @@ export type MergeOptions = {
     undefinedOverwrites?: boolean,
 };
 
-export const isMergeObj = (obj) => isPlainObject(obj) || Array.isArray(obj)
+export const isMergeObj = (obj: Object) => isPlainObject(obj) || Array.isArray(obj);
 
 const getMerge = (options: MergeOptions = {}) => {
    const merge = (target: Object, ...sources: Object[]) => {

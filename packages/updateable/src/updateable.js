@@ -1,5 +1,5 @@
 // @flow
-import { isPlainObject } from "@rpldy/shared";
+import { isPlainObject, clone } from "@rpldy/shared";
 import type { Updateable } from "./types";
 
 const UPD_SYM = Symbol.for("__rpldy-updateable__");
@@ -38,7 +38,11 @@ const deepUnWrap = (proxy: Object) => {
 	return proxy;
 };
 
-const startUnwrap = (proxy: Object) => proxy[UPD_SYM] || proxy;
+const isProxy = (obj: Object) =>
+	!!~Object.getOwnPropertySymbols(obj).indexOf(UPD_SYM);
+
+const unwrapEntry = (proxy: Object) =>
+	isProxy(proxy) ? clone(proxy) : proxy;
 
 /**
  * deep proxies an object so it is only updateable through an update callback.
@@ -110,7 +114,9 @@ export default <T>(obj: Object): Updateable<T> => {
 		return proxy;
 	};
 
-	const unwrap = (entry?: Object) => startUnwrap(entry || proxy);
+	const unwrap = (entry?: Object) =>
+		entry ? unwrapEntry(entry) :
+			(isProxy(proxy) ? deepUnWrap(proxy[UPD_SYM]) : proxy);
 
 	return {
 		state: proxy,
@@ -120,5 +126,5 @@ export default <T>(obj: Object): Updateable<T> => {
 };
 
 export {
-	startUnwrap as unwrap
+	unwrapEntry as unwrap
 };

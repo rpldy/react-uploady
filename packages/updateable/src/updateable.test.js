@@ -1,4 +1,10 @@
+import { clone } from "@rpldy/shared";
 import makeUpdateable, { unwrap } from "./updateable";
+
+jest.mock("@rpldy/shared", () => ({
+	isPlainObject: jest.requireActual("@rpldy/shared").isPlainObject,
+	clone: jest.fn(),
+}));
 
 describe("updateable tests", () => {
 	let env;
@@ -222,22 +228,12 @@ describe("updateable tests", () => {
 
 	it("should unwrap entry", () => {
 		const initial = getInitial();
-		const { state, update, unwrap } = makeUpdateable(initial);
+		const { state, unwrap } = makeUpdateable(initial);
 
-		update((state) => {
-			state.more = {
-				items: [1, 2, 3]
-			};
-		});
+		clone.mockReturnValueOnce("clone");
+		const unwrapResult = unwrap(state);
 
-		const entry = unwrap(state.more);
-
-		entry.test = 123;
-		expect(entry.test).toBe(123);
-
-		expect(entry.items).toEqual([1, 2, 3]);
-		entry.items.push(4);
-		expect(entry.items).toEqual([1, 2, 3, 4]);
+		expect(unwrapResult).toBe("clone");
 	});
 
 	it("should do nothing for non-proxy", () => {
@@ -246,8 +242,7 @@ describe("updateable tests", () => {
 		expect(result).toBe(obj);
 	});
 
-	it("should be able to re-proxy unwrapped object", () => {
-
+	it("should re-proxy unwrapped object", () => {
 		const initial = getInitial();
 		const { state, update, unwrap } = makeUpdateable(initial);
 
@@ -257,43 +252,25 @@ describe("updateable tests", () => {
 			};
 		});
 
-		const entry = unwrap(state.more);
+		const obj = unwrap();
 
-		entry.test = 123;
+		obj.test = 123;
 
-		update((state) => {
-			state.more = entry;
-		});
-
-		expect(state.more.test).toBe(123);
-		state.more.test = 1234;
-		expect(state.more.test).toBe(123);
-
-		update((state) => {
-			state.more.test = 1234;
-		});
-
-		expect(state.more.test).toBe(1234);
+		expect(state.test).toBe(123);
+		expect(obj.test).toBe(123);
 	});
 
-	it("unwrap export should do unwrap", () => {
+	it("unwrap export should clone", () => {
 		const initial = getInitial();
 		const { state } = makeUpdateable(initial);
 
+		clone.mockReturnValueOnce("clone");
+
 		const children = unwrap(state.children);
-
-		children.push({
-			another: true
-		});
-
-		expect(children).toHaveLength(3);
-
-		children[2].foo = "bar";
-		expect(children[2].foo).toBe("bar");
+		expect(children).toBe("clone");
 	});
 
 	it("should handle wrap for existing proxy", () => {
-
 		const { state } = makeUpdateable(getInitial());
 		const { state: state2, update } = makeUpdateable(state);
 
@@ -303,13 +280,5 @@ describe("updateable tests", () => {
 
 		expect(state2.children[2].test).toBe(true);
 		expect(state.children[2].test).toBe(true);
-	});
-
-	it("should do nothing for simple values", () => {
-		const str = unwrap("test");
-		expect(str).toBe("test");
-
-		const num = unwrap(4);
-		expect(num).toBe(4);
 	});
 });

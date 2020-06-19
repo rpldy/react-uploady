@@ -23,7 +23,8 @@
     "@rpldy/chunked-sender": "^0.2.4",
     "@rpldy/safe-storage": "^0.2.4",
     "@rpldy/sender": "^0.2.4",
-    "@rpldy/shared": "^0.2.4"
+    "@rpldy/shared": "^0.2.4",
+    "@rpldy/updateable": "^0.2.4"
   },
   "devDependencies": {
     "@rpldy/life-events": "^0.2.4",

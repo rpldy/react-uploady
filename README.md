@@ -97,7 +97,6 @@ For React applications, at the very least, you will need the Uploady provider:
    $ npm i @rpldy/uploady
 ``` 
 
-
 If you wish to use the uploading mechanism (no UI), at the very least, you will need the Uploader:
 
 ```shell
@@ -112,8 +111,7 @@ After that, you can add additional packages as needed. See below for more detail
 
 ## Packages
 
-### Base Packages
-
+### Main Packages
 * [@rpldy/uploader](packages/uploader) - The processing and queuing engine
 * [@rpldy/uploady](packages/ui/uploady) - The context provider for react-uploady and hooks (lots of hooks)
 
@@ -122,7 +120,6 @@ After that, you can add additional packages as needed. See below for more detail
 * [@rpldy/upload-preview](packages/ui/upload-preview) - Image&video preview component for files being uploaded 
 * [@rpldy/upload-url-input](packages/ui/upload-url-input) - Input component to send URL as upload info (ex: [Cloudinary](https://cloudinary.com/documentation/upload_images#auto_fetching_remote_images))
 * [@rpldy/upload-drop-zone](packages/ui/upload-drop-zone) - (Drag&)Drop zone to upload files and folder content
-* @rpldy/crop - TDOO
 * [@rpldy/retry-hooks](packages/ui/retry-hooks) - Hooks to interact with the retry mechanism
 
 ### Providers
@@ -138,11 +135,11 @@ After that, you can add additional packages as needed. See below for more detail
 * [@rpldy/retry](packages/retry) - Add support for retrying failed uploads
 
 ### Shared Packages
-
 * [@rpldy/shared](packages/shared) - Internal set of utils+types that all packages require  
 * [@rpldy/shared-ui](packages/ui/shared) - Internal set of utils+types that all UI packages require 
 * [@rpldy/live-events](packages/life-events) - provides **cancellable** pub/sub "events" 
 * [@rpldy/safe-storage](packages/safe-storage) - safe (don't throw) versions of local and session storage
+* [@rpldy/updateable](packages/updateable) - deep proxy object, so it's only updateable through an update method
 
 ## Examples
 

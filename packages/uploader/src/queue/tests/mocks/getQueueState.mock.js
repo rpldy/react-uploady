@@ -1,7 +1,7 @@
-import { getUpdateable } from "@rpldy/shared";
+import makeUpdateable from "@rpldy/updateable";
 
 export default (testState, options) => {
-    const { state, update } = getUpdateable({
+    const { state, update } = makeUpdateable({
         itemQueue: [],
         currentBatch: null,
         batches: {},

@@ -90,3 +90,5 @@ export type UploadData = {
 };
 
 export const createBatchItem: (f: UploadInfo, batchId: string) => BatchItem;
+
+export const isPlainObject: (obj: unknown) => boolean;

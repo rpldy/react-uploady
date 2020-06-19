@@ -1,5 +1,6 @@
 // @flow
-import { logger, getUpdateable } from "@rpldy/shared";
+import { logger } from "@rpldy/shared";
+import makeUpdateable from "@rpldy/updateable";
 import { SENDER_EVENTS, UPLOADER_EVENTS } from "../consts";
 import processQueueNext from "./processQueueNext";
 import * as abortMethods from "./abort";
@@ -16,7 +17,7 @@ export default (
     sender: ItemsSender,
     uploaderId: string,
 ) => {
-    const { state, update } = getUpdateable<State>({
+    const { state, update } = makeUpdateable<State>({
         itemQueue: [],
         currentBatch: null,
         batches: {},

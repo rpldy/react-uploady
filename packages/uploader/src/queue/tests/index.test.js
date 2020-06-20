@@ -203,7 +203,7 @@ describe("queue tests", () => {
 				...batch,
 				completed: 50,
 				loaded: 4000,
-			})
+			});
         });
 
         it("should not trigger event if no batch found", () => {

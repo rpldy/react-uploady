@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "@rpldy/sender": "^0.2.4",
-    "@rpldy/shared": "^0.2.4"
+    "@rpldy/shared": "^0.2.4",
+    "@rpldy/simple-state": "^0.2.4"
   },
   "devDependencies": {
     "@rpldy/life-events": "^0.2.4",

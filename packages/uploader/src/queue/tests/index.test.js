@@ -1,9 +1,11 @@
-import { SENDER_EVENTS, UPLOADER_EVENTS } from "../../consts";
 import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import createState, { unwrap } from "@rpldy/simple-state";
+import { SENDER_EVENTS, UPLOADER_EVENTS } from "../../consts";
 import processQueueNext from "../processQueueNext";
-import createQueue from "../";
 import * as abortMethods from "../abort";
+import createQueue from "../";
 
+jest.mock("@rpldy/simple-state");
 jest.mock("../processQueueNext", () => jest.fn());
 jest.mock("../abort", () => ({
     abortAll: jest.fn(),
@@ -22,14 +24,21 @@ describe("queue tests", () => {
     });
 
     const trigger = jest.fn(),
-        cancellable = () => {
-        },
+        cancellable = jest.fn(),
         sender = { on: mockSenderOn };
+
+    beforeAll(()=>{
+    	createState.mockImplementation((state) => ({
+			state,
+			update: jest.fn((updater) => updater(state)),
+		}));
+    });
 
     beforeEach(() => {
         clearJestMocks(
             trigger,
             processQueueNext,
+			unwrap,
         );
     });
 
@@ -48,8 +57,18 @@ describe("queue tests", () => {
 
         const queueState = processQueueNext.mock.calls[0][0];
 
-        expect(queueState.trigger).toBe(trigger);
-        expect(queueState.cancellable).toBe(cancellable);
+        expect(queueState.trigger).toBeInstanceOf(Function);
+		queueState.trigger("test", "a", "b");
+		expect(unwrap).toHaveBeenCalledWith("a");
+		expect(unwrap).toHaveBeenCalledWith("b");
+		expect(trigger).toHaveBeenCalledWith("test", undefined, undefined);
+
+        expect(queueState.cancellable).toBeInstanceOf(Function);
+        queueState.cancellable("test2", "c", "d");
+		expect(unwrap).toHaveBeenCalledWith("c");
+		expect(unwrap).toHaveBeenCalledWith("d");
+		expect(cancellable).toHaveBeenCalledWith("test2", undefined, undefined);
+
         expect(queueState.getOptions().destination).toBe("foo");
 
         const state = queueState.getState();
@@ -135,11 +154,14 @@ describe("queue tests", () => {
             expect(state2.items["u1"].loaded).toBe(1000);
             expect(state2.items["u1"].completed).toBe(20);
 
-            expect(trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_PROGRESS, {
-                id: "u1",
-                loaded: 1000,
-                completed: 20,
-            });
+            unwrap.mockReturnValueOnce("unwrapped");
+
+            expect(trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_PROGRESS, undefined);
+            expect(unwrap).toHaveBeenCalledWith({
+				id: "u1",
+				loaded: 1000,
+				completed: 20,
+			});
         });
 
         it("should not trigger event if no item found", () => {
@@ -173,11 +195,15 @@ describe("queue tests", () => {
             expect(state2.batches["b1"].batch.completed).toBe(50);
             expect(state2.batches["b1"].batch.loaded).toBe(4000);
 
-            expect(trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS, {
-                ...batch,
-                completed: 50,
-                loaded: 4000,
-            });
+			unwrap.mockReturnValueOnce("unwrapped");
+
+            expect(trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS,"unwrapped");
+
+            expect(unwrap).toHaveBeenCalledWith( {
+				...batch,
+				completed: 50,
+				loaded: 4000,
+			})
         });
 
         it("should not trigger event if no batch found", () => {

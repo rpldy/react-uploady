@@ -1,13 +1,13 @@
-import makeUpdateable from "./index";
+import createState from "./index";
 
 interface State {
     foo: string,
     bob: string,
 }
 
-const testUpdateable = (): void => {
+const testCreateState = (): void => {
 
-    const { state, update, unwrap } = makeUpdateable<State>({
+    const { state, update, unwrap } = createState<State>({
         foo: "bar",
         bob: "mcintyre",
     });
@@ -24,5 +24,5 @@ const testUpdateable = (): void => {
 };
 
 export {
-    testUpdateable,
+    testCreateState,
 };

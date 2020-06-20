@@ -1,8 +1,8 @@
 // @flow
 import { isPlainObject, clone } from "@rpldy/shared";
-import type { Updateable } from "./types";
+import type { SimpleState } from "./types";
 
-const UPD_SYM = Symbol.for("__rpldy-updateable__");
+const STT_SYM = Symbol.for("__rpldy-simple-state__");
 
 const deepProxy = (obj, traps) => {
 	let proxy;
@@ -10,9 +10,8 @@ const deepProxy = (obj, traps) => {
 	if (Array.isArray(obj) || isPlainObject(obj)) {
 		proxy = new Proxy(obj, traps);
 
-		if (!obj[UPD_SYM]) {
-			Object.defineProperty(proxy, UPD_SYM, {
-				// get: () => true,
+		if (!obj[STT_SYM]) {
+			Object.defineProperty(proxy, STT_SYM, {
 				value: true,
 				configurable: true,
 			});
@@ -28,18 +27,19 @@ const deepProxy = (obj, traps) => {
 };
 
 const deepUnWrap = (proxy: Object) => {
-	delete proxy[UPD_SYM];
+	delete proxy[STT_SYM];
 
 	Object.keys(proxy)
 		.forEach((key) => {
-			proxy[key] = proxy[key][UPD_SYM] || proxy[key];
+			proxy[key] = proxy[key][STT_SYM] || proxy[key];
 		});
 
 	return proxy;
 };
 
 const isProxy = (obj: Object) =>
-	!!~Object.getOwnPropertySymbols(obj).indexOf(UPD_SYM);
+	process.env.NODE_ENV !== "production" &&
+		!!~Object.getOwnPropertySymbols(obj).indexOf(STT_SYM);
 
 const unwrapEntry = (proxy: Object) =>
 	isProxy(proxy) ? clone(proxy) : proxy;
@@ -56,9 +56,9 @@ const unwrapEntry = (proxy: Object) =>
  * Original object is changed!
  *
  * @param obj
- * @returns {{update: update, state: *}}
+ * @returns {{state, update, unwrap}}
  */
-export default <T>(obj: Object): Updateable<T> => {
+export default <T>(obj: Object): SimpleState<T> => {
 	let isUpdateable = false;
 
 	const traps = {
@@ -71,11 +71,11 @@ export default <T>(obj: Object): Updateable<T> => {
 		},
 
 		get: (obj, key) => {
-			return key === UPD_SYM ? deepUnWrap(obj) : obj[key];
+			return key === STT_SYM ? deepUnWrap(obj) : obj[key];
 		},
 
 		defineProperty: (obj, key, props) => {
-			if (key === UPD_SYM) {
+			if (key === STT_SYM) {
 				Object.defineProperty(obj, key, props);
 			} else {
 				throw new Error("Update state doesnt support defining property");
@@ -116,7 +116,7 @@ export default <T>(obj: Object): Updateable<T> => {
 
 	const unwrap = (entry?: Object) =>
 		entry ? unwrapEntry(entry) :
-			(isProxy(proxy) ? deepUnWrap(proxy[UPD_SYM]) : proxy);
+			(isProxy(proxy) ? deepUnWrap(proxy[STT_SYM]) : proxy);
 
 	return {
 		state: proxy,

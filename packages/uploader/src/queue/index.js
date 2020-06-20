@@ -1,6 +1,6 @@
 // @flow
 import { logger } from "@rpldy/shared";
-import makeUpdateable from "@rpldy/updateable";
+import createState, { unwrap } from "@rpldy/simple-state";
 import { SENDER_EVENTS, UPLOADER_EVENTS } from "../consts";
 import processQueueNext from "./processQueueNext";
 import * as abortMethods from "./abort";
@@ -17,7 +17,7 @@ export default (
     sender: ItemsSender,
     uploaderId: string,
 ) => {
-    const { state, update } = makeUpdateable<State>({
+    const { state, update } = createState<State>({
         itemQueue: [],
         currentBatch: null,
         batches: {},
@@ -25,6 +25,12 @@ export default (
         activeIds: [],
         aborts: {},
     });
+
+    const unWrapAndTrigger = (name: string, ...data: mixed[]) =>
+		trigger(name, ...data.map((d) => unwrap(d)));
+
+    const unWrapAndCancellable = (name: string, ...data: mixed[]) =>
+		cancellable(name, ...data.map((d) => unwrap(d)));
 
     const getState = () => state;
 
@@ -62,7 +68,7 @@ export default (
             });
 
             //trigger item progress event for the outside
-            trigger(UPLOADER_EVENTS.ITEM_PROGRESS, getState().items[item.id]);
+			unWrapAndTrigger(UPLOADER_EVENTS.ITEM_PROGRESS, getState().items[item.id]);
         }
     };
 
@@ -90,7 +96,7 @@ export default (
                     stateBatch.loaded = loaded;
                 });
 
-                trigger(UPLOADER_EVENTS.BATCH_PROGRESS, state.batches[batch.id].batch);
+				unWrapAndTrigger(UPLOADER_EVENTS.BATCH_PROGRESS, state.batches[batch.id].batch);
             }
         });
 
@@ -99,8 +105,8 @@ export default (
         getCurrentActiveCount: () => state.activeIds.length,
         getState,
         updateState,
-        trigger,
-        cancellable,
+        trigger: unWrapAndTrigger,
+        cancellable: unWrapAndCancellable,
         sender,
         handleItemProgress,
     };

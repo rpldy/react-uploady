@@ -6,6 +6,7 @@ import {
     logger,
     getMerge
 } from "@rpldy/shared";
+import { unwrap } from "@rpldy/simple-state";
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 
@@ -24,7 +25,10 @@ const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], options: CreateOptions): Promise<ItemsSendData> => {
     // $FlowFixMe - https://github.com/facebook/flow/issues/8215
     const updated: {items?: BatchItem[], options?: CreateOptions } = await triggerUpdater<BatchItem[], CreateOptions>(
-        queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, { items, options });
+		queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, {
+			items: unwrap(items),
+			options: unwrap(options),
+		});
 
     if (updated) {
         logger.debugLog(`uploader.queue: REQUEST_PRE_SEND event returned updated items/options`, updated);

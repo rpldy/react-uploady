@@ -1,5 +1,5 @@
 import { clone } from "@rpldy/shared";
-import createState, { unwrap } from "./createState";
+import createState, { unwrap, isProxy } from "./createState";
 
 jest.mock("@rpldy/shared", () => ({
 	isPlainObject: jest.requireActual("@rpldy/shared").isPlainObject,
@@ -35,6 +35,10 @@ describe("updateable tests", () => {
 
 	beforeEach(() => {
 		process.env.NODE_ENV = env;
+
+		clearJestMocks(
+			clone
+		);
 	});
 
 	it("should deep proxy object ", () => {
@@ -197,7 +201,7 @@ describe("updateable tests", () => {
 		expect(children).toBe(state.children);
 	});
 
-	it("should unwrap entire proxy", () => {
+	it("should unwrap entire state", () => {
 		const initial = getInitial();
 		const { update, unwrap } = createState(initial);
 
@@ -224,6 +228,8 @@ describe("updateable tests", () => {
 
 		target.test.foo = "car";
 		expect(target.test.foo).toBe("car");
+
+		expect(isProxy(target)).toBe(false);
 	});
 
 	it("should unwrap entry", () => {
@@ -258,6 +264,17 @@ describe("updateable tests", () => {
 
 		expect(state.test).toBe(123);
 		expect(obj.test).toBe(123);
+
+		const { state: state2, update: update2 } = createState(obj);
+
+		state2.more.items.push(4);
+		expect(state2.more.items).toHaveLength(3);
+
+		update2((state) => {
+			state.more.items.push(4);
+		});
+
+		expect(state2.more.items).toHaveLength(4);
 	});
 
 	it("unwrap export should clone", () => {
@@ -270,15 +287,11 @@ describe("updateable tests", () => {
 		expect(children).toBe("clone");
 	});
 
-	it("should handle wrap for existing proxy", () => {
+	it("should throw on attempt to re-proxy", () => {
 		const { state } = createState(getInitial());
-		const { state: state2, update } = createState(state);
 
-		update((state) => {
-			state.children.push({ test: true });
-		});
-
-		expect(state2.children[2].test).toBe(true);
-		expect(state.children[2].test).toBe(true);
+		expect(() => {
+			createState(state);
+		}).toThrow("rpldy.simple-state: object is already a state proxy");
 	});
 });

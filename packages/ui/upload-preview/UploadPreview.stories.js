@@ -277,7 +277,11 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 			});
 
 			const cropped = await cropImage(url, requestData.items[0].file, cropPixels);
-			updateRequest({ items: [cropped] });
+
+
+			console.log("!!!!!! ITEMS", requestData.items);
+
+			// updateRequest({ items: [cropped] });
 		}
 	},[url, requestData, updateRequest, cropPixels]);
 

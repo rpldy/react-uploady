@@ -3,8 +3,10 @@ import React, { useContext, useState } from "react";
 import { assertContext, UploadyContext } from "@rpldy/shared-ui";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 
-export default (Component) => {
-	return (props) => {
+type Props = {id: string};
+
+export default (Component: React$ComponentType<any>) => {
+	return (props: Props) => {
 		const context = assertContext(useContext(UploadyContext));
 
 		const [updater, setUpdater] = useState({

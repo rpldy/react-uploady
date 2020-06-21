@@ -4,18 +4,24 @@ import type { SimpleState } from "./types";
 
 const STT_SYM = Symbol.for("__rpldy-simple-state__");
 
+const isProxy = (obj: Object) =>
+	process.env.NODE_ENV !== "production" &&
+	!!~Object.getOwnPropertySymbols(obj).indexOf(STT_SYM);
+
 const deepProxy = (obj, traps) => {
 	let proxy;
 
 	if (Array.isArray(obj) || isPlainObject(obj)) {
+		if (isProxy(obj)) {
+			throw new Error("rpldy.simple-state: object is already a state proxy");
+		}
+
 		proxy = new Proxy(obj, traps);
 
-		if (!obj[STT_SYM]) {
-			Object.defineProperty(proxy, STT_SYM, {
-				value: true,
-				configurable: true,
-			});
-		}
+		Object.defineProperty(proxy, STT_SYM, {
+			value: true,
+			configurable: true,
+		});
 
 		Object.keys(obj)
 			.forEach((key) => {
@@ -36,10 +42,6 @@ const deepUnWrap = (proxy: Object) => {
 
 	return proxy;
 };
-
-const isProxy = (obj: Object) =>
-	process.env.NODE_ENV !== "production" &&
-		!!~Object.getOwnPropertySymbols(obj).indexOf(STT_SYM);
 
 const unwrapEntry = (proxy: Object) =>
 	isProxy(proxy) ? clone(proxy) : proxy;
@@ -101,7 +103,7 @@ export default <T>(obj: Object): SimpleState<T> => {
 
 	const update = (fn) => {
 		if (isUpdateable) {
-			throw new Error("Can't call update on Updateable already being updated!");
+			throw new Error("Can't call update on State already being updated!");
 		}
 
 		try {
@@ -116,7 +118,7 @@ export default <T>(obj: Object): SimpleState<T> => {
 
 	const unwrap = (entry?: Object) =>
 		entry ? unwrapEntry(entry) :
-			(isProxy(proxy) ? deepUnWrap(proxy[STT_SYM]) : proxy);
+			(isProxy(proxy) ? proxy[STT_SYM] : proxy);
 
 	return {
 		state: proxy,
@@ -126,5 +128,6 @@ export default <T>(obj: Object): SimpleState<T> => {
 };
 
 export {
+	isProxy,
 	unwrapEntry as unwrap
 };

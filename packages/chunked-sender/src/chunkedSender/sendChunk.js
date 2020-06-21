@@ -7,6 +7,7 @@ import {
 	pick,
 	FILE_STATES
 } from "@rpldy/shared";
+import { unwrap } from "@rpldy/simple-state";
 import xhrSend from "@rpldy/sender";
 import { getChunkDataFromFile } from "../utils";
 import { CHUNK_EVENTS } from "../consts";
@@ -41,7 +42,7 @@ const uploadChunkWithUpdatedData = async (
 	trigger: TriggerMethod,
 ): Promise<SendResult> => {
 	const sendOptions = {
-		...state.sendOptions,
+		...unwrap(state.sendOptions),
 		headers: {
 			...state.sendOptions.headers,
 			"Content-Range": getContentRangeValue(chunk, chunk.data, item),
@@ -58,9 +59,9 @@ const uploadChunkWithUpdatedData = async (
 
 	// $FlowFixMe - https://github.com/facebook/flow/issues/8215
 	const updatedData = await triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, {
-		item,
+		item: unwrap(item),
 		chunk: pick(chunk, ["id", "start", "end", "index", "attempt"]),
-		chunkItem,
+		chunkItem: chunkItem,
 		sendOptions,
 		url: state.url,
 		chunkIndex,

@@ -5,6 +5,7 @@ import {
 	utils
 } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import xhrSend from "@rpldy/sender";
+import { unwrap } from "@rpldy/simple-state";
 import ChunkedSendError from "../ChunkedSendError";
 import { getChunkDataFromFile } from "../../utils";
 import { CHUNK_EVENTS } from "../../consts";
@@ -12,6 +13,7 @@ import sendChunk from "../sendChunk";
 
 jest.mock("@rpldy/sender", () => jest.fn());
 jest.mock("../../utils", () => ({ getChunkDataFromFile: jest.fn() }));
+jest.mock("@rpldy/simple-state"); //, () =>({unwrap: jest.fn()}));
 
 describe("sendChunk tests", () => {
 
@@ -19,12 +21,17 @@ describe("sendChunk tests", () => {
 
     const onProgress = jest.fn();
 
+    beforeAll(()=>{
+		unwrap.mockReturnValue({unwrapped: true});
+    });
+
     beforeEach(() => {
         clearJestMocks(
             xhrSend,
             onProgress,
             triggerUpdater,
             xhrSendResult.abort,
+			unwrap,
         );
     });
 
@@ -58,7 +65,7 @@ describe("sendChunk tests", () => {
         expect(createBatchItem).toHaveBeenCalledWith(fileData, "c1");
 
         const updatedSendOptions = {
-            ...sendOptions,
+            unwrapped: true,
             headers: {
                 ...sendOptions.headers,
                 "Content-Range": `bytes 1-${fileData.size}/400`,
@@ -82,7 +89,7 @@ describe("sendChunk tests", () => {
 		}
 
         expect(triggerUpdater).toHaveBeenCalledWith(trigger, CHUNK_EVENTS.CHUNK_START, {
-            item: { file },
+            item: {"unwrapped": true},
             chunk: {
                 id: chunk.id,
                 start: chunk.start,

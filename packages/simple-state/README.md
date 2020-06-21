@@ -1,15 +1,15 @@
-<a href="https://badge.fury.io/js/%40rpldy%2Fsupdateable">
-    <img src="https://badge.fury.io/js/%40rpldy%2Fupdateable.svg" alt="npm version" height="20"></a>
+<a href="https://badge.fury.io/js/%40rpldy%2Fssimple-state">
+    <img src="https://badge.fury.io/js/%40rpldy%2Fsimple-state.svg" alt="npm version" height="20"></a>
 <a href="https://circleci.com/gh/rpldy/react-uploady">
     <img src="https://circleci.com/gh/rpldy/react-uploady.svg?style=svg" alt="circleci status"/></a>  
 <a href="https://codecov.io/gh/rpldy/react-uploady">
     <img src="https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg" alt="codecov status"/></a> 
-<a href="https://bundlephobia.com/result?p=@rpldy/updateable">
-    <img src="https://badgen.net/bundlephobia/minzip/@rpldy/updateable" alt="bundlephobia badge"/></a>
+<a href="https://bundlephobia.com/result?p=@rpldy/simple-state">
+    <img src="https://badgen.net/bundlephobia/minzip/@rpldy/simple-state" alt="bundlephobia badge"/></a>
 <a href="https://react-uploady-storybook.netlify.com">
    <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/></a>
 
-# Updateable
+# Simple State
 
 > Internal package 
  
@@ -26,18 +26,18 @@ Original object is changed!
 
 ```shell
 #Yarn: 
-   $ yarn add @rpldy/updateable 
+   $ yarn add @rpldy/simple-state 
 
 #NPM:
-   $ npm i @rpldy/updateable
+   $ npm i @rpldy/simple-state
 ``` 
 
 ## Example
 
 ```javascript
-import makeUpdateable from "@rpldy/updateable"
+import createState from "@rpldy/simple-state"
 
-const { state, update } = makeUpdateable({
+const { state, update } = createState({
     arr: [1,2,3]
 });
 

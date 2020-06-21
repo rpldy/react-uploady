@@ -1,5 +1,5 @@
 import { clone } from "@rpldy/shared";
-import makeUpdateable, { unwrap } from "./updateable";
+import createState, { unwrap } from "./createState";
 
 jest.mock("@rpldy/shared", () => ({
 	isPlainObject: jest.requireActual("@rpldy/shared").isPlainObject,
@@ -40,7 +40,7 @@ describe("updateable tests", () => {
 	it("should deep proxy object ", () => {
 
 		const initial = getInitial();
-		const { state } = makeUpdateable(initial);
+		const { state } = createState(initial);
 
 		expect(state).not.toBe(initial);
 
@@ -67,7 +67,7 @@ describe("updateable tests", () => {
 
 	it("should only be updateable through update method", () => {
 
-		const { state, update } = makeUpdateable(getInitial());
+		const { state, update } = createState(getInitial());
 
 		const state1 = update((obj) => {
 			obj.arr.push(4);
@@ -94,7 +94,7 @@ describe("updateable tests", () => {
 	});
 
 	it("should block defining prototype", () => {
-		const { state, update } = makeUpdateable(getInitial());
+		const { state, update } = createState(getInitial());
 
 		expect(() => {
 			Object.defineProperty(state, "someProp", {
@@ -112,7 +112,7 @@ describe("updateable tests", () => {
 	});
 
 	it("should block setPrototypeOf", () => {
-		const { state, update } = makeUpdateable(getInitial());
+		const { state, update } = createState(getInitial());
 
 		expect(() => {
 			Object.setPrototypeOf(state, {});
@@ -126,7 +126,7 @@ describe("updateable tests", () => {
 	});
 
 	it("should throw on double update", () => {
-		const { update } = makeUpdateable(getInitial());
+		const { update } = createState(getInitial());
 
 		expect(() => {
 			update(() => {
@@ -137,7 +137,7 @@ describe("updateable tests", () => {
 
 	it("should proxy new object trees added with update", () => {
 
-		const { state, update } = makeUpdateable(getInitial());
+		const { state, update } = createState(getInitial());
 
 		update((state) => {
 			state.section1 = {
@@ -164,7 +164,7 @@ describe("updateable tests", () => {
 		process.env.NODE_ENV = "production";
 
 		const initial = getInitial();
-		const { state, update } = makeUpdateable(initial);
+		const { state, update } = createState(initial);
 
 		expect(state).toBe(initial);
 
@@ -180,7 +180,7 @@ describe("updateable tests", () => {
 		process.env.NODE_ENV = "production";
 
 		const initial = getInitial();
-		const { unwrap } = makeUpdateable(initial);
+		const { unwrap } = createState(initial);
 
 		const org = unwrap();
 		expect(org).toBe(initial);
@@ -190,7 +190,7 @@ describe("updateable tests", () => {
 
 		process.env.NODE_ENV = "production";
 
-		const { state } = makeUpdateable(getInitial());
+		const { state } = createState(getInitial());
 
 		const children = unwrap(state.children);
 
@@ -199,7 +199,7 @@ describe("updateable tests", () => {
 
 	it("should unwrap entire proxy", () => {
 		const initial = getInitial();
-		const { update, unwrap } = makeUpdateable(initial);
+		const { update, unwrap } = createState(initial);
 
 		update((state) => {
 			state.more = {
@@ -228,7 +228,7 @@ describe("updateable tests", () => {
 
 	it("should unwrap entry", () => {
 		const initial = getInitial();
-		const { state, unwrap } = makeUpdateable(initial);
+		const { state, unwrap } = createState(initial);
 
 		clone.mockReturnValueOnce("clone");
 		const unwrapResult = unwrap(state);
@@ -244,7 +244,7 @@ describe("updateable tests", () => {
 
 	it("should re-proxy unwrapped object", () => {
 		const initial = getInitial();
-		const { state, update, unwrap } = makeUpdateable(initial);
+		const { state, update, unwrap } = createState(initial);
 
 		update((state) => {
 			state.more = {
@@ -262,7 +262,7 @@ describe("updateable tests", () => {
 
 	it("unwrap export should clone", () => {
 		const initial = getInitial();
-		const { state } = makeUpdateable(initial);
+		const { state } = createState(initial);
 
 		clone.mockReturnValueOnce("clone");
 
@@ -271,8 +271,8 @@ describe("updateable tests", () => {
 	});
 
 	it("should handle wrap for existing proxy", () => {
-		const { state } = makeUpdateable(getInitial());
-		const { state: state2, update } = makeUpdateable(state);
+		const { state } = createState(getInitial());
+		const { state: state2, update } = createState(state);
 
 		update((state) => {
 			state.children.push({ test: true });

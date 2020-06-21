@@ -1,6 +1,6 @@
 // @flow
 
-export type Updateable<T> = {
+export type SimpleState<T> = {
 	state: T,
 	update: ((T) => void) => T,
 	unwrap: (?Object) => T | Object,

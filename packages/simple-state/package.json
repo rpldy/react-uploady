@@ -1,6 +1,6 @@
 {
   "version": "0.2.4",
-  "name": "@rpldy/updateable",
+  "name": "@rpldy/simple-state",
   "description": "deep proxy object, so it's only updateable through an update method",
   "author": "yoav niran (https://github.com/yoavniran)",
   "main": "lib/index.js",
@@ -10,7 +10,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/rpldy/react-uploady.git",
-    "directory": "packages/updateable"
+    "directory": "packages/simple-state"
   },
   "scripts": {
     "build": "node ../../scripts/build.js",

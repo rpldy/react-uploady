@@ -1,7 +1,11 @@
-Cypress.Commands.add("visitStory", (component, storyName) => {
+Cypress.Commands.add("visitStory", (component, storyName, canvas = false) => {
     cy.log(`cmd.loadStory: component = ${component}, story = ${storyName}`);
 
-    const url = `${Cypress.env("storybookDomain")}:${Cypress.env("SB_PORT")}${Cypress.env("storybookPath")}`;
+    const sbUrlBase = `${Cypress.env("storybookDomain")}:${Cypress.env("SB_PORT")}`;
+
+    const url = canvas ?
+		`${sbUrlBase}/iframe.html?id=` :
+		`${sbUrlBase}${Cypress.env("storybookPath")}`;
 
     cy.visit(`${url}${Cypress.env("components")[component]}--${storyName}`);
 });

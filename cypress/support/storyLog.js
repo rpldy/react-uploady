@@ -18,9 +18,11 @@ const isContains = (a, b) => {
 };
 
 Cypress.Commands.add("storyLog", () =>
-    cy.window().then((w) => {
-        return w.__cypressResults.storyLog;
-    }));
+	(window.parent.__cypressResults ?
+		cy.wrap(window.parent) : cy.window())
+		.then((w) => {
+			return w.__cypressResults.storyLog;
+		}));
 
 const assertStartFinish = (storyLog, startIndex, prop, value) => {
     expect(storyLog[startIndex].args[0]).to.equal("ITEM_START");

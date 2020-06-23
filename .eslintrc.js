@@ -210,6 +210,7 @@ module.exports = {
                 "react/jsx-no-bind": 0,
                 "jest/valid-expect": 0,
                 "jest/expect-expect": 2,
+				"jest/no-commented-out-tests": 0,
             }
         }
     ]

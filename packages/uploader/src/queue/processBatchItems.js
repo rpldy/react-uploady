@@ -17,13 +17,13 @@ import type { QueueState, ProcessNextMethod } from "./types";
 
 type ItemsSendData = {
     items: BatchItem[],
-    options: CreateOptions
-}
+    options: CreateOptions,
+	cancelled?: boolean,
+};
 
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
 const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], options: CreateOptions): Promise<ItemsSendData> => {
-	let result;
 	// $FlowFixMe - https://github.com/facebook/flow/issues/8215
 	const updated: { items?: BatchItem[], options?: CreateOptions } = await triggerUpdater<BatchItem[], CreateOptions>(
 		queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, {
@@ -31,10 +31,7 @@ const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], optio
 			options: unwrap(options),
 		});
 
-	if (updated === false) {
-		logger.debugLog(`uploader.queue: REQUEST_PRE_SEND event returned false to cancel ${items.length} group upload`);
-		result = { cancelled: true };
-	} else if (updated) {
+	if (updated) {
         logger.debugLog(`uploader.queue: REQUEST_PRE_SEND event returned updated items/options`, updated);
         if (updated.items) {
             //can't change items count at this point.
@@ -49,11 +46,9 @@ const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], optio
         if (updated.options) {
             options = mergeWithUndefined({}, options, updated.options);
         }
-
-        result = { items, options };
     }
 
-    return result;
+    return { items, options, cancelled: (updated === false) };
 };
 
 const prepareAllowedItems = async (queue: QueueState, items: BatchItem[]): Promise<ItemsSendData> => {
@@ -135,10 +130,11 @@ export default async (queue: QueueState, ids: string[], next: ProcessNextMethod)
     if (allowedItems.length) {
         const itemsSendData = await prepareAllowedItems(queue, allowedItems);
 
-		if (!itemsSendData.cancelled) {
-			sendAllowedItems(queue, itemsSendData, next); //we dont need to wait for the response here
-		} else {
+		if (itemsSendData.cancelled) {
 			cancelledResults = ids.map(() => true);
+		} else {
+			//we dont need to wait for the response here
+			sendAllowedItems(queue, itemsSendData, next);
 		}
 	}
 

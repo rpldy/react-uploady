@@ -1,13 +1,14 @@
-import { clone } from "@rpldy/shared";
-import createState, { unwrap, isProxy } from "./createState";
-
-jest.mock("@rpldy/shared", () => ({
-	isPlainObject: jest.requireActual("@rpldy/shared").isPlainObject,
-	clone: jest.fn(),
-}));
+// import { isPlainObject } from "@rpldy/shared";
+// import createState, { unwrap, isProxy } from "./createState";
+//
+// jest.mock("@rpldy/shared", () => ({
+// 	isPlainObject: jest.requireActual("@rpldy/shared").isPlainObject,
+// 	clone: jest.fn(),
+// }));
 
 describe("updateable tests", () => {
-	let env;
+	const env = process.env.NODE_ENV;
+	let clone, createState, unwrap, isProxy;
 
 	const getInitial = () => ({
 		arr: [1, 2, 3],
@@ -29,20 +30,38 @@ describe("updateable tests", () => {
 		]
 	});
 
-	beforeAll(() => {
-		env = process.env.NODE_ENV;
-	});
-
 	beforeEach(() => {
-		process.env.NODE_ENV = env;
-
 		clearJestMocks(
 			clone
 		);
 	});
 
-	it("should deep proxy object ", () => {
+	afterAll(() => {
+		process.env.NODE_ENV = env;
+	});
 
+	const createTest = (runTest, isProd = false) =>
+		() => {
+			jest.resetModules();
+			process.env.NODE_ENV = isProd ? "production" : env;
+
+			const mockClone = jest.fn();
+			clone = mockClone;
+
+			jest.mock("@rpldy/shared", () => ({
+				isPlainObject: jest.requireActual("@rpldy/shared").isPlainObject,
+				clone: mockClone,
+			}));
+
+			const mdl = require("./createState");
+			createState = mdl.default;
+			unwrap = mdl.unwrap;
+			isProxy = mdl.isProxy;
+
+			runTest();
+		};
+
+	it("should deep proxy object ", createTest(() => {
 		const initial = getInitial();
 		const { state } = createState(initial);
 
@@ -67,9 +86,9 @@ describe("updateable tests", () => {
 
 		delete state.sub.foo;
 		expect(state.sub.foo).toBe("bar");
-	});
+	}));
 
-	it("should only be updateable through update method", () => {
+	it("should only be updateable through update method", createTest(() => {
 
 		const { state, update } = createState(getInitial());
 
@@ -95,9 +114,9 @@ describe("updateable tests", () => {
 
 		state2.sub.newVal = 1234;
 		expect(state2.sub.newVal).toBe(123);
-	});
+	}));
 
-	it("should block defining prototype", () => {
+	it("should block defining prototype", createTest(() => {
 		const { state, update } = createState(getInitial());
 
 		expect(() => {
@@ -113,9 +132,9 @@ describe("updateable tests", () => {
 				});
 			});
 		}).toThrow();
-	});
+	}));
 
-	it("should block setPrototypeOf", () => {
+	it("should block setPrototypeOf", createTest(() => {
 		const { state, update } = createState(getInitial());
 
 		expect(() => {
@@ -127,9 +146,9 @@ describe("updateable tests", () => {
 				Object.setPrototypeOf(state, {});
 			});
 		}).toThrow();
-	});
+	}));
 
-	it("should throw on double update", () => {
+	it("should throw on double update", createTest(() => {
 		const { update } = createState(getInitial());
 
 		expect(() => {
@@ -137,9 +156,9 @@ describe("updateable tests", () => {
 				update();
 			});
 		}).toThrow();
-	});
+	}));
 
-	it("should proxy new object trees added with update", () => {
+	it("should proxy new object trees added with update", createTest(() => {
 
 		const { state, update } = createState(getInitial());
 
@@ -161,11 +180,9 @@ describe("updateable tests", () => {
 		});
 
 		expect(state2.section1.players).toHaveLength(3);
-	});
+	}));
 
-	it("should not proxy in production", () => {
-
-		process.env.NODE_ENV = "production";
+	it("should not proxy in production", createTest(() => {
 
 		const initial = getInitial();
 		const { state, update } = createState(initial);
@@ -178,9 +195,9 @@ describe("updateable tests", () => {
 
 		expect(state1).toBe(state);
 		expect(state1.arr).toHaveLength(4);
-	});
+	}, true));
 
-	it("should unwrap to same object in production", () => {
+	it("should unwrap to same object in production", createTest(() => {
 		process.env.NODE_ENV = "production";
 
 		const initial = getInitial();
@@ -188,9 +205,9 @@ describe("updateable tests", () => {
 
 		const org = unwrap();
 		expect(org).toBe(initial);
-	});
+	}, true));
 
-	it("unwrap export should return same object in production", () => {
+	it("unwrap export should return same object in production", createTest(() => {
 
 		process.env.NODE_ENV = "production";
 
@@ -199,9 +216,9 @@ describe("updateable tests", () => {
 		const children = unwrap(state.children);
 
 		expect(children).toBe(state.children);
-	});
+	}, true));
 
-	it("should unwrap entire state", () => {
+	it("should unwrap entire state", createTest(() => {
 		const initial = getInitial();
 		const { update, unwrap } = createState(initial);
 
@@ -230,9 +247,9 @@ describe("updateable tests", () => {
 		expect(target.test.foo).toBe("car");
 
 		expect(isProxy(target)).toBe(false);
-	});
+	}));
 
-	it("should unwrap entry", () => {
+	it("should unwrap entry", createTest(() => {
 		const initial = getInitial();
 		const { state, unwrap } = createState(initial);
 
@@ -240,15 +257,15 @@ describe("updateable tests", () => {
 		const unwrapResult = unwrap(state);
 
 		expect(unwrapResult).toBe("clone");
-	});
+	}));
 
-	it("should do nothing for non-proxy", () => {
+	it("should do nothing for non-proxy", createTest(() => {
 		const obj = { test: true };
 		const result = unwrap(obj);
 		expect(result).toBe(obj);
-	});
+	}));
 
-	it("should re-proxy unwrapped object", () => {
+	it("should re-proxy unwrapped object", createTest(() => {
 		const initial = getInitial();
 		const { state, update, unwrap } = createState(initial);
 
@@ -275,9 +292,9 @@ describe("updateable tests", () => {
 		});
 
 		expect(state2.more.items).toHaveLength(4);
-	});
+	}));
 
-	it("unwrap export should clone", () => {
+	it("unwrap export should clone", createTest(() => {
 		const initial = getInitial();
 		const { state } = createState(initial);
 
@@ -285,13 +302,39 @@ describe("updateable tests", () => {
 
 		const children = unwrap(state.children);
 		expect(children).toBe("clone");
-	});
+	}));
 
-	it("should throw on attempt to re-proxy", () => {
+	it("should work for exiting proxy", createTest(() => {
 		const { state } = createState(getInitial());
+		const { state: state2, update } = createState(state);
 
-		expect(() => {
-			createState(state);
-		}).toThrow("rpldy.simple-state: object is already a state proxy");
-	});
+		update((st) => {
+			st.children.push({ reproxy: true });
+		});
+
+		expect(state2.children).toHaveLength(3);
+		expect(state.children).toHaveLength(3);
+	}));
+
+	//TODO: uncomment when this is supported
+
+	// it("should work for existing prop proxy", createTest(() => {
+	// 	const { state: child } = createState(getInitial());
+	//
+	// 	const { state: parent, update } = createState({
+	// 		test: true,
+	// 	});
+	//
+	// 	update((stt) => {
+	// 		stt.child = child;
+	// 	});
+	//
+	// 	expect(parent.child.children).toHaveLength(2);
+	//
+	// 	update((stt) => {
+	// 		stt.child.children.push({complex: true});
+	// 	});
+	//
+	// 	expect(parent.child.children).toHaveLength(3);
+	// }));
 });

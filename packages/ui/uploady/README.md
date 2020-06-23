@@ -306,6 +306,7 @@ Called in case [abortBatch](#abortBatch) was called
 ### useItemStartListener (event hook)
 
 Called when item starts uploading (just before)
+For grouped uploads (multiple files in same xhr request) ITEM_START is triggered for each item separately
 
 > This event is _[cancellable](../../uploader/README.md#cancellable-events)_
 
@@ -446,6 +447,8 @@ Group will contain a single item unless "grouped" option is set to true.
 Handler receives the item(s) in the group and the upload options that were used.
 The handler can change data inside the items and in the options by returning different data than received.
 See simple example below or this more detailed [guide](../../../guides/DynamicParameters.md).
+
+> This event is _[cancellable](../../uploader/README.md#cancellable-events)_
 
 ```javascript
     import { useRequestPreSend } from "@rpldy/uploady";

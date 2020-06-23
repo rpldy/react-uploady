@@ -23,6 +23,7 @@ type ItemsSendData = {
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
 const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], options: CreateOptions): Promise<ItemsSendData> => {
+	let result;
 	// $FlowFixMe - https://github.com/facebook/flow/issues/8215
 	const updated: { items?: BatchItem[], options?: CreateOptions } = await triggerUpdater<BatchItem[], CreateOptions>(
 		queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, {
@@ -30,10 +31,13 @@ const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], optio
 			options: unwrap(options),
 		});
 
-    if (updated) {
+	if (updated === false) {
+		logger.debugLog(`uploader.queue: REQUEST_PRE_SEND event returned false to cancel ${items.length} group upload`);
+		result = { cancelled: true };
+	} else if (updated) {
         logger.debugLog(`uploader.queue: REQUEST_PRE_SEND event returned updated items/options`, updated);
         if (updated.items) {
-            //can't change items count at this point. removing can be done by cancelling with UPLOADER_EVENTS.ITEM_START
+            //can't change items count at this point.
             if (updated.items.length !== items.length ||
                 !isSamePropInArrays(updated.items, items, ["id", "batchId"])) {
                 throw new Error(`REQUEST_PRE_SEND event handlers must return same items with same ids`);
@@ -45,9 +49,11 @@ const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], optio
         if (updated.options) {
             options = mergeWithUndefined({}, options, updated.options);
         }
+
+        result = { items, options };
     }
 
-    return { items, options };
+    return result;
 };
 
 const prepareAllowedItems = async (queue: QueueState, items: BatchItem[]): Promise<ItemsSendData> => {
@@ -100,7 +106,7 @@ const reportCancelledItems = (queue: QueueState, items: BatchItem[], cancelledRe
             info: { status: 0, state: FILE_STATES.CANCELLED, response: "cancel" },
         }));
 
-        processFinishedRequest(queue, finishedData, next); //report out info about cancelled items
+        processFinishedRequest(queue, finishedData, next); //report about cancelled items
     }
 
     return !!cancelledItemsIds.length;
@@ -117,8 +123,8 @@ export default async (queue: QueueState, ids: string[], next: ProcessNextMethod)
     let items: any[] = Object.values(state.items);
     items = items.filter((item: BatchItem) => !!~ids.indexOf(item.id));
 
-    //allow external code to cancel items
-    const cancelledResults = await Promise.all(items.map((i: BatchItem) =>
+    //allow user code cancel items from start event handler(s)
+    let cancelledResults = await Promise.all(items.map((i: BatchItem) =>
         queue.cancellable(UPLOADER_EVENTS.ITEM_START, i)));
 
     let allowedItems: BatchItem[] = cancelledResults
@@ -128,12 +134,17 @@ export default async (queue: QueueState, ids: string[], next: ProcessNextMethod)
 
     if (allowedItems.length) {
         const itemsSendData = await prepareAllowedItems(queue, allowedItems);
-        sendAllowedItems(queue, itemsSendData, next); //we dont need to wait for the response here
-    }
 
-    //if no cancelled we can go to process more items immediately (and not wait for upload responses)
-    if (!reportCancelledItems(queue, items, cancelledResults, next)) {
-        await next(queue); //when concurrent is allowed, we can go ahead and process more
-    }
+		if (!itemsSendData.cancelled) {
+			sendAllowedItems(queue, itemsSendData, next); //we dont need to wait for the response here
+		} else {
+			cancelledResults = ids.map(() => true);
+		}
+	}
+
+	//if no cancelled we can go to process more items immediately (and not wait for upload responses)
+	if (!reportCancelledItems(queue, items, cancelledResults, next)) {
+		await next(queue); //when concurrent is allowed, we can go ahead and process more
+	}
 };
 

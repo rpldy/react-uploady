@@ -270,20 +270,17 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 
 	const onUploadCrop = useCallback(async() => {
 		if (updateRequest && cropPixels) {
-			console.log("CONTINUE UPLOAD - ", {
-				updateRequest,
-				cropPixels,
-				requestData
-			});
-
 			const cropped = await cropImage(url, requestData.items[0].file, cropPixels);
-
 			const updated = requestData.items;
 			updated[0].file = cropped;
 
 			updateRequest({ items: updated });
 		}
-	},[url, requestData, updateRequest, cropPixels]);
+	}, [url, requestData, updateRequest, cropPixels]);
+
+	const onUploadCancel = useCallback(() => {
+		updateRequest(false);
+	}, [updateRequest]);
 
 	return <>
 		<ImageCropWrapper>
@@ -293,8 +290,13 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 				onCropChange={setCrop}
 				onCropComplete={onCropComplete}/>
 		</ImageCropWrapper>
-		<button style={{display: updateRequest && cropPixels ? "block" : "none" }} onClick={onUploadCrop}>
+		<button style={{ display: updateRequest && cropPixels ? "block" : "none" }}
+				onClick={onUploadCrop}>
 			Upload Cropped
+		</button>
+		<button style={{ display: updateRequest && cropPixels ? "block" : "none" }}
+				onClick={onUploadCancel}>
+			Cancel
 		</button>
 	</>;
 });

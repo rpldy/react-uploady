@@ -33,27 +33,3 @@ export default (Component: React$ComponentType<any>) => {
 		/>;
 	};
 };
-
-//
-// export default () => {
-// 	const [intercept, setIntercept] = useState(true);
-// 	const [updaters, setUpdaters] = useState([]);
-//
-// 	const context = assertContext(useContext(UploadyContext));
-//
-// 	context.on(UPLOADER_EVENTS.REQUEST_PRE_SEND, (data) => {
-// 		return intercept ? new Promise((resolve) => {
-// 			const updater = async (cb) => {
-// 				const result = await cb(data);
-// 				resolve(result);
-// 			};
-//
-// 			setUpdaters(() => updaters.concat(updater));
-// 		}) : undefined;
-// 	});
-//
-// 	return {
-// 		updaters,
-// 		setIntercept
-// 	};
-// };

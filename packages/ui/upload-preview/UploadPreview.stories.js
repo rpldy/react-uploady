@@ -1,10 +1,12 @@
 // @flow
 import React, { useCallback, useState, useRef } from "react";
 import styled from "styled-components";
-import Cropper from "react-easy-crop";
+import ReactCrop from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 import { withKnobs, number } from "@storybook/addon-knobs";
 import Uploady, {
     useItemProgressListener,
+	useItemFinalizeListener,
 	withRequestPreSendUpdate,
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
@@ -260,41 +262,45 @@ const ImageCropWrapper = styled.div`
 `;
 
 const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
-	const [crop, setCrop] = useState({ x: 0, y: 0 });
-	const [cropPixels, setCropPixels] = useState(null);
-	const { url, updateRequest, requestData } = props;
+	const { id, url, updateRequest, requestData } = props;
+	const imgRef = useRef(null);
+	const [finished, setFinished] = useState(false);
+	const [crop, setCrop] = useState(null);
 
-	const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
-		setCropPixels(croppedAreaPixels);
-	}, [])
+	useItemFinalizeListener(() =>{
+		setFinished(true);
+	}, id);
 
 	const onUploadCrop = useCallback(async() => {
-		if (updateRequest && cropPixels) {
-			const cropped = await cropImage(url, requestData.items[0].file, cropPixels);
-			const updated = requestData.items;
-			updated[0].file = cropped;
-
-			updateRequest({ items: updated });
+		if (updateRequest && (crop?.height || crop?.width)) {
+			requestData.items[0].file = await cropImage(url, requestData.items[0].file, crop);;
+			updateRequest({ items: requestData.items });
 		}
-	}, [url, requestData, updateRequest, cropPixels]);
+	}, [url, requestData, updateRequest, crop]);
 
 	const onUploadCancel = useCallback(() => {
 		updateRequest(false);
 	}, [updateRequest]);
 
+	const onLoad = useCallback(img => {
+		imgRef.current = img;
+	}, []);
+
 	return <>
 		<ImageCropWrapper>
-			<Cropper
-				image={url}
+			{requestData ? <ReactCrop
+				src={url}
+				onImageLoaded={onLoad}
 				crop={crop}
-				onCropChange={setCrop}
-				onCropComplete={onCropComplete}/>
+				onChange={setCrop}
+				onComplete={setCrop}
+			/> : null}
 		</ImageCropWrapper>
-		<button style={{ display: updateRequest && cropPixels ? "block" : "none" }}
+		<button style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
 				onClick={onUploadCrop}>
 			Upload Cropped
 		</button>
-		<button style={{ display: updateRequest && cropPixels ? "block" : "none" }}
+		<button style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
 				onClick={onUploadCancel}>
 			Cancel
 		</button>

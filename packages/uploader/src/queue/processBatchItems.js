@@ -36,7 +36,7 @@ const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], optio
         if (updated.items) {
             //can't change items count at this point.
             if (updated.items.length !== items.length ||
-                !isSamePropInArrays(updated.items, items, ["id", "batchId"])) {
+                !isSamePropInArrays(updated.items, items, ["id", "batchId", "recycled"])) {
                 throw new Error(`REQUEST_PRE_SEND event handlers must return same items with same ids`);
             }
 
@@ -58,9 +58,26 @@ const prepareAllowedItems = async (queue: QueueState, items: BatchItem[]): Promi
         state.activeIds = state.activeIds.concat(allowedIds);
     });
 
-    const options = queue.getState().batches[items[0].batchId].batchOptions;
+	const prepared = await triggerPreSendUpdate(queue, items,
+		queue.getState().batches[items[0].batchId].batchOptions);
 
-    return await triggerPreSendUpdate(queue, items, options);
+	if (!prepared.cancelled) {
+		//update potentially changed data back into queue state
+		queue.updateState((state) => {
+			prepared.items.forEach((i) => {
+				state.items[i.id] = i;
+			});
+
+			state.batches[items[0].batchId].batchOptions = prepared.options;
+		});
+
+		//use objects from internal state(proxies) - not objects from userland
+		const updatedState = queue.getState();
+		prepared.items = prepared.items.map((item) => updatedState.items[item.id]);
+		prepared.options = updatedState.batches[items[0].batchId].batchOptions;
+	}
+
+    return prepared;
 };
 
 const updateUploadingState = (queue: QueueState, items: BatchItem[], sendResult: SendResult) => {
@@ -114,7 +131,7 @@ const getAllowedItem = (id: string, queue: QueueState) =>
 //send group of items to be uploaded
 export default async (queue: QueueState, ids: string[], next: ProcessNextMethod) => {
     const state = queue.getState();
-    //multiple items can happen when grouping is allowed
+    //ids will have more than one when grouping is allowed
     let items: any[] = Object.values(state.items);
     items = items.filter((item: BatchItem) => !!~ids.indexOf(item.id));
 

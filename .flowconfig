@@ -19,3 +19,4 @@ module.system.node.resolve_dirname=node_modules
 module.name_mapper='^invariant$' -> '<PROJECT_ROOT>/node_modules/invariant/invariant'
 module.name_mapper='^html-dir-content$' -> '<PROJECT_ROOT>/node_modules/html-dir-content/dist/html-dir-content'
 module.name_mapper='^@storybook/addon-knobs' -> '<PROJECT_ROOT>/node_modules/@storybook/addon-knobs/dist'
+module.name_mapper='^react-image-crop$' -> '<PROJECT_ROOT>/node_modules/react-image-crop/dist/ReactCrop.min.js'

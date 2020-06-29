@@ -570,7 +570,7 @@ export const WithCustomFileInputAndForm = () => {
 HOC to enable components to interact with the upload data and options just-in-time before the request is sent.
 This is a hatch point to introduce custom logic that may affect the upload data.
 
-A good example use-case for this is applying [crop](../../../guides/XXXX) to selected image before it is uploaded.
+A good example use-case for this is applying [crop](../../../guides/Crop.md) to selected image before it is uploaded.
 
 When rendering the result of the HOC, the id of the batch item to handle must be in the props. 
 This to ensure the HOC only re-renders for a specific item and not for all.

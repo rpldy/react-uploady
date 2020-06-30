@@ -114,10 +114,12 @@ const triggerUploaderBatchEvent = (queue: QueueState, batchId: string, event: st
         batch = getBatchFromState(state, batchId), //get the most uptodate batch data
         stateItems = state.items;
 
-    queue.trigger(event, {
-        ...unwrap(batch),
-        items: batch.items.map(({ id }: BatchItem) => unwrap(stateItems[id])),
-    });
+    const eventBatch = {
+		...unwrap(batch),
+		items: batch.items.map(({ id }: BatchItem) => unwrap(stateItems[id])),
+	};
+
+    queue.trigger(event, eventBatch);
 };
 
 const getIsItemBatchReady = (queue: QueueState, itemId: string): boolean => {

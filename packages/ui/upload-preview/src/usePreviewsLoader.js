@@ -35,7 +35,7 @@ const loadPreviewData = (
     options: MandatoryPreviewOptions,
     previewComponentProps: PreviewComponentPropsOrMethod): ?PreviewItem => {
 
-    let data, props;
+    let data, props, isFallback = false;
 
     if (item.file) {
         const file = item.file;
@@ -43,6 +43,7 @@ const loadPreviewData = (
 
         if (!data) {
             data = getFallbackUrl(options.fallbackUrl, file);
+			isFallback = true;
         }
     } else {
         data = {
@@ -61,6 +62,7 @@ const loadPreviewData = (
     return data && {
         ...data,
 		id: item.id,
+		isFallback,
         props
     };
 };

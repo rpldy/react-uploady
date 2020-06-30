@@ -2,19 +2,31 @@
 import { isPlainObject, clone } from "@rpldy/shared";
 import type { SimpleState } from "./types";
 
-const STT_SYM = Symbol.for("__rpldy-simple-state__");
+const PROXY_SYM = Symbol.for("__rpldy-sstt-proxy__"),
+	STATE_SYM = Symbol.for("__rpldy-sstt-state__");
+
+const isProd = process.env.NODE_ENV === "production";
+
+const isProxy = (obj: Object) =>
+	!isProd &&
+	!!~Object.getOwnPropertySymbols(obj).indexOf(PROXY_SYM);
+
+const getIsUpdateable = (proxy: Object) =>
+	isProd ? true : proxy[STATE_SYM].isUpdateable;
+
+const setIsUpdateable = (proxy: Object, value) => {
+	if (!isProd) {
+		proxy[STATE_SYM].isUpdateable = value;
+	}
+};
 
 const deepProxy = (obj, traps) => {
 	let proxy;
 
 	if (Array.isArray(obj) || isPlainObject(obj)) {
-		proxy = new Proxy(obj, traps);
-
-		if (!obj[STT_SYM]) {
-			Object.defineProperty(proxy, STT_SYM, {
-				value: true,
-				configurable: true,
-			});
+		if (!isProxy(obj)) {
+			obj[PROXY_SYM] = true;
+			proxy = new Proxy(obj, traps);
 		}
 
 		Object.keys(obj)
@@ -27,22 +39,23 @@ const deepProxy = (obj, traps) => {
 };
 
 const deepUnWrap = (proxy: Object) => {
-	delete proxy[STT_SYM];
+	delete proxy[PROXY_SYM];
 
 	Object.keys(proxy)
 		.forEach((key) => {
-			proxy[key] = proxy[key][STT_SYM] || proxy[key];
+			proxy[key] = proxy[key][PROXY_SYM] || proxy[key];
 		});
 
 	return proxy;
 };
 
-const isProxy = (obj: Object) =>
-	process.env.NODE_ENV !== "production" &&
-		!!~Object.getOwnPropertySymbols(obj).indexOf(STT_SYM);
-
 const unwrapEntry = (proxy: Object) =>
 	isProxy(proxy) ? clone(proxy) : proxy;
+
+const unwrapState = (proxy: Object) => {
+	delete proxy[STATE_SYM];
+	return proxy[PROXY_SYM];
+};
 
 /**
  * deep proxies an object so it is only updateable through an update callback.
@@ -55,15 +68,14 @@ const unwrapEntry = (proxy: Object) =>
  *
  * Original object is changed!
  *
+ * DOESNT support updating state (wrapped seperately) that is set as a child of another state
  * @param obj
  * @returns {{state, update, unwrap}}
  */
 export default <T>(obj: Object): SimpleState<T> => {
-	let isUpdateable = false;
-
 	const traps = {
 		set: (obj, key, value) => {
-			if (isUpdateable) {
+			if (getIsUpdateable(proxy)) {
 				obj[key] = deepProxy(value, traps);
 			}
 
@@ -71,44 +83,45 @@ export default <T>(obj: Object): SimpleState<T> => {
 		},
 
 		get: (obj, key) => {
-			return key === STT_SYM ? deepUnWrap(obj) : obj[key];
+			return key === PROXY_SYM ? deepUnWrap(obj) : obj[key];
 		},
 
-		defineProperty: (obj, key, props) => {
-			if (key === STT_SYM) {
-				Object.defineProperty(obj, key, props);
-			} else {
-				throw new Error("Update state doesnt support defining property");
-			}
-
-			return true;
+		defineProperty: () => {
+			throw new Error("Simple State doesnt support defining property");
 		},
 
 		setPrototypeOf: () => {
-			throw new Error("Update state doesnt support setting prototype");
+			throw new Error("Simple State doesnt support setting prototype");
 		},
 
-		deleteProperty: (target, key) => {
-			if (isUpdateable) {
-				delete target[key];
+		deleteProperty: (obj, key) => {
+			if (getIsUpdateable(proxy)) {
+				delete obj[key];
 			}
 
 			return true;
 		},
 	};
 
-	const proxy = process.env.NODE_ENV !== "production" ? deepProxy(obj, traps) : obj;
+	if (!isProd && !isProxy(obj)) {
+		Object.defineProperty(obj, STATE_SYM, {
+			value: { isUpdateable: false },
+			configurable: true,
+		});
+	}
+
+	const proxy = !isProd ? deepProxy(obj, traps) : obj;
 
 	const update = (fn) => {
-		if (isUpdateable) {
-			throw new Error("Can't call update on Updateable already being updated!");
+		if (!isProd && getIsUpdateable(proxy)) {
+			throw new Error("Can't call update on State already being updated!");
 		}
 
 		try {
-			isUpdateable = true;
+			setIsUpdateable(proxy, true);
 			fn(proxy);
 		} finally {
-			isUpdateable = false;
+			setIsUpdateable(proxy, false);
 		}
 
 		return proxy;
@@ -116,7 +129,7 @@ export default <T>(obj: Object): SimpleState<T> => {
 
 	const unwrap = (entry?: Object) =>
 		entry ? unwrapEntry(entry) :
-			(isProxy(proxy) ? deepUnWrap(proxy[STT_SYM]) : proxy);
+			(isProxy(proxy) ? unwrapState(proxy) : proxy);
 
 	return {
 		state: proxy,
@@ -126,5 +139,6 @@ export default <T>(obj: Object): SimpleState<T> => {
 };
 
 export {
+	isProxy,
 	unwrapEntry as unwrap
 };

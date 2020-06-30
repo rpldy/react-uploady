@@ -1,9 +1,13 @@
 // @flow
 import React, { useCallback, useState, useRef } from "react";
 import styled from "styled-components";
+import ReactCrop from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 import { withKnobs, number } from "@storybook/addon-knobs";
 import Uploady, {
     useItemProgressListener,
+	useItemFinalizeListener,
+	withRequestPreSendUpdate,
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
@@ -14,6 +18,7 @@ import {
     useStoryUploadySetup,
     uploadButtonCss,
     uploadUrlInputCss,
+	cropImage
 } from "../../../story-helpers";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -247,6 +252,78 @@ export const WithPreviewMethods = () => {
 		</StyledUploadButton>
 
 		<PreviewsWithClear/>
+	</Uploady>;
+};
+
+const ImageCropWrapper = styled.div`
+    position: relative;
+    width: 100%;
+    min-height: 500px;
+`;
+
+const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
+	const { id, url, updateRequest, requestData } = props;
+	const imgRef = useRef(null);
+	const [finished, setFinished] = useState(false);
+	const [crop, setCrop] = useState(null);
+
+	useItemFinalizeListener(() =>{
+		setFinished(true);
+	}, id);
+
+	const onUploadCrop = useCallback(async() => {
+		if (updateRequest && (crop?.height || crop?.width)) {
+			requestData.items[0].file = await cropImage(url, requestData.items[0].file, crop);;
+			updateRequest({ items: requestData.items });
+		}
+	}, [url, requestData, updateRequest, crop]);
+
+	const onUploadCancel = useCallback(() => {
+		updateRequest(false);
+	}, [updateRequest]);
+
+	const onLoad = useCallback(img => {
+		imgRef.current = img;
+	}, []);
+
+	return <>
+		<ImageCropWrapper>
+			{requestData ? <ReactCrop
+				src={url}
+				onImageLoaded={onLoad}
+				crop={crop}
+				onChange={setCrop}
+				onComplete={setCrop}
+			/> : null}
+		</ImageCropWrapper>
+		<button style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
+				onClick={onUploadCrop}>
+			Upload Cropped
+		</button>
+		<button style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
+				onClick={onUploadCancel}>
+			Cancel
+		</button>
+	</>;
+});
+
+export const WithCrop = () => {
+	const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+
+	return <Uploady
+		debug
+		multiple={false}
+		destination={destination}
+		enhancer={enhancer}
+		grouped={grouped}
+		maxGroupSize={groupSize}>
+
+		<StyledUploadButton id="upload-btn">
+			Upload
+		</StyledUploadButton>
+
+		<UploadPreview
+			PreviewComponent={ItemPreviewWithCrop} />
 	</Uploady>;
 };
 

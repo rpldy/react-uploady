@@ -50,10 +50,10 @@ export const useItemErrorListener: ItemEventHook;
 export const useItemAbortListener: ItemEventHook;
 export const useItemFinalizeListener: ItemEventHook;
 
-type PreSendData = { items: BatchItem[]; options: CreateOptions };
+export type PreSendData = { items: BatchItem[]; options: CreateOptions };
 
 export const useRequestPreSend: (cb: (data: PreSendData) =>
-    { items?: BatchItem[]; options: CreateOptions }) => void;
+    { items?: BatchItem[]; options?: CreateOptions }) => void;
 
 export const useUploadOptions: (options?: CreateOptions) => CreateOptions;
 

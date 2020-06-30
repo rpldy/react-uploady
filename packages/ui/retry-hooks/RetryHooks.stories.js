@@ -217,6 +217,7 @@ const AbortButton = ({ id, state }) => {
 	return <Button
 		disabled={state === STATES.ABORTED || state === STATES.DONE}
 		onClick={onAbort}
+		data-test="abort-button"
 	>
 		🛑
 	</Button>;
@@ -226,15 +227,16 @@ const RetryButton = ({ id, state }) => {
 	const retry = useRetry();
 	const onRetry = useCallback(() => retry(id), [id, retry]);
 
-	return <Button disabled={state !== STATES.ABORTED} onClick={onRetry}>
+	return <Button disabled={state !== STATES.ABORTED}
+				   onClick={onRetry}
+				   data-test="retry-button"
+	>
 		🔃
 	</Button>;
 };
 
 const ClearPreviewsButton = ({ methods, previews }) => {
 	const disabled = !methods.current?.clear || !previews.length;
-
-	console.log("!!!!!!!!!! rendering CLEAR BUTTON ", {methods, previews, disabled});
 
 	const onClear = useCallback(() => {
 		if (methods.current?.clear) {
@@ -243,7 +245,7 @@ const ClearPreviewsButton = ({ methods, previews }) => {
 	}, [methods]);
 
 	return <>
-		<Button disabled={disabled} onClick={onClear}>
+		<Button disabled={disabled} onClick={onClear} data-test="queue-clear-button">
 			🗑️
 		</Button>
 		({previews.length} items)
@@ -272,7 +274,7 @@ const QueueItem = memo((props) => {
 	}, props.id);
 
 	return (
-		<PreviewItemContainer state={itemState}>
+		<PreviewItemContainer state={itemState} data-test="preview-item-container" data-state={itemState}>
 			<ImageName>{props.name}</ImageName>
 			<PreviewImageWrapper>
 				<PreviewImage src={props.url}/>
@@ -330,7 +332,7 @@ export const WithRetryAndPreview = () => {
 			enhancer={enhancer}
 		>
 			<div className="App">
-				<UploadButton>Upload Files</UploadButton>
+				<UploadButton id="upload-button">Upload Files</UploadButton>
 				<Queue/>
 			</div>
 		</Uploady>

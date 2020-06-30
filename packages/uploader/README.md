@@ -228,8 +228,11 @@ Triggered in case the batch was [aborted](#abortBatch)
 ### UPLOADER_EVENTS.ITEM_START
 
 Triggered when item starts uploading (just before)
+For grouped uploads (multiple files in same xhr request) ITEM_START is triggered for each item separately 
 
 - Parameters: _(item)_
+
+> This event is _[cancellable](#cancellable-events)_
 
 ### UPLOADER_EVENTS.ITEM_FINISH
 
@@ -285,10 +288,12 @@ See this [guide](../../guides/DynamicParameters.md) for more details.
 
 - Parameters: _(items, options)_
 
+> This event is _[cancellable](#cancellable-events)_
+
 ## Cancellable Events
 
-These are events that allow the client to cancel their respective upload object (batch or batch item)
-To cancel the upload, the handler can return false.
+These are events that allow the client to cancel their respective upload object (batch or batch-item)
+To cancel the upload, the handler must return (boolean) false.
 
 ```javascript
 uploader.on(UPLOADER_EVENTS.ITEM_START, (item) => {

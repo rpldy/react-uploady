@@ -4,14 +4,11 @@ describe("UploadButton - Simple - Multiple files", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadButton", "simple");
+        cy.visitStory("uploadButton", "simple", true);
     });
 
     it("should use uploady to upload multiple files", () => {
-        cy.iframe("#storybook-preview-iframe").as("iframe");
-
-        cy.get("@iframe")
-            .find("input")
+        cy.get("input")
             .should("exist")
             .as("fInput");
 
@@ -22,7 +19,6 @@ describe("UploadButton - Simple - Multiple files", () => {
             cy.storyLog().assertFileItemStartFinish("flower2.jpg", 3);
             cy.wait(500);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg", 5);
-
-        }, 3);
+        }, 3, "button", null);
     });
 });

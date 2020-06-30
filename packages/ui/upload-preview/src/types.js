@@ -12,6 +12,7 @@ export type PreviewItem = {
 	url: string,
 	name: string,
 	type: PreviewType,
+	isFallback: boolean,
     props: Object,
 };
 

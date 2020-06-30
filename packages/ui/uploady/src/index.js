@@ -1,6 +1,7 @@
 // @flow
 import Uploady from "./Uploady";
 import useFileInput from "./useFileInput";
+import withRequestPreSendUpdate from "./withRequestPreSendUpdate";
 
 import type { UploadyContextType } from "@rpldy/shared-ui";
 import type { UploadyProps } from "./types";
@@ -10,6 +11,7 @@ export default Uploady;
 export {
     Uploady,
     useFileInput,
+	withRequestPreSendUpdate,
 };
 
 export {

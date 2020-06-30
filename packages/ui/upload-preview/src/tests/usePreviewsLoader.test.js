@@ -168,6 +168,7 @@ describe("usePreviewLoader tests", () => {
 
 		expect(previews).toHaveLength(1);
 		expect(previews[0].url).toBe("fallback.test");
+		expect(previews[0].isFallback).toBe(true);
 		expect(previews[0].props).toEqual({ test: "f1-fallback.test-fallback" });
 
 		expect(getFallbackUrl).toHaveBeenCalledWith(props.fallbackUrl, items[0].file);

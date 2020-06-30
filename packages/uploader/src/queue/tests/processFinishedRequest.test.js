@@ -134,8 +134,9 @@ describe("onRequestFinished tests", () => {
 		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, {
 			batchId: "b1",
 			state: FILE_STATES.FINISHED,
-			uploadResponse: response,
+			uploadResponse: queueState.getState().items.u1.uploadResponse,
 		});
+
 		expect(queueState.updateState).toHaveBeenCalledTimes(2);
 		expect(queueState.getState().itemQueue).toHaveLength(1);
 		expect(queueState.getState().activeIds).toHaveLength(0);
@@ -171,11 +172,12 @@ describe("onRequestFinished tests", () => {
 				}
 			}], mockNext);
 
-			const item = {
-				batchId: "b1",
-				state,
-				uploadResponse: response
-			};
+			const item = queueState.getState().items.u1;
+			// 	{
+			// 	batchId: "b1",
+			// 	state,
+			// 	uploadResponse: response
+			// };
 
 			expect(queueState.trigger).toHaveBeenNthCalledWith(1, FILE_STATE_TO_EVENT_MAP[state], item);
 			expect(queueState.trigger).not.toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, item);
@@ -225,21 +227,11 @@ describe("onRequestFinished tests", () => {
 					}
 				}], mockNext);
 
-			const item1 = {
-				id: "u1",
-				batchId: "b1",
-				state: FILE_STATES.FINISHED,
-				uploadResponse: response,
-			};
+			expect(queueState.getState().items.u1.state).toBe(FILE_STATES.FINISHED);
+			expect(queueState.getState().items.u1.uploadResponse).toMatchObject(response);
 
-			expect(queueState.getState().items.u1).toEqual(item1);
-
-			const item2 = {
-				id: "u2",
-				batchId: "b1",
-				state: failState,
-				uploadResponse: response2
-			};
+			const item1 = queueState.getState().items.u1;
+			const item2 = queueState.getState().items.u2;
 
 			expect(queueState.getState().items.u2).toEqual(item2);
 

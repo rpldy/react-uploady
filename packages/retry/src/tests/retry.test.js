@@ -1,6 +1,11 @@
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { RETRY_EVENT } from "../consts";
-import retryEnhancer from "../retry";
+
+const createState = jest.fn(jest.requireActual("@rpldy/simple-state").default);
+createState.unwrap = jest.fn((obj) => obj);
+jest.doMock("@rpldy/simple-state", () => createState);
+
+const retryEnhancer = require("../retry").default;
 
 describe("retry tests", () => {
 
@@ -33,13 +38,27 @@ describe("retry tests", () => {
 
 		uploader = retryEnhancer(uploader, trigger);
 
+		const retryState = createState.mock.calls[0][0];
+
 		return {
 			retry,
 			retryBatch,
 			uploader,
 			trigger,
+			retryState,
 		};
 	};
+
+	beforeEach(() => {
+		clearJestMocks(
+			createState,
+		);
+	});
+
+	const getItemsFromRetryState = (items, retryState) =>
+		Object.values(retryState.failed)
+			.filter((stateItem) =>
+				!!items.find((item) => item.id === stateItem.id));
 
 	describe("retry all tests", () => {
 		it.each([
@@ -47,15 +66,16 @@ describe("retry tests", () => {
 			UPLOADER_EVENTS.ITEM_ABORT,
 		])("should send all items to retry ", (itemEvent) => {
 
-			const { retry, trigger, uploader, } = getTestRetry(itemEvent);
+			const { retry, trigger, uploader, retryState } = getTestRetry(itemEvent);
+
+			const options = { autoUpload: true },
+				expectedItems = getItemsFromRetryState(items, retryState);
 
 			const result = retry();
 
 			expect(result).toBe(true);
 
-			const options = {autoUpload: true};
-
-			expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items , options});
+			expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options });
 			expect(uploader.add).toHaveBeenCalledWith(items, options);
 
 			const result2 = retry();
@@ -84,18 +104,19 @@ describe("retry tests", () => {
 			UPLOADER_EVENTS.ITEM_ERROR,
 			UPLOADER_EVENTS.ITEM_ABORT,
 		])("should send requested item to retry", (itemEvent) => {
-			const { retry, trigger, uploader, } = getTestRetry(itemEvent);
+			const { retry, trigger, uploader, retryState } = getTestRetry(itemEvent);
 			const options = { foo: "bar" };
 
-			const result = retry("f-3", options);
-			expect(result).toBe(true);
-
 			const expectedOptions = {
-				...options,
-				autoUpload: true,
-			};
+					...options,
+					autoUpload: true,
+				},
+				expectedItems = getItemsFromRetryState([items[2]], retryState);
 
-			expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: [items[2]], options: expectedOptions });
+			const result = retry("f-3", options);
+
+			expect(result).toBe(true);
+			expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options: expectedOptions });
 			expect(uploader.add).toHaveBeenCalledWith([items[2]], expectedOptions);
 
 			const result2 = retry("f-3", options);
@@ -111,19 +132,19 @@ describe("retry tests", () => {
 			UPLOADER_EVENTS.ITEM_ERROR,
 			UPLOADER_EVENTS.ITEM_ABORT,
 		])("should send batch items to retry ", (itemEvent) => {
-			const { retryBatch, trigger, uploader, } = getTestRetry(itemEvent);
+			const { retryBatch, trigger, uploader, retryState } = getTestRetry(itemEvent);
 
 			const options = { foo: "bar" };
-
-			const result = retryBatch("b2", options);
-			expect(result).toBe(true);
 
 			const expectedOptions = {
 				...options,
 				autoUpload: true,
 			};
 
-			const expectedItems =  [items[2], items[3]];
+			const expectedItems =  getItemsFromRetryState([items[2], items[3]], retryState);
+
+			const result = retryBatch("b2", options);
+			expect(result).toBe(true);
 
 			expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options: expectedOptions });
 			expect(uploader.add).toHaveBeenCalledWith(expectedItems, expectedOptions);

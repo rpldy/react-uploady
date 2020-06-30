@@ -134,7 +134,7 @@ describe("onRequestFinished tests", () => {
 		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, {
 			batchId: "b1",
 			state: FILE_STATES.FINISHED,
-			uploadResponse: queueState.getState().items.u1.uploadResponse,
+			uploadResponse: { success: true },
 		});
 
 		expect(queueState.updateState).toHaveBeenCalledTimes(2);
@@ -173,11 +173,6 @@ describe("onRequestFinished tests", () => {
 			}], mockNext);
 
 			const item = queueState.getState().items.u1;
-			// 	{
-			// 	batchId: "b1",
-			// 	state,
-			// 	uploadResponse: response
-			// };
 
 			expect(queueState.trigger).toHaveBeenNthCalledWith(1, FILE_STATE_TO_EVENT_MAP[state], item);
 			expect(queueState.trigger).not.toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, item);

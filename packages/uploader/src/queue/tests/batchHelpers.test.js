@@ -73,7 +73,7 @@ describe("batchHelpers tests", () => {
 			const expectedBatch = expect.objectContaining({
 				...queueState.getState().batches.b1.batch,
 				items: [queueState.getState().items.u1, queueState.getState().items.u2],
-			}) ;
+			});
 
 			batchHelpers.cleanUpFinishedBatch(queueState);
 
@@ -109,7 +109,10 @@ describe("batchHelpers tests", () => {
 				itemQueue: ["u2"]
 			});
 
-			const expectedBatch = queueState.getState().batches.b1.batch;
+			const expectedBatch = expect.objectContaining({
+				...queueState.getState().batches.b1.batch,
+				items: [queueState.getState().items.u1],
+			});
 
 			batchHelpers.cleanUpFinishedBatch(queueState);
 
@@ -262,11 +265,11 @@ describe("batchHelpers tests", () => {
 
 			expect(queueState.trigger).toHaveBeenCalledWith(
 				UPLOADER_EVENTS.BATCH_CANCEL,
-				{
+				expect.objectContaining({
 					...eventBatch,
 					state: BATCH_STATES.CANCELLED,
 					items: eventItems,
-				},
+				}),
 			);
 
 			const updatedState = queueState.getState();
@@ -321,8 +324,8 @@ describe("batchHelpers tests", () => {
 
 			const result = batchHelpers.getBatchDataFromItemId(queueState, "u2");
 
-			expect(result.batch).toStrictEqual(batch);
-			expect(result.batchOptions).toStrictEqual(batchOptions);
+			expect(result.batch).toStrictEqual(queueState.getState().batches.b2.batch);
+			expect(result.batchOptions).toStrictEqual(queueState.getState().batches.b2.batchOptions);
 		});
 	});
 
@@ -365,10 +368,10 @@ describe("batchHelpers tests", () => {
 			batchHelpers.triggerUploaderBatchEvent(queueState, "b1", UPLOADER_EVENTS.BATCH_FINISH);
 
 			expect(queueState.trigger)
-				.toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, {
+				.toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expect.objectContaining({
 					...batch,
 					items: [{ test: 1 }, { test: 2 }]
-				});
+				}));
 		});
 	});
 

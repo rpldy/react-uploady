@@ -70,13 +70,15 @@ describe("batchHelpers tests", () => {
 				},
 			});
 
+			const expectedBatch = queueState.getState().batches.b1.batch;
+
 			batchHelpers.cleanUpFinishedBatch(queueState);
 
 			const updatedState = queueState.getState();
 
 			expect(queueState.updateState).toHaveBeenCalledTimes(2);
 			expect(updatedState.batches.b1).toBeUndefined();
-			expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, batch);
+			expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedBatch);
 			expect(updatedState.items.u1).toBeUndefined();
 			expect(updatedState.items.u2).toBeUndefined();
 		});
@@ -104,13 +106,15 @@ describe("batchHelpers tests", () => {
 				itemQueue: ["u2"]
 			});
 
+			const expectedBatch = queueState.getState().batches.b1.batch;
+
 			batchHelpers.cleanUpFinishedBatch(queueState);
 
 			const updatedState = queueState.getState();
 
 			expect(queueState.updateState).toHaveBeenCalledTimes(2);
 			expect(updatedState.batches.b1).toBeUndefined();
-			expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, batch);
+			expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedBatch);
 			expect(updatedState.items.u1).toBeUndefined();
 			expect(updatedState.items.u2).toBeDefined();
 		});

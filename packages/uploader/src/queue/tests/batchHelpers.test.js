@@ -70,7 +70,10 @@ describe("batchHelpers tests", () => {
 				},
 			});
 
-			const expectedBatch = queueState.getState().batches.b1.batch;
+			const expectedBatch = expect.objectContaining({
+				...queueState.getState().batches.b1.batch,
+				items: [queueState.getState().items.u1, queueState.getState().items.u2],
+			}) ;
 
 			batchHelpers.cleanUpFinishedBatch(queueState);
 

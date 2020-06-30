@@ -64,7 +64,7 @@ describe("retry tests", () => {
 		it.each([
 			UPLOADER_EVENTS.ITEM_ERROR,
 			UPLOADER_EVENTS.ITEM_ABORT,
-		])("should send all items to retry ", (itemEvent) => {
+		])("should send all items to retry - %s ", (itemEvent) => {
 
 			const { retry, trigger, uploader, retryState } = getTestRetry(itemEvent);
 
@@ -76,7 +76,7 @@ describe("retry tests", () => {
 			expect(result).toBe(true);
 
 			expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options });
-			expect(uploader.add).toHaveBeenCalledWith(items, options);
+			expect(uploader.add).toHaveBeenCalledWith(expectedItems, options);
 
 			const result2 = retry();
 			expect(result2).toBe(false);
@@ -88,14 +88,15 @@ describe("retry tests", () => {
 		it.each([
 			UPLOADER_EVENTS.ITEM_ERROR,
 			UPLOADER_EVENTS.ITEM_ABORT,
-		])("should send all items with options", (itemEvent) => {
-			const { retry, trigger, uploader, } = getTestRetry(itemEvent);
-			const options = { autoUpload: false };
+		])("should send all items with options for event: %s", (itemEvent) => {
+			const { retry, trigger, uploader, retryState } = getTestRetry(itemEvent);
+			const options = { autoUpload: false },
+				expectedItems = getItemsFromRetryState(items, retryState);
 
 			retry(null, options);
 
-			expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items, options });
-			expect(uploader.add).toHaveBeenCalledWith(items, options);
+			expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options });
+			expect(uploader.add).toHaveBeenCalledWith(expectedItems, options);
 		});
 	});
 
@@ -103,7 +104,7 @@ describe("retry tests", () => {
 		it.each([
 			UPLOADER_EVENTS.ITEM_ERROR,
 			UPLOADER_EVENTS.ITEM_ABORT,
-		])("should send requested item to retry", (itemEvent) => {
+		])("should send requested item to retry - %s", (itemEvent) => {
 			const { retry, trigger, uploader, retryState } = getTestRetry(itemEvent);
 			const options = { foo: "bar" };
 
@@ -117,7 +118,7 @@ describe("retry tests", () => {
 
 			expect(result).toBe(true);
 			expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options: expectedOptions });
-			expect(uploader.add).toHaveBeenCalledWith([items[2]], expectedOptions);
+			expect(uploader.add).toHaveBeenCalledWith(expectedItems, expectedOptions);
 
 			const result2 = retry("f-3", options);
 			expect(result2).toBe(false);
@@ -141,7 +142,7 @@ describe("retry tests", () => {
 				autoUpload: true,
 			};
 
-			const expectedItems =  getItemsFromRetryState([items[2], items[3]], retryState);
+			const expectedItems = getItemsFromRetryState([items[2], items[3]], retryState);
 
 			const result = retryBatch("b2", options);
 			expect(result).toBe(true);

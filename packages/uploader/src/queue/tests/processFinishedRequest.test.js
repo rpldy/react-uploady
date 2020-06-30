@@ -121,6 +121,8 @@ describe("onRequestFinished tests", () => {
 			},
 		});
 
+		const expectedItem = queueState.getState().items.u1;
+
 		await processFinishedRequest(queueState, [{
 			id: "u1",
 			info: {
@@ -131,11 +133,7 @@ describe("onRequestFinished tests", () => {
 
 		expect(cleanUpFinishedBatch).toHaveBeenCalledTimes(1);
 		expect(mockNext).toHaveBeenCalledTimes(1);
-		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, {
-			batchId: "b1",
-			state: FILE_STATES.FINISHED,
-			uploadResponse: { success: true },
-		});
+		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, expectedItem);
 
 		expect(queueState.updateState).toHaveBeenCalledTimes(2);
 		expect(queueState.getState().itemQueue).toHaveLength(1);
@@ -168,6 +166,7 @@ describe("onRequestFinished tests", () => {
 				id: "u1",
 				info: {
 					state,
+
 					response,
 				}
 			}], mockNext);

@@ -276,11 +276,10 @@ describe("batchHelpers tests", () => {
 			expect(updatedState.batches.b1).toBeUndefined();
 			expect(updatedState.batches.b2).toBeDefined();
 
-			expect(updatedState.itemQueue).toEqual(["u4"]);
+			expect(updatedState.itemQueue[0]).toEqual("u4");
+			expect(updatedState.itemQueue).toHaveLength(1);
 
-			expect(updatedState.items).toEqual({
-				"u4": { id: "u4", batchId: "b2" },
-			});
+			expect(Object.keys(updatedState.items)).toEqual(["u4"]);
 		});
     });
 
@@ -370,7 +369,10 @@ describe("batchHelpers tests", () => {
 			expect(queueState.trigger)
 				.toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expect.objectContaining({
 					...batch,
-					items: [{ test: 1 }, { test: 2 }]
+					items: [
+						queueState.getState().items.u1,
+						queueState.getState().items.u2,
+					]
 				}));
 		});
 	});

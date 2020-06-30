@@ -7,7 +7,7 @@ references:
   workspace_root: &workspace_root
                     /tmp/build
   node_version: &node_version
-    "10.15.2"
+    "12.16.2"
 
 commands:
   setup:

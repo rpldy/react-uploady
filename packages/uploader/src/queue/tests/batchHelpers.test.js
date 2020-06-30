@@ -73,10 +73,16 @@ describe("batchHelpers tests", () => {
 
 			expect(queueState.updateState).toHaveBeenCalledTimes(2);
 			expect(updatedState.batches.b1).toBeUndefined();
-			expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, {
+
+			const expectedBatch =  {
 				...batch,
 				items: [{}, {}]
-			});
+			};
+
+			console.log("!!!!!!!!", queueState.trigger.mock.calls[0][1].items[0]);
+
+
+			expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedBatch);
 			expect(updatedState.items.u1).toBeUndefined();
 			expect(updatedState.items.u2).toBeUndefined();
 		});

@@ -231,7 +231,7 @@ const PreviewsWithClear = () => {
 				previewComponentProps={getPreviewProps}
 				previewMethodsRef={previewMethodsRef}
 				onPreviewsChanged={onPreviewsChanged}
-				fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
+				fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"/>
 		</PreviewContainer>
 	</>;
 };
@@ -258,11 +258,11 @@ export const WithPreviewMethods = () => {
 const ImageCropWrapper = styled.div`
     position: relative;
     width: 100%;
-    min-height: 500px;
+    max-height: 500px;
 `;
 
 const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
-	const { id, url, updateRequest, requestData } = props;
+	const { id, url, isFallback, updateRequest, requestData } = props;
 	const imgRef = useRef(null);
 	const [finished, setFinished] = useState(false);
 	const [crop, setCrop] = useState(null);
@@ -286,25 +286,29 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 		imgRef.current = img;
 	}, []);
 
-	return <>
-		<ImageCropWrapper>
-			{requestData ? <ReactCrop
-				src={url}
-				onImageLoaded={onLoad}
-				crop={crop}
-				onChange={setCrop}
-				onComplete={setCrop}
-			/> : null}
-		</ImageCropWrapper>
-		<button style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
-				onClick={onUploadCrop}>
-			Upload Cropped
-		</button>
-		<button style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
-				onClick={onUploadCancel}>
-			Cancel
-		</button>
-	</>;
+	return isFallback ?
+		<PreviewContainer>
+			<img src={url} alt="fallback img"/>
+		</PreviewContainer> :
+		<>
+			<ImageCropWrapper>
+				{requestData ? <ReactCrop
+					src={url}
+					onImageLoaded={onLoad}
+					crop={crop}
+					onChange={setCrop}
+					onComplete={setCrop}
+				/> : null}
+			</ImageCropWrapper>
+			<button style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
+					onClick={onUploadCrop}>
+				Upload Cropped
+			</button>
+			<button style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
+					onClick={onUploadCancel}>
+				Cancel
+			</button>
+		</>;
 });
 
 export const WithCrop = () => {
@@ -323,7 +327,8 @@ export const WithCrop = () => {
 		</StyledUploadButton>
 
 		<UploadPreview
-			PreviewComponent={ItemPreviewWithCrop} />
+			PreviewComponent={ItemPreviewWithCrop}
+		/>
 	</Uploady>;
 };
 

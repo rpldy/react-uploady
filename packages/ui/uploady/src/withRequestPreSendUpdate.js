@@ -16,18 +16,22 @@ export default (Component: React$ComponentType<any>) => {
 		});
 
 		useEffect(() => {
-			const handleRequestPreSend = (requestData) =>
-				requestData.items.find((item) => item.id === id) &&
-				new Promise((resolve) => {
-					setUpdater(() => ({
-						update: (data) => {
-							//unregister handler so this instance doesnt continue listening unnecessarily
-							context.off(UPLOADER_EVENTS.REQUEST_PRE_SEND, handleRequestPreSend);
-							resolve(data);
-						},
-						data: requestData,
-					}));
-				});
+			const handleRequestPreSend = (requestData) => {
+				console.log("!!!!!!!!!! ", requestData);
+				return requestData.items.find((item) => item.id === id) &&
+					new Promise((resolve) => {
+						setUpdater(() => ({
+							update: (data) => {
+								//unregister handler so this instance doesnt continue listening unnecessarily
+								context.off(UPLOADER_EVENTS.REQUEST_PRE_SEND, handleRequestPreSend);
+								resolve(data);
+							},
+							data: requestData,
+						}));
+					});
+			};
+
+			console.log("############# RENDERING withRequest...", id);
 
 			if (id) {
 				context.on(UPLOADER_EVENTS.REQUEST_PRE_SEND, handleRequestPreSend);

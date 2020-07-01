@@ -93,6 +93,9 @@ export default (props: PreviewOptions): PreviewData => {
 	}, []);
 
     useBatchStartListener((batch: Batch) => {
+
+		console.log("################# usePreviews - batch started!");
+
         const items: BatchItem[] = previewOptions.loadFirstOnly ? batch.items.slice(0, 1) : batch.items;
 
         const previewsData = items

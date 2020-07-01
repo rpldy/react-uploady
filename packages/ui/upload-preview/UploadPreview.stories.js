@@ -258,12 +258,10 @@ export const WithPreviewMethods = () => {
 const ImageCropWrapper = styled.div`
     position: relative;
     width: 100%;
-    max-height: 500px;
 `;
 
 const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 	const { id, url, isFallback, updateRequest, requestData } = props;
-	const imgRef = useRef(null);
 	const [finished, setFinished] = useState(false);
 	const [crop, setCrop] = useState(null);
 
@@ -282,10 +280,6 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 		updateRequest(false);
 	}, [updateRequest]);
 
-	const onLoad = useCallback(img => {
-		imgRef.current = img;
-	}, []);
-
 	return isFallback ?
 		<PreviewContainer>
 			<img src={url} alt="fallback img"/>
@@ -294,7 +288,6 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 			<ImageCropWrapper>
 				{requestData ? <ReactCrop
 					src={url}
-					onImageLoaded={onLoad}
 					crop={crop}
 					onChange={setCrop}
 					onComplete={setCrop}

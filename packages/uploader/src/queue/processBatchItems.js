@@ -24,7 +24,6 @@ type ItemsSendData = {
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
 const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], options: CreateOptions): Promise<ItemsSendData> => {
-	console.log("####################### triggerPreSendUpdate", items);
 	// $FlowFixMe - https://github.com/facebook/flow/issues/8215
 	const updated: { items?: BatchItem[], options?: CreateOptions } = await triggerUpdater<BatchItem[], CreateOptions>(
 		queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, {

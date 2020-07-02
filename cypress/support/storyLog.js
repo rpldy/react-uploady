@@ -103,3 +103,7 @@ Cypress.Commands.add("assertLogPattern", { prevSubject: true }, (storyLog, patte
         }
     }
 });
+
+Cypress.Commands.add("resetStoryLog", {prevSubject: true}, (storyLog) => {
+	storyLog.splice(0, storyLog.length);
+});

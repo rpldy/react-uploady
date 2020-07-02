@@ -4,17 +4,15 @@ describe("Different Configuration", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadButton", "different-configuration");
+        cy.visitStory("uploadButton", "different-configuration", true);
     });
 
     it("should allow overriding upload options from button", () => {
-        cy.iframe("#storybook-preview-iframe").as("iframe");
-
         //test button with autoUpload = false
         uploadFile(fileName, () => {
             cy.wait(100);
             cy.storyLog().assertLogEntryCount(1);
-        }, "#upload-a");
+        }, "#upload-a", null);
 
         //test other button with custom destination header
         uploadFile(fileName, () => {
@@ -28,6 +26,6 @@ describe("Different Configuration", () => {
                     }
                 }
             });
-        }, "#upload-b");
+        }, "#upload-b", null);
     });
 });

@@ -22,6 +22,7 @@ describe("UploadPreview - Crop", () => {
 		}).as("uploadReq");
 
 		uploadFile(fileName, () => {
+			cy.wait(500);
 
 			cy.get("img.ReactCrop__image")
 				.should("be.visible");
@@ -45,6 +46,7 @@ describe("UploadPreview - Crop", () => {
 
 	it("should show crop and allow cancel", () => {
 		uploadFile(fileName, () => {
+			cy.wait(500);
 
 			cy.get("img.ReactCrop__image")
 				.should("be.visible");
@@ -69,6 +71,7 @@ describe("UploadPreview - Crop", () => {
 		}).as("uploadReq");
 
 		uploadFile(fileName, () => {
+			cy.wait(500);
 
 			cy.get("img.ReactCrop__image")
 				.should("be.visible");

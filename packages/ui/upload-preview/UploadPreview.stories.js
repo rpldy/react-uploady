@@ -11,7 +11,7 @@ import Uploady, {
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
-import UploadPreview from "./src";
+import UploadPreview, { PREVIEW_TYPES } from "./src";
 
 import {
     KNOB_GROUPS,
@@ -261,7 +261,7 @@ const ImageCropWrapper = styled.div`
 `;
 
 const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
-	const { id, url, isFallback, updateRequest, requestData } = props;
+	const { id, url, isFallback, type, updateRequest, requestData } = props;
 	const [finished, setFinished] = useState(false);
 	const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
 
@@ -282,7 +282,7 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 
 	const onUploadFull = useCallback(() => updateRequest(), [updateRequest]);
 
-	return isFallback ?
+	return isFallback || type !== PREVIEW_TYPES.IMAGE ?
 		<PreviewContainer>
 			<img src={url} alt="fallback img"/>
 		</PreviewContainer> :
@@ -327,6 +327,7 @@ export const WithCrop = () => {
 
 		<UploadPreview
 			PreviewComponent={ItemPreviewWithCrop}
+			fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
 		/>
 	</Uploady>;
 };

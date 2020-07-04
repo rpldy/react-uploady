@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.3.0
+
+### Features
+
+- `[uploady]` - withRequestPreSendUpdate HOC
+- `[uploader]` - made REQUEST_PRE_SEND event cancellable
+- `[upload-preview]` - exposed PREVIEW_TYPES  
+- `[upload-preview]` - added isFallback prop for preview component  
+- `all` - event data is unwrapped (un-proxied) before sent out with trigger
+
+### Bug fixes
+
+- `[shared]` - fix merge/clone mistreating arrays
+
+### Internal
+
+- `[simple-state]` - new package to handle internal state (uploader/retry/tus-sender)
+- `[e2e]` - added queue-retry spec
+
+### Docs
+
+- `guides` - Crop guide
+- `[storybook]` - added upload-preview with crop story
+- `[uploady]` - document withRequestPreSendUpdate 
+- `[simple-state]` - package readme
+- `internal packages` - added "internal" note 
+
 ## 0.2.4
 
 ### Features
@@ -14,7 +41,7 @@
 
 ### Docs
 
-- `[guides]` - Upload Queue guide
+- `guides` - Upload Queue guide
 - `[chunked-uploady]` - document chunk event hooks
 - `[chunked-sender]` - document chunk events
 
@@ -67,20 +94,16 @@ __Misc__
 
 - `[uploady]` - useItemFinalizeListener hook
 
-
 - `[chunked-sender]` - startByte send option
 - `[chunked-sender]` - createChunkedSender export
 - `[chunked-sender]` - CHUNK_START event  
 - `[chunked-sender]` - CHUNK_FINISH event (cancellable and update options)
 
-
 - `[safe-storage]` _NEW_ - safe (don't throw) versions of local and session storage
-
 
 - `[shared]` - generic (xhr) request export
 - `[shared]` - getMerge (undefinedOverwrites config) export
 - `[shared]` - pick helper export 
-
 
 - `[sender]` - sendWithFormData option
 
@@ -88,7 +111,6 @@ __Misc__
 ### Docs
 
 - `[chunked-sender]` - added options to README
-
 
 ## 0.1.12
 

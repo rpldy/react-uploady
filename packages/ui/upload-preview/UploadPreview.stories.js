@@ -11,7 +11,7 @@ import Uploady, {
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
-import UploadPreview from "./src";
+import UploadPreview, { PREVIEW_TYPES } from "./src";
 
 import {
     KNOB_GROUPS,
@@ -231,7 +231,7 @@ const PreviewsWithClear = () => {
 				previewComponentProps={getPreviewProps}
 				previewMethodsRef={previewMethodsRef}
 				onPreviewsChanged={onPreviewsChanged}
-				fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
+				fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"/>
 		</PreviewContainer>
 	</>;
 };
@@ -258,14 +258,12 @@ export const WithPreviewMethods = () => {
 const ImageCropWrapper = styled.div`
     position: relative;
     width: 100%;
-    min-height: 500px;
 `;
 
 const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
-	const { id, url, updateRequest, requestData } = props;
-	const imgRef = useRef(null);
+	const { id, url, isFallback, type, updateRequest, requestData } = props;
 	const [finished, setFinished] = useState(false);
-	const [crop, setCrop] = useState(null);
+	const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
 
 	useItemFinalizeListener(() =>{
 		setFinished(true);
@@ -282,29 +280,34 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 		updateRequest(false);
 	}, [updateRequest]);
 
-	const onLoad = useCallback(img => {
-		imgRef.current = img;
-	}, []);
+	const onUploadFull = useCallback(() => updateRequest(), [updateRequest]);
 
-	return <>
-		<ImageCropWrapper>
-			{requestData ? <ReactCrop
-				src={url}
-				onImageLoaded={onLoad}
-				crop={crop}
-				onChange={setCrop}
-				onComplete={setCrop}
-			/> : null}
-		</ImageCropWrapper>
-		<button style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
-				onClick={onUploadCrop}>
-			Upload Cropped
-		</button>
-		<button style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
-				onClick={onUploadCancel}>
-			Cancel
-		</button>
-	</>;
+	return isFallback || type !== PREVIEW_TYPES.IMAGE ?
+		<PreviewContainer>
+			<img src={url} alt="fallback img"/>
+		</PreviewContainer> :
+		<>
+			<ImageCropWrapper>
+				{requestData ? <ReactCrop
+					src={url}
+					crop={crop}
+					onChange={setCrop}
+					onComplete={setCrop}
+				/> : null}
+			</ImageCropWrapper>
+			<button id="crop-btn" style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
+					onClick={onUploadCrop}>
+				Upload Cropped
+			</button>
+			<button id="full-btn" style={{ display: !finished && updateRequest ? "block" : "none" }}
+					onClick={updateRequest}>
+				Upload without Crop
+			</button>
+			<button id="cancel-btn" style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
+					onClick={onUploadCancel}>
+				Cancel
+			</button>
+		</>;
 });
 
 export const WithCrop = () => {
@@ -323,7 +326,9 @@ export const WithCrop = () => {
 		</StyledUploadButton>
 
 		<UploadPreview
-			PreviewComponent={ItemPreviewWithCrop} />
+			PreviewComponent={ItemPreviewWithCrop}
+			fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+		/>
 	</Uploady>;
 };
 

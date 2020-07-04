@@ -11,11 +11,71 @@ _upload-preview_ allows us to use a custom preview component and _withRequestPre
 Use of upload-preview isn't mandatory of course. It's simply makes it easier as it loads a preview of the uploaded image for us.
 It also provides the batch item id which is needed for _withRequestPreSendUpdate_.
 
-First we define our preview with crop component:
+## Code
+
+First we define our preview with crop component, wrapping it with _withRequestPreSendUpdate_.
+We use [react-image-crop](https://www.npmjs.com/package/react-image-crop) for the cropping functionality.
 
 ```javascript
+import React, { useState, useCallback } from "react";
+import ReactCrop from "react-image-crop";
+import { withRequestPreSendUpdate } from "@rpldy/uploady";
+import { PREVIEW_TYPES } from "@rpldy/upload-preview";
+import cropImage from "./my-fancy-canvas-cropper";
 
+const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
+	const { url, isFallback, updateRequest, requestData } = props;
+	const [crop, setCrop] = useState(null);
 
+	const onUploadCrop = useCallback(async() => {
+		if (updateRequest && (crop?.height || crop?.width)) {
+			requestData.items[0].file = await cropImage(url, requestData.items[0].file, crop);;
+			updateRequest({ items: requestData.items });
+		}
+	}, [url, requestData, updateRequest, crop]);
 
+	return isFallback || type !== PREVIEW_TYPES.IMAGE ?
+		<img src={url} alt="fallback img"/> :
+		<>			
+            {requestData ? <ReactCrop
+                src={url}                
+                crop={crop}
+                onChange={setCrop}
+                onComplete={setCrop}
+            /> : null}		
+			<button style={{ display: updateRequest && crop ? "block" : "none" }}
+					onClick={onUploadCrop}>
+				Upload Cropped
+			</button>
+		</>;
+});
 
+```
+
+* Note that when a fallback image is used (ex: when uploading non-image) then we only show the fallback, without crop.
+
+Then we define our "app" with Uploady, an UploadButton and UploadPreview.
+We use our own _ItemPreviewWithCrop_ as the PreviewComponent instead of the default one _UploadPreview_ provides.
+  
+```javascript
+import React from "react";
+import Uploady from "@rpldy/uploady";
+import UploadButton from "@rpldy/upload-button";
+import UploadPreview from "@rpldy/upload-preview";
+
+export const App = () => {
+	return <Uploady
+		multiple={false}
+		destination={{url: "my-server.com/upload"}}>
+
+		<UploadButton/>
+
+		<UploadPreview
+			rememberPreviousBatches
+			PreviewComponent={ItemPreviewWithCrop}
+            fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+        />
+		
+	</Uploady>;
+};
 ```   

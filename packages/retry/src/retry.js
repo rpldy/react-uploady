@@ -1,5 +1,6 @@
 // @flow
-import { logger, getUpdateable } from "@rpldy/shared";
+import { logger } from "@rpldy/shared";
+import createState, { unwrap } from "@rpldy/simple-state";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { RETRY_EXT, RETRY_EVENT } from "./consts";
 
@@ -36,7 +37,7 @@ const uploadFailedIds = (uploader: UploaderType, retryState: RetryState, trigger
 			autoUpload: typeof options?.autoUpload !== "undefined" ? options.autoUpload : true,
 		};
 
-		trigger(RETRY_EVENT, { items: uploads, options });
+		trigger(RETRY_EVENT, { items: unwrap(uploads), options });
 		ids.forEach((id) => removeItemFromState(retryState, id));
 		uploader.add(uploads, options);
 	}
@@ -74,7 +75,7 @@ const retryBatch = (uploader: UploaderType, retryState: RetryState, trigger: Tri
 };
 
 const createRetryState = (): RetryState => {
-    const { state, update } = getUpdateable<State>({
+    const { state, update } = createState<State>({
         batchIdsMap: {},
         failed: {},
     });

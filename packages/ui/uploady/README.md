@@ -306,6 +306,7 @@ Called in case [abortBatch](#abortBatch) was called
 ### useItemStartListener (event hook)
 
 Called when item starts uploading (just before)
+For grouped uploads (multiple files in same xhr request) ITEM_START is triggered for each item separately
 
 > This event is _[cancellable](../../uploader/README.md#cancellable-events)_
 
@@ -447,6 +448,8 @@ Handler receives the item(s) in the group and the upload options that were used.
 The handler can change data inside the items and in the options by returning different data than received.
 See simple example below or this more detailed [guide](../../../guides/DynamicParameters.md).
 
+> This event is _[cancellable](../../uploader/README.md#cancellable-events)_
+
 ```javascript
     import { useRequestPreSend } from "@rpldy/uploady";
 
@@ -533,10 +536,8 @@ The way you pass in your own input element is by using this hook.
 In case Uploady wasn't provided with a destination prop or if it doesn't have a URL property, 
 Uploady will check whether the input resides in a form. It will then use the form's action and method to set the upload endpoint and method.
  
- 
 > In case the form's attributes were used for the upload destination, updating the form's attributes dynamically won't affect the uploader configuration once it was set.
  
-
 ```javascript
 import Uploady, { useFileInput } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
@@ -563,3 +564,60 @@ export const WithCustomFileInputAndForm = () => {
 };
 
 ```
+
+### withRequestPreSendUpdate
+
+HOC to enable components to interact with the upload data and options just-in-time before the request is sent.
+This is a hatch point to introduce custom logic that may affect the upload data.
+
+A good example use-case for this is applying [crop](../../../guides/Crop.md) to selected image before it is uploaded.
+
+When rendering the result of the HOC, the id of the batch item to handle must be in the props. 
+This to ensure the HOC only re-renders for a specific item and not for all.
+
+```javascript
+    import React, { useState, useCallback } from "react";
+    import Cropper from "react-easy-crop";
+	import Uploady, { withRequestPreSendUpdate } from "@rpldy/uploady";
+    import cropImage from "./my-image-crop-code";
+
+    const ItemCrop = withRequestPreSendUpdate((props) => {
+        const [crop, setCrop] = useState({ x: 0, y: 0 });
+        const [cropPixels, setCropPixels] = useState(null);
+        const { url, updateRequest, requestData } = props;
+         
+        const onUploadCrop = useCallback(async() => {
+            if (updateRequest && cropPixels) {
+                //replace the file data with the cropped result
+                requestData.items[0].file = await cropImage(url, requestData.items[0].file, cropPixels);
+                //resume the upload flow with the updated file data			    
+                updateRequest({ items: requestData.items });
+            }
+        }, [url, requestData, updateRequest, cropPixels]);
+    
+        const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+            setCropPixels(croppedAreaPixels);
+        }, []);
+
+        return <>            
+            <Cropper
+                image={url}
+                crop={crop}
+                onCropChange={setCrop}
+                onCropComplete={onCropComplete}
+            />           
+            <button style={{ display: updateRequest && cropPixels ? "block" : "none" }}
+                    onClick={onUploadCrop}>
+                Upload Cropped
+            </button>
+        </>;
+    });
+
+    const MyApp = () => {
+        return <Uploady destination={{url: "my-server.com/upload"}}>
+            <ItemCrop id="batch-item-1" />
+        </Uploady>
+    }
+```
+
+See the [Crop Guide](../../../guides/Crop.md) for a full example.

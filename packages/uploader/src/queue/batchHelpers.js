@@ -1,5 +1,6 @@
 // @flow
 import { BATCH_STATES, logger } from "@rpldy/shared";
+import { unwrap } from "@rpldy/simple-state";
 import { UPLOADER_EVENTS } from "../consts";
 
 import type { BatchData, QueueState, State } from "./types";
@@ -113,10 +114,12 @@ const triggerUploaderBatchEvent = (queue: QueueState, batchId: string, event: st
         batch = getBatchFromState(state, batchId), //get the most uptodate batch data
         stateItems = state.items;
 
-    queue.trigger(event, {
-        ...batch,
-        items: batch.items.map(({ id }: BatchItem) => stateItems[id]),
-    });
+    const eventBatch = {
+		...unwrap(batch),
+		items: batch.items.map(({ id }: BatchItem) => unwrap(stateItems[id])),
+	};
+
+    queue.trigger(event, eventBatch);
 };
 
 const getIsItemBatchReady = (queue: QueueState, itemId: string): boolean => {

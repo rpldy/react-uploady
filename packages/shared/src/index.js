@@ -29,6 +29,7 @@ export {
 
 export {
     isFunction,
+	isPlainObject,
     isSamePropInArrays,
     devFreeze,
 
@@ -36,7 +37,6 @@ export {
     getMerge,
 
     clone,
-    getUpdateable,
     pick,
 } from "./utils";
 

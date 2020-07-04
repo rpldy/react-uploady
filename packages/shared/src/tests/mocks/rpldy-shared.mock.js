@@ -1,7 +1,6 @@
 import { FILE_STATES, BATCH_STATES } from "../../consts";
 import merge, { getMerge } from "../../utils/merge";
 import clone from "../../utils/clone";
-import getUpdateable from "../../utils/updateable";
 import pick from "../../utils/pick";
 
 const invariant = jest.fn();
@@ -25,8 +24,6 @@ utils.merge.mockImplementation((...args) => merge(...args));
 utils.getMerge.mockImplementation((...args) => getMerge(...args));
 //keep clone working - dont mock it
 utils.clone.mockImplementation((...args) => clone(...args));
-//keep updateable working - dont mock it
-utils.getUpdateable.mockImplementation((...args) => getUpdateable(...args));
 //keep pick working - dont mock it
 utils.pick.mockImplementation((...args) => pick(...args));
 

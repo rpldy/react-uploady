@@ -5,7 +5,8 @@ import {
     UmdBundleScript,
     localDestination,
     UMD_NAMES,
-    addActionLogEnhancer, useStoryUploadySetup
+    addActionLogEnhancer,
+	useStoryUploadySetup
 } from "../../../story-helpers";
 import Uploady, { UploadyContext } from "./src";
 

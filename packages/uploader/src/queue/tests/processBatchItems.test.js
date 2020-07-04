@@ -8,7 +8,7 @@ import processBatchItems from "../processBatchItems";
 import processFinishedRequest from "../processFinishedRequest";
 import { UPLOADER_EVENTS } from "../../consts";
 
-jest.mock("../processFinishedRequest", () => jest.fn());
+jest.mock("../processFinishedRequest"); //, () => jest.fn());
 
 describe("processBatchItems tests", () => {
     const mockNext = jest.fn();
@@ -103,8 +103,7 @@ describe("processBatchItems tests", () => {
         expect(queueState.getState().aborts.u2).toBe(sendResult.abort);
     });
 
-    it("should throw in case update returns different array length", async () => {
-
+    it("should throw in case REQUEST_PRE_SEND update returns different array length", async () => {
         const queueState = getQueueState(getMockStateData());
 
         queueState.cancellable
@@ -117,7 +116,7 @@ describe("processBatchItems tests", () => {
             .toThrow("REQUEST_PRE_SEND event handlers must return same items with same ids");
     });
 
-    it("should throw in case update returns different item ids", async () => {
+    it("should throw in case REQUEST_PRE_SEND update returns different item ids", async () => {
         const queueState = getQueueState(getMockStateData());
 
         queueState.cancellable
@@ -132,7 +131,7 @@ describe("processBatchItems tests", () => {
             .toThrow("REQUEST_PRE_SEND event handlers must return same items with same ids");
     });
 
-    it("should update items before sending", async () => {
+    it("REQUEST_PRE_SEND should update items before sending", async () => {
 
         const queueState = getQueueState(getMockStateData());
 
@@ -144,11 +143,8 @@ describe("processBatchItems tests", () => {
 
         mockUtils.isSamePropInArrays.mockReturnValueOnce(true);
 
-        const newItems = [{ id: "u1", batchId: "b1", newProp: 111 }, {
-            id: "u2",
-            batchId: "b1",
-            foo: "bar"
-        }];
+        const newItems = [{ id: "u1", batchId: "b1", newProp: 111 },
+			{ id: "u2", batchId: "b2", foo: "bar" }];
 
         const newOptions = {
             test: true,
@@ -163,7 +159,7 @@ describe("processBatchItems tests", () => {
 
         expect(triggerUpdater).toHaveBeenCalledWith(
             queueState.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, {
-                items: Object.values(queueState.state.items),
+                items: Object.values(getMockStateData().items), //Object.values(queueState.state.items),
                 options: batchOptions,
             });
 
@@ -174,9 +170,11 @@ describe("processBatchItems tests", () => {
                 ...batchOptions,
                 ...newOptions
             });
+
+        expect(Object.values(queueState.getState().items)).toEqual(newItems);
     });
 
-    it("should update options without items", async () => {
+    it("REQUEST_PRE_SEND should update options without items", async () => {
         const queueState = getQueueState(getMockStateData());
 
         queueState.cancellable
@@ -209,9 +207,14 @@ describe("processBatchItems tests", () => {
                 ...batchOptions,
                 ...newOptions
             });
+
+        expect(queueState.getState().batches["b1"].batchOptions).toEqual({
+			...batchOptions,
+			...newOptions
+		});
     });
 
-    it("should update items without options", async () => {
+    it("REQUEST_PRE_SEND should update items without options", async () => {
         const queueState = getQueueState(getMockStateData());
 
         queueState.cancellable
@@ -236,14 +239,16 @@ describe("processBatchItems tests", () => {
 
         expect(triggerUpdater).toHaveBeenCalledWith(
             queueState.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, {
-                items: Object.values(queueState.state.items),
-                options: batchOptions,
+                items: Object.values(getMockStateData().items),
+				options: batchOptions,
             });
 
         expect(queueState.sender.send).toHaveBeenCalledWith(
             Object.values(newItems),
             queueState.state.batches["b1"].batch,
             batchOptions);
+
+		expect(Object.values(queueState.getState().items)).toEqual(newItems);
     });
 
     it("should report cancelled items", async () => {
@@ -309,4 +314,24 @@ describe("processBatchItems tests", () => {
         expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
         expect(queueState.getState().aborts.u2).toBeUndefined();
     });
+
+	it("should allow REQUEST_PRE_SEND to cancel", async() => {
+		const queueState = getQueueState(getMockStateData());
+
+		triggerUpdater.mockResolvedValueOnce(false);
+
+		queueState.cancellable
+			.mockResolvedValueOnce(false)
+			.mockResolvedValueOnce(false);
+
+		await processBatchItems(queueState, ["u1", "u2"], mockNext);
+
+		expect(Object.values(queueState.getState().items))
+			.toEqual(Object.values(getMockStateData().items));
+
+		expect(queueState.getState().batches["b1"].batchOptions)
+			.toEqual(getMockStateData().batches["b1"].batchOptions);
+
+		expect(queueState.sender.send).not.toHaveBeenCalled();
+	});
 });

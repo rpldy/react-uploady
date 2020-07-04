@@ -12,6 +12,8 @@
    
 # Safe Storage
 
+> Internal package 
+
 provides safe versions of localStorage and sessionStorage that don't throw because
 of browser issues like safari in private mode.
 

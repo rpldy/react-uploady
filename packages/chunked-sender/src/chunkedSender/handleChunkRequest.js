@@ -1,5 +1,6 @@
 // @flow
 import { FILE_STATES, logger, pick } from "@rpldy/shared";
+import { unwrap } from "@rpldy/simple-state";
 import { CHUNK_EVENTS } from "../consts";
 
 import type { BatchItem } from "@rpldy/shared";
@@ -27,7 +28,7 @@ export default async (state: State, item: BatchItem, chunkId: string, chunkSendR
 
 			trigger(CHUNK_EVENTS.CHUNK_FINISH, {
                 chunk: pick(spliced[0], ["id", "start", "end", "index", "attempt"]),
-                item,
+                item: unwrap(item),
                 uploadData: result,
             });
 		} else if (result.state !== FILE_STATES.ABORTED) {

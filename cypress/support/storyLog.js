@@ -18,9 +18,11 @@ const isContains = (a, b) => {
 };
 
 Cypress.Commands.add("storyLog", () =>
-    cy.window().then((w) => {
-        return w.__cypressResults.storyLog;
-    }));
+	(window.parent.__cypressResults ?
+		cy.wrap(window.parent) : cy.window())
+		.then((w) => {
+			return w.__cypressResults.storyLog;
+		}));
 
 const assertStartFinish = (storyLog, startIndex, prop, value) => {
     expect(storyLog[startIndex].args[0]).to.equal("ITEM_START");
@@ -100,4 +102,8 @@ Cypress.Commands.add("assertLogPattern", { prevSubject: true }, (storyLog, patte
             expect(found, "expect pattern matches to all be different").to.be.undefined
         }
     }
+});
+
+Cypress.Commands.add("resetStoryLog", {prevSubject: true}, (storyLog) => {
+	storyLog.splice(0, storyLog.length);
 });

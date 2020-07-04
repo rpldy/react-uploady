@@ -6,6 +6,7 @@ import {
     logger,
     getMerge
 } from "@rpldy/shared";
+import { unwrap } from "@rpldy/simple-state";
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 
@@ -16,22 +17,26 @@ import type { QueueState, ProcessNextMethod } from "./types";
 
 type ItemsSendData = {
     items: BatchItem[],
-    options: CreateOptions
-}
+    options: CreateOptions,
+	cancelled?: boolean,
+};
 
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
 const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], options: CreateOptions): Promise<ItemsSendData> => {
-    // $FlowFixMe - https://github.com/facebook/flow/issues/8215
-    const updated: {items?: BatchItem[], options?: CreateOptions } = await triggerUpdater<BatchItem[], CreateOptions>(
-        queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, { items, options });
+	// $FlowFixMe - https://github.com/facebook/flow/issues/8215
+	const updated: { items?: BatchItem[], options?: CreateOptions } = await triggerUpdater<BatchItem[], CreateOptions>(
+		queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, {
+			items: items.map((i) => unwrap(i)),
+			options: unwrap(options),
+		});
 
-    if (updated) {
+	if (updated) {
         logger.debugLog(`uploader.queue: REQUEST_PRE_SEND event returned updated items/options`, updated);
         if (updated.items) {
-            //can't change items count at this point. removing can be done by cancelling with UPLOADER_EVENTS.ITEM_START
+            //can't change items count at this point.
             if (updated.items.length !== items.length ||
-                !isSamePropInArrays(updated.items, items, ["id", "batchId"])) {
+                !isSamePropInArrays(updated.items, items, ["id", "batchId", "recycled"])) {
                 throw new Error(`REQUEST_PRE_SEND event handlers must return same items with same ids`);
             }
 
@@ -43,7 +48,7 @@ const triggerPreSendUpdate = async (queue: QueueState, items: BatchItem[], optio
         }
     }
 
-    return { items, options };
+    return { items, options, cancelled: (updated === false) };
 };
 
 const prepareAllowedItems = async (queue: QueueState, items: BatchItem[]): Promise<ItemsSendData> => {
@@ -53,9 +58,26 @@ const prepareAllowedItems = async (queue: QueueState, items: BatchItem[]): Promi
         state.activeIds = state.activeIds.concat(allowedIds);
     });
 
-    const options = queue.getState().batches[items[0].batchId].batchOptions;
+	const prepared = await triggerPreSendUpdate(queue, items,
+		queue.getState().batches[items[0].batchId].batchOptions);
 
-    return await triggerPreSendUpdate(queue, items, options);
+	if (!prepared.cancelled) {
+		//update potentially changed data back into queue state
+		queue.updateState((state) => {
+			prepared.items.forEach((i) => {
+				state.items[i.id] = i;
+			});
+
+			state.batches[items[0].batchId].batchOptions = prepared.options;
+		});
+
+		//use objects from internal state(proxies) - not objects from userland
+		const updatedState = queue.getState();
+		prepared.items = prepared.items.map((item) => updatedState.items[item.id]);
+		prepared.options = updatedState.batches[items[0].batchId].batchOptions;
+	}
+
+    return prepared;
 };
 
 const updateUploadingState = (queue: QueueState, items: BatchItem[], sendResult: SendResult) => {
@@ -96,7 +118,7 @@ const reportCancelledItems = (queue: QueueState, items: BatchItem[], cancelledRe
             info: { status: 0, state: FILE_STATES.CANCELLED, response: "cancel" },
         }));
 
-        processFinishedRequest(queue, finishedData, next); //report out info about cancelled items
+        processFinishedRequest(queue, finishedData, next); //report about cancelled items
     }
 
     return !!cancelledItemsIds.length;
@@ -109,12 +131,12 @@ const getAllowedItem = (id: string, queue: QueueState) =>
 //send group of items to be uploaded
 export default async (queue: QueueState, ids: string[], next: ProcessNextMethod) => {
     const state = queue.getState();
-    //multiple items can happen when grouping is allowed
+    //ids will have more than one when grouping is allowed
     let items: any[] = Object.values(state.items);
     items = items.filter((item: BatchItem) => !!~ids.indexOf(item.id));
 
-    //allow external code to cancel items
-    const cancelledResults = await Promise.all(items.map((i: BatchItem) =>
+    //allow user code cancel items from start event handler(s)
+    let cancelledResults = await Promise.all(items.map((i: BatchItem) =>
         queue.cancellable(UPLOADER_EVENTS.ITEM_START, i)));
 
     let allowedItems: BatchItem[] = cancelledResults
@@ -124,12 +146,18 @@ export default async (queue: QueueState, ids: string[], next: ProcessNextMethod)
 
     if (allowedItems.length) {
         const itemsSendData = await prepareAllowedItems(queue, allowedItems);
-        sendAllowedItems(queue, itemsSendData, next); //we dont need to wait for the response here
-    }
 
-    //if no cancelled we can go to process more items immediately (and not wait for upload responses)
-    if (!reportCancelledItems(queue, items, cancelledResults, next)) {
-        await next(queue); //when concurrent is allowed, we can go ahead and process more
-    }
+		if (itemsSendData.cancelled) {
+			cancelledResults = ids.map(() => true);
+		} else {
+			//we dont need to wait for the response here
+			sendAllowedItems(queue, itemsSendData, next);
+		}
+	}
+
+	//if no cancelled we can go to process more items immediately (and not wait for upload responses)
+	if (!reportCancelledItems(queue, items, cancelledResults, next)) {
+		await next(queue); //when concurrent is allowed, we can go ahead and process more
+	}
 };
 

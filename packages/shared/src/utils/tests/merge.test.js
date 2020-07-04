@@ -97,9 +97,21 @@ describe("merge (deep) tests", () => {
                 a: 2,
                 c: { back: true },
             });
+
+            expect(Array.isArray(a.b)).toBe(true);
         });
 
-        it("should merge multiple levels from multiple objects", () => {
+		it("should merge array from source", () => {
+
+			const a = {};
+			const b = {arr: [1,2,3]};
+
+			const result = merge(a, b);
+
+	 		expect(Array.isArray(result.arr)).toBe(true);
+		});
+
+		it("should merge multiple levels from multiple objects", () => {
 
             const a = {
                 lll: "aaaa",
@@ -308,6 +320,5 @@ describe("merge (deep) tests", () => {
                 }
             });
         });
-
     });
 });

@@ -22,4 +22,41 @@ describe("clone (deep) tests", () => {
         expect(result).toEqual(obj);
     });
 
+	it("should clone array", () => {
+
+		const arr = [1,2,3];
+		const arr2 = clone(arr);
+
+		expect(arr).not.toBe(arr2);
+
+		arr.push(4);
+		expect(arr2).toHaveLength(3);
+	});
+
+	it("should clone array with objects", () => {
+		const arr = [{name: "a"}, {name: "b"}];
+		const arr2 = clone(arr);
+
+		arr[1].name = "c";
+		expect(arr2[1].name).toBe("b");
+
+		arr2.push({name: "d"});
+		expect(arr).toHaveLength(2);
+		expect(arr2).toHaveLength(3);
+
+		arr2[1].test = true;
+		arr2[2].test = true;
+
+		expect(arr[1].test).toBeUndefined();
+		expect(arr2[1].test).toBe(true);
+		expect(arr2[2].test).toBe(true);
+	});
+
+	it("should do nothing for simple values ", () => {
+		const str = clone("test");
+		expect(str).toBe("test");
+
+		const num = clone(4);
+		expect(num).toBe(4);
+	});
 });

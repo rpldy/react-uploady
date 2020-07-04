@@ -5,6 +5,8 @@ export type MergeOptions = {
     undefinedOverwrites?: boolean,
 };
 
+export const isMergeObj = (obj: Object) => isPlainObject(obj) || Array.isArray(obj);
+
 const getMerge = (options: MergeOptions = {}) => {
    const merge = (target: Object, ...sources: Object[]) => {
         if (target && sources.length) {
@@ -15,12 +17,13 @@ const getMerge = (options: MergeOptions = {}) => {
                             const prop = source[key];
 
                             if (typeof prop !== "undefined" || options.undefinedOverwrites) {
-                                if (isPlainObject(prop)) {
-                                    //object - go deeper
-                                    if (!target[key] || !isPlainObject(target[key])) {
+								//object/array - go deeper
+                                if (isMergeObj(prop)) {
+                                    if (typeof target[key]  === "undefined" || !isPlainObject(target[key])) {
                                         //recreate target prop if doesnt exist or not an object
-                                        target[key] = {};
+                                        target[key] = Array.isArray(prop) ? [] : {};
                                     }
+
                                     merge(target[key], prop);
                                 } else {
                                     target[key] = prop;

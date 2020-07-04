@@ -565,6 +565,8 @@ export const WithCustomFileInputAndForm = () => {
 
 ```
 
+## HOCs
+
 ### withRequestPreSendUpdate
 
 HOC to enable components to interact with the upload data and options just-in-time before the request is sent.

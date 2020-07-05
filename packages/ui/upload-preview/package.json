@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.3.1",
   "name": "@rpldy/upload-preview",
   "description": "preview component to show image or video being uploaded",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -21,8 +21,8 @@
     "@rpldy/shared-ui": "^0.3.0"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^0.3.0",
-    "@rpldy/upload-url-input": "^0.3.0",
+    "@rpldy/upload-button": "^0.3.1",
+    "@rpldy/upload-url-input": "^0.3.1",
     "@storybook/addon-knobs": "^5.3.19",
     "flow-bin": "^0.126.1",
     "react-image-crop": "^8.6.4",

@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.3.1",
   "name": "@rpldy/upload-button",
   "description": "upload button component and asUploadButton HOC",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@rpldy/retry": "^0.3.0",
-    "@rpldy/uploady": "^0.3.0",
+    "@rpldy/uploady": "^0.3.1",
     "@storybook/addon-knobs": "^5.3.19",
     "flow-bin": "^0.126.1",
     "styled-components": "^5.1.1"

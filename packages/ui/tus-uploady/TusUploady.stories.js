@@ -20,12 +20,27 @@ const useTusStoryHelper = () => {
 	const resume = boolean("enable resume (storage)", true, KNOB_GROUPS.SETTINGS);
 	const ignoreModifiedDateInStorage = boolean("ignore modifiedDate in resume storage", false, KNOB_GROUPS.SETTINGS);
 	const sendDataOnCreate = boolean("send data on create", false, KNOB_GROUPS.SETTINGS);
+	const sendWithCustomHeader = boolean("send custom header", false, KNOB_GROUPS.SETTINGS);
 
-	return { ...setup, chunkSize, forgetOnSuccess, resume, ignoreModifiedDateInStorage, sendDataOnCreate };
+	return {
+		...setup,
+		chunkSize,
+		forgetOnSuccess,
+		resume,
+		ignoreModifiedDateInStorage,
+		sendDataOnCreate,
+		sendWithCustomHeader,
+	};
 };
 
 export const Simple = () => {
-	const { enhancer, destination, chunkSize, forgetOnSuccess, resume, ignoreModifiedDateInStorage, sendDataOnCreate } = useTusStoryHelper();
+	const storySetup = useTusStoryHelper();
+	let { destination } = storySetup;
+	const { enhancer, chunkSize, forgetOnSuccess, resume, ignoreModifiedDateInStorage, sendDataOnCreate, sendWithCustomHeader } = storySetup;
+
+	if (sendWithCustomHeader) {
+		destination = { ...destination, headers: { "x-test": "abcd" } };
+	}
 
 	return <TusUploady
 		debug

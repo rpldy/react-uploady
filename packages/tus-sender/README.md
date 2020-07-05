@@ -39,7 +39,7 @@ On top of the Core Protocol, Uploady supports the following extensions:
 - [Concatenation](https://tus.io/protocols/resumable-upload.html#concatenation) (concatenation)
 - [Creation Defer Length](https://tus.io/protocols/resumable-upload.html#upload-defer-length) (creation-defer-length)
 
-It also supports the __Upload-Metadata__ header and will turn the destination __params__ prop into the metadata key/value.
+It also supports the __Upload-Metadata__ header and will turn the destination/upload options __params__ prop into the metadata key/value.
 
 ## Options
 
@@ -62,6 +62,10 @@ It also supports the __Upload-Metadata__ header and will turn the destination __
 
 > When the chunked-sender parallel param is set to > 1, the Concatenation tus extension will be used.
 >It will send the chunks as different parallel requests that are finalized once done.
+
+> Params prop that is set on the Destination or upload options is serialized (encoded according to Tus protocol) and sent as the value of the Upload-Metadata header.
+
+> Custom headers set on the Destination will be sent (and override existing headers) with the Creation request      
 
 ## Feature Detection
 

@@ -60,7 +60,8 @@ export default (item: BatchItem, url: string, tusState: TusState, sendOptions: S
         "Upload-Defer-Length": options.deferLength ? 1 : undefined,
         "Upload-Length": !options.deferLength ? item.file.size : undefined,
         "Upload-Metadata": parallelIdentifier ? undefined : getUploadMetadata(sendOptions),
-		"Content-Type": options.sendDataOnCreate ? "application/offset+octet-stream" : undefined
+		"Content-Type": options.sendDataOnCreate ? "application/offset+octet-stream" : undefined,
+		...sendOptions.headers
     };
 
     let data = null;

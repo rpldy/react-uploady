@@ -92,4 +92,18 @@ describe("UploadPreview - Crop", () => {
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 		}, "#upload-btn", null);
 	});
+
+	it("should show fallback without crop", () => {
+
+		uploadFile(fileName, () => {
+			cy.wait(500);
+
+			cy.get("img.ReactCrop__image")
+				.should("not.exist");
+
+			cy.get("#fallback-preview")
+				.should("be.visible");
+
+		}, "#upload-btn", null, {mimeType: "application/pdf"});
+	});
 });

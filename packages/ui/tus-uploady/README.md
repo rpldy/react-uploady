@@ -41,6 +41,10 @@ See [Uploady documentation](../uploady#props) for detailed list of upload option
 
 > All of the [chunked-sender options](../../chunked-sender#options) are supported as well
 
+> Params prop that is set on the Destination or upload options is serialized (encoded according to Tus protocol) and sent as the value of the Upload-Metadata header.
+
+> Custom headers set on the Destination will be sent (and override existing headers) with the Creation request
+
 ## Installation
 
 ```shell

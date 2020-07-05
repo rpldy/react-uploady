@@ -4,7 +4,7 @@ describe("TusUploady - Simple", () => {
 	const fileName = "flower.jpg";
 
 	before(() => {
-		cy.visitStory("tusUploady", "simple&knob-destination_Upload Destination=url&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-upload url_Upload Destination=http://test.tus.com/upload&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true&knob-ignore modifiedDate in resume storage_Upload Settings=true");
+		cy.visitStory("tusUploady", "simple&knob-destination_Upload Destination=url&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-upload url_Upload Destination=http://test.tus.com/upload&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true&knob-ignore modifiedDate in resume storage_Upload Settings=true&knob-send custom header_Upload Settings=true");
 	});
 
 	it("should upload chunks using tus protocol", () => {
@@ -49,6 +49,9 @@ describe("TusUploady - Simple", () => {
 				.then((xhr) => {
 					expect(xhr.request.headers["Upload-Metadata"])
 						.to.eq("foo YmFy");
+
+					expect(xhr.request.headers["x-test"])
+						.to.eq("abcd");
 
 					expect(xhr.request.body).to.be.null;
 				});

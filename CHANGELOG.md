@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.1
+
+### Bug fixes
+
+- `[upload-preview]` - isFallback isnt passed to preview
+- `[tus-sender]` - include custom headers from destination
+
+### Docs
+
+- `[tus-sender]` - clarify params. explain headers override
+- `[tus-uploady]` - clarify params. explain headers override
+
 ## 0.3.0
 
 ### Features
@@ -7,7 +19,8 @@
 - `[uploady]` - withRequestPreSendUpdate HOC
 - `[uploader]` - made REQUEST_PRE_SEND event cancellable
 - `[upload-preview]` - exposed PREVIEW_TYPES  
-- `[upload-preview]` - added isFallback prop for preview component  
+- `[upload-preview]` - added isFallback prop for preview component
+- `[shared]` - batch items can be recycled (ex: retry)  
 - `all` - event data is unwrapped (un-proxied) before sent out with trigger
 
 ### Bug fixes
@@ -21,10 +34,10 @@
 
 ### Docs
 
-- `guides` - Crop guide
-- `[storybook]` - added upload-preview with crop story
 - `[uploady]` - document withRequestPreSendUpdate 
 - `[simple-state]` - package readme
+- `guides` - Crop guide
+- `storybook` - added upload-preview with crop story
 - `internal packages` - added "internal" note 
 
 ## 0.2.4
@@ -41,9 +54,9 @@
 
 ### Docs
 
-- `guides` - Upload Queue guide
 - `[chunked-uploady]` - document chunk event hooks
 - `[chunked-sender]` - document chunk events
+- `guides` - Upload Queue guide
 
 ## 0.2.3
 

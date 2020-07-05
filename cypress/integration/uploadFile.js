@@ -11,8 +11,10 @@ const uploadFile = (fileName, cb, button = "button", iframe = "@iframe", options
         .should("exist")
         .as("fInput");
 
+	const mimeType = options.mimeType || "image/jpeg";
+
     cy.fixture(fileName, "base64").then((fileContent) => {
-        let files = [{ fileContent, fileName, mimeType: "image/jpeg" }];
+        let files = [{ fileContent, fileName, mimeType  }];
 
         if (options.times) {
             files = files.concat(new Array(options.times - 1)
@@ -20,7 +22,7 @@ const uploadFile = (fileName, cb, button = "button", iframe = "@iframe", options
                 .map((f, i) => ({
                     fileContent,
                     fileName: fileName.replace(".", `${i+2}.`),
-                    mimeType: "image/jpeg",
+                    mimeType,
                 })));
         }
 

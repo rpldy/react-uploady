@@ -286,7 +286,7 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 
 	return isFallback || type !== PREVIEW_TYPES.IMAGE ?
 		<PreviewContainer>
-			<img src={url} alt="fallback img"/>
+			<img src={url} alt="fallback img" id="fallback-preview"/>
 		</PreviewContainer> :
 		<>
 			{requestData ? <StyledReactCrop

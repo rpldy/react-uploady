@@ -255,13 +255,14 @@ export const WithPreviewMethods = () => {
 	</Uploady>;
 };
 
-const ImageCropWrapper = styled.div`
-    position: relative;
-    width: 100%;
+const StyledReactCrop = styled(ReactCrop)`
+  width: 100%;
+  max-width: 900px;
+  height: 400px;
 `;
 
 const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
-	const { id, url, isFallback, type, updateRequest, requestData } = props;
+	const { id, url, isFallback, type, updateRequest, requestData, previewMethods } = props;
 	const [finished, setFinished] = useState(false);
 	const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
 
@@ -271,30 +272,29 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 
 	const onUploadCrop = useCallback(async() => {
 		if (updateRequest && (crop?.height || crop?.width)) {
-			requestData.items[0].file = await cropImage(url, requestData.items[0].file, crop);;
+			requestData.items[0].file = await cropImage(url, requestData.items[0].file, crop);
 			updateRequest({ items: requestData.items });
 		}
 	}, [url, requestData, updateRequest, crop]);
 
 	const onUploadCancel = useCallback(() => {
 		updateRequest(false);
-	}, [updateRequest]);
-
-	const onUploadFull = useCallback(() => updateRequest(), [updateRequest]);
+		if (previewMethods.current?.clear) {
+			previewMethods.current.clear();
+		}
+	}, [updateRequest, previewMethods]);
 
 	return isFallback || type !== PREVIEW_TYPES.IMAGE ?
 		<PreviewContainer>
 			<img src={url} alt="fallback img"/>
 		</PreviewContainer> :
 		<>
-			<ImageCropWrapper>
-				{requestData ? <ReactCrop
-					src={url}
-					crop={crop}
-					onChange={setCrop}
-					onComplete={setCrop}
-				/> : null}
-			</ImageCropWrapper>
+			{requestData ? <StyledReactCrop
+				src={url}
+				crop={crop}
+				onChange={setCrop}
+				onComplete={setCrop}
+			/> : null}
 			<button id="crop-btn" style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
 					onClick={onUploadCrop}>
 				Upload Cropped
@@ -312,6 +312,7 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 
 export const WithCrop = () => {
 	const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+	const previewMethodsRef = useRef();
 
 	return <Uploady
 		debug
@@ -327,6 +328,8 @@ export const WithCrop = () => {
 
 		<UploadPreview
 			PreviewComponent={ItemPreviewWithCrop}
+			previewComponentProps={{ previewMethods: previewMethodsRef }}
+			previewMethodsRef={previewMethodsRef}
 			fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
 		/>
 	</Uploady>;

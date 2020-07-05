@@ -53,7 +53,8 @@ describe("UploadPreview tests", () => {
     it("should render with PreviewComponent from props", () => {
 
         const PreviewComp = (props) => {
-            const { url, type, ...previewProps } = props;
+			// eslint-disable-next-line no-unused-vars
+            const { url, type, isFallback, ...previewProps } = props;
             return <article data-preview-type={type} {...previewProps}>
                 {url}
             </article>;
@@ -121,6 +122,23 @@ describe("UploadPreview tests", () => {
 		expect(onPreviewsChanged).toHaveBeenCalledWith(previews);
 
 		expect(methodsRef.current.clear).toBe("clear");
+	});
+
+	it("should provide isFallback to custom preview component", () => {
+
+		usePreviewsLoader.mockReturnValueOnce({previews: [{isFallback: true, url: "fallback.com"}]});
+
+		const PreviewComp = (props) => {
+			const { url, isFallback, ...previewProps } = props;
+			return <article data-fallback={isFallback} {...previewProps}>
+				{url}
+			</article>;
+		};
+
+		const wrapper = mount(<UploadPreview
+			PreviewComponent={PreviewComp}/>);
+
+		expect(wrapper.find("article")).toHaveProp("data-fallback", true);
 	});
 });
 

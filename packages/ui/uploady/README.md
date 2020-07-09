@@ -18,6 +18,8 @@
 * [Example](#example)
 * [Context](#context)
 * [Hooks](#hooks)
+* [HOCs](#hocs)
+
 </details>
 
 # Uploady

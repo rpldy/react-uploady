@@ -95,7 +95,10 @@ describe("createUpload tests", () => {
 			const item = { id: "bi1", file: { size: config.fileSize } };
 
 			const createResult = createUpload(item, url, state, {
-				params: config.metadata
+				params: config.metadata,
+				headers: {
+					"x-test": "abcd"
+				},
 			}, parallelId);
 
 			const location = "/test";
@@ -137,7 +140,8 @@ describe("createUpload tests", () => {
 					"Upload-Defer-Length": undefined,
 					"Upload-Length": 123,
 					"Upload-Metadata": undefined,
-					"Content-Type": undefined
+					"Content-Type": undefined,
+					"x-test": "abcd",
 				}
 			});
 
@@ -181,7 +185,8 @@ describe("createUpload tests", () => {
 					"Upload-Defer-Length": 1,
 					"Upload-Length": undefined,
 					"Upload-Metadata": undefined,
-					"Content-Type": undefined
+					"Content-Type": undefined,
+					"x-test": "abcd",
 				}
 			});
 
@@ -209,6 +214,7 @@ describe("createUpload tests", () => {
 					"Upload-Length": 123,
 					"Upload-Metadata": undefined,
 					"Content-Type": "application/offset+octet-stream",
+					"x-test": "abcd",
 				}
 			});
 
@@ -238,6 +244,7 @@ describe("createUpload tests", () => {
 					"Upload-Length": 123,
 					"Upload-Metadata": undefined,
 					"Content-Type": "application/offset+octet-stream",
+					"x-test": "abcd",
 				}
 			});
 
@@ -274,7 +281,8 @@ describe("createUpload tests", () => {
 					"Upload-Defer-Length": undefined,
 					"Upload-Length": 123,
 					"Upload-Metadata": "test MTIz",
-					"Content-Type": undefined
+					"Content-Type": undefined,
+					"x-test": "abcd",
 				}
 			});
 		});
@@ -292,7 +300,8 @@ describe("createUpload tests", () => {
 					"Upload-Defer-Length": undefined,
 					"Upload-Length": 123,
 					"Upload-Metadata": undefined,
-					"Content-Type": undefined
+					"Content-Type": undefined,
+					"x-test": "abcd",
 				}
 			});
 		});
@@ -329,7 +338,8 @@ describe("createUpload tests", () => {
 					"Upload-Defer-Length": undefined,
 					"Upload-Length": 1234,
 					"Upload-Metadata": undefined,
-					"Content-Type": "application/offset+octet-stream"
+					"Content-Type": "application/offset+octet-stream",
+					"x-test": "abcd",
 				}
 			});
 

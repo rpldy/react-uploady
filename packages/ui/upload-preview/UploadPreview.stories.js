@@ -272,19 +272,16 @@ const PreviewButtons = (props) => {
 	const { finished, crop, updateRequest, onUploadCancel, onUploadCrop } = props;
 
 	return <ButtonsWrapper>
-		<button
-			style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
-			onClick={onUploadCrop}>
+		<button id="crop-btn" style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
+				onClick={onUploadCrop}>
 			Upload Cropped
 		</button>
-		<button
-			style={{ display: !finished && updateRequest ? "block" : "none" }}
-			onClick={updateRequest}>
+		<button id="full-btn" style={{ display: !finished && updateRequest ? "block" : "none" }}
+				onClick={updateRequest}>
 			Upload without Crop
 		</button>
-		<button
-			style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
-			onClick={onUploadCancel}>
+		<button id="cancel-btn" style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
+				onClick={onUploadCancel}>
 			Cancel
 		</button>
 	</ButtonsWrapper>;

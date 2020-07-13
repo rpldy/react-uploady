@@ -8,7 +8,6 @@
     "bundle": "rimraf bundle; node scripts/bundle.js --validate --out bundle",
     "bundle:prod": "NODE_ENV=production yarn bundle",
     "bundle:serve": "http-server ./bundle -p 8009",
-    "bundle:serve:ci": "echo TMP BUILD DIR ------; ls /tmp/build -ll; echo DIR BUNDLE -------; ls /tmp/build/bundle -ll; http-server /tmp/build/bundle -p 8009",
     "build": "lerna exec --stream -- FORCE_COLOR=1 NODE_ENV=production yarn build;",
     "clean": "rimraf bundle; lerna exec --stream -- rimraf lib umd",
     "release": "yarn bootstrap; yarn clean; yarn build; yarn bundle:prod; yarn flow:copy; lerna publish",
@@ -76,7 +75,7 @@
     "babel-plugin-module-resolver": "^4.0.0",
     "bundlesize": "^0.18.0",
     "bytes": "^3.1.0",
-    "chalk": "^3.0.0",
+    "chalk": "^4.1.0",
     "codecov": "^3.6.5",
     "concurrently": "^5.1.0",
     "core-js": "^3.6.5",
@@ -94,7 +93,7 @@
     "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-react-hooks": "^4.0.4",
     "fast-glob": "^3.2.2",
-    "flow-bin": "^0.126.1",
+    "flow-bin": "^0.129.0",
     "flow-copy-source": "^2.0.9",
     "flow-mono-cli": "^1.5.0",
     "fs-extra": "^9.0.0",
@@ -102,13 +101,13 @@
     "husky": "^4.2.3",
     "jest": "^26.0.1",
     "jest-enzyme": "^7.1.2",
-    "jest-junit": "^10.0.0",
-    "jest-styled-components": "^6.3.3",
+    "jest-junit": "^11.0.1",
+    "jest-styled-components": "^7.0.2",
     "lerna": "^3.22.0",
     "license-webpack-plugin": "^2.1.4",
     "lodash": "^4.17.15",
     "pacote": "^11.1.4",
-    "rc-progress": "^2.5.2",
+    "rc-progress": "^3.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-icons": "^3.10.0",
@@ -122,7 +121,7 @@
     "styled-components": "^5.1.1",
     "typescript": "^3.9.5",
     "virtual-module-webpack-plugin": "^0.4.1",
-    "wait-on": "^4.0.2",
+    "wait-on": "^5.1.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-merge": "^4.2.2",
@@ -130,5 +129,8 @@
   },
   "optionalDependencies": {
     "fsevents": "^2.1.2"
+  },
+  "dependencies": {
+    "react-dnd-html5-backend": "^11.1.3"
   }
 }

@@ -18,10 +18,10 @@
   },
   "dependencies": {
     "@rpldy/shared": "^0.3.0",
-    "is-promise": "^2.1.0"
+    "is-promise": "^4.0.0"
   },
   "devDependencies": {
-    "flow-bin": "^0.126.1"
+    "flow-bin": "^0.129.0"
   },
   "publishConfig": {
     "access": "public"

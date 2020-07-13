@@ -30,7 +30,7 @@
     "@rpldy/retry": "^0.3.0",
     "@rpldy/uploady": "^0.3.1",
     "@storybook/addon-knobs": "^5.3.19",
-    "flow-bin": "^0.126.1",
+    "flow-bin": "^0.129.0",
     "styled-components": "^5.1.1"
   },
   "peerDependencies": {

@@ -261,6 +261,32 @@ const StyledReactCrop = styled(ReactCrop)`
   height: 400px;
 `;
 
+const ButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+const PreviewButtons = (props) => {
+	const { finished, crop, updateRequest, onUploadCancel, onUploadCrop } = props;
+
+	return <ButtonsWrapper>
+		<button id="crop-btn" style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
+				onClick={onUploadCrop}>
+			Upload Cropped
+		</button>
+		<button id="full-btn" style={{ display: !finished && updateRequest ? "block" : "none" }}
+				onClick={updateRequest}>
+			Upload without Crop
+		</button>
+		<button id="cancel-btn" style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
+				onClick={onUploadCancel}>
+			Cancel
+		</button>
+	</ButtonsWrapper>;
+};
+
 const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 	const { id, url, isFallback, type, updateRequest, requestData, previewMethods } = props;
 	const [finished, setFinished] = useState(false);
@@ -295,18 +321,14 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 				onChange={setCrop}
 				onComplete={setCrop}
 			/> : null}
-			<button id="crop-btn" style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
-					onClick={onUploadCrop}>
-				Upload Cropped
-			</button>
-			<button id="full-btn" style={{ display: !finished && updateRequest ? "block" : "none" }}
-					onClick={updateRequest}>
-				Upload without Crop
-			</button>
-			<button id="cancel-btn" style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
-					onClick={onUploadCancel}>
-				Cancel
-			</button>
+			<PreviewButtons
+				finished={finished}
+				crop={crop}
+				updateRequest={updateRequest}
+				onUploadCancel={onUploadCancel}
+				onUploadCrop={onUploadCrop}
+			/>
+			<p>{finished ? "FINISHED" : ""}</p>
 		</>;
 });
 

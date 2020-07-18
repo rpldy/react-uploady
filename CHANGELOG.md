@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2
+
+### Features
+
+- `[upload-drop-zone]` - UploadDropZone extraProps prop
+
 ## 0.3.1
 
 ### Bug fixes

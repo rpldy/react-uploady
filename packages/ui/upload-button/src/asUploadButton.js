@@ -12,7 +12,7 @@ export default (Component: ComponentType<any>) => {
         const { setRef: setButtonRef } = useWithForwardRef(ref);
         const { id, className, text, children, extraProps, ...uploadOptions } = props;
 
-        //using ref so inputOnClick can stay memoized
+        //using ref so onButtonClick can stay memoized
         const uploadOptionsRef = useRef<?UploadOptions>();
         uploadOptionsRef.current = uploadOptions;
 

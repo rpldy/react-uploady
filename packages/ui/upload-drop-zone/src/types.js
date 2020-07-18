@@ -10,5 +10,6 @@ export type UploadDropZoneProps =  {|
     onDragOverClassName?: string,
     dropHandler?: DropHandlerMethod,
     htmlDirContentParams?: Object,
+	extraProps?: Object,
     children?: React$Node,
 |};

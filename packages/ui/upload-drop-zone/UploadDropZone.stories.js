@@ -1,10 +1,11 @@
 // @flow
-import React, { useCallback, useContext, useMemo } from "react";
+import React, { forwardRef, useCallback, useContext, useMemo } from "react";
 import styled, { css } from "styled-components";
 import { withKnobs } from "@storybook/addon-knobs";
 import { DndProvider, useDrop } from "react-dnd";
 import Backend, { NativeTypes } from "react-dnd-html5-backend";
 import Uploady, { UploadyContext } from "@rpldy/uploady";
+import { asUploadButton } from "@rpldy/upload-button";
 import UploadDropZone from "./src";
 import {
     useStoryUploadySetup,
@@ -177,19 +178,55 @@ const ThirdPartyDropZoneContainer = () => {
 };
 
 export const WithThirdPartyDropZone = () => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
-    return <DndProvider backend={Backend}>
-        <Uploady debug
-                 multiple={multiple}
-                 destination={destination}
-                 enhancer={enhancer}
-                 grouped={grouped}
-                 maxGroupSize={groupSize}>
+	return <DndProvider backend={Backend}>
+		<Uploady debug
+				 multiple={multiple}
+				 destination={destination}
+				 enhancer={enhancer}
+				 grouped={grouped}
+				 maxGroupSize={groupSize}>
 
-            <ThirdPartyDropZoneContainer/>
-        </Uploady>
-    </DndProvider>;
+			<ThirdPartyDropZoneContainer/>
+		</Uploady>
+	</DndProvider>;
+};
+
+const MyClickableDropZone = forwardRef((props, ref) => {
+	const { onClick, ...buttonProps } = props;
+
+	const onZoneClick = useCallback((e) => {
+		if (onClick) {
+			onClick(e);
+		}
+	}, [onClick]);
+
+	return <StyledDropZone {...buttonProps}
+							ref={ref}
+						   onDragOverClassName="drag-over"
+						   extraProps={{ onClick: onZoneClick }}>
+		<div id="drag-text">Drag File(s) Here</div>
+		<div id="drop-text">Drop File(s) Here</div>
+	</StyledDropZone>
+});
+
+const DropZoneButton = asUploadButton(MyClickableDropZone);
+
+export const WithAsUploadButton = () => {
+	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+	return <Uploady debug
+					multiple={multiple}
+					destination={destination}
+					enhancer={enhancer}
+					grouped={grouped}
+					maxGroupSize={groupSize}>
+
+		<p>Drop zone and upload button in a single component!</p>
+
+		<DropZoneButton/>
+	</Uploady>
 };
 
 export default {

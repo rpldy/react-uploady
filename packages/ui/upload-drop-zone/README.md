@@ -42,6 +42,7 @@ Drop Zones can use different configuration overrides that supersede the options 
 | dropHandler         | [DropHandlerMethod](src/types.js#L4) | undefined | override default handler that returns the drop result (ex: files). May return a promise 
 | htmlDirContentParams | Object | undefined | will be passed as is to html-dir-content. See [docs](https://www.npmjs.com/package/html-dir-content#api)
 | children             | React.Node | undefined | child element(s) to render inside the container 
+| extraProps          | Object   | undefined | any other props to pass to the div component (with spread)
 
 In addition, most [UploadOptions](../../shared/src/types.js#L104) props can be passed to UploadDropZone.
 In order to override configuration passed to the parent Uploady component. 

@@ -31,6 +31,7 @@
   "devDependencies": {
     "@rpldy/shared": "^0.3.0",
     "@rpldy/uploady": "^0.3.1",
+    "@rpldy/upload-button": "^0.3.1",
     "@storybook/addon-knobs": "^5.3.19",
     "flow-bin": "^0.129.0",
     "react-dnd": "^11.1.3",

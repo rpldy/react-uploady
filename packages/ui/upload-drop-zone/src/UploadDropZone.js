@@ -13,6 +13,7 @@ const UploadDropZone = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
         const {
             className, id, children, onDragOverClassName, dropHandler,
             htmlDirContentParams,
+			extraProps,
             ...uploadOptions
         } = props;
 
@@ -66,7 +67,8 @@ const UploadDropZone = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
                     onDragOver={onDragOver}
                     onDrop={onDrop}
                     onDragLeave={onDragLeave}
-                    onDragEnd={onDragEnd}>
+                    onDragEnd={onDragEnd}
+					{...extraProps}>
             {children}
         </div>;
     });

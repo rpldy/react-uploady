@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0
+
+### Features
+
+- `[mock-sender]` - mock sender for testing purposes (moved out of sender)
+
+### Bug fixes
+
+- `[shared]` - getMerge with _withSymbols_
+- `[simple-state]` - unwrap with symbol props
+
 ## 0.3.2
 
 ### Features

@@ -27,18 +27,4 @@ export type SendMethod = (item: BatchItem[], url: string, options: SendOptions, 
 
 export const send: SendMethod;
 
-export interface MockOptions {
-    delay?: number;
-    fileSize?: number;
-    progressIntervals?: number[];
-    response?: any;
-}
-
-export type MockSender = {
-    update: (updated: MockOptions) => void;
-    send: SendMethod;
-};
-
-export const createMockSender: (option: MockOptions) => MockSender;
-
 export default send;

@@ -1,11 +1,3 @@
-// import { isPlainObject } from "@rpldy/shared";
-// import createState, { unwrap, isProxy } from "./createState";
-//
-// jest.mock("@rpldy/shared", () => ({
-// 	isPlainObject: jest.requireActual("@rpldy/shared").isPlainObject,
-// 	clone: jest.fn(),
-// }));
-
 describe("updateable tests", () => {
 	const env = process.env.NODE_ENV;
 	let clone, createState, unwrap, isProxy;
@@ -51,6 +43,7 @@ describe("updateable tests", () => {
 			jest.mock("@rpldy/shared", () => ({
 				isPlainObject: jest.requireActual("@rpldy/shared").isPlainObject,
 				clone: mockClone,
+				getMerge: () => {}
 			}));
 
 			const mdl = require("./createState");
@@ -197,127 +190,18 @@ describe("updateable tests", () => {
 		expect(state1.arr).toHaveLength(4);
 	}, true));
 
-	it("should unwrap to same object in production", createTest(() => {
-		process.env.NODE_ENV = "production";
+	it("should proxy object with symbol prop", createTest(() => {
+		const sym = Symbol.for("test-sym");
 
-		const initial = getInitial();
-		const { unwrap } = createState(initial);
-
-		const org = unwrap();
-		expect(org).toBe(initial);
-	}, true));
-
-	it("unwrap export should return same object in production", createTest(() => {
-
-		process.env.NODE_ENV = "production";
-
-		const { state } = createState(getInitial());
-
-		const children = unwrap(state.children);
-
-		expect(children).toBe(state.children);
-	}, true));
-
-	it("should unwrap entire state", createTest(() => {
-		const initial = getInitial();
-		const { update, unwrap } = createState(initial);
-
-		update((state) => {
-			state.more = {
-				items: [1, 2, 3]
-			};
+		const { state } = createState({
+			foo: "bar",
+			[sym]: true
 		});
 
-		const target = unwrap();
-
-		expect(target).toBe(initial);
-
-		target.more.test = 123;
-		expect(target.more.test).toBe(123);
-
-		expect(target.more.items).toEqual([1, 2, 3]);
-		target.more.items.push(4);
-		expect(target.more.items).toEqual([1, 2, 3, 4]);
-
-		target.test = {
-			foo: "bar"
-		};
-
-		target.test.foo = "car";
-		expect(target.test.foo).toBe("car");
-
-		expect(isProxy(target)).toBe(false);
-	}));
-
-	it("should unwrap entry", createTest(() => {
-		const initial = getInitial();
-		const { state, unwrap } = createState(initial);
-
-		clone.mockReturnValueOnce("clone");
-		const unwrapResult = unwrap(state);
-
-		expect(unwrapResult).toBe("clone");
-	}));
-
-	it("should do nothing for non-proxy", createTest(() => {
-		const obj = { test: true };
-		const result = unwrap(obj);
-		expect(result).toBe(obj);
-	}));
-
-	it("should re-proxy unwrapped object", createTest(() => {
-		const initial = getInitial();
-		const { state, update, unwrap } = createState(initial);
-
-		update((state) => {
-			state.more = {
-				items: [1, 2, 3]
-			};
-		});
-
-		const obj = unwrap();
-
-		obj.test = 123;
-
-		expect(state.test).toBe(123);
-		expect(obj.test).toBe(123);
-
-		const { state: state2, update: update2 } = createState(obj);
-
-		state2.more.items.push(4);
-		expect(state2.more.items).toHaveLength(3);
-
-		update2((state) => {
-			state.more.items.push(4);
-		});
-
-		expect(state2.more.items).toHaveLength(4);
-	}));
-
-	it("unwrap export should clone", createTest(() => {
-		const initial = getInitial();
-		const { state } = createState(initial);
-
-		clone.mockReturnValueOnce("clone");
-
-		const children = unwrap(state.children);
-		expect(children).toBe("clone");
-	}));
-
-	it("should work for exiting proxy", createTest(() => {
-		const { state } = createState(getInitial());
-		const { state: state2, update } = createState(state);
-
-		update((st) => {
-			st.children.push({ reproxy: true });
-		});
-
-		expect(state2.children).toHaveLength(3);
-		expect(state.children).toHaveLength(3);
+		expect(state[sym]).toBe(true);
 	}));
 
 	//TODO: uncomment when this is supported
-
 	// it("should work for existing prop proxy", createTest(() => {
 	// 	const { state: child } = createState(getInitial());
 	//
@@ -337,4 +221,145 @@ describe("updateable tests", () => {
 	//
 	// 	expect(parent.child.children).toHaveLength(3);
 	// }));
+
+	describe("unwrap tests", () => {
+		it("should unwrap to same object in production", createTest(() => {
+			process.env.NODE_ENV = "production";
+
+			const initial = getInitial();
+			const { unwrap } = createState(initial);
+
+			const org = unwrap();
+			expect(org).toBe(initial);
+		}, true));
+
+		it("unwrap export should return same object in production", createTest(() => {
+
+			process.env.NODE_ENV = "production";
+
+			const { state } = createState(getInitial());
+
+			const children = unwrap(state.children);
+
+			expect(children).toBe(state.children);
+		}, true));
+
+		it("should unwrap entire state", createTest(() => {
+			const initial = getInitial();
+			const { update, unwrap } = createState(initial);
+
+			update((state) => {
+				state.more = {
+					items: [1, 2, 3]
+				};
+			});
+
+			const target = unwrap();
+
+			expect(target).toBe(initial);
+
+			target.more.test = 123;
+			expect(target.more.test).toBe(123);
+
+			expect(target.more.items).toEqual([1, 2, 3]);
+			target.more.items.push(4);
+			expect(target.more.items).toEqual([1, 2, 3, 4]);
+
+			target.test = {
+				foo: "bar"
+			};
+
+			target.test.foo = "car";
+			expect(target.test.foo).toBe("car");
+
+			expect(isProxy(target)).toBe(false);
+		}));
+
+		it("should unwrap entry", createTest(() => {
+			const initial = getInitial();
+			const { state, unwrap } = createState(initial);
+
+			clone.mockReturnValueOnce("clone");
+			const unwrapResult = unwrap(state);
+
+			expect(unwrapResult).toBe("clone");
+		}));
+
+		it("should do nothing for non-proxy", createTest(() => {
+			const obj = { test: true };
+			const result = unwrap(obj);
+			expect(result).toBe(obj);
+		}));
+
+		it("should re-proxy unwrapped object", createTest(() => {
+			const initial = getInitial();
+			const { state, update, unwrap } = createState(initial);
+
+			update((state) => {
+				state.more = {
+					items: [1, 2, 3]
+				};
+			});
+
+			const obj = unwrap();
+
+			obj.test = 123;
+
+			expect(state.test).toBe(123);
+			expect(obj.test).toBe(123);
+
+			const { state: state2, update: update2 } = createState(obj);
+
+			state2.more.items.push(4);
+			expect(state2.more.items).toHaveLength(3);
+
+			update2((state) => {
+				state.more.items.push(4);
+			});
+
+			expect(state2.more.items).toHaveLength(4);
+		}));
+
+		it("unwrap export should clone", createTest(() => {
+			const initial = getInitial();
+			const { state } = createState(initial);
+
+			clone.mockReturnValueOnce("clone");
+
+			const children = unwrap(state.children);
+			expect(children).toBe("clone");
+		}));
+
+		it("should work for exiting proxy", createTest(() => {
+			const { state } = createState(getInitial());
+			const { state: state2, update } = createState(state);
+
+			update((st) => {
+				st.children.push({ reproxy: true });
+			});
+
+			expect(state2.children).toHaveLength(3);
+			expect(state.children).toHaveLength(3);
+		}));
+
+		it("should unwrap symbol props", createTest(() => {
+			const SYM = Symbol.for("test-sym");
+
+			const obj = {
+				foo: "bar",
+			};
+
+			Object.defineProperty(obj, SYM, {
+				value: true,
+				enumerable: true,
+				writable: true,
+			});
+
+			const { unwrap } = createState(obj);
+
+			const unwrapped = unwrap();
+
+			expect(unwrapped[SYM]).toBe(true);
+		}));
+	});
 });

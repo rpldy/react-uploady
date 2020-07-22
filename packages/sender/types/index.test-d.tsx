@@ -1,4 +1,4 @@
-import send, { createMockSender, OnProgress } from "./index";
+import send, { OnProgress } from "./index";
 import { createBatchItem } from "@rpldy/shared";
 
 const batchItem = createBatchItem({ name: "test.png", size: 123, type: "image", lastModified: 1234 }, "b1");
@@ -23,29 +23,6 @@ const testSend = async (): Promise<void> => {
     console.log(result.response);
 };
 
-const testMockSend =  async (): Promise<void> => {
-
-    const mockSender = createMockSender({
-        delay: 1100,
-        response: { test: true }
-    });
-
-    mockSender.update({
-        delay: 1200,
-        fileSize: 2222222,
-    });
-
-    const sendResult = mockSender.send([batchItem], "mocked", {
-        method: "PUT",
-        paramName: "bla"
-    }, onProgress);
-
-    const result = await sendResult.request;
-
-    console.log(result.response);
-};
-
 export {
     testSend,
-    testMockSend,
 };

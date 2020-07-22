@@ -127,9 +127,10 @@ After that, you can add additional packages as needed. See below for more detail
 * [@rpldy/tus-uploady](packages/ui/tus-uploady) - Wrapper for Uploady with support for tus(resumable) uploads  
 
 ### Senders
-* [@rpldy/sender](packages/sender) - XHR sender - Uploady's main file sender. Contains mock sender (for testing purposes)
+* [@rpldy/sender](packages/sender) - Uploady's main file sender (XHR)
 * [@rpldy/chunked-sender](packages/chunked-sender) - add chunked uploads support on top of the XHR Sender
 * [@rpldy/tus-sender](packages/tus-sender) - add TUS resumable upload support  
+* [@rpldy/mock-sender](packages/mock-sender) - use Mock sender for testing purposes 
 
 ### Extra
 * [@rpldy/retry](packages/retry) - Add support for retrying failed uploads

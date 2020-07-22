@@ -1,18 +1,18 @@
 // @flow
 import { logger, FILE_STATES } from "@rpldy/shared";
-import { MOCK_SENDER_TYPE } from "../consts";
+import { MOCK_SENDER_TYPE } from "./consts";
 import { MOCK_DEFAULTS } from "./defaults";
 
 import type { UploadData, BatchItem, } from "@rpldy/shared";
 
 import type {
-    MockOptions,
-    MandatoryMockOptions,
     SendResult,
     SendOptions,
     OnProgress,
     SenderProgressEvent,
-} from "../types";
+} from "@rpldy/sender";
+
+import type { MockOptions, MandatoryMockOptions, } from "./types";
 
 type MockResponse = {
 	time: number,
@@ -125,7 +125,6 @@ const processResponse = (request, options: MandatoryMockOptions): Promise<Upload
 };
 
 export default (options?: MockOptions) => {
-
 	let mockOptions: MandatoryMockOptions = { ...MOCK_DEFAULTS, ...options };
 
 	const update = (updated: MockOptions) => {

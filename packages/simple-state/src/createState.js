@@ -1,6 +1,8 @@
 // @flow
-import { isPlainObject, clone } from "@rpldy/shared";
+import { isPlainObject, clone, getMerge } from "@rpldy/shared";
 import type { SimpleState } from "./types";
+
+const mergeWithSymbols = getMerge({ withSymbols: true });
 
 const PROXY_SYM = Symbol.for("__rpldy-sstt-proxy__"),
 	STATE_SYM = Symbol.for("__rpldy-sstt-state__");
@@ -42,6 +44,8 @@ const deepUnWrap = (proxy: Object) => {
 	delete proxy[PROXY_SYM];
 
 	Object.keys(proxy)
+		.concat(Object.getOwnPropertySymbols(proxy)
+			.filter((sym) => sym !== STATE_SYM))
 		.forEach((key) => {
 			proxy[key] = proxy[key][PROXY_SYM] || proxy[key];
 		});
@@ -50,7 +54,7 @@ const deepUnWrap = (proxy: Object) => {
 };
 
 const unwrapEntry = (proxy: Object) =>
-	isProxy(proxy) ? clone(proxy) : proxy;
+	isProxy(proxy) ? clone(proxy, mergeWithSymbols) : proxy;
 
 const unwrapState = (proxy: Object) => {
 	delete proxy[STATE_SYM];
@@ -127,8 +131,10 @@ export default <T>(obj: Object): SimpleState<T> => {
 		return proxy;
 	};
 
-	const unwrap = (entry?: Object) =>
-		entry ? unwrapEntry(entry) :
+	const unwrap = (entry?: Object) => entry ?
+			//simply clone the provided object (if its a proxy)
+			unwrapEntry(entry) :
+			//unwrap entire proxy state
 			(isProxy(proxy) ? unwrapState(proxy) : proxy);
 
 	return {

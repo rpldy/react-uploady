@@ -321,4 +321,64 @@ describe("merge (deep) tests", () => {
             });
         });
     });
+
+	describe("withSymbols tests", () => {
+
+		it("should merge symbols when withSymbols = true", () => {
+
+			const sym1 = Symbol.for("test-sym1");
+			const sym2 = Symbol.for("test-sym2");
+
+			const obj = {
+				foo: "bar",
+			};
+
+			Object.defineProperty(obj, sym1, {
+				value: true
+			});
+
+			const obj2 = {
+				test: true,
+				more: {}
+			};
+
+			Object.defineProperty(obj2.more, sym2, {
+				value: "yes"
+			});
+
+
+			const result = getMerge({ withSymbols: true })({}, obj, obj2);
+
+			expect(result[sym1]).toBe(true);
+			expect(result.more[sym2]).toBe("yes");
+		});
+
+		it("should merge without symbols when withSymbols = false", () => {
+			const sym1 = Symbol.for("test-sym1");
+			const sym2 = Symbol.for("test-sym2");
+
+			const obj = {
+				foo: "bar",
+			};
+
+			Object.defineProperty(obj, sym1, {
+				value: true
+			});
+
+			const obj2 = {
+				test: true,
+				more: {}
+			};
+
+			Object.defineProperty(obj2.more, sym2, {
+				value: "yes"
+			});
+
+
+			const result = merge({}, obj, obj2);
+
+			expect(result[sym1]).toBeUndefined();
+			expect(result.more[sym2]).toBeUndefined();
+		});
+	});
 });

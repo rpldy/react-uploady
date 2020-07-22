@@ -6,13 +6,13 @@ import { MOCK_DEFAULTS } from "./defaults";
 import type { UploadData, BatchItem, } from "@rpldy/shared";
 
 import type {
-    MockOptions,
-    MandatoryMockOptions,
     SendResult,
     SendOptions,
     OnProgress,
     SenderProgressEvent,
 } from "@rpldy/sender";
+
+import type { MockOptions, MandatoryMockOptions, } from "./types";
 
 type MockResponse = {
 	time: number,

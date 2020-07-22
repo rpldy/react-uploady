@@ -1,6 +1,6 @@
 import { FILE_STATES } from "@rpldy/shared";
-import { MOCK_DEFAULTS } from "./defaults";
-import createMockSender from "./mockSender";
+import { MOCK_DEFAULTS } from "../defaults";
+import createMockSender from "../mockSender";
 
 describe("mockSender tests", () => {
 

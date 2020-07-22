@@ -35,6 +35,8 @@ export default (f: UploadInfo, batchId: string): BatchItem => {
 
 	Object.defineProperty(batchItem, BISYM, {
 		value: true,
+		//need writable to be able to keep prop when unwrapped from simple-state
+		writable: true,
 	});
 
 	if (typeof f === "object" && f[BISYM] === true) {

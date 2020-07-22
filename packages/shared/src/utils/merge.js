@@ -3,16 +3,24 @@ import isPlainObject from "./isPlainObject";
 
 export type MergeOptions = {
     undefinedOverwrites?: boolean,
+	withSymbols?: boolean,
 };
 
 export const isMergeObj = (obj: Object) => isPlainObject(obj) || Array.isArray(obj);
+
+const getKeys = (obj: Object, options: MergeOptions) => {
+	const keys = Object.keys(obj);
+	return options.withSymbols ?
+		keys.concat(Object.getOwnPropertySymbols(obj)) :
+		keys;
+};
 
 const getMerge = (options: MergeOptions = {}) => {
    const merge = (target: Object, ...sources: Object[]) => {
         if (target && sources.length) {
             sources.forEach((source) => {
                 if (source) {
-                    Object.keys(source)
+					getKeys(source, options)
                         .forEach((key) => {
                             const prop = source[key];
 

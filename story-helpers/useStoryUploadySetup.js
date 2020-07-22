@@ -1,7 +1,7 @@
 import { select, boolean, number, text, object } from "@storybook/addon-knobs";
 import { useMemo } from "react";
 import { composeEnhancers } from "@rpldy/uploady";
-import { createMockSender } from "@rpldy/sender";
+import { getMockSenderEnhancer } from "@rpldy/mock-sender";
 import { DESTINATION_TYPES, KNOB_GROUPS} from "./consts";
 import { actionLogEnhancer, isCypress } from "./uploadyStoryLogger";
 import { isProd } from "./helpers";
@@ -19,11 +19,7 @@ const DEV_DEST_OPTIONS = [
     DESTINATION_TYPES.local,
 ];
 
-const mockSenderEnhancer = (uploader) => {
-    const mockSender = createMockSender({ delay: 1000 });
-    uploader.update({ send: mockSender.send });
-    return uploader;
-};
+const mockSenderEnhancer = getMockSenderEnhancer({ delay: 1000 });
 
 export const mockDestination = () => ({
     destinationType: DESTINATION_TYPES.mock,

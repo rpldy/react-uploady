@@ -59,4 +59,12 @@ describe("clone (deep) tests", () => {
 		const num = clone(4);
 		expect(num).toBe(4);
 	});
+
+	it("should use merge fn", () => {
+		const merge = jest.fn();
+		const obj = { test: true };
+		clone(obj, merge);
+
+		expect(merge).toHaveBeenCalledWith({}, obj);
+	});
 });

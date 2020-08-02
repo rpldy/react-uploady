@@ -29,6 +29,6 @@
   "devDependencies": {
     "@rpldy/life-events": "^0.4.0",
     "@rpldy/uploader": "^0.4.0",
-    "flow-bin": "^0.129.0"
+    "flow-bin": "^0.130.0"
   }
 }

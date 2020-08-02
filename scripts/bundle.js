@@ -6,7 +6,7 @@ const path = require("path"),
     shell = require("shelljs"),
     bytes = require("bytes"),
     _ = require("lodash"),
-    wpMerge = require("webpack-merge"),
+    { merge: wpMerge } = require("webpack-merge"),
     { logger, getMatchingPackages } = require("./utils");
 
 //TODO: should be passed by options or found in root (dynamically)
@@ -171,7 +171,7 @@ const getWebpackConfig = (type, name, definition, repoPackages) => {
 
     return wpMerge(
         config.webpackConfig.base,
-        config.webpackConfig[process.env.NODE_ENV],
+        config.webpackConfig[process.env.NODE_ENV] || {},
         {
             entry: Array.isArray(definition.pkgs) ? {
                 [_.camelCase(name)]: entries
@@ -185,7 +185,7 @@ const getWebpackConfig = (type, name, definition, repoPackages) => {
                 // globalObject: "this",
             },
         },
-        _.isFunction(definition.config) ? definition.config(entries, isProduction, definition) : definition.config,
+        _.isFunction(definition.config) ? definition.config(entries, isProduction, definition) : (definition.config || {}),
     );
 }
 

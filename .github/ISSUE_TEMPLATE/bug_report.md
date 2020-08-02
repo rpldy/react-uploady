@@ -20,5 +20,9 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
+**Versions**
+Specify the versions of the @rpldy packages you're using. 
+Which browser this bug reproduces in.
+
 **Code**
 Please provide code sample or better yet, a link to a reproducing repository or best yet, codesandbox (fiddle, etc) where issue can be reproduced easily

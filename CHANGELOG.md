@@ -126,8 +126,8 @@ __Misc__
 
 - `[chunked-sender]` - startByte send option
 - `[chunked-sender]` - createChunkedSender export
-- `[chunked-sender]` - CHUNK_START event  
-- `[chunked-sender]` - CHUNK_FINISH event (cancellable and update options)
+- `[chunked-sender]` - CHUNK_START event  (cancellable and update options)
+- `[chunked-sender]` - CHUNK_FINISH event 
 
 - `[safe-storage]` _NEW_ - safe (don't throw) versions of local and session storage
 

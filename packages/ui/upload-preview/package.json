@@ -24,7 +24,7 @@
     "@rpldy/upload-button": "^0.4.0",
     "@rpldy/upload-url-input": "^0.4.0",
     "@storybook/addon-knobs": "^5.3.19",
-    "flow-bin": "^0.129.0",
+    "flow-bin": "^0.130.0",
     "react-image-crop": "^8.6.4",
     "styled-components": "^5.1.1"
   },

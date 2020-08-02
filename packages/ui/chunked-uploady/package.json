@@ -37,7 +37,7 @@
   "devDependencies": {
     "@rpldy/upload-button": "^0.4.0",
     "@storybook/addon-knobs": "^5.3.19",
-    "flow-bin": "^0.129.0"
+    "flow-bin": "^0.130.0"
   },
   "peerDependencies": {
     "react": ">=16.8.x"

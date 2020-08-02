@@ -17,7 +17,7 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "devDependencies": {
-    "flow-bin": "^0.129.0"
+    "flow-bin": "^0.130.0"
   },
   "dependencies": {
     "invariant": "^2.2.4",

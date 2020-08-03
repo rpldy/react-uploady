@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1
+
+### Bug fixes
+
+- `[simple-state]` - unwrap doesn't handle nullish props
+
 ## 0.4.0
 
 ### Features

@@ -47,7 +47,7 @@ const deepUnWrap = (proxy: Object) => {
 		.concat(Object.getOwnPropertySymbols(proxy)
 			.filter((sym) => sym !== STATE_SYM))
 		.forEach((key) => {
-			proxy[key] = proxy[key][PROXY_SYM] || proxy[key];
+            proxy[key] = proxy[key] && (proxy[key][PROXY_SYM] || proxy[key]);
 		});
 
 	return proxy;

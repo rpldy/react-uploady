@@ -5,7 +5,7 @@
     "devDependencies": {
         "cors": "^2.8.5",
         "express": "^4.17.1",
-        "express-fileupload": "^1.1.6",
+        "express-fileupload": "^1.1.9",
         "lodash": "^4.17.19",
         "tus-node-server": "^0.3.2"
     }

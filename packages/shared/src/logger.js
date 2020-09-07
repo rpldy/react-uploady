@@ -9,7 +9,7 @@ const isEnvDebug =  () =>
 const isDebugOn = () => {
 	if (typeof isDebug !== "boolean"){
 		isDebug = isEnvDebug() ||
-			!!~window.location.search.indexOf("rpldy_debug=true") ||
+            ("location" in window && !!~window.location.search.indexOf("rpldy_debug=true")) ||
 			window[DEBUG_LOG_KEY] === true;
 	}
 

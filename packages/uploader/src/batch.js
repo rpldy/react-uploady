@@ -1,6 +1,7 @@
 // @flow
 import { BATCH_STATES, createBatchItem } from "@rpldy/shared";
 import { DEFAULT_FILTER } from "./defaults";
+import { getIsFileList } from "./utils";
 
 import type {
     UploadInfo,
@@ -22,8 +23,7 @@ export default (files: UploadInfo | UploadInfo[], uploaderId: string, options: C
     bCounter += 1;
     const id = `batch-${bCounter}`;
 
-    //in case files list was created in a different context(window) need to check toString
-    const isFileList = files instanceof FileList || files.toString() === "[object FileList]";
+    const isFileList = getIsFileList(files);
 
     files = (Array.isArray(files) || isFileList) ? files : [files];
 

@@ -57,7 +57,7 @@ const Uploady = (props: UploadyProps) => {
     logger.setDebug(!!debug);
     logger.debugLog("@@@@@@ Uploady Rendering @@@@@@", props);
 
-    const container = inputFieldContainer || document.body;
+    const container = !customInput ? (inputFieldContainer || document.body) : null;
     const internalInputFieldRef = useRef<?HTMLInputElement>();
 
     const uploader = useUploader(uploadOptions, listeners);

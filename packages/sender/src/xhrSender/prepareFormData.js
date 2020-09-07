@@ -4,6 +4,24 @@ import { isFunction } from "@rpldy/shared";
 import type { BatchItem } from "@rpldy/shared";
 import type { SendOptions } from "../types";
 
+/**
+ * mimics FormData.set() when its not available (react-native)
+ * in case FormData.delete() isnt available, will append only (unlike set)
+ */
+const addToFormData = (fd, name, ...rest) => {
+    //rest = [value, fileName = undefined]
+    if (fd.set) {
+        // $FlowFixMe - ignore flow for not allowing FileLike here
+        fd.set(name, ...rest);
+    } else {
+        if (fd.delete) {
+            fd.delete(name);
+        }
+        // $FlowFixMe - ignore flow for not allowing FileLike here
+        fd.append(name, ...rest);
+    }
+};
+
 const getFormFileField = (fd: FormData, items: BatchItem[], options: SendOptions) => {
     const single = (items.length === 1);
 
@@ -14,10 +32,9 @@ const getFormFileField = (fd: FormData, items: BatchItem[], options: SendOptions
                 `${options.paramName}[${i}]`);
 
         if (item.file) {
-            // $FlowFixMe - ignore flow for not allowing FileLike here
-            fd.set(name, item.file, item.file.name);
+            addToFormData(fd, name, item.file, item.file.name);
         } else if (item.url) {
-            fd.set(name, item.url);
+            addToFormData(fd, name, item.url);
         }
     });
 };
@@ -29,7 +46,8 @@ export default (items: BatchItem[], options: SendOptions) => {
 
     if (options.params) {
         Object.entries(options.params)
-            .forEach(([key, val]: [string, any]) => fd.set(key, val));
+            .forEach(([key, val]: [string, any]) =>
+                addToFormData(fd, key, val));
     }
 
     return fd;

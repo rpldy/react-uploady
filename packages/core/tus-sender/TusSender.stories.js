@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { withKnobs } from "@storybook/addon-knobs";
 import { logger } from "@rpldy/shared";
 import createUploader, { composeEnhancers } from "@rpldy/uploader";
-import { useStoryUploadySetup, DESTINATION_TYPES } from "../../story-helpers";
+import { useStoryUploadySetup, DESTINATION_TYPES } from "../../../story-helpers";
 import getTusEnhancer from "./src";
 
 // $FlowFixMe - doesnt understand loading readme

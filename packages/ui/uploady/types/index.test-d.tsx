@@ -1,5 +1,7 @@
 import * as React from "react";
 import Uploady, {
+    NoDomUploady,
+    useUploadOptions,
     withRequestPreSendUpdate,
     WithRequestPreSendUpdateWrappedProps,
 } from "./index";
@@ -41,8 +43,22 @@ const testWithRequestPreSendUpdate = (): JSX.Element => {
     </div>;
 };
 
+const ListOfUploadOptions = () => {
+    const options = useUploadOptions();
+
+    return <ul>
+        {JSON.stringify(options)}
+    </ul>;
+};
+const testNoDomUploady = (): JSX.Element => {
+
+    return <NoDomUploady debug>
+        <ListOfUploadOptions/>
+    </NoDomUploady>;
+};
 
 export {
     testMyApp,
     testWithRequestPreSendUpdate,
+    testNoDomUploady,
 };

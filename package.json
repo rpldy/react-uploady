@@ -41,8 +41,9 @@
   },
   "private": true,
   "workspaces": [
-    "packages/*",
-    "packages/ui/*"
+    "packages/core/*",
+    "packages/ui/*",
+    "packages/native/*"
   ],
   "repository": {
     "type": "git",
@@ -60,7 +61,7 @@
     "@babel/preset-react": "^7.10.1",
     "@babel/runtime-corejs3": "^7.11.0",
     "@commitlint/cli": "^9.1.1",
-    "@commitlint/config-conventional": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.2",
     "@commitlint/config-lerna-scopes": "^9.1.1",
     "@storybook/addon-actions": "^5.3.19",
     "@storybook/addon-console": "^1.2.1",
@@ -105,7 +106,7 @@
     "jest-enzyme": "^7.1.2",
     "jest-junit": "^11.0.1",
     "jest-styled-components": "^7.0.2",
-    "lerna": "^3.22.0",
+    "lerna": "^3.22.1",
     "license-webpack-plugin": "^2.1.4",
     "lodash": "^4.17.15",
     "pacote": "^11.1.4",
@@ -132,5 +133,6 @@
   },
   "optionalDependencies": {
     "fsevents": "^2.1.2"
-  }
+  },
+  "dependencies": {}
 }

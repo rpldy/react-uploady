@@ -1,16 +1,7 @@
-// @flow
-import Uploady from "./Uploady";
-
-export default Uploady;
-
-export { default as useFileInput } from "./useFileInput";
-export { default as withRequestPreSendUpdate } from "./withRequestPreSendUpdate";
 
 export {
-    Uploady,
-};
+    NoDomUploady as default,
 
-export {
     UploadyContext,
     NoDomUploady,
     assertContext,
@@ -33,15 +24,7 @@ export {
 
     useRequestPreSend,
 
-	useAbortAll,
-	useAbortBatch,
-	useAbortItem,
+    useAbortAll,
+    useAbortBatch,
+    useAbortItem,
 } from "@rpldy/shared-ui";
-
-export * from "@rpldy/uploader";
-
-export type {
-    UploadyContextType,
-    UploadyProps,
-} from "@rpldy/shared-ui";
-

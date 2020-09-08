@@ -1,7 +1,9 @@
 import * as React from "react";
 import { Batch, BatchItem, UploadInfo, UploadOptions } from "@rpldy/shared";
-import { CreateOptions } from "@rpldy/uploader";
-import { OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
+import { CreateOptions, UploaderType } from "@rpldy/uploader";
+import { EventCallback, OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
+
+export type UploaderListeners = { [key: string]: EventCallback };
 
 export type AddUploadFunction = (files: UploadInfo | UploadInfo[], addOptions?: UploadOptions) => void;
 
@@ -57,6 +59,8 @@ export const useRequestPreSend: (cb: (data: PreSendData) =>
 
 export const useUploadOptions: (options?: CreateOptions) => CreateOptions;
 
+export const useUploader: (options: CreateOptions, listeners: ?UploaderListeners) => UploaderType;
+
 export const UploadyContext: React.Context<UploadyContextType>;
 
 export const assertContext: (context: UploadyContextType) => UploadyContextType;
@@ -66,3 +70,22 @@ export const useAbortAll: () => () => boolean;
 export const useAbortBatch: () => (batchId: string) => boolean;
 
 export const useAbortItem: () => (itemId: string) => boolean;
+
+export interface UploadyProps extends CreateOptions {
+    debug?: boolean;
+    listeners?: UploaderListeners;
+    customInput?: boolean;
+    inputFieldContainer?: HTMLElement;
+    children?: JSX.Element[] | JSX.Element;
+    capture?: string;
+    multiple?: boolean;
+    accept?: string;
+    webkitdirectory?: boolean;
+    fileInputId?: string;
+}
+
+export interface NoDomUploadyProps extends UploadyProps {
+    inputRef?: InputRef;
+}
+
+export const NoDomUploady: React.ComponentType<NoDomUploadyProps>;

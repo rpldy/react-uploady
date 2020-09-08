@@ -7,7 +7,7 @@ import {
     UMD_NAMES,
     addActionLogEnhancer,
     useStoryUploadySetup,
-} from "../../story-helpers";
+} from "../../../story-helpers";
 import createUploader from "./src";
 
 // $FlowFixMe - doesnt understand loading readme

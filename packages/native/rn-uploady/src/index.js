@@ -1,7 +1,9 @@
+import NativeUploady from "./NativeUploady";
+
+export { NativeUploady };
+export default NativeUploady;
 
 export {
-    NoDomUploady as default,
-
     UploadyContext,
     NoDomUploady,
     assertContext,

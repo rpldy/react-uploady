@@ -59,7 +59,7 @@ export const useRequestPreSend: (cb: (data: PreSendData) =>
 
 export const useUploadOptions: (options?: CreateOptions) => CreateOptions;
 
-export const useUploader: (options: CreateOptions, listeners: ?UploaderListeners) => UploaderType;
+export const useUploader: (options: CreateOptions, listeners?: UploaderListeners) => UploaderType;
 
 export const UploadyContext: React.Context<UploadyContextType>;
 
@@ -71,21 +71,21 @@ export const useAbortBatch: () => (batchId: string) => boolean;
 
 export const useAbortItem: () => (itemId: string) => boolean;
 
-export interface UploadyProps extends CreateOptions {
+export interface NoDomUploadyProps extends CreateOptions {
     debug?: boolean;
     listeners?: UploaderListeners;
+    inputRef?: InputRef;
+    children?: JSX.Element[] | JSX.Element;
+}
+
+export interface UploadyProps extends NoDomUploadyProps {
     customInput?: boolean;
     inputFieldContainer?: HTMLElement;
-    children?: JSX.Element[] | JSX.Element;
     capture?: string;
     multiple?: boolean;
     accept?: string;
     webkitdirectory?: boolean;
     fileInputId?: string;
-}
-
-export interface NoDomUploadyProps extends UploadyProps {
-    inputRef?: InputRef;
 }
 
 export const NoDomUploady: React.ComponentType<NoDomUploadyProps>;

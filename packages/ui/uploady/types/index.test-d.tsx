@@ -50,6 +50,7 @@ const ListOfUploadOptions = () => {
         {JSON.stringify(options)}
     </ul>;
 };
+
 const testNoDomUploady = (): JSX.Element => {
 
     return <NoDomUploady debug>

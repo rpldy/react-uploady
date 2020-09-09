@@ -1,7 +1,7 @@
 import * as React from "react";
 import { CreateOptions } from "@rpldy/uploader";
 import { PreSendData, UploadyProps }  from "@rpldy/shared-ui";
-import { BatchItem } from "~/shared";
+import { BatchItem } from "@rpldy/shared";
 
 export const Uploady: React.ComponentType<UploadyProps>;
 
@@ -46,4 +46,6 @@ export {
     useAbortAll,
     useAbortBatch,
     useAbortItem,
+
+    UploadyProps,
 } from "@rpldy/shared-ui";

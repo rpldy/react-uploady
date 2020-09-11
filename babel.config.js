@@ -16,8 +16,9 @@ module.exports = {
 		"lodash",
 		["module-resolver", {
 			"root": ["./"],
-			// "alias": {
-			// }
+			"alias": {
+			    "shared": "./shared"
+			}
 		}]
 	],
 	env: {

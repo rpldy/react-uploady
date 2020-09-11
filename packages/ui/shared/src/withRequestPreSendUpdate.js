@@ -1,6 +1,7 @@
 // @flow
 import React, { useContext, useLayoutEffect, useState } from "react";
-import { assertContext, UploadyContext } from "@rpldy/shared-ui";
+import UploadyContext from "./UploadyContext";
+import assertContext from "./assertContext";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 
 type Props = { id: string };

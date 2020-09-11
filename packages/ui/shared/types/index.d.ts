@@ -89,3 +89,16 @@ export interface UploadyProps extends NoDomUploadyProps {
 }
 
 export const NoDomUploady: React.ComponentType<NoDomUploadyProps>;
+
+export interface WithRequestPreSendUpdateProps {
+    id: string;
+}
+
+export interface WithRequestPreSendUpdateWrappedProps {
+    id: string;
+    updateRequest: (data?: boolean | { items?: BatchItem[]; options?: CreateOptions }) => void;
+    requestData: PreSendData;
+}
+
+export const withRequestPreSendUpdate: <P extends WithRequestPreSendUpdateProps>(Comp: React.FC<P> | React.ComponentType<P>) =>
+    React.FC<Omit<P, "updateRequest" | "requestData">>;

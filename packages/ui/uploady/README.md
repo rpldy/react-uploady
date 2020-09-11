@@ -24,7 +24,7 @@
 
 # Uploady
 
-This is the main UI package. Its role is to initialize and expose the [uploader](../../uploader) functionality.
+This is the main UI package. Its role is to initialize and expose the [uploader](../../core/uploader) functionality.
 It contains the Provider that all other UI packages rely on.
 
 It provides multiple hooks that enable more advanced features and data for client apps.
@@ -46,7 +46,7 @@ It provides multiple hooks that enable more advanced features and data for clien
 | --------------       | ------------- | ------------- | -------------
 | **Uploader Options**
 | autoUpload           | boolean       | true          | automatically upload files when they are added 
-| destination          | [Destination](../../shared/src/types.js#L7)   | undefined     | configure the end-point to upload to
+| destination          | [Destination](../../core/shared/src/types.js#L7)   | undefined     | configure the end-point to upload to
 | inputFieldName       | string        | "file"        | name (attribute) of the file input field (requires sendWithFormData = true)
 | grouped              | boolean       | false         | group multiple files in a single request 
 | maxGroupSize         | number        | 5             | maximum of files to group together in a single request 
@@ -56,14 +56,14 @@ It provides multiple hooks that enable more advanced features and data for clien
 | params               | Object        | undefined     | collection of params to pass along with the upload (requires sendWithFormData = true)
 | forceJsonResponse    | boolean       | false         | parse server response as JSON even if no JSON content-type header received            
 | withCredentials      | boolean       | false         | set XHR withCredentials to true
-| enhancer             | [UploaderEnhancer](../../uploader/src/types.js#L37) | undefined    | uploader [enhancer](../../../README.md#enhancer) function
+| enhancer             | [UploaderEnhancer](../../core/uploader/src/types.js#L37) | undefined    | uploader [enhancer](../../../README.md#enhancer) function
 | concurrent           | boolean       | false          | issue multiple upload requests simultaneously
 | maxConcurrent        | number        | 2              | maximum allowed simultaneous requests
-| send                 | [SendMethod](../../shared/src/types.js#L100) | @rpldy/sender | how to send files to the server
+| send                 | [SendMethod](../../core/shared/src/types.js#L100) | @rpldy/sender | how to send files to the server
 | sendWithFormData     | boolean       | true           | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data
 | **Uploady Options**
 | debug                | boolean        | false | enable console logs from uploady packages
-| listeners            | Object        | undefined | map of [event](../../uploader/README.md#events) name and event handler
+| listeners            | Object        | undefined | map of [event](../../core/uploader/README.md#events) name and event handler
 | customInput          | boolean       | false | whether to use a custom file input (see: [useFileInput](#useFileInput)
 | inputFieldContainer  | HTMLElement   | document.body | html element to place the file input element inside
 | children             | React.Node    | undefined     | any part of your React app that will require access to the upload flow  (components, hooks, etc.)
@@ -173,13 +173,13 @@ abort a specific batch by its ID
 
 _(name: any, cb: EventCallback) => OffMethod_
 
-register for an [event](../../uploader/README.md#events)
+register for an [event](../../core/uploader/README.md#events)
  
 #### once 
 
 _(name: any, cb: EventCallback) => OffMethod_
  
-register once for an [event](../../uploader/README.md#events)
+register once for an [event](../../core/uploader/README.md#events)
     
 #### off
 
@@ -189,13 +189,13 @@ unregister from an events
 
 ## Hooks
 
-Uploady provides hooks for all [uploader events](../../uploader/README.md#events), as well as a few other useful ones.
+Uploady provides hooks for all [uploader events](../../core/uploader/README.md#events), as well as a few other useful ones.
 
 ### useBatchAddListener (event hook)
 
 Called when a new batch is added.
 
-> This event is _[cancellable](../../uploader/README.md#cancellable-events)_
+> This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
 
 ```javascript
     import { useBatchAddListener } from "@rpldy/uploady";
@@ -213,7 +213,7 @@ Called when a new batch is added.
 
 Called when batch items start uploading
 
-> This event is _[cancellable](../../uploader/README.md#cancellable-events)_
+> This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
 
 > This event can be scoped to a specific batch by passing the batch id as a second parameter
 
@@ -310,7 +310,7 @@ Called in case [abortBatch](#abortBatch) was called
 Called when item starts uploading (just before)
 For grouped uploads (multiple files in same xhr request) ITEM_START is triggered for each item separately
 
-> This event is _[cancellable](../../uploader/README.md#cancellable-events)_
+> This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
 
 > This event can be scoped to a specific batch by passing the item id as a second parameter
 
@@ -450,7 +450,7 @@ Handler receives the item(s) in the group and the upload options that were used.
 The handler can change data inside the items and in the options by returning different data than received.
 See simple example below or this more detailed [guide](../../../guides/DynamicParameters.md).
 
-> This event is _[cancellable](../../uploader/README.md#cancellable-events)_
+> This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
 
 ```javascript
     import { useRequestPreSend } from "@rpldy/uploady";

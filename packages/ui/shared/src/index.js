@@ -33,6 +33,7 @@ export { default as useAbortBatch } from "./useAbortBatch";
 export { default as useAbortAll } from "./useAbortAll";
 export { default as NoDomUploady } from "./NoDomUploady";
 export { default as UploadyContext, createContextApi } from "./UploadyContext";
+export { default as withRequestPreSendUpdate } from "./withRequestPreSendUpdate";
 
 export type {
     InputRef,

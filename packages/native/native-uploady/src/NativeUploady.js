@@ -1,3 +1,5 @@
+// @flow
+
 import React from "react";
 import { NoDomUploady } from "@rpldy/shared-ui";
 

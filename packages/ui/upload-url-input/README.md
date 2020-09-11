@@ -37,7 +37,7 @@ This can be useful for services that accept a URL and do server-side fetch. [Clo
 | uploadRef     | React Ref   | undefined | ref will be set to the upload callback so it can be triggered from the outside (see [example](#example))
 | ignoreKeyPress   | boolean | false | by default pressing Enter will initiate the upload, set to true in order to disable this behavior
 
-In addition, most [UploadOptions](../../shared/src/types.js#L104) props can be passed to UploadButton.
+In addition, most [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to UploadButton.
 In order to override configuration passed to the parent Uploady component. 
 See [Uploady documentation](../uploady#props) for detailed list of upload options.
 

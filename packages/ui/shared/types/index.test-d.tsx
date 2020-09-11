@@ -21,6 +21,9 @@ import {
 
     UploadyContext,
     assertContext,
+    NoDomUploady,
+    withRequestPreSendUpdate,
+    WithRequestPreSendUpdateWrappedProps,
 } from "./index";
 
 const EventHooksTest: React.FC = () => {
@@ -140,8 +143,53 @@ const testUseUploadOptions = (): JSX.Element => {
     return <TestUseOptions/>;
 };
 
+const ListOfUploadOptions = () => {
+    const options = useUploadOptions();
+
+    return <ul>
+        {JSON.stringify(options)}
+    </ul>;
+};
+
+const testNoDomUploady = (): JSX.Element => {
+
+    return <NoDomUploady debug>
+        <ListOfUploadOptions/>
+    </NoDomUploady>;
+};
+
+interface WithPreReqTestProps extends WithRequestPreSendUpdateWrappedProps{
+    name: string
+}
+
+const testWithRequestPreSendUpdate = (): JSX.Element => {
+    const MyComp: React.FC<WithPreReqTestProps> = (props) => {
+        const { updateRequest } = props;
+
+        React.useEffect(() => {
+            if (updateRequest) {
+                updateRequest({
+                    options: {
+                        destination: { url: "different-server.com" }
+                    }
+                });
+            }
+        }, [updateRequest]);
+
+        return <span>test {props.id} - {props.name}</span>;
+    };
+
+    const TestPreReqComp = withRequestPreSendUpdate(MyComp);
+
+    return <div>
+        <TestPreReqComp id="bi1" name="test"/>
+    </div>;
+};
+
 export {
     testEventHooks,
     testUploadyContext,
     testUseUploadOptions,
+    testNoDomUploady,
+    testWithRequestPreSendUpdate,
 };

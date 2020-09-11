@@ -1,3 +1,4 @@
+// @flow
 import NativeUploady from "./NativeUploady";
 
 export { NativeUploady };

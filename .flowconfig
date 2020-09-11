@@ -9,6 +9,7 @@
 [include]
 ./packages/**/*.js.flow
 
+
 [libs]
 
 [options]
@@ -20,3 +21,4 @@ module.name_mapper='^invariant$' -> '<PROJECT_ROOT>/node_modules/invariant/invar
 module.name_mapper='^html-dir-content$' -> '<PROJECT_ROOT>/node_modules/html-dir-content/dist/html-dir-content'
 module.name_mapper='^@storybook/addon-knobs' -> '<PROJECT_ROOT>/node_modules/@storybook/addon-knobs/dist'
 module.name_mapper='^react-image-crop$' -> '<PROJECT_ROOT>/node_modules/react-image-crop/dist/ReactCrop.min.js'
+#module.name_mapper='shared/\(.*\)$' -> '<PROJECT_ROOT>/src/shared/\1'

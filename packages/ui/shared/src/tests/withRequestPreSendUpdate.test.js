@@ -1,16 +1,22 @@
 import React from "react";
-import {
-	UploadyContext
-} from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
-import withRequestPreSendUpdate from "../withRequestPreSendUpdate";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
+import withRequestPreSendUpdate from "../withRequestPreSendUpdate";
+import UploadyContext from "../UploadyContext";
+import assertContext from "../assertContext";
+
+jest.mock("../UploadyContext", () => jest.requireActual("./mocks/UploadyContext.mock"));
+jest.mock("../assertContext");
 
 describe("withRequestPreSendUpdate tests", () => {
 
+    beforeAll(()=>{
+        assertContext.mockReturnValue(UploadyContext);
+    });
+
 	beforeEach(() => {
 		clearJestMocks(
-			UploadyContext.on,
-			UploadyContext.off,
+            UploadyContext.on,
+            UploadyContext.off,
 		);
 	});
 
@@ -40,7 +46,7 @@ describe("withRequestPreSendUpdate tests", () => {
 		expect(UploadyContext.off).not.toHaveBeenCalled();
 	});
 
-	it("shouldn provide update data for matching item id", async () => {
+	it("shouldn't provide update data for matching item id", async () => {
 		let handlerPromise;
 
 		const requestData = { items: [{ id: "bi0" }, { id: "bi1" }] };
@@ -48,7 +54,7 @@ describe("withRequestPreSendUpdate tests", () => {
 		const MockComp = jest.fn((props) =>
 			<div>{props.id}-{props.name}</div>);
 
-		UploadyContext.on.mockImplementationOnce((name, handler) => {
+        UploadyContext.on.mockImplementationOnce((name, handler) => {
 			handlerPromise = handler(requestData);
 			expect(handlerPromise).toBeInstanceOf(Promise);
 		});
@@ -93,7 +99,7 @@ describe("withRequestPreSendUpdate tests", () => {
 		const MockComp = jest.fn((props) =>
 			<div>{props.id}-{props.name}</div>);
 
-		UploadyContext.on.mockImplementationOnce((name, handler) => {
+        UploadyContext.on.mockImplementationOnce((name, handler) => {
 			handlerPromise = handler(requestData);
 			expect(handlerPromise).toBeUndefined();
 		});
@@ -131,7 +137,7 @@ describe("withRequestPreSendUpdate tests", () => {
 		expect(UploadyContext.on)
 			.toHaveBeenCalledWith(UPLOADER_EVENTS.REQUEST_PRE_SEND, expect.any(Function));
 
-		UploadyContext.on.mockImplementationOnce((name, handler) => {
+        UploadyContext.on.mockImplementationOnce((name, handler) => {
 			const handlerPromise = handler({ items: [{ id: "bi2" }] });
 			expect(handlerPromise).toBeInstanceOf(Promise);
 		});

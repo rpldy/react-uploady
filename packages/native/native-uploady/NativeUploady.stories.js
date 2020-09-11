@@ -18,7 +18,7 @@ const WithCustomUI = () => {
     }, []);
 
     const onInputChange = useCallback(() => {
-        uploadyContext.upload(inputRef.current?.files);
+        uploadyContext?.upload(inputRef.current?.files);
     }, []);
 
     return <div>

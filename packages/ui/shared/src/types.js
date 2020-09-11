@@ -39,7 +39,6 @@ export type NoDomUploadyProps = {|
     children?: Node,
 |};
 
-
 export type UploadyProps = {|
     ...NoDomUploadyProps,
 

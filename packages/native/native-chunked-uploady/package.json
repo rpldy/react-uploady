@@ -1,0 +1,45 @@
+{
+  "version": "0.4.1",
+  "name": "@rpldy/native-chunked-uploady",
+  "description": "wrapper&context component to expose and provide react-uploady functionality with chunked for react-native",
+  "author": "yoav niran (https://github.com/yoavniran)",
+  "main": "lib/index.js",
+  "module": "src/index.js",
+  "types": "types/index.d.ts",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rpldy/react-uploady.git",
+    "directory": "packages/ui/rn-chunked-uploady"
+  },
+  "keywords": [
+    "upload",
+    "file upload",
+    "react",
+    "hooks",
+    "resumable",
+    "library",
+    "react-native"
+  ],
+  "scripts": {
+    "build": "node ../../../scripts/build.js",
+    "flow:copy": "flow-copy-source ./src ./lib --ignore *.test.js --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
+  },
+  "dependencies": {
+      "@rpldy/chunked-sender": "^0.4.1",
+      "@rpldy/sender": "^0.4.1",
+      "@rpldy/shared": "^0.4.1",
+      "@rpldy/shared-ui": "^0.4.1",
+      "@rpldy/uploader": "^0.4.1",
+      "@rpldy/rn-uploady": "^0.4.1"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.x"
+  },
+  "devDependencies": {
+    "flow-bin": "^0.133.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

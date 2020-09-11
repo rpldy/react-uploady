@@ -2,7 +2,8 @@
 
 import React from "react";
 import { NoDomUploady } from "@rpldy/shared-ui";
+import type { NativeUploadyProps } from "./types";
 
-const NativeUploady = (props) => <NoDomUploady {...props} />;
+const NativeUploady = (props: NativeUploadyProps) => <NoDomUploady {...props} />;
 
 export default NativeUploady;

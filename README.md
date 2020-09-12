@@ -49,7 +49,7 @@
 ![React-Uploady Demo](guides/rpldy-demo.gif)
 
 The philosophy behind this library is that it should be as simple as possible to use, yet customizable at every point.
-You can start simple or you can can configure just about every aspect of the upload flow. 
+You can start simple, or you can can configure just about every aspect of the upload flow. 
 For this purpose, RU provides components, hooks, and plenty of features. 
 You get to choose which ones you need and only install the dependencies required (See [Packages](#packages) details below)
 
@@ -57,10 +57,10 @@ RU has a small footprint (by design) with very few (and small) dependencies.
 
 | Bundle         | Minified size | GZipped size
 | -------------- | ------------- | -------------
-| core                         | 35.1KB          | 9.9KB
-| core + ui                    | 45.9KB          | 12.2KB
-| core + ui + chunked support  | 56.8KB          | 14.8KB
-| everything                   | 64.7KB          | 16.2KB
+| core                         | 31.5KB          | 10.1KB
+| core + ui                    | 42.6KB          | 12.9KB
+| core + ui + chunked support  | 53.1KB          | 15.4KB
+| everything                   | 80.9KB          | 16.2KB
 
 ## Documentation
 
@@ -71,7 +71,7 @@ and how to access upload data (using the provided hooks or events).
 
 It's also worth reading the  [Important Concepts](#important-concepts) section below for some key concepts.
 
-In case you need UI components (like an upload button), check out any of our [UI packages](#ui-packages).
+In case you need UI components (like an upload button), check out the [UI packages](#ui-packages).
 
 **Additional Resources**
 
@@ -81,7 +81,7 @@ Checkout our __[Guides](guides)__ section for additional examples & information.
 
 ### Changelog
 
-For a list of versions and changes see the [CHANGELOG](CHANGELOG.md)
+For a list of versions and changes, see the [CHANGELOG](CHANGELOG.md)
 
 ## Installation
 
@@ -112,7 +112,7 @@ After that, you can add additional packages as needed. See below for more detail
 ## Packages
 
 ### Main Packages
-* [@rpldy/uploader](packages/uploader) - The processing and queuing engine
+* [@rpldy/uploader](packages/core/uploader) - The processing and queuing engine
 * [@rpldy/uploady](packages/ui/uploady) - The context provider for react-uploady and hooks (lots of hooks)
 
 ### UI Packages
@@ -127,20 +127,23 @@ After that, you can add additional packages as needed. See below for more detail
 * [@rpldy/tus-uploady](packages/ui/tus-uploady) - Wrapper for Uploady with support for tus(resumable) uploads  
 
 ### Senders
-* [@rpldy/sender](packages/sender) - Uploady's main file sender (XHR)
-* [@rpldy/chunked-sender](packages/chunked-sender) - add chunked uploads support on top of the XHR Sender
-* [@rpldy/tus-sender](packages/tus-sender) - add TUS resumable upload support  
-* [@rpldy/mock-sender](packages/mock-sender) - use Mock sender for testing purposes 
+* [@rpldy/sender](packages/core/sender) - Uploady's main file sender (XHR)
+* [@rpldy/chunked-sender](packages/core/chunked-sender) - add chunked uploads support on top of the XHR Sender
+* [@rpldy/tus-sender](packages/core/tus-sender) - add TUS resumable upload support  
+* [@rpldy/mock-sender](packages/core/mock-sender) - use Mock sender for testing purposes 
 
 ### Extra
-* [@rpldy/retry](packages/retry) - Add support for retrying failed uploads
+* [@rpldy/retry](packages/core/retry) - Add support for retrying failed uploads
 
 ### Shared Packages
-* [@rpldy/shared](packages/shared) - Internal set of utils+types that all packages require  
+* [@rpldy/shared](packages/core/shared) - Internal set of utils+types that all packages require  
 * [@rpldy/shared-ui](packages/ui/shared) - Internal set of utils+types that all UI packages require 
-* [@rpldy/live-events](packages/life-events) - provides **cancellable** pub/sub "events" 
-* [@rpldy/safe-storage](packages/safe-storage) - safe (don't throw) versions of local and session storage
-* [@rpldy/simple-state](packages/simple-state) - deep proxy object, so it's only updateable through an update method
+* [@rpldy/live-events](packages/core/life-events) - provides **cancellable** pub/sub "events" 
+* [@rpldy/safe-storage](packages/core/safe-storage) - safe (don't throw) versions of local and session storage
+* [@rpldy/simple-state](packages/core/simple-state) - deep proxy object, so it's only updateable through an update method
+
+### React Native
+* [@rpldy/native-uploady](packages/native/native-uploady) - Uploay for React Native (no react-dom)
 
 ## Examples
 
@@ -151,7 +154,7 @@ For upload options see the [@rpldy/uploady docs](packages/ui/uploady).
 ### Simple Upload Button
 
 This examples shows how you add Uploady and UploadButton to your app.
-This is all it takes to get file uploading to work in your React app.
+This is all it takes to get file uploading to work in your React application.
 
 ```javascript 
 
@@ -252,15 +255,15 @@ const App = () => (<ChunkedUploady
 
 ### Upload Options
 
-These are options that are passed to the [uploader](packages/uploader) to configure aspects of the upload process.
+These are the options that are passed to the [uploader](packages/uploader) to configure aspects of the upload process.
 For example, whether files can be grouped in a single request (by default, no).
 
-Upload Options are typically passed to the [Uploady](packages/ui/uploady) instance. But these can be overriden. For example, by an [upload button](packages/ui/upload-button).
+Upload Options are typically passed to the [Uploady](packages/ui/uploady) instance. But these can be overriden. For example, by props passed to the [upload button](packages/ui/upload-button).
 Or even during [upload processing](guides/DynamicParameters.md).  
 
 ### Destination
 
-Passed as a part of the upload options. It's an object that is used to configure the end-point the files will be uploaded to.
+Passed as a part of the upload options. It's an object that is used to configure the end-point where the files will be uploaded to.
 It's type is defined [here](packages/shared/src/types.js#L7).
 
 See more information in the [Uploady](packages/ui/uploady#props) README.
@@ -274,17 +277,17 @@ At the very least, a destination should contain a URL property with the server e
 (uploader: UploaderType, trigger: Trigger<mixed>) => UploaderType
 ``` 
 
-Enhancers are functions that can ehance an uploader instance. They are also passed as part of the options given to the Uploady instance.
+Enhancers are functions that can enhance an uploader instance. They are also passed as part of the options given to the Uploady instance.
 
 As they are applied when the uploader instance is created, they can change the way uploader does things or pass different defaults. 
 
-See this [guide](guides/UploaderEnhancers.md) for more practical information and sample code.
+See this [guide](guides/UploaderEnhancers.md) for practical information and sample code.
 
 ### Batch
 
 When a file or files are handed over to the uploader, they are grouped into a batch. 
-This batch will have its all lifetime [events](packages/ui/uploady#events).
-A batch can be used to abort the upload of all files inside it. Or can also be retried together (see [@rpldy/retry](packages/retry)).
+This batch will have its own lifetime [events](packages/ui/uploady#events).
+With a batch ID, it is possible to cancel all files that are part of it. It can also be used to retry all files in the batch (see [@rpldy/retry](packages/retry)).
 
 ### BatchItem
 
@@ -293,12 +296,11 @@ A BatchItem has its own lifetime [events](packages/ui/uploady#events).
 
 ## Resumable Uploads
 
-Rpldy supports resumable uploads through the [tus](https://tus.io/) [protocol](https://tus.io/protocols/resumable-upload.html).
+RU supports resumable uploads through the [tus](https://tus.io/) [protocol](https://tus.io/protocols/resumable-upload.html).
 Instead of using <Uploady> from @rpldy/uploady, use <TusUploady> from @rpldy/tus-uploady and you will have resumable upload support on the client side.
 Your server will also have to support the same protocol for this to work of course.
 
-See the  [@rpldy/tus-uploady](packages/ui/tus-uploady) documentation for more details.
-
+See the [@rpldy/tus-uploady](packages/ui/tus-uploady) documentation for more details.
 
 ## UMD Bundles
 

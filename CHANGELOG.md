@@ -16,6 +16,7 @@
 ### Bug fixes
 
 - `[shared-ui]` - dont import code from @rpldy/uploady
+- upgraded lerna
 
 ### Internal
 

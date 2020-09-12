@@ -1,12 +1,33 @@
 # Changelog
 
-## 0.4.1
+## 0.5.0 (2020-09-13)
+
+### Features
+
+- `[native-uploady]` -  support react-native 📱 - new package.
+- `[sender]` - react-native: work with FormData without set 
+- `[shared]` - react-native: don't expect window to be there
+- `[simple-state]` - react-native: don't proxy File-like object in RN
+- `[uploader]` - react-native: don't expect window to be there
+- `[shared-ui]` - react-native: NoDomUploady - Uploady without react-dom
+- `[shared-ui]` - moved withRequestPreSendUpdate from ui/uploady
+- `[shared-ui]` - moved useUploader from ui/uploady
+ 
+### Bug fixes
+
+- `[shared-ui]` - dont import code from @rpldy/uploady
+
+### Internal
+
+- moved non-ui packages to packages/core dir
+
+## 0.4.1 (2020-08-03)
 
 ### Bug fixes
 
 - `[simple-state]` - unwrap doesn't handle nullish props
 
-## 0.4.0
+## 0.4.0 (2020-07-22)
 
 ### Features
 
@@ -17,13 +38,13 @@
 - `[shared]` - getMerge with _withSymbols_
 - `[simple-state]` - unwrap with symbol props
 
-## 0.3.2
+## 0.3.2 (2020-07-18)
 
 ### Features
 
 - `[upload-drop-zone]` - UploadDropZone extraProps prop
 
-## 0.3.1
+## 0.3.1 (2020-07-06)
 
 ### Bug fixes
 
@@ -35,7 +56,7 @@
 - `[tus-sender]` - clarify params. explain headers override
 - `[tus-uploady]` - clarify params. explain headers override
 
-## 0.3.0
+## 0.3.0 (2020-07-04)
 
 ### Features
 
@@ -63,7 +84,7 @@
 - `storybook` - added upload-preview with crop story
 - `internal packages` - added "internal" note 
 
-## 0.2.4
+## 0.2.4 (2020-06-10)
 
 ### Features
 
@@ -81,7 +102,7 @@
 - `[chunked-sender]` - document chunk events
 - `guides` - Upload Queue guide
 
-## 0.2.3
+## 0.2.3 (2020-06-05)
 
 ### Features
 
@@ -97,7 +118,7 @@
 - `[upload-preview]` - rememberPreviousBatches merges items, not just concating
 - `[upload-preview]` - upload preview provides item id and file name as part of PreviewComponent props
 
-## 0.2.2
+## 0.2.2 (2020-06-02)
 
 ### Features
 
@@ -107,7 +128,7 @@
 
 - `[sender]` - fixed missing item abort event
 
-## 0.2.1
+## 0.2.1 (2020-06-01)
 
 ### Features
 
@@ -115,7 +136,7 @@
 - `[uploady]` - useAbortBatch hook
 - `[uploady]` - useAbortAll hook
 
-## 0.2.0
+## 0.2.0 (2020-06-01)
 
 ### Features
 
@@ -148,7 +169,7 @@ __Misc__
 
 - `[chunked-sender]` - added options to README
 
-## 0.1.12
+## 0.1.12 (2020-05-21)
 
 ### Features
 
@@ -158,6 +179,6 @@ __Misc__
 
 - `all` added description to all package.json files 
 
-## 0.1.11
+## 0.1.11 (2020-05-04)
 
 **EVERYTHING**

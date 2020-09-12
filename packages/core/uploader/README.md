@@ -284,7 +284,7 @@ Group will contain a single item unless "grouped" option is set to true.
 
 Handler receives the item(s) in the group and the upload options that were used.
 The handler can change data inside the items and in the options by returning different data than received.
-See this [guide](../../guides/DynamicParameters.md) for more details.
+See this [guide](../../../guides/DynamicParameters.md) for more details.
 
 - Parameters: _(items, options)_
 

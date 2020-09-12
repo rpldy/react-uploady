@@ -22,10 +22,13 @@ const setIsUpdateable = (proxy: Object, value) => {
 	}
 };
 
+//check if object is native file object (it wont by instanceof File in react-native)
+const isNativeFile = (obj: Object) => obj.name && obj.size && obj.uri;
+
 const deepProxy = (obj, traps) => {
 	let proxy;
 
-	if (Array.isArray(obj) || isPlainObject(obj)) {
+	if (Array.isArray(obj) || (isPlainObject(obj) && !isNativeFile(obj))) {
 		if (!isProxy(obj)) {
 			obj[PROXY_SYM] = true;
 			proxy = new Proxy(obj, traps);

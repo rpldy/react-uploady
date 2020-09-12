@@ -1,7 +1,9 @@
 import * as React from "react";
 import { Batch, BatchItem, UploadInfo, UploadOptions } from "@rpldy/shared";
-import { CreateOptions } from "@rpldy/uploader";
-import { OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
+import { CreateOptions, UploaderType } from "@rpldy/uploader";
+import { EventCallback, OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
+
+export type UploaderListeners = { [key: string]: EventCallback };
 
 export type AddUploadFunction = (files: UploadInfo | UploadInfo[], addOptions?: UploadOptions) => void;
 
@@ -57,6 +59,8 @@ export const useRequestPreSend: (cb: (data: PreSendData) =>
 
 export const useUploadOptions: (options?: CreateOptions) => CreateOptions;
 
+export const useUploader: (options: CreateOptions, listeners?: UploaderListeners) => UploaderType;
+
 export const UploadyContext: React.Context<UploadyContextType>;
 
 export const assertContext: (context: UploadyContextType) => UploadyContextType;
@@ -66,3 +70,35 @@ export const useAbortAll: () => () => boolean;
 export const useAbortBatch: () => (batchId: string) => boolean;
 
 export const useAbortItem: () => (itemId: string) => boolean;
+
+export interface NoDomUploadyProps extends CreateOptions {
+    debug?: boolean;
+    listeners?: UploaderListeners;
+    inputRef?: InputRef;
+    children?: JSX.Element[] | JSX.Element;
+}
+
+export interface UploadyProps extends NoDomUploadyProps {
+    customInput?: boolean;
+    inputFieldContainer?: HTMLElement;
+    capture?: string;
+    multiple?: boolean;
+    accept?: string;
+    webkitdirectory?: boolean;
+    fileInputId?: string;
+}
+
+export const NoDomUploady: React.ComponentType<NoDomUploadyProps>;
+
+export interface WithRequestPreSendUpdateProps {
+    id: string;
+}
+
+export interface WithRequestPreSendUpdateWrappedProps {
+    id: string;
+    updateRequest: (data?: boolean | { items?: BatchItem[]; options?: CreateOptions }) => void;
+    requestData: PreSendData;
+}
+
+export const withRequestPreSendUpdate: <P extends WithRequestPreSendUpdateProps>(Comp: React.FC<P> | React.ComponentType<P>) =>
+    React.FC<Omit<P, "updateRequest" | "requestData">>;

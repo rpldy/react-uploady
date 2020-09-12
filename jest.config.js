@@ -18,7 +18,13 @@ module.exports = {
 			lines: 90,
 			statements: 90
 		},
-		"packages/*/src/**/*.js": {
+        "packages/native/**/src/**/*.js": {
+            branches: 90,
+            functions: 95,
+            lines: 90,
+            statements: 90
+        },
+		"packages/core/**/src/**/*.js": {
 			branches: 92,
 			functions: 98,
 			lines: 98,

@@ -62,7 +62,7 @@ export const App = () => (
 _The props _rememberPreviousBatches_, _previewMethodsRef_, and _onPreviewsChanged_ make it possible to do more with previews.
 Specifically, the make it possible to create a visual queue of the uploads.
 
-This is especially useful when adding other features such as abort and [retry](../retry-hooks).   
+This is especially useful when adding other features such as abort and [retry](../core/retry-hooks).   
 
 The code below shows how to clear the previews with a button click:
 

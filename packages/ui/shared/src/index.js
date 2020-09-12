@@ -1,11 +1,4 @@
 // @flow
-import UploadyContext, { createContextApi } from "./UploadyContext";
-import useWithForwardRef from "./useWithForwardRef";
-import assertContext from "./assertContext";
-import useUploadOptions from "./useUploadOptions";
-import useAbortItem from "./useAbortItem";
-import useAbortBatch from "./useAbortBatch";
-import useAbortAll from "./useAbortAll";
 
 export {
     useBatchAddListener,
@@ -32,22 +25,22 @@ export {
     logWarning,
 } from "./utils";
 
-export {
-    UploadyContext,
-    createContextApi,
-    useUploadOptions,
-    assertContext,
-
-    useWithForwardRef,
-
-	useAbortAll,
-	useAbortBatch,
-	useAbortItem,
-};
+export { default as useWithForwardRef } from "./useWithForwardRef";
+export { default as assertContext } from "./assertContext";
+export { default as useUploadOptions } from "./useUploadOptions";
+export { default as useAbortItem } from "./useAbortItem";
+export { default as useAbortBatch } from "./useAbortBatch";
+export { default as useAbortAll } from "./useAbortAll";
+export { default as NoDomUploady } from "./NoDomUploady";
+export { default as UploadyContext, createContextApi } from "./UploadyContext";
+export { default as withRequestPreSendUpdate } from "./withRequestPreSendUpdate";
 
 export type {
     InputRef,
     UploadyContextType,
 	RefObject,
+    UploaderListeners,
+    UploadyProps,
+    NoDomUploadyProps
 } from "./types";
 

@@ -40,7 +40,7 @@ Buttons can use different configuration overrides that supersede the options pas
 | extraProps     | Object   | undefined | any other props to pass to the button component (with spread)
 | ref            | React ref | undefined will be passed to the button element to acquire a ref
 
-In addition, most [UploadOptions](../../shared/src/types.js#L104) props can be passed to UploadButton.
+In addition, most [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to UploadButton.
 In order to override configuration passed to the parent Uploady component. 
 See [Uploady documentation](../uploady#props) for detailed list of upload options.
 

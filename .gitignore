@@ -5,6 +5,7 @@
 .jest-coverage/
 .sb-static/
 .env
+.eslintcache
 
 coverage
 node_modules

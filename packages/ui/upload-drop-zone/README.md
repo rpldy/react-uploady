@@ -44,7 +44,7 @@ Drop Zones can use different configuration overrides that supersede the options 
 | children             | React.Node | undefined | child element(s) to render inside the container 
 | extraProps          | Object   | undefined | any other props to pass to the div component (with spread)
 
-In addition, most [UploadOptions](../../shared/src/types.js#L104) props can be passed to UploadDropZone.
+In addition, most [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to UploadDropZone.
 In order to override configuration passed to the parent Uploady component. 
 See [Uploady documentation](../uploady#props) for detailed list of upload options.
 

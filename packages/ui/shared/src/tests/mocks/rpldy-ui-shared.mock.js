@@ -1,20 +1,7 @@
 import React from "react";
+import UploadyContextMock from "./UploadyContext.mock";
 
-const UploadyContext = {
-    showFileUpload: jest.fn(),
-    getOptions: jest.fn(),
-    setOptions: jest.fn(),
-    setExternalFileInput: jest.fn(),
-    upload: jest.fn(),
-    getExtension: jest.fn(),
-	on: jest.fn(),
-	off: jest.fn(),
-    Provider: jest.fn(({ children }) => {
-        return <div id="uploady-context-provider">{children}</div>
-    }),
-};
-
-const assertContext = jest.fn(() => UploadyContext);
+const assertContext = jest.fn(() => UploadyContextMock);
 
 const createContextApi = jest.fn();
 
@@ -29,8 +16,16 @@ const useBatchStartListener = jest.fn();
 
 const logWarning = jest.fn();
 
+const useUploader = jest.fn();
+
+const useUploadOptions = jest.fn();
+
+const NoDomUploady = jest.fn(({ children }) => <div>{children}</div>);
+
 const uiSharedMock = {
-    UploadyContext,
+    UploadyContext: UploadyContextMock,
+    NoDomUploady,
+
     assertContext,
     createContextApi,
     useWithForwardRef,
@@ -46,20 +41,25 @@ const uiSharedMock = {
     // useItemCancelListener,
     // useItemErrorListener,
     // useRequestPreSend,
-
+    useUploader,
+    useUploadOptions,
     logWarning,
 };
 
 jest.doMock("@rpldy/shared-ui", () => uiSharedMock);
 
 export {
-    UploadyContext,
+    UploadyContextMock as UploadyContext,
+    NoDomUploady,
     assertContext,
     createContextApi,
     useWithForwardRef,
     withForwardRefMock,
 
     useBatchStartListener,
+
+    useUploader,
+    useUploadOptions,
 
     logWarning,
 };

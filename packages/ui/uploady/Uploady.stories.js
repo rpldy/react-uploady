@@ -8,6 +8,7 @@ import {
     addActionLogEnhancer,
 	useStoryUploadySetup
 } from "../../../story-helpers";
+import { NoDomUploady, useUploadOptions } from "@rpldy/shared-ui";
 import Uploady, { UploadyContext } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -35,6 +36,28 @@ export const ButtonWithContextApi = () => {
         maxGroupSize={groupSize}>
         <ContextUploadButton/>
     </Uploady>
+};
+
+const ListOfUploadOptions = () => {
+    const options = useUploadOptions();
+
+    return <ul>
+        {Object.entries(options).map(([key, val]) =>
+            <li key={key}>{key} = {JSON.stringify(val)}</li>)}
+    </ul>
+};
+
+export const WithNoDomUploady = () => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    return <NoDomUploady
+        debug
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}>
+        <ListOfUploadOptions />
+    </NoDomUploady>
 };
 
 //expose react and react-dom for Uploady bundle

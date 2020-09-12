@@ -17,6 +17,7 @@ module.exports = {
 		["module-resolver", {
 			"root": ["./"],
 			// "alias": {
+			//     "shared": "./shared"
 			// }
 		}]
 	],

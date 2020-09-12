@@ -23,11 +23,12 @@
     "flow:mono": "flow-mono create-symlinks ./.flowconfig",
     "flow": "yarn flow:mono; flow --show-all-errors",
     "flow:copy": "lerna exec --stream -- yarn flow:copy",
-    "lint": "eslint ./packages",
+    "lint": "eslint ./packages --cache",
+    "lint:nocache": "eslint ./packages",
     "ensureTypes": "node scripts/ensureTypes.js",
     "types": "yarn ensureTypes && tsc --outDir ./tstest",
     "test": "yarn flow && yarn lint && yarn jest:cov && yarn types",
-    "test:ci": "yarn flow && yarn lint && yarn jest:ci && yarn types",
+    "test:ci": "yarn flow && yarn lint:nocache && yarn jest:ci && yarn types",
     "cy:deps:serve": "concurrently --kill-others \"yarn sb:serve\" \"yarn bundle:serve\"",
     "cy:open": "CYPRESS_SB_PORT=9111 cypress open",
     "cy:open:build": "CYPRESS_SB_PORT=8001 cypress open",
@@ -40,8 +41,9 @@
   },
   "private": true,
   "workspaces": [
-    "packages/*",
-    "packages/ui/*"
+    "packages/core/*",
+    "packages/ui/*",
+    "packages/native/*"
   ],
   "repository": {
     "type": "git",
@@ -59,7 +61,7 @@
     "@babel/preset-react": "^7.10.1",
     "@babel/runtime-corejs3": "^7.11.0",
     "@commitlint/cli": "^9.1.1",
-    "@commitlint/config-conventional": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.2",
     "@commitlint/config-lerna-scopes": "^9.1.1",
     "@storybook/addon-actions": "^5.3.19",
     "@storybook/addon-console": "^1.2.1",
@@ -93,7 +95,7 @@
     "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-react-hooks": "^4.0.4",
     "fast-glob": "^3.2.2",
-    "flow-bin": "^0.130.0",
+    "flow-bin": "^0.133.0",
     "flow-copy-source": "^2.0.9",
     "flow-mono-cli": "^1.5.0",
     "fs-extra": "^9.0.0",
@@ -104,7 +106,7 @@
     "jest-enzyme": "^7.1.2",
     "jest-junit": "^11.0.1",
     "jest-styled-components": "^7.0.2",
-    "lerna": "^3.22.0",
+    "lerna": "^3.22.1",
     "license-webpack-plugin": "^2.1.4",
     "lodash": "^4.17.15",
     "pacote": "^11.1.4",
@@ -131,5 +133,6 @@
   },
   "optionalDependencies": {
     "fsevents": "^2.1.2"
-  }
+  },
+  "dependencies": {}
 }

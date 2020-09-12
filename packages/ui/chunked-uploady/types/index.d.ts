@@ -1,7 +1,7 @@
 import * as React from "react";
 import { UploadyProps } from "@rpldy/uploady";
 import { ChunkedOptions, ChunkFinishEventData, ChunkStartEventData } from "@rpldy/chunked-sender";
-import { SendOptions } from "~/sender";
+import { SendOptions } from "@rpldy/sender";
 
 export * from "@rpldy/uploady";
 

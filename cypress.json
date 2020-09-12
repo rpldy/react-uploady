@@ -15,7 +15,8 @@
             "uploadDropZone": "upload-drop-zone",
             "uploadUrlInput": "upload-url-input",
             "uploadPreview": "upload-preview",
-            "tusUploady": "tus-uploady"
+            "tusUploady": "tus-uploady",
+            "nativeUploady": "native-uploady"
         }
     },
     "pluginsFile": false,

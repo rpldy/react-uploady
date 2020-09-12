@@ -14,9 +14,9 @@
 This package is provided as a convenient alternative to the main [Uploady](../uploady) package. 
 To be used in case resumable (tus) upload is required.
 
-The package wraps the [tus-sender](../../tus-sender) 
+The package wraps the [tus-sender](../../core/tus-sender) 
 
-Additional information about tus functionality can be found the [tus-sender README](../../tus-sender).
+Additional information about tus functionality can be found the [tus-sender README](../../core/tus-sender).
 
 ## Props
 
@@ -35,11 +35,11 @@ Additional information about tus functionality can be found the [tus-sender READ
 | forgetOnSuccess   | boolean | false | whether to remove URL from localStorage when upload finishes successfully
 | ignoreModifiedDateInStorage   | boolean   | false     | ignore File's modified date when creating key for storage
 
-In addition, all [UploadOptions](../../shared/src/types.js#L104) props can be passed to TusUploady.
+In addition, all [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to TusUploady.
 In order to override configuration passed to the parent Uploady component. 
 See [Uploady documentation](../uploady#props) for detailed list of upload options.   
 
-> All of the [chunked-sender options](../../chunked-sender#options) are supported as well
+> All of the [chunked-sender options](../../core/chunked-sender#options) are supported as well
 
 > Params prop that is set on the Destination or upload options is serialized (encoded according to Tus protocol) and sent as the value of the Upload-Metadata header.
 

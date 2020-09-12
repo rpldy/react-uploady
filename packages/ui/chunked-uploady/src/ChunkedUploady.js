@@ -28,4 +28,3 @@ const ChunkedUploady = (props: ChunkedUploadyProps) => {
 logWarning(CHUNKING_SUPPORT, "This browser doesn't support chunking. Consider using @rpldy/uploady instead");
 
 export default ChunkedUploady;
-

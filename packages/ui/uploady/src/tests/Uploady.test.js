@@ -1,33 +1,22 @@
 import React from "react";
-import { logger, invariant } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { invariant } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import {
-    createContextApi
+    useUploadOptions,
 } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
-import useUploader from "../useUploader";
 import Uploady from "../Uploady";
-
-jest.mock("../useUploader", () => jest.fn());
 
 describe("Uploady tests", () => {
 
-    const uploader = {
-        getOptions: jest.fn(),
-        add: jest.fn(),
-    };
-
     beforeEach(() => {
-        useUploader.mockReturnValueOnce(uploader);
-
         clearJestMocks(
-            uploader.getOptions,
-            uploader.add,
+            useUploadOptions,
             invariant,
         );
     });
 
     it("should render Uploady successfully", () => {
 
-        uploader.getOptions.mockReturnValueOnce({
+        useUploadOptions.mockReturnValueOnce({
             inputFieldName: "file",
         });
 
@@ -43,9 +32,6 @@ describe("Uploady tests", () => {
             <div id="test"/>
         </Uploady>);
 
-        expect(logger.setDebug).toHaveBeenCalledWith(true);
-        expect(createContextApi).toHaveBeenCalledWith(uploader, expect.any(Object));
-
         expect(wrapper.find("#test")).toHaveLength(1);
 
         const input = wrapper.find("input");
@@ -55,13 +41,11 @@ describe("Uploady tests", () => {
         expect(input).toHaveProp("name", "file");
         expect(input).toHaveProp("capture", "user");
         expect(input).toHaveProp("accept", ".doc");
-
-        expect(useUploader).toHaveBeenCalledWith({ autoUpload: true }, listeners);
     });
 
     it("should use provided container for file input", () => {
 
-        uploader.getOptions.mockReturnValueOnce({
+        useUploadOptions.mockReturnValueOnce({
             inputFieldName: "file",
         });
 
@@ -83,7 +67,7 @@ describe("Uploady tests", () => {
 
     it("should show error in case no valid container", () => {
 
-        uploader.getOptions.mockReturnValueOnce({
+        useUploadOptions.mockReturnValueOnce({
             inputFieldContainer: true,
         });
 

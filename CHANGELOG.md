@@ -16,11 +16,11 @@
 ### Bug fixes
 
 - `[shared-ui]` - dont import code from @rpldy/uploady
-- upgraded lerna
 
 ### Internal
 
 - moved non-ui packages to packages/core dir
+- upgraded lerna
 
 ## 0.4.1 (2020-08-03)
 

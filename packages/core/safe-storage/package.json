@@ -1,5 +1,5 @@
 {
-  "version": "0.4.1",
+  "version": "0.5.0",
   "name": "@rpldy/safe-storage",
   "description": "safe (dont throw) versions of local and session storage",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -13,7 +13,7 @@
     "directory": "packages/safe-storage"
   },
   "scripts": {
-      "build": "node ../../../scripts/build.js",
+    "build": "node ../../../scripts/build.js",
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js"
   },
   "devDependencies": {

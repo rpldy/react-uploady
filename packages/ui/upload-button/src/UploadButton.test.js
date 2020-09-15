@@ -47,4 +47,16 @@ describe("<UploadButton> tests", () => {
         expect(wrapper).toHaveText("test");
     });
 
+    it("should call onClick", () => {
+        const onClick = jest.fn();
+
+        const wrapper = mount(<UploadButton text="test" onClick={onClick}>
+            <div>custom</div>
+        </UploadButton>);
+
+        wrapper.simulate("click");
+
+        expect(UploadyContext.showFileUpload).toHaveBeenCalled();
+        expect(onClick).toHaveBeenCalled();
+    });
 });

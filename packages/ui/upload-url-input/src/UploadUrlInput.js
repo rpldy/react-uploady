@@ -1,13 +1,12 @@
 // @flow
-import React, { useRef, useContext, useCallback, forwardRef } from "react";
-import { invariant } from "@rpldy/shared";
-import { UploadyContext, assertContext, useWithForwardRef } from "@rpldy/shared-ui";
+import React, { useRef, useContext, useCallback, forwardRef, useImperativeHandle } from "react";
+import { UploadyContext, assertContext } from "@rpldy/shared-ui";
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadUrlInputProps, UploadMethod } from "./types";
 
 const UploadUrlInput = forwardRef<UploadUrlInputProps, ?HTMLInputElement>(
     (props: UploadUrlInputProps, ref) => {
-        const { ref: inputRef, setRef: setInputRef } = useWithForwardRef<?HTMLInputElement>(ref);
+        const inputRef = useRef<?HTMLInputElement>(null);
         const context = assertContext(useContext(UploadyContext));
 
         const { className, id, placeholder, uploadRef, validate, ignoreKeyPress, ...uploadOptions } = props;
@@ -16,15 +15,11 @@ const UploadUrlInput = forwardRef<UploadUrlInputProps, ?HTMLInputElement>(
         const uploadOptionsRef = useRef<?UploadOptions>();
         uploadOptionsRef.current = uploadOptions;
 
+        useImperativeHandle<?HTMLInputElement>(ref, () => inputRef.current, []);
+
         const upload = useCallback(() => {
-
-            invariant(
-                inputRef.current,
-                "Uploady - UploadUrlInput failed to upload, input ref isn't available"
-            );
-
             const input = inputRef.current,
-                value = input.value;
+                value = input?.value;
 
             if ((validate ? validate(value, input) : value)) {
                 context.upload(value, uploadOptionsRef.current);
@@ -42,13 +37,12 @@ const UploadUrlInput = forwardRef<UploadUrlInputProps, ?HTMLInputElement>(
             }
         }, [upload, ignoreKeyPress]);
 
-		const { setRef: setUploadMethodRef } = useWithForwardRef<UploadMethod>(uploadRef);
-		setUploadMethodRef(upload);
+        useImperativeHandle<?UploadMethod>(uploadRef, () => upload, [upload]);
 
         return <input
             type="text"
             id={id}
-            ref={setInputRef}
+            ref={inputRef}
             className={className}
             onKeyPress={onKeyPress}
             placeholder={placeholder}

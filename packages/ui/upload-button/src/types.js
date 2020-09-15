@@ -9,6 +9,7 @@ export type ButtonProps = {|
     children?: Node,
     text?: string,
     extraProps?: Object,
+    onClick?: EventHandler
 |};
 
 export type UploadButtonProps = {|

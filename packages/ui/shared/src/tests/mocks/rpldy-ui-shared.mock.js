@@ -10,8 +10,6 @@ const withForwardRefMock = {
     ref: { current: null },
 };
 
-const useWithForwardRef = jest.fn(() => withForwardRefMock);
-
 const useBatchStartListener = jest.fn();
 
 const logWarning = jest.fn();
@@ -28,7 +26,6 @@ const uiSharedMock = {
 
     assertContext,
     createContextApi,
-    useWithForwardRef,
     // useBatchAddListener,
     useBatchStartListener,
     // useBatchProgressListener,
@@ -53,7 +50,6 @@ export {
     NoDomUploady,
     assertContext,
     createContextApi,
-    useWithForwardRef,
     withForwardRefMock,
 
     useBatchStartListener,

@@ -33,12 +33,13 @@ Buttons can use different configuration overrides that supersede the options pas
 
 | Name (* = mandatory) | Type          | Default       | Description  
 | --------------       | ------------- | ------------- | -------------
-| id             | string   | undefined | id attribute to pass to the button element
-| text           | string   | "Upload"  | the button text (in case no children passed)
-| className      | string   | undefined | the class attribute to pass to the button element
-| children       | React.Node | undefined | child element(s) to render inside the button (replaces text)
-| extraProps     | Object   | undefined | any other props to pass to the button component (with spread)
-| ref            | React ref | undefined will be passed to the button element to acquire a ref
+| id             | string            | undefined | id attribute to pass to the button element
+| text           | string            | "Upload"  | the button text (in case no children passed)
+| className      | string            | undefined | the class attribute to pass to the button element
+| children       | React.Node        | undefined | child element(s) to render inside the button (replaces text)
+| extraProps     | Object            | undefined | any other props to pass to the button component (with spread)
+| ref            | React ref         | undefined | will be passed to the button element to acquire a ref
+| onClick        | EventHandler      | undefined | function to handle button click (called after showing the system's file selection dialog)
 
 In addition, most [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to UploadButton.
 In order to override configuration passed to the parent Uploady component. 

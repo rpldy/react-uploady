@@ -1,13 +1,16 @@
 // @flow
-import React, { forwardRef, useCallback, useContext, useRef } from "react";
+import React, { forwardRef, useCallback, useContext, useImperativeHandle, useRef } from "react";
 import { getFilesFromDragEvent } from "html-dir-content";
-import { assertContext, UploadyContext, useWithForwardRef } from "@rpldy/shared-ui";
+import { assertContext, UploadyContext } from "@rpldy/shared-ui";
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadDropZoneProps } from "./types";
 
 const UploadDropZone = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
     (props, ref) => {
-        const { ref: containerRef, setRef } = useWithForwardRef<?HTMLDivElement>(ref);
+        const containerRef = useRef(null);
+
+        useImperativeHandle<?HTMLDivElement>(ref, () => containerRef.current, []);
+
         const { upload } = assertContext(useContext(UploadyContext));
 
         const {
@@ -63,12 +66,16 @@ const UploadDropZone = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
             handleEnd();
         }, [handleEnd]);
 
-        return <div id={id} className={className} ref={setRef}
-                    onDragOver={onDragOver}
-                    onDrop={onDrop}
-                    onDragLeave={onDragLeave}
-                    onDragEnd={onDragEnd}
-					{...extraProps}>
+        return <div
+            id={id}
+            className={className}
+            ref={containerRef}
+            onDragOver={onDragOver}
+            onDrop={onDrop}
+            onDragLeave={onDragLeave}
+            onDragEnd={onDragEnd}
+            {...extraProps}
+        >
             {children}
         </div>;
     });

@@ -1,6 +1,6 @@
 import React  from "react";
 import { getFilesFromDragEvent } from "html-dir-content";
-import { UploadyContext, withForwardRefMock} from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
+import { UploadyContext } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import UploadDropZone from "./UploadDropZone";
 
 jest.mock("html-dir-content", () => ({
@@ -17,9 +17,10 @@ describe("UploadDropZone tests", () => {
     });
 
     const testDropZone = (props) => {
+        const mockRef = jest.fn();
 
         const wrapper = mount(<UploadDropZone
-            {...props}>
+            {...props} ref={mockRef}>
             <span>test</span>
         </UploadDropZone>);
 
@@ -37,6 +38,7 @@ describe("UploadDropZone tests", () => {
             wrapper,
             div,
             dropEvent,
+            mockRef
         };
     };
 
@@ -107,25 +109,23 @@ describe("UploadDropZone tests", () => {
 
         const onDragOverClassName = "drag-over";
 
-        withForwardRefMock.setRef.mockImplementationOnce((elm)=>{
-            withForwardRefMock.ref.current = elm;
-        });
-
-        const { div } = testDropZone({
+        const { div, mockRef } = testDropZone({
             onDragOverClassName
         });
 
+        const refElm = mockRef.mock.calls[0][0];
+
         div.simulate("dragover");
-        expect(withForwardRefMock.ref.current.classList.contains("drag-over")).toBe(true);
+        expect(refElm.classList.contains("drag-over")).toBe(true);
         div.simulate("dragend");
-        expect(withForwardRefMock.ref.current.classList.contains("drag-over")).toBe(false);
+        expect(refElm.classList.contains("drag-over")).toBe(false);
 
         div.simulate("dragover");
-        expect(withForwardRefMock.ref.current.classList.contains("drag-over")).toBe(true);
+        expect(refElm.classList.contains("drag-over")).toBe(true);
         div.simulate("dragleave");
-        expect(withForwardRefMock.ref.current.classList.contains("drag-over")).toBe(false);
+        expect(refElm.classList.contains("drag-over")).toBe(false);
 
-        withForwardRefMock.ref.current = null;
-        div.simulate("dragover");
+        // withForwardRefMock.ref.current = null;
+        // div.simulate("dragover");
     });
 });

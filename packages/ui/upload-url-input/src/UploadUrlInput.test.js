@@ -1,11 +1,6 @@
 import React from "react";
-import {
-    UploadyContext,
-    useWithForwardRef,
-    withForwardRefMock
-} from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
+import { UploadyContext } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import UploadUrlInput from "./UploadUrlInput";
-
 
 describe("UploadUrlInput tests", () => {
 
@@ -14,14 +9,9 @@ describe("UploadUrlInput tests", () => {
             UploadyContext.upload
         );
     });
+
     it("should render and upload on enter", () => {
-
         const value = "http://test.com";
-
-        useWithForwardRef.mockReturnValueOnce({
-            ...withForwardRefMock,
-            ref: { current: { value } }
-        });
 
         const wrapper = mount(<UploadUrlInput
             id="uploadInput"
@@ -31,6 +21,8 @@ describe("UploadUrlInput tests", () => {
         />);
 
         const input = wrapper.find("input");
+        input.getDOMNode().value = value;
+
         expect(input).toHaveProp("id", "uploadInput");
         expect(input).toHaveProp("className", "test-input");
         expect(input).toHaveProp("placeholder", "upload url");
@@ -58,26 +50,8 @@ describe("UploadUrlInput tests", () => {
         expect(UploadyContext.upload).not.toHaveBeenCalled();
     });
 
-    it("should throw on no input ref", () => {
-        useWithForwardRef.mockReturnValueOnce({
-            ...withForwardRefMock,
-            ref: { current: null}
-        });
-
-        const wrapper = mount(<UploadUrlInput />);
-
-        expect(() => {
-            wrapper.find("input").props().onKeyPress({ key: "Enter" });
-        }).toThrow("Uploady - ");
-    });
-
     it("should not upload if validate fails", () => {
         const value = "http://test.com";
-
-        useWithForwardRef.mockReturnValueOnce({
-            ...withForwardRefMock,
-            ref: { current: { value } }
-        });
 
         const validate = (inputValue, input) => {
             expect(inputValue).toBe(value);
@@ -86,7 +60,7 @@ describe("UploadUrlInput tests", () => {
         };
 
         const wrapper = mount(<UploadUrlInput validate={validate}/>);
-
+        wrapper.find("input").getDOMNode().value = value;
         wrapper.find("input").props().onKeyPress({ key: "Enter" });
 
         expect(UploadyContext.upload).not.toHaveBeenCalled();
@@ -95,18 +69,18 @@ describe("UploadUrlInput tests", () => {
     it("should upload if validate succeeds", () => {
         const value = "http://test.com";
 
-        useWithForwardRef.mockReturnValueOnce({
-            ...withForwardRefMock,
-            ref: { current: { value } }
-        });
+        const mockRef = jest.fn();
 
         const validate = () => {
             return true;
         };
 
         const wrapper = mount(<UploadUrlInput
-            autoUpload
+            autoUpload ref={mockRef}
             validate={validate}/>);
+
+        expect(mockRef).toHaveBeenCalled();
+        mockRef.mock.calls[0][0].value = value;
 
         wrapper.find("input").props().onKeyPress({ key: "Enter" });
 
@@ -115,4 +89,22 @@ describe("UploadUrlInput tests", () => {
         });
     });
 
+    it("should upload using uploadRef", () => {
+        const value = "http://test.com";
+        const uploadRef = jest.fn();
+        const mockRef = jest.fn();
+
+        mount(<UploadUrlInput
+            autoUpload
+            ref={mockRef}
+            uploadRef={uploadRef}/>);
+
+        mockRef.mock.calls[0][0].value = value;
+
+        uploadRef.mock.calls[0][0]();
+
+        expect(UploadyContext.upload).toHaveBeenCalledWith(value, {
+            autoUpload: true
+        });
+    });
 });

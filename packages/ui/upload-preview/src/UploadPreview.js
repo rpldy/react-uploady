@@ -1,6 +1,5 @@
 // @flow
-import React, { useCallback, useEffect, useMemo } from "react";
-import { useWithForwardRef } from "@rpldy/shared-ui";
+import React, { useCallback, useEffect, useImperativeHandle } from "react";
 import usePreviewsLoader from "./usePreviewsLoader";
 import { getFallbackUrl } from "./utils";
 import { PREVIEW_TYPES } from "./consts";
@@ -19,15 +18,7 @@ const showBasicPreview = (type, url, previewProps, onImgError) =>
 		<img key={url} onError={onImgError} src={url} {...previewProps} />;
 
 const usePreviewMethods = (previews, clearPreviews, previewMethodsRef, onPreviewsChanged) => {
-	const previewMethods = useMemo(() => ({
-		clear: clearPreviews,
-	}), [clearPreviews]);
-
-	const { setRef: setPreviewMethods } = useWithForwardRef<PreviewMethods>(previewMethodsRef);
-
-	if (previewMethodsRef?.current !== previewMethods) {
-		setPreviewMethods(previewMethods);
-	}
+    useImperativeHandle<?PreviewMethods>(previewMethodsRef, () => ({ clear: clearPreviews }), [clearPreviews]);
 
 	useEffect(() => {
 		if (onPreviewsChanged) {

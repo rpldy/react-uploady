@@ -25,7 +25,6 @@ export {
     logWarning,
 } from "./utils";
 
-export { default as useWithForwardRef } from "./useWithForwardRef";
 export { default as assertContext } from "./assertContext";
 export { default as useUploadOptions } from "./useUploadOptions";
 export { default as useAbortItem } from "./useAbortItem";

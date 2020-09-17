@@ -41,7 +41,14 @@ const resolveOnAllChunksFinished = (state: State, item: BatchItem, resolve): boo
     return finished || state.error;
 };
 
-export const handleChunk = (state: State, item: BatchItem, onProgress: OnProgress, chunkResolve: (any) => void, chunk: Chunk, trigger: TriggerMethod): Promise<void> =>
+export const handleChunk = (
+    state: State,
+    item: BatchItem,
+    onProgress: OnProgress,
+    chunkResolve: (any) => void,
+    chunk: Chunk,
+    trigger: TriggerMethod
+): Promise<void> =>
     new Promise((resolve, reject) => {
         try {
             const chunkSendResult = sendChunk(chunk, state, item, onProgress, trigger);

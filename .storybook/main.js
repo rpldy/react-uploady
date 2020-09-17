@@ -24,16 +24,19 @@ const getCurrentNpmVersion = async () => {
 module.exports = {
     stories: async () => {
         const paths = await glob(
-            ["../packages/**/*.stories.js", "!**/node_modules"],
-            { cwd: path.join(process.cwd(), ".storybook") });
+            [
+                "../packages/**/*.stories.js",
+                "!../packages/**/node_modules"
+            ],
+           { cwd: path.join(process.cwd(), ".storybook") });
 
         return ["./welcome.story.js"].concat(paths);
     },
 
     addons: [
-        "@storybook/addon-actions/register",
-        "@storybook/addon-knobs/register",
-        "@storybook/addon-storysource/register",
+        "@storybook/addon-actions",
+        "@storybook/addon-knobs",
+        "@storybook/addon-storysource",
         "storybook-readme/register",
         // "./.storybook/cypressAddon/register",
     ],
@@ -57,7 +60,7 @@ module.exports = {
             mainFields: ["main:dev", "module", "main"],
         };
 
-        // config.devtool = "eval";
+        config.optimization.minimize = false;
 
         return config;
     },

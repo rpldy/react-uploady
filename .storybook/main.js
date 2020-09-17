@@ -53,6 +53,10 @@ module.exports = {
             "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
         }));
 
+        config.resolve = {
+            mainFields: ["main:dev", "module", "main"],
+        };
+
         // config.devtool = "eval";
 
         return config;

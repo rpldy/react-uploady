@@ -3,8 +3,9 @@
   "name": "@rpldy/upload-url-input",
   "description": "input component to enter a URL (or any string for that matter) to be sent as an upload",
   "author": "yoav niran (https://github.com/yoavniran)",
-  "main": "lib/index.js",
-  "module": "src/index.js",
+    "main": "lib/cjs/index.js",
+    "module": "lib/esm/index.js",
+    "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
   "repository": {

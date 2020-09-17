@@ -72,6 +72,16 @@ describe("sendChunks tests", () => {
                 sendOptions = {},
                 onProgress = "progress";
 
+            const parallel = state.parallel || 1;
+
+            let mockedhandleChunkRequest = handleChunkRequest.mockResolvedValueOnce();
+
+            if (parallel > 1) {
+                for (let i = 0; i < (parallel-1); i++) {
+                    mockedhandleChunkRequest = mockedhandleChunkRequest.mockResolvedValueOnce();
+                }
+            }
+
             getChunksToSend.mockReturnValueOnce(chunks);
 
             const noop = () => {};

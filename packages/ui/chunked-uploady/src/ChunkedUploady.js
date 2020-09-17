@@ -1,5 +1,6 @@
 // @flow
 import React, { useMemo } from "react";
+import { hasWindow } from "@rpldy/shared";
 import { logWarning } from "@rpldy/shared-ui";
 import Uploady, { composeEnhancers } from "@rpldy/uploady";
 import getChunkedEnhancer, { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
@@ -25,6 +26,6 @@ const ChunkedUploady = (props: ChunkedUploadyProps) => {
     return <Uploady {...uploadyProps} enhancer={enhancer}/>;
 };
 
-logWarning(CHUNKING_SUPPORT, "This browser doesn't support chunking. Consider using @rpldy/uploady instead");
+logWarning(CHUNKING_SUPPORT || !hasWindow, "This browser doesn't support chunking. Consider using @rpldy/uploady instead");
 
 export default ChunkedUploady;

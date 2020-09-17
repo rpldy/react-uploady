@@ -78,18 +78,19 @@ const isNewBatchStarting = (queue: QueueState, itemId: string): boolean => {
     return queue.getState().currentBatch !== batch.id;
 };
 
-const loadNewBatchForItem = async (queue: QueueState, itemId: string) => {
+const loadNewBatchForItem = (queue: QueueState, itemId: string) => {
     const batch = getBatchFromItemId(queue, itemId);
 
-    const isCancelled = await queue.cancellable(UPLOADER_EVENTS.BATCH_START, batch);
+    return queue.cancellable(UPLOADER_EVENTS.BATCH_START, batch)
+        .then((isCancelled: boolean) => {
+            if (!isCancelled) {
+                queue.updateState((state) => {
+                    state.currentBatch = batch.id;
+                });
+            }
 
-    if (!isCancelled) {
-        queue.updateState((state) => {
-            state.currentBatch = batch.id;
+            return !isCancelled;
         });
-    }
-
-    return !isCancelled;
 };
 
 const isBatchFinished = (queue: QueueState): boolean => {

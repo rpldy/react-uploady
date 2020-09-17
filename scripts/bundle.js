@@ -44,7 +44,12 @@ const getPackageRootFromName = (name, repoPackages) => {
     return getEntryPath(pkgName, repoPackages);
 };
 
-const getEntriesFromDefinition = ({ pkgs }, type, repoPackages) => {
+const isExcluded = (entry, exclude) => {
+    const pkgPath = _.isString(entry) ? entry : entry.location;
+    return !!exclude.find((e) => !!~pkgPath.indexOf(e));
+};
+
+const getEntriesFromDefinition = ({ pkgs, exclude }, type, repoPackages) => {
     pkgs = [].concat(pkgs);
 
     const entries = pkgs.map((p) => {
@@ -71,7 +76,8 @@ const getEntriesFromDefinition = ({ pkgs }, type, repoPackages) => {
         return result;
     });
 
-    return _.flatten(entries);
+    return _.flatten(entries)
+        .filter((p) => !exclude || !isExcluded(p, exclude));
 };
 
 const validateSize = (type, name, wpResult) => {
@@ -167,7 +173,7 @@ const handleBundleOutput = (type, definition, wpResult, repoPackages) => {
 const getWebpackConfig = (type, name, definition, repoPackages) => {
     const entries = getEntriesFromDefinition(definition, type, repoPackages);
 
-    logger.verbose(`>>>> creating bundle: '${name}' of type: '${type}' - with entries: `, entries);
+    logger.verbose(`>>>> creating bundle: '${name}' of type: '${type}' - with entries: ${entries.length}`);
 
     return wpMerge(
         config.webpackConfig.base,

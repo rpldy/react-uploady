@@ -3,8 +3,9 @@
   "name": "@rpldy/retry-hooks",
   "description": "useful hooks for the retry functionality from @rpldy/retry",
   "author": "yoav niran (https://github.com/yoavniran)",
-  "main": "lib/index.js",
-  "module": "src/index.js",
+    "main": "lib/cjs/index.js",
+    "module": "lib/esm/index.js",
+    "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
   "keywords": [

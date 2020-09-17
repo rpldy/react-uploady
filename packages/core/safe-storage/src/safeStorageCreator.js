@@ -1,11 +1,12 @@
 // @flow
+import { hasWindow } from "@rpldy/shared";
 
 export default (storageType: string) => {
 	let isSupported = false;
 
 	const checkSupport = () => {
 		try {
-			if (storageType in window) {
+			if (hasWindow && storageType in window) {
 				const key = "__lsTest";
 				window[storageType].setItem(key, `__test-${Date.now()}`);
 				window[storageType].removeItem(key);

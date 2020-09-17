@@ -50,29 +50,34 @@ export default (options?: CreateOptions): UploaderType => {
         return uploader;
     };
 
-    const add = async (files: UploadInfo | UploadInfo[], addOptions?: ?UploadOptions): Promise<void> => {
+    const add = (files: UploadInfo | UploadInfo[], addOptions?: ?UploadOptions): Promise<void> => {
         const processOptions: CreateOptions = merge({}, uploaderOptions, addOptions);
         const batch = createBatch(files, uploader.id, processOptions);
+        let resultP;
 
         if (batch.items.length) {
             // $FlowFixMe - https://github.com/facebook/flow/issues/8215
-            const isCancelled = await cancellable(UPLOADER_EVENTS.BATCH_ADD, batch, processOptions);
+            resultP = cancellable(UPLOADER_EVENTS.BATCH_ADD, batch, processOptions)
+                .then((isCancelled: boolean) => {
+                    if (!isCancelled) {
+                        logger.debugLog(`uploady.uploader [${uploader.id}]: new items added - auto upload =
+                        ${String(processOptions.autoUpload)}`, batch.items);
 
-            if (!isCancelled) {
-                logger.debugLog(`uploady.uploader [${uploader.id}]: new items added - auto upload = ${String(processOptions.autoUpload)}`, batch.items);
-
-                if (processOptions.autoUpload) {
-                    processor.process(batch, processOptions);
-                } else {
-                    pendingBatches.push({ batch, uploadOptions: processOptions });
-                }
-            } else {
-                batch.state = BATCH_STATES.CANCELLED;
-                trigger(UPLOADER_EVENTS.BATCH_CANCEL, batch);
-            }
+                        if (processOptions.autoUpload) {
+                            processor.process(batch, processOptions);
+                        } else {
+                            pendingBatches.push({ batch, uploadOptions: processOptions });
+                        }
+                    } else {
+                        batch.state = BATCH_STATES.CANCELLED;
+                        trigger(UPLOADER_EVENTS.BATCH_CANCEL, batch);
+                    }
+                });
         } else {
             logger.debugLog(`uploady.uploader: no items to add. batch ${batch.id} is empty. check fileFilter if this isn't intended`);
         }
+
+        return resultP || Promise.resolve();
     };
 
     const abort = (id?: string): void => {

@@ -19,7 +19,8 @@ describe("processBatchItems tests", () => {
         clearJestMocks(
             processFinishedRequest,
             triggerUpdater,
-            mockNext);
+            mockNext
+        );
     });
 
     const requestResponse = {};
@@ -55,6 +56,8 @@ describe("processBatchItems tests", () => {
         queueState.cancellable.mockResolvedValueOnce(false);
         queueState.sender.send.mockReturnValueOnce(sendResult);
 
+        triggerUpdater.mockResolvedValueOnce();
+
         await processBatchItems(queueState, ["u1"], mockNext);
         await waitForTest();
 
@@ -82,6 +85,8 @@ describe("processBatchItems tests", () => {
             .mockResolvedValueOnce(false);
 
         queueState.sender.send.mockReturnValueOnce(sendResult);
+
+        triggerUpdater.mockResolvedValueOnce();
 
         await processBatchItems(queueState, ["u1", "u2"], mockNext);
         await waitForTest();
@@ -285,6 +290,8 @@ describe("processBatchItems tests", () => {
         queueState.cancellable
             .mockResolvedValueOnce(false)
             .mockResolvedValueOnce(true);
+
+        triggerUpdater.mockResolvedValueOnce();
 
         queueState.sender.send.mockReturnValueOnce(sendResult);
 

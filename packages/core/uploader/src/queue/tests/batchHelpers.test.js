@@ -164,6 +164,8 @@ describe("batchHelpers tests", () => {
 				}
 			});
 
+			queueState.cancellable.mockResolvedValueOnce(false);
+
 			const allowed = await batchHelpers.loadNewBatchForItem(queueState, "u1");
 
 			expect(allowed).toBe(true);

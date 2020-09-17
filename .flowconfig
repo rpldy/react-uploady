@@ -14,11 +14,14 @@
 
 [options]
 module.ignore_non_literal_requires=true
-module.system.node.main_field=module
+module.system.node.main_field=main:dev
 esproposal.optional_chaining=enable
 module.system.node.resolve_dirname=node_modules
 module.name_mapper='^invariant$' -> '<PROJECT_ROOT>/node_modules/invariant/invariant'
 module.name_mapper='^html-dir-content$' -> '<PROJECT_ROOT>/node_modules/html-dir-content/dist/html-dir-content'
 module.name_mapper='^@storybook/addon-knobs' -> '<PROJECT_ROOT>/node_modules/@storybook/addon-knobs/dist'
 module.name_mapper='^react-image-crop$' -> '<PROJECT_ROOT>/node_modules/react-image-crop/dist/ReactCrop.min.js'
-#module.name_mapper='shared/\(.*\)$' -> '<PROJECT_ROOT>/src/shared/\1'
+module.name_mapper='^styled-components$' -> '<PROJECT_ROOT>/node_modules/styled-components/dist/styled-components.cjs.js'
+module.name_mapper='^react-dnd$' -> '<PROJECT_ROOT>/node_modules/react-dnd/dist/cjs/index.js'
+module.name_mapper='^react-dnd-html5-backend$' -> '<PROJECT_ROOT>/node_modules/react-dnd-html5-backend/dist/cjs/index.js'
+module.name_mapper='^rc-progress$' -> '<PROJECT_ROOT>/node_modules/rc-progress/es/index.js'

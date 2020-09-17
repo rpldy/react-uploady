@@ -1,7 +1,7 @@
 // @flow
 import React, { forwardRef, memo, useRef } from "react";
 import ReactDOM from "react-dom";
-import { invariant } from "@rpldy/shared";
+import { invariant, hasWindow } from "@rpldy/shared";
 import { NoDomUploady, useUploadOptions } from "@rpldy/shared-ui";
 
 import type { UploadyProps } from "@rpldy/shared-ui";
@@ -14,26 +14,38 @@ type FileInputPortalProps = {|
     webkitdirectory: ?boolean,
     id: ?string,
     style: Object,
+    noPortal: boolean,
 |};
 
 const NO_CONTAINER_ERROR_MSG = "Uploady - Container for file input must be a valid dom element";
 
-const FileInputFieldPortal = memo(forwardRef((props: FileInputPortalProps, ref) => {
-    const { container, ...inputProps } = props;
+const renderInput = (inputProps, instanceOptions, ref) => <input
+    {...inputProps}
+    name={instanceOptions.inputFieldName}
+    type="file"
+    ref={ref}
+/>;
+
+const renderInPortal = (container, isValidContainer, inputProps, instanceOptions, ref) =>
+    container && isValidContainer ?
+        ReactDOM.createPortal(renderInput(inputProps, instanceOptions, ref), container) :
+        null;
+
+const FileInputField = memo(forwardRef(({ container, noPortal, ...inputProps }: FileInputPortalProps, ref) => {
     const instanceOptions = useUploadOptions();
     const isValidContainer = container && container.nodeType === 1;
 
     invariant(
-        isValidContainer,
+        isValidContainer || !hasWindow,
         NO_CONTAINER_ERROR_MSG
     );
 
-    return container && isValidContainer ? ReactDOM.createPortal(<input
-        {...inputProps}
-        name={instanceOptions.inputFieldName}
-        type="file"
-        ref={ref}
-    />, container) : null;
+    // In DEV - SSR React will warn on mismatch between client&server :( -
+    // https://github.com/facebook/react/issues/12615
+    // https://github.com/facebook/react/issues/13097
+    return noPortal ?
+        renderInput(inputProps, instanceOptions, ref) :
+        renderInPortal(container, isValidContainer, inputProps, instanceOptions, ref);
 }));
 
 const Uploady = (props: UploadyProps) => {
@@ -46,14 +58,17 @@ const Uploady = (props: UploadyProps) => {
         inputFieldContainer,
         customInput,
         fileInputId,
+        noPortal  = false,
         ...noDomProps
     } = props;
 
-    const container = !customInput ? (inputFieldContainer || document.body) : null;
+    const container = !customInput ?
+        (inputFieldContainer || (hasWindow ? document.body : null)) : null;
+
     const internalInputFieldRef = useRef<?HTMLInputElement>();
 
-    return <NoDomUploady {...noDomProps} inputRef={internalInputFieldRef}>
-        {!customInput ? <FileInputFieldPortal
+    return <NoDomUploady {...noDomProps} inputRef={internalInputFieldRef} >
+        {!customInput ? <FileInputField
             container={container}
             multiple={multiple}
             capture={capture}
@@ -62,6 +77,7 @@ const Uploady = (props: UploadyProps) => {
             style={{ display: "none" }}
             ref={internalInputFieldRef}
             id={fileInputId}
+            noPortal={noPortal}
         /> : null}
 
         {children}

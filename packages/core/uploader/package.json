@@ -3,8 +3,9 @@
   "name": "@rpldy/uploader",
   "description": "the processing and queuing engine for react-uploady",
   "author": "yoav niran (https://github.com/yoavniran)",
-  "main": "lib/index.js",
-  "module": "src/index.js",
+    "main": "lib/cjs/index.js",
+    "module": "lib/esm/index.js",
+    "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
   "keywords": [
@@ -20,7 +21,7 @@
   },
   "scripts": {
     "build": "node ../../../scripts/build.js",
-    "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
+    "flow:copy": "flow-copy-source ./src ./lib/flow --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
     "@rpldy/life-events": "^0.5.0",

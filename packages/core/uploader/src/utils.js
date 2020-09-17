@@ -1,10 +1,11 @@
 // @flow
 import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "./defaults";
+import { hasWindow } from "@rpldy/shared";
 
 import type { Destination } from "@rpldy/shared";
 import type { CreateOptions } from "./types";
 
-const FILE_LIST_SUPPORT = "FileList" in window;
+const FILE_LIST_SUPPORT = hasWindow && "FileList" in window;
 
 const getMandatoryDestination = (dest: Destination): Destination => {
     return {

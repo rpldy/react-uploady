@@ -3,8 +3,9 @@
   "name": "@rpldy/safe-storage",
   "description": "safe (dont throw) versions of local and session storage",
   "author": "yoav niran (https://github.com/yoavniran)",
-  "main": "lib/index.js",
-  "module": "src/index.js",
+    "main": "lib/cjs/index.js",
+    "module": "lib/esm/index.js",
+    "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
   "repository": {
@@ -16,7 +17,10 @@
     "build": "node ../../../scripts/build.js",
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js"
   },
-  "devDependencies": {
+    "dependencies": {
+        "@rpldy/shared": "^0.5.0"
+    },
+    "devDependencies": {
     "flow-bin": "^0.133.0"
   },
   "publishConfig": {

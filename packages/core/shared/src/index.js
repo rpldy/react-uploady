@@ -28,16 +28,16 @@ export {
 };
 
 export {
+    //cant use * because of flow
     isFunction,
 	isPlainObject,
     isSamePropInArrays,
     devFreeze,
-
     merge,
     getMerge,
-
     clone,
     pick,
+    hasWindow,
 } from "./utils";
 
 export type {

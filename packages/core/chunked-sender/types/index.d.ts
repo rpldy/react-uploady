@@ -48,4 +48,6 @@ export const createChunkedSender: (options: ChunkedOptions) => ChunkedSender;
 
 export const CHUNKING_SUPPORT: boolean;
 
+export const hasWindow: boolean;
+
 export default getChunkedEnhancer;

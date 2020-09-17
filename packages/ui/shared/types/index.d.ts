@@ -86,6 +86,7 @@ export interface UploadyProps extends NoDomUploadyProps {
     accept?: string;
     webkitdirectory?: boolean;
     fileInputId?: string;
+    noPortal?: boolean;
 }
 
 export const NoDomUploady: React.ComponentType<NoDomUploadyProps>;

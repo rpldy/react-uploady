@@ -7,20 +7,26 @@ const isEmpty = (val) =>
 	(val === null || val === undefined);
 
 export default <T>(trigger: Trigger<T>, event?: string, ...args?: mixed[]): Outcome<T> => {
-	const doTrigger = async (event: string, ...args?: mixed[]): Promise<?T> => {
-		let result;
+	const doTrigger = (event: string, ...args?: mixed[]): Promise<?T> => new Promise((resolve, reject) => {
 		const results: Promise<?T>[] = trigger(event, ...args);
 
 		if (results && results.length) {
-			const resolved = await Promise.all(results);
+            Promise.all(results)
+                .catch(reject)
+                .then((resolvedResults) => {
+                    let result;
+                    if (resolvedResults) {
+                        while (isEmpty(result) && resolvedResults.length) {
+                            result = resolvedResults.pop();
+                        }
+                    }
 
-			while (isEmpty(result) && resolved.length) {
-				result = resolved.pop();
-			}
-		}
-
-		return isEmpty(result) ? undefined : result;
-	};
+                    resolve(isEmpty(result) ? undefined : result);
+                });
+		} else {
+		    resolve();
+        }
+	});
 
 	return event ? doTrigger(event, ...args) : doTrigger;
 };

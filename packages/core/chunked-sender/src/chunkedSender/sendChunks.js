@@ -41,17 +41,26 @@ const resolveOnAllChunksFinished = (state: State, item: BatchItem, resolve): boo
     return finished || state.error;
 };
 
-export const handleChunk = async (state: State, item: BatchItem, onProgress: OnProgress, resolve: (any) => void, chunk: Chunk, trigger: TriggerMethod) => {
-    const chunkSendResult = sendChunk(chunk, state, item, onProgress, trigger);
-    await handleChunkRequest(state, item, chunk.id, chunkSendResult, trigger);
+export const handleChunk = (state: State, item: BatchItem, onProgress: OnProgress, chunkResolve: (any) => void, chunk: Chunk, trigger: TriggerMethod): Promise<void> =>
+    new Promise((resolve, reject) => {
+        try {
+            const chunkSendResult = sendChunk(chunk, state, item, onProgress, trigger);
 
-    if (!resolveOnAllChunksFinished(state, item, resolve)) {
-        //not finished - continue sending remaining chunks
-        sendChunks(state, item, onProgress, resolve, trigger);
-    }
-};
+            handleChunkRequest(state, item, chunk.id, chunkSendResult, trigger)
+                .then(() => {
+                    resolve();
 
-const sendChunks = async (
+                    if (!resolveOnAllChunksFinished(state, item, chunkResolve)) {
+                        //not finished - continue sending remaining chunks
+                        sendChunks(state, item, onProgress, chunkResolve, trigger);
+                    }
+                });
+        } catch (ex) {
+            reject(ex);
+        }
+    });
+
+const sendChunks = (
     state: State,
     item: BatchItem,
     onProgress: OnProgress,

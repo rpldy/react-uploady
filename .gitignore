@@ -40,4 +40,4 @@ cypress/examples
 tstest/
 
 server/tusFiles/
-
+test/react-uploady-ssr/

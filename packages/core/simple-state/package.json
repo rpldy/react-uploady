@@ -3,8 +3,9 @@
   "name": "@rpldy/simple-state",
   "description": "deep proxy object, so it's only updateable through an update method",
   "author": "yoav niran (https://github.com/yoavniran)",
-  "main": "lib/index.js",
-  "module": "src/index.js",
+    "main": "lib/cjs/index.js",
+    "module": "lib/esm/index.js",
+    "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
   "repository": {

@@ -78,6 +78,8 @@ describe("UploadDropZone tests", () => {
             htmlDirContentParams: htmlDirParams
         });
 
+        getFilesFromDragEvent.mockResolvedValueOnce([1, 2]);
+
         await div.props().onDrop(dropEvent);
 
         expect(getFilesFromDragEvent).toHaveBeenCalledWith(

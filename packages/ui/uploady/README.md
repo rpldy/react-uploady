@@ -72,6 +72,7 @@ It provides multiple hooks that enable more advanced features and data for clien
 | accept               | string        | null          | [input/file#accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept)
 | webkitdirectory      | boolean       | false         | [webkitdirectory](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory)
 | fileInputId          | string        | undefined     | the value to use for the internal file input element
+| noPortal             | boolean       | false         | Dont render Uploady's file input in a portal. (default: false) For SSR, noPortal = false causes a React warning in DEV.
 
 ## Example
 

@@ -57,10 +57,10 @@ RU has a small footprint (by design) with very few (and small) dependencies.
 
 | Bundle         | Minified size | GZipped size
 | -------------- | ------------- | -------------
-| core                         | 31.5KB          | 10.1KB
-| core + ui                    | 42.6KB          | 12.9KB
-| core + ui + chunked support  | 53.1KB          | 15.4KB
-| everything                   | 80.9KB          | 16.2KB
+| core                         | 31.5KB          | 9.79KB
+| core + ui                    | 42.6KB          | 12.5KB
+| core + ui + chunked support  | 49.9KB          | 14.9KB
+| everything                   | 76.3KB          | 22.1KB
 
 ## Documentation
 
@@ -317,7 +317,7 @@ See this [guide](guides/UMD.md) for more information on how to use.
 | core + ui + chunked support  | https://cdn.jsdelivr.net/npm/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js  
 | everything                   | https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/rpldy-all.umd.min.js
 
-You will most likely need the polyfill (regenerator & core js) bundle as well (load it first):
+You will most likely need the polyfill (core js) bundle as well (load it first):
 
 - core bundles -> https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/polyfills-bundle.js
 - everything bundle -> https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/polyfills-all-bundle.js
@@ -331,7 +331,7 @@ You will most likely need the polyfill (regenerator & core js) bundle as well (l
 | core + ui + chunked support  | https://unpkg.com/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js  
 | everything                   | https://unpkg.com/@rpldy/uploady/umd/rpldy-all.umd.min.js
 
-You will most likely need the polyfill (regenerator & core js) bundle as well (load it first):
+You will most likely need the polyfill (core js) bundle as well (load it first):
 
 - core bundles -> https://unpkg.com/@rpldy/uploady/umd/polyfills-bundle.js
 - everything bundle -> https://unpkg.com/@rpldy/uploady/umd/polyfills-all-bundle.js

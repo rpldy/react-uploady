@@ -72,8 +72,9 @@ export const getNextIdGroup = (queue: QueueState): ?string[] => {
 	return nextGroup;
 };
 
-const processNext = async (queue: QueueState) => {
+const processNext = (queue: QueueState): Promise<void> => {
 	const ids = getNextIdGroup(queue);
+    let resultP = Promise.resolve();
 
 	if (ids) {
 		const currentCount = queue.getCurrentActiveCount(),
@@ -83,26 +84,36 @@ const processNext = async (queue: QueueState) => {
 			logger.debugLog("uploader.processor: Processing next upload - ", {
 				ids,
 				state: queue.getState(),
-				currentCount,
-			});
+                currentCount,
+            });
 
-			let cancelled = false;
+            let cancelled = false;
+            let newBatchP = Promise.resolve(false);
 
-			if (isNewBatchStarting(queue, ids[0])) {
-				const allowBatch = await loadNewBatchForItem(queue, ids[0]);
-				cancelled = !allowBatch;
+            if (isNewBatchStarting(queue, ids[0])) {
+                newBatchP = loadNewBatchForItem(queue, ids[0])
+                    .then((allowBatch) => {
+                        cancelled = !allowBatch;
 
-				if (cancelled) {
-					cancelBatchForItem(queue, ids[0]);
-					processNext(queue);
-				}
-			}
+                        if (cancelled) {
+                            cancelBatchForItem(queue, ids[0]);
+                            processNext(queue);
+                        }
 
-			if (!cancelled) {
-				processBatchItems(queue, ids, processNext);
-			}
-		}
-	}
+                        return cancelled;
+                    });
+            }
+
+            resultP = newBatchP
+                .then((cancelled: boolean) => {
+                    if (!cancelled) {
+                        processBatchItems(queue, ids, processNext);
+                    }
+                });
+        }
+    }
+
+	return resultP;
 };
 
 export default processNext;

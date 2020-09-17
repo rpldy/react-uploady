@@ -1,5 +1,5 @@
 // @flow
-import { logger } from "@rpldy/shared";
+import { logger, hasWindow } from "@rpldy/shared";
 import createState, { unwrap } from "@rpldy/simple-state";
 import { SENDER_EVENTS, UPLOADER_EVENTS } from "../consts";
 import processQueueNext from "./processQueueNext";
@@ -111,7 +111,7 @@ export default (
         handleItemProgress,
     };
 
-    if (logger.isDebugOn()) {
+    if (hasWindow && logger.isDebugOn()) {
         window[`__rpldy_${uploaderId}_queue_state`] = queueState;
     }
 

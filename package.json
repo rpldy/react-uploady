@@ -10,7 +10,7 @@
     "bundle:serve": "http-server ./bundle -p 8009",
     "build": "lerna exec --stream -- FORCE_COLOR=1 NODE_ENV=production yarn build;",
     "clean": "rimraf bundle; lerna exec --stream -- rimraf lib umd",
-    "release": "yarn bootstrap; yarn clean; yarn build; yarn bundle:prod; yarn flow:copy; lerna publish",
+    "release": "yarn bootstrap; yarn clean; yarn build; yarn bundle:prod; lerna publish",
     "release:force": "yarn release --force-publish=*",
     "sb:start": "start-storybook -p 9111 --ci",
     "sb:build": "build-storybook -c .storybook -o .sb-static",
@@ -53,6 +53,7 @@
   "devDependencies": {
     "@babel/cli": "^7.10.5",
     "@babel/core": "^7.11.0",
+    "@babel/plugin-proposal-export-default-from": "^7.10.4",
     "@babel/plugin-proposal-function-bind": "^7.10.5",
     "@babel/plugin-proposal-optional-chaining": "^7.11.0",
     "@babel/plugin-transform-runtime": "^7.11.0",
@@ -63,11 +64,11 @@
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.2",
     "@commitlint/config-lerna-scopes": "^9.1.1",
-    "@storybook/addon-actions": "^5.3.19",
+    "@storybook/addon-actions": "^6.0.21",
     "@storybook/addon-console": "^1.2.1",
-    "@storybook/addon-knobs": "^5.3.19",
-    "@storybook/addon-storysource": "^5.3.19",
-    "@storybook/react": "^5.3.19",
+    "@storybook/addon-knobs": "^6.0.21",
+    "@storybook/addon-storysource": "^6.0.21",
+    "@storybook/react": "^6.0.21",
     "@typescript-eslint/eslint-plugin": "^3.7.1",
     "@typescript-eslint/parser": "^3.7.1",
     "babel-eslint": "^10.1.0",
@@ -126,6 +127,7 @@
     "typescript": "^3.9.5",
     "virtual-module-webpack-plugin": "^0.4.1",
     "wait-on": "^5.1.0",
+    "weak-napi": "^2.0.2",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-merge": "^5.0.9",
@@ -133,6 +135,5 @@
   },
   "optionalDependencies": {
     "fsevents": "^2.1.2"
-  },
-  "dependencies": {}
+  }
 }

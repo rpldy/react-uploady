@@ -80,43 +80,45 @@ const parseResponseJson = (response: string, headers: ?Headers, options: SendOpt
 	return parsed;
 };
 
-const processResponse = async (sendRequest: SendRequest, options: SendOptions): Promise<UploadData> => {
-	let state, response,
-		status = 0;
+const processResponse = (sendRequest: SendRequest, options: SendOptions): Promise<UploadData> =>
+    sendRequest
+        .pXhr
+        .then((xhr) => {
+            let state, response, status;
+            logger.debugLog("uploady.sender: received upload response ", xhr);
 
-	try {
-		const xhr = await sendRequest.pXhr;
+            state = ~SUCCESS_CODES.indexOf(xhr.status) ?
+                FILE_STATES.FINISHED : FILE_STATES.ERROR;
 
-		logger.debugLog("uploady.sender: received upload response ", xhr);
+            status = xhr.status;
 
-		state = ~SUCCESS_CODES.indexOf(xhr.status) ?
-			FILE_STATES.FINISHED : FILE_STATES.ERROR;
+            const resHeaders = parseResponseHeaders(xhr);
 
-		status = xhr.status;
+            response = {
+                data: parseResponseJson(xhr.response, resHeaders, options),
+                headers: resHeaders,
+            };
 
-		const resHeaders = parseResponseHeaders(xhr);
+            return {
+                status,
+                state,
+                response,
+            };
+        })
+        .catch((error) => {
+            let state, response;
 
-		response = {
-			data: parseResponseJson(xhr.response, resHeaders, options),
-			headers: resHeaders,
-		};
-	} catch (ex) {
-		if (sendRequest.aborted) {
-			state = FILE_STATES.ABORTED;
-			response = "aborted";
-		} else {
-			logger.debugLog("uploady.sender: upload failed: ", ex);
-			state = FILE_STATES.ERROR;
-			response = ex;
-		}
-	}
+            if (sendRequest.aborted) {
+                state = FILE_STATES.ABORTED;
+                response = "aborted";
+            } else {
+                logger.debugLog("uploady.sender: upload failed: ", error);
+                state = FILE_STATES.ERROR;
+                response = error;
+            }
 
-	return {
-		status,
-		state,
-		response,
-	};
-};
+            return { error: true, state, response, status: 0 };
+        });
 
 const abortRequest = (sendRequest: SendRequest) => {
 	let abortCalled = false;

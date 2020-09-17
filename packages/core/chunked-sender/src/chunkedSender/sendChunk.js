@@ -34,54 +34,55 @@ const getSkippedResult = (): SendResult => ({
 	senderType: "chunk-skipped-sender",
 });
 
-const uploadChunkWithUpdatedData = async (
-	chunk: Chunk,
-	state: State,
-	item: BatchItem,
-	onProgress: OnProgress,
-	trigger: TriggerMethod,
+const uploadChunkWithUpdatedData = (
+    chunk: Chunk,
+    state: State,
+    item: BatchItem,
+    onProgress: OnProgress,
+    trigger: TriggerMethod,
 ): Promise<SendResult> => {
-	const sendOptions = {
-		...unwrap(state.sendOptions),
-		headers: {
-			...state.sendOptions.headers,
-			"Content-Range": getContentRangeValue(chunk, chunk.data, item),
-		}
-	};
+    const sendOptions = {
+        ...unwrap(state.sendOptions),
+        headers: {
+            ...state.sendOptions.headers,
+            "Content-Range": getContentRangeValue(chunk, chunk.data, item),
+        }
+    };
 
-	const chunkItem = createBatchItem(chunk.data, chunk.id);
+    const chunkItem = createBatchItem(chunk.data, chunk.id);
 
-	const onChunkProgress = (e) => {
-		onProgress(e, [chunk]);
-	};
+    const onChunkProgress = (e) => {
+        onProgress(e, [chunk]);
+    };
 
-	const chunkIndex = state.chunks.indexOf(chunk);
+    const chunkIndex = state.chunks.indexOf(chunk);
 
-	// $FlowFixMe - https://github.com/facebook/flow/issues/8215
-	const updatedData = await triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, {
-		item: unwrap(item),
-		chunk: pick(chunk, ["id", "start", "end", "index", "attempt"]),
-		chunkItem: chunkItem,
-		sendOptions,
-		url: state.url,
-		chunkIndex,
-		chunkCount: state.chunks.length,
-		onProgress,
-	});
+    return triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, {
+        item: unwrap(item),
+        chunk: pick(chunk, ["id", "start", "end", "index", "attempt"]),
+        chunkItem: chunkItem,
+        sendOptions,
+        url: state.url,
+        chunkIndex,
+        chunkCount: state.chunks.length,
+        onProgress,
+    })
+        // $FlowFixMe - https://github.com/facebook/flow/issues/8215
+        .then((updatedData: ChunkStartEventData & boolean) => {
+            const skipChunk = (updatedData === false);
 
-	const skipChunk = (updatedData === false);
+            if (skipChunk) {
+                logger.debugLog(`chunkedSender.sendChunk: received false from CHUNK_START handler - skipping chunk ${chunkIndex}, item ${item.id}`);
+            }
 
-	if (skipChunk) {
-		logger.debugLog(`chunkedSender.sendChunk: received false from CHUNK_START handler - skipping chunk ${chunkIndex}, item ${item.id}`);
-	}
-
-	//upload the chunk to the server
-	return skipChunk ?
-		getSkippedResult() :
-		xhrSend([chunkItem],
-			updatedData?.url || state.url,
-			mergeWithUndefined({}, sendOptions, updatedData?.sendOptions),
-			onChunkProgress);
+            //upload the chunk to the server
+            return skipChunk ?
+                getSkippedResult() :
+                xhrSend([chunkItem],
+                    updatedData?.url || state.url,
+                    mergeWithUndefined({}, sendOptions, updatedData && updatedData.sendOptions),
+                    onChunkProgress);
+        });
 };
 
 export default (

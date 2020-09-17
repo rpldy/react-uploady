@@ -32,13 +32,15 @@ const UploadDropZone = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
 
         const dropFileHandler = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             return dropHandler ?
-                dropHandler(e) :
+                Promise.resolve(dropHandler(e)) :
                 getFilesFromDragEvent(e, htmlDirContentParams || {});
         }, [dropHandler, htmlDirContentParams]);
 
-        const handleDropUpload = useCallback(async (e: SyntheticDragEvent<HTMLDivElement>) => {
-            const files = await dropFileHandler(e);
-            upload(files, uploadOptionsRef.current);
+        const handleDropUpload = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
+            dropFileHandler(e)
+                .then((files) => {
+                    upload(files, uploadOptionsRef.current);
+                });
         }, [upload, dropFileHandler, uploadOptionsRef]);
 
         const onDragOver = useCallback((e) => {
@@ -49,11 +51,11 @@ const UploadDropZone = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
             }
         }, [onDragOverClassName, containerRef]);
 
-        const onDrop = useCallback(async (e: SyntheticDragEvent<HTMLDivElement>) => {
+        const onDrop = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             e.preventDefault();
             e.persist();
             handleEnd();
-            await handleDropUpload(e);
+            handleDropUpload(e);
         }, [handleEnd, handleDropUpload]);
 
         const onDragLeave = useCallback(() => {

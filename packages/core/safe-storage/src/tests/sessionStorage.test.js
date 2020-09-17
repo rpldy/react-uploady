@@ -1,3 +1,5 @@
+import "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+
 describe("sessionStorage tests", () => {
 
     describe("supported tests", () => {

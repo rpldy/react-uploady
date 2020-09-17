@@ -1,5 +1,5 @@
 // @flow
-import { merge } from "@rpldy/shared";
+import { merge, hasWindow } from "@rpldy/shared";
 import { DEFAULT_OPTIONS } from "./defaults";
 
 import type { FileLike } from "@rpldy/shared";
@@ -12,7 +12,7 @@ let sliceMethod = null;
 
 const isChunkingSupported = (): boolean => {
     sliceMethod = null;
-    if ("Blob" in window) {
+    if (hasWindow && "Blob" in window) {
         sliceMethod = Blob.prototype.slice ||
             // $FlowFixMe - flow doesnt know webkitSlice
             Blob.prototype.webkitSlice ||

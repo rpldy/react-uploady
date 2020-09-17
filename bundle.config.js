@@ -69,6 +69,7 @@ module.exports = {
              */
             "all": {
                 pkgs: "*",
+                exclude: ["native-uploady"],
                 target: PKGS.UPLOADY,
                 config: (entries) => {
                     const exports = entries.map((entry) => {
@@ -158,6 +159,10 @@ module.exports = {
             mode: "development",
 
             devtool: "source-map",
+
+            resolve: {
+                mainFields: ["main:dev", "module", "main"],
+            },
 
             optimization: {
                 splitChunks: {

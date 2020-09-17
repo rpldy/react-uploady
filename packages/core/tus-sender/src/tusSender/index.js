@@ -1,5 +1,5 @@
 // @flow
-import { logger } from "@rpldy/shared";
+import { logger, hasWindow } from "@rpldy/shared";
 import createState from "@rpldy/simple-state";
 import { createChunkedSender } from "@rpldy/chunked-sender";
 import { getMandatoryOptions } from "../utils";
@@ -26,7 +26,7 @@ const initializeState = (uploader: UploaderType, options: TusOptions): TusState 
 		updateState: update,
 	};
 
-	if (logger.isDebugOn()) {
+	if (hasWindow && logger.isDebugOn()) {
 		window[`__rpldy_${uploader.id}_tus_state`] = tusState;
 	}
 

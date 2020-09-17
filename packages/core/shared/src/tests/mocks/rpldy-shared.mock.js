@@ -29,6 +29,16 @@ utils.pick.mockImplementation((...args) => pick(...args));
 
 utils.devFreeze.mockImplementation((obj) => obj);
 
+const hasWindowFn = jest.fn(() => true);
+
+const hasWindowMock = {
+    get hasWindow () {
+        return hasWindowFn();
+    }
+}
+
+const hasWindowMockFn = hasWindowMock.hasWindowFn;
+
 const sharedMock = {
     FILE_STATES,
     BATCH_STATES,
@@ -45,6 +55,8 @@ const sharedMock = {
     parseResponseHeaders,
 
     ...utils,
+
+    ...hasWindowMock,
 };
 
 jest.doMock("@rpldy/shared", () => sharedMock);
@@ -65,4 +77,6 @@ export {
     parseResponseHeaders,
 
     utils,
+
+    hasWindowMockFn,
 };

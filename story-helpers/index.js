@@ -8,7 +8,7 @@ import useStoryUploadySetup, {
 import StoryUploadProgress from "./StoryUploadProgress";
 import StoryAbortButton from "./StoryAbortButton"
 import useEventsLogUpdater from "./useEventsLogUpdater";
-import { logToCypress } from "./uploadyStoryLogger";
+import { logToCypress, isCypress } from "./uploadyStoryLogger";
 import UmdBundleScript  from "./UmdBundleScript";
 import { isProd } from "./helpers";
 import cropImage from "./cropImage";
@@ -20,6 +20,7 @@ export {
 
 export {
     isProd,
+    isCypress,
 
     KNOB_GROUPS,
     UMD_NAMES,

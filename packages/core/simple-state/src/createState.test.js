@@ -19,7 +19,7 @@ describe("updateable tests", () => {
 				id: 2,
 				name: "child-b"
 			}
-		]
+		],
 	});
 
 	beforeEach(() => {
@@ -81,7 +81,22 @@ describe("updateable tests", () => {
 		expect(state.sub.foo).toBe("bar");
 	}));
 
-	it("should only be updateable through update method", createTest(() => {
+    it("should not proxy react-native file object", createTest(() => {
+        const initial = {
+            rnFile: {
+                name: "file",
+                size: 111,
+                uri: "file://file"
+            }
+        };
+
+        const { state } = createState(initial);
+
+        expect(isProxy(state)).toBe(true);
+        expect(isProxy(state.rnFile)).toBe(false);
+    }));
+
+    it("should only be updateable through update method", createTest(() => {
 
 		const { state, update } = createState(getInitial());
 

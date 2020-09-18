@@ -420,5 +420,89 @@ describe("batchHelpers tests", () => {
 		});
 	});
 
+    describe("detachRecycledFromPreviousBatch tests", () => {
+        const getTestQueueState = () => {
+            const items = {
+                i1: { id: "i1", batchId: "b1" },
+                i2: { id: "i2", batchId: "b1" },
+                i3: { id: "i3", batchId: "b1" },
+            };
+
+            return getQueueState({
+                items: {
+                    ...items,
+                    //item from different batch
+                    i4: {id: "i4", batchId: "b3"},
+                    //intentionally using batchId: b1 but not in batch.items
+                    i5: {id: "i5", batchId: "b1"},
+                },
+                batches: {
+                    b1: {
+                        batch: {
+                            id: "b1",
+                            items: Object.values(items)
+                        }
+                    },
+                    b3: {
+                        batch: {
+                            id: "b3",
+                            items: [],
+                        }
+                    }
+                }
+            });
+        };
+
+        it("should detach from batch", () => {
+            const qState = getTestQueueState();
+            const item = { id: "i2", batchId: "b2", recycled: true, previousBatch: "b1" };
+
+            batchHelpers.detachRecycledFromPreviousBatch(qState, item);
+
+            const updatedBatch = batchHelpers.getBatchFromState(qState.getState(), "b1");
+            expect(updatedBatch.items).toHaveLength(2);
+            expect(updatedBatch.items.find(({id}) => id === item.id)).toBeUndefined();
+        });
+
+        it("should not detach for non-recycled", () => {
+            const qState = getTestQueueState();
+            const item = { id: "i2", batchId: "b2", previousBatch: "b1" };
+
+            batchHelpers.detachRecycledFromPreviousBatch(qState, item);
+
+            const updatedBatch = batchHelpers.getBatchFromState(qState.getState(), "b1");
+            expect(updatedBatch.items).toHaveLength(3);
+        });
+
+        it("should not detach for mismatched previous batch", () => {
+            const qState = getTestQueueState();
+            const item = { id: "i2", batchId: "b2", previousBatch: "b4" };
+
+            batchHelpers.detachRecycledFromPreviousBatch(qState, item);
+
+            const updatedBatch = batchHelpers.getBatchFromState(qState.getState(), "b1");
+            expect(updatedBatch.items).toHaveLength(3);
+        });
+
+        it("should not detach if item not in previous batch", () => {
+            const qState = getTestQueueState();
+            const item = { id: "i4", batchId: "b2", recycled: true, previousBatch: "b1" };
+
+            batchHelpers.detachRecycledFromPreviousBatch(qState, item);
+
+            const updatedBatch = batchHelpers.getBatchFromState(qState.getState(), "b1");
+            expect(updatedBatch.items).toHaveLength(3);
+        });
+
+        it("should cope with item no longer in batch", () => {
+            const qState = getTestQueueState();
+            const item = { id: "i5", batchId: "b1", recycled: true, previousBatch: "b1" };
+
+            batchHelpers.detachRecycledFromPreviousBatch(qState, item);
+
+            const updatedBatch = batchHelpers.getBatchFromState(qState.getState(), "b1");
+            expect(updatedBatch.items).toHaveLength(3);
+        });
+    });
 });
 

@@ -60,6 +60,7 @@ interface BatchItemBase {
     completed: number;
     loaded: number;
     recycled: boolean;
+    previousBatch?: string;
 }
 
 export type FileLike = {

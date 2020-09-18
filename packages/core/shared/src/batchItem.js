@@ -20,7 +20,8 @@ const isLikeFile = (f: UploadInfo) => f && (f instanceof Blob || f instanceof Fi
 
 export default (f: UploadInfo, batchId: string): BatchItem => {
 	iCounter += 1;
-	const id = f.id ? f.id : `${batchId}.item-${iCounter}`,
+	//keep existing id for recycled items
+	const id = (f.id && f.batchId) ? f.id : `${batchId}.item-${iCounter}`,
 		state = FILE_STATES.ADDED;
 
 	let batchItem = {
@@ -31,6 +32,7 @@ export default (f: UploadInfo, batchId: string): BatchItem => {
 		loaded: 0,
 		aborted: false,
 		recycled: false,
+        previousBatch: null,
 	};
 
 	Object.defineProperty(batchItem, BISYM, {
@@ -42,6 +44,7 @@ export default (f: UploadInfo, batchId: string): BatchItem => {
 	if (typeof f === "object" && f[BISYM] === true) {
 		//recycling existing batch item
 		batchItem.recycled = true;
+		batchItem.previousBatch = f.batchId;
 		f = f.file || f.url;
 	}
 

@@ -187,19 +187,19 @@ const PreviewItemBar = styled.div`
   box-shadow: #5dbdec 0px -3px 2px -2px;
 `;
 
-const Button = styled.button` 
+const Button = styled.button`
     width: 52px;
     height: 34px;
     font-size: 26px;
     line-height: 26px;
     cursor: pointer;
     margin-right: 4px;
-    
+
     :disabled {
       cursor: not-allowed;
       background-color: grey;
       color: grey;
-    }  
+    }
 `;
 
 const QueueBar = styled.div`

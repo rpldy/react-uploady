@@ -71,15 +71,16 @@ const App = () => (<Uploady
 In case you want to use your own component as the upload trigger, use the asUploadButton HOC:
 
 ```javascript
-import React from "react";
+import React, { forwardRef } from "react";
 import Uploady from "@rpldy/uploady";
 import { asUploadButton } from "@rpldy/upload-button";
 
-const DivUploadButton = asUploadButton((props) => {
-    return <div {...props} style={{ cursor: "pointer" }}>
-        DIV Upload Button
-    </div>
-});
+const DivUploadButton = asUploadButton(forwardRef(
+    (props, ref) =>
+        <div {...props} style={{ cursor: "pointer" }}>
+            DIV Upload Button
+        </div>
+));
 
 const App = () => (<Uploady
     destination={{ url: "https://my-server/upload" }}>
@@ -87,3 +88,7 @@ const App = () => (<Uploady
 </Uploady>);
 
 ```
+
+> Note: _asUploadButton_ makes it possible to gain access to the underlying component with a [ref](https://reactjs.org/docs/refs-and-the-dom.html).
+  To support this, it passes along a ref to the component you provide it. For functional components, 
+  you'd need to wrap your component with [React.forwardRef](https://reactjs.org/docs/react-api.html#reactforwardref).

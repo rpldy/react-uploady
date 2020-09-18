@@ -3,9 +3,11 @@ import createState, { unwrap } from "@rpldy/simple-state";
 import { SENDER_EVENTS, UPLOADER_EVENTS } from "../../consts";
 import processQueueNext from "../processQueueNext";
 import * as abortMethods from "../abort";
-import createQueue from "../";
+import { detachRecycledFromPreviousBatch } from "../batchHelpers";
+import createQueue from "../uploaderQueue";
 
 jest.mock("@rpldy/simple-state");
+jest.mock("../batchHelpers");
 jest.mock("../processQueueNext", () => jest.fn());
 jest.mock("../abort", () => ({
     abortAll: jest.fn(),
@@ -97,7 +99,18 @@ describe("queue tests", () => {
 		}).toThrow("Uploader queue conflict - item u1 already exists");
 	});
 
-	it("should update state", () => {
+    it("should detach recycled item", () => {
+        const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
+
+        queue.uploadBatch({ items: [{ id: "u1" }] }, { });
+
+        const recycled = { id: "u1", recycled: true };
+        queue.uploadBatch({ items: [recycled] });
+
+        expect(detachRecycledFromPreviousBatch).toHaveBeenCalledWith(expect.any(Object), recycled );
+    });
+
+    it("should update state", () => {
 
         const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 

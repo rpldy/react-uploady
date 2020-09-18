@@ -35,11 +35,10 @@ const getBatchFromItemId = (queue: QueueState, itemId: string): Batch => {
 };
 
 const removeBatchItems = (queue: QueueState, batchId: string) => {
-    const batch = getBatch(queue, batchId),
-        batchItemIds = batch.items.map((item: BatchItem) => item.id);
+    const batch = getBatch(queue, batchId);
 
     queue.updateState((state: State) => {
-        batchItemIds.forEach((id: string) => {
+        batch.items.forEach(({ id }: BatchItem) => {
             delete state.items[id];
 
             const index = state.itemQueue.indexOf(id);
@@ -128,6 +127,25 @@ const getIsItemBatchReady = (queue: QueueState, itemId: string): boolean => {
     return BATCH_READY_STATES.includes(batch.state);
 };
 
+const detachRecycledFromPreviousBatch = (queue: QueueState, item: BatchItem): void => {
+    if (item.recycled) {
+        if (queue.getState().batches[item.previousBatch]) {
+            const { id: batchId } = getBatchFromItemId(queue, item.id);
+
+            if (batchId === item.previousBatch) {
+                queue.updateState((state: State) => {
+                    const batch = getBatchFromState(state, batchId);
+                    const index = batch.items.findIndex(({ id }: BatchItem) => id === item.id);
+
+                    if (~index) {
+                        batch.items.splice(index, 1);
+                    }
+                });
+            }
+        }
+    }
+};
+
 export {
     isBatchFinished,
     loadNewBatchForItem,
@@ -140,4 +158,5 @@ export {
     triggerUploaderBatchEvent,
     getIsItemBatchReady,
     getBatchFromState,
+    detachRecycledFromPreviousBatch,
 };

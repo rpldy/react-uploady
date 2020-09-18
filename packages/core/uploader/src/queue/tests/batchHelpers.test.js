@@ -431,7 +431,10 @@ describe("batchHelpers tests", () => {
             return getQueueState({
                 items: {
                     ...items,
+                    //item from different batch
                     i4: {id: "i4", batchId: "b3"},
+                    //intentionally using batchId: b1 but not in batch.items
+                    i5: {id: "i5", batchId: "b1"},
                 },
                 batches: {
                     b1: {
@@ -473,7 +476,7 @@ describe("batchHelpers tests", () => {
 
         it("should not detach for mismatched previous batch", () => {
             const qState = getTestQueueState();
-            const item = { id: "i2", batchId: "b2", previousBatch: "b3" };
+            const item = { id: "i2", batchId: "b2", previousBatch: "b4" };
 
             batchHelpers.detachRecycledFromPreviousBatch(qState, item);
 
@@ -484,6 +487,16 @@ describe("batchHelpers tests", () => {
         it("should not detach if item not in previous batch", () => {
             const qState = getTestQueueState();
             const item = { id: "i4", batchId: "b2", recycled: true, previousBatch: "b1" };
+
+            batchHelpers.detachRecycledFromPreviousBatch(qState, item);
+
+            const updatedBatch = batchHelpers.getBatchFromState(qState.getState(), "b1");
+            expect(updatedBatch.items).toHaveLength(3);
+        });
+
+        it("should cope with item no longer in batch", () => {
+            const qState = getTestQueueState();
+            const item = { id: "i5", batchId: "b1", recycled: true, previousBatch: "b1" };
 
             batchHelpers.detachRecycledFromPreviousBatch(qState, item);
 

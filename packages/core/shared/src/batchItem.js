@@ -32,6 +32,7 @@ export default (f: UploadInfo, batchId: string): BatchItem => {
 		loaded: 0,
 		aborted: false,
 		recycled: false,
+        previousBatch: null,
 	};
 
 	Object.defineProperty(batchItem, BISYM, {

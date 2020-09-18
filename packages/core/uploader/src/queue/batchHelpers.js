@@ -128,11 +128,13 @@ const getIsItemBatchReady = (queue: QueueState, itemId: string): boolean => {
 };
 
 const detachRecycledFromPreviousBatch = (queue: QueueState, item: BatchItem): void => {
-    if (item.recycled) {
-        if (queue.getState().batches[item.previousBatch]) {
+    const { previousBatch } = item;
+
+    if (item.recycled && previousBatch) {
+        if (queue.getState().batches[previousBatch]) {
             const { id: batchId } = getBatchFromItemId(queue, item.id);
 
-            if (batchId === item.previousBatch) {
+            if (batchId === previousBatch) {
                 queue.updateState((state: State) => {
                     const batch = getBatchFromState(state, batchId);
                     const index = batch.items.findIndex(({ id }: BatchItem) => id === item.id);

@@ -180,38 +180,3 @@ const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMe
 };
 
 export default processBatchItems;
-
-//send group of items to be uploaded
-// export default async (queue: QueueState, ids: string[], next: ProcessNextMethod) => {
-//     const state = queue.getState();
-//     //ids will have more than one when grouping is allowed
-//     let items: any[] = Object.values(state.items);
-//     items = items.filter((item: BatchItem) => !!~ids.indexOf(item.id));
-//
-//     //allow user code cancel items from start event handler(s)
-//     let cancelledResults = await Promise.all(items.map((i: BatchItem) =>
-//         queue.cancellable(UPLOADER_EVENTS.ITEM_START, i)));
-//
-//     let allowedItems: BatchItem[] = cancelledResults
-//         .map((isCancelled: boolean, index: number): ?BatchItem =>
-//             isCancelled ? null : getAllowedItem(items[index].id, queue))
-//         .filter(Boolean);
-//
-//     if (allowedItems.length) {
-//         const itemsSendData = await prepareAllowedItems(queue, allowedItems);
-//
-//         if (itemsSendData.cancelled) {
-//             cancelledResults = ids.map(() => true);
-//         } else {
-//             //we dont need to wait for the response here
-//             sendAllowedItems(queue, itemsSendData, next);
-//         }
-//     }
-//
-//     //if no cancelled we can go to process more items immediately (and not wait for upload responses)
-//     if (!reportCancelledItems(queue, items, cancelledResults, next)) {
-//         await next(queue); //when concurrent is allowed, we can go ahead and process more
-//     }
-// };
-
-

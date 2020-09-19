@@ -1,15 +1,45 @@
 # Changelog
 
+## 0.6.0 (2020-09-19)
+
+### Features
+
+#### Highlight: **SSR**
+
+- `[uploader]` - SSR: dont use _window_ if not available
+- `[shared]` - SSR: dont use _window_ if not available
+- `[chunked-sender]` - SSR: dont use _window_ if not available
+- `[safe-storage]` - SSR: dont use _window_ if not available
+- `[uploady]` - SSR: _noPortal_ prop - Dont render Uploady's file input in a portal
+
+- `all` - esm and cjs are both available in npm 
+
+### Bug fixes
+
+- `[uploader]` - fixed bug preventing retry item while its batch is still in progress
+
+### Docs
+
+- `[upload-button]` - clarified use of forwardRef for asUploadButton
+
+### Internal
+
+- `storybook` - upgraded to SB 6
+- `misc` - removed use of async/await = no dependency on regenerator-runtime
+
 ## 0.5.0 (2020-09-13)
 
 ### Features
 
-- `[native-uploady]` -  support react-native 📱 - new package.
+#### Highlight: #### **React Native**
+
+- `[native-uploady]` - react-native: 📱 - new package.
 - `[sender]` - react-native: work with FormData without set 
 - `[shared]` - react-native: don't expect window to be there
 - `[simple-state]` - react-native: don't proxy File-like object in RN
 - `[uploader]` - react-native: don't expect window to be there
 - `[shared-ui]` - react-native: NoDomUploady - Uploady without react-dom
+
 - `[shared-ui]` - moved withRequestPreSendUpdate from ui/uploady
 - `[shared-ui]` - moved useUploader from ui/uploady
  
@@ -75,7 +105,7 @@
 ### Internal
 
 - `[simple-state]` - new package to handle internal state (uploader/retry/tus-sender)
-- `[e2e]` - added queue-retry spec
+- `e2e` - added queue-retry spec
 
 ### Docs
 
@@ -141,30 +171,22 @@
 
 ### Features
 
-__Resumable Uploads__
+#### Highlight: **Resumable Uploads**
 
-- `[tus-sender]` _NEW_ - An Uploady sender implementation of the TUS protocol.
-- `[tus-uploady]` _NEW_ - Wrapper&context component to expose and provide react-uploady functionality with TUS protocol support
-
-__Misc__
+- `[tus-sender]` - Resumable: An Uploady sender implementation of the TUS protocol.
+- `[tus-uploady]` -  Resumable: Wrapper&context component to expose and provide react-uploady functionality with TUS protocol support
 
 - `[uploader]` - ITEM_FINALIZE event
-
 - `[uploady]` - useItemFinalizeListener hook
-
 - `[chunked-sender]` - startByte send option
 - `[chunked-sender]` - createChunkedSender export
 - `[chunked-sender]` - CHUNK_START event  (cancellable and update options)
 - `[chunked-sender]` - CHUNK_FINISH event 
-
 - `[safe-storage]` _NEW_ - safe (don't throw) versions of local and session storage
-
 - `[shared]` - generic (xhr) request export
 - `[shared]` - getMerge (undefinedOverwrites config) export
 - `[shared]` - pick helper export 
-
 - `[sender]` - sendWithFormData option
-
 
 ### Docs
 

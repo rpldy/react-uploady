@@ -1,11 +1,11 @@
 {
-  "version": "0.5.0",
+  "version": "0.6.0",
   "name": "@rpldy/shared",
   "description": "internal set of utils+types for react-uploady",
   "author": "yoav niran (https://github.com/yoavniran)",
-    "main": "lib/cjs/index.js",
-    "module": "lib/esm/index.js",
-    "main:dev": "src/index.js",
+  "main": "lib/cjs/index.js",
+  "module": "lib/esm/index.js",
+  "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
   "repository": {

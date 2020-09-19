@@ -1,11 +1,11 @@
 {
-  "version": "0.5.0",
+  "version": "0.6.0",
   "name": "@rpldy/mock-sender",
   "description": "mock sender for testing purposes",
   "author": "yoav niran (https://github.com/yoavniran)",
-    "main": "lib/cjs/index.js",
-    "module": "lib/esm/index.js",
-    "main:dev": "src/index.js",
+  "main": "lib/cjs/index.js",
+  "module": "lib/esm/index.js",
+  "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
   "repository": {
@@ -18,9 +18,9 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/sender": "^0.5.0",
-    "@rpldy/shared": "^0.5.0",
-    "@rpldy/uploader": "^0.5.0"
+    "@rpldy/sender": "^0.6.0",
+    "@rpldy/shared": "^0.6.0",
+    "@rpldy/uploader": "^0.6.0"
   },
   "devDependencies": {
     "flow-bin": "^0.133.0"

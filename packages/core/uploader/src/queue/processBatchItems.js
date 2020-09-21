@@ -133,7 +133,7 @@ const getAllowedItem = (id: string, queue: QueueState) =>
 	queue.getState().items[id];
 
 //send group of items to be uploaded
-const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMethod) => {
+const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMethod): Promise<void> => {
     const state = queue.getState();
     //ids will have more than one when grouping is allowed
     let items: any[] = Object.values(state.items);

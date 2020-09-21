@@ -27,7 +27,7 @@ type FinishData = { id: string, info: UploadData };
 const getIsFinalized = (item: BatchItem) =>
 	!!~ITEM_FINALIZE_STATES.indexOf(item.state);
 
-export default (queue: QueueState, finishedData: FinishData[], next: ProcessNextMethod) => {
+const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], next: ProcessNextMethod) => {
     finishedData.forEach((itemData: FinishData) => {
         const state = queue.getState();
         const { id, info } = itemData;
@@ -41,8 +41,8 @@ export default (queue: QueueState, finishedData: FinishData[], next: ProcessNext
                 item.uploadResponse = info.response;
 
                 if (getIsFinalized(item)) {
-					delete state.aborts[id];
-				}
+                    delete state.aborts[id];
+                }
             });
 
             //get most up-to-date item data
@@ -80,3 +80,5 @@ export default (queue: QueueState, finishedData: FinishData[], next: ProcessNext
 
     return next(queue);
 };
+
+export default processFinishedRequest;

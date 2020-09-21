@@ -19,13 +19,15 @@ const DEV_DEST_OPTIONS = [
     DESTINATION_TYPES.local,
 ];
 
-const mockSenderEnhancer = getMockSenderEnhancer({ delay: 1000 });
+export const mockDestination = () => {
+    const delay = number("mock send delay", 1000, {}, KNOB_GROUPS.DESTINATION);
 
-export const mockDestination = () => ({
-    destinationType: DESTINATION_TYPES.mock,
-    destination: { url: "http://react-uploady-dummy-server.comm" },
-    enhancer: mockSenderEnhancer
-});
+    return {
+        destinationType: DESTINATION_TYPES.mock,
+        destination: { url: "http://react-uploady-dummy-server.comm" },
+        enhancer: getMockSenderEnhancer({ delay }),
+    }
+};
 
 export const localDestination = ({noLong = false} = {}) => {
 	console.log("GETTING LOCAL DESTINATION ", noLong);
@@ -49,8 +51,7 @@ export const localDestination = ({noLong = false} = {}) => {
 };
 
 const cldDestination = () => {
-    const cloudName = text("(cloudinary) cloud name", process.env.CLD_CLOUD || "", KNOB_GROUPS.DESTINATION);
-    const uploadPreset = text("(cloudinary) upload preset", process.env.CLD_PRESET || "", KNOB_GROUPS.DESTINATION);
+    const cloudName = text("(cloudinary) cloud name", process.env.CLD_CLOUD || "", KNOB_GROUPS.DESTINATION);    const uploadPreset = text("(cloudinary) upload preset", process.env.CLD_PRESET || "", KNOB_GROUPS.DESTINATION);
     const folder = text("(cloudinary) folder", process.env.CLD_TEST_FOLDER || "", KNOB_GROUPS.DESTINATION);
 
     return {

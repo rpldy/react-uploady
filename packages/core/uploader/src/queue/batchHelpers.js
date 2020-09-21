@@ -102,7 +102,7 @@ const cleanUpFinishedBatch = (queue: QueueState) => {
     const state = queue.getState();
     const batchId = state.currentBatch;
 
-    if (batchId && isBatchFinished(queue)) {
+    if (batchId && state.batches[batchId] && isBatchFinished(queue)) {
         triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_FINISH);
         removeBatchItems(queue, batchId);
         removeBatch(queue, batchId);

@@ -147,10 +147,21 @@ describe("batchHelpers tests", () => {
 
 			expect(queueState.updateState).not.toHaveBeenCalled();
 			expect(queueState.state.batches.b1).toBeDefined();
-			expect(queueState.trigger).not.toHaveBeenCalled(); //dWith(UPLOADER_EVENTS.BATCH_FINISH, batch);
+			expect(queueState.trigger).not.toHaveBeenCalled();
 		});
 
-	});
+        it("should'nt finalize batch if no longer in state", () => {
+            const queueState = getQueueState({
+                currentBatch: "b1",
+                batches: {}
+            });
+
+            batchHelpers.cleanUpFinishedBatch(queueState);
+
+            expect(queueState.updateState).not.toHaveBeenCalled();
+            expect(queueState.trigger).not.toHaveBeenCalled();
+        });
+    });
 
 	describe("loadNewBatchForItem tests", () => {
 		it("should load allowed batch", async () => {

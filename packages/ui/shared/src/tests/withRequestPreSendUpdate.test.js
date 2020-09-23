@@ -1,22 +1,20 @@
 import React from "react";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
+import useUploadyContext from "../useUploadyContext";
 import withRequestPreSendUpdate from "../withRequestPreSendUpdate";
-import UploadyContext from "../UploadyContext";
-import assertContext from "../assertContext";
+import mockContext from "./mocks/UploadyContext.mock";
 
-jest.mock("../UploadyContext", () => jest.requireActual("./mocks/UploadyContext.mock"));
-jest.mock("../assertContext");
+jest.mock("../useUploadyContext");
 
 describe("withRequestPreSendUpdate tests", () => {
 
     beforeAll(()=>{
-        assertContext.mockReturnValue(UploadyContext);
+        useUploadyContext.mockReturnValue(mockContext);
     });
 
 	beforeEach(() => {
 		clearJestMocks(
-            UploadyContext.on,
-            UploadyContext.off,
+            mockContext,
 		);
 	});
 
@@ -30,7 +28,7 @@ describe("withRequestPreSendUpdate tests", () => {
 
 		expect(wrapper).toHaveText("bob");
 
-		expect(UploadyContext.on).not.toHaveBeenCalled();
+		expect(mockContext.on).not.toHaveBeenCalled();
 	});
 
 	it("shouldn't unregister if no id on first render", () => {
@@ -42,8 +40,8 @@ describe("withRequestPreSendUpdate tests", () => {
 		const wrapper = mount(<MyComp name="bob"/>);
 
 		wrapper.setProps({id: "bi1"});
-		expect(UploadyContext.on).toHaveBeenCalledTimes(1);
-		expect(UploadyContext.off).not.toHaveBeenCalled();
+		expect(mockContext.on).toHaveBeenCalledTimes(1);
+		expect(mockContext.off).not.toHaveBeenCalled();
 	});
 
 	it("shouldn't provide update data for matching item id", async () => {
@@ -54,7 +52,7 @@ describe("withRequestPreSendUpdate tests", () => {
 		const MockComp = jest.fn((props) =>
 			<div>{props.id}-{props.name}</div>);
 
-        UploadyContext.on.mockImplementationOnce((name, handler) => {
+        mockContext.on.mockImplementationOnce((name, handler) => {
 			handlerPromise = handler(requestData);
 			expect(handlerPromise).toBeInstanceOf(Promise);
 		});
@@ -79,12 +77,12 @@ describe("withRequestPreSendUpdate tests", () => {
 			updateRequest: expect.any(Function),
 		}, {});
 
-		expect(UploadyContext.on)
+		expect(mockContext.on)
 			.toHaveBeenCalledWith(UPLOADER_EVENTS.REQUEST_PRE_SEND, expect.any(Function));
 
 		MockComp.mock.calls[1][0].updateRequest("test");
 
-		expect(UploadyContext.off)
+		expect(mockContext.off)
 			.toHaveBeenCalledWith(UPLOADER_EVENTS.REQUEST_PRE_SEND, expect.any(Function));
 
 		const handlerResult = await handlerPromise;
@@ -99,7 +97,7 @@ describe("withRequestPreSendUpdate tests", () => {
 		const MockComp = jest.fn((props) =>
 			<div>{props.id}-{props.name}</div>);
 
-        UploadyContext.on.mockImplementationOnce((name, handler) => {
+        mockContext.on.mockImplementationOnce((name, handler) => {
 			handlerPromise = handler(requestData);
 			expect(handlerPromise).toBeUndefined();
 		});
@@ -110,7 +108,7 @@ describe("withRequestPreSendUpdate tests", () => {
 
 		expect(wrapper).toHaveText("bi1-bob");
 
-		expect(UploadyContext.on)
+		expect(mockContext.on)
 			.toHaveBeenCalledWith(UPLOADER_EVENTS.REQUEST_PRE_SEND, expect.any(Function));
 
 		expect(MockComp).toHaveBeenCalledTimes(1);
@@ -134,19 +132,19 @@ describe("withRequestPreSendUpdate tests", () => {
 
 		expect(wrapper).toHaveText("bi1-bob");
 
-		expect(UploadyContext.on)
+		expect(mockContext.on)
 			.toHaveBeenCalledWith(UPLOADER_EVENTS.REQUEST_PRE_SEND, expect.any(Function));
 
-        UploadyContext.on.mockImplementationOnce((name, handler) => {
+        mockContext.on.mockImplementationOnce((name, handler) => {
 			const handlerPromise = handler({ items: [{ id: "bi2" }] });
 			expect(handlerPromise).toBeInstanceOf(Promise);
 		});
 
 		wrapper.setProps({ id: "bi2" });
 
-		expect(UploadyContext.off)
+		expect(mockContext.off)
 			.toHaveBeenCalledWith(UPLOADER_EVENTS.REQUEST_PRE_SEND, expect.any(Function));
 
-		expect(UploadyContext.on).toHaveBeenCalledTimes(2);
+		expect(mockContext.on).toHaveBeenCalledTimes(2);
 	});
 });

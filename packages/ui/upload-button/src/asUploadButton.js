@@ -1,6 +1,6 @@
 // @flow
-import React, { forwardRef, useCallback, useContext, useRef } from "react";
-import { assertContext, UploadyContext } from "@rpldy/shared-ui";
+import React, { forwardRef, useCallback, useRef } from "react";
+import { useUploadyContext } from "@rpldy/shared-ui";
 
 import type { ComponentType } from "react";
 import type { UploadOptions } from "@rpldy/shared";
@@ -8,7 +8,7 @@ import type { UploadButtonProps } from "./types";
 
 export default (Component: ComponentType<any>) => {
     const AsUploadButton = (props: UploadButtonProps, ref) => {
-        const { showFileUpload } = assertContext(useContext(UploadyContext));
+        const { showFileUpload } = useUploadyContext();
         const { id, className, text, children, extraProps, onClick, ...uploadOptions } = props;
 
         //using ref so onButtonClick can stay memoized

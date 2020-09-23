@@ -25,7 +25,7 @@ describe("mockSender tests", () => {
 
     const items = [1, 2, 3];
 
-    const doMockSend = (options = {}, updatedOptions = {}, abort = false, noProgressCb = false) => {
+    const doMockSend = (options = {}, updatedOptions = {}, abort = false, noProgressCb = false, sendOptions = null) => {
 
         const sender = createMockSender(options);
 
@@ -33,7 +33,7 @@ describe("mockSender tests", () => {
             sender.update(updatedOptions);
         }
 
-        const result = sender.send(items, null, null, !noProgressCb && onProgress);
+        const result = sender.send(items, null, sendOptions, !noProgressCb && onProgress);
 
         if (abort) {
             jest.advanceTimersByTime(100);
@@ -59,7 +59,7 @@ describe("mockSender tests", () => {
 
         expect(response.time).toBeGreaterThan(0);
         expect(response.headers).toEqual({ "x-request-type": "react-uploady.mockSender" });
-        expect(response.data).toEqual({ mock: true, success: true });
+        expect(response.data).toEqual({ mock: true, success: true, sendOptions: null });
         expect(response.progressEvents).toHaveLength(5);
 
         expect(response.progressEvents[0].total).toBe(MOCK_DEFAULTS.fileSize);
@@ -87,7 +87,7 @@ describe("mockSender tests", () => {
         const response = result.response;
 
         expect(response.time).toBeGreaterThan(0);
-        expect(response.data).toEqual({ mock: true, success: true });
+        expect(response.data).toEqual({ mock: true, success: true, sendOptions: null });
         expect(response.progressEvents).toHaveLength(0);
         expect(result.state).toBe(FILE_STATES.FINISHED);
     });
@@ -101,7 +101,7 @@ describe("mockSender tests", () => {
         const response = result.response;
 
         expect(response.time).toBeGreaterThan(0);
-        expect(response.data).toEqual({ mock: true, success: true });
+        expect(response.data).toEqual({ mock: true, success: true, sendOptions: null });
         expect(result.state).toBe(FILE_STATES.FINISHED);
 
         expect(response.progressEvents).toHaveLength(5);
@@ -178,5 +178,14 @@ describe("mockSender tests", () => {
         const result = await doMockSend(null, null, false, true).request;
         expect(onProgress).toHaveBeenCalledTimes(0);
         expect(result.state).toBe(FILE_STATES.FINISHED);
+    });
+
+    it("should add sendOptions to response data", async () => {
+        const sendOptions = {params: [1,2]};
+        const result = await doMockSend(null, null, false, false, sendOptions ).request;
+
+        const response = result.response;
+
+        expect(response.data.sendOptions).toEqual(sendOptions);
     });
 });

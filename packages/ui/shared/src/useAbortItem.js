@@ -1,10 +1,9 @@
 // @flow
-import { useContext, useCallback } from "react";
-import assertContext from "./assertContext";
-import { UploadyContext } from "./index";
+import { useCallback } from "react";
+import useUploadyContext from "./useUploadyContext";
 
 export default () => {
-	const context = assertContext(useContext(UploadyContext));
+	const context = useUploadyContext();
 
 	return useCallback(
 		(id: string) => context.abort(id),

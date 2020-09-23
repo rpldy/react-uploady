@@ -136,9 +136,11 @@ Upload file(s). Optionally Pass options as the second parameter to override opti
 
 #### processPending
 
-_() => void_
+_(uploadOptions?: UploadOptions) => void_
 
 Start uploading batches that were added with autoUpload = false
+
+Upload Options can be added here to be (deep) merged with the options the batch(es) was added with.
     
 #### setOptions 
 
@@ -473,6 +475,33 @@ See simple example below or this more detailed [guide](../../../guides/DynamicPa
     };
 ``` 
     
+
+#### useUploadyContext
+
+Shortcut hook to get the [Uploady Context](#context) instance
+
+> Will throw in case its used outside of <Uploady> render tree
+
+```javascript
+    import { uploadyContext } from "@rpldy/uploady";
+
+    const MyComponent = () => {
+        const uploadyContext = useUploadyContext();
+        
+        const onClick = () => {
+            uploadyContext.showFileUpload();
+        }
+
+        //...       
+    };
+
+    const App = () => (
+        <Uploady destination={{...}}>
+            <MyComponent/>
+        </Uploady>
+    );
+```
+
 ### useUploadOptions
 
 Shortcut hook to set/get upload options. 

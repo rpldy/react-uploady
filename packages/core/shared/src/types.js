@@ -83,8 +83,10 @@ export type Batch = {
 export type FileFilterMethod = (File | string) => boolean;
 
 export type UploadOptions = {|
-	//whether to automatically upload files when they are added (default: true)
+	//automatically upload files when they are added (default: true)
 	autoUpload?: boolean,
+    //clear pending batches on new upload (default: false)
+    clearPendingOnAdd?: boolean,
 	//destination properties related to the server files will be uploaded to
 	destination?: ?Destination,
 	//name (attribute) of the file input field (default: "file")

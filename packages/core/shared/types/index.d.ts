@@ -12,6 +12,7 @@ export type FileFilterMethod = (file: unknown) => boolean;
 
 export interface UploadOptions {
     autoUpload?: boolean;
+    clearPendingOnAdd?: boolean;
     destination?: Destination;
     inputFieldName?: string;
     formatGroupParamName?: FormatParamGroupNameMethod;

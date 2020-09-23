@@ -1,12 +1,10 @@
 // @flow
-import { useContext } from "react";
-import assertContext from "./assertContext";
-import { UploadyContext } from "./index";
+import useUploadyContext from "./useUploadyContext";
 
 import type { CreateOptions } from "@rpldy/uploader";
 
 export default (options?: CreateOptions): CreateOptions => {
-    const context = assertContext(useContext(UploadyContext));
+    const context = useUploadyContext();
 
     if (options) {
         context.setOptions(options);

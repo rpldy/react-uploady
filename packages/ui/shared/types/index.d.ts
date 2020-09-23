@@ -14,7 +14,7 @@ export type UploadyContextType = {
     hasUploader: () => boolean;
     showFileUpload: (options?: UploadOptions) => void;
     upload: AddUploadFunction;
-    processPending: () => void;
+    processPending: (uploadOptions?: UploadOptions) => void;
     setOptions: (options: CreateOptions) => void;
     getOptions: () => CreateOptions;
     on: OnAndOnceMethod;
@@ -64,6 +64,8 @@ export const useUploader: (options: CreateOptions, listeners?: UploaderListeners
 export const UploadyContext: React.Context<UploadyContextType>;
 
 export const assertContext: (context: UploadyContextType) => UploadyContextType;
+
+export const useUploadyContext: () => UploadyContextType;
 
 export const useAbortAll: () => () => boolean;
 

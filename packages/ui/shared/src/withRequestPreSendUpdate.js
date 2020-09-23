@@ -1,14 +1,13 @@
 // @flow
-import React, { useContext, useLayoutEffect, useState } from "react";
-import UploadyContext from "./UploadyContext";
-import assertContext from "./assertContext";
+import React, { useLayoutEffect, useState } from "react";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
+import useUploadyContext from "./useUploadyContext";
 
 type Props = { id: string };
 
 export default (Component: React$ComponentType<any>) =>
 	(props: Props) => {
-		const context = assertContext(useContext(UploadyContext));
+		const context = useUploadyContext();
 		const { id } = props;
 
 		const [updater, setUpdater] = useState({

@@ -1,13 +1,13 @@
 // @flow
-import React, { useRef, useContext, useCallback, forwardRef, useImperativeHandle } from "react";
-import { UploadyContext, assertContext } from "@rpldy/shared-ui";
+import React, { useRef, useCallback, forwardRef, useImperativeHandle } from "react";
+import { useUploadyContext } from "@rpldy/shared-ui";
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadUrlInputProps, UploadMethod } from "./types";
 
 const UploadUrlInput = forwardRef<UploadUrlInputProps, ?HTMLInputElement>(
     (props: UploadUrlInputProps, ref) => {
         const inputRef = useRef<?HTMLInputElement>(null);
-        const context = assertContext(useContext(UploadyContext));
+        const context = useUploadyContext();
 
         const { className, id, placeholder, uploadRef, validate, ignoreKeyPress, ...uploadOptions } = props;
 

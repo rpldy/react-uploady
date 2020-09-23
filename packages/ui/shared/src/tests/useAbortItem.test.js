@@ -1,7 +1,7 @@
-import assertContext from "../assertContext";
+import useUploadyContext from "../useUploadyContext";
 import useAbortItem from "../useAbortItem";
 
-jest.mock("../assertContext", () => jest.fn());
+jest.mock("../useUploadyContext");
 
 describe("useAbortItem tests", () => {
 
@@ -10,7 +10,7 @@ describe("useAbortItem tests", () => {
 	};
 
 	beforeAll(() => {
-		assertContext.mockReturnValue(context);
+        useUploadyContext.mockReturnValue(context);
 	});
 
 	beforeEach(() => {

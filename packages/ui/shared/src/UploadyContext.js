@@ -64,7 +64,7 @@ export const createContextApi =
             uploader.add(files, addOptions);
         };
 
-		const processPending = (uploadOptions?: UploadOptions) => {
+		const processPending = (uploadOptions?: ?UploadOptions) => {
 			uploader.upload(uploadOptions);
 		};
 

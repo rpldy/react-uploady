@@ -103,13 +103,13 @@ export default (options?: CreateOptions): UploaderType => {
     /**
      * Tells the uploader to process batches that weren't auto-uploaded
      */
-    const upload = (uploadOptions?: UploadOptions): void => {
+    const upload = (uploadOptions?: ?UploadOptions): void => {
         pendingBatches
             .splice(0)
             .forEach(({ batch, uploadOptions: batchOptions }: PendingBatch) =>
                 processor.process(
                     batch,
-                    merge({foo: "bar"}, batchOptions, uploadOptions))
+                    merge({}, batchOptions, uploadOptions))
             );
     };
 

@@ -104,7 +104,7 @@ const MyUploadField = asUploadButton(
         });
 
         return (
-            <UploadField {...props} ref={ref}>
+            <UploadField {...props} ref={ref} id="form-upload-button">
                 {text}
             </UploadField>
         );
@@ -139,7 +139,7 @@ const MyForm = () => {
             <br/>
             <input onChange={onFieldChange} id="field-age" type="number" placeholder="your age"/>
             <br/>
-            <button type="button" onClick={onSubmit} disabled={!fileName}>Submit Form</button>
+            <button id="form-submit" type="button" onClick={onSubmit} disabled={!fileName}>Submit Form</button>
         </Form>
     );
 };
@@ -169,12 +169,6 @@ export const WithForm = () => {
         </Uploady>
     );
 };
-
-
-
-
-
-
 
 
 //expose react and react-dom for Uploady bundle

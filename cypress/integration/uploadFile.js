@@ -7,7 +7,7 @@ const uploadFile = (fileName, cb, button = "button", iframe = "@iframe", options
         .click()
         .as("uploadButton");
 
-	get("input")
+	get(`input[type="file"]`)
         .should("exist")
         .as("fInput");
 

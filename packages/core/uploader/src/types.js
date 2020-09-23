@@ -35,7 +35,7 @@ export type UploaderType = {
 	id: string,
 	update: (updateOptions: CreateOptions) => UploaderType,
 	add: (files: UploadInfo | UploadInfo[], addOptions?: ?UploadOptions) => Promise<void>,
-	upload: () => void,
+	upload: (uploadOptions?: UploadOptions) => void,
 	abort: (id?: string) => void,
 	abortBatch: (id: string) => void,
 	getOptions: () => CreateOptions,

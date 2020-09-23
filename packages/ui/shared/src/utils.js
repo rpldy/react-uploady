@@ -1,12 +1,11 @@
 // @flow
-import { useEffect, useContext, useState, useCallback } from "react";
-import UploadyContext  from "./UploadyContext";
-import assertContext from "./assertContext";
+import { useEffect, useState, useCallback } from "react";
+import useUploadyContext from "./useUploadyContext";
 
 type Callback = (...args?: any) => ?any;
 
 const useEventEffect = (event: string, fn: Callback) => {
-	const context = assertContext(useContext(UploadyContext));
+	const context = useUploadyContext();
 	const { on, off } = context;
 
 	useEffect(() => {

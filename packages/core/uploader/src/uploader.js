@@ -66,6 +66,10 @@ export default (options?: CreateOptions): UploaderType => {
                         if (processOptions.autoUpload) {
                             processor.process(batch, processOptions);
                         } else {
+                            if (processOptions.clearPendingOnAdd) {
+                                clearPending();
+                            }
+
                             pendingBatches.push({ batch, uploadOptions: processOptions });
                         }
                     } else {
@@ -99,11 +103,14 @@ export default (options?: CreateOptions): UploaderType => {
     /**
      * Tells the uploader to process batches that weren't auto-uploaded
      */
-    const upload = (): void => {
+    const upload = (uploadOptions?: UploadOptions): void => {
         pendingBatches
             .splice(0)
-            .forEach(({ batch, uploadOptions }: PendingBatch) =>
-                processor.process(batch, uploadOptions));
+            .forEach(({ batch, uploadOptions: batchOptions }: PendingBatch) =>
+                processor.process(
+                    batch,
+                    merge({foo: "bar"}, batchOptions, uploadOptions))
+            );
     };
 
     const getOptions = (): CreateOptions => {

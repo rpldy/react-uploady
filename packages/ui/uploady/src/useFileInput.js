@@ -1,7 +1,7 @@
 // @flow
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { logger } from "@rpldy/shared";
-import { UploadyContext, assertContext } from "@rpldy/shared-ui";
+import { useUploadyContext } from "@rpldy/shared-ui";
 import type { Destination } from "@rpldy/shared";
 import type { InputRef } from "@rpldy/shared-ui";
 
@@ -59,7 +59,7 @@ const getDestinationFromInput = (input: HTMLInputElement): ?DestinationShape => 
 };
 
 export default (fileInputRef: InputRef) => {
-    const context = assertContext(useContext(UploadyContext));
+    const context = useUploadyContext();
 
     context.setExternalFileInput(fileInputRef);
 

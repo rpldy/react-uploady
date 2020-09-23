@@ -1,7 +1,7 @@
-import assertContext from "../assertContext";
+import useUploadyContext from "../useUploadyContext";
 import useUploadOptions from "../useUploadOptions";
 
-jest.mock("../assertContext", () => jest.fn());
+jest.mock("../useUploadyContext");
 
 describe("useUploadOptions tests", () => {
 
@@ -11,7 +11,7 @@ describe("useUploadOptions tests", () => {
     };
 
     beforeAll(() => {
-        assertContext.mockReturnValue(context);
+        useUploadyContext.mockReturnValue(context);
     });
 
     beforeEach(() => {

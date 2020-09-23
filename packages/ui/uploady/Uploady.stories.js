@@ -1,6 +1,7 @@
 // @flow
-import React, { useCallback, useState, useContext } from "react";
+import React, { useCallback, useState, forwardRef, useMemo } from "react";
 import ReactDOM from "react-dom";
+import styled from "styled-components";
 import {
     UmdBundleScript,
     localDestination,
@@ -8,14 +9,21 @@ import {
     addActionLogEnhancer,
 	useStoryUploadySetup
 } from "../../../story-helpers";
-import { NoDomUploady, useUploadOptions } from "@rpldy/shared-ui";
-import Uploady, { UploadyContext } from "./src";
+import { asUploadButton } from "@rpldy/upload-button";
+import UploadPreview from "@rpldy/upload-preview";
+import Uploady, {
+    useUploadyContext,
+    NoDomUploady,
+    useUploadOptions,
+    useBatchAddListener,
+    useBatchFinishListener,
+} from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
 const ContextUploadButton = () => {
-    const uploadyContext = useContext(UploadyContext);
+    const uploadyContext = useUploadyContext();
 
     const onClick = useCallback(() => {
         uploadyContext?.showFileUpload();
@@ -59,6 +67,115 @@ export const WithNoDomUploady = () => {
         <ListOfUploadOptions />
     </NoDomUploady>
 };
+
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const UploadField = styled.div`
+  width: 260px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #fff;
+  background-color: #f1f1f1;
+  color: #000;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 0 4px;
+  cursor: pointer;
+`;
+
+const MyUploadField = asUploadButton(
+    forwardRef(({ onChange, ...props }, ref) => {
+        const [text, setText] = useState("Select file");
+
+        useBatchAddListener((batch) => {
+            setText(batch.items[0].file.name);
+            onChange(batch.items[0].file.name);
+        });
+
+        useBatchFinishListener(() => {
+            setText("Select file");
+            onChange(null);
+        });
+
+        return (
+            <UploadField {...props} ref={ref}>
+                {text}
+            </UploadField>
+        );
+    })
+);
+
+const MyForm = () => {
+    const [fields, setFields] = useState({});
+    const [fileName, setFileName] = useState(null);
+    const uploadyContext = useUploadyContext();
+
+    const onSubmit = useCallback(() => {
+        uploadyContext.processPending({params: fields});
+    }, [fields, uploadyContext]);
+
+    const onFieldChange = useCallback((e)=> {
+        setFields({
+            ...fields,
+            [e.currentTarget.id]: e.currentTarget.value,
+        })
+    }, [fields, setFields]);
+
+    const buttonExtraProps = useMemo(() => ({
+        onChange:setFileName
+    }), [setFileName]);
+
+    return (
+        <Form>
+            <MyUploadField autoUpload={false} extraProps={buttonExtraProps}/>
+            <br/>
+            <input onChange={onFieldChange} id="field-name" type="text" placeholder="your name"/>
+            <br/>
+            <input onChange={onFieldChange} id="field-age" type="number" placeholder="your age"/>
+            <br/>
+            <button type="button" onClick={onSubmit} disabled={!fileName}>Submit Form</button>
+        </Form>
+    );
+};
+
+export const WithForm = () => {
+    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+
+    return (
+        <Uploady
+            debug
+            clearPendingOnAdd
+            multiple={false}
+            destination={destination}
+            enhancer={enhancer}
+            grouped={grouped}
+            maxGroupSize={groupSize}>
+        >
+            <div className="App">
+                <h3>Using a Form with file input and additional fields</h3>
+
+                <MyForm />
+                <br />
+                <UploadPreview
+                    fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+                />
+            </div>
+        </Uploady>
+    );
+};
+
+
+
+
+
+
+
 
 //expose react and react-dom for Uploady bundle
 window.react = React;

@@ -65,6 +65,8 @@ export const UploadyContext: React.Context<UploadyContextType>;
 
 export const assertContext: (context: UploadyContextType) => UploadyContextType;
 
+export const useUploadyContext: () => UploadyContextType;
+
 export const useAbortAll: () => () => boolean;
 
 export const useAbortBatch: () => (batchId: string) => boolean;

@@ -1,7 +1,7 @@
 // @flow
-import React, { forwardRef, useCallback, useContext, useImperativeHandle, useRef } from "react";
+import React, { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
 import { getFilesFromDragEvent } from "html-dir-content";
-import { assertContext, UploadyContext } from "@rpldy/shared-ui";
+import { useUploadyContext } from "@rpldy/shared-ui";
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadDropZoneProps } from "./types";
 
@@ -11,7 +11,7 @@ const UploadDropZone = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
 
         useImperativeHandle<?HTMLDivElement>(ref, () => containerRef.current, []);
 
-        const { upload } = assertContext(useContext(UploadyContext));
+        const { upload } = useUploadyContext();
 
         const {
             className, id, children, onDragOverClassName, dropHandler,

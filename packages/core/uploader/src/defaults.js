@@ -7,6 +7,7 @@ export const DEFAULT_FILTER = () => true;
 
 export const DEFAULT_OPTIONS = devFreeze({
     autoUpload: true,
+    clearPendingOnAdd: false,
     inputFieldName: "file",
     concurrent: false,
     maxConcurrent: 2,

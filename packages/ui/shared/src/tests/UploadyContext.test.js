@@ -47,8 +47,8 @@ describe("UploadyContext tests", () => {
 	it("processPending should call upload on uploader", () => {
 		const contextApi = getTestContext();
 
-		contextApi.processPending();
-		expect(uploader.upload).toHaveBeenCalled();
+		contextApi.processPending({process: true});
+		expect(uploader.upload).toHaveBeenCalledWith({process: true});
 	});
 
 	it("should call abort on uploader", () => {

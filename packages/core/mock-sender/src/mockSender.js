@@ -96,7 +96,7 @@ const createRequest = (options: MandatoryMockOptions, items: BatchItem[]) => {
 	};
 };
 
-const processResponse = (request, options: MandatoryMockOptions): Promise<UploadData> => {
+const processResponse = (request, options: MandatoryMockOptions, sendOptions: SendOptions): Promise<UploadData> => {
 	return request.then((mockResponse: MockResponse) => {
 		logger.debugLog("uploady.mockSender: mock request finished successfully");
 
@@ -107,6 +107,7 @@ const processResponse = (request, options: MandatoryMockOptions): Promise<Upload
 				...mockResponse,
 				headers: { "x-request-type": "react-uploady.mockSender" },
 				data: options.response || {
+                    sendOptions,
 					mock: true,
 					success: true,
 				}
@@ -138,7 +139,7 @@ export default (options?: MockOptions) => {
 		request.onProgress(onProgress);
 
 		return {
-			request: processResponse(request, mockOptions),
+			request: processResponse(request, mockOptions, sendOptions),
 			abort: request.abort,
             senderType: MOCK_SENDER_TYPE,
 		};

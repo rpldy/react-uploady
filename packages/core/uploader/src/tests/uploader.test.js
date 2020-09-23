@@ -1,4 +1,4 @@
-import { BATCH_STATES, triggerCancellable, invariant } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { BATCH_STATES, triggerCancellable, invariant, utils } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { mockTrigger } from "@rpldy/life-events/src/tests/mocks/rpldy-life-events.mock";
 import mockCreateProcessor from "../processor";
 import mockCreateBatch from "../batch";
@@ -20,6 +20,7 @@ describe("uploader tests", () => {
             mockAbort,
             triggerCancellable,
             invariant,
+            utils
         );
     });
 
@@ -107,6 +108,23 @@ describe("uploader tests", () => {
             expect(mockProcess).not.toHaveBeenCalled();
         });
 
+        it("should process with merged upload options", async() => {
+            triggerCancellable
+                .mockReturnValueOnce(() => Promise.resolve(false));
+
+            mockCreateBatch
+                .mockReturnValueOnce({ items: [1, 2] });
+
+            const uploader = getTestUploader({ autoUpload: false });
+
+            await uploader.add([], { test: 1 });
+            uploader.upload({ process: true });
+
+            expect(mockProcess).toHaveBeenCalled();
+
+            expect(utils.merge).toHaveBeenNthCalledWith(2, expect.any(Object), expect.any(Object), {process: true});
+        });
+
         it("should process pending", async () => {
             triggerCancellable
                 .mockReturnValueOnce(() => Promise.resolve(false));
@@ -125,6 +143,29 @@ describe("uploader tests", () => {
 
             uploader.upload();
             expect(mockProcess).toHaveBeenCalledWith(batch1, expect.objectContaining({ test: 1 }));
+            expect(mockProcess).toHaveBeenCalledWith(batch2, expect.objectContaining({ test: 2 }));
+        });
+
+        it("should clear previous pending", async () => {
+
+            triggerCancellable
+                .mockReturnValueOnce(() => Promise.resolve(false));
+
+            const uploader = getTestUploader({ autoUpload: false, clearPendingOnAdd: true });
+
+            const batch1 = { items: [1, 2] },
+                batch2 = { items: [3] };
+
+            mockCreateBatch
+                .mockReturnValueOnce(batch1)
+                .mockReturnValueOnce(batch2);
+
+            await uploader.add([], { test: 1 });
+            await uploader.add([], { test: 2 });
+
+            uploader.upload();
+
+            expect(mockProcess).toHaveBeenCalledTimes(1);
             expect(mockProcess).toHaveBeenCalledWith(batch2, expect.objectContaining({ test: 2 }));
         });
     });

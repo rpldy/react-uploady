@@ -14,6 +14,8 @@ const useBatchStartListener = jest.fn();
 
 const logWarning = jest.fn();
 
+const useUploadyContext = jest.fn(() => UploadyContextMock);
+
 const useUploader = jest.fn();
 
 const useUploadOptions = jest.fn();
@@ -26,6 +28,7 @@ const uiSharedMock = {
 
     assertContext,
     createContextApi,
+    useUploadyContext,
     // useBatchAddListener,
     useBatchStartListener,
     // useBatchProgressListener,
@@ -53,7 +56,7 @@ export {
     withForwardRefMock,
 
     useBatchStartListener,
-
+    useUploadyContext,
     useUploader,
     useUploadOptions,
 

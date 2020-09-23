@@ -37,8 +37,7 @@
   },
   "devDependencies": {
     "flow-bin": "^0.133.0",
-      "@rpldy/upload-button": "^0.6.0",
-      "@rpldy/upload-preview": "^0.6.0"
+      "@rpldy/upload-button": "^0.6.0"
   },
   "publishConfig": {
     "access": "public"

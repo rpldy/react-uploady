@@ -10,7 +10,6 @@ import {
 	useStoryUploadySetup
 } from "../../../story-helpers";
 import { asUploadButton } from "@rpldy/upload-button";
-import UploadPreview from "@rpldy/upload-preview";
 import Uploady, {
     useUploadyContext,
     NoDomUploady,
@@ -64,7 +63,7 @@ export const WithNoDomUploady = () => {
         enhancer={enhancer}
         grouped={grouped}
         maxGroupSize={groupSize}>
-        <ListOfUploadOptions />
+        <ListOfUploadOptions/>
     </NoDomUploady>
 };
 
@@ -117,10 +116,10 @@ const MyForm = () => {
     const uploadyContext = useUploadyContext();
 
     const onSubmit = useCallback(() => {
-        uploadyContext.processPending({params: fields});
+        uploadyContext.processPending({ params: fields });
     }, [fields, uploadyContext]);
 
-    const onFieldChange = useCallback((e)=> {
+    const onFieldChange = useCallback((e) => {
         setFields({
             ...fields,
             [e.currentTarget.id]: e.currentTarget.value,
@@ -128,7 +127,7 @@ const MyForm = () => {
     }, [fields, setFields]);
 
     const buttonExtraProps = useMemo(() => ({
-        onChange:setFileName
+        onChange: setFileName
     }), [setFileName]);
 
     return (
@@ -156,15 +155,11 @@ export const WithForm = () => {
             enhancer={enhancer}
             grouped={grouped}
             maxGroupSize={groupSize}>
-        >
+            >
             <div className="App">
                 <h3>Using a Form with file input and additional fields</h3>
 
-                <MyForm />
-                <br />
-                <UploadPreview
-                    fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
-                />
+                <MyForm/>
             </div>
         </Uploady>
     );

@@ -88,28 +88,27 @@ const processResponse = (tusState: TusState, extensions: ?string, version: ?stri
 	});
 };
 
-const handleResponse = async (pXhr: Promise<XMLHttpRequest>, url: string, tusState: TusState): Promise<void> => {
-	try {
-		const response = await pXhr;
+const handleResponse = (pXhr: Promise<XMLHttpRequest>, url: string, tusState: TusState): Promise<void> =>
+    pXhr
+        .catch((error) => {
+            logger.debugLog(`tusSender.featureDetection: failed to retrieve data from server`, error);
+        })
+        .then((response: ?XMLHttpRequest) => {
+            if (response && ~SUCCESS_CODES.indexOf(response.status)) {
+                const tusExtensions = response.getResponseHeader("Tus-Extension");
+                const tusVersion = response.getResponseHeader("Tus-Resumable");
 
-		if (~SUCCESS_CODES.indexOf(response.status)) {
-			const tusExtensions = response.getResponseHeader("Tus-Extension");
-			const tusVersion = response.getResponseHeader("Tus-Resumable");
+                if (tusExtensions) {
+                    safeSessionStorage.setItem(getStorageKey(url),
+                        JSON.stringify({
+                            extensions: tusExtensions,
+                            versions: tusVersion,
+                        }));
+                }
 
-			if (tusExtensions ) {
-				safeSessionStorage.setItem(getStorageKey(url),
-					JSON.stringify({
-						extensions: tusExtensions,
-						versions: tusVersion,
-					}));
-			}
-
-			processResponse(tusState, tusExtensions, tusVersion);
-		}
-	} catch (ex) {
-		logger.debugLog(`tusSender.featureDetection: failed to retrieve data from server`, ex);
-	}
-};
+                processResponse(tusState, tusExtensions, tusVersion);
+            }
+        });
 
 export const requestFeaturesFromServer = (url: string, tusState: TusState) => {
 	const { options } = tusState.getState();

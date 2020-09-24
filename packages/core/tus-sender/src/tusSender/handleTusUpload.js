@@ -4,7 +4,7 @@ import createUpload from "./initTusUpload/createUpload";
 import { persistResumable } from "../resumableStore";
 import finalizeParallelUpload from "./finalizeParallelUpload";
 
-import type { BatchItem } from "@rpldy/shared";
+import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { ChunkedSender, ChunkedSendOptions, OnProgress } from "@rpldy/chunked-sender";
 import type { TusState } from "../types";
 import type { InitData } from "./types";
@@ -63,7 +63,7 @@ const handleParallelizedChunkInit = (items: BatchItem[], tusState: TusState, ini
 	});
 };
 
-const handleTusUpload = async (
+const handleTusUpload = (
 	items: BatchItem[],
 	url: string,
 	sendOptions: ChunkedSendOptions,
@@ -72,46 +72,46 @@ const handleTusUpload = async (
 	chunkedSender: ChunkedSender,
 	initRequest: Promise<?InitData>,
 	isResume?: boolean,
-	parallelIdentifier: ?string,
-) => {
-	const initData: ?InitData = await initRequest;
+    parallelIdentifier: ?string,
+): Promise<UploadData> =>
+    initRequest
+        .then((initData: ?InitData) => {
+            let request,
+                resumeFailed = false;
 
-	let request,
-		resumeFailed = false;
+            if (initData) {
+                if (initData.isDone) {
+                    logger.debugLog(`tusSender.handler: resume found server has completed file for item: ${items[0].id}`, items[0]);
+                    request = Promise.resolve({
+                        status: 200,
+                        state: FILE_STATES.FINISHED,
+                        response: "TUS server has file",
+                    });
+                } else if (!initData.isNew && !initData.canResume) {
+                    resumeFailed = true;
+                } else if (parallelIdentifier) {
+                    //no need for another chunked upload - already inside a parallel chunk upload flow (initiated by chunk start handler - handleEvents)
+                    request = handleParallelizedChunkInit(items, tusState, initData, parallelIdentifier);
+                } else {
+                    request = doChunkedUploadForItem(items, url, sendOptions, onProgress, tusState, chunkedSender, initData);
+                }
+            } else {
+                resumeFailed = isResume;
+            }
 
-	if (initData) {
-		if (initData.isDone) {
-			logger.debugLog(`tusSender.handler: resume found server has completed file for item: ${items[0].id}`, items[0]);
-			request = Promise.resolve({
-				status: 200,
-				state: FILE_STATES.FINISHED,
-				response: "TUS server has file",
-			});
-		} else if (!initData.isNew && !initData.canResume) {
-			resumeFailed = true;
-		} else if (parallelIdentifier) {
-			//no need for another chunked upload - we're already inside a parallel chunk upload flow (initiated by chunk start handler - handleEvents)
-			request = handleParallelizedChunkInit(items, tusState, initData, parallelIdentifier);
-		} else {
-			request = doChunkedUploadForItem(items, url, sendOptions, onProgress, tusState, chunkedSender, initData);
-		}
-	} else {
-		resumeFailed = isResume;
-	}
+            if (resumeFailed) {
+                logger.debugLog(`tusSender.handler: resume init failed. Will try creating a new upload for item: ${items[0].id}`);
+                const { request: createRequest } = createUpload(items[0], url, tusState, sendOptions);
+                //this second init request (after failed resume) cannot be aborted
+                request = handleTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender, createRequest);
+            }
 
-	if (resumeFailed) {
-		logger.debugLog(`tusSender.handler: resume init failed. Will try creating a new upload for item: ${items[0].id}`);
-		const { request: createRequest } = createUpload(items[0], url, tusState, sendOptions);
-		//currently, this second init request (after failed resume) cannot be aborted
-		request = await handleTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender, createRequest);
-	}
-
-	return request || Promise.resolve({
-		status: 0,
-		state: FILE_STATES.ERROR,
-		response: "TUS initialize failed",
-	});
-};
+            return request || Promise.resolve({
+                status: 0,
+                state: FILE_STATES.ERROR,
+                response: "TUS initialize failed",
+            });
+        });
 
 export default handleTusUpload;
 

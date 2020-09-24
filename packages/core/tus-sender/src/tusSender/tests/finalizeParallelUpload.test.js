@@ -53,7 +53,7 @@ describe("finalizeParallelUpload tests", () => {
 
 		expect(finalizeParallelUpload(item, null, tusState, null, Promise.resolve({
 			state: FILE_STATES.FINISHED
-		}))).rejects.toThrow(`tusSender: something went wrong. found only 1 upload urls for 2 chunks`);
+		}))).rejects.toThrow(`tusSender: something went wrong. found 1 upload urls for 2 chunks`);
 	});
 
 	it("should finalize successfully", async () => {
@@ -194,17 +194,47 @@ describe("finalizeParallelUpload tests", () => {
 
 		getUploadMetadata.mockReturnValueOnce("metadata");
 
-		const pXhr = Promise.reject("error!");
+        const pXhr = Promise.reject({ status: 500, response: "error!" });
 
 		request.mockReturnValueOnce(pXhr);
 
 		const result = await finalizeParallelUpload(item, url, tusState, null, Promise.resolve(chunkResult));
 
 		expect(result).toEqual({
-			status: 0,
+			status: 500,
 			state: FILE_STATES.ERROR,
 			response: "error!",
 		});
-
 	});
+
+    it("should fail if no xhr response",  async() => {
+        const url = "upload.url";
+
+        const item = { id: "i1" };
+
+        const chunkResult = {
+            state: FILE_STATES.FINISHED
+        };
+
+        const tusState = createMockState({
+            items: {
+                [item.id]: {
+                    parallelChunks: ["ci1", "ci2"],
+                },
+                "ci1": { uploadUrl: "ci1.url" },
+                "ci2": { uploadUrl: "ci2.url" }
+            }
+        });
+
+        const pXhr = Promise.reject(null);
+        request.mockReturnValueOnce(pXhr);
+
+        const result = await finalizeParallelUpload(item, url, tusState, null, Promise.resolve(chunkResult));
+
+        expect(result).toEqual({
+            status: 0,
+            state: FILE_STATES.ERROR,
+            response: "",
+        });
+    });
 });

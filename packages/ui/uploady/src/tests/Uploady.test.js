@@ -34,7 +34,7 @@ describe("Uploady tests", () => {
 
         expect(wrapper.find("#test")).toHaveLength(1);
 
-        const input = wrapper.find("input");
+        const input = wrapper.find("Portal").find("input");
 
         expect(input).toHaveLength(1);
         expect(input).toHaveProp("multiple", true);
@@ -84,5 +84,25 @@ describe("Uploady tests", () => {
         const wrapper = mount(<Uploady customInput/>);
 
         expect(wrapper.find("input")).toHaveLength(0);
+    });
+
+    it("should respect noPortal", () => {
+
+        useUploadOptions.mockReturnValueOnce({
+            inputFieldName: "file",
+        });
+
+        const wrapper = mount(<Uploady noPortal
+                                       multiple
+                                       accept={".doc"}>
+            <div id="test"/>
+        </Uploady>);
+
+        expect(wrapper.find("Portal").find("input")).toHaveLength(0);
+
+        const input = wrapper.find("input");
+        expect(input).toHaveLength(1);
+        expect(input).toHaveProp("multiple", true);
+        expect(input).toHaveProp("name", "file");
     });
 });

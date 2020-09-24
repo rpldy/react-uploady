@@ -71,7 +71,7 @@ const makeResumeRequest = (item: BatchItem, url: string, tusState: TusState, par
 	let resumeFinished = false;
 
 	const resumeRequest = pXhr
-		.then(async (resumeResponse) => {
+		.then((resumeResponse: ?XMLHttpRequest) => {
 			let result;
 
 			if (resumeResponse && ~SUCCESS_CODES.indexOf(resumeResponse.status)) {
@@ -79,7 +79,7 @@ const makeResumeRequest = (item: BatchItem, url: string, tusState: TusState, par
 			} else if (resumeResponse?.status === 423 && attempt === 0) {
 				logger.debugLog(`tusSender.resume: upload is locked for item: ${item.id}. Will retry in ${+options.lockedRetryDelay}`, resumeResponse);
 				//Make one more attempt at resume
-				result = await resumeWithDelay(item, url, tusState, parallelIdentifier, 1);
+				result = resumeWithDelay(item, url, tusState, parallelIdentifier, 1);
 			} else {
 				logger.debugLog(`tusSender.resume: failed for item: ${item.id}${parallelIdentifier ? `-${parallelIdentifier}` : ""}`, resumeResponse);
 				result = handleResumeFail(item, options, parallelIdentifier);

@@ -1,7 +1,5 @@
 // @flow
 
-import type { FileState } from "@rpldy/shared";
-
 export type ItemInfo = {
 	id: string,
 	uploadUrl: ?string,

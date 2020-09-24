@@ -6,6 +6,7 @@ import { removeResumable } from "../resumableStore";
 import initTusUpload from "./initTusUpload";
 import { SUCCESS_CODES } from "../consts";
 
+import type { UploadData } from "@rpldy/shared";
 import type {
 	ChunkedSender,
 	ChunkStartEventData,
@@ -19,7 +20,7 @@ const PATCH = "PATCH";
 const getParallelChunkIdentifier = (options: TusOptions, chunkIndex: number) =>
 	`_prlChunk_${+options.chunkSize}_${chunkIndex}`;
 
-const handleParallelChunk = async (tusState: TusState, chunkedSender: ChunkedSender, data: ChunkStartEventData): Promise<boolean> => {
+const handleParallelChunk = (tusState: TusState, chunkedSender: ChunkedSender, data: ChunkStartEventData): Promise<boolean> => {
 	const { item: orgItem, chunkItem, url, sendOptions, onProgress, chunk } = data;
 	const { options } = tusState.getState();
 
@@ -42,9 +43,10 @@ const handleParallelChunk = async (tusState: TusState, chunkedSender: ChunkedSen
 		getParallelChunkIdentifier(options, chunk.index),
 	);
 
-	const response = await initResult.request;
-
-	return response.state !== FILE_STATES.FINISHED;
+    return initResult.request
+        .then((response: UploadData) => {
+            return response.state !== FILE_STATES.FINISHED;
+        });
 };
 
 const updateChunkStartData = (tusState: TusState, data: ChunkStartEventData, isParallel) => {
@@ -108,16 +110,18 @@ export default (uploader: UploaderType, tusState: TusState, chunkedSender: Chunk
 			}
 		});
 
-		uploader.on(CHUNK_EVENTS.CHUNK_START, async (data: ChunkStartEventData) => {
+		uploader.on(CHUNK_EVENTS.CHUNK_START, (data: ChunkStartEventData) => {
 			const { options } = tusState.getState(),
-				isParallel = +options.parallel > 1;
+                isParallel = +options.parallel > 1;
 
-			const continueWithChunk = !isParallel ||
-				await handleParallelChunk(tusState, chunkedSender, data);
+            const continueP = isParallel ?
+                handleParallelChunk(tusState, chunkedSender, data) :
+                Promise.resolve(true);
 
-			return continueWithChunk &&
-				updateChunkStartData(tusState, data, isParallel);
-		});
+            return continueP.then((continueHandle: boolean) => continueHandle &&
+                updateChunkStartData(tusState, data, isParallel)
+            );
+        });
 
 		uploader.on(CHUNK_EVENTS.CHUNK_FINISH, ({ item, chunk, uploadData }: ChunkFinishEventData) => {
 			const { items, options } = tusState.getState(),

@@ -7,80 +7,88 @@ import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
 import type { TusState } from "../types";
 
-export default async (
-	item: BatchItem,
-	url: string,
-	tusState: TusState,
-	sendOptions: SendOptions,
-	chunkedRequest: Promise<UploadData>,
-) => {
-	let result: UploadData = await chunkedRequest;
+const handleResponse = (pXhr) : Promise<?UploadData> =>
+    pXhr
+        .catch((xhr: ?XMLHttpRequest) => {
+            logger.debugLog(`tusSender.finalizeParallel: finalize request failed unexpectedly!`, xhr);
+            return xhr;
+        })
+        .then((xhr: ?XMLHttpRequest) => {
+            let result;
+            const status = xhr?.status || 0;
+            const successCode = !!~SUCCESS_CODES.indexOf(status);
 
-	if (result.state === FILE_STATES.FINISHED) {
-		const { options, items } = tusState.getState(),
-			itemData = items[item.id];
+            const resLocation = successCode &&
+                xhr?.getResponseHeader &&
+                xhr.getResponseHeader("Location");
 
-		if (itemData) {
-			const chunkItemIds = itemData.parallelChunks;
-			const parallelUploadUrls = chunkItemIds
-				.filter((chunkId: string) => items[chunkId]?.uploadUrl)
-				.map((chunkId: string) => items[chunkId].uploadUrl);
+            if (resLocation) {
+                logger.debugLog(`tusSender.finalizeParallel: successfully finalized parallel upload`, resLocation);
+            } else {
+                logger.debugLog(`tusSender.finalizeParallel: parallel upload finalize failed!`, status);
 
-			if (parallelUploadUrls.length !== chunkItemIds.length) {
-				throw new Error(`tusSender: something went wrong. found only ${parallelUploadUrls.length} upload urls for ${chunkItemIds.length} chunks`);
-			}
+                result = {
+                    status: status,
+                    state: FILE_STATES.ERROR,
+                    response: xhr?.response || (successCode && !resLocation ? "No valid location header for finalize request" : ""),
+                };
+            }
 
-			const headers = {
-				"tus-resumable": options.version,
-				"Upload-Concat": `final;${parallelUploadUrls.join(" ")}`,
-				"Upload-Metadata": getUploadMetadata(sendOptions),
-			};
+            return result;
+        });
 
-			logger.debugLog(`tusSender.finalizeParallel: sending finalizing request`, {
-				url,
-				headers
-			});
+const finalizeParallelUpload = (
+    item: BatchItem,
+    url: string,
+    tusState: TusState,
+    sendOptions: SendOptions,
+    chunkedRequest: Promise<UploadData>,
+): Promise<UploadData> =>
+    chunkedRequest.then((result: UploadData) => {
+        let finalResult = result;
 
-			const pXhr = request(url, null, { method: "POST", headers });
+        if (result.state === FILE_STATES.FINISHED) {
+            const { options, items } = tusState.getState(),
+                itemData = items[item.id];
 
-			tusState.updateState((state) => {
-				state.items[item.id].abort = () => {
-					//override the state item's abort with the finalize request abort
-					// $FlowFixMe
-					pXhr.xhr.abort();
-					return true;
-				};
-			});
+            if (itemData) {
+                const chunkItemIds = itemData.parallelChunks;
+                const parallelUploadUrls = chunkItemIds
+                    .filter((chunkId: string) => items[chunkId]?.uploadUrl)
+                    .map((chunkId: string) => items[chunkId].uploadUrl);
 
-			let finalizeResponse;
+                if (parallelUploadUrls.length !== chunkItemIds.length) {
+                    throw new Error(`tusSender: something went wrong. found ${parallelUploadUrls.length} upload urls for ${chunkItemIds.length} chunks`);
+                }
 
-			try {
-				finalizeResponse = await pXhr;
-			} catch (ex) {
-				logger.debugLog(`tusSender.finalizeParallel: finalize request failed unexpectedly!`, ex);
-				finalizeResponse = { status: 0, response: (ex.message || ex) };
-			}
+                const headers = {
+                    "tus-resumable": options.version,
+                    "Upload-Concat": `final;${parallelUploadUrls.join(" ")}`,
+                    "Upload-Metadata": getUploadMetadata(sendOptions),
+                };
 
-			const successCode = finalizeResponse &&
-				!!~SUCCESS_CODES.indexOf(finalizeResponse.status);
+                logger.debugLog(`tusSender.finalizeParallel: sending finalizing request`, {
+                    url,
+                    headers
+                });
 
-			const resLocation = successCode &&
-				finalizeResponse.getResponseHeader &&
-				finalizeResponse.getResponseHeader("Location");
+                const pXhr = request(url, null, { method: "POST", headers });
 
-			if (resLocation) {
-				logger.debugLog(`tusSender.finalizeParallel: successfully finalized parallel upload`, resLocation);
-			} else {
-				logger.debugLog(`tusSender.finalizeParallel: parallel upload finalize failed!`, finalizeResponse.status);
+                tusState.updateState((state) => {
+                    state.items[item.id].abort = () => {
+                        //override the state item's abort with the finalize request abort
+                        // $FlowFixMe
+                        pXhr.xhr.abort();
+                        return true;
+                    };
+                });
 
-				result = {
-					status: finalizeResponse.status,
-					state: FILE_STATES.ERROR,
-					response: finalizeResponse.response || (successCode && !resLocation ? "No valid location header for finalize request" : ""),
-				};
-			}
-		}
-	}
+                finalResult = handleResponse(pXhr)
+                    .then((response: ?UploadData) => response || result);
+            }
+        }
 
-	return result;
-};
+        return finalResult;
+    });
+
+export default finalizeParallelUpload;

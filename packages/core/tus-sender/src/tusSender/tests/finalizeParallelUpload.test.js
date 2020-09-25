@@ -168,7 +168,7 @@ describe("finalizeParallelUpload tests", () => {
 		expect(result).toEqual({
 			status: 200,
 			state: FILE_STATES.ERROR,
-			response: "No valid location header for finalize request",
+            response: { message: "No valid location header for finalize request" },
 		});
 	});
 
@@ -203,7 +203,7 @@ describe("finalizeParallelUpload tests", () => {
 		expect(result).toEqual({
 			status: 500,
 			state: FILE_STATES.ERROR,
-			response: "error!",
+            response: { message: "error!" },
 		});
 	});
 
@@ -234,7 +234,7 @@ describe("finalizeParallelUpload tests", () => {
         expect(result).toEqual({
             status: 0,
             state: FILE_STATES.ERROR,
-            response: "",
+            response: { message: "" },
         });
     });
 });

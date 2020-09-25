@@ -9,6 +9,15 @@ import type { ChunkedSender, ChunkedSendOptions, OnProgress } from "@rpldy/chunk
 import type { TusState } from "../types";
 import type { InitData } from "./types";
 
+const addLocationToResponse = (request: Promise<UploadData>, uploadUrl: ?string) =>
+    request.then((data: UploadData) => {
+        if (data.state === FILE_STATES.FINISHED) {
+            data.response.location = uploadUrl;
+        }
+
+        return data;
+    });
+
 const doChunkedUploadForItem = (
 	items: BatchItem[],
 	url: string,
@@ -82,18 +91,22 @@ const handleTusUpload = (
             if (initData) {
                 if (initData.isDone) {
                     logger.debugLog(`tusSender.handler: resume found server has completed file for item: ${items[0].id}`, items[0]);
-                    request = Promise.resolve({
+                    request = addLocationToResponse(Promise.resolve({
                         status: 200,
                         state: FILE_STATES.FINISHED,
-                        response: "TUS server has file",
-                    });
+                        response: { message: "TUS server has file" },
+                    }), initData.uploadUrl);
                 } else if (!initData.isNew && !initData.canResume) {
                     resumeFailed = true;
                 } else if (parallelIdentifier) {
                     //no need for another chunked upload - already inside a parallel chunk upload flow (initiated by chunk start handler - handleEvents)
                     request = handleParallelizedChunkInit(items, tusState, initData, parallelIdentifier);
                 } else {
-                    request = doChunkedUploadForItem(items, url, sendOptions, onProgress, tusState, chunkedSender, initData);
+                    //ensure location is added to successful response (parallel or not) for client code to be able to use
+                    request = addLocationToResponse(
+                        doChunkedUploadForItem(items, url, sendOptions, onProgress, tusState, chunkedSender, initData),
+                        initData.uploadUrl
+                    );
                 }
             } else {
                 resumeFailed = isResume;

@@ -83,7 +83,7 @@ describe("tusSend tests", () => {
 			expect(abort).toHaveBeenCalled();
 		});
 
-		it("should wait for feature detection ", async () => {
+		it("should wait for feature detection", async () => {
 			const abort = jest.fn(() => true);
 
 			doFeatureDetection.mockReturnValueOnce({

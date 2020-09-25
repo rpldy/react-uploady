@@ -30,7 +30,7 @@ const handleResponse = (pXhr) : Promise<?UploadData> =>
                 result = {
                     status: status,
                     state: FILE_STATES.ERROR,
-                    response: xhr?.response || (successCode && !resLocation ? "No valid location header for finalize request" : ""),
+                    response: { message: xhr?.response || (successCode && !resLocation ? "No valid location header for finalize request" : "") },
                 };
             }
 

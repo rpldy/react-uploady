@@ -52,7 +52,7 @@ describe("clone (deep) tests", () => {
 		expect(arr2[2].test).toBe(true);
 	});
 
-	it("should do nothing for simple values ", () => {
+	it("should do nothing for simple values", () => {
 		const str = clone("test");
 		expect(str).toBe("test");
 

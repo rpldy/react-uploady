@@ -64,7 +64,7 @@ describe("retry tests", () => {
 		it.each([
 			UPLOADER_EVENTS.ITEM_ERROR,
 			UPLOADER_EVENTS.ITEM_ABORT,
-		])("should send all items to retry - %s ", (itemEvent) => {
+		])("should send all items to retry - %s", (itemEvent) => {
 
 			const { retry, trigger, uploader, retryState } = getTestRetry(itemEvent);
 
@@ -132,7 +132,7 @@ describe("retry tests", () => {
 		it.each([
 			UPLOADER_EVENTS.ITEM_ERROR,
 			UPLOADER_EVENTS.ITEM_ABORT,
-		])("should send batch items to retry ", (itemEvent) => {
+		])("should send batch items to retry", (itemEvent) => {
 			const { retryBatch, trigger, uploader, retryState } = getTestRetry(itemEvent);
 
 			const options = { foo: "bar" };

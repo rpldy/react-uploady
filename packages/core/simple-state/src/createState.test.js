@@ -54,7 +54,7 @@ describe("updateable tests", () => {
 			runTest();
 		};
 
-	it("should deep proxy object ", createTest(() => {
+	it("should deep proxy object", createTest(() => {
 		const initial = getInitial();
 		const { state } = createState(initial);
 

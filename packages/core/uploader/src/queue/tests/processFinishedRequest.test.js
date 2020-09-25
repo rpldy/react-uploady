@@ -142,7 +142,7 @@ describe("onRequestFinished tests", () => {
 	});
 
 
-	describe("non finalize state tests ", () => {
+	describe("non finalize state tests", () => {
 		it.each([
 			FILE_STATES.UPLOADING,
 			FILE_STATES.ADDED,
@@ -183,7 +183,7 @@ describe("onRequestFinished tests", () => {
 			FILE_STATES.ABORTED,
 			FILE_STATES.CANCELLED,
 			FILE_STATES.ERROR,
-		])("for group should trigger and finalize ", async (failState) => {
+		])("for group should trigger and finalize", async (failState) => {
 
 			const batch = { id: "b1" };
 			const response = { success: true };

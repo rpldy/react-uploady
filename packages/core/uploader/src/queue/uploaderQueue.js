@@ -11,7 +11,7 @@ import type { TriggerMethod } from "@rpldy/life-events";
 import type { ItemsSender, CreateOptions } from "../types";
 import type { State } from "./types";
 
-export default (
+const createUploaderQueue = (
     options: CreateOptions,
     cancellable: Cancellable,
     trigger: TriggerMethod,
@@ -54,14 +54,16 @@ export default (
         });
     };
 
-    const uploadBatch = (batch: Batch, batchOptions: CreateOptions) => {
-        updateState((state) => {
-            state.batches[batch.id] = { batch, batchOptions };
-        });
-
+    const uploadBatch = (batch: Batch) => {
         batch.items.forEach(add);
 
         processQueueNext(queueState);
+    };
+
+    const addBatch = (batch: Batch, batchOptions: CreateOptions) => {
+        updateState((state) => {
+            state.batches[batch.id] = { batch, batchOptions };
+        });
     };
 
     const handleItemProgress = (item: BatchItem, completed: number, loaded: number) => {
@@ -136,8 +138,11 @@ export default (
         updateState,
         getState: queueState.getState,
         uploadBatch,
+        addBatch,
         abortItem,
         abortBatch,
         abortAll,
     };
 };
+
+export default createUploaderQueue;

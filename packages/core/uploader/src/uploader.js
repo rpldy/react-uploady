@@ -9,7 +9,7 @@ import {
     merge,
     clone,
 } from "@rpldy/shared";
-import createBatch from "./batch";
+// import createBatch from "./batch";
 import getProcessor from "./processor";
 import { UPLOADER_EVENTS } from "./consts";
 import { getMandatoryOptions } from "./utils";
@@ -52,10 +52,15 @@ export default (options?: CreateOptions): UploaderType => {
 
     const add = (files: UploadInfo | UploadInfo[], addOptions?: ?UploadOptions): Promise<void> => {
         const processOptions: CreateOptions = merge({}, uploaderOptions, addOptions);
-        const batch = createBatch(files, uploader.id, processOptions);
+
+        const batch = processor.addNewBatch(files, uploader.id, processOptions);
         let resultP;
 
         if (batch.items.length) {
+
+            //TODO: UNWRAP batch & processOptions before they are passed to BATCH_ADD event
+            //TODO: ensure changing the data passed cant be changed by client !!!!!!!
+
             // $FlowFixMe - https://github.com/facebook/flow/issues/8215
             resultP = cancellable(UPLOADER_EVENTS.BATCH_ADD, batch, processOptions)
                 .then((isCancelled: boolean) => {
@@ -74,6 +79,10 @@ export default (options?: CreateOptions): UploaderType => {
                         }
                     } else {
                         batch.state = BATCH_STATES.CANCELLED;
+
+                        //TODO: UNWRAP batch !!!!!!!!!!
+
+
                         trigger(UPLOADER_EVENTS.BATCH_CANCEL, batch);
                     }
                 });

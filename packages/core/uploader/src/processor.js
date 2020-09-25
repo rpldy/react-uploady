@@ -2,6 +2,7 @@
 import { triggerCancellable } from "@rpldy/shared";
 import createUploadQueue from "./queue";
 import createItemsSender from "./batchItemsSender";
+import createBatch from "./batch";
 
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { Batch, Cancellable } from "@rpldy/shared";
@@ -30,9 +31,16 @@ export default (trigger: TriggerMethod, options: CreateOptions, uploaderId: stri
 		}
 	};
 
+	const addNewBatch = (files, uploaderId, processOptions) => {
+        const batch = createBatch(files, uploaderId, processOptions);
+        queue.addBatch(batch, processOptions);
+        return batch;
+    };
+
     return {
         process,
         abortBatch,
         abort,
+        addNewBatch,
     };
 };

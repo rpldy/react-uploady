@@ -44,7 +44,7 @@ describe("handleChunkRequest tests", () => {
 		return { state, item };
 	};
 
-	it("should handle send success ", async () => {
+	it("should handle send success", async () => {
 
         const trigger = jest.fn();
         const response = {

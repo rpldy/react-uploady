@@ -60,7 +60,7 @@ describe("isSamePropInArrays tests", () => {
             .toBe(true);
     });
 
-    it("should return true for empty arrays ", () => {
+    it("should return true for empty arrays", () => {
         expect(isSamePropInArrays([], [], "test"))
             .toBe(true);
     });

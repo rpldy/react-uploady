@@ -45,7 +45,7 @@ describe("life-events tests", () => {
 
     describe("add regs tests", () => {
 
-        it("should add reg ", () => {
+        it("should add reg", () => {
             const obj = { foo: "bar" };
             const api = addLife(obj);
 
@@ -256,7 +256,7 @@ describe("life-events tests", () => {
             expect(api.hasEventRegistrations("test")).toBe(false);
         });
 
-        it("off should remove registrations for name ", () => {
+        it("off should remove registrations for name", () => {
             const api = addLife();
             api.target.on("test", noOp);
             api.target.on("test", () => {
@@ -271,7 +271,7 @@ describe("life-events tests", () => {
 
     describe("events tests", () => {
 
-        it("should be able to add event ", () => {
+        it("should be able to add event", () => {
 
             const api = addLife(null, ["test"]);
             api.addEvent("test-2");

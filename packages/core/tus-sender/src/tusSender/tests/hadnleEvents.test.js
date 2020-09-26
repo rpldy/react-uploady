@@ -1,9 +1,10 @@
+/* eslint jest/no-conditional-expect: 0 */
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { CHUNK_EVENTS as mockChunkEvents } from "@rpldy/chunked-sender";
 import getTusState from "../../tests/tusState.mock";
 import { FILE_STATES } from "@rpldy/shared";
 
-describe("handleEvents tests ", () => {
+describe("handleEvents tests", () => {
 	let handleEvents;
 
 	const uploader = {

@@ -5,7 +5,7 @@ import useRetry from "../useRetry";
 
 describe("useRetry tests", () => {
 
-    it("should throw if ext not registered ", () => {
+    it("should throw if ext not registered", () => {
         const { getError } = testCustomHook(useRetry);
 
         expect(invariant).toHaveBeenCalledWith(undefined, NO_EXT);
@@ -13,7 +13,7 @@ describe("useRetry tests", () => {
         expect(getError().message).toBe("Cannot read property 'retry' of undefined");
     });
 
-    it("should return retry from context ", () => {
+    it("should return retry from context", () => {
         UploadyContext.getExtension.mockReturnValueOnce({
             retry: "test"
         });

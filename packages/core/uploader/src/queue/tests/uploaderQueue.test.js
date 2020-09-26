@@ -188,7 +188,7 @@ describe("queue tests", () => {
 
     describe("UPLOADER_EVENTS.BATCH_PROGRESS tests", () => {
 
-        it("should trigger UPLOADER_EVENTS.BATCH_PROGRESS on sender batch progress ", () => {
+        it("should trigger UPLOADER_EVENTS.BATCH_PROGRESS on sender batch progress", () => {
             const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
             const batch = {

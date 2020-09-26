@@ -1,8 +1,9 @@
 // @flow
 import { FILE_STATES, logger } from "@rpldy/shared";
-import createUpload from "./initTusUpload/createUpload";
 import { persistResumable } from "../resumableStore";
+import createUpload from "./initTusUpload/createUpload";
 import finalizeParallelUpload from "./finalizeParallelUpload";
+import { addLocationToResponse } from "./utils";
 
 import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { ChunkedSender, ChunkedSendOptions, OnProgress } from "@rpldy/chunked-sender";
@@ -44,7 +45,7 @@ const doChunkedUploadForItem = (
 	return +options.parallel > 1 ?
 		//parallel requires a finalizing request
 		finalizeParallelUpload(item, url, tusState, sendOptions, chunkedResult.request) :
-		chunkedResult.request;
+        addLocationToResponse(chunkedResult.request, initData.uploadUrl);
 };
 
 const handleParallelizedChunkInit = (items: BatchItem[], tusState: TusState, initData: InitData, parallelIdentifier: string) => {
@@ -82,11 +83,11 @@ const handleTusUpload = (
             if (initData) {
                 if (initData.isDone) {
                     logger.debugLog(`tusSender.handler: resume found server has completed file for item: ${items[0].id}`, items[0]);
-                    request = Promise.resolve({
+                    request = addLocationToResponse(Promise.resolve({
                         status: 200,
                         state: FILE_STATES.FINISHED,
-                        response: "TUS server has file",
-                    });
+                        response: { message: "TUS server has file" },
+                    }), initData.uploadUrl);
                 } else if (!initData.isNew && !initData.canResume) {
                     resumeFailed = true;
                 } else if (parallelIdentifier) {

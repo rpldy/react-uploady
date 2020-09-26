@@ -47,7 +47,7 @@ describe("ui-shared utils tests", () => {
 			expect(callback).toHaveBeenCalled();
         });
 
-		it("should register and unregister from uploader event with scope ", () => {
+		it("should register and unregister from uploader event with scope", () => {
 			const eventHook = generateUploaderEventHook(event);
 			const callback = jest.fn(() => "cb-result");
 			const item = { id: "f1" };

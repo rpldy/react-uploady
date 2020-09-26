@@ -21,7 +21,7 @@ describe("abort tests", () => {
 
 	describe("abortItem tests", () => {
 
-		it("should xhr abort uploading item ", () => {
+		it("should xhr abort uploading item", () => {
 			const queue = getQueueState({
 				items: {
 					"u1": {

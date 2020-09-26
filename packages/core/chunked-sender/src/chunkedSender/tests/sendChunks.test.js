@@ -172,7 +172,7 @@ describe("sendChunks tests", () => {
 
             expect(resolve).toHaveBeenCalledWith({
                 state: FILE_STATES.FINISHED,
-                response: state.responses,
+                response: { results: state.responses },
             });
 
             expect(getChunksToSend).not.toHaveBeenCalled();

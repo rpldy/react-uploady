@@ -309,7 +309,7 @@ describe("processQueueNext tests", () => {
 		expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();
 	});
 
-	it("should do nothing if already active upload and no concurrent ", async () => {
+	it("should do nothing if already active upload and no concurrent", async () => {
 
 		const queueState = getQueueState({
 			currentBatch: "b1",

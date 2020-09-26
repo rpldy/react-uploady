@@ -35,7 +35,7 @@ describe("resumeableStore tests", () => {
 
 	describe("persistResumable tests", () => {
 
-		it("should persist url for item with default prefix ", () => {
+		it("should persist url for item with default prefix", () => {
 			persistResumable(item, uploadUrl, { resume: true });
 
 			expect(safeLocalStorage.setItem)
@@ -106,7 +106,7 @@ describe("resumeableStore tests", () => {
 		it.each([
 			"pre_",
 			null
-		])("clearResumables should remove all resumable items from storage with prefix: %s ", (prefix) => {
+		])("clearResumables should remove all resumable items from storage with prefix: %s", (prefix) => {
 			safeLocalStorage.length = 3;
 
 			safeLocalStorage.key

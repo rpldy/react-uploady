@@ -53,15 +53,15 @@ const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: 
     };
 };
 
-export default (item: BatchItem, url: string, tusState: TusState, sendOptions: SendOptions, parallelIdentifier: ?string): InitUploadResult => {
+const createUpload = (item: BatchItem, url: string, tusState: TusState, sendOptions: SendOptions, parallelIdentifier: ?string): InitUploadResult => {
     const { options } = tusState.getState();
     const headers = {
         "tus-resumable": options.version,
         "Upload-Defer-Length": options.deferLength ? 1 : undefined,
         "Upload-Length": !options.deferLength ? item.file.size : undefined,
         "Upload-Metadata": parallelIdentifier ? undefined : getUploadMetadata(sendOptions),
-		"Content-Type": options.sendDataOnCreate ? "application/offset+octet-stream" : undefined,
-		...sendOptions.headers
+        "Content-Type": options.sendDataOnCreate ? "application/offset+octet-stream" : undefined,
+        ...sendOptions.headers
     };
 
     let data = null;
@@ -69,13 +69,13 @@ export default (item: BatchItem, url: string, tusState: TusState, sendOptions: S
     logger.debugLog(`tusSender.create - creating upload for ${item.id} at: ${url}`);
 
     if (options.sendDataOnCreate) {
-		logger.debugLog(`tusSender.create - adding first chunk to create request`);
-		const chunkSize = +options.chunkSize;
+        logger.debugLog(`tusSender.create - adding first chunk to create request`);
+        const chunkSize = +options.chunkSize;
 
-		data = chunkSize < item.file.size ?
-			getChunkDataFromFile(item.file, 0, chunkSize) :
-			item.file;
-	}
+        data = chunkSize < item.file.size ?
+            getChunkDataFromFile(item.file, 0, chunkSize) :
+            item.file;
+    }
 
     const pXhr = request(url, data, { method: "POST", headers });
 
@@ -117,3 +117,5 @@ export default (item: BatchItem, url: string, tusState: TusState, sendOptions: S
         abort: abortCreate,
     };
 };
+
+export default createUpload;

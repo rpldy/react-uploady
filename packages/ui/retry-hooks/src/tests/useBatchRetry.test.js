@@ -7,7 +7,7 @@ jest.mock("invariant", () => jest.fn());
 
 describe("useBatchRetry tests", () => {
 
-    it("should throw if ext not registered ", () => {
+    it("should throw if ext not registered", () => {
         const { getError } = testCustomHook(useBatchRetry);
 
         expect(invariant).toHaveBeenCalledWith(undefined, NO_EXT);
@@ -15,7 +15,7 @@ describe("useBatchRetry tests", () => {
         expect(getError().message).toBe("Cannot read property 'retryBatch' of undefined");
     });
 
-    it("should return batchRetry from context ", () => {
+    it("should return batchRetry from context", () => {
         UploadyContext.getExtension.mockReturnValueOnce({
             retryBatch: "test"
         });

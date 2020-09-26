@@ -10,12 +10,12 @@ jest.mock("@rpldy/tus-sender", () =>({
 
 describe("useClearResumableStore tests", () => {
 
-	it("should throw if ext not registered ", () => {
+	it("should throw if ext not registered", () => {
 		testCustomHook(useClearResumableStore);
 		expect(invariant).toHaveBeenCalledWith(undefined, NO_EXT);
 	});
 
-	it("should return retry from context ", () => {
+	it("should return retry from context", () => {
 		const getOptions = jest.fn();
 
 		UploadyContext.getExtension.mockReturnValueOnce({

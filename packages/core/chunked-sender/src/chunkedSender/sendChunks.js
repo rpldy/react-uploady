@@ -34,7 +34,7 @@ const resolveOnAllChunksFinished = (state: State, item: BatchItem, resolve): boo
 
         resolve({
             state: FILE_STATES.FINISHED,
-            response: state.responses,
+            response: { results: state.responses },
         });
     }
 

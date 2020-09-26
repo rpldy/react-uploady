@@ -55,6 +55,7 @@ describe("handleTusUpload tests", () => {
 			null,
 			chunkedSender,
 			Promise.resolve({
+                uploadUrl: "tus-file-loc",
 				isDone: true,
 			}),
 		);
@@ -62,7 +63,7 @@ describe("handleTusUpload tests", () => {
 		expect(result).toEqual({
 			status: 200,
 			state: FILE_STATES.FINISHED,
-			response: "TUS server has file",
+			response: { message: "TUS server has file", location: "tus-file-loc" },
 		});
 	});
 
@@ -141,9 +142,11 @@ describe("handleTusUpload tests", () => {
 			});
 
 			chunkedSender.send.mockReturnValueOnce({
-				abort: "abort",
-				request: "chunked-request"
-			});
+                abort: "abort",
+                request: Promise.resolve({
+                    state: FILE_STATES.ABORTED
+                })
+            });
 
 			const result = await handleTusUpload(
 				[item],
@@ -160,9 +163,9 @@ describe("handleTusUpload tests", () => {
 				null,
 			);
 
-			expect(chunkedSender.send).toHaveBeenCalledWith([item], "server.com", {}, "onProgress");
-			expect(persistResumable).toHaveBeenCalledWith(item, "upload.url", tusState.getState().options);
-			expect(result).toBe("chunked-request");
+            expect(chunkedSender.send).toHaveBeenCalledWith([item], "server.com", {}, "onProgress");
+            expect(persistResumable).toHaveBeenCalledWith(item, "upload.url", tusState.getState().options);
+            expect(result).toEqual({  state: FILE_STATES.ABORTED });
 			expect(tusState.getState().items[item.id].abort).toBe("abort");
 		});
 
@@ -178,10 +181,11 @@ describe("handleTusUpload tests", () => {
 				},
 			});
 
-			chunkedSender.send.mockReturnValueOnce({
-				abort: "abort",
-				request: "chunked-request"
-			});
+            chunkedSender.send.mockReturnValueOnce({
+                request: Promise.resolve({
+                    state: FILE_STATES.ABORTED
+                })
+            });
 
 			const result = await handleTusUpload(
 				[item],
@@ -200,7 +204,7 @@ describe("handleTusUpload tests", () => {
 			);
 
 			expect(chunkedSender.send).toHaveBeenCalledWith([item], "server.com", { startByte: 123 }, "onProgress");
-			expect(result).toBe("chunked-request");
+            expect(result).toEqual({  state: FILE_STATES.ABORTED });
 		});
 
 		it("should do chunked for resume", async () => {
@@ -213,10 +217,11 @@ describe("handleTusUpload tests", () => {
 				options: {},
 			});
 
-			chunkedSender.send.mockReturnValueOnce({
-				abort: "abort",
-				request: "chunked-request"
-			});
+            chunkedSender.send.mockReturnValueOnce({
+                request: Promise.resolve({
+                    state: FILE_STATES.ABORTED
+                })
+            });
 
 			const result = await handleTusUpload(
 				[item],
@@ -235,7 +240,9 @@ describe("handleTusUpload tests", () => {
 			);
 
 			expect(chunkedSender.send).toHaveBeenCalledWith([item], "server.com", { startByte: 123 }, "onProgress");
-			expect(result).toBe("chunked-request");
+			expect(result).toEqual({
+                state: FILE_STATES.ABORTED
+            });
 		});
 
 		it("should do finalize call for parallel", async () => {
@@ -248,10 +255,12 @@ describe("handleTusUpload tests", () => {
 				options: { parallel: 2 },
 			});
 
-			chunkedSender.send.mockReturnValueOnce({
-				abort: "abort",
-				request: "chunked-request"
-			});
+            chunkedSender.send.mockReturnValueOnce({
+                abort: "abort",
+                request: Promise.resolve({
+                    state: FILE_STATES.ABORTED
+                })
+            });
 
 			finalizeParallelUpload.mockResolvedValueOnce("parallel-finalized");
 
@@ -288,10 +297,12 @@ describe("handleTusUpload tests", () => {
 				options: {},
 			});
 
-			chunkedSender.send.mockReturnValueOnce({
-				abort: "abort",
-				request: "chunked-request"
-			});
+            chunkedSender.send.mockReturnValueOnce({
+                abort: "abort",
+                request: Promise.resolve({
+                    state: FILE_STATES.ABORTED
+                })
+            });
 
 			createUpload.mockReturnValueOnce({
 				request: Promise.resolve({
@@ -316,7 +327,9 @@ describe("handleTusUpload tests", () => {
 			expect(chunkedSender.send).toHaveBeenCalledTimes(1);
 			expect(persistResumable).toHaveBeenCalledWith(item, "upload.url", tusState.getState().options);
 			expect(persistResumable).toHaveBeenCalledTimes(1);
-			expect(result).toBe("chunked-request");
+			expect(result).toEqual({
+                state: FILE_STATES.ABORTED
+            });
 			expect(tusState.getState().items[item.id].abort).toBe("abort");
 		});
 
@@ -330,10 +343,12 @@ describe("handleTusUpload tests", () => {
 				options: {},
 			});
 
-			chunkedSender.send.mockReturnValueOnce({
-				abort: "abort",
-				request: "chunked-request"
-			});
+            chunkedSender.send.mockReturnValueOnce({
+                abort: "abort",
+                request: Promise.resolve({
+                    state: FILE_STATES.ABORTED
+                })
+            });
 
 			createUpload.mockReturnValueOnce({
 				request: Promise.resolve({
@@ -361,7 +376,9 @@ describe("handleTusUpload tests", () => {
 			expect(chunkedSender.send).toHaveBeenCalledTimes(1);
 			expect(persistResumable).toHaveBeenCalledWith(item, "upload.url", tusState.getState().options);
 			expect(persistResumable).toHaveBeenCalledTimes(1);
-			expect(result).toBe("chunked-request");
+            expect(result).toEqual({
+                state: FILE_STATES.ABORTED
+            });
 			expect(tusState.getState().items[item.id].abort).toBe("abort");
 		});
 	});

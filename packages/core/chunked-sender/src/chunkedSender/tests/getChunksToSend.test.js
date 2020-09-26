@@ -67,7 +67,7 @@ describe("getChunkToSend tests", () => {
 		expect(chunks).toEqual([chunk]);
 	});
 
-	it("should throw ChunkedSendError if chunk is over the attempt limit ", () => {
+	it("should throw ChunkedSendError if chunk is over the attempt limit", () => {
 		expect(() => {
 			getChunksToSend({
 				requests: {},

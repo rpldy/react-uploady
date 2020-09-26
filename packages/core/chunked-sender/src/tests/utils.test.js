@@ -50,7 +50,7 @@ describe("utils tests", () => {
             expect(utils.isChunkingSupported()).toBe(false);
         });
 
-        it("should ", () => {
+        it("should", () => {
             // noinspection JSAnnotator
             delete window.Blob;
             expect(utils.isChunkingSupported()).toBe(false);

@@ -187,7 +187,7 @@ describe("uploader tests", () => {
             expect(mockProcess).not.toHaveBeenCalled();
         });
 
-        it("should auto upload ", async () => {
+        it("should auto upload", async () => {
 
             triggerCancellable
                 .mockReturnValueOnce(() => Promise.resolve(false));

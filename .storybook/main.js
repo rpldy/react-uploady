@@ -30,8 +30,6 @@ module.exports = {
             ],
            { cwd: path.join(process.cwd(), ".storybook") });
 
-        console.log("!!!!!!!! ", paths);
-
         return ["./welcome.story.js"].concat(paths);
     },
 

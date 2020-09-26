@@ -4,12 +4,10 @@ describe("TusUploady - Simple", () => {
 	const fileName = "flower.jpg";
 
 	before(() => {
-		cy.visitStory("tusUploady", "simple&knob-destination_Upload Destination=url&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-upload url_Upload Destination=http://test.tus.com/upload&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true&knob-ignore modifiedDate in resume storage_Upload Settings=true&knob-send custom header_Upload Settings=true");
+		cy.visitStory("tusUploady", "simple&knob-destination_Upload Destination=url&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-upload url_Upload Destination=http://test.tus.com/upload&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true&knob-ignore modifiedDate in resume storage_Upload Settings=true&knob-send custom header_Upload Settings=true", true);
 	});
 
 	it("should upload chunks using tus protocol", () => {
-		//need to wait for storybook to re-render due to knobs passed in URL
-		cy.wait(2000);
 
 		cy.server();
 
@@ -34,15 +32,12 @@ describe("TusUploady - Simple", () => {
 			},
 		}).as("patchReq");
 
-		cy.iframe("#storybook-preview-iframe").as("iframe");
-
-		cy.get("@iframe")
-			.find("input")
+		cy.get("input")
 			.should("exist")
 			.as("fInput");
 
 		uploadFile(fileName, () => {
-			cy.wait(2000);
+			cy.wait(500);
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
 			cy.wait("@createReq")
@@ -79,13 +74,14 @@ describe("TusUploady - Simple", () => {
 
 			//upload again, should be resumed!
 			uploadFile(fileName, () => {
-				cy.wait(2000);
+				cy.wait(500);
 
 				cy.storyLog().assertFileItemStartFinish(fileName, 4)
 					.then((events) => {
-						expect(events.finish.args[1].uploadResponse).to.eq("TUS server has file");
+						expect(events.finish.args[1].uploadResponse.message).to.eq("TUS server has file");
+						expect(events.finish.args[1].uploadResponse.location).to.eq("http://test.tus.com/upload/123");
 					});
-			});
-		});
+			}, "button", null);
+		}, "button", null);
 	});
 });

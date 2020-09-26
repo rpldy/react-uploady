@@ -115,7 +115,7 @@ describe("processChunks tests", () => {
 
 	describe("abortChunkedRequest", () => {
 
-		it("should do nothing for finished request ", () => {
+		it("should do nothing for finished request", () => {
 			const abort = jest.fn();
 
 			const state = {
@@ -131,7 +131,7 @@ describe("processChunks tests", () => {
 			expect(state.aborted).toBeFalsy();
 		});
 
-		it("should do nothing for aborted request ", () => {
+		it("should do nothing for aborted request", () => {
 			const abort = jest.fn();
 
 			const state = {

@@ -1,11 +1,12 @@
 import { request, FILE_STATES } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
-import { getUploadMetadata } from "../utils";
+import { getUploadMetadata, addLocationToResponse } from "../utils";
 import createMockState from "../../tests/tusState.mock";
 import finalizeParallelUpload from "../finalizeParallelUpload";
 
-jest.mock("../utils", () => ({
-	getUploadMetadata: jest.fn(),
-}));
+jest.mock("../utils");
+// , () => ({
+// 	getUploadMetadata: jest.fn(),
+// }));
 
 describe("finalizeParallelUpload tests", () => {
 
@@ -72,6 +73,8 @@ describe("finalizeParallelUpload tests", () => {
 		const chunkResult = {
 			state: FILE_STATES.FINISHED
 		};
+
+		addLocationToResponse.mockResolvedValueOnce(chunkResult);
 
 		const url = "upload.url";
 
@@ -168,7 +171,7 @@ describe("finalizeParallelUpload tests", () => {
 		expect(result).toEqual({
 			status: 200,
 			state: FILE_STATES.ERROR,
-			response: "No valid location header for finalize request",
+            response: { message: "No valid location header for finalize request" },
 		});
 	});
 
@@ -203,7 +206,7 @@ describe("finalizeParallelUpload tests", () => {
 		expect(result).toEqual({
 			status: 500,
 			state: FILE_STATES.ERROR,
-			response: "error!",
+            response: { message: "error!" },
 		});
 	});
 
@@ -234,7 +237,7 @@ describe("finalizeParallelUpload tests", () => {
         expect(result).toEqual({
             status: 0,
             state: FILE_STATES.ERROR,
-            response: "",
+            response: { message: "" },
         });
     });
 });

@@ -133,7 +133,7 @@ describe("sendChunk tests", () => {
         expect(xhrSend.mock.calls[0][2].headers.another).toBe(true);
     });
 
-	it("should skip chunk when event updater returns false ", async() => {
+	it("should skip chunk when event updater returns false", async() => {
 		const { result, sendResult } = await testSendChunk({size: 9}, false);
 
 		expect(xhrSend).not.toHaveBeenCalled();

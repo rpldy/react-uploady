@@ -4,17 +4,14 @@ describe("TusUploady - Parallel", () => {
 	const fileName = "flower.jpg";
 
 	before(() => {
-		cy.visitStory("tusUploady", "with-tus-concatenation&knob-destination_Upload Destination=url&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-upload url_Upload Destination=http://test.tus.com/upload&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true");
+		cy.visitStory("tusUploady", "with-tus-concatenation&knob-destination_Upload Destination=url&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-upload url_Upload Destination=http://test.tus.com/upload&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true", true);
 	});
 
 	it("should upload chunks using tus protocol in parallel", () => {
-		//need to wait for storybook to re-render due to knobs passed in URL
-		cy.wait(2000);
-
 		cy.server();
 
 		let reqCount = 0;
-		const createUrls = ["123", "456"];
+		const createUrls = ["123", "456", "final"];
 
 		cy.route({
 			method: "POST",
@@ -57,15 +54,12 @@ describe("TusUploady - Parallel", () => {
 			},
 		}).as("patchReq2");
 
-		cy.iframe("#storybook-preview-iframe").as("iframe");
-
-		cy.get("@iframe")
-			.find("input")
+		cy.get("input")
 			.should("exist")
 			.as("fInput");
 
 		uploadFile(fileName, () => {
-			cy.wait(2000);
+			cy.wait(500);
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
 			cy.wait("@createReq")
@@ -95,7 +89,12 @@ describe("TusUploady - Parallel", () => {
 
 					expect(xhr.request.headers["Upload-Concat"])
 						.to.eq("final;http://test.tus.com/upload/123 http://test.tus.com/upload/456");
+
+                    cy.storyLog().assertFileItemStartFinish(fileName, 1)
+                        .then((events) => {
+                            expect(events.finish.args[1].uploadResponse.location).to.eq("http://test.tus.com/upload/final");
+                        });
 				});
-		});
+		}, "button", null);
 	});
 });

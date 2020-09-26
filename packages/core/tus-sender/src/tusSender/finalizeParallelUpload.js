@@ -1,13 +1,13 @@
 // @flow
 import { request, logger, FILE_STATES } from "@rpldy/shared";
-import { getUploadMetadata } from "./utils";
+import { addLocationToResponse, getUploadMetadata } from "./utils";
 import { SUCCESS_CODES } from "../consts";
 
 import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
 import type { TusState } from "../types";
 
-const handleResponse = (pXhr) : Promise<?UploadData> =>
+const handleFinalizeResponse = (pXhr, chunkedUploadData: UploadData) : Promise<?UploadData> =>
     pXhr
         .catch((xhr: ?XMLHttpRequest) => {
             logger.debugLog(`tusSender.finalizeParallel: finalize request failed unexpectedly!`, xhr);
@@ -24,6 +24,7 @@ const handleResponse = (pXhr) : Promise<?UploadData> =>
 
             if (resLocation) {
                 logger.debugLog(`tusSender.finalizeParallel: successfully finalized parallel upload`, resLocation);
+                result = addLocationToResponse(Promise.resolve(chunkedUploadData), resLocation);
             } else {
                 logger.debugLog(`tusSender.finalizeParallel: parallel upload finalize failed!`, status);
 
@@ -44,10 +45,10 @@ const finalizeParallelUpload = (
     sendOptions: SendOptions,
     chunkedRequest: Promise<UploadData>,
 ): Promise<UploadData> =>
-    chunkedRequest.then((result: UploadData) => {
-        let finalResult = result;
+    chunkedRequest.then((chunkedUploadData: UploadData) => {
+        let finalResult = chunkedUploadData;
 
-        if (result.state === FILE_STATES.FINISHED) {
+        if (chunkedUploadData.state === FILE_STATES.FINISHED) {
             const { options, items } = tusState.getState(),
                 itemData = items[item.id];
 
@@ -83,8 +84,7 @@ const finalizeParallelUpload = (
                     };
                 });
 
-                finalResult = handleResponse(pXhr)
-                    .then((response: ?UploadData) => response || result);
+                finalResult = handleFinalizeResponse(pXhr, chunkedUploadData);
             }
         }
 

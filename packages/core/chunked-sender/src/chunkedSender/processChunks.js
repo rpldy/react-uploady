@@ -57,7 +57,7 @@ export const process = (
     };
 };
 
-export default (
+const processChunks = (
     item: BatchItem,
     chunkedOptions: MandatoryChunkedOptions,
     url: string,
@@ -90,3 +90,4 @@ export default (
     };
 };
 
+export default processChunks;

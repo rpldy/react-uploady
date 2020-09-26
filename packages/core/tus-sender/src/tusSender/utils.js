@@ -1,6 +1,8 @@
 // @flow
 
 import type { SendOptions } from "@rpldy/sender";
+import type { UploadData } from "@rpldy/shared";
+import { FILE_STATES } from "@rpldy/shared";
 
 const getUploadMetadata = (sendOptions: SendOptions) => {
 	const keys = sendOptions.params && Object.keys(sendOptions.params);
@@ -11,6 +13,16 @@ const getUploadMetadata = (sendOptions: SendOptions) => {
 		undefined;
 };
 
+const addLocationToResponse = (request: Promise<UploadData>, location: ?string) =>
+    request.then((data: UploadData) => {
+        if (data.state === FILE_STATES.FINISHED) {
+            data.response.location = location;
+        }
+
+        return data;
+    });
+
 export {
 	getUploadMetadata,
+    addLocationToResponse
 };

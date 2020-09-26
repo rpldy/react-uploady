@@ -1,22 +1,14 @@
 // @flow
 import { FILE_STATES, logger } from "@rpldy/shared";
-import createUpload from "./initTusUpload/createUpload";
 import { persistResumable } from "../resumableStore";
+import createUpload from "./initTusUpload/createUpload";
 import finalizeParallelUpload from "./finalizeParallelUpload";
+import { addLocationToResponse } from "./utils";
 
 import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { ChunkedSender, ChunkedSendOptions, OnProgress } from "@rpldy/chunked-sender";
 import type { TusState } from "../types";
 import type { InitData } from "./types";
-
-const addLocationToResponse = (request: Promise<UploadData>, uploadUrl: ?string) =>
-    request.then((data: UploadData) => {
-        if (data.state === FILE_STATES.FINISHED) {
-            data.response.location = uploadUrl;
-        }
-
-        return data;
-    });
 
 const doChunkedUploadForItem = (
 	items: BatchItem[],
@@ -53,7 +45,7 @@ const doChunkedUploadForItem = (
 	return +options.parallel > 1 ?
 		//parallel requires a finalizing request
 		finalizeParallelUpload(item, url, tusState, sendOptions, chunkedResult.request) :
-		chunkedResult.request;
+        addLocationToResponse(chunkedResult.request, initData.uploadUrl);
 };
 
 const handleParallelizedChunkInit = (items: BatchItem[], tusState: TusState, initData: InitData, parallelIdentifier: string) => {
@@ -102,11 +94,7 @@ const handleTusUpload = (
                     //no need for another chunked upload - already inside a parallel chunk upload flow (initiated by chunk start handler - handleEvents)
                     request = handleParallelizedChunkInit(items, tusState, initData, parallelIdentifier);
                 } else {
-                    //ensure location is added to successful response (parallel or not) for client code to be able to use
-                    request = addLocationToResponse(
-                        doChunkedUploadForItem(items, url, sendOptions, onProgress, tusState, chunkedSender, initData),
-                        initData.uploadUrl
-                    );
+                    request = doChunkedUploadForItem(items, url, sendOptions, onProgress, tusState, chunkedSender, initData);
                 }
             } else {
                 resumeFailed = isResume;

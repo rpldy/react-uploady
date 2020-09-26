@@ -7,7 +7,7 @@ import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
 import type { TusState } from "../types";
 
-const handleFinalizeResponse = (pXhr, chunkedUploadData: UploadData) : Promise<?UploadData> =>
+const handleFinalizeResponse = (pXhr, chunkedUploadData: UploadData) : Promise<UploadData> =>
     pXhr
         .catch((xhr: ?XMLHttpRequest) => {
             logger.debugLog(`tusSender.finalizeParallel: finalize request failed unexpectedly!`, xhr);

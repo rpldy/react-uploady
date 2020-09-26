@@ -1,11 +1,12 @@
 import { request, FILE_STATES } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
-import { getUploadMetadata } from "../utils";
+import { getUploadMetadata, addLocationToResponse } from "../utils";
 import createMockState from "../../tests/tusState.mock";
 import finalizeParallelUpload from "../finalizeParallelUpload";
 
-jest.mock("../utils", () => ({
-	getUploadMetadata: jest.fn(),
-}));
+jest.mock("../utils");
+// , () => ({
+// 	getUploadMetadata: jest.fn(),
+// }));
 
 describe("finalizeParallelUpload tests", () => {
 
@@ -72,6 +73,8 @@ describe("finalizeParallelUpload tests", () => {
 		const chunkResult = {
 			state: FILE_STATES.FINISHED
 		};
+
+		addLocationToResponse.mockResolvedValueOnce(chunkResult);
 
 		const url = "upload.url";
 

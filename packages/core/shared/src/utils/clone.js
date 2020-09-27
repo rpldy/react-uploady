@@ -11,5 +11,5 @@ type MergeFn = (target: Object, ...sources: Object[]) => any;
  */
 export default (obj: Object, mergeFn: MergeFn = merge) =>
 	isMergeObj(obj) ?
-		mergeFn(Array.isArray(obj) ? [] : {}, obj) :
+		mergeFn((Array.isArray(obj) ? [] : {}), obj) :
 		obj;

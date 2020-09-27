@@ -1,26 +1,8 @@
-describe("updateable tests", () => {
+import getInitialData from "./mocks/getTestData.mock";
+
+describe("createState tests", () => {
 	const env = process.env.NODE_ENV;
 	let clone, createState, unwrap, isProxy;
-
-	const getInitial = () => ({
-		arr: [1, 2, 3],
-		sub: {
-			foo: "bar",
-			more: {
-				test: true
-			},
-		},
-		children: [
-			{
-				id: 1,
-				name: "child-a"
-			},
-			{
-				id: 2,
-				name: "child-b"
-			}
-		],
-	});
 
 	beforeEach(() => {
 		clearJestMocks(
@@ -46,7 +28,7 @@ describe("updateable tests", () => {
 				getMerge: () => {}
 			}));
 
-			const mdl = require("./createState");
+			const mdl = require("../createState");
 			createState = mdl.default;
 			unwrap = mdl.unwrap;
 			isProxy = mdl.isProxy;
@@ -55,7 +37,7 @@ describe("updateable tests", () => {
 		};
 
 	it("should deep proxy object", createTest(() => {
-		const initial = getInitial();
+		const initial = getInitialData();
 		const { state } = createState(initial);
 
 		expect(state).not.toBe(initial);
@@ -98,7 +80,7 @@ describe("updateable tests", () => {
 
     it("should only be updateable through update method", createTest(() => {
 
-		const { state, update } = createState(getInitial());
+		const { state, update } = createState(getInitialData());
 
 		const state1 = update((obj) => {
 			obj.arr.push(4);
@@ -125,7 +107,7 @@ describe("updateable tests", () => {
 	}));
 
 	it("should block defining prototype", createTest(() => {
-		const { state, update } = createState(getInitial());
+		const { state, update } = createState(getInitialData());
 
 		expect(() => {
 			Object.defineProperty(state, "someProp", {
@@ -143,7 +125,7 @@ describe("updateable tests", () => {
 	}));
 
 	it("should block setPrototypeOf", createTest(() => {
-		const { state, update } = createState(getInitial());
+		const { state, update } = createState(getInitialData());
 
 		expect(() => {
 			Object.setPrototypeOf(state, {});
@@ -157,7 +139,7 @@ describe("updateable tests", () => {
 	}));
 
 	it("should throw on double update", createTest(() => {
-		const { update } = createState(getInitial());
+		const { update } = createState(getInitialData());
 
 		expect(() => {
 			update(() => {
@@ -168,7 +150,7 @@ describe("updateable tests", () => {
 
 	it("should proxy new object trees added with update", createTest(() => {
 
-		const { state, update } = createState(getInitial());
+		const { state, update } = createState(getInitialData());
 
 		update((state) => {
 			state.section1 = {
@@ -192,7 +174,7 @@ describe("updateable tests", () => {
 
 	it("should not proxy in production", createTest(() => {
 
-		const initial = getInitial();
+		const initial = getInitialData();
 		const { state, update } = createState(initial);
 
 		expect(state).toBe(initial);
@@ -218,7 +200,7 @@ describe("updateable tests", () => {
 
 	//TODO: uncomment when this is supported
 	// it("should work for existing prop proxy", createTest(() => {
-	// 	const { state: child } = createState(getInitial());
+	// 	const { state: child } = createState(getInitialData());
 	//
 	// 	const { state: parent, update } = createState({
 	// 		test: true,
@@ -241,7 +223,7 @@ describe("updateable tests", () => {
 		it("should unwrap to same object in production", createTest(() => {
 			process.env.NODE_ENV = "production";
 
-			const initial = getInitial();
+			const initial = getInitialData();
 			const { unwrap } = createState(initial);
 
 			const org = unwrap();
@@ -252,46 +234,15 @@ describe("updateable tests", () => {
 
 			process.env.NODE_ENV = "production";
 
-			const { state } = createState(getInitial());
+			const { state } = createState(getInitialData());
 
 			const children = unwrap(state.children);
 
 			expect(children).toBe(state.children);
 		}, true));
 
-		it("should unwrap entire state", createTest(() => {
-			const initial = getInitial();
-			const { update, unwrap } = createState(initial);
-
-			update((state) => {
-				state.more = {
-					items: [1, 2, 3]
-				};
-			});
-
-			const target = unwrap();
-
-			expect(target).toBe(initial);
-
-			target.more.test = 123;
-			expect(target.more.test).toBe(123);
-
-			expect(target.more.items).toEqual([1, 2, 3]);
-			target.more.items.push(4);
-			expect(target.more.items).toEqual([1, 2, 3, 4]);
-
-			target.test = {
-				foo: "bar"
-			};
-
-			target.test.foo = "car";
-			expect(target.test.foo).toBe("car");
-
-			expect(isProxy(target)).toBe(false);
-		}));
-
 		it("should unwrap entry", createTest(() => {
-			const initial = getInitial();
+			const initial = getInitialData();
 			const { state, unwrap } = createState(initial);
 
 			clone.mockReturnValueOnce("clone");
@@ -306,37 +257,8 @@ describe("updateable tests", () => {
 			expect(result).toBe(obj);
 		}));
 
-		it("should re-proxy unwrapped object", createTest(() => {
-			const initial = getInitial();
-			const { state, update, unwrap } = createState(initial);
-
-			update((state) => {
-				state.more = {
-					items: [1, 2, 3]
-				};
-			});
-
-			const obj = unwrap();
-
-			obj.test = 123;
-
-			expect(state.test).toBe(123);
-			expect(obj.test).toBe(123);
-
-			const { state: state2, update: update2 } = createState(obj);
-
-			state2.more.items.push(4);
-			expect(state2.more.items).toHaveLength(3);
-
-			update2((state) => {
-				state.more.items.push(4);
-			});
-
-			expect(state2.more.items).toHaveLength(4);
-		}));
-
 		it("unwrap export should clone", createTest(() => {
-			const initial = getInitial();
+			const initial = getInitialData();
 			const { state } = createState(initial);
 
 			clone.mockReturnValueOnce("clone");
@@ -346,7 +268,7 @@ describe("updateable tests", () => {
 		}));
 
 		it("should work for exiting proxy", createTest(() => {
-			const { state } = createState(getInitial());
+			const { state } = createState(getInitialData());
 			const { state: state2, update } = createState(state);
 
 			update((st) => {
@@ -355,26 +277,6 @@ describe("updateable tests", () => {
 
 			expect(state2.children).toHaveLength(3);
 			expect(state.children).toHaveLength(3);
-		}));
-
-		it("should unwrap symbol props", createTest(() => {
-			const SYM = Symbol.for("test-sym");
-
-			const obj = {
-				foo: "bar",
-			};
-
-			Object.defineProperty(obj, SYM, {
-				value: true,
-				enumerable: true,
-				writable: true,
-			});
-
-			const { unwrap } = createState(obj);
-
-			const unwrapped = unwrap();
-
-			expect(unwrapped[SYM]).toBe(true);
 		}));
 	});
 });

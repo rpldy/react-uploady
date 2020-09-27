@@ -2,15 +2,18 @@
 import { isPlainObject, clone, getMerge } from "@rpldy/shared";
 import type { SimpleState } from "./types";
 
-const mergeWithSymbols = getMerge({ withSymbols: true });
-
 const PROXY_SYM = Symbol.for("__rpldy-sstt-proxy__"),
 	STATE_SYM = Symbol.for("__rpldy-sstt-state__");
+
+const mergeWithSymbols = getMerge({
+    withSymbols: true,
+    predicate: (key) => key !== PROXY_SYM && key !== STATE_SYM,
+});
 
 const isProd = process.env.NODE_ENV === "production";
 
 const isProxy = (obj: Object) =>
-	!isProd &&
+	!isProd && !!obj &&
 	!!~Object.getOwnPropertySymbols(obj).indexOf(PROXY_SYM);
 
 const getIsUpdateable = (proxy: Object) =>
@@ -43,26 +46,29 @@ const deepProxy = (obj, traps) => {
 	return proxy || obj;
 };
 
-const deepUnWrap = (proxy: Object) => {
-	delete proxy[PROXY_SYM];
-
-	Object.keys(proxy)
-		.concat(Object.getOwnPropertySymbols(proxy)
-			.filter((sym) => sym !== STATE_SYM))
-		.forEach((key) => {
-            proxy[key] = proxy[key] && (proxy[key][PROXY_SYM] || proxy[key]);
-		});
-
-	return proxy;
-};
+// const deepUnWrap = (proxy: Object) => {
+//     if (!proxy[STATE_SYM]) {
+//         delete proxy[PROXY_SYM];
+//
+//         Object.keys(proxy)
+//             .concat(Object.getOwnPropertySymbols(proxy)
+//                 .filter((sym) => sym !== STATE_SYM))
+//             .forEach((key) => {
+//                 proxy[key] = proxy[key] && (proxy[key][PROXY_SYM] || proxy[key]);
+//             });
+//
+//     }
+//
+// 	return proxy;
+// };
 
 const unwrapEntry = (proxy: Object) =>
 	isProxy(proxy) ? clone(proxy, mergeWithSymbols) : proxy;
 
-const unwrapState = (proxy: Object) => {
-	delete proxy[STATE_SYM];
-	return proxy[PROXY_SYM];
-};
+// const unwrapState = (proxy: Object) => {
+// 	delete proxy[STATE_SYM];
+// 	return proxy[PROXY_SYM];
+// };
 
 /**
  * deep proxies an object so it is only updateable through an update callback.
@@ -90,7 +96,7 @@ export default <T>(obj: Object): SimpleState<T> => {
 		},
 
 		get: (obj, key) => {
-			return key === PROXY_SYM ? deepUnWrap(obj) : obj[key];
+			return key === PROXY_SYM ? unwrapEntry(obj) : obj[key];
 		},
 
 		defineProperty: () => {
@@ -126,19 +132,19 @@ export default <T>(obj: Object): SimpleState<T> => {
 
 		try {
 			setIsUpdateable(proxy, true);
-			fn(proxy);
-		} finally {
-			setIsUpdateable(proxy, false);
-		}
+            fn(proxy);
+        } finally {
+            setIsUpdateable(proxy, false);
+        }
 
-		return proxy;
+        return proxy;
 	};
 
 	const unwrap = (entry?: Object) => entry ?
 			//simply clone the provided object (if its a proxy)
 			unwrapEntry(entry) :
 			//unwrap entire proxy state
-			(isProxy(proxy) ? unwrapState(proxy) : proxy);
+			(isProxy(proxy) ? unwrapEntry(proxy) : proxy);
 
 	return {
 		state: proxy,

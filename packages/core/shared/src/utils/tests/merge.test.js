@@ -235,7 +235,6 @@ describe("merge (deep) tests", () => {
     });
 
     describe("undefinedOverwrites tests", () => {
-
         it("should overwrite with undefined", () => {
             const a = {};
             const b = {
@@ -323,7 +322,6 @@ describe("merge (deep) tests", () => {
     });
 
 	describe("withSymbols tests", () => {
-
 		it("should merge symbols when withSymbols = true", () => {
 
 			const sym1 = Symbol.for("test-sym1");
@@ -381,4 +379,35 @@ describe("merge (deep) tests", () => {
 			expect(result.more[sym2]).toBeUndefined();
 		});
 	});
+
+	describe("predicate tests", () => {
+
+        it("should use predicate", () => {
+
+            const obj = {
+                test: {
+                    2: { foo: "bar" },
+                    3: false,
+                    more: "test",
+                    num: 4
+                },
+                1: true,
+                int: "6",
+                word: "defenestrate"
+            };
+
+            const predicateMerge = getMerge({ predicate: (key, val) =>
+                    isNaN(key) && isNaN(val) });
+
+            const result = predicateMerge({}, obj);
+
+            expect(result["1"]).toBeUndefined();
+            expect(result["int"]).toBeUndefined();
+            expect(result.word).toBe("defenestrate");
+            expect(result.test["2"]).toBeUndefined();
+            expect(result.test["3"]).toBeUndefined();
+            expect(result.test.more).toBe("test");
+            expect(result.test.num).toBeUndefined();
+        });
+    });
 });

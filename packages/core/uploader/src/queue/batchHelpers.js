@@ -80,7 +80,7 @@ const isNewBatchStarting = (queue: QueueState, itemId: string): boolean => {
 const loadNewBatchForItem = (queue: QueueState, itemId: string) => {
     const batch = getBatchFromItemId(queue, itemId);
 
-    return queue.cancellable(UPLOADER_EVENTS.BATCH_START, batch)
+    return queue.runCancellable(UPLOADER_EVENTS.BATCH_START, batch)
         .then((isCancelled: boolean) => {
             if (!isCancelled) {
                 queue.updateState((state) => {

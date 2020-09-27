@@ -26,8 +26,9 @@ const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 const triggerPreSendUpdate = (queue: QueueState, items: BatchItem[], options: CreateOptions): Promise<ItemsSendData> => {
     return triggerUpdater<{ items: BatchItem[], options: CreateOptions }>(
         queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, {
+            //need to unwrap each item separately since items array isnt a proxy
             items: items.map((i) => unwrap(i)),
-            options: unwrap(options),
+            options,
         })
         // $FlowFixMe - https://github.com/facebook/flow/issues/8215
         .then((updated: ?{ items: BatchItem[], options: CreateOptions }) => {
@@ -141,7 +142,7 @@ const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMe
 
     //allow user code cancel items from start event handler(s)
     return Promise.all(items.map((i: BatchItem) =>
-        queue.cancellable(UPLOADER_EVENTS.ITEM_START, i)))
+        queue.runCancellable(UPLOADER_EVENTS.ITEM_START, i)))
         .then((cancelledResults) => {
             let allowedItems: BatchItem[] = cancelledResults
                 .map((isCancelled: boolean, index: number): ?BatchItem =>

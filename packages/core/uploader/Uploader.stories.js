@@ -8,7 +8,7 @@ import {
     addActionLogEnhancer,
     useStoryUploadySetup,
 } from "../../../story-helpers";
-import createUploader from "./src";
+import createUploader, { UPLOADER_EVENTS } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
@@ -30,12 +30,41 @@ export const WithCustomUI = () => {
     }, []);
 
     useEffect(() => {
-        uploaderRef.current = createUploader({
+        const uploader = createUploader({
             enhancer,
             destination,
             grouped,
             maxGroupSize: groupSize
         });
+
+        uploader.on(UPLOADER_EVENTS.BATCH_ADD, (batch, batchOptions) => {
+            batch.id = " TEST !!!!!!!!!!"
+            console.log("###### UPLOADER EVENT BATCH_ADD ", {
+                batch,
+                batchOptions
+            });
+        });
+
+        uploader.on(UPLOADER_EVENTS.ITEM_START, (item) => {
+            console.log(" ########## UPLOADER EVENT ITEM_START ", item);
+        });
+
+        uploader.on(UPLOADER_EVENTS.ITEM_FINISH, (item) => {
+            console.log(" ########## UPLOADER EVENT ITEM_FINISH ", item);
+        });
+
+        uploader.on(UPLOADER_EVENTS.BATCH_FINISH, (batch) => {
+            console.log("###### UPLOADER EVENT BATCH_FINISH ", batch);
+        });
+
+        uploader.on(UPLOADER_EVENTS.REQUEST_PRE_SEND, ({items, options}) => {
+            console.log("###### UPLOADER EVENT REQUEST_PRE_SEND ", {
+                items,
+                options
+            });
+        });
+
+        uploaderRef.current = uploader;
     }, [enhancer, destination, grouped, groupSize]);
 
     return <div>

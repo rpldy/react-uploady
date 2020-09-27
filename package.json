@@ -117,7 +117,6 @@
     "react-dom": "^16.13.1",
     "react-icons": "^3.10.0",
     "react-load-script": "^0.0.6",
-    "regenerator-runtime": "^0.13.7",
     "rimraf": "^3.0.0",
     "semver-utils": "^1.1.4",
     "shelljs": "^0.8.3",

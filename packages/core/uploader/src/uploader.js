@@ -9,7 +9,7 @@ import {
     merge,
     clone,
 } from "@rpldy/shared";
-// import createBatch from "./batch";
+import { unwrap } from "@rpldy/simple-state";
 import getProcessor from "./processor";
 import { UPLOADER_EVENTS } from "./consts";
 import { getMandatoryOptions } from "./utils";
@@ -57,19 +57,14 @@ export default (options?: CreateOptions): UploaderType => {
         let resultP;
 
         if (batch.items.length) {
-
-            //TODO: UNWRAP batch & processOptions before they are passed to BATCH_ADD event
-            //TODO: ensure changing the data passed cant be changed by client !!!!!!!
-
-            // $FlowFixMe - https://github.com/facebook/flow/issues/8215
-            resultP = cancellable(UPLOADER_EVENTS.BATCH_ADD, batch, processOptions)
+            resultP = processor.runCancellable(UPLOADER_EVENTS.BATCH_ADD, batch, processOptions)
                 .then((isCancelled: boolean) => {
                     if (!isCancelled) {
                         logger.debugLog(`uploady.uploader [${uploader.id}]: new items added - auto upload =
                         ${String(processOptions.autoUpload)}`, batch.items);
 
                         if (processOptions.autoUpload) {
-                            processor.process(batch, processOptions);
+                            processor.process(batch);
                         } else {
                             if (processOptions.clearPendingOnAdd) {
                                 clearPending();
@@ -80,10 +75,7 @@ export default (options?: CreateOptions): UploaderType => {
                     } else {
                         batch.state = BATCH_STATES.CANCELLED;
 
-                        //TODO: UNWRAP batch !!!!!!!!!!
-
-
-                        trigger(UPLOADER_EVENTS.BATCH_CANCEL, batch);
+                        triggerWithUnwrap(UPLOADER_EVENTS.BATCH_CANCEL, batch);
                     }
                 });
         } else {
@@ -164,17 +156,24 @@ export default (options?: CreateOptions): UploaderType => {
         { canAddEvents: false, canRemoveEvents: false }
     );
 
-    const cancellable = triggerCancellable(trigger);
+    const triggerWithUnwrap = (name: string, ...data: mixed[]) => {
+        return trigger(name, ...data.map((d) => {
+            const unwrapped = unwrap(d);
+            return unwrapped;
+        }));
+    };
+
+    const cancellable = triggerCancellable(triggerWithUnwrap);
 
     if (uploaderOptions.enhancer) {
         enhancerTime = true;
-        const enhanced = uploaderOptions.enhancer(uploader, trigger);
+        const enhanced = uploaderOptions.enhancer(uploader, triggerWithUnwrap);
         enhancerTime = false;
         //graceful handling for enhancer forgetting to return uploader
         uploader = enhanced || uploader;
     }
 
-    const processor = getProcessor(trigger, uploaderOptions, uploader.id);
+    const processor = getProcessor(triggerWithUnwrap, cancellable, uploaderOptions, uploader.id);
 
     return devFreeze(uploader);
 };

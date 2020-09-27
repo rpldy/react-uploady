@@ -4,6 +4,7 @@ import isPlainObject from "./isPlainObject";
 export type MergeOptions = {
     undefinedOverwrites?: boolean,
 	withSymbols?: boolean,
+    predicate?: (mixed, mixed) => boolean,
 };
 
 export const isMergeObj = (obj: Object) => isPlainObject(obj) || Array.isArray(obj);
@@ -17,29 +18,31 @@ const getKeys = (obj: Object, options: MergeOptions) => {
 
 const getMerge = (options: MergeOptions = {}) => {
    const merge = (target: Object, ...sources: Object[]) => {
-        if (target && sources.length) {
-            sources.forEach((source) => {
-                if (source) {
-					getKeys(source, options)
-                        .forEach((key) => {
-                            const prop = source[key];
+       if (target && sources.length) {
+           sources.forEach((source) => {
+               if (source) {
+                   getKeys(source, options)
+                       .forEach((key) => {
+                           const prop = source[key];
 
-                            if (typeof prop !== "undefined" || options.undefinedOverwrites) {
-								//object/array - go deeper
-                                if (isMergeObj(prop)) {
-                                    if (typeof target[key]  === "undefined" || !isPlainObject(target[key])) {
-                                        //recreate target prop if doesnt exist or not an object
-                                        target[key] = Array.isArray(prop) ? [] : {};
-                                    }
+                           if (!options.predicate || options.predicate(key, prop)) {
+                               if (typeof prop !== "undefined" || options.undefinedOverwrites) {
+                                   //object/array - go deeper
+                                   if (isMergeObj(prop)) {
+                                       if (typeof target[key] === "undefined" || !isPlainObject(target[key])) {
+                                           //recreate target prop if doesnt exist or not an object
+                                           target[key] = Array.isArray(prop) ? [] : {};
+                                       }
 
-                                    merge(target[key], prop);
-                                } else {
-                                    target[key] = prop;
-                                }
-                            }
-                        });
-                }
-            });
+                                       merge(target[key], prop);
+                                   } else {
+                                       target[key] = prop;
+                                   }
+                               }
+                           }
+                       });
+               }
+           });
         }
 
         return target;

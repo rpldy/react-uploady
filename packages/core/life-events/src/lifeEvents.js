@@ -2,7 +2,7 @@
 import isPromise from "is-promise";
 import defaults from "./defaults";
 import { validateFunction, isUndefined } from "./utils";
-import { LESYM } from "./consts";
+import { LESYM, LE_PACK_SYM } from "./consts";
 import type { Options, LifeEventsAPI, RegItem, EventCallback } from "./types";
 
 //TODO: implement STATS
@@ -128,15 +128,24 @@ function trigger(name: any, ...args) {
 	const regs = findRegistrations(this, name);
 	let results;
 
-	if (regs.length) {
-		results = regs.map((r: RegItem): any => {
-			let result;
+    if (regs.length) {
+        let packValue;
 
-			if (r.once) {
-				removeRegItem(this, name, r.cb);
+        if (args.length === 1 && args[0]?.[LE_PACK_SYM] === true) {
+            //life-pack always returns array as params to spread
+            packValue = args[0].resolve();
+        }
+
+        results = regs.map((r: RegItem): any => {
+            let result;
+
+            if (r.once) {
+                removeRegItem(this, name, r.cb);
 			}
 
-			if (!args.length) {
+			if (packValue) {
+                result = r.cb(...packValue);
+            } else if (!args.length) {
 				result = r.cb();
 			} else if (args.length === 1) {
 				result = r.cb(args[0]);

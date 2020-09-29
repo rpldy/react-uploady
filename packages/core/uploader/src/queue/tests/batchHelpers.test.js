@@ -175,13 +175,13 @@ describe("batchHelpers tests", () => {
 				}
 			});
 
-			queueState.cancellable.mockResolvedValueOnce(false);
+			queueState.runCancellable.mockResolvedValueOnce(false);
 
 			const allowed = await batchHelpers.loadNewBatchForItem(queueState, "u1");
 
 			expect(allowed).toBe(true);
 
-			expect(queueState.cancellable).toHaveBeenCalledWith(
+			expect(queueState.runCancellable).toHaveBeenCalledWith(
 				UPLOADER_EVENTS.BATCH_START, queueState.state.batches.b1.batch);
 
 			expect(queueState.getState().currentBatch).toBe("b1");
@@ -199,12 +199,12 @@ describe("batchHelpers tests", () => {
 				}
 			});
 
-			queueState.cancellable.mockResolvedValueOnce(true);
+			queueState.runCancellable.mockResolvedValueOnce(true);
 			const allowed = await batchHelpers.loadNewBatchForItem(queueState, "u2");
 
 			expect(allowed).toBe(false);
 
-			expect(queueState.cancellable).toHaveBeenCalledWith(
+			expect(queueState.runCancellable).toHaveBeenCalledWith(
 				UPLOADER_EVENTS.BATCH_START, queueState.state.batches.b2.batch);
 
 			expect(queueState.state.currentBatch).toBe("b1");

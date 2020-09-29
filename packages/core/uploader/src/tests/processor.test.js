@@ -1,10 +1,12 @@
-jest.mock("../queue", () => jest.fn());
-jest.mock("../batchItemsSender", () => jest.fn());
 import { triggerCancellable as mockTriggerCancellable } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
-
 import mockCreateUploadQueue from "../queue";
 import mockCreateItemsSender from "../batchItemsSender";
 import createProcessor from "../processor";
+import createBatch from "../batch";
+
+jest.mock("../queue", () => jest.fn());
+jest.mock("../batchItemsSender", () => jest.fn());
+jest.mock("../batch");
 
 describe("processor tests", () => {
 
@@ -19,6 +21,8 @@ describe("processor tests", () => {
 		abortAll: jest.fn(),
 		abortItem: jest.fn(),
 		abortBatch: jest.fn(),
+        addBatch: jest.fn(),
+        runCancellable: jest.fn(),
 	};
 
 	beforeEach(() => {
@@ -26,7 +30,7 @@ describe("processor tests", () => {
 			mockCreateUploadQueue,
 			mockCreateItemsSender,
 			mockTriggerCancellable,
-			...Object.values(queue)
+			queue,
 		);
 	});
 
@@ -36,23 +40,21 @@ describe("processor tests", () => {
 		mockCreateItemsSender.mockReturnValueOnce(sender);
 		mockCreateUploadQueue.mockReturnValueOnce(queue);
 
-		return createProcessor(trigger, options, uploaderId);
+		return createProcessor(trigger, cancellable, options, uploaderId);
 	};
 
 	it("should create processor", () => {
 		const processor = testProcessor();
 
-		expect(mockTriggerCancellable).toHaveBeenCalledWith(trigger);
 		expect(mockCreateItemsSender).toHaveBeenCalled();
-		expect(mockCreateUploadQueue).toHaveBeenCalledWith(options, cancellable, trigger, sender, uploaderId);
+        expect(mockCreateUploadQueue).toHaveBeenCalledWith(options, trigger, cancellable, sender, uploaderId);
 
-		const batch = {}, batchOptions = {};
+        const batch = {}, batchOptions = {};
 		processor.process(batch, batchOptions);
 		expect(queue.uploadBatch).toHaveBeenCalledWith(batch, batchOptions);
 	});
 
 	it("should call abort methods on queue", () => {
-
 		const processor = testProcessor();
 
 		processor.abort();
@@ -63,4 +65,23 @@ describe("processor tests", () => {
 		expect(queue.abortBatch).toHaveBeenCalledWith("b1");
 	});
 
+    it("should create batch on addNewBatch", () => {
+        const processor = testProcessor();
+        const files = [1,2];
+        const options = { test: true };
+
+        createBatch.mockReturnValueOnce("batch");
+
+        processor.addNewBatch(files, "u1", options);
+
+        expect(createBatch).toHaveBeenCalledWith(files, "u1", options);
+        expect(queue.addBatch).toHaveBeenCalledWith("batch", options);
+    });
+
+    it("should use queue runCancellable", () => {
+        const processor = testProcessor();
+
+        processor.runCancellable();
+        expect(queue.runCancellable).toHaveBeenCalled();
+    });
 });

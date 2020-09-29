@@ -2,6 +2,7 @@ import { FILE_STATES, BATCH_STATES } from "../../consts";
 import merge, { getMerge } from "../../utils/merge";
 import clone from "../../utils/clone";
 import pick from "../../utils/pick";
+import isFunction from "../../utils/isFunction";
 
 const invariant = jest.fn();
 
@@ -26,6 +27,7 @@ utils.getMerge.mockImplementation((...args) => getMerge(...args));
 utils.clone.mockImplementation((...args) => clone(...args));
 //keep pick working - dont mock it
 utils.pick.mockImplementation((...args) => pick(...args));
+utils.isFunction.mockImplementation((...args) => isFunction(...args));
 
 utils.devFreeze.mockImplementation((obj) => obj);
 

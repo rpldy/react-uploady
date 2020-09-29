@@ -30,4 +30,10 @@ export interface LifeEventsAPI<T> {
 
 export const addLife: <T>(target: T, events: unknown[], options: LifeEventsOptions) => LifeEventsAPI<T>;
 
+export interface LifePack<T> {
+  resolve: () => T,
+}
+
+export const createLifePack: <T>(creator: () => T) => LifePack<T>;
+
 export default addLife;

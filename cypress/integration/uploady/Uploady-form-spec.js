@@ -33,7 +33,6 @@ describe("Uploady - Form", () => {
 
                 cy.wait("@uploadReq")
                     .then((xhr) => {
-                        console.log(xhr);
                         expect(xhr.request.body.get("field-name")).to.eq("james");
                         expect(xhr.request.body.get("field-age")).to.eq("22");
                         expect(xhr.request.body.get("file").name).to.eq(fileName2);

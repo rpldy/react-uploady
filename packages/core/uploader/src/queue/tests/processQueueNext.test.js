@@ -334,7 +334,7 @@ describe("processQueueNext tests", () => {
 		await processQueueNext(queueState);
 
 		expect(queueState.getCurrentActiveCount).toHaveBeenCalled();
-		expect(queueState.cancellable).not.toHaveBeenCalled();
+		expect(queueState.runCancellable).not.toHaveBeenCalled();
 	});
 
 	it("should process next item without new batch", async () => {
@@ -364,7 +364,7 @@ describe("processQueueNext tests", () => {
 		await processQueueNext(queueState);
 
 		expect(queueState.getCurrentActiveCount).toHaveBeenCalled();
-		expect(queueState.cancellable).not.toHaveBeenCalled();
+		expect(queueState.runCancellable).not.toHaveBeenCalled();
 
 		expect(mockProcessBatchItems).toHaveBeenCalledWith(
 			expect.any(Object),

@@ -48,28 +48,24 @@ describe("queue tests", () => {
 
         logger.isDebugOn.mockReturnValueOnce(true);
 
-        const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
+        const queue = createQueue({ destination: "foo" }, trigger, cancellable, sender, uploaderId);
 
         const batch = { items: [{ id: "u1" }, { id: "u2" }] },
             batchOptions = { concurrent: true };
 
-        queue.uploadBatch(batch, batchOptions);
+        queue.addBatch(batch, batchOptions);
+        queue.uploadBatch(batch);
 
         expect(processQueueNext).toHaveBeenCalled();
 
         const queueState = processQueueNext.mock.calls[0][0];
 
-        expect(queueState.trigger).toBeInstanceOf(Function);
+        expect(queueState.trigger).toBe(trigger);
 		queueState.trigger("test", "a", "b");
-		expect(unwrap).toHaveBeenCalledWith("a");
-		expect(unwrap).toHaveBeenCalledWith("b");
-		expect(trigger).toHaveBeenCalledWith("test", undefined, undefined);
+		expect(trigger).toHaveBeenCalledWith("test", "a", "b");
 
-        expect(queueState.cancellable).toBeInstanceOf(Function);
-        queueState.cancellable("test2", "c", "d");
-		expect(unwrap).toHaveBeenCalledWith("c");
-		expect(unwrap).toHaveBeenCalledWith("d");
-		expect(cancellable).toHaveBeenCalledWith("test2", undefined, undefined);
+        queueState.runCancellable("test2", "c", "d");
+		expect(cancellable).toHaveBeenCalledWith("test2", "c", "d");
 
         expect(queueState.getOptions().destination).toBe("foo");
 
@@ -86,12 +82,18 @@ describe("queue tests", () => {
         expect(mockSenderOn).toHaveBeenCalledWith(SENDER_EVENTS.BATCH_PROGRESS, expect.any(Function));
     });
 
-	it("should throw if item id already exists", () => {
+    it("should override batch options if passed to uploadBatch", () => {
+        expect(true).toBe(false);
+    });
+
+
+    it("should throw if item id already exists", () => {
 		const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
 		const batch = { items: [{ id: "u1" }, { id: "u2" }] },
 			batchOptions = { concurrent: true };
 
+        queue.addBatch(batch);
 		queue.uploadBatch(batch, batchOptions);
 
 		expect(() => {
@@ -102,7 +104,9 @@ describe("queue tests", () => {
     it("should detach recycled item", () => {
         const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
-        queue.uploadBatch({ items: [{ id: "u1" }] }, { });
+        const batch = { items: [{ id: "u1" }] };
+        queue.addBatch(batch, {});
+        queue.uploadBatch(batch);
 
         const recycled = { id: "u1", recycled: true };
         queue.uploadBatch({ items: [recycled] });
@@ -159,7 +163,8 @@ describe("queue tests", () => {
             const batch = { items: [{ id: "u1" }, { id: "u2" }] },
                 batchOptions = {};
 
-            queue.uploadBatch(batch, batchOptions);
+            queue.addBatch(batch, batchOptions);
+            queue.uploadBatch(batch);
 
             senderOnHandlers[SENDER_EVENTS.ITEM_PROGRESS]({ id: "u1" }, 20, 1000);
 
@@ -167,14 +172,14 @@ describe("queue tests", () => {
             expect(state2.items["u1"].loaded).toBe(1000);
             expect(state2.items["u1"].completed).toBe(20);
 
-            unwrap.mockReturnValueOnce("unwrapped");
+            // unwrap.mockReturnValueOnce("unwrapped");
 
             expect(trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_PROGRESS, undefined);
-            expect(unwrap).toHaveBeenCalledWith({
-				id: "u1",
-				loaded: 1000,
-				completed: 20,
-			});
+            // expect(unwrap).toHaveBeenCalledWith({
+			// 	id: "u1",
+			// 	loaded: 1000,
+			// 	completed: 20,
+			// });
         });
 
         it("should not trigger event if no item found", () => {

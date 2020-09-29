@@ -6,18 +6,20 @@ import UploadButton from "@rpldy/upload-button";
 import ChunkedUploady, {
 	useRequestPreSend,
 	useChunkStartListener,
-	useChunkFinishListener
+	useChunkFinishListener,
+    CHUNK_EVENTS
 } from "./src";
 import {
-	KNOB_GROUPS,
-	UMD_NAMES,
+    KNOB_GROUPS,
+    UMD_NAMES,
 
-	useStoryUploadySetup,
-	StoryUploadProgress,
-	StoryAbortButton,
-	UmdBundleScript,
-	localDestination,
-	addActionLogEnhancer,
+    useStoryUploadySetup,
+    StoryUploadProgress,
+    StoryAbortButton,
+    UmdBundleScript,
+    localDestination,
+    addActionLogEnhancer,
+    logToCypress,
 } from "../../../story-helpers";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -95,10 +97,12 @@ export const WithAbortButton = () => {
 const ChunkEventLog = () => {
 	useChunkStartListener((data) => {
 		console.log(`Chunk Start - ${data.chunk.id} - attempt: ${data.chunk.attempt}`, data);
+        logToCypress(`###${CHUNK_EVENTS.CHUNK_START}`, data);
 	});
 
 	useChunkFinishListener((data) => {
 		console.log(`Chunk Finish - ${data.chunk.id} - attempt: ${data.chunk.attempt}`, data);
+        logToCypress(`###${CHUNK_EVENTS.CHUNK_FINISH}`, data);
 	});
 
 	return null;

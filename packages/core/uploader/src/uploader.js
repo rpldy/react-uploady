@@ -1,5 +1,5 @@
 // @flow
-import addLife from "@rpldy/life-events";
+import addLife, { createLifePack } from "@rpldy/life-events";
 import {
     BATCH_STATES,
     invariant,
@@ -9,10 +9,9 @@ import {
     merge,
     clone,
 } from "@rpldy/shared";
-import { unwrap } from "@rpldy/simple-state";
 import getProcessor from "./processor";
 import { UPLOADER_EVENTS } from "./consts";
-import { getMandatoryOptions } from "./utils";
+import { getMandatoryOptions, deepProxyUnwrap } from "./utils";
 
 import type {
     UploadInfo,
@@ -74,7 +73,6 @@ export default (options?: CreateOptions): UploaderType => {
                         }
                     } else {
                         batch.state = BATCH_STATES.CANCELLED;
-
                         triggerWithUnwrap(UPLOADER_EVENTS.BATCH_CANCEL, batch);
                     }
                 });
@@ -156,11 +154,13 @@ export default (options?: CreateOptions): UploaderType => {
         { canAddEvents: false, canRemoveEvents: false }
     );
 
+    /**
+     * ensures that data being exposed to client-land isnt a proxy, only pojos
+     */
     const triggerWithUnwrap = (name: string, ...data: mixed[]) => {
-        return trigger(name, ...data.map((d) => {
-            const unwrapped = unwrap(d);
-            return unwrapped;
-        }));
+        //delays unwrap to the very last time on trigger. Will only unwrap if there are listeners
+        const lp = createLifePack(() => data.map(deepProxyUnwrap));
+        return trigger(name, lp);
     };
 
     const cancellable = triggerCancellable(triggerWithUnwrap);

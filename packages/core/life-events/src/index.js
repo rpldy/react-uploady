@@ -1,24 +1,11 @@
 // @flow
-import addLife, { isLE } from "./lifeEvents";
-import type {
-	LifeEventsAPI,
-	EventCallback,
-	TriggerMethod,
-	OnAndOnceMethod,
-	OffMethod,
-} from "./types";
-
-export default addLife;
-
-export {
-    addLife,
-	isLE,
-};
+export { default, default as addLife, isLE } from "./lifeEvents";
+export { default as createLifePack } from "./lifePack";
 
 export type {
-	LifeEventsAPI,
-	EventCallback,
-	TriggerMethod,
-	OnAndOnceMethod,
-	OffMethod,
-};
+    LifeEventsAPI,
+    EventCallback,
+    TriggerMethod,
+    OnAndOnceMethod,
+    OffMethod,
+} from "./types";

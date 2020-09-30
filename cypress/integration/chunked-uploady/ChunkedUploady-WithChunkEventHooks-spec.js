@@ -1,10 +1,10 @@
 import uploadFile from "../uploadFile";
 
-describe("ChunkedUploady - Simple", () => {
+describe("ChunkedUploady - WithChunkEventHooks", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("chunkedUploady", "simple&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url&knob-chunk size (bytes)_Upload Settings=50000", true);
+        cy.visitStory("chunkedUploady", "with-chunk-event-hooks&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url&knob-chunk size (bytes)_Upload Settings=50000", true);
     });
 
     it("should use chunked uploady with unique id", () => {

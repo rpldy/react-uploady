@@ -53,7 +53,7 @@ describe("uploader utils tests", () => {
             isProxy.mockReturnValueOnce(false);
             const result = deepProxyUnwrap(obj);
 
-            console.log(result);
+            expect(result[TEST_SYM_UNWRAP]).toBe(true);
         });
 
         it("should unwrap array items on level 0", () => {

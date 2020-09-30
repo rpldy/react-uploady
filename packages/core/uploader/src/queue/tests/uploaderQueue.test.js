@@ -1,5 +1,5 @@
 import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
-import createState, { unwrap } from "@rpldy/simple-state";
+import createState from "@rpldy/simple-state";
 import { SENDER_EVENTS, UPLOADER_EVENTS } from "../../consts";
 import processQueueNext from "../processQueueNext";
 import * as abortMethods from "../abort";
@@ -16,7 +16,6 @@ jest.mock("../abort", () => ({
 }));
 
 describe("queue tests", () => {
-
     const uploaderId = "uploader111";
 
     let senderOnHandlers = {};
@@ -40,12 +39,10 @@ describe("queue tests", () => {
         clearJestMocks(
             trigger,
             processQueueNext,
-			unwrap,
         );
     });
 
     it("should initialize and add uploads", () => {
-
         logger.isDebugOn.mockReturnValueOnce(true);
 
         const queue = createQueue({ destination: "foo" }, trigger, cancellable, sender, uploaderId);
@@ -59,6 +56,8 @@ describe("queue tests", () => {
         expect(processQueueNext).toHaveBeenCalled();
 
         const queueState = processQueueNext.mock.calls[0][0];
+
+        expect(queue.getState().batches[batch.id].batchOptions).toBe(batchOptions);
 
         expect(queueState.trigger).toBe(trigger);
 		queueState.trigger("test", "a", "b");
@@ -83,9 +82,17 @@ describe("queue tests", () => {
     });
 
     it("should override batch options if passed to uploadBatch", () => {
-        expect(true).toBe(false);
-    });
+        const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
+        const batch = {id: "b1", items: [{ id: "u1" }, { id: "u2" }] },
+            batchOptions = { version: 1 },
+            batchOptions2 = { version: 2 };
+
+        queue.addBatch(batch, batchOptions);
+        queue.uploadBatch(batch, batchOptions2);
+
+        expect(queue.getState().batches[batch.id].batchOptions).toBe(batchOptions2);
+    });
 
     it("should throw if item id already exists", () => {
 		const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
@@ -93,8 +100,8 @@ describe("queue tests", () => {
 		const batch = { items: [{ id: "u1" }, { id: "u2" }] },
 			batchOptions = { concurrent: true };
 
-        queue.addBatch(batch);
-		queue.uploadBatch(batch, batchOptions);
+        queue.addBatch(batch, batchOptions);
+		queue.uploadBatch(batch);
 
 		expect(() => {
 			queue.uploadBatch(batch, batchOptions);
@@ -115,7 +122,6 @@ describe("queue tests", () => {
     });
 
     it("should update state", () => {
-
         const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
         expect(queue.getState().currentBatch).toBe(null);
@@ -128,7 +134,6 @@ describe("queue tests", () => {
     });
 
     it("should call abort method", () => {
-
         const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
         queue.abortItem("u1");
@@ -142,7 +147,6 @@ describe("queue tests", () => {
     });
 
     it("getCurrentActiveCount should return active count", () => {
-
         const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
         queue.updateState((state) => {
@@ -157,8 +161,7 @@ describe("queue tests", () => {
 
     describe("UPLOADER_EVENTS.ITEM_PROGRESS tests", () => {
         it("should trigger UPLOADER_EVENTS.ITEM_PROGRESS on sender item progress", () => {
-
-            const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
+            const queue = createQueue({ destination: "foo" }, trigger,cancellable, sender, uploaderId);
 
             const batch = { items: [{ id: "u1" }, { id: "u2" }] },
                 batchOptions = {};
@@ -172,18 +175,11 @@ describe("queue tests", () => {
             expect(state2.items["u1"].loaded).toBe(1000);
             expect(state2.items["u1"].completed).toBe(20);
 
-            // unwrap.mockReturnValueOnce("unwrapped");
-
-            expect(trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_PROGRESS, undefined);
-            // expect(unwrap).toHaveBeenCalledWith({
-			// 	id: "u1",
-			// 	loaded: 1000,
-			// 	completed: 20,
-			// });
+            expect(trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_PROGRESS, state2.items["u1"]);
         });
 
         it("should not trigger event if no item found", () => {
-            createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
+            createQueue({ destination: "foo" }, trigger, cancellable, sender, uploaderId);
 
             senderOnHandlers[SENDER_EVENTS.ITEM_PROGRESS]({ id: "u1" }, 20, 1000);
 
@@ -192,9 +188,8 @@ describe("queue tests", () => {
     });
 
     describe("UPLOADER_EVENTS.BATCH_PROGRESS tests", () => {
-
         it("should trigger UPLOADER_EVENTS.BATCH_PROGRESS on sender batch progress", () => {
-            const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
+            const queue = createQueue({ destination: "foo" }, trigger, cancellable, sender, uploaderId);
 
             const batch = {
                     id: "b1",
@@ -205,7 +200,8 @@ describe("queue tests", () => {
                 },
                 batchOptions = {};
 
-            queue.uploadBatch(batch, batchOptions);
+            queue.addBatch(batch, batchOptions);
+            queue.uploadBatch(batch);
 
             senderOnHandlers[SENDER_EVENTS.BATCH_PROGRESS](batch);
 
@@ -213,19 +209,11 @@ describe("queue tests", () => {
             expect(state2.batches["b1"].batch.completed).toBe(50);
             expect(state2.batches["b1"].batch.loaded).toBe(4000);
 
-			unwrap.mockReturnValueOnce("unwrapped");
-
-            expect(trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS,"unwrapped");
-
-            expect(unwrap).toHaveBeenCalledWith( {
-				...batch,
-				completed: 50,
-				loaded: 4000,
-			});
+            expect(trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS, state2.batches["b1"].batch);
         });
 
         it("should not trigger event if no batch found", () => {
-            createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
+            createQueue({ destination: "foo" },  trigger, cancellable, sender, uploaderId);
 
             senderOnHandlers[SENDER_EVENTS.BATCH_PROGRESS]({ id: "b1" });
 

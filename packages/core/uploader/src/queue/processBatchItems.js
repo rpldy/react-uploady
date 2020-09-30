@@ -147,7 +147,6 @@ const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMe
             return { allowedItems, cancelledResults };
         })
         .then(({ allowedItems, cancelledResults }) => {
-
             const afterPreparePromise = allowedItems.length ?
                 prepareAllowedItems(queue, allowedItems)
                     .then() : Promise.resolve();

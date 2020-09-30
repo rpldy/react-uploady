@@ -11,13 +11,15 @@ import React, {
 import styled from "styled-components";
 import { withKnobs } from "@storybook/addon-knobs";
 import Uploady, {
+    UPLOADER_EVENTS,
     useFileInput,
     UploadyContext,
     useItemStartListener,
     useItemFinishListener,
     useBatchStartListener,
     useBatchFinishListener,
-    UPLOADER_EVENTS,
+    useBatchAddListener,
+    useUploadyContext,
 } from "@rpldy/uploady";
 import {
     useStoryUploadySetup,
@@ -365,6 +367,105 @@ export const WithFileFilter = () => {
         <UploadButton id="upload-button"/>
     </Uploady>;
 };
+
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const UploadField = styled.div`
+  width: 260px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #fff;
+  background-color: #f1f1f1;
+  color: #000;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 0 4px;
+  cursor: pointer;
+`;
+
+const MyUploadField = asUploadButton(
+    forwardRef(({ onChange, ...props }, ref) => {
+        const [text, setText] = useState("Select file");
+
+        useBatchAddListener((batch) => {
+            setText(batch.items[0].file.name);
+            onChange(batch.items[0].file.name);
+        });
+
+        useBatchFinishListener(() => {
+            setText("Select file");
+            onChange(null);
+        });
+
+        return (
+            <UploadField {...props} ref={ref} id="form-upload-button">
+                {text}
+            </UploadField>
+        );
+    })
+);
+
+const MyForm = () => {
+    const [fields, setFields] = useState({});
+    const [fileName, setFileName] = useState(null);
+    const uploadyContext = useUploadyContext();
+
+    const onSubmit = useCallback(() => {
+        uploadyContext.processPending({ params: fields });
+    }, [fields, uploadyContext]);
+
+    const onFieldChange = useCallback((e) => {
+        setFields({
+            ...fields,
+            [e.currentTarget.id]: e.currentTarget.value,
+        })
+    }, [fields, setFields]);
+
+    const buttonExtraProps = useMemo(() => ({
+        onChange: setFileName
+    }), [setFileName]);
+
+    return (
+        <Form>
+            <MyUploadField autoUpload={false} extraProps={buttonExtraProps}/>
+            <br/>
+            <input onChange={onFieldChange} id="field-name" type="text" placeholder="your name"/>
+            <br/>
+            <input onChange={onFieldChange} id="field-age" type="number" placeholder="your age"/>
+            <br/>
+            <button id="form-submit" type="button" onClick={onSubmit} disabled={!fileName}>Submit Form</button>
+        </Form>
+    );
+};
+
+export const WithForm = () => {
+    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+
+    return (
+        <Uploady
+            debug
+            clearPendingOnAdd
+            multiple={false}
+            destination={destination}
+            enhancer={enhancer}
+            grouped={grouped}
+            maxGroupSize={groupSize}>
+            >
+            <div className="App">
+                <h3>Using a Form with file input and additional fields</h3>
+
+                <MyForm/>
+            </div>
+        </Uploady>
+    );
+};
+
 
 export default {
     component: UploadButton,

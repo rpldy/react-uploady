@@ -9,6 +9,7 @@ export default makeDecorator({
 			(window.Cypress ? window : null);
 
 		if (win) {
+		    win.__cypressEnv = process.env.NODE_ENV;
 			win.__cypressResults = win.__cypressResults || { storyLog: []};
 			//clear story log on each story render
 			win.__cypressResults.storyLog = [];

@@ -1,6 +1,6 @@
 import uploadFile from "../uploadFile";
 
-describe("With Abort", () => {
+describe("UploadButton - With Abort", () => {
     const fileName = "flower.jpg";
 
     before(() => {

@@ -1,6 +1,7 @@
 {
   "name": "@rpldy/root",
   "version": "1.0.0",
+  "author": "yoav niran (https://github.com/yoavniran)",
   "scripts": {
     "upgradep": "node scripts/upgradeDep.js",
     "bootstrap": "lerna bootstrap --use-workspaces",
@@ -75,6 +76,7 @@
     "babel-jest": "^26.3.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-lodash": "^3.3.4",
+    "babel-plugin-minify-dead-code-elimination": "^0.5.1",
     "babel-plugin-module-resolver": "^4.0.0",
     "bundlesize": "^0.18.0",
     "bytes": "^3.1.0",

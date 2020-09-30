@@ -13,7 +13,7 @@ describe("UploadButton - Simple", () => {
 			.as("fInput");
 
 		uploadFile(fileName, () => {
-			cy.wait(1000);
+			cy.wait(1500);
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 		}, "button", null);
 	});

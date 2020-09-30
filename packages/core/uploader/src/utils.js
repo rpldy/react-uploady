@@ -34,19 +34,19 @@ const getIsFileList = (files: any) =>
  * if obj itself isnt a proxy, will look for a proxy max 2 levels deep
  */
 const deepProxyUnwrap = (obj: any, level: number = 0): any => {
-    let result;
-    if (level < 3 && isProxy(obj)) {
-        result = unwrap(obj);
-    } else if (level < 3 && isProxiable(obj)) {
-        result = Array.isArray(obj) ?
-            Object.keys(obj).map<any[]>((key) => deepProxyUnwrap(obj[key])) :
-            Object.keys(obj).reduce<{[string]: any}>((res, key) => {
-                res[key] = deepProxyUnwrap(obj[key], level + 1);
-                return res;
-            }, {});
-    } else {
-        //bail - obj cant be proxy or gone too deep
-        result = obj;
+    let result = obj;
+
+    if (process.env.NODE_ENV !== "production") {
+        if (level < 3 && isProxy(obj)) {
+            result = unwrap(obj);
+        } else if (level < 3 && isProxiable(obj)) {
+            result = Array.isArray(obj) ?
+                Object.keys(obj).map<any[]>((key) => deepProxyUnwrap(obj[key])) :
+                Object.keys(obj).reduce<{ [string]: any }>((res, key) => {
+                    res[key] = deepProxyUnwrap(obj[key], level + 1);
+                    return res;
+                }, {});
+        }
     }
 
     return result;

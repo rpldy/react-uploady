@@ -1,12 +1,12 @@
 import uploadFile from "../uploadFile";
 
 
-describe("Uploady - Form", () => {
+describe("UploadButton - Form", () => {
     const fileName = "flower.jpg",
         fileName2 = "sea.jpg";
 
     before(() => {
-        cy.visitStory("uploady", "with-form&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url", true);
+        cy.visitStory("uploadButton", "with-form&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url", true);
     });
 
     it("should submit form with upload and other fields", () => {

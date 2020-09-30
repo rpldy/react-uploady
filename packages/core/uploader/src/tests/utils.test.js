@@ -46,6 +46,16 @@ describe("uploader utils tests", () => {
             expect(unwrap).toHaveBeenCalledTimes(1);
         });
 
+        it("should keep symbols", () => {
+            const TEST_SYM_UNWRAP = Symbol.for("TEST_SYM_UNWRAP");
+            const obj = { test: true, items: ["a", "b"], [TEST_SYM_UNWRAP]: true };
+
+            isProxy.mockReturnValueOnce(false);
+            const result = deepProxyUnwrap(obj);
+
+            console.log(result);
+        });
+
         it("should unwrap array items on level 0", () => {
             const arr = ["a", "b"];
 

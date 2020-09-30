@@ -21,6 +21,7 @@ Cypress.Commands.add("storyLog", () =>
 	(window.parent.__cypressResults ?
 		cy.wrap(window.parent) : cy.window())
 		.then((w) => {
+            w.__cypressResults.storyLog._env = w.__cypressEnv;
 			return w.__cypressResults.storyLog;
 		}));
 
@@ -70,8 +71,9 @@ Cypress.Commands.add("assertLogEntryContains", { prevSubject: true }, (storyLog,
 Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, eventName, asserter) => {
     const logLine = storyLog.find((item) => item.args[0] === eventName).args.slice(1);
 
-    cy.wrap(logLine)
-        .should(asserter);
+    // cy.wrap(logLine)
+    //     .should(asserter);
+    asserter(logLine, storyLog._env);
 });
 
 Cypress.Commands.add("assertLogPattern", { prevSubject: true }, (storyLog, pattern, options = {}) => {

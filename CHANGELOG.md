@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.7.0 (2020-10-01)
+
+### Features
+
+- `[uploady]` - new hook: useUploadyContext
+- `[uploady]` - processPending context method now accepts options
+- `[uploader]` - new upload option - clearPending - clears pending batches when new is added
+
+### Bug fixes
+
+- `[tus-sender]` - location header inaccessible
+- `[simple-state]` - unwrap issues
+
+### Internal
+
+- `[uploader]` - safer cleanUpFinishedBatch in batch helpers  
+- `[tus-sender]` - remove async/await
+- `[uploader]` - ensure all data exposed from events is unwrapped (in dev)
+- `[life-events]` - introduce life-pack concept
+- `build` - use minify-dead-code-elimination babel plugin
+- `all` - moved umd bundle into lib/
+- `all` - upgrade dev dependencies
+
+### Docs
+
+- `guides` - new guide: Submit Form
+
 ## 0.6.0 (2020-09-19)
 
 ### Features

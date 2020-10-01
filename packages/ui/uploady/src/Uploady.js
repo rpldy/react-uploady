@@ -36,7 +36,7 @@ const FileInputField = memo(forwardRef(({ container, noPortal, ...inputProps }: 
     const isValidContainer = container && container.nodeType === 1;
 
     invariant(
-        isValidContainer || !hasWindow,
+        isValidContainer || !hasWindow(),
         NO_CONTAINER_ERROR_MSG
     );
 
@@ -63,7 +63,7 @@ const Uploady = (props: UploadyProps) => {
     } = props;
 
     const container = !customInput ?
-        (inputFieldContainer || (hasWindow ? document.body : null)) : null;
+        (inputFieldContainer || (hasWindow() ? document.body : null)) : null;
 
     const internalInputFieldRef = useRef<?HTMLInputElement>();
 

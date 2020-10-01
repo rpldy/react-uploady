@@ -26,6 +26,6 @@ const ChunkedUploady = (props: ChunkedUploadyProps) => {
     return <Uploady {...uploadyProps} enhancer={enhancer}/>;
 };
 
-logWarning(CHUNKING_SUPPORT || !hasWindow, "This browser doesn't support chunking. Consider using @rpldy/uploady instead");
+logWarning(CHUNKING_SUPPORT || !hasWindow(), "This browser doesn't support chunking. Consider using @rpldy/uploady instead");
 
 export default ChunkedUploady;

@@ -21,7 +21,7 @@ export type QueueState = {|
 	getCurrentActiveCount: () => number,
 	updateState: ((State) => void) => void,
 	trigger: TriggerMethod,
-	cancellable: Cancellable,
+    runCancellable: Cancellable,
 	sender: ItemsSender,
     handleItemProgress: (BatchItem, number, number) => void,
 |};

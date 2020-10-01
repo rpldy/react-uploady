@@ -6,7 +6,6 @@ import {
     logger,
     getMerge
 } from "@rpldy/shared";
-import { unwrap } from "@rpldy/simple-state";
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 
@@ -25,10 +24,7 @@ const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
 const triggerPreSendUpdate = (queue: QueueState, items: BatchItem[], options: CreateOptions): Promise<ItemsSendData> => {
     return triggerUpdater<{ items: BatchItem[], options: CreateOptions }>(
-        queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, {
-            items: items.map((i) => unwrap(i)),
-            options: unwrap(options),
-        })
+        queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, { items, options })
         // $FlowFixMe - https://github.com/facebook/flow/issues/8215
         .then((updated: ?{ items: BatchItem[], options: CreateOptions }) => {
             if (updated) {
@@ -141,7 +137,7 @@ const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMe
 
     //allow user code cancel items from start event handler(s)
     return Promise.all(items.map((i: BatchItem) =>
-        queue.cancellable(UPLOADER_EVENTS.ITEM_START, i)))
+        queue.runCancellable(UPLOADER_EVENTS.ITEM_START, i)))
         .then((cancelledResults) => {
             let allowedItems: BatchItem[] = cancelledResults
                 .map((isCancelled: boolean, index: number): ?BatchItem =>
@@ -151,7 +147,6 @@ const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMe
             return { allowedItems, cancelledResults };
         })
         .then(({ allowedItems, cancelledResults }) => {
-
             const afterPreparePromise = allowedItems.length ?
                 prepareAllowedItems(queue, allowedItems)
                     .then() : Promise.resolve();

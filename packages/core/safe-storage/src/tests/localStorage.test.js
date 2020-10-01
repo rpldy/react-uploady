@@ -1,9 +1,13 @@
+import "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { hasWindow } from "@rpldy/shared";
+
 describe("localStorage tests", () => {
 
     describe("supported tests", () => {
         let safeLocalStorage;
 
         beforeAll(() => {
+            hasWindow.mockReturnValueOnce(true);
             safeLocalStorage = require("../localStorage").default;
         });
 
@@ -46,6 +50,7 @@ describe("localStorage tests", () => {
 			delete global._localStorage;
 
 			jest.resetModules();
+            hasWindow.mockReturnValueOnce(true);
 			safeLocalStorage = require("../localStorage").default;
 		});
 
@@ -82,6 +87,7 @@ describe("localStorage tests", () => {
             };
 
             jest.resetModules();
+            hasWindow.mockReturnValueOnce(true);
             safeLocalStorage = require("../localStorage").default;
         });
 

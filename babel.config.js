@@ -17,6 +17,7 @@ module.exports = {
 		"@babel/plugin-proposal-class-properties",
 		"@babel/plugin-proposal-optional-chaining",
         "@babel/plugin-proposal-export-default-from",
+        "minify-dead-code-elimination",
         // "@babel/plugin-transform-runtime",
         // ["@babel/plugin-transform-runtime", {
         //     corejs: 3,

@@ -7,6 +7,7 @@ import clone from "./clone";
 import pick from "./pick";
 import isPlainObject from "./isPlainObject";
 import hasWindow from "./hasWindow";
+import isProduction from "./isProduction";
 
 export {
     isFunction,
@@ -18,4 +19,5 @@ export {
     pick,
 	isPlainObject,
     hasWindow,
+    isProduction,
 };

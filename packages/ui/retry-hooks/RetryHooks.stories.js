@@ -13,8 +13,8 @@ import Uploady, {
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadPreview from "@rpldy/upload-preview";
-import { StoryUploadProgress, useStoryUploadySetup } from "../../../story-helpers";
-import retryEnhancer, { useBatchRetry, useRetry, useRetryListener } from "./src";
+import { logToCypress, StoryUploadProgress, useStoryUploadySetup } from "../../../story-helpers";
+import retryEnhancer, { useBatchRetry, useRetry, useRetryListener, RETRY_EVENT } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
@@ -44,6 +44,7 @@ const RetryUi = () => {
 
 	useRetryListener(({ items }) => {
 		console.log("##### RETRY EVENT - retrying items: ", items);
+        logToCypress(`###${RETRY_EVENT}`, items);
 	});
 
 	const onRetryAll = useCallback(() => {

@@ -1,37 +1,27 @@
 // @flow
-import { isPlainObject, clone, getMerge } from "@rpldy/shared";
-import type { SimpleState } from "./types";
+import { clone, getMerge, isProduction } from "@rpldy/shared";
+import { PROXY_SYM, STATE_SYM } from "./consts";
+import { isProxiable, isProxy } from "./utils";
 
-const PROXY_SYM = Symbol.for("__rpldy-sstt-proxy__"),
-	STATE_SYM = Symbol.for("__rpldy-sstt-state__");
+import type { SimpleState } from "./types";
 
 const mergeWithSymbols = getMerge({
     withSymbols: true,
     predicate: (key) => key !== PROXY_SYM && key !== STATE_SYM,
 });
-
-const isProd = process.env.NODE_ENV === "production";
-
-const isProxy = (obj: Object) =>
-	!isProd && !!obj &&
-	!!~Object.getOwnPropertySymbols(obj).indexOf(PROXY_SYM);
-
 const getIsUpdateable = (proxy: Object) =>
-	isProd ? true : proxy[STATE_SYM].isUpdateable;
+    isProduction() ? true : proxy[STATE_SYM].isUpdateable;
 
 const setIsUpdateable = (proxy: Object, value) => {
-	if (!isProd) {
+	if (!isProduction()) {
 		proxy[STATE_SYM].isUpdateable = value;
 	}
 };
 
-//check if object is native file object (it wont by instanceof File in react-native)
-const isNativeFile = (obj: Object) => obj.name && obj.size && obj.uri;
-
 const deepProxy = (obj, traps) => {
 	let proxy;
 
-	if (Array.isArray(obj) || (isPlainObject(obj) && !isNativeFile(obj))) {
+	if (isProxiable(obj)) {
 		if (!isProxy(obj)) {
 			obj[PROXY_SYM] = true;
 			proxy = new Proxy(obj, traps);
@@ -46,29 +36,8 @@ const deepProxy = (obj, traps) => {
 	return proxy || obj;
 };
 
-// const deepUnWrap = (proxy: Object) => {
-//     if (!proxy[STATE_SYM]) {
-//         delete proxy[PROXY_SYM];
-//
-//         Object.keys(proxy)
-//             .concat(Object.getOwnPropertySymbols(proxy)
-//                 .filter((sym) => sym !== STATE_SYM))
-//             .forEach((key) => {
-//                 proxy[key] = proxy[key] && (proxy[key][PROXY_SYM] || proxy[key]);
-//             });
-//
-//     }
-//
-// 	return proxy;
-// };
-
-const unwrapEntry = (proxy: Object) =>
+const unwrapProxy = (proxy: Object) =>
 	isProxy(proxy) ? clone(proxy, mergeWithSymbols) : proxy;
-
-// const unwrapState = (proxy: Object) => {
-// 	delete proxy[STATE_SYM];
-// 	return proxy[PROXY_SYM];
-// };
 
 /**
  * deep proxies an object so it is only updateable through an update callback.
@@ -96,7 +65,7 @@ export default <T>(obj: Object): SimpleState<T> => {
 		},
 
 		get: (obj, key) => {
-			return key === PROXY_SYM ? unwrapEntry(obj) : obj[key];
+			return key === PROXY_SYM ? unwrapProxy(obj) : obj[key];
 		},
 
 		defineProperty: () => {
@@ -116,17 +85,17 @@ export default <T>(obj: Object): SimpleState<T> => {
 		},
 	};
 
-	if (!isProd && !isProxy(obj)) {
+	if (!isProduction() && !isProxy(obj)) {
 		Object.defineProperty(obj, STATE_SYM, {
 			value: { isUpdateable: false },
 			configurable: true,
 		});
 	}
 
-	const proxy = !isProd ? deepProxy(obj, traps) : obj;
+	const proxy = !isProduction() ? deepProxy(obj, traps) : obj;
 
 	const update = (fn) => {
-		if (!isProd && getIsUpdateable(proxy)) {
+		if (!isProduction() && getIsUpdateable(proxy)) {
 			throw new Error("Can't call update on State already being updated!");
 		}
 
@@ -142,9 +111,9 @@ export default <T>(obj: Object): SimpleState<T> => {
 
 	const unwrap = (entry?: Object) => entry ?
 			//simply clone the provided object (if its a proxy)
-			unwrapEntry(entry) :
+			unwrapProxy(entry) :
 			//unwrap entire proxy state
-			(isProxy(proxy) ? unwrapEntry(proxy) : proxy);
+			(isProxy(proxy) ? unwrapProxy(proxy) : proxy);
 
 	return {
 		state: proxy,
@@ -155,5 +124,5 @@ export default <T>(obj: Object): SimpleState<T> => {
 
 export {
 	isProxy,
-	unwrapEntry as unwrap
+    unwrapProxy as unwrap
 };

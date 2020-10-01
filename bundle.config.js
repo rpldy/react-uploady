@@ -37,7 +37,7 @@ module.exports = {
             "core": {
                 pkgs: [PKGS.LIFE_EVENTS, PKGS.SHARED, PKGS.SENDER, PKGS.UPLOADER],
                 target: PKGS.UPLOADER,
-                maxSize: 11000,
+                maxSize: 12000,
             },
 
             /**
@@ -107,7 +107,7 @@ module.exports = {
                         },
                     };
                 },
-                maxSize: 23500,
+                maxSize: 24000,
             },
 
             //TODO: find a way to make this work with global object assignment (wepackages/tus-sender/src/tusSender/initTusUpload/createUpload.js:88:94bpack externals root)

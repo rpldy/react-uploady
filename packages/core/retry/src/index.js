@@ -1,11 +1,6 @@
 // @flow
-import retryEnhancer from "./retry";
 
-export default retryEnhancer;
-
-export {
-    retryEnhancer,
-};
+export { default, default as retryEnhancer } from "./retry";
 
 export {
     RETRY_EVENT,

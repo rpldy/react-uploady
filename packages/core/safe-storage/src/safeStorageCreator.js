@@ -6,7 +6,7 @@ export default (storageType: string) => {
 
 	const checkSupport = () => {
 		try {
-			if (hasWindow && storageType in window) {
+			if (hasWindow() && storageType in window) {
 				const key = "__lsTest";
 				window[storageType].setItem(key, `__test-${Date.now()}`);
 				window[storageType].removeItem(key);

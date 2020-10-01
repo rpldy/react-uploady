@@ -1,5 +1,6 @@
 import { createChunkedSender } from "@rpldy/chunked-sender";
 import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { hasWindow } from "@rpldy/shared";
 import getTusSend from "../tusSend";
 import handleEvents from "../handleEvents";
 import createTusSender from "../index";
@@ -26,6 +27,8 @@ describe("tusSender index tests", () => {
 	});
 
 	const doTest = (options) => {
+	    hasWindow.mockReturnValueOnce(true);
+
 		const uploader = {};
 
 		options = {

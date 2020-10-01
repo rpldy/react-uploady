@@ -53,7 +53,7 @@ describe("processBatchItems tests", () => {
 
         const queueState = getQueueState(getMockStateData());
 
-        queueState.cancellable.mockResolvedValueOnce(false);
+        queueState.runCancellable.mockResolvedValueOnce(false);
         queueState.sender.send.mockReturnValueOnce(sendResult);
 
         triggerUpdater.mockResolvedValueOnce();
@@ -80,7 +80,7 @@ describe("processBatchItems tests", () => {
     it("should send allowed (multiple) items", async () => {
         const queueState = getQueueState(getMockStateData());
 
-        queueState.cancellable
+        queueState.runCancellable
             .mockResolvedValueOnce(false)
             .mockResolvedValueOnce(false);
 
@@ -111,7 +111,7 @@ describe("processBatchItems tests", () => {
     it("should throw in case REQUEST_PRE_SEND update returns different array length", async () => {
         const queueState = getQueueState(getMockStateData());
 
-        queueState.cancellable
+        queueState.runCancellable
             .mockResolvedValueOnce(false)
             .mockResolvedValueOnce(false);
 
@@ -124,7 +124,7 @@ describe("processBatchItems tests", () => {
     it("should throw in case REQUEST_PRE_SEND update returns different item ids", async () => {
         const queueState = getQueueState(getMockStateData());
 
-        queueState.cancellable
+        queueState.runCancellable
             .mockResolvedValueOnce(false)
             .mockResolvedValueOnce(false);
 
@@ -140,7 +140,7 @@ describe("processBatchItems tests", () => {
 
         const queueState = getQueueState(getMockStateData());
 
-        queueState.cancellable
+        queueState.runCancellable
             .mockResolvedValueOnce(false)
             .mockResolvedValueOnce(false);
 
@@ -182,7 +182,7 @@ describe("processBatchItems tests", () => {
     it("REQUEST_PRE_SEND should update options without items", async () => {
         const queueState = getQueueState(getMockStateData());
 
-        queueState.cancellable
+        queueState.runCancellable
             .mockResolvedValueOnce(false)
             .mockResolvedValueOnce(false);
 
@@ -222,7 +222,7 @@ describe("processBatchItems tests", () => {
     it("REQUEST_PRE_SEND should update items without options", async () => {
         const queueState = getQueueState(getMockStateData());
 
-        queueState.cancellable
+        queueState.runCancellable
             .mockResolvedValueOnce(false)
             .mockResolvedValueOnce(false);
 
@@ -260,7 +260,7 @@ describe("processBatchItems tests", () => {
 
         const queueState = getQueueState(getMockStateData());
 
-        queueState.cancellable
+        queueState.runCancellable
             .mockResolvedValueOnce(true)
             .mockResolvedValueOnce(true);
 
@@ -287,7 +287,7 @@ describe("processBatchItems tests", () => {
     it("should send allowed and report cancelled both", async () => {
         const queueState = getQueueState(getMockStateData());
 
-        queueState.cancellable
+        queueState.runCancellable
             .mockResolvedValueOnce(false)
             .mockResolvedValueOnce(true);
 
@@ -327,7 +327,7 @@ describe("processBatchItems tests", () => {
 
 		triggerUpdater.mockResolvedValueOnce(false);
 
-		queueState.cancellable
+		queueState.runCancellable
 			.mockResolvedValueOnce(false)
 			.mockResolvedValueOnce(false);
 

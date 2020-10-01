@@ -12,7 +12,7 @@ let sliceMethod = null;
 
 const isChunkingSupported = (): boolean => {
     sliceMethod = null;
-    if (hasWindow && "Blob" in window) {
+    if (hasWindow() && "Blob" in window) {
         sliceMethod = Blob.prototype.slice ||
             // $FlowFixMe - flow doesnt know webkitSlice
             Blob.prototype.webkitSlice ||

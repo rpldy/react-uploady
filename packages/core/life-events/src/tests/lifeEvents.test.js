@@ -1,4 +1,5 @@
 import addLife, { isLE } from "../lifeEvents";
+import createLifePack from "../lifePack";
 
 describe("life-events tests", () => {
     const noOp = jest.fn();
@@ -186,7 +187,7 @@ describe("life-events tests", () => {
                 expect(noOp).not.toHaveBeenCalledWith("b");
             });
 
-            it("should only remove onces", async () => {
+            it("should only remove once", async () => {
 
                 const handler1 = () => "b",
                     handler2 = () => "c",
@@ -240,7 +241,47 @@ describe("life-events tests", () => {
                 expect(handler).toHaveBeenCalledTimes(1);
             });
         });
+    });
 
+    describe("life pack tests", () => {
+
+        it("should not unpkac when no listeners", () => {
+
+            const api = addLife();
+
+            api.target.on("test", () => {
+            });
+
+            const creator = jest.fn();
+            const pack = createLifePack(creator);
+
+            api.trigger("test2", pack);
+
+            expect(creator).not.toHaveBeenCalled();
+        });
+
+        it("should unpack life pack with listeners", () => {
+            const api = addLife();
+
+            const listener = jest.fn();
+            const listener2 = jest.fn();
+
+            api.target.on("test", listener);
+            api.target.on("test", listener2);
+
+            const creator = jest.fn(() => ["value", "value2"]);
+            const pack = createLifePack(creator);
+
+            api.trigger("test", pack);
+
+            expect(listener).toHaveBeenCalledWith("value", "value2");
+            expect(listener2).toHaveBeenCalledWith("value", "value2");
+            expect(creator).toHaveBeenCalledTimes(1);
+
+            api.trigger("test", pack);
+            expect(listener).toHaveBeenNthCalledWith(2, "value", "value2");
+            expect(listener2).toHaveBeenNthCalledWith(2,"value", "value2");
+        });
     });
 
     describe("unregister tests", () => {

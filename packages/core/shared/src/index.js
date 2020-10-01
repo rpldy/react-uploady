@@ -38,28 +38,10 @@ export {
     clone,
     pick,
     hasWindow,
+    isProduction
 } from "./utils";
 
-export type {
-    UploadOptions,
-    Destination,
-    UploadInfo,
-    ProgressInfo,
-    BatchState,
-    FileState,
-    NonMaybeTypeFunc,
-    Batch,
-    BatchItem,
-    UploadData,
-    FormatParamGroupNameMethod,
-    Trigger,
-    Cancellable,
-    Updater,
-    FileLike,
-    GetExact,
-    FileFilterMethod,
-} from "./types";
-
+export type * from "./types";
 export type {
     MergeOptions
 } from "./utils/merge";

@@ -1,5 +1,5 @@
 // @flow
-import addLife from "@rpldy/life-events";
+import addLife, { createLifePack } from "@rpldy/life-events";
 import {
     BATCH_STATES,
     invariant,
@@ -9,10 +9,9 @@ import {
     merge,
     clone,
 } from "@rpldy/shared";
-import createBatch from "./batch";
 import getProcessor from "./processor";
 import { UPLOADER_EVENTS } from "./consts";
-import { getMandatoryOptions } from "./utils";
+import { getMandatoryOptions, deepProxyUnwrap } from "./utils";
 
 import type {
     UploadInfo,
@@ -52,19 +51,19 @@ export default (options?: CreateOptions): UploaderType => {
 
     const add = (files: UploadInfo | UploadInfo[], addOptions?: ?UploadOptions): Promise<void> => {
         const processOptions: CreateOptions = merge({}, uploaderOptions, addOptions);
-        const batch = createBatch(files, uploader.id, processOptions);
+
+        const batch = processor.addNewBatch(files, uploader.id, processOptions);
         let resultP;
 
         if (batch.items.length) {
-            // $FlowFixMe - https://github.com/facebook/flow/issues/8215
-            resultP = cancellable(UPLOADER_EVENTS.BATCH_ADD, batch, processOptions)
+            resultP = processor.runCancellable(UPLOADER_EVENTS.BATCH_ADD, batch, processOptions)
                 .then((isCancelled: boolean) => {
                     if (!isCancelled) {
                         logger.debugLog(`uploady.uploader [${uploader.id}]: new items added - auto upload =
                         ${String(processOptions.autoUpload)}`, batch.items);
 
                         if (processOptions.autoUpload) {
-                            processor.process(batch, processOptions);
+                            processor.process(batch);
                         } else {
                             if (processOptions.clearPendingOnAdd) {
                                 clearPending();
@@ -74,7 +73,7 @@ export default (options?: CreateOptions): UploaderType => {
                         }
                     } else {
                         batch.state = BATCH_STATES.CANCELLED;
-                        trigger(UPLOADER_EVENTS.BATCH_CANCEL, batch);
+                        triggerWithUnwrap(UPLOADER_EVENTS.BATCH_CANCEL, batch);
                     }
                 });
         } else {
@@ -155,17 +154,26 @@ export default (options?: CreateOptions): UploaderType => {
         { canAddEvents: false, canRemoveEvents: false }
     );
 
-    const cancellable = triggerCancellable(trigger);
+    /**
+     * ensures that data being exposed to client-land isnt a proxy, only pojos
+     */
+    const triggerWithUnwrap = (name: string, ...data: mixed[]) => {
+        //delays unwrap to the very last time on trigger. Will only unwrap if there are listeners
+        const lp = createLifePack(() => data.map(deepProxyUnwrap));
+        return trigger(name, lp);
+    };
+
+    const cancellable = triggerCancellable(triggerWithUnwrap);
 
     if (uploaderOptions.enhancer) {
         enhancerTime = true;
-        const enhanced = uploaderOptions.enhancer(uploader, trigger);
+        const enhanced = uploaderOptions.enhancer(uploader, triggerWithUnwrap);
         enhancerTime = false;
         //graceful handling for enhancer forgetting to return uploader
         uploader = enhanced || uploader;
     }
 
-    const processor = getProcessor(trigger, uploaderOptions, uploader.id);
+    const processor = getProcessor(triggerWithUnwrap, cancellable, uploaderOptions, uploader.id);
 
     return devFreeze(uploader);
 };

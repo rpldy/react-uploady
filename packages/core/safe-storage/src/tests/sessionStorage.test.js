@@ -1,4 +1,5 @@
 import "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { hasWindow } from "@rpldy/shared";
 
 describe("sessionStorage tests", () => {
 
@@ -6,6 +7,7 @@ describe("sessionStorage tests", () => {
         let safeSessionStorage;
 
         beforeAll(() => {
+            hasWindow.mockReturnValueOnce(true);
             safeSessionStorage = require("../sessionStorage").default;
         });
 
@@ -48,8 +50,15 @@ describe("sessionStorage tests", () => {
 			delete global._sessionStorage;
 
 			jest.resetModules();
+            hasWindow.mockReturnValueOnce(true);
 			safeSessionStorage = require("../sessionStorage").default;
 		});
+
+        beforeEach(() => {
+            beforeEach(() => {
+                hasWindow.mockReturnValueOnce(true);
+            });
+        });
 
 		afterAll(() => {
 			window.sessionStorage = global._sessionStorage = orgStorage;
@@ -84,6 +93,7 @@ describe("sessionStorage tests", () => {
             };
 
             jest.resetModules();
+            hasWindow.mockReturnValueOnce(true);
             safeSessionStorage = require("../sessionStorage").default;
         });
 

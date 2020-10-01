@@ -26,6 +26,12 @@ describe("RetryHooks - Retry Upload", () => {
                 cy.wait(3000);
 
                 cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 2 });
+
+                cy.storyLog().customAssertLogEntry("###RETRY_EVENT", (logLine) => {
+                    expect(Object.getOwnPropertySymbols(logLine[0][0])).to.have.lengthOf(1, "RETRY_EVENT item 0 - shouldnt have proxy symbols");
+                    expect(Object.getOwnPropertySymbols(logLine[0][1])).to.have.lengthOf(1, "RETRY_EVENT item 1 - shouldnt have proxy symbols");
+                });
+
             }, "#upload-button", null);
         }, "#upload-button", null);
     });

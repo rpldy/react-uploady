@@ -27,7 +27,7 @@ export default (testState, options) => {
 		getCurrentActiveCount: jest.fn(() => state.activeIds.length),
 		updateState: jest.fn(updateState),
 		trigger: jest.fn(),
-		cancellable: jest.fn(),
+        runCancellable: jest.fn(),
 		sender: {
 			send: jest.fn(),
 		},

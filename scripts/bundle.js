@@ -123,7 +123,7 @@ const runWebpack = (type, name, config) => {
 };
 
 const copyBundleToTarget = (assets, outputPath, type, pkgRoot) => {
-    const dest = path.join(pkgRoot, config.targets[type]);
+    const dest = path.join(pkgRoot, "lib", config.targets[type]);
     fs.ensureDirSync(dest);
 
     assets.forEach((asset) => {

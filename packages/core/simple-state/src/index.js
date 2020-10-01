@@ -1,8 +1,9 @@
 // @flow
-import createState, { unwrap } from "./createState";
 
-export default createState;
+export { default, default as createState, unwrap } from "./createState";
 
 export {
-	unwrap
-};
+    isProxy,
+    isProxiable,
+} from "./utils";
+

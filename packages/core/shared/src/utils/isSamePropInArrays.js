@@ -11,7 +11,7 @@ const getPropsExtractor = (prop: string | string[]) => {
 stringifies props together - will return true for same type of value (ex: function)
 even if refs are different
  */
-export default (arr1: Object[], arr2: Object[], prop: string | string[]): boolean => {
+const isSamePropInArrays = (arr1: Object[], arr2: Object[], prop: string | string[]): boolean => {
     let diff = true;
     const propsExtractor = getPropsExtractor(prop);
 
@@ -24,3 +24,6 @@ export default (arr1: Object[], arr2: Object[], prop: string | string[]): boolea
 
     return !diff;
 };
+
+
+export default isSamePropInArrays;

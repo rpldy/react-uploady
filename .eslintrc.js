@@ -20,6 +20,7 @@ module.exports = {
         "jsx-a11y",
         "react-hooks",
         "flowtype",
+        "no-async"
     ],
     "settings": {
         "import/resolver": "webpack",
@@ -155,7 +156,8 @@ module.exports = {
         "jsx-a11y/alt-text": 0,
         "jsx-a11y/media-has-caption": 0,
         "jsx-a11y/anchor-is-valid": 1,
-		"max-len": [2, 155]
+		"max-len": [2, 155],
+        "no-async/no-async": 2
     },
 
     "overrides": [
@@ -182,6 +184,7 @@ module.exports = {
                 "import/no-extraneous-dependencies": 0,
                 "@typescript-eslint/no-explicit-any": 0,
 				"no-console": 0,
+                "no-async/no-async": 0,
             }
         },
         {
@@ -211,6 +214,7 @@ module.exports = {
                 "jest/valid-expect": 0,
                 "jest/expect-expect": 2,
 				"jest/no-commented-out-tests": 0,
+                "no-async/no-async": 0,
             }
         }
     ]

@@ -57,10 +57,10 @@ RU has a small footprint (by design) with very few (and small) dependencies.
 
 | Bundle         | Minified size | GZipped size
 | -------------- | ------------- | -------------
-| core                         | 31.5KB          | 9.79KB
-| core + ui                    | 42.6KB          | 12.5KB
-| core + ui + chunked support  | 49.9KB          | 14.9KB
-| everything                   | 76.3KB          | 22.1KB
+| core                         | 32.8KB          | 10.7KB
+| core + ui                    | 43.9KB          | 13.5KB
+| core + ui + chunked support  | 53.6KB          | 16.0KB
+| everything                   | 78.7KB          | 22.9KB
 
 ## Documentation
 

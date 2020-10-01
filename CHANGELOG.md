@@ -7,6 +7,7 @@
 - `[uploady]` - new hook: useUploadyContext
 - `[uploady]` - processPending context method now accepts options
 - `[uploader]` - new upload option - clearPending - clears pending batches when new is added
+- `[chunked-sender]` - change chunked upload data to include results array inside response object (instead of response being the results array)
 
 ### Bug fixes
 

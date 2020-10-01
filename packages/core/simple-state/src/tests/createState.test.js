@@ -17,15 +17,15 @@ describe("createState tests", () => {
 	const createTest = (runTest, isProd = false) =>
 		() => {
 			jest.resetModules();
-			process.env.NODE_ENV = isProd ? "production" : env;
 
 			const mockClone = jest.fn();
 			clone = mockClone;
 
-			jest.mock("@rpldy/shared", () => ({
+			jest.doMock("@rpldy/shared", () => ({
 				isPlainObject: jest.requireActual("@rpldy/shared").isPlainObject,
 				clone: mockClone,
-				getMerge: () => {}
+				getMerge: () => {},
+                isProduction: () => isProd,
 			}));
 
 			const mdl = require("../createState");

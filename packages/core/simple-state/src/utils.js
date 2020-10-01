@@ -1,11 +1,9 @@
 // @flow
 import { PROXY_SYM } from "./consts";
-import { isPlainObject } from "@rpldy/shared";
-
-const isProd = process.env.NODE_ENV === "production";
+import { isPlainObject, isProduction } from "@rpldy/shared";
 
 const isProxy = (obj: Object) =>
-    !isProd && !!obj &&
+    !isProduction() && !!obj &&
     !!~Object.getOwnPropertySymbols(obj).indexOf(PROXY_SYM);
 
 //check if object is File or react-native file object (it wont by instanceof File in react-native)
@@ -15,7 +13,6 @@ const isProxiable = (obj: any) =>
     Array.isArray(obj) || (isPlainObject(obj) && !isNativeFile(obj));
 
 export {
-    isProd,
     isProxy,
     isProxiable,
 };

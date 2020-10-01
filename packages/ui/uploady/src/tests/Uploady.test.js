@@ -1,5 +1,6 @@
 import React from "react";
 import { invariant } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { hasWindow } from "@rpldy/shared";
 import {
     useUploadOptions,
 } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
@@ -15,6 +16,7 @@ describe("Uploady tests", () => {
     });
 
     it("should render Uploady successfully", () => {
+        hasWindow.mockReturnValueOnce(true);
 
         useUploadOptions.mockReturnValueOnce({
             inputFieldName: "file",
@@ -66,6 +68,7 @@ describe("Uploady tests", () => {
     });
 
     it("should show error in case no valid container", () => {
+        hasWindow.mockReturnValueOnce(true);
 
         useUploadOptions.mockReturnValueOnce({
             inputFieldContainer: true,

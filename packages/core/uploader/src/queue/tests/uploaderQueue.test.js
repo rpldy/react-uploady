@@ -1,4 +1,5 @@
 import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { hasWindow } from "@rpldy/shared";
 import createState from "@rpldy/simple-state";
 import { SENDER_EVENTS, UPLOADER_EVENTS } from "../../consts";
 import processQueueNext from "../processQueueNext";
@@ -43,6 +44,7 @@ describe("queue tests", () => {
     });
 
     it("should initialize and add uploads", () => {
+        hasWindow.mockReturnValueOnce(true);
         logger.isDebugOn.mockReturnValueOnce(true);
 
         const queue = createQueue({ destination: "foo" }, trigger, cancellable, sender, uploaderId);

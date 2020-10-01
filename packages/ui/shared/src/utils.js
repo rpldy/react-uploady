@@ -1,5 +1,6 @@
 // @flow
 import { useEffect, useState, useCallback } from "react";
+import { isProduction } from "@rpldy/shared";
 import useUploadyContext from "./useUploadyContext";
 
 type Callback = (...args?: any) => ?any;
@@ -47,7 +48,8 @@ const generateUploaderEventHook = (event: string, canScope: boolean = true) =>
 	};
 
 const logWarning = (condition: ?any, msg: string) => {
-	if (process.env.NODE_ENV !== "production" && !condition) {
+
+	if (!isProduction() && !condition) {
 		// eslint-disable-next-line no-console
 		console.warn(msg);
 	}

@@ -1,5 +1,7 @@
 // @flow
+import isProduction from "./isProduction";
 
-export default (obj: Object) => {
-    return process.env.NODE_ENV === "production" ? obj : Object.freeze(obj);
-};
+const devFreeze = (obj: Object) =>
+    isProduction() ? obj : Object.freeze(obj);
+
+export default devFreeze;

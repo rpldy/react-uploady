@@ -1,3 +1,5 @@
+import "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { isProduction } from "@rpldy/shared";
 import assertContext from "../assertContext";
 import {
     generateUploaderEventHook,
@@ -164,12 +166,11 @@ describe("ui-shared utils tests", () => {
     });
 
     describe("logWarning test", () => {
-        let mockWarn, env;
+        let mockWarn;
 
         beforeAll(() => {
             mockWarn = jest.spyOn(console, "warn");
             mockWarn.mockImplementation(()=>{});
-            env = process.env.NODE_ENV;
         });
 
         afterAll(() => {
@@ -178,10 +179,6 @@ describe("ui-shared utils tests", () => {
 
         beforeEach(() => {
             clearJestMocks(mockWarn);
-        });
-
-        afterEach(() => {
-            process.env.NODE_ENV = env;
         });
 
         it.each([
@@ -205,7 +202,7 @@ describe("ui-shared utils tests", () => {
         });
 
         it("should'nt log in production", () => {
-            process.env.NODE_ENV = "production";
+            isProduction.mockReturnValueOnce(true);
             logWarning(null, "warning");
             expect(mockWarn).not.toHaveBeenCalled();
         });

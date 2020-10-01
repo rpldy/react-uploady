@@ -1,7 +1,7 @@
 // @flow
-import { clone, getMerge } from "@rpldy/shared";
+import { clone, getMerge, isProduction } from "@rpldy/shared";
 import { PROXY_SYM, STATE_SYM } from "./consts";
-import { isProd, isProxiable, isProxy } from "./utils";
+import { isProxiable, isProxy } from "./utils";
 
 import type { SimpleState } from "./types";
 
@@ -10,10 +10,10 @@ const mergeWithSymbols = getMerge({
     predicate: (key) => key !== PROXY_SYM && key !== STATE_SYM,
 });
 const getIsUpdateable = (proxy: Object) =>
-	isProd ? true : proxy[STATE_SYM].isUpdateable;
+    isProduction() ? true : proxy[STATE_SYM].isUpdateable;
 
 const setIsUpdateable = (proxy: Object, value) => {
-	if (!isProd) {
+	if (!isProduction()) {
 		proxy[STATE_SYM].isUpdateable = value;
 	}
 };
@@ -85,17 +85,17 @@ export default <T>(obj: Object): SimpleState<T> => {
 		},
 	};
 
-	if (!isProd && !isProxy(obj)) {
+	if (!isProduction() && !isProxy(obj)) {
 		Object.defineProperty(obj, STATE_SYM, {
 			value: { isUpdateable: false },
 			configurable: true,
 		});
 	}
 
-	const proxy = !isProd ? deepProxy(obj, traps) : obj;
+	const proxy = !isProduction() ? deepProxy(obj, traps) : obj;
 
 	const update = (fn) => {
-		if (!isProd && getIsUpdateable(proxy)) {
+		if (!isProduction() && getIsUpdateable(proxy)) {
 			throw new Error("Can't call update on State already being updated!");
 		}
 

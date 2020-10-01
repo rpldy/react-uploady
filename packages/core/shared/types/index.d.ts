@@ -94,3 +94,21 @@ export type UploadData = {
 export const createBatchItem: (f: UploadInfo, batchId: string) => BatchItem;
 
 export const isPlainObject: (obj: unknown) => boolean;
+
+export const isFunction: (val: unknown) => boolean;
+
+export const isProduction: boolean;
+
+export const hasWindow: boolean;
+
+export const pick: <T>(obj: T, props: string[]) => T;
+
+export type MergeFn = <T>(target: T, ...sources: T[]) => T;
+
+export const merge: MergeFn;
+
+export const clone: <T>(obj: T, mergeFn?: MergeFn) => T;
+
+export const devFreeze: <T>(obj: T) => T;
+
+export const isSamePropInArrays: (arr1: any[], arr2: any[], prop: string | string[]) => boolean;

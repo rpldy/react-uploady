@@ -38,6 +38,7 @@ export {
     clone,
     pick,
     hasWindow,
+    isProduction
 } from "./utils";
 
 export type * from "./types";

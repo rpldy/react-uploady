@@ -128,7 +128,7 @@ const createUploaderQueue = (
         handleItemProgress,
     };
 
-    if (hasWindow && logger.isDebugOn()) {
+    if (hasWindow() && logger.isDebugOn()) {
         window[`__rpldy_${uploaderId}_queue_state`] = queueState;
     }
 

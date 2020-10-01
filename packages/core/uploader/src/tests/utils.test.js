@@ -1,3 +1,5 @@
+import "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { isProduction, hasWindow } from "@rpldy/shared";
 import { unwrap, isProxiable, isProxy } from "@rpldy/simple-state";
 import { deepProxyUnwrap, getMandatoryOptions } from "../utils";
 
@@ -18,6 +20,43 @@ describe("uploader utils tests", () => {
             expect(options.destination.params).toBeDefined();
             expect(options.destination.url).toBe("test.com");
             expect(options.clearPendingOnAdd).toBe(true);
+        });
+
+        it("should set destination to null if not provided", () => {
+            const options = getMandatoryOptions({ clearPendingOnAdd: true });
+            expect(options.autoUpload).toBe(true);
+            expect(options.destination).toBe(null);
+        });
+    });
+
+    describe("getIsFileList tests", () => {
+        let getIsFileList;
+
+        beforeAll(() => {
+            jest.resetModules();
+            hasWindow.mockReturnValueOnce(true);
+            getIsFileList = require("../utils").getIsFileList;
+        });
+
+        it("should return false for non FileList", () => {
+            expect(getIsFileList([])).toBe(false);
+            expect(getIsFileList({})).toBe(false);
+            expect(getIsFileList(true)).toBe(false);
+        });
+
+        it("should be true for FileList", () => {
+            const input = document.createElement("input");
+            input.type = "file";
+            document.body.appendChild(input);
+
+            const fl = input.files;
+            expect(getIsFileList(fl)).toBe(true);
+        });
+
+        it("should be true for [object FileList]", () => {
+            const fl = {};
+            fl.toString = () => "[object FileList]";
+            expect(getIsFileList(fl)).toBe(true);
         });
     });
 
@@ -168,6 +207,14 @@ describe("uploader utils tests", () => {
             expect(result).toStrictEqual(obj);
             expect(unwrap).toHaveBeenCalledTimes(0);
             expect(isProxiable).toHaveBeenCalledTimes(3);
+        });
+
+        it("should return same obj in production", () => {
+            isProduction.mockReturnValueOnce(true);
+
+            const obj = {test: true};
+
+            expect(deepProxyUnwrap(obj)).toBe(obj);
         });
     });
 });

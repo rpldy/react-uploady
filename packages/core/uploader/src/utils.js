@@ -1,12 +1,12 @@
 // @flow
-import { hasWindow } from "@rpldy/shared";
+import { hasWindow, isProduction } from "@rpldy/shared";
 import { unwrap, isProxiable, isProxy } from "@rpldy/simple-state";
 import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "./defaults";
 
 import type { Destination } from "@rpldy/shared";
 import type { CreateOptions } from "./types";
 
-const FILE_LIST_SUPPORT = hasWindow && "FileList" in window;
+const FILE_LIST_SUPPORT = hasWindow() && "FileList" in window;
 
 const getMandatoryDestination = (dest: Destination): Destination => {
     return {
@@ -36,7 +36,7 @@ const getIsFileList = (files: any) =>
 const deepProxyUnwrap = (obj: any, level: number = 0): any => {
     let result = obj;
 
-    if (process.env.NODE_ENV !== "production") {
+    if (!isProduction()) {
         if (level < 3 && isProxy(obj)) {
             result = unwrap(obj);
         } else if (level < 3 && isProxiable(obj)) {

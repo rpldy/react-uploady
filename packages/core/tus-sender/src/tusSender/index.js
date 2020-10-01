@@ -26,7 +26,7 @@ const initializeState = (uploader: UploaderType, options: TusOptions): TusState 
 		updateState: update,
 	};
 
-	if (hasWindow && logger.isDebugOn()) {
+	if (hasWindow() && logger.isDebugOn()) {
 		window[`__rpldy_${uploader.id}_tus_state`] = tusState;
 	}
 

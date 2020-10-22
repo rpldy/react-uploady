@@ -48,7 +48,7 @@ const FileInputField = memo(forwardRef(({ container, noPortal, ...inputProps }: 
         renderInPortal(container, isValidContainer, inputProps, instanceOptions, ref);
 }));
 
-const Uploady = (props: UploadyProps) => {
+const Uploady = (props: UploadyProps): React$Element<typeof NoDomUploady> => {
     const {
         multiple = true,
         capture,

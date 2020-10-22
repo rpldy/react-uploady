@@ -341,4 +341,26 @@ describe("processBatchItems tests", () => {
 
 		expect(queueState.sender.send).not.toHaveBeenCalled();
 	});
+
+    it("should mark item as failed for unexpected sender exception", async () => {
+
+        const queueState = getQueueState(getMockStateData());
+
+        queueState.runCancellable.mockResolvedValueOnce(false);
+        queueState.sender.send.mockImplementationOnce(() => {
+            throw new Error("SENDER FAIL");
+        });
+
+        triggerUpdater.mockResolvedValueOnce();
+
+        await processBatchItems(queueState, ["u1"], mockNext);
+        await waitForTest();
+
+        expect(processFinishedRequest.mock.calls[0][1]).toStrictEqual([{
+            id: "u1",
+            info: { status: 0, state: FILE_STATES.ERROR, response: "SENDER FAIL" },
+        }]);
+
+        expect(queueState.getState().aborts["u1"]()).toBe(false);
+    });
 });

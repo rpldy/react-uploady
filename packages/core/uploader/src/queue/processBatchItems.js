@@ -9,7 +9,7 @@ import {
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 
-import type { BatchItem } from "@rpldy/shared";
+import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { SendResult } from "@rpldy/sender";
 import type { CreateOptions } from "../types";
 import type { QueueState, ProcessNextMethod } from "./types";
@@ -91,13 +91,31 @@ const updateUploadingState = (queue: QueueState, items: BatchItem[], sendResult:
 const sendAllowedItems = (queue: QueueState, itemsSendData: ItemsSendData, next: ProcessNextMethod) => {
     const { items, options } = itemsSendData;
     const batch = queue.getState().batches[items[0].batchId].batch;
-    const sendResult = queue.sender.send(items, batch, options);
+
+    let sendResult: ?SendResult;
+
+    try {
+        sendResult = queue.sender.send(items, batch, options);
+    }
+    catch (ex) {
+        logger.debugLog(`uploader.queue: sender failed with unexpected error`, ex);
+        //provide error result so file(s) are marked as failed
+        sendResult = {
+            request: Promise.resolve({
+                status: 0,
+                state: FILE_STATES.ERROR,
+                response: ex.message,
+            }),
+            abort: () => false,
+            senderType: "exception-handler",
+        };
+    }
 
     updateUploadingState(queue, items, sendResult);
 
     return sendResult.request
         //wait for server request to return
-        .then((requestInfo) => {
+        .then((requestInfo: UploadData) => {
             const finishedData = items.map((item) => ({
                 id: item.id,
                 info: requestInfo,

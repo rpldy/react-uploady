@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.7.1 (2020-10-22)
+
+### Bug fixes
+
+- `[uploader]` - recover from sender exception 
+- `[chunked-sender]` - handle 0 byte file size (#91) 
+
+### Docs
+
+- `[uploady]` - clarify file input options only affect uploads from FS selection dialog (#92)
+- `guides` - new guide: Cloudinary
+
 ## 0.7.0 (2020-10-01)
 
 ### Features

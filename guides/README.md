@@ -27,3 +27,5 @@
 * [Upload Queue](UploadQueue.md) - Show upload queue with preview, retry & abort
 
 * [Crop](Crop.md) - Allow crop before image upload
+
+* [Cloudinary](Cloudinary.md) - Uploading to Cloudinary

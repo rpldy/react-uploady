@@ -22,6 +22,7 @@ export const WithCustomUI = () => {
     const onClick = useCallback(() => {
         const input = inputRef.current;
         if (input) {
+            input.value = "";
             input.click();
         }
     }, []);

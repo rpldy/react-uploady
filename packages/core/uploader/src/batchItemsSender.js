@@ -29,12 +29,13 @@ const onItemUploadProgress = (items: BatchItem[], batch: Batch, e: ProgressEvent
     trigger(SENDER_EVENTS.BATCH_PROGRESS, batch);
 };
 
-export default (): ItemsSender => {
+const createBatchItemsSender = (): ItemsSender => {
     const send = (items: BatchItem[], batch: Batch, batchOptions: CreateOptions) => {
         const destination = batchOptions.destination,
             url = destination?.url;
 
         if (!url) {
+            //TODO: wrap defaultSend with a function that throws this error, allowing custom sender to ignore missing URL if desired
             throw new Error("Destination URL not found! Can't send files without it");
         }
 
@@ -54,7 +55,7 @@ export default (): ItemsSender => {
             withCredentials: batchOptions.withCredentials,
             formatGroupParamName: batchOptions.formatGroupParamName,
             headers: destination?.headers,
-			sendWithFormData: batchOptions.sendWithFormData,
+            sendWithFormData: batchOptions.sendWithFormData,
         }, throttledProgress);
     };
 
@@ -62,3 +63,5 @@ export default (): ItemsSender => {
 
     return sender;
 };
+
+export default createBatchItemsSender;

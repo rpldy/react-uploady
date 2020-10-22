@@ -1,5 +1,5 @@
 {
-  "version": "0.7.0",
+  "version": "0.7.1",
   "name": "@rpldy/uploader",
   "description": "the processing and queuing engine for react-uploady",
   "author": "yoav niran (https://github.com/yoavniran)",

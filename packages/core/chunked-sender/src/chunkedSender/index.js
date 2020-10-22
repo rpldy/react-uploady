@@ -15,7 +15,7 @@ export default (chunkedOptions: ?ChunkedOptions, trigger: TriggerMethod): Chunke
     const send = (items: BatchItem[], url: string, sendOptions: ChunkedSendOptions, onProgress: OnProgress): SendResult => {
         let result;
 
-        if (!options.chunked || items.length > 1 || items[0].url) {
+        if (!options.chunked || items.length > 1 || items[0].url || !items[0].file.size) {
             result = xhrSend(items, url, sendOptions, onProgress);
             logger.debugLog(`chunkedSender: sending items as normal, un-chunked requests`);
         } else {

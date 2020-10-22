@@ -67,10 +67,10 @@ It provides multiple hooks that enable more advanced features and data for clien
 | customInput          | boolean       | false | whether to use a custom file input (see: [useFileInput](#useFileInput)
 | inputFieldContainer  | HTMLElement   | document.body | html element to place the file input element inside
 | children             | React.Node    | undefined     | any part of your React app that will require access to the upload flow  (components, hooks, etc.)
-| capture              | string        | null          | [input/file#capture](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture)
-| multiple             | boolean       | true          | [input/file#multiple](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#multiple)
-| accept               | string        | null          | [input/file#accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept)
-| webkitdirectory      | boolean       | false         | [webkitdirectory](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory)
+| capture              | string        | null          | [input/file#capture](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting 
+| multiple             | boolean       | true          | [input/file#multiple](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#multiple) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting
+| accept               | string        | null          | [input/file#accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting
+| webkitdirectory      | boolean       | false         | [webkitdirectory](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting
 | fileInputId          | string        | undefined     | the value to use for the internal file input element
 | noPortal             | boolean       | false         | Dont render Uploady's file input in a portal. (default: false) For SSR, noPortal = false causes a React warning in DEV.
 

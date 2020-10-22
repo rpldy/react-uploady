@@ -114,3 +114,7 @@ const App = () => {
 We pass multiple = false so user can only select one file at a time. 
 And pass `clearPendingOnAdd` as true. This will make the uploader "forget" previously added uploads. Since we use `autoUpload`, we want to replace the pending file rather than add to it.
 Once `processPending` is called, only one file will be uploaded.
+
+---
+
+Code is available in this [sandbox](https://codesandbox.io/s/react-uploady-inside-form-ys1wx?file=/src/App.js).

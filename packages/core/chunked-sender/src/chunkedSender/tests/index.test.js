@@ -50,7 +50,14 @@ describe("chunkedSender index tests", () => {
 		expect(processChunks).not.toHaveBeenCalled();
 	});
 
-	it("should use chunked send", () => {
+    it("should use default send for 0 size file", () => {
+        const items = [{file: {size: 0}}];
+        doChunkedSend(items, {});
+        expect(send).toHaveBeenCalledWith(items, url, sendOptions, onProgress);
+        expect(processChunks).not.toHaveBeenCalled();
+    });
+
+    it("should use chunked send", () => {
 		const items = [{ file: { size: 1e+6 } }];
 		const chunkedOptions = { chunked: true, chunkSize: 5e+5 };
 

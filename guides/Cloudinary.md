@@ -48,7 +48,7 @@ const SignedUploadButton = () => {
     const response = await fetch("https://my-signing-service/sign?", {
       method: "POST",
       body: {
-        ...options.params,
+        ...options.destination.params,
         timestamp
       }
     });

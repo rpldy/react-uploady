@@ -27,3 +27,69 @@ const App = () => (<Uploady
 </Uploady>);
 
 ```
+
+For Production environment, you should only allow signed uploads. 
+Below is an example of signed upload flow:
+
+```javascript
+
+import React from "react";
+import Uploady, { useRequestPreSend } from "@rpldy/uploady";
+import UploadButton from "@rpldy/upload-button";
+
+const CLOUD_NAME = "<cloud-name>",
+  UPLOAD_PRESET = "<signed-upload-preset>",
+  API_KEY = "<cloud-api-key>";
+
+const SignedUploadButton = () => {
+  useRequestPreSend(async ({ options }) => {
+    const timestamp = Date.now();
+
+    const response = await fetch("https://my-signing-service/sign?", {
+      method: "POST",
+      body: {
+        ...options.params,
+        timestamp
+      }
+    });
+
+    const responseJson = await response.json();
+
+    return {
+      options: {
+        destination: {
+          params: {
+            signature: responseJson.signature,
+            timestamp,
+            api_key: API_KEY
+          }
+        }
+      }
+    };
+  });
+
+  return <UploadButton>Signed Upload to Cloudinary</UploadButton>;
+};
+
+export default function App() {
+  return (
+    <div className="App">
+      <Uploady
+        destination={{
+          url: `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`,
+          params: {
+            upload_preset: UPLOAD_PRESET,
+            folder: "upload-folder"
+            //additional cloudinary upload params can be defined here
+          }
+        }}
+      >
+        <SignedUploadButton />
+      </Uploady>
+    </div>
+  );
+}
+
+```
+
+checkout this [sandbox](https://codesandbox.io/s/react-uploady-cloudinary-signed-sample-8tw8d) with the same code.

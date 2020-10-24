@@ -45,7 +45,7 @@ const SignedUploadButton = () => {
   useRequestPreSend(async ({ options }) => {
     const timestamp = Date.now();
 
-    const response = await fetch("https://my-signing-service/sign?", {
+    const response = await fetch("https://my-signing-service/sign", {
       method: "POST",
       body: {
         ...options.destination.params,
@@ -92,4 +92,4 @@ export default function App() {
 
 ```
 
-checkout this [sandbox](https://codesandbox.io/s/react-uploady-cloudinary-signed-sample-8tw8d) with the same code.
+check out this [sandbox](https://codesandbox.io/s/react-uploady-cloudinary-signed-sample-8tw8d) with the same code.

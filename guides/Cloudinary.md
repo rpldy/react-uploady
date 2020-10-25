@@ -1,4 +1,4 @@
-#Cloudinary
+# Cloudinary
 
 Uploading to [Cloudinary](https://cloudinary.com) can be done from the client easily.
 For [unsigned](https://cloudinary.com/documentation/upload_images#unsigned_upload) uploads it's just a matter of knowing your cloud name and the name of an unsigned upload preset.

@@ -11,6 +11,8 @@
 
 # Shared
 
+> Internal package 
+
 Internal set of utils+types that all rpldy packages require and use.
 
 ## Installation
@@ -23,3 +25,6 @@ Internal set of utils+types that all rpldy packages require and use.
   $ npm i @rpldy/shared
 ``` 
 
+## Important!
+
+**All exports of this package are considered internal API and may change/disappear in any version: patch/minor/major**

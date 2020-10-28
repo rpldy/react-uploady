@@ -34,6 +34,11 @@ In case storage isn't supported, the same API is available but will be replaced 
    $ npm i @rpldy/safe-storage
 ``` 
 
+## Important!
+
+**All exports of this package are considered internal API and may change/disappear in any version: patch/minor/major**
+
+
 ## Example
 
 ```javascript

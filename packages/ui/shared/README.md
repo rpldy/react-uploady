@@ -11,6 +11,8 @@
 
 # Shared UI
 
+> Internal package 
+
 Internal set of utils+types that all UI packages require and use.
 
 ```shell
@@ -21,3 +23,6 @@ Internal set of utils+types that all UI packages require and use.
   $ npm i @rpldy/shared-ui
 ``` 
 
+## Important!
+
+**All exports of this package are considered internal API and may change/disappear in any version: patch/minor/major**

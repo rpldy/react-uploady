@@ -32,6 +32,10 @@ Original object is changed!
    $ npm i @rpldy/simple-state
 ``` 
 
+## Important!
+
+**All exports of this package are considered internal API and may change/disappear in any version: patch/minor/major**
+
 ## Example
 
 ```javascript

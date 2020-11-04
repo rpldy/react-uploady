@@ -8,7 +8,7 @@ export type Destination = {
 
 export type FormatParamGroupNameMethod = (index: number, paramName: string) => string;
 
-export type FileFilterMethod = (file: unknown) => boolean;
+export type FileFilterMethod = (file: unknown, index: number, files: unknown[]) => boolean;
 
 export interface UploadOptions {
     autoUpload?: boolean;

@@ -51,7 +51,7 @@ It provides multiple hooks that enable more advanced features and data for clien
 | grouped              | boolean       | false         | group multiple files in a single request 
 | maxGroupSize         | number        | 5             | maximum of files to group together in a single request 
 | formatGroupParamName | (number, string) => string | undefined | determine the upload request field name when more than file is grouped in a single upload
-| fileFilter           | (File &#124; string) => boolean | undefined | return false to exclude from batch
+| fileFilter           | (File &#124; string, index: number, File[] &#124; string[]) => boolean | undefined | return false to exclude from batch
 | method               | string        | "POST"        | HTTP method in upload request
 | params               | Object        | undefined     | collection of params to pass along with the upload (requires sendWithFormData = true)
 | forceJsonResponse    | boolean       | false         | parse server response as JSON even if no JSON content-type header received            

@@ -66,7 +66,8 @@ const App = () => (<NativeUploady
     maxGroupSize={2}
     method="PUT"
     destination={{url: "https://my-server", headers: {"x-custom": "123"}}}>
-
+    
+    <Upload/>
     <RestOfMyApp/>
 </NativeUploady>)
 

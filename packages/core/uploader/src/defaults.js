@@ -21,4 +21,5 @@ export const DEFAULT_OPTIONS = devFreeze({
     destination: {},
     send: null,
     sendWithFormData: true,
+    throwNoDestinationUrl: true,
 });

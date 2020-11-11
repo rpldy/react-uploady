@@ -34,11 +34,6 @@ const createBatchItemsSender = (): ItemsSender => {
         const destination = batchOptions.destination,
             url = destination?.url;
 
-        if (!url) {
-            //TODO: wrap defaultSend with a function that throws this error, allowing custom sender to ignore missing URL if desired
-            throw new Error("Destination URL not found! Can't send files without it");
-        }
-
         const throttledProgress = throttle(
             (e: ProgressEvent) => onItemUploadProgress(items, batch, e, trigger), PROGRESS_DELAY, true);
 

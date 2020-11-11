@@ -60,7 +60,7 @@ export const process = (
 const processChunks = (
     item: BatchItem,
     chunkedOptions: MandatoryChunkedOptions,
-    url: string,
+    url: ?string,
     sendOptions: ChunkedSendOptions,
     onProgress: OnProgress,
     trigger: TriggerMethod

@@ -34,7 +34,10 @@ describe("tusSend tests", () => {
 				CHUNKING_SUPPORT: true,
 			}));
 
-			jest.mock("@rpldy/sender", () => jest.fn());
+			jest.mock("@rpldy/sender", () => ({
+                MissingUrlError: Error,
+            }));
+
 			jest.mock("../initTusUpload", () => jest.fn());
 			jest.mock("../../featureDetection", () => jest.fn());
 
@@ -50,7 +53,14 @@ describe("tusSend tests", () => {
 			);
 		});
 
-		it("should send with chunkedSender for multiple items", () => {
+        it("should throw MissingUrlError if no URL", () => {
+            const send = getTusSend(chunkedSender, createMockState());
+            expect(() => {
+                send([1], null);
+            }).toThrow(TUS_SENDER_TYPE);
+        });
+
+        it("should send with chunkedSender for multiple items", () => {
 			const send = getTusSend(chunkedSender, createMockState());
 
 			send([1, 2, 3], "upload.url", "sendOptions", "onProgress");

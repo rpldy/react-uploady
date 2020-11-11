@@ -23,6 +23,7 @@ describe("batchItemsSender tests", () => {
             params: {
                 preset: "test"
             },
+            throwNoDestinationUrl: true,
             ...options,
             destination: {
                 url: "test.com",
@@ -121,12 +122,6 @@ describe("batchItemsSender tests", () => {
         expect(mockTrigger).toHaveBeenNthCalledWith(test.items.length+1,
             SENDER_EVENTS.BATCH_PROGRESS,
             test.batch);
-    });
-
-    it("should throw when no destination url", () => {
-        expect(() => {
-            testSend({ destination: { url: null } });
-        }).toThrow();
     });
 
     it("should use default filesParamName if none provided", () => {

@@ -9,6 +9,8 @@ export {
     XHR_SENDER_TYPE,
 };
 
+export { default as MissingUrlError } from "./MissingUrlError";
+
 export type {
     SendMethod,
     OnProgress,

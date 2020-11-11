@@ -1,6 +1,7 @@
 // @flow
 import { logger, FILE_STATES, request, parseResponseHeaders, pick } from "@rpldy/shared";
 import { XHR_SENDER_TYPE } from "../consts";
+import MissingUrlError from "../MissingUrlError";
 import prepareFormData from "./prepareFormData";
 
 import type {
@@ -135,7 +136,11 @@ const abortRequest = (sendRequest: SendRequest) => {
 	return abortCalled;
 };
 
-export default (items: BatchItem[], url: string, options: SendOptions, onProgress?: OnProgress): SendResult => {
+export default (items: BatchItem[], url: ?string, options: SendOptions, onProgress?: OnProgress): SendResult => {
+    if (!url) {
+        throw new MissingUrlError(XHR_SENDER_TYPE);
+    }
+
 	logger.debugLog("uploady.sender: sending file: ", { items, url, options, });
 
 	const sendRequest = makeRequest(items, url, options, onProgress);

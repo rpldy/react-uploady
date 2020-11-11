@@ -5,7 +5,6 @@ import {
     parseResponseHeaders
 } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import MissingUrlError from "../../MissingUrlError";
-import MissingUrlError from "../../MissingUrlError";
 import getXhrSend, { SUCCESS_CODES } from "../xhrSender";
 import prepareFormData from "../prepareFormData";
 

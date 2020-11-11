@@ -6,12 +6,6 @@ import type {
     FormatParamGroupNameMethod,
 } from "@rpldy/shared";
 
-export type SendResult = {
-    request: Promise<UploadData>,
-    abort: () => boolean,
-    senderType: string,
-};
-
 export type SendOptions = {
     method: string,
     paramName: string,
@@ -26,5 +20,19 @@ export type SendOptions = {
 export type SenderProgressEvent = { total: number, loaded: number };
 
 export type OnProgress = (e: SenderProgressEvent, Object[]) => void;
+
+export type XhrSendConfig = {
+    preRequestHandler: (
+        issueRequest: (
+            requestUrl?: string, requestData?: any, requestOptions?: Object) => Promise<XMLHttpRequest>,
+        items: BatchItem[], url: string, options: SendOptions, onProgress: ?OnProgress, config: ?XhrSendConfig) => Promise<XMLHttpRequest>,
+    getRequestData: (items: BatchItem[], options: SendOptions) => any,
+};
+
+export type SendResult = {
+    request: Promise<UploadData>,
+    abort: () => boolean,
+    senderType: string,
+};
 
 export type SendMethod<-T: SendOptions> = (item: BatchItem[], url: string, options: T, onProgress: OnProgress) => SendResult;

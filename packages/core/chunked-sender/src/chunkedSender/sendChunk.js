@@ -101,7 +101,7 @@ export default (
 		throw new ChunkedSendError("chunk failure - failed to slice");
 	}
 
-	logger.debugLog(`chunkedSender.sendChunk: about to send chunk ${chunk.id} [${chunk.start}-${chunk.end}] to: ${state.url}`);
+	logger.debugLog(`chunkedSender.sendChunk: about to send chunk ${chunk.id} [${chunk.start}-${chunk.end}] to: ${state.url || ""}`);
 
 	const chunkXhrRequest = uploadChunkWithUpdatedData(chunk, state, item, onProgress, trigger);
 

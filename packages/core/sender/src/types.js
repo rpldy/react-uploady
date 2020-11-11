@@ -35,4 +35,4 @@ export type SendResult = {
     senderType: string,
 };
 
-export type SendMethod<-T: SendOptions> = (item: BatchItem[], url: string, options: T, onProgress: OnProgress) => SendResult;
+export type SendMethod<-T: SendOptions> = (item: BatchItem[], url: ?string, options: T, onProgress: OnProgress) => SendResult;

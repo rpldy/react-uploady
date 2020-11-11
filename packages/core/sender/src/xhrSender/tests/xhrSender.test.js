@@ -4,6 +4,7 @@ import {
     request,
     parseResponseHeaders
 } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import MissingUrlError from "../../MissingUrlError";
 import getXhrSend, { SUCCESS_CODES } from "../xhrSender";
 import prepareFormData from "../prepareFormData";
 
@@ -21,7 +22,7 @@ describe("xhrSender tests", () => {
         parseResponseHeaders.mockReset();
     });
 
-    const doTest = (options = {}, responseHeaders, items, send = getXhrSend()) => {
+    const doTest = (options = {}, responseHeaders, items, url = "test.com", send = getXhrSend()) => {
         options = {
             method: "GET",
             headers: {
@@ -34,8 +35,6 @@ describe("xhrSender tests", () => {
 
         const mockProgress = jest.fn();
         items = items || [{ id: "u1" }, { id: "u2" }];
-
-        const url = "test.com";
 
         if (options.sendWithFormData) {
             prepareFormData.mockReturnValueOnce({ test: true });
@@ -58,8 +57,15 @@ describe("xhrSender tests", () => {
 
         pXhr.xhr = xhr;
 
-        if (options.sendWithFormData || items.length === 1) {
-            request.mockReturnValueOnce(pXhr);
+        if (url) {
+            prepareFormData.mockReturnValueOnce({ test: true });
+
+            responseHeaders = responseHeaders || { "content-type": "application/json" };
+            parseResponseHeaders.mockReturnValueOnce(responseHeaders);
+
+            if (options.sendWithFormData || items.length === 1) {
+                request.mockReturnValueOnce(pXhr);
+            }
         }
 
         const sendResult = send(items, url, options, mockProgress);
@@ -93,6 +99,12 @@ describe("xhrSender tests", () => {
             url,
         };
     };
+
+    it("should throw MissingUrl if no url provided", () => {
+        expect(() => {
+            doTest({}, null, [], null);
+        }).toThrow(MissingUrlError);
+    });
 
     describe("success tests", () => {
         it.each(SUCCESS_CODES)
@@ -278,7 +290,7 @@ describe("xhrSender tests", () => {
                 },
             });
 
-            const { sendResult, items, url, confirmRequest, xhrResolve, xhr } = doTest({}, null, [1, 2], send);
+            const { sendResult, items, url, confirmRequest, xhrResolve, xhr } = doTest({}, null, [1, 2], "test.com", send);
 
             jest.runAllTimers();
 
@@ -304,7 +316,7 @@ describe("xhrSender tests", () => {
                 },
             });
 
-            const { sendResult, confirmRequest, xhr } = doTest({}, null, [1, 2], send);
+            const { sendResult, confirmRequest, xhr } = doTest({}, null, [1, 2], "test.com", send);
 
             jest.runAllTimers();
 
@@ -333,7 +345,7 @@ describe("xhrSender tests", () => {
                 },
             });
 
-            doTest({ }, null, [1,2], send);
+            doTest({ }, null, [1,2], "test.com", send);
 
             jest.runAllTimers();
 
@@ -354,7 +366,7 @@ describe("xhrSender tests", () => {
                 },
             });
 
-            const { url } = doTest(sendOptions, null, sendItems, send);
+            const { url } = doTest(sendOptions, null, sendItems, "test.com", send);
 
             expect(request).toHaveBeenCalledWith(url, sendData, expect.any(Object));
             expect(prepareFormData).not.toHaveBeenCalled();

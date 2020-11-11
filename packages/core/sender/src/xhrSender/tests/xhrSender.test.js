@@ -106,12 +106,6 @@ describe("xhrSender tests", () => {
         }).toThrow(MissingUrlError);
     });
 
-    it("should throw MissingUrl if no url provided", () => {
-        expect(() => {
-            doTest({}, null, [], null);
-        }).toThrow(MissingUrlError);
-    });
-
     describe("success tests", () => {
         it.each(SUCCESS_CODES)
         ("should make request successfully for code: %s", async (code) => {

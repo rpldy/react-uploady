@@ -158,7 +158,6 @@ const getXhrSend = (config?: XhrSendConfig) => (items: BatchItem[], url: ?string
     if (!url) {
         throw new MissingUrlError(XHR_SENDER_TYPE);
     }
-
 	logger.debugLog("uploady.sender: sending file: ", { items, url, options, });
 
     const sendRequest = makeRequest(items, url, options, onProgress, config);

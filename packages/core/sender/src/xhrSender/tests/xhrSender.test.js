@@ -5,6 +5,7 @@ import {
     parseResponseHeaders
 } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import MissingUrlError from "../../MissingUrlError";
+import MissingUrlError from "../../MissingUrlError";
 import getXhrSend, { SUCCESS_CODES } from "../xhrSender";
 import prepareFormData from "../prepareFormData";
 
@@ -99,6 +100,12 @@ describe("xhrSender tests", () => {
             url,
         };
     };
+
+    it("should throw MissingUrl if no url provided", () => {
+        expect(() => {
+            doTest({}, null, [], null);
+        }).toThrow(MissingUrlError);
+    });
 
     it("should throw MissingUrl if no url provided", () => {
         expect(() => {

@@ -109,8 +109,6 @@ export type UploadOptions = {|
 	withCredentials?: boolean,
     //whether file/url data will be sent as part of formdata (default: true)
     sendWithFormData?: boolean,
-    //whether to throw error when destination doesn't provide upload URL (default: true)
-    throwNoDestinationUrl?: boolean
 |};
 
 export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];

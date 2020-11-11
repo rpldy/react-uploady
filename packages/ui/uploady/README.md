@@ -61,7 +61,6 @@ It provides multiple hooks that enable more advanced features and data for clien
 | maxConcurrent        | number        | 2              | maximum allowed simultaneous requests
 | send                 | [SendMethod](../../core/shared/src/types.js#L100) | @rpldy/sender | how to send files to the server
 | sendWithFormData     | boolean       | true           | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data
-| throwNoDestinationUrl | boolean       | true          | whether to throw error when destination doesn't provide upload URL
 | **Uploady Options**
 | debug                | boolean        | false | enable console logs from uploady packages
 | listeners            | Object        | undefined | map of [event](../../core/uploader/README.md#events) name and event handler

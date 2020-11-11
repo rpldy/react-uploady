@@ -1,7 +1,7 @@
 // @flow
 import { logger } from "@rpldy/shared";
 import { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
-import xhrSend from "@rpldy/sender";
+import xhrSend, { MissingUrlError } from "@rpldy/sender";
 import initTusUpload from "./initTusUpload";
 import { TUS_SENDER_TYPE } from "../consts";
 import doFeatureDetection from "../featureDetection";
@@ -45,11 +45,15 @@ const doUpload = (
 export default (chunkedSender: ChunkedSender, tusState: TusState) => {
 	const tusSend = (
 		items: BatchItem[],
-		url: string,
+		url: ?string,
 		sendOptions: ChunkedSendOptions,
 		onProgress: OnProgress
 	): SendResult => {
 		let result;
+
+		if (!url) {
+		    throw new MissingUrlError(TUS_SENDER_TYPE);
+        }
 
 		if (items.length > 1 || items[0].url) {
 			//ignore this upload - let the chunked sender handle it

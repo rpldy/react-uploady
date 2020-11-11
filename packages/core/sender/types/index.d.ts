@@ -23,7 +23,11 @@ export type SendOptions = {
     formatGroupParamName?: FormatParamGroupNameMethod;
 };
 
-export type SendMethod = (item: BatchItem[], url: string, options: SendOptions, onProgress?: OnProgress) => SendResult;
+/**
+
+ * @param {string} [url] - Some senders may not require a URL. Internal Uploady senders do require it and will throw if not provided
+ */
+export type SendMethod = (item: BatchItem[], url: string | undefined, options: SendOptions, onProgress?: OnProgress) => SendResult;
 
 export const send: SendMethod;
 

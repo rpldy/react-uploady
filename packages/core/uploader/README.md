@@ -84,7 +84,6 @@ uploader.add(myFile);
 | maxConcurrent        | number        | 2              | maximum allowed simultaneous requests
 | send                 | [SendMethod](../../shared/src/types.js#L100) | @rpldy/sender | how to send files to the server
 | sendWithFormData     | boolean       | true           | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data
-| throwNoDestinationUrl | boolean       | true          | whether to throw error when destination doesn't provide upload URL 
 
 ## Uploader API
 

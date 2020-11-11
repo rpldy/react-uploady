@@ -132,7 +132,7 @@ export default (options?: MockOptions) => {
 		mockOptions = { ...mockOptions, ...updated };
 	};
 
-	const send = (items: BatchItem[], url: string, sendOptions: SendOptions, onProgress: OnProgress): SendResult => {
+	const send = (items: BatchItem[], url: ?string, sendOptions: SendOptions, onProgress: OnProgress): SendResult => {
 		logger.debugLog("uploady.mockSender: about to make a mock request for items: ", items);
 		const request = createRequest(mockOptions, items);
 

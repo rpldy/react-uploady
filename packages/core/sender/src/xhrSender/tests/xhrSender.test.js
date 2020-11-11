@@ -4,6 +4,7 @@ import {
     request,
     parseResponseHeaders
 } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import MissingUrlError from "../../MissingUrlError";
 import send, { SUCCESS_CODES } from "../xhrSender";
 import prepareFormData from "../prepareFormData";
 
@@ -20,7 +21,7 @@ describe("xhrSender tests", () => {
         parseResponseHeaders.mockReset();
     });
 
-    const doTest = (options = {}, responseHeaders, items) => {
+    const doTest = (options = {}, responseHeaders, items, url = "test.com") => {
         options = {
             method: "GET",
             headers: {
@@ -33,13 +34,6 @@ describe("xhrSender tests", () => {
 
         const mockProgress = jest.fn();
         items = items || [{ id: "u1" }, { id: "u2" }];
-
-        const url = "test.com";
-
-        prepareFormData.mockReturnValueOnce({ test: true });
-
-        responseHeaders = responseHeaders || { "content-type": "application/json" };
-        parseResponseHeaders.mockReturnValueOnce(responseHeaders);
 
         let xhrResolve, xhrReject;
 
@@ -55,7 +49,14 @@ describe("xhrSender tests", () => {
 
         pXhr.xhr = xhr;
 
-        request.mockReturnValueOnce(pXhr);
+        if (url) {
+            prepareFormData.mockReturnValueOnce({ test: true });
+
+            responseHeaders = responseHeaders || { "content-type": "application/json" };
+            parseResponseHeaders.mockReturnValueOnce(responseHeaders);
+
+            request.mockReturnValueOnce(pXhr);
+        }
 
         const sendResult = send(items, url, options, mockProgress);
 
@@ -84,6 +85,12 @@ describe("xhrSender tests", () => {
             responseHeaders
         };
     };
+
+    it("should throw MissingUrl if no url provided", () => {
+        expect(() => {
+            doTest({}, null, [], null);
+        }).toThrow(MissingUrlError);
+    });
 
     describe("success tests", () => {
         it.each(SUCCESS_CODES)

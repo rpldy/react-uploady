@@ -12,7 +12,7 @@ import type { ChunkedOptions, ChunkedSender, ChunkedSendOptions } from "../types
 export default (chunkedOptions: ?ChunkedOptions, trigger: TriggerMethod): ChunkedSender => {
     const options = getMandatoryOptions(chunkedOptions);
 
-    const send = (items: BatchItem[], url: string, sendOptions: ChunkedSendOptions, onProgress: OnProgress): SendResult => {
+    const send = (items: BatchItem[], url: ?string, sendOptions: ChunkedSendOptions, onProgress: OnProgress): SendResult => {
         let result;
 
         if (!options.chunked || items.length > 1 || items[0].url || !items[0].file.size) {

@@ -23,7 +23,7 @@ export type State = {|
     responses: any[],
     chunks: Chunk[],
     uploaded: { [string]: number },
-    url: string,
+    url: ?string,
     sendOptions: SendOptions,
 |};
 

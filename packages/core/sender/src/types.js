@@ -27,4 +27,4 @@ export type SenderProgressEvent = { total: number, loaded: number };
 
 export type OnProgress = (e: SenderProgressEvent, Object[]) => void;
 
-export type SendMethod<-T: SendOptions> = (item: BatchItem[], url: string, options: T, onProgress: OnProgress) => SendResult;
+export type SendMethod<-T: SendOptions> = (item: BatchItem[], url: ?string, options: T, onProgress: OnProgress) => SendResult;

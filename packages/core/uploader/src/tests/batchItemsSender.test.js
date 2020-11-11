@@ -124,18 +124,6 @@ describe("batchItemsSender tests", () => {
             test.batch);
     });
 
-    it("should throw when no destination url and throwNoDestinationUrl", () => {
-        expect(() => {
-            testSend({ destination: { url: null } });
-        }).toThrow();
-    });
-
-    it("should not throw if no destination url and not throwNoDestinationUrl", () => {
-        expect(() => {
-            testSend({ destination: { url: null }, throwNoDestinationUrl: false });
-        }).not.toThrow();
-    });
-
     it("should use default filesParamName if none provided", () => {
         testSend({inputFieldName: null,  destination: { filesParamName: null } });
     });

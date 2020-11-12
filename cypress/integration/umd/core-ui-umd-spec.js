@@ -17,7 +17,7 @@ describe("UMD UI CORE - Bundle", () => {
         }).as("uploadReq");
 
         uploadFile(fileName, () => {
-            cy.wait(1000);
+            cy.wait(1500);
 
             cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 1 });
             cy.storyLog().assertLogPattern(/ITEM_START/, { times: 1 });

@@ -79,6 +79,13 @@ interface BatchFile extends BatchItemBase {
     file: FileLike;
 }
 
+export interface RequestOptions {
+    method?: string;
+    headers?: Record<string, string>;
+    withCredentials?: boolean;
+    preSend?: (xhr: XMLHttpRequest) => void,
+}
+
 export type BatchItem = BatchUrl & BatchFile;
 
 export type UploadInfo = string | FileLike | BatchItem;
@@ -112,3 +119,5 @@ export const clone: <T>(obj: T, mergeFn?: MergeFn) => T;
 export const devFreeze: <T>(obj: T) => T;
 
 export const isSamePropInArrays: (arr1: any[], arr2: any[], prop: string | string[]) => boolean;
+
+export const request: (url: string, data?: unknown, options?: RequestOptions) => Promise<XMLHttpRequest>;

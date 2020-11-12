@@ -11,7 +11,7 @@ const setHeaders = (req, headers: Object): ?Headers => {
     }
 };
 
-export default (url: string, data?: mixed, options: RequestOptions = {}): Promise<XMLHttpRequest> => {
+const request = (url: string, data?: mixed, options: RequestOptions = {}): Promise<XMLHttpRequest> => {
     const req = new XMLHttpRequest();
 
     const pXhr = new Promise((resolve, reject) => {
@@ -35,3 +35,5 @@ export default (url: string, data?: mixed, options: RequestOptions = {}): Promis
     pXhr.xhr = req;
     return pXhr;
 };
+
+export default request;

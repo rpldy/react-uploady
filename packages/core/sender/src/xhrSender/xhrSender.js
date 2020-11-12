@@ -9,7 +9,7 @@ import type {
 	UploadData,
 } from "@rpldy/shared";
 
-import type { OnProgress, SendResult, SendOptions } from "../types";
+import type { OnProgress, SendResult, SendOptions, XhrSendConfig } from "../types";
 
 type Headers = { [string]: string };
 
@@ -17,7 +17,7 @@ type SendRequest = {
 	url: string,
 	count: number,
 	pXhr: Promise<XMLHttpRequest>,
-	xhr: XMLHttpRequest,
+	getXhr: () => XMLHttpRequest,
 	aborted: boolean,
 };
 
@@ -42,26 +42,42 @@ const getRequestData = (items: BatchItem[], options: SendOptions) => {
 	return data;
 };
 
-const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onProgress: ?OnProgress): SendRequest => {
-	const requestData = getRequestData(items, options);
+const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onProgress: ?OnProgress, config: ?XhrSendConfig): SendRequest => {
+    let xhr;
 
-	const pXhr = request(url, requestData, {
-		...pick(options, ["method", "headers", "withCredentials"]),
-		preSend: (req) => {
-			req.upload.onprogress = (e) => {
-				if (e.lengthComputable && onProgress) {
-					onProgress(e, items.slice());
-				}
-			};
-		},
-	});
+    const data = config?.getRequestData ?
+        config.getRequestData(items, options) :
+        getRequestData(items, options);
+
+    const issueRequest = (requestUrl = url, requestData = data, requestOptions) => {
+	    requestOptions = {
+            ...pick(options, ["method", "headers", "withCredentials"]),
+            preSend: (req) => {
+                req.upload.onprogress = (e) => {
+                    if (e.lengthComputable && onProgress) {
+                        onProgress(e, items.slice());
+                    }
+                };
+            },
+            ...requestOptions,
+        };
+
+	    const realPXhr = request(requestUrl, requestData, requestOptions);
+        // $FlowFixMe -
+	    xhr = realPXhr.xhr;
+
+        return realPXhr;
+    };
+
+	const pXhr = config?.preRequestHandler ?
+        config.preRequestHandler(issueRequest, items, url, options, onProgress, config) :
+        issueRequest();
 
 	return {
 		url,
 		count: items.length,
 		pXhr,
-		// $FlowFixMe -
-		xhr: pXhr.xhr,
+		getXhr: () => xhr,
 		aborted: false,
 	};
 };
@@ -123,9 +139,11 @@ const processResponse = (sendRequest: SendRequest, options: SendOptions): Promis
 
 const abortRequest = (sendRequest: SendRequest) => {
 	let abortCalled = false;
-	const { aborted, xhr } = sendRequest;
+	const { aborted, getXhr } = sendRequest;
 
-	if (!aborted && xhr.readyState && xhr.readyState !== 4) {
+	const xhr = getXhr();
+
+	if (!aborted && xhr && xhr.readyState && xhr.readyState !== 4) {
 		logger.debugLog(`uploady.sender: cancelling request with ${sendRequest.count} items to: ${sendRequest.url}`);
 
 		xhr.abort();
@@ -136,18 +154,20 @@ const abortRequest = (sendRequest: SendRequest) => {
 	return abortCalled;
 };
 
-export default (items: BatchItem[], url: ?string, options: SendOptions, onProgress?: OnProgress): SendResult => {
+const getXhrSend = (config?: XhrSendConfig) => (items: BatchItem[], url: ?string, options: SendOptions, onProgress?: OnProgress): SendResult => {
     if (!url) {
         throw new MissingUrlError(XHR_SENDER_TYPE);
     }
-
 	logger.debugLog("uploady.sender: sending file: ", { items, url, options, });
 
-	const sendRequest = makeRequest(items, url, options, onProgress);
+    const sendRequest = makeRequest(items, url, options, onProgress, config);
 
-	return {
-		request: processResponse(sendRequest, options),
-		abort: () => abortRequest(sendRequest),
-		senderType: XHR_SENDER_TYPE,
-	};
+    return {
+        request: processResponse(sendRequest, options),
+        abort: () => abortRequest(sendRequest),
+        senderType: XHR_SENDER_TYPE,
+    };
 };
+
+
+export default getXhrSend;

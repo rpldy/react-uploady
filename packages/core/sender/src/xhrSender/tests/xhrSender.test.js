@@ -5,7 +5,7 @@ import {
     parseResponseHeaders
 } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import MissingUrlError from "../../MissingUrlError";
-import send, { SUCCESS_CODES } from "../xhrSender";
+import getXhrSend, { SUCCESS_CODES } from "../xhrSender";
 import prepareFormData from "../prepareFormData";
 
 jest.mock("../prepareFormData", () => jest.fn());
@@ -15,13 +15,14 @@ describe("xhrSender tests", () => {
     beforeEach(() => {
         clearJestMocks(
             request,
-            parseResponseHeaders
+            parseResponseHeaders,
+            prepareFormData,
         );
 
         parseResponseHeaders.mockReset();
     });
 
-    const doTest = (options = {}, responseHeaders, items, url = "test.com") => {
+    const doTest = (options = {}, responseHeaders, items, url = "test.com", send = getXhrSend()) => {
         options = {
             method: "GET",
             headers: {
@@ -34,6 +35,13 @@ describe("xhrSender tests", () => {
 
         const mockProgress = jest.fn();
         items = items || [{ id: "u1" }, { id: "u2" }];
+
+        if (options.sendWithFormData) {
+            prepareFormData.mockReturnValueOnce({ test: true });
+        }
+
+        responseHeaders = responseHeaders || { "content-type": "application/json" };
+        parseResponseHeaders.mockReturnValueOnce(responseHeaders);
 
         let xhrResolve, xhrReject;
 
@@ -55,23 +63,27 @@ describe("xhrSender tests", () => {
             responseHeaders = responseHeaders || { "content-type": "application/json" };
             parseResponseHeaders.mockReturnValueOnce(responseHeaders);
 
-            request.mockReturnValueOnce(pXhr);
+            if (options.sendWithFormData || items.length === 1) {
+                request.mockReturnValueOnce(pXhr);
+            }
         }
 
         const sendResult = send(items, url, options, mockProgress);
 
-        expect(request).toHaveBeenCalledWith(url,
-            options.sendWithFormData ? { test: true } : (items[0].file || items[0].url),
-            {
-                method: options.method,
-                headers: options.headers,
-                withCredentials: options.withCredentials,
-                preSend: expect.any(Function),
-            });
+        const confirmRequest = () => {
+            expect(request).toHaveBeenCalledWith(url,
+                options.sendWithFormData ? { test: true } : (items[0].file || items[0].url),
+                {
+                    method: options.method,
+                    headers: options.headers,
+                    withCredentials: options.withCredentials,
+                    preSend: expect.any(Function),
+                });
 
-        if (options.sendWithFormData) {
-            expect(prepareFormData).toHaveBeenCalledWith(items, options);
-        }
+            if (options.sendWithFormData) {
+                expect(prepareFormData).toHaveBeenCalledWith(items, options);
+            }
+        };
 
         return {
             sendResult,
@@ -82,7 +94,9 @@ describe("xhrSender tests", () => {
             mockProgress,
             options,
             items,
-            responseHeaders
+            responseHeaders,
+            confirmRequest,
+            url,
         };
     };
 
@@ -96,6 +110,8 @@ describe("xhrSender tests", () => {
         it.each(SUCCESS_CODES)
         ("should make request successfully for code: %s", async (code) => {
             const test = doTest();
+
+            test.confirmRequest();
 
             const responseData = { success: true };
             test.xhr.status = code;
@@ -126,6 +142,8 @@ describe("xhrSender tests", () => {
         it("should abort running upload", async () => {
             const test = doTest();
 
+            test.confirmRequest();
+
             test.xhr.readyState = 1;
             test.sendResult.abort();
 
@@ -137,6 +155,8 @@ describe("xhrSender tests", () => {
         it("should not abort already finished upload", () => {
             const test = doTest();
 
+            test.confirmRequest();
+
             test.xhr.readyState = 4;
             test.sendResult.abort();
 
@@ -147,7 +167,6 @@ describe("xhrSender tests", () => {
     describe("json parse tests", () => {
 
         it("should try parse json with forceJsonResponse", async () => {
-
             const responseData = { success: true };
 
             const test = doTest({ forceJsonResponse: true }, {});
@@ -163,7 +182,6 @@ describe("xhrSender tests", () => {
         });
 
         it("should not parse if no header and no force", async () => {
-
             const responseData = { success: true };
 
             const test = doTest({}, {});
@@ -208,9 +226,15 @@ describe("xhrSender tests", () => {
     });
 
     describe("without formdata tests", () => {
+        it("should throw error on multiple items", () => {
+            expect(() => {
+                doTest({ sendWithFormData: false });
+            }).toThrow();
+        });
 
         it("should send single item file", async () => {
             const test = doTest({ sendWithFormData: false }, null, [{ id: "u1", file: "file" }]);
+            test.confirmRequest();
 
             const responseData = { success: true };
             test.xhr.status = 200;
@@ -229,6 +253,7 @@ describe("xhrSender tests", () => {
 
         it("should send single item url", async () => {
             const test = doTest({ sendWithFormData: false }, null, [{ id: "u1", url: "url" }]);
+            test.confirmRequest();
 
             const responseData = { success: true };
             test.xhr.status = 200;
@@ -238,11 +263,113 @@ describe("xhrSender tests", () => {
 
             await test.sendResult.request;
         });
+    });
 
-        it("should throw error on multiple items", () => {
-            expect(() => {
-                doTest({ sendWithFormData: false });
-            }).toThrow();
+    describe("with custom config", () => {
+
+        beforeEach(() => {
+            jest.useFakeTimers();
+        });
+
+        afterEach(() => {
+            jest.useRealTimers();
+        });
+
+        it("should work with config preRequestHandler", async() => {
+
+            const customCode = jest.fn();
+
+            const send = getXhrSend({
+                preRequestHandler: (issueRequest, items, url) => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            customCode(items, url);
+                            resolve(issueRequest());
+                        }, 1000);
+                    }) ;
+                },
+            });
+
+            const { sendResult, items, url, confirmRequest, xhrResolve, xhr } = doTest({}, null, [1, 2], "test.com", send);
+
+            jest.runAllTimers();
+
+            confirmRequest();
+            xhr.status = 200;
+            xhrResolve();
+
+            const result = await sendResult.request;
+
+            expect(result.state).toBe( FILE_STATES.FINISHED);
+
+            expect(customCode).toHaveBeenCalledWith(items, url);
+        });
+
+        it("should work with abort from config preRequestHandler", async() => {
+            const send = getXhrSend({
+                preRequestHandler: (issueRequest) => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            resolve(issueRequest());
+                        }, 1000);
+                    }) ;
+                },
+            });
+
+            const { sendResult, confirmRequest, xhr } = doTest({}, null, [1, 2], "test.com", send);
+
+            jest.runAllTimers();
+
+            confirmRequest();
+
+            xhr.readyState = 1;
+            sendResult.abort();
+
+            const result = await sendResult.request;
+            expect(result.state).toBe(FILE_STATES.ABORTED);
+            expect(result.response).toBe("aborted");
+        });
+
+        it("issueRequest should accept override params", () => {
+            const requestUrl = "override.com",
+                requestDate = "override data",
+                requestOptions = {test: "override options"};
+
+            const send = getXhrSend({
+                preRequestHandler: (issueRequest) => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            resolve(issueRequest(requestUrl, requestDate, requestOptions));
+                        }, 1000);
+                    }) ;
+                },
+            });
+
+            doTest({ }, null, [1,2], "test.com", send);
+
+            jest.runAllTimers();
+
+            expect(request).toHaveBeenCalledWith(requestUrl, requestDate, expect.objectContaining(requestOptions));
+        });
+
+        it("should use config getRequestData", async () => {
+            const sendItems = [1,2],
+                sendOptions = { test: true },
+                sendData = "data!";
+
+            const send = getXhrSend({
+                getRequestData: (items, options) => {
+                    expect(items).toBe(sendItems);
+                    expect(options.test).toBe(true);
+
+                    return sendData;
+                },
+            });
+
+            const { url } = doTest(sendOptions, null, sendItems, "test.com", send);
+
+            expect(request).toHaveBeenCalledWith(url, sendData, expect.any(Object));
+            expect(prepareFormData).not.toHaveBeenCalled();
         });
     });
 });

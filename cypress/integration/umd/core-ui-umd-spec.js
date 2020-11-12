@@ -16,6 +16,8 @@ describe("UMD UI CORE - Bundle", () => {
             response: { success: true }
         }).as("uploadReq");
 
+        cy.wait(1500);
+
         uploadFile(fileName, () => {
             cy.wait(1500);
 

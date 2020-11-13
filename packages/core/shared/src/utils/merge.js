@@ -52,7 +52,7 @@ const getMerge = (options: MergeOptions = {}) => {
 };
 
 /**
- * Does deep merge of simple objects (only)
+ * Does deep merge of simple objects and arrays (only)
  *
  * The first parameter is the target
  * Will only merge objects passed as arguments to this method

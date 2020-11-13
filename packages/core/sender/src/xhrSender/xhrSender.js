@@ -1,5 +1,5 @@
 // @flow
-import { logger, FILE_STATES, request, parseResponseHeaders, pick } from "@rpldy/shared";
+import { logger, FILE_STATES, request, parseResponseHeaders, pick, merge } from "@rpldy/shared";
 import { XHR_SENDER_TYPE } from "../consts";
 import MissingUrlError from "../MissingUrlError";
 import prepareFormData from "./prepareFormData";
@@ -50,7 +50,7 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
         getRequestData(items, options);
 
     const issueRequest = (requestUrl = url, requestData = data, requestOptions) => {
-	    requestOptions = {
+        requestOptions = merge({
             ...pick(options, ["method", "headers", "withCredentials"]),
             preSend: (req) => {
                 req.upload.onprogress = (e) => {
@@ -59,8 +59,7 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
                     }
                 };
             },
-            ...requestOptions,
-        };
+        }, requestOptions);
 
 	    const realPXhr = request(requestUrl, requestData, requestOptions);
         // $FlowFixMe -
@@ -69,6 +68,7 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
         return realPXhr;
     };
 
+    //pXhr is a promise that resolves to the upload XHR
 	const pXhr = config?.preRequestHandler ?
         config.preRequestHandler(issueRequest, items, url, options, onProgress, config) :
         issueRequest();
@@ -154,20 +154,22 @@ const abortRequest = (sendRequest: SendRequest) => {
 	return abortCalled;
 };
 
-const getXhrSend = (config?: XhrSendConfig) => (items: BatchItem[], url: ?string, options: SendOptions, onProgress?: OnProgress): SendResult => {
-    if (!url) {
-        throw new MissingUrlError(XHR_SENDER_TYPE);
-    }
-	logger.debugLog("uploady.sender: sending file: ", { items, url, options, });
+const getXhrSend = (config?: XhrSendConfig) =>
+    (items: BatchItem[], url: ?string, options: SendOptions, onProgress?: OnProgress): SendResult => {
+        if (!url) {
+            throw new MissingUrlError(XHR_SENDER_TYPE);
+        }
 
-    const sendRequest = makeRequest(items, url, options, onProgress, config);
+        logger.debugLog("uploady.sender: sending file: ", { items, url, options, });
 
-    return {
-        request: processResponse(sendRequest, options),
-        abort: () => abortRequest(sendRequest),
-        senderType: XHR_SENDER_TYPE,
+        const sendRequest = makeRequest(items, url, options, onProgress, config);
+
+        return {
+            request: processResponse(sendRequest, options),
+            abort: () => abortRequest(sendRequest),
+            senderType: XHR_SENDER_TYPE,
+        };
     };
-};
 
 
 export default getXhrSend;

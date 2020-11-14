@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.2 (2020-11-14)
+
+### Features
+
+- `[sender]` - add extensibility capabilities to xhrSender
+- `[sender]` - moved throw error on no URL to xhrSender (from uploader)
+
+### Docs
+
+- `[shared]` - improve fileFilter doc
+- `[native-uploady]` - fix mistake in readme
+- `all` - add exports field to all packages
+
 ## 0.7.1 (2020-10-22)
 
 ### Bug fixes

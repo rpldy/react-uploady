@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.4 (2020-11-16)
+
+### Bug fixes
+
+- `all` - revert use of exports field (doesn't seem to play nice yet. Not until npm@7 at least probably)
+
 ## 0.7.3 (2020-11-16)
 
 ### Bug fixes

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.3 (2020-11-16)
+
+### Bug fixes
+
+- `all` - fix exports field
+
 ## 0.7.2 (2020-11-14)
 
 ### Features

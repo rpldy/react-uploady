@@ -6,11 +6,6 @@
     "main": "lib/cjs/index.js",
     "module": "lib/esm/index.js",
     "main:dev": "src/index.js",
-    "exports": {
-        "require": "./lib/cjs/index.js",
-        "import": "./lib/esm/index.js",
-        "default": "./lib/esm/index.js"
-    },
     "types": "types/index.d.ts",
     "license": "MIT",
     "repository": {

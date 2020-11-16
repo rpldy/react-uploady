@@ -1,12 +1,11 @@
 {
-  "version": "0.7.3",
+  "version": "0.7.4",
   "name": "@rpldy/simple-state",
   "description": "deep proxy object, so it's only updateable through an update method",
   "author": "yoav niran (https://github.com/yoavniran)",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
   "main:dev": "src/index.js",
-
   "types": "types/index.d.ts",
   "license": "MIT",
   "repository": {
@@ -19,7 +18,7 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.7.3"
+    "@rpldy/shared": "^0.7.4"
   },
   "devDependencies": {
     "flow-bin": "^0.133.0"

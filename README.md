@@ -77,7 +77,7 @@ In case you need UI components (like an upload button), check out the [UI packag
 
 Our __[Storybook](https://react-uploady-storybook.netlify.com/)__ has many examples, both simple and advanced.
 
-Our __[Guides](guides)__ section for additional examples & information.
+Check out our __[Guides](guides)__ section for additional examples & information.
 
 ### Changelog
 

@@ -67,6 +67,8 @@ export const assertContext: (context: UploadyContextType) => UploadyContextType;
 
 export const useUploadyContext: () => UploadyContextType;
 
+export const useUploady: () => UploadyContextType;
+
 export const useAbortAll: () => () => boolean;
 
 export const useAbortBatch: () => (batchId: string) => boolean;

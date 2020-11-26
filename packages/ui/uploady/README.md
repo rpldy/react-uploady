@@ -476,20 +476,20 @@ See simple example below or this more detailed [guide](../../../guides/DynamicPa
 ``` 
     
 
-#### useUploadyContext
+#### useUploadyContext (alias: _useUploady_)
 
 Shortcut hook to get the [Uploady Context](#context) instance
 
-> Will throw in case its used outside of <Uploady> render tree
+> Will throw in case used outside of <Uploady> render tree
 
 ```javascript
-    import { uploadyContext } from "@rpldy/uploady";
+    import { useUploady } from "@rpldy/uploady";
 
     const MyComponent = () => {
-        const uploadyContext = useUploadyContext();
+        const uploady = useUploady();
         
         const onClick = () => {
-            uploadyContext.showFileUpload();
+            uploady.showFileUpload();
         }
 
         //...       
@@ -510,7 +510,7 @@ Shortcut hook to set/get upload options.
     import { useUploadOptions } from "@rpldy/uploady";
 
     const MyComponent = () => {
-        const options = useUploadOptions({grouped: true, maxGroupSize: 3});
+        const options = useUploadOptions({ grouped: true, maxGroupSize: 3 });
         
         //...       
     };
@@ -560,13 +560,13 @@ Returns abort all method
         
 ### useFileInput
 
-When customInput prop is set to true. Uploady will not create its own file input element.
+When customInput prop is set to true, Uploady will not create its own file input element.
 In this case, Uploady will wait for a ref to an existing input.
 
 The way you pass in your own input element is by using this hook.
 
 In case Uploady wasn't provided with a destination prop or if it doesn't have a URL property, 
-Uploady will check whether the input resides in a form. It will then use the form's action and method to set the upload endpoint and method.
+Uploady will check whether the input resides in a form. It will then use the form's action and method to set the upload endpoint and request method.
  
 > In case the form's attributes were used for the upload destination, updating the form's attributes dynamically won't affect the uploader configuration once it was set.
  
@@ -606,8 +606,9 @@ This is a hatch point to introduce custom logic that may affect the upload data.
 
 A good example use-case for this is applying [crop](../../../guides/Crop.md) to selected image before it is uploaded.
 
-When rendering the result of the HOC, the id of the batch item to handle must be in the props. 
-This to ensure the HOC only re-renders for a specific item and not for all.
+When rendering the HOC's output, the id of the batch-item must be provided as a prop. 
+This ensures the HOC only re-renders for a specific item and not for all.
+The id of the batch-item can be obtained from a hook (ex: [useItemStartListener](#useitemstartlistener-event-hook) or [useBatchStartListener](#usebatchstartlistener-event-hook))
 
 ```javascript
     import React, { useState, useCallback } from "react";
@@ -618,6 +619,7 @@ This to ensure the HOC only re-renders for a specific item and not for all.
     const ItemCrop = withRequestPreSendUpdate((props) => {
         const [crop, setCrop] = useState({ x: 0, y: 0 });
         const [cropPixels, setCropPixels] = useState(null);
+        
         const { url, updateRequest, requestData } = props;
          
         const onUploadCrop = useCallback(async() => {

@@ -8,6 +8,8 @@ describe("UMD UI CORE - Bundle", () => {
     });
 
     it("should use uploady and upload file", () => {
+        cy.wait(1000);
+
         cy.server();
 
         cy.route({
@@ -15,8 +17,6 @@ describe("UMD UI CORE - Bundle", () => {
             url: "http://localhost:4000/upload",
             response: { success: true }
         }).as("uploadReq");
-
-        cy.wait(1500);
 
         uploadFile(fileName, () => {
             cy.wait(1500);

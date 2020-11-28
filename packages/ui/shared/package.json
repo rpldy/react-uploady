@@ -1,5 +1,5 @@
 {
-    "version": "0.7.4",
+    "version": "0.8.0",
     "name": "@rpldy/shared-ui",
     "description": "internal set of utils+types for react-uploady UI",
     "author": "yoav niran (https://github.com/yoavniran)",
@@ -18,8 +18,8 @@
         "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
     },
     "dependencies": {
-        "@rpldy/shared": "^0.7.4",
-        "@rpldy/uploader": "^0.7.4"
+        "@rpldy/shared": "^0.8.0",
+        "@rpldy/uploader": "^0.8.0"
     },
     "devDependencies": {
         "flow-bin": "^0.133.0"

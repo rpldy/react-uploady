@@ -1,5 +1,5 @@
 {
-  "version": "0.7.4",
+  "version": "0.8.0",
   "name": "@rpldy/tus-sender",
   "description": "react-uploady sender implementation of the TUS protocol",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -21,15 +21,15 @@
     "access": "public"
   },
   "dependencies": {
-    "@rpldy/chunked-sender": "^0.7.4",
-    "@rpldy/safe-storage": "^0.7.4",
-    "@rpldy/sender": "^0.7.4",
-    "@rpldy/shared": "^0.7.4",
-    "@rpldy/simple-state": "^0.7.4"
+    "@rpldy/chunked-sender": "^0.8.0",
+    "@rpldy/safe-storage": "^0.8.0",
+    "@rpldy/sender": "^0.8.0",
+    "@rpldy/shared": "^0.8.0",
+    "@rpldy/simple-state": "^0.8.0"
   },
   "devDependencies": {
-    "@rpldy/life-events": "^0.7.4",
-    "@rpldy/uploader": "^0.7.4",
+    "@rpldy/life-events": "^0.8.0",
+    "@rpldy/uploader": "^0.8.0",
     "flow-bin": "^0.133.0"
   }
 }

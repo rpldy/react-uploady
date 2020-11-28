@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.0 (2020-11-28)
+
+### Features
+
+- `[uploady]` - hook alias: useUploady for useUploadyContext
+- `[sender]` - add file/url to form data last (after params), fix for #103
+
+### Docs
+
+- `root` - fix typos in README.md
+
 ## 0.7.4 (2020-11-16)
 
 ### Bug fixes

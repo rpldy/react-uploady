@@ -1,7 +1,6 @@
 // @flow
-import React, { useCallback, useState, forwardRef, useMemo } from "react";
+import React, { useCallback, useState } from "react";
 import ReactDOM from "react-dom";
-import styled from "styled-components";
 import {
     UmdBundleScript,
     localDestination,
@@ -9,20 +8,17 @@ import {
     addActionLogEnhancer,
 	useStoryUploadySetup
 } from "../../../story-helpers";
-import { asUploadButton } from "@rpldy/upload-button";
 import Uploady, {
-    useUploadyContext,
+    useUploady,
     NoDomUploady,
     useUploadOptions,
-    useBatchAddListener,
-    useBatchFinishListener,
 } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
 const ContextUploadButton = () => {
-    const uploadyContext = useUploadyContext();
+    const uploadyContext = useUploady();
 
     const onClick = useCallback(() => {
         uploadyContext?.showFileUpload();
@@ -42,6 +38,31 @@ export const ButtonWithContextApi = () => {
         grouped={grouped}
         maxGroupSize={groupSize}>
         <ContextUploadButton/>
+    </Uploady>
+};
+
+const UrlUploadButton = () => {
+    const uploady = useUploady();
+
+    const onClick = useCallback(() => {
+        uploady.upload("http://image.com/someimage.jpg");
+    }, [uploady]);
+
+    return <button onClick={onClick}>Url Upload</button>;
+};
+
+
+export const UrlUploadWithContextApi = () => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}>
+        <UrlUploadButton/>
     </Uploady>
 };
 

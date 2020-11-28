@@ -39,10 +39,8 @@ const getFormFileField = (fd: FormData, items: BatchItem[], options: SendOptions
     });
 };
 
-export default (items: BatchItem[], options: SendOptions) => {
+const prepareFormData = (items: BatchItem[], options: SendOptions) => {
     const fd = new FormData();
-
-    getFormFileField(fd, items, options);
 
     if (options.params) {
         Object.entries(options.params)
@@ -50,5 +48,9 @@ export default (items: BatchItem[], options: SendOptions) => {
                 addToFormData(fd, key, val));
     }
 
+    getFormFileField(fd, items, options);
+
     return fd;
 };
+
+export default prepareFormData;

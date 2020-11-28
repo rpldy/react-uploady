@@ -124,9 +124,9 @@ describe("prepareFormData tests", () => {
             }
         });
 
-        expect(mockFormDataSet).toHaveBeenCalledWith(paramName, items[0].url);
         expect(mockFormDataSet).toHaveBeenCalledWith("foo", "bar");
         expect(mockFormDataSet).toHaveBeenCalledWith("extra", true);
+        expect(mockFormDataSet).toHaveBeenCalledWith(paramName, items[0].url);
     });
 
     it("should use delete & append if no set", () => {

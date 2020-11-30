@@ -8,6 +8,11 @@
   "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
+  "keywords": [
+    "events",
+    "pubsub",
+    "emitter"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/rpldy/react-uploady.git",

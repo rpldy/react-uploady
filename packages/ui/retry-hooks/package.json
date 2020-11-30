@@ -9,6 +9,7 @@
   "types": "types/index.d.ts",
   "license": "MIT",
   "keywords": [
+    "file",
     "upload",
     "file upload",
     "react",

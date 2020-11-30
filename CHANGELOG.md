@@ -1,11 +1,17 @@
 # Changelog
 
+## 0.8.1 (2020-12-01)
+
+## Bug fixes
+
+- `[simple-state]` - fix: File object not available in ssr. Fix for #106
+
 ## 0.8.0 (2020-11-28)
 
 ### Features
 
 - `[uploady]` - hook alias: useUploady for useUploadyContext
-- `[sender]` - add file/url to form data last (after params), fix for #103
+- `[sender]` - add file/url to form data last (after params). Fix for #103
 
 ### Docs
 
@@ -107,7 +113,7 @@
 
 ### Features
 
-#### Highlight: #### **React Native**
+#### Highlight: **React Native**
 
 - `[native-uploady]` - react-native: 📱 - new package.
 - `[sender]` - react-native: work with FormData without set 

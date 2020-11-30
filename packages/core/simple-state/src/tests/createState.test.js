@@ -26,6 +26,7 @@ describe("createState tests", () => {
 				clone: mockClone,
 				getMerge: () => {},
                 isProduction: () => isProd,
+                hasWindow: () => true,
 			}));
 
 			const mdl = require("../createState");

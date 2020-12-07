@@ -45,6 +45,8 @@ const abortAll = (queue: QueueState, next: ProcessNextMethod) => {
 
 	Object.keys(items)
 		.forEach((id) => callAbortOnItem(queue, id, next));
+
+	queue.trigger(UPLOADER_EVENTS.ALL_ABORT);
 };
 
 const abortItem = (queue: QueueState, id: string, next: ProcessNextMethod): boolean => {

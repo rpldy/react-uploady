@@ -51,7 +51,6 @@ const UrlUploadButton = () => {
     return <button onClick={onClick}>Url Upload</button>;
 };
 
-
 export const UrlUploadWithContextApi = () => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 

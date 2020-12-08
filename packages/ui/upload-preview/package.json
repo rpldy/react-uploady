@@ -24,7 +24,7 @@
   "devDependencies": {
     "@rpldy/upload-button": "^0.8.1",
     "@rpldy/upload-url-input": "^0.8.1",
-    "@storybook/addon-knobs": "^6.0.21",
+    "@storybook/addon-knobs": "^6.1.10",
     "flow-bin": "^0.133.0",
     "react-image-crop": "^8.6.4",
     "styled-components": "^5.2.0"

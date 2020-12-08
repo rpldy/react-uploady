@@ -4,11 +4,13 @@ describe("UMD UI CORE - Bundle", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploady", "umd-core-ui", true);
+        cy.visitStory("uploady", "umd-core-ui", false);
     });
 
     it("should use uploady and upload file", () => {
-        cy.wait(1000);
+        cy.wait(2000);
+
+        cy.iframe("#storybook-preview-iframe").as("iframe");
 
         cy.server();
 
@@ -17,6 +19,10 @@ describe("UMD UI CORE - Bundle", () => {
             url: "http://localhost:4000/upload",
             response: { success: true }
         }).as("uploadReq");
+
+        // cy.get("@iframe")
+        //     .find("input")
+        //     .as("fInput");
 
         uploadFile(fileName, () => {
             cy.wait(1500);
@@ -30,6 +36,6 @@ describe("UMD UI CORE - Bundle", () => {
 				.then((req) => {
 					expect(req.request.body.get("file").name).to.eq(fileName);
 				});
-        }, "#upload-button", null);
+        }, "#upload-button");
     });
 });

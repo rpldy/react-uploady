@@ -1,7 +1,6 @@
 // @flow
 import React, { useCallback, useState, useRef, memo } from "react";
 import styled from "styled-components";
-import { withKnobs } from "@storybook/addon-knobs";
 import { Circle } from "rc-progress";
 import { composeEnhancers } from "@rpldy/uploader";
 import Uploady, {
@@ -13,7 +12,7 @@ import Uploady, {
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadPreview from "@rpldy/upload-preview";
-import { logToCypress, StoryUploadProgress, useStoryUploadySetup } from "../../../story-helpers";
+import { getCsfExport, logToCypress, StoryUploadProgress, useStoryUploadySetup } from "../../../story-helpers";
 import retryEnhancer, { useBatchRetry, useRetry, useRetryListener, RETRY_EVENT } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -340,15 +339,4 @@ export const WithRetryAndPreview = () => {
 	);
 };
 
-export default {
-	title: "Retry Hooks",
-	decorators: [withKnobs],
-	parameters: {
-		sidebar: readme,
-		options: {
-			showPanel: true,
-			//needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-			theme: {}
-		},
-	},
-};
+export default getCsfExport(undefined, "Retry Hooks", readme);

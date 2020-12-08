@@ -1,6 +1,6 @@
 // @flow
 import React, { useCallback, useContext, useRef } from "react";
-import { useStoryUploadySetup } from "../../../story-helpers";
+import { useStoryUploadySetup, getCsfExport } from "../../../story-helpers";
 import NativeUploady, { UploadyContext } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -40,17 +40,4 @@ export const Simple = () => {
     </NativeUploady>
 };
 
-export default {
-    component: NativeUploady,
-    title: "Native Uploady",
-    parameters: {
-        readme: {
-            sidebar: readme,
-        },
-        options: {
-            showPanel: true,
-            //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-            theme: {}
-        },
-    },
-};
+export default getCsfExport(NativeUploady, "Native Uploady", readme);

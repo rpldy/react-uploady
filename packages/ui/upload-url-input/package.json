@@ -23,7 +23,6 @@
   },
   "devDependencies": {
     "@rpldy/uploady": "^0.8.1",
-    "@storybook/addon-knobs": "^6.0.21",
     "flow-bin": "^0.133.0"
   },
   "peerDependencies": {

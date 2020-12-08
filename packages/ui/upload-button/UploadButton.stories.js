@@ -9,7 +9,6 @@ import React, {
 	useContext
 } from "react";
 import styled from "styled-components";
-import { withKnobs } from "@storybook/addon-knobs";
 import Uploady, {
     UPLOADER_EVENTS,
     useFileInput,
@@ -28,6 +27,7 @@ import {
     uploadButtonCss,
     mockDestination,
     useEventsLogUpdater,
+    getCsfExport,
 } from "../../../story-helpers";
 import UploadButton, { asUploadButton } from "./src";
 
@@ -306,7 +306,7 @@ export const DifferentConfiguration = () => {
 };
 
 const DivUploadButton = asUploadButton(forwardRef((props, ref) => {
-    return <div {...props}
+    return <div {...props} ref={ref}
                 style={{ border: "1px solid red", width: "200px", cursor: "pointer" }}
                 id="div-upload">
         This is a DIV
@@ -466,19 +466,4 @@ export const WithForm = () => {
     );
 };
 
-
-export default {
-    component: UploadButton,
-    title: "Upload Button",
-    decorators: [withKnobs],
-    parameters: {
-        readme: {
-            sidebar: readme,
-        },
-        options: {
-            showPanel: true,
-            //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-            theme: {}
-        },
-    },
-};
+export default getCsfExport(UploadButton, "Upload Button",readme);

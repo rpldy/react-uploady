@@ -1,9 +1,8 @@
 // @flow
 import React, { useCallback, useEffect, useRef } from "react";
-import { withKnobs } from "@storybook/addon-knobs";
 import { logger } from "@rpldy/shared";
 import createUploader, { composeEnhancers } from "@rpldy/uploader";
-import { useStoryUploadySetup, DESTINATION_TYPES } from "../../../story-helpers";
+import { useStoryUploadySetup, DESTINATION_TYPES, getCsfExport } from "../../../story-helpers";
 import getTusEnhancer from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -135,18 +134,4 @@ export const WithFeatureDetection = () => {
 	</div>
 };
 
-export default {
-	title: "TUS Sender",
-	decorators: [withKnobs],
-	parameters: {
-		readme: {
-			sidebar: readme,
-		},
-		options: {
-			showPanel: true,
-			//needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-			theme: {}
-		},
-	},
-};
-
+export default getCsfExport(undefined, "TUS Sender", readme);

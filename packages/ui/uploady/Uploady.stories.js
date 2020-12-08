@@ -6,7 +6,8 @@ import {
     localDestination,
     UMD_NAMES,
     addActionLogEnhancer,
-	useStoryUploadySetup
+	useStoryUploadySetup,
+    getCsfExport,
 } from "../../../story-helpers";
 import Uploady, {
     useUploady,
@@ -178,17 +179,4 @@ export const UMD_ALL = () => {
     </div>;
 };
 
-export default {
-	component: Uploady,
-    title: "Uploady",
-    parameters: {
-        readme: {
-            sidebar: readme,
-        },
-        options: {
-            showPanel: true,
-            //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-            theme: {}
-        },
-    },
-};
+export default getCsfExport(Uploady, "Uploady", readme);

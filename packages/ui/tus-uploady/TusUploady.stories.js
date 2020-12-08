@@ -1,8 +1,8 @@
 // @flow
 import React from "react";
 import UploadButton from "@rpldy/upload-button";
-import { number, boolean, withKnobs } from "@storybook/addon-knobs";
-import { DESTINATION_TYPES, KNOB_GROUPS, useStoryUploadySetup } from "../../../story-helpers";
+import { number, boolean } from "@storybook/addon-knobs";
+import { DESTINATION_TYPES, getCsfExport, KNOB_GROUPS, useStoryUploadySetup } from "../../../story-helpers";
 import TusUploady from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -72,18 +72,4 @@ export const WithTusConcatenation = () => {
 	</TusUploady>;
 };
 
-export default {
-	component: TusUploady,
-	title: "Tus Uploady",
-	decorators: [withKnobs],
-	parameters: {
-		readme: {
-			sidebar: readme,
-		},
-		options: {
-			showPanel: true,
-			//needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-			theme: {}
-		},
-	},
-};
+export default getCsfExport(TusUploady, "Tus Uploady", readme);

@@ -3,7 +3,7 @@ import React, { useCallback, useState, useRef } from "react";
 import styled from "styled-components";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { withKnobs, number } from "@storybook/addon-knobs";
+import { number } from "@storybook/addon-knobs";
 import Uploady, {
     useItemProgressListener,
 	useItemFinalizeListener,
@@ -11,15 +11,15 @@ import Uploady, {
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
-import UploadPreview, { PREVIEW_TYPES } from "./src";
-
 import {
     KNOB_GROUPS,
     useStoryUploadySetup,
     uploadButtonCss,
     uploadUrlInputCss,
-	cropImage
+    cropImage,
+    getCsfExport,
 } from "../../../story-helpers";
+import UploadPreview, { PREVIEW_TYPES } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
@@ -165,7 +165,7 @@ export const WithUrls = () => {
 const PreviewContainer = styled.div`
 	display: flex;
 	flex-wrap: wrap;
-	
+
 	img {
 	    margin: 5px;
 	    max-width: 200px;
@@ -357,18 +357,20 @@ export const WithCrop = () => {
 	</Uploady>;
 };
 
-export default {
-    component: UploadPreview,
-    title: "Upload Preview",
-    decorators: [withKnobs],
-    parameters: {
-        readme: {
-            sidebar: readme,
-        },
-        options: {
-            showPanel: true,
-            //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-            theme: {}
-        },
-    },
-};
+// export default {
+//     component: UploadPreview,
+//     title: "Upload Preview",
+//     decorators: [withKnobs],
+//     parameters: {
+//         readme: {
+//             sidebar: readme,
+//         },
+//         options: {
+//             showPanel: true,
+//             //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
+//             theme: {}
+//         },
+//     },
+// };
+
+export default getCsfExport(UploadPreview, "Upload Preview", readme);

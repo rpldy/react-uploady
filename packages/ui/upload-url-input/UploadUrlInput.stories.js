@@ -1,10 +1,10 @@
 // @flow
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { withKnobs } from "@storybook/addon-knobs";
 import Uploady from "@rpldy/uploady";
 import {
     useStoryUploadySetup,
     StoryUploadProgress,
+    getCsfExport,
 } from "../../../story-helpers";
 import UploadUrlInput from "./src";
 
@@ -93,19 +93,4 @@ export const WithButtonAndValidate = () => {
     </Uploady>;
 };
 
-export default {
-    component: UploadUrlInput,
-    title: "Upload Url Input",
-    decorators: [withKnobs],
-    parameters: {
-        readme: {
-            sidebar: readme,
-        },
-        options: {
-            showPanel: true,
-            //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-            theme: {}
-        },
-    },
-};
-
+export default getCsfExport(UploadUrlInput, "Upload Url Input", readme);

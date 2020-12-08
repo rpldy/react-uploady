@@ -14,6 +14,7 @@ const StoryAbortButton = () => {
     });
 
     const onClick = useCallback(() => {
+        console.log("ABORTING BATCH ", uploadingId);
         context.abortBatch(uploadingId);
     }, [context, uploadingId]);
 

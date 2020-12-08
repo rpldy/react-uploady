@@ -1,6 +1,5 @@
 // @flow
 import React, { useCallback, useState, useRef, useEffect } from "react";
-import { withKnobs } from "@storybook/addon-knobs";
 import {
     UmdBundleScript,
     localDestination,
@@ -8,6 +7,7 @@ import {
     addActionLogEnhancer,
     useStoryUploadySetup,
     logToCypress,
+    getCsfExport,
 } from "../../../story-helpers";
 import createUploader, { UPLOADER_EVENTS } from "./src";
 
@@ -149,17 +149,4 @@ export const UMD_Core = () => {
     </div>;
 };
 
-export default {
-    title: "Uploader",
-    decorators: [withKnobs],
-    parameters: {
-        readme: {
-            sidebar: readme,
-        },
-        options: {
-            showPanel: true,
-            //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-            theme: {}
-        },
-    },
-};
+export default getCsfExport(undefined, "Uploader", readme);

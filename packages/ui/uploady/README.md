@@ -76,7 +76,7 @@ It provides multiple hooks that enable more advanced features and data for clien
 
 ## Example
 
-To be able to use one of the [UI Components](../../../README.md#ui-packages) or one of the hooks, you need to wrap them with <Uploady>.
+To be able to use one of the [UI Components](../../../README.md#ui-packages) or one of the hooks, you need to wrap them with Uploady.
 This will give them access to the UploadyContext.
 
 ```javascript
@@ -126,13 +126,13 @@ const App = () => (<Uploady>
 
 _(?UploadOptions) => void_
     
-Show the native file selection dialog. Optionally Pass options as a parameter to override options set as props on the <Uploady/> component. 
+Show the native file selection dialog. Optionally Pass options as a parameter to override options set as props on the Uploady component. 
 
 #### upload 
 
 _(files: UploadInfo | UploadInfo[], addOptions: ?UploadOptions) => void_
 
-Upload file(s). Optionally Pass options as the second parameter to override options set as props on the <Uploady/> component.
+Upload file(s). Optionally Pass options as the second parameter to override options set as props on the Uploady component.
 
 #### processPending
 
@@ -480,7 +480,7 @@ See simple example below or this more detailed [guide](../../../guides/DynamicPa
 
 Shortcut hook to get the [Uploady Context](#context) instance
 
-> Will throw in case used outside of <Uploady> render tree
+> Will throw in case used outside of Uploady render tree
 
 ```javascript
     import { useUploady } from "@rpldy/uploady";
@@ -563,6 +563,7 @@ Returns abort all method
 When customInput prop is set to true, Uploady will not create its own file input element.
 In this case, Uploady will wait for a ref to an existing input.
 
+
 The way you pass in your own input element is by using this hook.
 
 In case Uploady wasn't provided with a destination prop or if it doesn't have a URL property, 
@@ -570,6 +571,8 @@ Uploady will check whether the input resides in a form. It will then use the for
  
 > In case the form's attributes were used for the upload destination, updating the form's attributes dynamically won't affect the uploader configuration once it was set.
  
+ 
+
 ```javascript
 import Uploady, { useFileInput } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
@@ -609,6 +612,7 @@ A good example use-case for this is applying [crop](../../../guides/Crop.md) to 
 When rendering the HOC's output, the id of the batch-item must be provided as a prop. 
 This ensures the HOC only re-renders for a specific item and not for all.
 The id of the batch-item can be obtained from a hook (ex: [useItemStartListener](#useitemstartlistener-event-hook) or [useBatchStartListener](#usebatchstartlistener-event-hook))
+
 
 ```javascript
     import React, { useState, useCallback } from "react";

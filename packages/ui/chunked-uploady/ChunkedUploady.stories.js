@@ -1,7 +1,7 @@
 // @flow
 import React, { useCallback, useState } from "react";
 import ReactDOM from "react-dom";
-import { withKnobs, number } from "@storybook/addon-knobs";
+import { number } from "@storybook/addon-knobs";
 import UploadButton from "@rpldy/upload-button";
 import ChunkedUploady, {
 	useRequestPreSend,
@@ -20,6 +20,7 @@ import {
     localDestination,
     addActionLogEnhancer,
     logToCypress,
+    getCsfExport,
 } from "../../../story-helpers";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -181,18 +182,4 @@ export const UMD_CoreChunkedUI = () => {
     </div>;
 };
 
-export default {
-    component: ChunkedUploady,
-    title: "Chunked Uploady",
-    decorators: [withKnobs],
-    parameters: {
-        readme: {
-            sidebar: readme,
-        },
-        options: {
-            showPanel: true,
-            //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-            theme: {}
-        },
-    },
-};
+export default getCsfExport(ChunkedUploady, "Chunked Uploady", readme);

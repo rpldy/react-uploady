@@ -52,6 +52,8 @@ export const useItemErrorListener: ItemEventHook;
 export const useItemAbortListener: ItemEventHook;
 export const useItemFinalizeListener: ItemEventHook;
 
+export const useAllAbortListener: (cb: () => void) => void;
+
 export type PreSendData = { items: BatchItem[]; options: CreateOptions };
 
 export const useRequestPreSend: (cb: (data: PreSendData) =>

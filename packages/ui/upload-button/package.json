@@ -31,7 +31,6 @@
   "devDependencies": {
     "@rpldy/retry": "^0.8.1",
     "@rpldy/uploady": "^0.8.1",
-    "@storybook/addon-knobs": "^6.0.21",
     "flow-bin": "^0.133.0",
     "styled-components": "^5.2.0"
   },

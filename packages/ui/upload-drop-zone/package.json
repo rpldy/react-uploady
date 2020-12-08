@@ -34,7 +34,6 @@
     "@rpldy/shared": "^0.8.0",
     "@rpldy/upload-button": "^0.8.1",
     "@rpldy/uploady": "^0.8.1",
-    "@storybook/addon-knobs": "^6.0.21",
     "flow-bin": "^0.133.0",
     "react-dnd": "^11.1.3",
     "react-dnd-html5-backend": "^10.0.2",

@@ -100,7 +100,8 @@ const getDestinationOptions = ({destinations = null}) => {
 };
 
 const useStoryDestination = (type, { noLong }) => {
-	return useMemo(() => DESTINATIONS[type]({ noLong }), [type, noLong]);
+    return DESTINATIONS[type]({ noLong });
+	// return useMemo(() => DESTINATIONS[type]({ noLong }), [type, noLong]);
 };
 
 const useStoryUploadySetup = (options = {}) => {

@@ -37,7 +37,7 @@ See Props documentation in the main readme.
 
 ## Example
 
-To be able to use one of the [UI Components](../../../README.md#ui-packages) or one of the hooks, you need to wrap them with <Uploady>.
+To be able to use one of the [UI Components](../../../README.md#ui-packages) or one of the hooks, you need to wrap them with Uploady.
 This will give them access to the UploadyContext.
 
 ```javascript

@@ -34,10 +34,9 @@ module.exports = {
     },
 
     addons: [
-        "@storybook/addon-actions",
+        "@storybook/addon-essentials",
         "@storybook/addon-knobs",
         "@storybook/addon-storysource",
-        "storybook-readme/register",
         // "./.storybook/cypressAddon/register",
     ],
 
@@ -52,7 +51,7 @@ module.exports = {
         });
 
         config.plugins.push(new webpack.DefinePlugin({
-            "rpldyVersion": config.mode !== "development" && JSON.stringify(await getCurrentNpmVersion()),
+            "rpldyVersion": JSON.stringify(config.mode !== "development" ? await getCurrentNpmVersion() : ["DEV"] ),
             "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
         }));
 

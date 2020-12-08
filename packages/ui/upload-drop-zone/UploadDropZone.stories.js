@@ -1,7 +1,6 @@
 // @flow
 import React, { forwardRef, useCallback, useContext, useMemo } from "react";
 import styled, { css } from "styled-components";
-import { withKnobs } from "@storybook/addon-knobs";
 import { DndProvider, useDrop } from "react-dnd";
 import Backend, { NativeTypes } from "react-dnd-html5-backend";
 import Uploady, { UploadyContext } from "@rpldy/uploady";
@@ -10,6 +9,7 @@ import UploadDropZone from "./src";
 import {
     useStoryUploadySetup,
     StoryUploadProgress,
+    getCsfExport,
 } from "../../../story-helpers";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -229,18 +229,4 @@ export const WithAsUploadButton = () => {
 	</Uploady>
 };
 
-export default {
-    component: UploadDropZone,
-    title: "Upload Drop Zone",
-    decorators: [withKnobs],
-    parameters: {
-        readme: {
-            sidebar: readme,
-        },
-        options: {
-            showPanel: true,
-            //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-            theme: {}
-        },
-    },
-};
+export default getCsfExport(UploadDropZone, "Upload Drop Zone",readme);

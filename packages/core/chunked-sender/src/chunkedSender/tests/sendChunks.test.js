@@ -67,20 +67,20 @@ describe("sendChunks tests", () => {
 
     describe("chunks being sent tests", () => {
 
+        beforeEach(() => {
+            handleChunkRequest.mockReset();
+        });
+
         const doSend = async (chunks, state = {}, resolve) => {
             const item = {},
                 sendOptions = {},
                 onProgress = "progress";
 
-            const parallel = state.parallel || 1;
+            let mockedhandleChunkRequest = handleChunkRequest; //.mockResolvedValueOnce();
 
-            let mockedhandleChunkRequest = handleChunkRequest.mockResolvedValueOnce();
-
-            if (parallel > 1) {
-                for (let i = 0; i < (parallel-1); i++) {
-                    mockedhandleChunkRequest = mockedhandleChunkRequest.mockResolvedValueOnce();
-                }
-            }
+            chunks.forEach(()=> {
+                mockedhandleChunkRequest = mockedhandleChunkRequest.mockResolvedValueOnce();
+            });
 
             getChunksToSend.mockReturnValueOnce(chunks);
 
@@ -172,6 +172,33 @@ describe("sendChunks tests", () => {
 
             expect(resolve).toHaveBeenCalledWith({
                 state: FILE_STATES.FINISHED,
+                response: { results: state.responses },
+            });
+
+            expect(getChunksToSend).not.toHaveBeenCalled();
+        });
+
+        it("should finish with abort status", async() => {
+            const result = {};
+            sendChunk.mockReturnValueOnce(result);
+            handleChunkRequest.mockResolvedValueOnce();
+
+            const chunkId = "c1";
+
+            const state = {
+                aborted: true,
+                chunks: [],
+                responses: ["aborted"],
+            };
+
+            const resolve = jest.fn();
+
+            await handleChunk(state, {}, {}, resolve, { id: chunkId }, { });
+
+            expect(state.finished).toBe(true);
+
+            expect(resolve).toHaveBeenCalledWith({
+                state: FILE_STATES.ABORTED,
                 response: { results: state.responses },
             });
 

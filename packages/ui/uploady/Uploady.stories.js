@@ -94,34 +94,43 @@ window["react-dom"] = ReactDOM;
 
 //mimic rendering with react and react-uploady loaded through <script> tags
 const renderUploadyFromBundle = () => {
-    const MyUploadButton = () => {
+    let result;
+
+    try {
+        const MyUploadButton = () => {
+            // $FlowFixMe - react & rpldy
+            const uploadyContext = react.useContext(rpldy.UploadyContext);
+
+            const onClick = react.useCallback(() => {
+                uploadyContext.showFileUpload();
+            });
+
+            return react.createElement("button", {
+                id: "upload-button",
+                onClick: onClick,
+                children: "Upload"
+            });
+        };
+
+        const uploadyProps = {
+            debug: true,
+            destination: localDestination().destination,
+            enhancer: addActionLogEnhancer(),
+        };
+
         // $FlowFixMe - react & rpldy
-        const uploadyContext = react.useContext(rpldy.UploadyContext);
+        result = react.createElement(
+            // $FlowFixMe - react & rpldy
+            rpldy.Uploady,
+            uploadyProps,
+            [react.createElement(MyUploadButton)]
+        );
+    }
+    catch (ex){
+        result = react.createElement("p", { style: "color: red;", children: `ERROR !!! ${ex.message}` });
+    }
 
-        const onClick = react.useCallback(() => {
-            uploadyContext.showFileUpload();
-        });
-
-        return react.createElement("button", {
-            id: "upload-button",
-            onClick: onClick,
-            children: "Upload"
-        });
-    };
-
-    const uploadyProps = {
-        debug: true,
-        destination: localDestination().destination,
-        enhancer: addActionLogEnhancer(),
-    };
-
-    // $FlowFixMe - react & rpldy
-    return react.createElement(
-        // $FlowFixMe - react & rpldy
-        rpldy.Uploady,
-        uploadyProps,
-        [react.createElement(MyUploadButton)]
-    );
+    return result;
 };
 
 export const UMD_CoreUI = () => {

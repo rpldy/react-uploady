@@ -128,7 +128,7 @@ const renderUploadyFromBundle = () => {
     }
     catch (ex){
         // $FlowFixMe - react
-        result = react.createElement("p", { style: "color: red;", children: `ERROR !!! ${ex.message}` });
+        result = react.createElement("p", { style: {"color": "red"}, children: `ERROR !!! ${ex.message}` });
     }
 
     return result;

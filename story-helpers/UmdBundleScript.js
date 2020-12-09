@@ -21,21 +21,28 @@ const POLYFILLS_MAP = {
 };
 
 export default memo(({ bundle, onLoad }) => {
-    const [polyfillReady, setPolyfillReady] = useState(false)
+    const [polyfillReady, setPolyfillReady] = useState(false);
+    const [scriptReady, setScriptReady] = useState(false);
 
     const onPolyfillLoaded = useCallback(() => {
         setPolyfillReady(true);
     }, []);
 
-    return <>
+    const onScriptLoaded = useCallback(() => {
+        setScriptReady(true);
+        onLoad();
+    }, [onLoad]);
 
+    return <>
         <p>
             Fetching polyfill bundle from: {POLYFILLS_MAP[bundle]}
             <br/>
-            Fetching UMD bundle from: {UMD_BUNDLES[bundle]}
         </p>
 
+        {polyfillReady && <p>polyfill ready. Fetching UMD bundle from: {UMD_BUNDLES[bundle]}</p>}
+        {scriptReady && <p>script ready!!! Let's go</p>}
+
         <Script url={POLYFILLS_MAP[bundle]} onLoad={onPolyfillLoaded}/>
-        {polyfillReady && <Script key="secondScript" url={UMD_BUNDLES[bundle]} onLoad={onLoad}/>}
+        {polyfillReady && <Script key="secondScript" url={UMD_BUNDLES[bundle]} onLoad={onScriptLoaded}/>}
     </>;
 });

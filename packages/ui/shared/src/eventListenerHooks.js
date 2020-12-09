@@ -30,6 +30,8 @@ const useItemProgressListener = generateUploaderEventHookWithState(
 
 const useRequestPreSend = generateUploaderEventHook(UPLOADER_EVENTS.REQUEST_PRE_SEND, false);
 
+const useAllAbortListener = generateUploaderEventHook(UPLOADER_EVENTS.ALL_ABORT, false);
+
 export {
     useBatchAddListener,
     useBatchStartListener,
@@ -47,4 +49,6 @@ export {
     useItemFinalizeListener,
 
     useRequestPreSend,
+
+    useAllAbortListener
 };

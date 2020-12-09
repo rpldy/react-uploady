@@ -80,6 +80,8 @@ export enum UPLOADER_EVENTS {
     ITEM_FINALIZE = "FILE-FINALIZE",
 
     REQUEST_PRE_SEND = "REQUEST_PRE_SEND",
+
+    ALL_ABORT =  "ALL_ABORT",
 }
 
 export default createUploader;

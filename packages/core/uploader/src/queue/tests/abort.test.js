@@ -137,6 +137,8 @@ describe("abort tests", () => {
 				id: "u3",
 				info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
 			}], next);
+
+		expect(queue.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ALL_ABORT);
 	});
 
 	describe("batch abort tests", () => {

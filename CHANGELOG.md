@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.8.2 (2020-12-09)
+
+## Features
+
+- `[uploader]` - new event ALL_ABORT
+- `[uploady]` - new hook: useAllAbortListener
+
+## Bug fixes
+
+- `[chunked-sender]` - fixed abort flow for chunked sender. Fix for #109
+  
+## Internal
+
+- `e2e` - added chunked abort spec
+
 ## 0.8.1 (2020-12-01)
 
 ## Bug fixes

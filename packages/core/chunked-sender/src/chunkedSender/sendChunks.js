@@ -5,7 +5,7 @@ import handleChunkRequest from "./handleChunkRequest";
 import getChunksToSend from "./getChunksToSend";
 import sendChunk from "./sendChunk";
 
-import type { BatchItem } from "@rpldy/shared";
+import type { BatchItem, FileState } from "@rpldy/shared";
 import type { OnProgress } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { Chunk, State } from "./types";
@@ -24,18 +24,24 @@ const resolveOnError = (resolve, ex) => {
     }
 };
 
+const finalizeOnFinish = (state: State, item: BatchItem, resolve, status: FileState) => {
+    state.finished = true;
+
+    resolve({
+        state: status,
+        response: { results: state.responses },
+    });
+};
+
 const resolveOnAllChunksFinished = (state: State, item: BatchItem, resolve): boolean => {
     const finished = !state.chunks.length;
 
-    if (finished && !state.error) {
-        state.finished = true;
-
+    if (state.aborted) {
+        logger.debugLog(`chunkedSender: chunked upload aborted for item: ${item.id}`);
+        finalizeOnFinish(state, item, resolve, FILE_STATES.ABORTED);
+    } else if (finished && !state.error) {
         logger.debugLog(`chunkedSender: chunked upload finished for item: ${item.id}`, state.responses);
-
-        resolve({
-            state: FILE_STATES.FINISHED,
-            response: { results: state.responses },
-        });
+        finalizeOnFinish(state, item, resolve, FILE_STATES.FINISHED);
     }
 
     return finished || state.error;

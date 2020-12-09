@@ -30,7 +30,10 @@ export default memo(({ bundle, onLoad }) => {
 
     const onScriptLoaded = useCallback(() => {
         setScriptReady(true);
-        onLoad();
+
+        setTimeout(() => {
+            onLoad();
+        }, 2000);
     }, [onLoad]);
 
     return <>

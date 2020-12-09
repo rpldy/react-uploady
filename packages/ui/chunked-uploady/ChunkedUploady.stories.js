@@ -43,7 +43,7 @@ const UploadButtonWithUniqueIdHeader = () => {
         };
     });
 
-    return <UploadButton/>
+    return <UploadButton id="upload-button"/>
 };
 
 const useChunkedStoryHelper = () => {

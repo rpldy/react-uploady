@@ -18,6 +18,8 @@ export const UPLOADER_EVENTS = devFreeze({
     ITEM_FINALIZE: "FILE-FINALIZE",
 
     REQUEST_PRE_SEND: "REQUEST_PRE_SEND",
+
+    ALL_ABORT: "ALL_ABORT",
 });
 
 export const PROGRESS_DELAY = 50;

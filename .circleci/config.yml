@@ -147,7 +147,7 @@ workflows:
             - Prepare E2E (cypress)
           attach-workspace: true
           yarn: true
-          start: yarn cy:deps:serve
+          start: yarn deps:serve
           wait-on: "http://localhost:8001"
           #            record: true
           #            parallel: true

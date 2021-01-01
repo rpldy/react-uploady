@@ -4,7 +4,7 @@ describe("UMD UI CORE - Bundle", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("chunkedUploady", "umd-core-chunked-ui");
+        cy.visitStory("chunkedUploady", "umd-core-chunked-ui", true);
     });
 
     it("should use uploady and upload file", () => {
@@ -15,8 +15,6 @@ describe("UMD UI CORE - Bundle", () => {
             url: "http://localhost:4000/upload",
             response: { success: true }
         }).as("uploadReq");
-
-        cy.iframe("#storybook-preview-iframe").as("iframe");
 
         uploadFile(fileName, () => {
             cy.wait(2000);
@@ -44,6 +42,6 @@ describe("UMD UI CORE - Bundle", () => {
                         .to.match(/bytes 10000-\d+\//);
                 });
 
-        }, "#upload-button");
+        }, "#upload-button", null);
     });
 });

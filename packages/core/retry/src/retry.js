@@ -1,5 +1,5 @@
 // @flow
-import { logger } from "@rpldy/shared";
+import { FILE_STATES, logger } from "@rpldy/shared";
 import createState from "@rpldy/simple-state";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { RETRY_EXT, RETRY_EVENT } from "./consts";
@@ -7,6 +7,8 @@ import { RETRY_EXT, RETRY_EVENT } from "./consts";
 import type { UploaderType, TriggerMethod } from "@rpldy/uploader";
 import type { BatchItem, UploadOptions } from "@rpldy/shared";
 import type { State, RetryState } from "./types";
+
+const FAILED_STATES = [FILE_STATES.ABORTED, FILE_STATES.ERROR];
 
 const removeItemFromState = (retryState: RetryState, id: string) => {
     retryState.updateState((state: State) => {
@@ -89,16 +91,17 @@ const createRetryState = (): RetryState => {
 };
 
 const registerEvents = (uploader: UploaderType, retryState: RetryState) => {
-    const onItemFail = (item: BatchItem) => {
-        retryState.updateState((state: State) => {
-            state.failed[item.id] = item;
-            const biMap = state.batchIdsMap[item.batchId] = state.batchIdsMap[item.batchId] || [];
-            biMap.push(item.id);
-        });
+    const onItemFinalized = (item: BatchItem) => {
+        if (~FAILED_STATES.indexOf(item.state)) {
+            retryState.updateState((state: State) => {
+                state.failed[item.id] = item;
+                const biMap = state.batchIdsMap[item.batchId] = state.batchIdsMap[item.batchId] || [];
+                biMap.push(item.id);
+            });
+        }
     };
 
-    uploader.on(UPLOADER_EVENTS.ITEM_ERROR, onItemFail);
-    uploader.on(UPLOADER_EVENTS.ITEM_ABORT, onItemFail);
+    uploader.on(UPLOADER_EVENTS.ITEM_FINALIZE, onItemFinalized);
 };
 
 /**

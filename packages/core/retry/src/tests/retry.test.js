@@ -1,3 +1,4 @@
+import { FILE_STATES } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { RETRY_EVENT } from "../consts";
 
@@ -17,7 +18,7 @@ describe("retry tests", () => {
 		{ id: "f-5", url: "url5", batchId: "b3" },
 	];
 
-	const getTestRetry = (itemEvent) => {
+	const getTestRetry = (itemState) => {
 		const trigger = jest.fn();
 		let retry, retryBatch;
 
@@ -28,8 +29,9 @@ describe("retry tests", () => {
 			},
 
 			on: (event, method) => {
-				if (event === itemEvent) {
-					items.forEach(method);
+				// if (event === itemEvent) {
+                if (event === UPLOADER_EVENTS.ITEM_FINALIZE) {
+                    items.map((i) => ({ ...i, state: itemState })).forEach(method);
 				}
 			},
 
@@ -62,11 +64,10 @@ describe("retry tests", () => {
 
 	describe("retry all tests", () => {
 		it.each([
-			UPLOADER_EVENTS.ITEM_ERROR,
-			UPLOADER_EVENTS.ITEM_ABORT,
-		])("should send all items to retry - %s", (itemEvent) => {
-
-			const { retry, trigger, uploader, retryState } = getTestRetry(itemEvent);
+            FILE_STATES.ERROR,
+            FILE_STATES.ABORTED
+		])("should send all items to retry - %s", (itemState) => {
+			const { retry, trigger, uploader, retryState } = getTestRetry(itemState);
 
 			const options = { autoUpload: true },
 				expectedItems = getItemsFromRetryState(items, retryState);
@@ -86,10 +87,10 @@ describe("retry tests", () => {
 		});
 
 		it.each([
-			UPLOADER_EVENTS.ITEM_ERROR,
-			UPLOADER_EVENTS.ITEM_ABORT,
-		])("should send all items with options for event: %s", (itemEvent) => {
-			const { retry, trigger, uploader, retryState } = getTestRetry(itemEvent);
+            FILE_STATES.ERROR,
+            FILE_STATES.ABORTED
+		])("should send all items with options for event: %s", (itemState) => {
+			const { retry, trigger, uploader, retryState } = getTestRetry(itemState);
 			const options = { autoUpload: false },
 				expectedItems = getItemsFromRetryState(items, retryState);
 
@@ -102,10 +103,10 @@ describe("retry tests", () => {
 
 	describe("retry item tests", () => {
 		it.each([
-			UPLOADER_EVENTS.ITEM_ERROR,
-			UPLOADER_EVENTS.ITEM_ABORT,
-		])("should send requested item to retry - %s", (itemEvent) => {
-			const { retry, trigger, uploader, retryState } = getTestRetry(itemEvent);
+		    FILE_STATES.ERROR,
+			FILE_STATES.ABORTED
+		])("should send requested item to retry - %s", (itemState) => {
+			const { retry, trigger, uploader, retryState } = getTestRetry(itemState);
 			const options = { foo: "bar" };
 
 			const expectedOptions = {
@@ -130,10 +131,10 @@ describe("retry tests", () => {
 
 	describe("retry batch tests", () => {
 		it.each([
-			UPLOADER_EVENTS.ITEM_ERROR,
-			UPLOADER_EVENTS.ITEM_ABORT,
-		])("should send batch items to retry", (itemEvent) => {
-			const { retryBatch, trigger, uploader, retryState } = getTestRetry(itemEvent);
+            FILE_STATES.ERROR,
+            FILE_STATES.ABORTED
+		])("should send batch items to retry", (itemState) => {
+			const { retryBatch, trigger, uploader, retryState } = getTestRetry(itemState);
 
 			const options = { foo: "bar" };
 

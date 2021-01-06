@@ -20,6 +20,7 @@ describe("uploader utils tests", () => {
             expect(options.destination.params).toBeDefined();
             expect(options.destination.url).toBe("test.com");
             expect(options.clearPendingOnAdd).toBe(true);
+            expect(options.destination.filesParamName).toBeUndefined();``
         });
 
         it("should set destination to null if not provided", () => {

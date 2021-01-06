@@ -10,7 +10,6 @@ const FILE_LIST_SUPPORT = hasWindow() && "FileList" in window;
 
 const getMandatoryDestination = (dest: Destination): Destination => {
     return {
-        filesParamName: DEFAULT_PARAM_NAME,
         params: {},
         ...dest,
     };

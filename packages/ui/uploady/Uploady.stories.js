@@ -25,7 +25,7 @@ const ContextUploadButton = () => {
         uploadyContext?.showFileUpload();
     }, [uploadyContext]);
 
-    return <button id="upload-button" onClick={onClick}>Custom Upload Button</button>
+    return <button onClick={onClick}>Custom Upload Button</button>
 };
 
 export const ButtonWithContextApi = () => {
@@ -76,7 +76,7 @@ const ListOfUploadOptions = () => {
 };
 
 export const WithNoDomUploady = () => {
-    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <NoDomUploady
         debug
@@ -86,21 +86,6 @@ export const WithNoDomUploady = () => {
         maxGroupSize={groupSize}>
         <ListOfUploadOptions/>
     </NoDomUploady>
-};
-
-export const WithCustomFieldName = () => {
-    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
-
-    return <Uploady
-        inputFieldName="customFieldName"
-        debug
-        destination={destination}
-        enhancer={enhancer}
-        grouped={grouped}
-        maxGroupSize={groupSize}>
-        <p>Send upload request with custom field name</p>
-        <ContextUploadButton />
-    </Uploady>
 };
 
 //expose react and react-dom for Uploady bundle

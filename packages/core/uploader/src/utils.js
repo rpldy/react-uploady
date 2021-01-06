@@ -1,7 +1,7 @@
 // @flow
 import { hasWindow, isProduction } from "@rpldy/shared";
 import { unwrap, isProxiable, isProxy } from "@rpldy/simple-state";
-import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "./defaults";
+import { DEFAULT_OPTIONS } from "./defaults";
 
 import type { Destination } from "@rpldy/shared";
 import type { CreateOptions } from "./types";

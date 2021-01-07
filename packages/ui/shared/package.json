@@ -1,5 +1,5 @@
 {
-    "version": "0.8.2",
+    "version": "0.8.3",
     "name": "@rpldy/shared-ui",
     "description": "internal set of utils+types for react-uploady UI",
     "author": "yoav niran (https://github.com/yoavniran)",
@@ -19,7 +19,7 @@
     },
     "dependencies": {
         "@rpldy/shared": "^0.8.0",
-        "@rpldy/uploader": "^0.8.2"
+        "@rpldy/uploader": "^0.8.3"
     },
     "devDependencies": {
         "flow-bin": "^0.133.0"

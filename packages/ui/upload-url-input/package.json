@@ -1,5 +1,5 @@
 {
-  "version": "0.8.2",
+  "version": "0.8.3",
   "name": "@rpldy/upload-url-input",
   "description": "input component to enter a URL (or any string for that matter) to be sent as an upload",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -19,10 +19,10 @@
   },
   "dependencies": {
     "@rpldy/shared": "^0.8.0",
-    "@rpldy/shared-ui": "^0.8.2"
+    "@rpldy/shared-ui": "^0.8.3"
   },
   "devDependencies": {
-    "@rpldy/uploady": "^0.8.2",
+    "@rpldy/uploady": "^0.8.3",
     "flow-bin": "^0.133.0"
   },
   "peerDependencies": {

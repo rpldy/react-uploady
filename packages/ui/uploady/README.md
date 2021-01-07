@@ -410,7 +410,7 @@ Called in case item upload failed
 
 ### useItemAbortListener (event hook)
 
-Called in case [abort](#abort) was called
+Called in case [abort](#abort) was called for an item
 
 > This event can be scoped to a specific batch by passing the item id as a second parameter
 
@@ -474,9 +474,22 @@ See simple example below or this more detailed [guide](../../../guides/DynamicPa
         //...    
     };
 ``` 
-    
 
-#### useUploadyContext (alias: _useUploady_)
+### useAllAbortListener (event hook)
+
+Called in case [abort](#abort) was called for all running uploads  
+
+```javascript
+    import { useAllAbortListener } from "@rpldy/uploady";
+
+    const MyComponent = () => {
+        useAllAbortListener(() => {
+            console.log("abort all was called");
+        });
+    };
+```
+
+### useUploadyContext (alias: _useUploady_)
 
 Shortcut hook to get the [Uploady Context](#context) instance
 
@@ -523,7 +536,7 @@ Returns abort item method
 ```javascript
     import { useAbortItem } from "@rpldy/uploady";
     
-const MyComponent = () => {
+    const MyComponent = () => {
         const abortItem = useAbortItem();
         
         return <button onClick={() => abortItem("i-123")}>Abort Item</button>       

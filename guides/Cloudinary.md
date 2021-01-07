@@ -28,6 +28,8 @@ const App = () => (<Uploady
 
 ```
 
+### Production 
+
 For Production environment, you should only allow signed uploads. 
 Below is an example of signed upload flow:
 

@@ -290,6 +290,12 @@ See this [guide](../../../guides/DynamicParameters.md) for more details.
 
 > This event is _[cancellable](#cancellable-events)_
 
+### UPLOADER_EVENTS.ALL_ABORT
+
+Triggered when abort is called without an item id (abort all)
+
+- no parameters
+
 ## Cancellable Events
 
 These are events that allow the client to cancel their respective upload object (batch or batch-item)

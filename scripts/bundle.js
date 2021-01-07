@@ -122,14 +122,20 @@ const runWebpack = (type, name, config) => {
     });
 };
 
-const copyBundleToTarget = (assets, outputPath, type, pkgRoot) => {
+const copyBundleToTarget = (assets, outputPath, type, pkgRoot, dontUsePolyfills) => {
     const dest = path.join(pkgRoot, "lib", config.targets[type]);
     fs.ensureDirSync(dest);
 
     assets.forEach((asset) => {
         const outputFile = path.join(outputPath, asset.name);
         fs.copyFileSync(outputFile, path.join(dest, path.basename(outputFile)));
+
+        if (!dontUsePolyfills || !~asset.name.indexOf("polyfills")) {
+            fs.copyFileSync(outputFile, path.join(outputFile, "/../../", path.basename(outputFile)));
+        }
     });
+
+    fs.rmdir(outputPath, { recursive: true });
 };
 
 const findExtraBundles = (wpResult, definition) => {
@@ -158,14 +164,14 @@ const handleBundleOutput = (type, definition, wpResult, repoPackages) => {
                 ];
 
                 if (assets.length) {
-                    copyBundleToTarget(assets, outputPath, type, pkg.location);
+                    copyBundleToTarget(assets, outputPath, type, pkg.location, definition.dontUsePolyfills);
                 } else {
                     throw new Error(`Didn't find matching bundle for package: ${pkg.name} - bundle: ${bundleFileName}`);
                 }
             });
         } else {
             const pkgRoot = getPackageRootFromName(definition.target, repoPackages);
-            copyBundleToTarget(wpResult.assets, outputPath, type, pkgRoot);
+            copyBundleToTarget(wpResult.assets, outputPath, type, pkgRoot, definition.dontUsePolyfills);
         }
     }
 };
@@ -173,7 +179,9 @@ const handleBundleOutput = (type, definition, wpResult, repoPackages) => {
 const getWebpackConfig = (type, name, definition, repoPackages) => {
     const entries = getEntriesFromDefinition(definition, type, repoPackages);
 
-    logger.verbose(`>>>> creating bundle: '${name}' of type: '${type}' - with entries: ${entries.length}`);
+    const outputPath = path.join(process.cwd(), `${options.outputPath || "bundle"}/${name}`);
+
+    logger.verbose(`>>>> creating bundle: '${name}' of type: '${type}' - with entries: ${entries.length} - at: ${outputPath}`);
 
     return wpMerge(
         config.webpackConfig.base,
@@ -184,7 +192,7 @@ const getWebpackConfig = (type, name, definition, repoPackages) => {
             } : undefined,
 
             output: {
-                path: path.join(process.cwd(), options.outputPath || "bundle"),
+                path: outputPath,
                 filename: `${config.fileNamePrefix || config.library}-${name}.${type}${isProduction ? ".min" : ""}.js`,
                 library: config.library,
                 libraryTarget: type,

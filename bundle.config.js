@@ -38,6 +38,7 @@ module.exports = {
                 pkgs: [PKGS.LIFE_EVENTS, PKGS.SHARED, PKGS.SENDER, PKGS.UPLOADER],
                 target: PKGS.UPLOADER,
                 maxSize: 12000,
+                dontUsePolyfills: true,
             },
 
             /**
@@ -191,7 +192,7 @@ module.exports = {
                                 }]],
 								plugins: [["@babel/plugin-transform-runtime", {
 									corejs: 3,
-									"version": "^7.10.2"
+									"version": "^7.12.10"
 								}]]
                             }
                         }

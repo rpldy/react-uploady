@@ -1,17 +1,28 @@
 # Changelog
 
+## 0.8.3 (2021-01-07)
+
+### Bug fixes
+
+- `[uploader]` - respect filesParamName in upload options. Fix for #117
+
+### Internal
+
+- `[retry]` - use item finalize event instead of error & abort
+- `e2e` - added uploady custom filesParamName spec
+
 ## 0.8.2 (2020-12-09)
 
-## Features
+### Features
 
 - `[uploader]` - new event ALL_ABORT
 - `[uploady]` - new hook: useAllAbortListener
 
-## Bug fixes
+### Bug fixes
 
 - `[chunked-sender]` - fixed abort flow for chunked sender. Fix for #109
-  
-## Internal
+
+### Internal
 
 - `e2e` - added chunked abort spec
 

@@ -12,6 +12,7 @@ export const BATCH_STATES = {
 };
 
 export const FILE_STATES = {
+    PENDING: "pending",
 	ADDED: "added",
 	UPLOADING: "uploading",
 	CANCELLED: "cancelled",

@@ -4,7 +4,7 @@ import createItemsSender from "./batchItemsSender";
 import createBatch from "./batch";
 
 import type { TriggerMethod } from "@rpldy/life-events";
-import type { Batch, TriggerCancellableOutcome, UploadInfo } from "@rpldy/shared";
+import type { Batch, TriggerCancellableOutcome, UploadInfo, UploadOptions } from "@rpldy/shared";
 import type { CreateOptions } from "./types";
 
 export default (trigger: TriggerMethod, cancellable: TriggerCancellableOutcome, options: CreateOptions, uploaderId: string) => {
@@ -33,6 +33,14 @@ export default (trigger: TriggerMethod, cancellable: TriggerCancellableOutcome, 
         return queue.addBatch(batch, processOptions);
     };
 
+    const clearPendingBatches = () => {
+        queue.clearPendingBatches();
+    };
+
+    const processPendingBatches = (uploadOptions: ?UploadOptions) => {
+        queue.uploadPendingBatches(uploadOptions);
+    };
+
 	const runCancellable = queue.runCancellable;
 
     return {
@@ -40,6 +48,8 @@ export default (trigger: TriggerMethod, cancellable: TriggerCancellableOutcome, 
         abortBatch,
         abort,
         addNewBatch,
-        runCancellable
+        runCancellable,
+        clearPendingBatches,
+        processPendingBatches,
     };
 };

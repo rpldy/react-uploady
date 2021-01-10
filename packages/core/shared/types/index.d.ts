@@ -27,6 +27,7 @@ export interface UploadOptions {
 }
 
 export enum BATCH_STATES {
+    PENDING = "pending",
     ADDED = "added",
     PROCESSING = "processing",
     UPLOADING = "uploading",
@@ -42,6 +43,7 @@ export type Batch = {
     state: BATCH_STATES;
     completed: number;
     loaded: number;
+    isPending: boolean;
 };
 
 export enum FILE_STATES {

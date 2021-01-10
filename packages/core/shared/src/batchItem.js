@@ -18,11 +18,11 @@ const getBatchItemWithFile = (batchItem: Object, file: Object): BatchItem => {
 
 const isLikeFile = (f: UploadInfo) => f && (f instanceof Blob || f instanceof File || (typeof f === "object" && f.name && f.type));
 
-export default (f: UploadInfo, batchId: string): BatchItem => {
+export default (f: UploadInfo, batchId: string, autoUpload: boolean): BatchItem => {
 	iCounter += 1;
 	//keep existing id for recycled items
 	const id = (f.id && f.batchId) ? f.id : `${batchId}.item-${iCounter}`,
-		state = FILE_STATES.ADDED;
+		state = autoUpload ? FILE_STATES.ADDED : FILE_STATES.PENDING;
 
 	let batchItem = {
 		id,

@@ -69,6 +69,7 @@ export const WithoutAutoUpload = () => {
 
 		<UploadButton autoUpload={false}/>
 		<br/>
+        <StoryAbortButton/>
 		<ProcessPending/>
 	</Uploady>;
 };

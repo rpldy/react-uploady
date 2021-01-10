@@ -14,10 +14,10 @@ import type { CreateOptions } from "./types";
 
 let bCounter = 0;
 
-const processFiles = (batchId, files: UploadInfo, fileFilter: ?FileFilterMethod): BatchItem[] =>
+const processFiles = (batchId, files: UploadInfo, autoUpload: boolean, fileFilter: ?FileFilterMethod): BatchItem[] =>
     Array.prototype
         .filter.call(files, fileFilter || DEFAULT_FILTER)
-        .map((f) => createBatchItem(f, batchId));
+        .map((f) => createBatchItem(f, batchId, autoUpload));
 
 export default (files: UploadInfo | UploadInfo[], uploaderId: string, options: CreateOptions): Batch => {
     bCounter += 1;
@@ -30,9 +30,10 @@ export default (files: UploadInfo | UploadInfo[], uploaderId: string, options: C
     return {
         id,
         uploaderId,
-        items: processFiles(id, files, options.fileFilter),
+        items: processFiles(id, files, options.autoUpload, options.fileFilter),
         state: BATCH_STATES.ADDED,
         completed: 0,
         loaded: 0,
+        isPending: !options.autoUpload,
     };
 };

@@ -26,10 +26,10 @@ export type CreateOptions =  {|
     send?: ?SendMethod<any>,
 |};
 
-export type PendingBatch = {
-	batch: Batch,
-	uploadOptions: CreateOptions,
-};
+// export type PendingBatch = {
+// 	batch: Batch,
+// 	uploadOptions: CreateOptions,
+// };
 
 export type UploaderType = {
 	id: string,

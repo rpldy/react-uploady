@@ -1,10 +1,24 @@
 import React, { useCallback, useContext, useState } from "react";
-import { UploadyContext, useBatchAbortListener, useBatchStartListener, useAllAbortListener, useAbortAll } from "@rpldy/shared-ui";
+import {
+    UploadyContext,
+    useBatchAddListener,
+    useBatchAbortListener,
+    useBatchStartListener,
+    useAllAbortListener,
+    useAbortAll,
+    useAbortItem,
+} from "@rpldy/shared-ui";
 
 const StoryAbortButton = () => {
     const context = useContext(UploadyContext);
     const [uploadingId, setUploading] = useState(null);
+    const [files, setFiles] = useState([]);
     const abortAll = useAbortAll();
+    const abortItem = useAbortItem();
+
+    useBatchAddListener((batch) => {
+        setFiles((prevState) => [...prevState, ...batch.items]);
+    });
 
     useBatchStartListener((batch) => {
         setUploading(batch.id);
@@ -27,12 +41,19 @@ const StoryAbortButton = () => {
         abortAll();
     }, [context, abortAll]);
 
-    return context && uploadingId ?
-        (<>
-            <button onClick={onClick} data-test="story-abort-button">Abort</button>
+    return <div>
+        {context && uploadingId ? (<>
+            <button onClick={onClick} data-test="story-abort-button">Abort Batch: {uploadingId}</button>
             <br/>
             <button onClick={onAbortAllClick} data-test="story-abort-all-button">Abort All</button>
-        </>) : null
+            <br/>
+        </>) : null}
+
+        <ul>
+            {files.map((f) =>
+                <button key={f.file.name} onClick={() => abortItem(f.id)}>Abort file: {f.file.name}</button>)}
+        </ul>
+    </div>
 };
 
 export default StoryAbortButton;

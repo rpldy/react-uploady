@@ -33,4 +33,11 @@ describe("UploadButton - With Abort", () => {
             cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 0 });
         });
     });
+
+    it("should abort autoUpload=false items", () => {
+
+
+        expect(false).to.be.true;
+
+    });
 });

@@ -1,15 +1,16 @@
 // @flow
-import { logger, hasWindow, isFunction } from "@rpldy/shared";
+import { logger, hasWindow, isFunction, merge, } from "@rpldy/shared";
 import createState from "@rpldy/simple-state";
 import { SENDER_EVENTS, UPLOADER_EVENTS } from "../consts";
 import processQueueNext from "./processQueueNext";
 import * as abortMethods from "./abort";
 import { detachRecycledFromPreviousBatch, getBatchFromState } from "./batchHelpers";
 
-import type { TriggerCancellableOutcome, Batch, BatchItem } from "@rpldy/shared";
+import type { TriggerCancellableOutcome, Batch, BatchItem, UploadOptions, FILE_STATES } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { ItemsSender, CreateOptions } from "../types";
 import type { State } from "./types";
+import { BatchData } from "./types";
 
 const createUploaderQueue = (
     options: CreateOptions,
@@ -55,7 +56,27 @@ const createUploaderQueue = (
             });
         }
 
-        batch.items.forEach(add);
+        processQueueNext(queueState);
+    };
+
+    const uploadPendingBatches = (uploadOptions: ?UploadOptions) => {
+        updateState((state) => {
+            //remove pending state from pending batches
+            state.batches.forEach((batchData: BatchData) => {
+                const { batch, batchOptions } = batchData;
+
+                if (batch.isPending) {
+                    batch.items.forEach((item: BatchItem) => {
+                        item.state = FILE_STATES.ADDED;
+                    });
+
+                    batch.isPending = false;
+
+                    batchData.batchOptions = merge({}, batchOptions, uploadOptions);
+                }
+            });
+        });
+
         processQueueNext(queueState);
     };
 
@@ -63,6 +84,8 @@ const createUploaderQueue = (
         updateState((state) => {
             state.batches[batch.id] = { batch, batchOptions };
         });
+
+        batch.items.forEach(add);
 
         return getBatchFromState(state, batch.id);
     };
@@ -144,6 +167,12 @@ const createUploaderQueue = (
         abortMethods.abortAll(queueState, processQueueNext);
     };
 
+    const clearPendingBatches = () => {
+        updateState((state) => {
+            state.batches = state.batches.filter(({ batch }: BatchData) => !batch.isPending);
+        });
+    };
+
     return {
         updateState,
         getState: queueState.getState,
@@ -153,6 +182,8 @@ const createUploaderQueue = (
         abortItem,
         abortBatch,
         abortAll,
+        clearPendingBatches,
+        uploadPendingBatches,
     };
 };
 

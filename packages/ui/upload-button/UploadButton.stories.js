@@ -45,33 +45,8 @@ export const Simple = () => {
                     maxGroupSize={groupSize}
                     fileInputId={"rpldyInput"}>
 
-        <UploadButton />
+        <UploadButton/>
     </Uploady>;
-};
-
-const ProcessPending = () => {
-	const context= useContext(UploadyContext);
-	return <button onClick={() => {
-		context && context.processPending();
-	}}>PROCESS PENDING</button>
-}
-
-export const WithoutAutoUpload = () => {
-	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-
-	return <Uploady debug
-					multiple={multiple}
-					destination={destination}
-					enhancer={enhancer}
-					grouped={grouped}
-					maxGroupSize={groupSize}
-					fileInputId={"rpldyInput"}>
-
-		<UploadButton autoUpload={false}/>
-		<br/>
-        <StoryAbortButton/>
-		<ProcessPending/>
-	</Uploady>;
 };
 
 const StyledUploadButton = styled(UploadButton)`
@@ -368,7 +343,6 @@ export const WithFileFilter = () => {
         <UploadButton id="upload-button"/>
     </Uploady>;
 };
-
 
 const Form = styled.form`
   display: flex;

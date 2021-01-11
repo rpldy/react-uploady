@@ -1,10 +1,10 @@
 // @flow
-import { BATCH_STATES, logger } from "@rpldy/shared";
+import { BATCH_STATES, logger, merge, FILE_STATES } from "@rpldy/shared";
 import { unwrap } from "@rpldy/simple-state";
 import { UPLOADER_EVENTS } from "../consts";
 
 import type { BatchData, QueueState, State } from "./types";
-import type { Batch, BatchItem } from "@rpldy/shared";
+import type { Batch, BatchItem, UploadOptions } from "@rpldy/shared";
 
 const BATCH_READY_STATES = [
     BATCH_STATES.ADDED,
@@ -148,6 +148,39 @@ const detachRecycledFromPreviousBatch = (queue: QueueState, item: BatchItem): vo
     }
 };
 
+const preparePendingForUpload = (queue: QueueState,  uploadOptions: ?UploadOptions) : void => {
+    queue.updateState((state) => {
+        //remove pending state from pending batches
+        Object.keys(state.batches)
+            .forEach((batchId: string) => {
+                const batchData = state.batches[batchId];
+                const { batch, batchOptions } = batchData;
+
+                if (batch.state === BATCH_STATES.PENDING) {
+                    batch.items.forEach((item: BatchItem) => {
+                        item.state = FILE_STATES.ADDED;
+                    });
+
+                    batch.state = BATCH_STATES.ADDED;
+
+                    batchData.batchOptions = merge({}, batchOptions, uploadOptions);
+                }
+            });
+    });
+};
+
+const removePendingBatches = (queue: QueueState): void => {
+    const batches = queue.getState().batches;
+
+    Object.keys(batches)
+        .filter((batchId: string) =>
+            batches[batchId].batch.state === BATCH_STATES.PENDING)
+        .forEach((batchId: string) => {
+            removeBatchItems(queue, batchId);
+            removeBatch(queue, batchId);
+        });
+};
+
 export {
     isBatchFinished,
     loadNewBatchForItem,
@@ -161,4 +194,6 @@ export {
     getIsItemBatchReady,
     getBatchFromState,
     detachRecycledFromPreviousBatch,
+    preparePendingForUpload,
+    removePendingBatches,
 };

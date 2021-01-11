@@ -92,7 +92,6 @@ export default (options?: CreateOptions): UploaderType => {
 
     const clearPending = (): void => {
         processor.clearPendingBatches();
-        // pendingBatches.splice(0);
     };
 
     /**
@@ -100,13 +99,6 @@ export default (options?: CreateOptions): UploaderType => {
      */
     const upload = (uploadOptions?: ?UploadOptions): void => {
         processor.processPendingBatches(uploadOptions);
-        // pendingBatches
-        //     .splice(0)
-        //     .forEach(({ batch, uploadOptions: batchOptions }: PendingBatch) =>
-        //         processor.process(
-        //             batch,
-        //             merge({}, batchOptions, uploadOptions))
-        //     );
     };
 
     const getOptions = (): CreateOptions => {

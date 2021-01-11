@@ -26,11 +26,6 @@ export type CreateOptions =  {|
     send?: ?SendMethod<any>,
 |};
 
-// export type PendingBatch = {
-// 	batch: Batch,
-// 	uploadOptions: CreateOptions,
-// };
-
 export type UploaderType = {
 	id: string,
 	update: (updateOptions: CreateOptions) => UploaderType,
@@ -39,7 +34,6 @@ export type UploaderType = {
 	abort: (id?: string) => void,
 	abortBatch: (id: string) => void,
 	getOptions: () => CreateOptions,
-	getPending: () => PendingBatch[],
 	clearPending: () => void,
 	on: OnAndOnceMethod,
 	once: OnAndOnceMethod,

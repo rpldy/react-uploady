@@ -7,6 +7,7 @@ import type { UploadData, BatchItem } from "@rpldy/shared";
 import type { ProcessNextMethod, QueueState } from "./types";
 
 export const FILE_STATE_TO_EVENT_MAP = {
+    [FILE_STATES.PENDING]: null,
     [FILE_STATES.ADDED]: UPLOADER_EVENTS.ITEM_START,
     [FILE_STATES.FINISHED]: UPLOADER_EVENTS.ITEM_FINISH,
     [FILE_STATES.ERROR]: UPLOADER_EVENTS.ITEM_ERROR,
@@ -53,8 +54,10 @@ const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], n
                 queue.handleItemProgress(item, 100, item.file ? item.file.size : 0);
             }
 
-            //trigger UPLOADER EVENT for item based on its state
-            queue.trigger(FILE_STATE_TO_EVENT_MAP[item.state], item);
+            if (FILE_STATE_TO_EVENT_MAP[item.state]) {
+                //trigger UPLOADER EVENT for item based on its state
+                queue.trigger(FILE_STATE_TO_EVENT_MAP[item.state], item);
+            }
 
             if (getIsFinalized(item)) {
                 //trigger FINALIZE event

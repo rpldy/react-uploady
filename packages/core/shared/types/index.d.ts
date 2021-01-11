@@ -43,10 +43,10 @@ export type Batch = {
     state: BATCH_STATES;
     completed: number;
     loaded: number;
-    isPending: boolean;
 };
 
 export enum FILE_STATES {
+    PENDING = "pending",
     ADDED = "added",
     UPLOADING = "uploading",
     CANCELLED = "cancelled",
@@ -100,7 +100,7 @@ export type UploadData = {
     response: any;
 };
 
-export const createBatchItem: (f: UploadInfo, batchId: string) => BatchItem;
+export const createBatchItem: (f: UploadInfo, batchId: string, isPending?: boolean) => BatchItem;
 
 export const isPlainObject: (obj: unknown) => boolean;
 

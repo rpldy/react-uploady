@@ -78,7 +78,6 @@ export type Batch = {
     completed: number,
     //sum of bytes uploaded for batch items
     loaded: number,
-    isPending: boolean,
 };
 
 export type FileFilterMethod = (File | string) => boolean;

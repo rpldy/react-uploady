@@ -50,8 +50,11 @@ const StoryAbortButton = () => {
         </>) : null}
 
         <ul>
-            {files.map((f) =>
-                <button key={f.file.name} onClick={() => abortItem(f.id)}>Abort file: {f.file.name}</button>)}
+            {files.map((f, i) =>
+                <li key={f.id}>
+                    <button data-test={`abort-pending-${i}`}
+                            onClick={() => abortItem(f.id)}>Abort file: {f.file.name}</button>
+                </li>)}
         </ul>
     </div>
 };

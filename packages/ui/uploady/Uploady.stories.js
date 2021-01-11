@@ -1,18 +1,18 @@
 // @flow
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import ReactDOM from "react-dom";
 import {
     UmdBundleScript,
     localDestination,
     UMD_NAMES,
     addActionLogEnhancer,
-	useStoryUploadySetup,
-    getCsfExport,
+    useStoryUploadySetup,
+    getCsfExport, StoryAbortButton,
 } from "../../../story-helpers";
 import Uploady, {
     useUploady,
     NoDomUploady,
-    useUploadOptions,
+    useUploadOptions, UploadyContext,
 } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -100,6 +100,41 @@ export const WithCustomFieldName = () => {
         maxGroupSize={groupSize}>
         <p>Send upload request with custom field name</p>
         <ContextUploadButton />
+    </Uploady>
+};
+
+const ProcessPending = ({ id = "process-pending", title = "PROCESS PENDING", options}) => {
+    const { processPending } = useUploady();
+    return <button id={id}
+                   onClick={() => processPending(options)}>{title}</button>;
+}
+
+const ClearPending = () => {
+    const { clearPending } = useUploady();
+    return <button id="clear-pending" onClick={clearPending}>CLEAR PENDING</button>;
+};
+
+export const WithAutoUploadOff = () => {
+    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+
+    return <Uploady
+        debug
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+        autoUpload={false}>
+        <ContextUploadButton />
+        <br/>
+        <StoryAbortButton/>
+        <ProcessPending/>
+        <br/>
+        <ProcessPending
+            id="process-pending-param"
+            title="PROCESS PENDING WITH PARAM"
+            options={{ params: { test: "123" } }}/>
+        <br/>
+        <ClearPending/>
     </Uploady>
 };
 

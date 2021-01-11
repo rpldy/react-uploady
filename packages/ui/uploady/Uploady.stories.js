@@ -103,7 +103,7 @@ export const WithCustomFieldName = () => {
     </Uploady>
 };
 
-const ProcessPending = ({ id = "process-pending", title = "PROCESS PENDING", options}) => {
+const ProcessPending = ({ id = "process-pending", title = "PROCESS PENDING", options = undefined}) => {
     const { processPending } = useUploady();
     return <button id={id}
                    onClick={() => processPending(options)}>{title}</button>;

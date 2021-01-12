@@ -8,7 +8,7 @@ import {
 } from "./batchHelpers";
 import processFinishedRequest from "./processFinishedRequest";
 
-import type { BatchItem } from "@rpldy/shared";
+import type { Batch, BatchItem } from "@rpldy/shared";
 import type { ProcessNextMethod, QueueState } from "./types";
 
 const getIsAbortableBatch = (batch: Batch): boolean =>
@@ -42,10 +42,11 @@ const ITEM_STATE_ABORTS = {
 
 const callAbortOnItem = (queue: QueueState, id: string, next: ProcessNextMethod, batchAbort = false) => {
     const state = queue.getState(),
-        item = state.items[id];
+        item = state.items[id],
+        itemState = item?.state;
 
-    return ITEM_STATE_ABORTS[item?.state] ?
-        ITEM_STATE_ABORTS[item.state](queue, item, next, batchAbort) : false;
+    return ITEM_STATE_ABORTS[itemState] ?
+        ITEM_STATE_ABORTS[itemState](queue, item, next, batchAbort) : false;
 };
 
 const abortAll = (queue: QueueState, next: ProcessNextMethod) => {

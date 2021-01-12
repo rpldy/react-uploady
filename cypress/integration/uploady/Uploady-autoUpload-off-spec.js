@@ -4,12 +4,13 @@ import { BATCH_ADD, ITEM_START, ITEM_FINISH } from "../storyLogPatterns";
 describe("Uploady - autoUpload off tests", () => {
     const fileName = "flower.jpg";
 
-    beforeEach(() => {
-        cy.reload();
+    before(() => {
+        cy.visitStory("uploady", "with-auto-upload-off&knob-mock send delay_Upload Destination=200", true);
     });
 
-    before(() => {
-        cy.visitStory("uploady", "with-auto-upload-off&knob-mock send delay_Upload Destination=200", true) //&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url", true);
+    beforeEach(() => {
+        //refresh UI And cypress log
+        cy.reload();
     });
 
     it("should not auto upload", () => {
@@ -58,34 +59,20 @@ describe("Uploady - autoUpload off tests", () => {
         }, "#upload-button", null);
     });
 
-    it("should process pending with options", () => {
-        cy.visitStory("uploady", "with-auto-upload-off&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url", true);
-
-        cy.server();
-
-        cy.route({
-            method: "POST",
-            url: "http://test.upload/url",
-            response: { success: true }
-        }).as("uploadReq");
+    it("should abort individual pending item", () => {
 
         uploadFile(fileName, () => {
-            cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });
+            uploadFile(fileName, () => {
+                cy.get("button[data-test='abort-file-0']")
+                    .click();
 
-            cy.get("#process-pending-param")
-                .click();
+                cy.get("#process-pending")
+                    .click();
 
-            cy.wait(500);
+                cy.wait(500);
 
-            cy.storyLog().assertLogPattern(ITEM_START, { times: 1 });
-            cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });
-
-            cy.wait("@uploadReq")
-                .its("request.body")
-                .should((body) => {
-                    expect(body.get("test")).to.equal("123");
-                });
-
+                cy.storyLog().assertLogPattern(ITEM_START, { times: 1 });
+            }, "#upload-button", null);
         }, "#upload-button", null);
     });
 });

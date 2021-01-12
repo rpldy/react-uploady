@@ -1,7 +1,7 @@
 import { UPLOADER_EVENTS } from "../../consts";
 import getQueueState from "./mocks/getQueueState.mock";
 import * as batchHelpers from "../batchHelpers";
-import { BATCH_STATES } from "@rpldy/shared";
+import { BATCH_STATES, FILE_STATES } from "@rpldy/shared";
 
 describe("batchHelpers tests", () => {
 
@@ -513,6 +513,206 @@ describe("batchHelpers tests", () => {
 
             const updatedBatch = batchHelpers.getBatchFromState(qState.getState(), "b1");
             expect(updatedBatch.items).toHaveLength(3);
+        });
+
+        it("should do nothing if batch no longer exists", () => {
+            const qState = getTestQueueState();
+            const item = { id: "i2", batchId: "b2", recycled: true, previousBatch: "???" };
+
+            batchHelpers.detachRecycledFromPreviousBatch(qState, item);
+
+            const updatedBatch = batchHelpers.getBatchFromState(qState.getState(), "b1");
+            expect(updatedBatch.items).toHaveLength(3);
+        });
+    });
+
+    describe("removePendingBatches tests", () => {
+        it("should do nothing if no batches", () => {
+            const queue = getQueueState({
+                items: {
+                },
+                batches: {
+                }
+            });
+
+            batchHelpers.removePendingBatches(queue);
+
+            expect(Object.keys(queue.getState().batches)).toHaveLength(0);
+        });
+
+        it("should do nothing if no pending batches", () => {
+            const items = [{ id: "i1" }, { id: "i2" }];
+
+            const queue = getQueueState({
+                items: {
+                    i1: items[0],
+                    i2: items[1],
+                },
+                batches: {
+                    b1: {
+                        batch: { state: BATCH_STATES.ADDED,  items, },
+                    }
+                }
+            });
+
+            batchHelpers.removePendingBatches(queue);
+
+            expect(queue.getState().batches.b1).toBeDefined();
+            expect(queue.getState().items.i1).toBeDefined();
+            expect(queue.getState().items.i2).toBeDefined();
+        });
+
+        it("should remove pending batches", () => {
+            const items = [{ id: "i1", batchId: "b1" },
+                { id: "i2", batchId: "b1" },
+                { id: "i3", batchId: "b2" },
+                { id: "i4", batchId: "b3" },
+            ];
+
+            const queue = getQueueState({
+                items: {
+                    i1: items[0],
+                    i2: items[1],
+                    i3: items[2],
+                    i4: items[3],
+                },
+                batches: {
+                    b1: {
+                        batch: { state: BATCH_STATES.PENDING, items: [items[0], items[1]], },
+                    },
+                    b2: {
+                        batch: { state: BATCH_STATES.PENDING, items: [items[2]], },
+                    },
+                    b3: {
+                        batch: { state: BATCH_STATES.ADDED, items: [items[3]], },
+                    }
+                }
+            });
+
+            batchHelpers.removePendingBatches(queue);
+
+            expect(Object.keys(queue.getState().batches)).toHaveLength(1);
+            expect(Object.keys(queue.getState().items)).toHaveLength(1);
+            expect(queue.getState().batches.b3).toBeDefined();
+            expect(queue.getState().items.i4).toBeDefined();
+        });
+    });
+
+    describe("preparePendingForUpload tests", () => {
+        it("should do nothing if no pending batches", () => {
+            const items = [{ id: "i1", state: FILE_STATES.ADDED }, { id: "i2" }];
+
+            const queue = getQueueState({
+                items: {
+                    i1: items[0],
+                    i2: items[1],
+                },
+                batches: {
+                    b1: {
+                        batch: { state: BATCH_STATES.ADDED, items, },
+                    }
+                }
+            });
+
+            batchHelpers.preparePendingForUpload(queue);
+
+            expect(queue.getState().batches.b1.batch.state).toBe(BATCH_STATES.ADDED);
+            expect(queue.getState().items.i1.state).toBe(FILE_STATES.ADDED);
+        });
+
+        const getPendingQueue = () => {
+            const items = [
+                { id: "i1", state: FILE_STATES.ADDED },
+                { id: "i2", state: FILE_STATES.PENDING },
+                { id: "i3", state: FILE_STATES.PENDING },
+                ];
+
+            return getQueueState({
+                items: {
+                    i1: items[0],
+                    i2: items[1],
+                    i3: items[2],
+                },
+                batches: {
+                    b1: {
+                        batch: { state: BATCH_STATES.ADDED, items: [items[0]], },
+                    },
+                    b2: {
+                        batch: { state: BATCH_STATES.PENDING, items: [items[1], items[2]], },
+                        batchOptions: { test: true }
+                    }
+                }
+            });
+        };
+
+        it("should prepare pending for upload", () => {
+            const queue = getPendingQueue();
+
+            batchHelpers.preparePendingForUpload(queue);
+
+            expect(queue.getState().batches.b2.batch.state).toBe(BATCH_STATES.ADDED);
+            expect(queue.getState().batches.b2.batch.items[0].state).toBe(FILE_STATES.ADDED);
+            expect(queue.getState().batches.b2.batch.items[1].state).toBe(FILE_STATES.ADDED);
+
+            expect(queue.getState().batches.b2.batchOptions.test).toBe(true);
+            expect(queue.getState().items.i2.state).toBe(FILE_STATES.ADDED);
+            expect(queue.getState().items.i3.state).toBe(FILE_STATES.ADDED);
+        });
+
+        it("should prepare pending for upload with Options", () => {
+            const queue = getPendingQueue();
+
+            batchHelpers.preparePendingForUpload(queue, { test: false});
+
+            expect(queue.getState().batches.b2.batch.state).toBe(BATCH_STATES.ADDED);
+            expect(queue.getState().batches.b2.batchOptions.test).toBe(false);
+            expect(queue.getState().items.i2.state).toBe(FILE_STATES.ADDED);
+            expect(queue.getState().items.i3.state).toBe(FILE_STATES.ADDED);
+        });
+    });
+
+    describe("ensureNonUploadingBatchCleaned tests", () => {
+
+        const getTestQueue = (itemState) => {
+            const item = { id: "i1", batchId: "b1", state: itemState };
+
+            return getQueueState({
+                items: {
+                    i1: item,
+                },
+                batches: {
+                    b1: {
+                        batch: { id: "b1", items: [item] }
+                    }
+                }
+            });
+        };
+
+        it.each([
+            FILE_STATES.ADDED,
+            FILE_STATES.PENDING,
+            FILE_STATES.UPLOADING,
+        ])("should do nothing if still has item with active state: %s", (state) => {
+            const queue = getTestQueue(state);
+
+            batchHelpers.ensureNonUploadingBatchCleaned(queue, "b1");
+
+            expect(queue.getState().items.i1).toBeDefined();
+            expect(queue.getState().batches.b1).toBeDefined();
+        });
+
+        it.each([
+            FILE_STATES.ABORTED,
+            FILE_STATES.ERROR,
+            FILE_STATES.FINISHED,
+            FILE_STATES.CANCELLED,
+        ])("should remove batch and items if only has finished items", (state) => {
+            const queue = getTestQueue(state);
+
+            batchHelpers.ensureNonUploadingBatchCleaned(queue, "b1");
+
+            expect(queue.getState().items.i1).toBeUndefined();
+            expect(queue.getState().batches.b1).toBeUndefined();
         });
     });
 });

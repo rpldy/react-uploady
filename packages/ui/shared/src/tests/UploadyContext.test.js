@@ -115,6 +115,11 @@ describe("UploadyContext tests", () => {
         expect(fileInput.click).toHaveBeenCalled();
     });
 
+    it("should clear uploader pending", () => {
+        getTestContext().clearPending();
+        expect(uploader.clearPending).toHaveBeenCalled();
+    });
+
     describe("hasUploader tests", () => {
         it("should return true when uploader provided", () => {
             expect(getTestContext().hasUploader()).toBe(true);

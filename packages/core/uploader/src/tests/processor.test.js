@@ -23,6 +23,8 @@ describe("processor tests", () => {
 		abortBatch: jest.fn(),
         addBatch: jest.fn(),
         runCancellable: jest.fn(),
+        clearPendingBatches: jest.fn(),
+        uploadPendingBatches: jest.fn(),
 	};
 
 	beforeEach(() => {
@@ -84,4 +86,17 @@ describe("processor tests", () => {
         processor.runCancellable();
         expect(queue.runCancellable).toHaveBeenCalled();
     });
+
+    it("clearPendingBatches should use queue clearPendingBatches", () => {
+        const processor = testProcessor();
+        processor.clearPendingBatches();
+        expect(queue.clearPendingBatches).toHaveBeenCalled();
+    });
+
+    it("processPendingBatches should use queue uploadPendingBatches", () => {
+        const processor = testProcessor();
+        processor.processPendingBatches();
+        expect(queue.uploadPendingBatches).toHaveBeenCalled();
+    });
+
 });

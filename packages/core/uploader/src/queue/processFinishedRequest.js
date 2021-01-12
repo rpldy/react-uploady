@@ -1,6 +1,6 @@
 // @flow
 import { FILE_STATES, logger } from "@rpldy/shared";
-import { UPLOADER_EVENTS } from "../consts";
+import { UPLOADER_EVENTS, ITEM_FINALIZE_STATES } from "../consts";
 import { cleanUpFinishedBatch } from "./batchHelpers";
 
 import type { UploadData, BatchItem } from "@rpldy/shared";
@@ -15,13 +15,6 @@ export const FILE_STATE_TO_EVENT_MAP = {
     [FILE_STATES.ABORTED]: UPLOADER_EVENTS.ITEM_ABORT,
     [FILE_STATES.UPLOADING]: UPLOADER_EVENTS.ITEM_PROGRESS,
 };
-
-const ITEM_FINALIZE_STATES = [
-  FILE_STATES.FINISHED,
-  FILE_STATES.ERROR,
-  FILE_STATES.CANCELLED,
-  FILE_STATES.ABORTED
-];
 
 type FinishData = { id: string, info: UploadData };
 

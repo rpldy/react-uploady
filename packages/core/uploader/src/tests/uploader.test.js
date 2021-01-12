@@ -13,7 +13,9 @@ describe("uploader tests", () => {
         mockAbort = jest.fn(),
         mockAbortBatch = jest.fn(),
         mockAddNewBatch = jest.fn(),
-        mockRunCancellable = jest.fn();
+        mockRunCancellable = jest.fn(),
+        mockProcessPendingBatches = jest.fn(),
+        mockClearPendingBatches = jest.fn();
 
     beforeAll(()=>{
         getMandatoryOptions.mockImplementation((options) => options);
@@ -29,6 +31,8 @@ describe("uploader tests", () => {
             mockRunCancellable,
             mockAddNewBatch,
             deepProxyUnwrap,
+            mockProcessPendingBatches,
+            mockClearPendingBatches,
         );
     });
 
@@ -44,6 +48,8 @@ describe("uploader tests", () => {
             abortBatch: mockAbortBatch,
             addNewBatch: mockAddNewBatch,
             runCancellable: mockRunCancellable,
+            processPendingBatches: mockProcessPendingBatches,
+            clearPendingBatches: mockClearPendingBatches,
         });
 
         return createUploader(options);
@@ -118,38 +124,36 @@ describe("uploader tests", () => {
 
             const uploader = getTestUploader({ autoUpload: false });
 
+            const newOptions = { process: true };
             await uploader.add([], { test: 1 });
-            uploader.upload({ process: true });
+            uploader.upload(newOptions);
 
-            expect(mockProcess).toHaveBeenCalled();
-
-            expect(utils.merge).toHaveBeenNthCalledWith(2, expect.any(Object), expect.any(Object), {process: true});
+            expect(mockProcessPendingBatches).toHaveBeenCalledWith(newOptions);
         });
 
-        it("should process pending", async () => {
-            mockRunCancellable
-                .mockResolvedValueOnce(false)
-                .mockResolvedValueOnce(false);
-
-            const batch1 = { items: [1, 2] },
-                batch2 = { items: [3] };
-
-            mockAddNewBatch
-                .mockReturnValueOnce(batch1)
-                .mockReturnValueOnce(batch2);
-
-            const uploader = getTestUploader({ autoUpload: false });
-
-            await uploader.add([], { test: 1 });
-            await uploader.add([], { test: 2 });
-
-            uploader.upload();
-            expect(mockProcess).toHaveBeenCalledWith(batch1, expect.objectContaining({ test: 1 }));
-            expect(mockProcess).toHaveBeenCalledWith(batch2, expect.objectContaining({ test: 2 }));
-        });
+        // it("should process pending", async () => {
+        //     mockRunCancellable
+        //         .mockResolvedValueOnce(false)
+        //         .mockResolvedValueOnce(false);
+        //
+        //     const batch1 = { items: [1, 2] },
+        //         batch2 = { items: [3] };
+        //
+        //     mockAddNewBatch
+        //         .mockReturnValueOnce(batch1)
+        //         .mockReturnValueOnce(batch2);
+        //
+        //     const uploader = getTestUploader({ autoUpload: false });
+        //
+        //     await uploader.add([], { test: 1 });
+        //     await uploader.add([], { test: 2 });
+        //
+        //     uploader.upload();
+        //     expect(mockProcess).toHaveBeenCalledWith(batch1, expect.objectContaining({ test: 1 }));
+        //     expect(mockProcess).toHaveBeenCalledWith(batch2, expect.objectContaining({ test: 2 }));
+        // });
 
         it("should clear previous pending", async () => {
-
             mockRunCancellable
                 .mockResolvedValueOnce(false)
                 .mockResolvedValueOnce(false);
@@ -168,13 +172,12 @@ describe("uploader tests", () => {
 
             uploader.upload();
 
-            expect(mockProcess).toHaveBeenCalledTimes(1);
-            expect(mockProcess).toHaveBeenCalledWith(batch2, expect.objectContaining({ test: 2 }));
+            expect(mockClearPendingBatches).toHaveBeenCalledTimes(2);
+            expect(mockProcessPendingBatches).toHaveBeenCalledTimes(1);
         });
     });
 
     describe("add uploads tests", () => {
-
         it("should not add anything in case batch returns empty", async () => {
             mockAddNewBatch.mockReturnValueOnce({ items: [] });
             const uploader = getTestUploader({ autoUpload: true });
@@ -224,32 +227,6 @@ describe("uploader tests", () => {
             createLifePack.mock.calls[0][0]();
             expect(deepProxyUnwrap).toHaveBeenCalledTimes(1);
             expect(deepProxyUnwrap.mock.calls[0][0]).toEqual({ ...batch, state: BATCH_STATES.CANCELLED });
-        });
-
-        it("should add to pending when auto upload is false", async () => {
-            mockRunCancellable
-                .mockResolvedValueOnce(false)
-                .mockResolvedValueOnce(false);
-
-            const uploader = getTestUploader({ autoUpload: false });
-
-            const batch1 = { items: [1, 2] },
-                batch2 = { items: [3, 4] };
-
-            mockAddNewBatch
-                .mockReturnValueOnce(batch1)
-                .mockReturnValueOnce(batch2);
-
-            await uploader.add([], { test: 1 });
-            await uploader.add([], { test: 2 });
-
-            const pending = uploader.getPending();
-
-            expect(pending[0].batch).toBe(batch1);
-            expect(pending[0].uploadOptions).toEqual(expect.objectContaining({ test: 1 }));
-
-            expect(pending[1].batch).toBe(batch2);
-            expect(pending[1].uploadOptions).toEqual(expect.objectContaining({ test: 2 }));
         });
     });
 
@@ -341,8 +318,7 @@ describe("uploader tests", () => {
         const uploader = getTestUploader({ autoUpload: false });
         await uploader.add([], { test: 1 });
 
-        expect(uploader.getPending()).toHaveLength(1);
         uploader.clearPending();
-        expect(uploader.getPending()).toHaveLength(0);
+        expect(mockClearPendingBatches).toHaveBeenCalledTimes(1);
     });
 });

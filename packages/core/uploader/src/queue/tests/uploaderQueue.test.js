@@ -4,7 +4,11 @@ import createState from "@rpldy/simple-state";
 import { SENDER_EVENTS, UPLOADER_EVENTS } from "../../consts";
 import processQueueNext from "../processQueueNext";
 import * as abortMethods from "../abort";
-import { detachRecycledFromPreviousBatch } from "../batchHelpers";
+import {
+    detachRecycledFromPreviousBatch,
+    preparePendingForUpload,
+    removePendingBatches,
+} from "../batchHelpers";
 import createQueue from "../uploaderQueue";
 
 jest.mock("@rpldy/simple-state");
@@ -103,10 +107,10 @@ describe("queue tests", () => {
 			batchOptions = { concurrent: true };
 
         queue.addBatch(batch, batchOptions);
-		queue.uploadBatch(batch);
+		// queue.uploadBatch(batch);
 
 		expect(() => {
-			queue.uploadBatch(batch, batchOptions);
+			queue.addBatch(batch, batchOptions);
 		}).toThrow("Uploader queue conflict - item u1 already exists");
 	});
 
@@ -115,10 +119,11 @@ describe("queue tests", () => {
 
         const batch = { items: [{ id: "u1" }] };
         queue.addBatch(batch, {});
-        queue.uploadBatch(batch);
+        // queue.uploadBatch(batch);
 
         const recycled = { id: "u1", recycled: true };
         queue.uploadBatch({ items: [recycled] });
+        queue.addBatch({ items: [recycled] });
 
         expect(detachRecycledFromPreviousBatch).toHaveBeenCalledWith(expect.any(Object), recycled );
     });
@@ -159,6 +164,22 @@ describe("queue tests", () => {
 
         const queueState = processQueueNext.mock.calls[0][0];
         expect(queueState.getCurrentActiveCount()).toBe(2);
+    });
+
+    it("clearPendingBatches should use batch helper", () => {
+        const queue = createQueue({ }, cancellable, trigger, sender, uploaderId);
+
+        queue.clearPendingBatches();
+        expect(removePendingBatches).toHaveBeenCalled();
+    });
+
+    it("uploadPendingBatches should prepare pending and upload", () => {
+        const queue = createQueue({ }, cancellable, trigger, sender, uploaderId);
+        const uploadOptions = { test: true };
+
+        queue.uploadPendingBatches(uploadOptions);
+        expect(preparePendingForUpload).toHaveBeenCalledWith(expect.any(Object), uploadOptions);
+        expect(processQueueNext).toHaveBeenCalled();
     });
 
     describe("UPLOADER_EVENTS.ITEM_PROGRESS tests", () => {

@@ -206,23 +206,6 @@ export const WithClass = () => {
     </Uploady>;
 };
 
-export const WithAbort = () => {
-    const { enhancer, destination, multiple } = useStoryUploadySetup();
-
-    return <div>
-        <p>Be prepared to click the abort button as soon as it appears once upload begins</p>
-        <Uploady
-            debug
-            multiple={multiple}
-            destination={destination}
-            enhancer={enhancer}>
-
-            <UploadButton id="upload-button"/>
-            <StoryAbortButton/>
-        </Uploady>
-    </div>
-};
-
 const DisabledDuringUploadButton = () => {
     const [uploading, setUploading] = useState(false);
 

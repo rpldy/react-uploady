@@ -1,43 +1,32 @@
 import uploadFile from "../uploadFile";
 
-describe("UploadButton - With Abort", () => {
+describe("Uploady - With Abort", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadButton", "with-abort");
+        cy.visitStory("uploady", "with-abort", true);
     });
 
-    it("should abort upload", () => {
-        cy.iframe("#storybook-preview-iframe").as("iframe");
+    beforeEach(() => {
+        cy.reload();
+    });
 
-        cy.get("@iframe")
-            .find("input")
-            .as("fInput");
+    it("should abort running upload", () => {
 
-        const abortSelector = "button[data-test='story-abort-button']";
-
-        cy.get("@iframe")
-            .find(abortSelector)
+        const abortSelector = "button[data-test='abort-batch-0']";
+        cy.get(abortSelector)
             .should("not.exist");
 
         uploadFile(fileName, () => {
-            cy.wait(500).then(() => {
-                cy.get("@iframe")
-                    .find(abortSelector)
-                    .should("be.visible")
-                    .click();
-            });
+            cy.get(abortSelector)
+                .should("be.visible")
+                .click();
+
+            cy.wait(500);
 
             cy.storyLog().assertLogPattern(/ITEM_ABORT/);
             cy.storyLog().assertLogPattern(/BATCH_ABORT/);
             cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 0 });
-        });
-    });
-
-    it("should abort autoUpload=false items", () => {
-
-
-        expect(false).to.be.true;
-
+        }, "#upload-button", null);
     });
 });

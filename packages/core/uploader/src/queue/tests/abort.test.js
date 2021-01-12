@@ -1,30 +1,106 @@
 import getQueueState from "./mocks/getQueueState.mock";
 import { BATCH_STATES, FILE_STATES } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../../consts";
-import { triggerUploaderBatchEvent, getBatchFromState } from "../batchHelpers";
+import {
+    triggerUploaderBatchEvent,
+    getBatchFromState,
+    ensureNonUploadingBatchCleaned,
+} from "../batchHelpers";
 import processFinishedRequest from "../processFinishedRequest";
 import * as abortMethods from "../abort";
 
-jest.mock("../batchHelpers", () => ({
-	triggerUploaderBatchEvent: jest.fn(),
-	getBatchFromState: jest.fn(),
-}));
-
+jest.mock("../batchHelpers");
 jest.mock("../processFinishedRequest", () => jest.fn());
 
 describe("abort tests", () => {
 	const mockItemAbort = jest.fn(() => true);
 
 	beforeEach(() => {
-		clearJestMocks(mockItemAbort);
+		clearJestMocks(
+		    mockItemAbort,
+            ensureNonUploadingBatchCleaned,
+        );
 	});
 
-	describe("abortItem tests", () => {
+    it("should abort all", () => {
+        const queue = getQueueState({
+            items: {
+                "u1": {
+                    id: "u1",
+                    batchId: "b1",
+                    state: FILE_STATES.UPLOADING,
+                },
+                "u2": {
+                    id: "u2",
+                    batchId: "b1",
+                    state: FILE_STATES.UPLOADING,
+                },
+                "u3": {
+                    id: "u3",
+                    batchId: "b1",
+                    state: FILE_STATES.ADDED,
+                },
+                "u4": {
+                    id: "u4",
+                    batchId: "b1",
+                    state: FILE_STATES.FINISHED,
+                },
+            },
+            aborts: {
+                "u1": mockItemAbort,
+                "u2": mockItemAbort,
+                "u3": mockItemAbort,
+                "u4": mockItemAbort,
+            }
+        });
 
-		it("should xhr abort uploading item", () => {
+        const next = "next";
+
+        abortMethods.abortAll(queue, next);
+
+        expect(mockItemAbort).toHaveBeenCalledTimes(2);
+        expect(queue.getState().items.u1.state).toBe(FILE_STATES.UPLOADING);
+        expect(queue.getState().items.u2.state).toBe(FILE_STATES.UPLOADING);
+        expect(queue.getState().items.u3.state).toBe(FILE_STATES.ADDED);
+        expect(queue.getState().items.u4.state).toBe(FILE_STATES.FINISHED);
+
+        expect(processFinishedRequest).toHaveBeenCalledWith(queue,
+            [{
+                id: "u3",
+                info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
+            }], next);
+
+        expect(processFinishedRequest).toHaveBeenCalledWith(queue,
+            [{
+                id: "u3",
+                info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
+            }], next);
+
+        expect(queue.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ALL_ABORT);
+
+        expect(ensureNonUploadingBatchCleaned).toHaveBeenCalledTimes(1);
+        expect(ensureNonUploadingBatchCleaned).toHaveBeenCalledWith(queue, "b1");
+    });
+
+    describe("abortItem tests", () => {
+        it("should do nothing for non-existing item", () => {
+            const queue = getQueueState({
+                items: {
+                },
+                aborts: {
+                }
+            });
+
+            const result = abortMethods.abortItem(queue, "u1");
+
+            expect(result).toBe(false);
+        });
+
+        it("should xhr abort uploading item", () => {
 			const queue = getQueueState({
 				items: {
 					"u1": {
+					    id: "u1",
 						state: FILE_STATES.UPLOADING
 					}
 				},
@@ -37,13 +113,15 @@ describe("abort tests", () => {
 
 			expect(result).toBe(true);
 			expect(mockItemAbort).toHaveBeenCalled();
-			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
+			expect(queue.getState().items.u1.state).toBe(FILE_STATES.UPLOADING);
 		});
 
 		it("should call abort for added item", () => {
 			const queue = getQueueState({
 				items: {
 					"u1": {
+					    id: "u1",
+                        batchId: "b1",
 						state: FILE_STATES.ADDED
 					}
 				},
@@ -71,6 +149,8 @@ describe("abort tests", () => {
 					id: "u1",
 					info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
 				}], next);
+
+			expect(ensureNonUploadingBatchCleaned).toHaveBeenCalledWith(queue, "b1");
 		});
 
 		it.each([
@@ -91,59 +171,9 @@ describe("abort tests", () => {
 		});
 	});
 
-	it("should abort all", () => {
-
-		const queue = getQueueState({
-			items: {
-				"u1": {
-					state: FILE_STATES.UPLOADING,
-				},
-				"u2": {
-					state: FILE_STATES.UPLOADING,
-				},
-				"u3": {
-					state: FILE_STATES.ADDED,
-				},
-				"u4": {
-					state: FILE_STATES.FINISHED,
-				},
-			},
-			aborts: {
-				"u1": mockItemAbort,
-				"u2": mockItemAbort,
-				"u3": mockItemAbort,
-				"u4": mockItemAbort,
-			}
-		});
-
-		const next = "next";
-
-		abortMethods.abortAll(queue, next);
-
-		expect(mockItemAbort).toHaveBeenCalledTimes(2);
-		expect(queue.getState().items.u1.state).toBe(FILE_STATES.ABORTED);
-		expect(queue.getState().items.u2.state).toBe(FILE_STATES.ABORTED);
-		expect(queue.getState().items.u3.state).toBe(FILE_STATES.ADDED);
-		expect(queue.getState().items.u4.state).toBe(FILE_STATES.FINISHED);
-
-		expect(processFinishedRequest).toHaveBeenCalledWith(queue,
-			[{
-				id: "u3",
-				info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
-			}], next);
-
-		expect(processFinishedRequest).toHaveBeenCalledWith(queue,
-			[{
-				id: "u3",
-				info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
-			}], next);
-
-		expect(queue.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ALL_ABORT);
-	});
-
 	describe("batch abort tests", () => {
-
 		const getBatch = (state) => ({
+            id: "b1",
 			state,
 			items: [
 				{ id: "u1", state: FILE_STATES.ADDED },
@@ -183,7 +213,7 @@ describe("abort tests", () => {
 			expect(mockItemAbort).toHaveBeenCalledTimes(1);
 			expect(queue.getState().batches.b1.batch.state).toBe(BATCH_STATES.ABORTED);
 			expect(queue.getState().items.u1.state).toBe(FILE_STATES.ADDED);
-			expect(queue.getState().items.u2.state).toBe(FILE_STATES.ABORTED);
+			expect(queue.getState().items.u2.state).toBe(FILE_STATES.UPLOADING);
 			expect(queue.getState().items.u3.state).toBe(FILE_STATES.CANCELLED);
 
 			expect(processFinishedRequest).toHaveBeenCalledWith(queue,
@@ -197,6 +227,9 @@ describe("abort tests", () => {
 					id: "u1",
 					info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
 				}], next);
+
+            expect(ensureNonUploadingBatchCleaned).toHaveBeenCalledTimes(1);
+            expect(ensureNonUploadingBatchCleaned).toHaveBeenCalledWith(queue, batch.id);
 		});
 
 		it("shouldnt abort if already finished or cancelled", () => {

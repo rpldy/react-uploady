@@ -4,71 +4,48 @@ import { UPLOADER_EVENTS } from "../consts";
 import {
     triggerUploaderBatchEvent,
     getBatchFromState,
+    ensureNonUploadingBatchCleaned,
 } from "./batchHelpers";
 import processFinishedRequest from "./processFinishedRequest";
 
-import type { ProcessNextMethod, QueueState, State } from "./types";
-import type { BatchItem, FileState } from "@rpldy/shared";
+import type { BatchItem } from "@rpldy/shared";
+import type { ProcessNextMethod, QueueState } from "./types";
 
-const isPendingItem = (state: State, itemId: string) => {
+const getIsAbortableBatch = (batch: Batch): boolean =>
+    batch.state !== BATCH_STATES.CANCELLED &&
+    batch.state !== BATCH_STATES.FINISHED;
 
+const abortNonUploadingItem = (queue, item: BatchItem, next, batchAbort) => {
+    logger.debugLog(`uploader.queue: aborting ${item.state} item  - `, item);
 
-
-
-
-};
-
-const isItemInProgress = (fileState: FileState): boolean =>
-    fileState === FILE_STATES.ADDED ||
-    fileState === FILE_STATES.UPLOADING;
-
-const removePendingItem = (queue, item, next) => {
-    //manually finish request for added item that hasnt reached the sender yet
+    //manually finish request for item that hasnt reached the sender yet
     processFinishedRequest(queue, [{
         id: item.id,
         info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
     }], next);
 
+    if (!batchAbort) {
+        ensureNonUploadingBatchCleaned(queue, item.batchId);
+    }
+
     return true;
 };
 
-const abortItemInProgress = (queue:  QueueState, state: State, item: BatchItem, next) => {
-    let abortCalled;
-
-    if (item.state === FILE_STATES.UPLOADING) {
-        queue.updateState((state) => {
-            state.items[item.id].state = FILE_STATES.ABORTED;
-        });
-
-        abortCalled = state.aborts[item.id]();
-    } else {
-      abortCalled = removePendingItem(queue, item, next);
-        // processFinishedRequest(queue, [{
-        //     id: item.id,
-        //     info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
-        // }], next);
-        //
-        // abortCalled = true;
-    }
-
-    return abortCalled;
+const ITEM_STATE_ABORTS = {
+    [FILE_STATES.UPLOADING]: (queue, item) => {
+        logger.debugLog(`uploader.queue: aborting uploading item  - `, item);
+        return queue.getState().aborts[item.id]();
+    },
+    [FILE_STATES.ADDED]: abortNonUploadingItem,
+    [FILE_STATES.PENDING]: abortNonUploadingItem,
 };
 
-const callAbortOnItem = (queue: QueueState, id: string, next: ProcessNextMethod) => {
-    let abortCalled = false;
-
+const callAbortOnItem = (queue: QueueState, id: string, next: ProcessNextMethod, batchAbort = false) => {
     const state = queue.getState(),
         item = state.items[id];
 
-    if (item && isItemInProgress(item.state)) {
-        logger.debugLog(`uploader.queue: aborting item in progress - `, item);
-        abortCalled = abortItemInProgress(queue, state, item, next);
-    } else if (isPendingItem(state, id)) {
-        logger.debugLog(`uploader.queue: aborting item from pending batch - `, item);
-        abortCalled = removePendingItem(queue, item, next);
-    }
-
-	return abortCalled;
+    return ITEM_STATE_ABORTS[item?.state] ?
+        ITEM_STATE_ABORTS[item.state](queue, item, next, batchAbort) : false;
 };
 
 const abortAll = (queue: QueueState, next: ProcessNextMethod) => {
@@ -80,26 +57,25 @@ const abortAll = (queue: QueueState, next: ProcessNextMethod) => {
 	queue.trigger(UPLOADER_EVENTS.ALL_ABORT);
 };
 
-const abortItem = (queue: QueueState, id: string, next: ProcessNextMethod): boolean => {
-	return callAbortOnItem(queue, id, next);
-};
+const abortItem = (queue: QueueState, id: string, next: ProcessNextMethod): boolean =>
+    callAbortOnItem(queue, id, next);
 
 const abortBatch = (queue: QueueState, id: string, next: ProcessNextMethod): void => {
 	const state = queue.getState(),
 		batchData = state.batches[id],
 		batch = batchData?.batch;
 
-	if (batch && batch.state !== BATCH_STATES.CANCELLED
-		&& batch.state !== BATCH_STATES.FINISHED) {
+	if (batch && getIsAbortableBatch(batch)) {
+        batch.items.forEach((bi) =>
+            callAbortOnItem(queue, bi.id, next, true));
 
-		batch.items.forEach((bi) =>
-			callAbortOnItem(queue, bi.id, next));
+        queue.updateState((state) => {
+            getBatchFromState(state, id).state = BATCH_STATES.ABORTED;
+        });
 
-		queue.updateState((state) => {
-			getBatchFromState(state, id).state = BATCH_STATES.ABORTED;
-		});
+        triggerUploaderBatchEvent(queue, id, UPLOADER_EVENTS.BATCH_ABORT);
 
-		triggerUploaderBatchEvent(queue, id, UPLOADER_EVENTS.BATCH_ABORT);
+        ensureNonUploadingBatchCleaned(queue, batch.id);
 	}
 };
 

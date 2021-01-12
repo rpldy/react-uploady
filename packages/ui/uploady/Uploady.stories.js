@@ -1,5 +1,5 @@
 // @flow
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useState } from "react";
 import ReactDOM from "react-dom";
 import {
     UmdBundleScript,
@@ -12,7 +12,7 @@ import {
 import Uploady, {
     useUploady,
     NoDomUploady,
-    useUploadOptions, UploadyContext,
+    useUploadOptions,
 } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -126,7 +126,7 @@ export const WithAutoUploadOff = () => {
         autoUpload={false}>
         <ContextUploadButton />
         <br/>
-        <StoryAbortButton/>
+        <hr/>
         <ProcessPending/>
         <br/>
         <ProcessPending
@@ -135,7 +135,27 @@ export const WithAutoUploadOff = () => {
             options={{ params: { test: "123" } }}/>
         <br/>
         <ClearPending/>
+        <hr/>
+        <br/>
+        <StoryAbortButton/>
     </Uploady>
+};
+
+export const WithAbort = () => {
+    const { enhancer, destination, multiple } = useStoryUploadySetup();
+
+    return <div>
+        <p>Be prepared to click the abort button as soon as it appears once upload begins</p>
+        <Uploady
+            debug
+            multiple={multiple}
+            destination={destination}
+            enhancer={enhancer}>
+
+            <ContextUploadButton />
+            <StoryAbortButton/>
+        </Uploady>
+    </div>
 };
 
 //expose react and react-dom for Uploady bundle

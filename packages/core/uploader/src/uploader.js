@@ -35,8 +35,7 @@ export default (options?: CreateOptions): UploaderType => {
     const uploaderId = `uploader-${counter}`;
     let enhancerTime = false;
 
-    const //pendingBatches = [],
-        extensions = {};
+    const extensions = {};
 
     logger.debugLog(`uploady.uploader: creating new instance (${uploaderId})`, { options, counter });
 
@@ -67,8 +66,6 @@ export default (options?: CreateOptions): UploaderType => {
                             if (processOptions.clearPendingOnAdd) {
                                 clearPending();
                             }
-
-                            // pendingBatches.push({ batch, uploadOptions: processOptions });
                         }
                     } else {
                         batch.state = BATCH_STATES.CANCELLED;

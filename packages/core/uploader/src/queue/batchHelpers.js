@@ -1,7 +1,7 @@
 // @flow
 import { BATCH_STATES, logger, merge, FILE_STATES } from "@rpldy/shared";
 import { unwrap } from "@rpldy/simple-state";
-import { UPLOADER_EVENTS } from "../consts";
+import { UPLOADER_EVENTS, ITEM_FINALIZE_STATES } from "../consts";
 
 import type { BatchData, QueueState, State } from "./types";
 import type { Batch, BatchItem, UploadOptions } from "@rpldy/shared";
@@ -130,20 +130,19 @@ const getIsItemBatchReady = (queue: QueueState, itemId: string): boolean => {
 const detachRecycledFromPreviousBatch = (queue: QueueState, item: BatchItem): void => {
     const { previousBatch } = item;
 
-    if (item.recycled && previousBatch) {
-        if (queue.getState().batches[previousBatch]) {
-            const { id: batchId } = getBatchFromItemId(queue, item.id);
+    if (item.recycled && previousBatch &&
+        queue.getState().batches[previousBatch]) {
+        const { id: batchId } = getBatchFromItemId(queue, item.id);
 
-            if (batchId === previousBatch) {
-                queue.updateState((state: State) => {
-                    const batch = getBatchFromState(state, batchId);
-                    const index = batch.items.findIndex(({ id }: BatchItem) => id === item.id);
+        if (batchId === previousBatch) {
+            queue.updateState((state: State) => {
+                const batch = getBatchFromState(state, batchId);
+                const index = batch.items.findIndex(({ id }: BatchItem) => id === item.id);
 
-                    if (~index) {
-                        batch.items.splice(index, 1);
-                    }
-                });
-            }
+                if (~index) {
+                    batch.items.splice(index, 1);
+                }
+            });
         }
     }
 };
@@ -181,6 +180,19 @@ const removePendingBatches = (queue: QueueState): void => {
         });
 };
 
+const ensureNonUploadingBatchCleaned = (queue: QueueState, batchId: string): void => {
+    const state = queue.getState(),
+        batch: Batch = getBatchFromState(state, batchId);
+
+    const activeItem = batch.items.find((item) => !ITEM_FINALIZE_STATES.includes(item.state));
+
+    //no active item left in batch, can remove it
+    if (!activeItem) {
+        removeBatchItems(queue, batchId);
+        removeBatch(queue, batchId);
+    }
+};
+
 export {
     isBatchFinished,
     loadNewBatchForItem,
@@ -196,4 +208,5 @@ export {
     detachRecycledFromPreviousBatch,
     preparePendingForUpload,
     removePendingBatches,
+    ensureNonUploadingBatchCleaned,
 };

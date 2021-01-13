@@ -125,12 +125,6 @@ _() => CreateOptions_
 
 get the instance's upload options
 
-###	getPending
-
-_() => [PendingBatch[]](src/types.js#L15)_
-
-get pending batches that were added with autoUpload = false.
-
 ###	clearPending
 
 _() => void_

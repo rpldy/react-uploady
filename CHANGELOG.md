@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.9.0 (2020-01-14)
+
+### Features
+
+- `[uploady]` - added _clearPending()_ to Uploady Context
+
+### Bug fixes
+
+- `[uploader]` - abort works for pending files and batches. Fix for #119
+
+### Internal
+
+- `[uploader]` - move pending batches into queue state
+- `e2e` - added specs for pending uploads
+
+### Removed
+
+- `[uploader]` - removed _uploader.getPending()_
+
 ## 0.8.3 (2021-01-07)
 
 ### Bug fixes

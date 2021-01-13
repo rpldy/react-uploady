@@ -142,6 +142,12 @@ Start uploading batches that were added with autoUpload = false
 
 Upload Options can be added here to be (deep) merged with the options the batch(es) was added with.
     
+#### clearPending 
+
+_() => void_
+
+Remove all batches that were added with autoUpload = false, and were not uploaded yet.
+
 #### setOptions 
 
 _(UploadOptions) => void_

@@ -159,7 +159,7 @@ export const WithAbort = () => {
 };
 
 export const withConcurrent = () => {
-    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+    const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
 
     return <Uploady
         debug
@@ -168,9 +168,12 @@ export const withConcurrent = () => {
         destination={destination}
         enhancer={enhancer}
         grouped={grouped}
-        maxGroupSize={groupSize}>
+        maxGroupSize={groupSize}
+        autoUpload={autoUpload}>
         <p>Send concurrent uploads</p>
         <ContextUploadButton />
+        <br/>
+        <ProcessPending />
     </Uploady>
 };
 

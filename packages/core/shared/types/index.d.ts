@@ -27,6 +27,7 @@ export interface UploadOptions {
 }
 
 export enum BATCH_STATES {
+    PENDING = "pending",
     ADDED = "added",
     PROCESSING = "processing",
     UPLOADING = "uploading",
@@ -45,6 +46,7 @@ export type Batch = {
 };
 
 export enum FILE_STATES {
+    PENDING = "pending",
     ADDED = "added",
     UPLOADING = "uploading",
     CANCELLED = "cancelled",
@@ -98,7 +100,7 @@ export type UploadData = {
     response: any;
 };
 
-export const createBatchItem: (f: UploadInfo, batchId: string) => BatchItem;
+export const createBatchItem: (f: UploadInfo, batchId: string, isPending?: boolean) => BatchItem;
 
 export const isPlainObject: (obj: unknown) => boolean;
 

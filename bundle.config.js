@@ -62,7 +62,7 @@ module.exports = {
                 config: {
                     externals: ["react", "react-dom"],
                 },
-                maxSize: 17000,
+                maxSize: 17500,
             },
 
             /**
@@ -108,7 +108,7 @@ module.exports = {
                         },
                     };
                 },
-                maxSize: 24000,
+                maxSize: 25000,
             },
 
             //TODO: find a way to make this work with global object assignment (wepackages/tus-sender/src/tusSender/initTusUpload/createUpload.js:88:94bpack externals root)

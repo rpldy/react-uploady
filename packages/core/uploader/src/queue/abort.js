@@ -1,43 +1,52 @@
 // @flow
 import { BATCH_STATES, FILE_STATES, logger } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
-import { triggerUploaderBatchEvent, getBatchFromState } from "./batchHelpers";
+import {
+    triggerUploaderBatchEvent,
+    getBatchFromState,
+    ensureNonUploadingBatchCleaned,
+} from "./batchHelpers";
 import processFinishedRequest from "./processFinishedRequest";
 
+import type { Batch, BatchItem } from "@rpldy/shared";
 import type { ProcessNextMethod, QueueState } from "./types";
-import type { FileState } from "@rpldy/shared";
 
-const isItemInProgress = (state: FileState): boolean =>
-	state === FILE_STATES.ADDED ||
-	state === FILE_STATES.UPLOADING;
+const getIsAbortableBatch = (batch: Batch): boolean =>
+    batch.state !== BATCH_STATES.CANCELLED &&
+    batch.state !== BATCH_STATES.FINISHED;
 
-const callAbortOnItem = (queue: QueueState, id: string, next: ProcessNextMethod) => {
-	let abortCalled = false;
+const abortNonUploadingItem = (queue, item: BatchItem, next, batchAbort) => {
+    logger.debugLog(`uploader.queue: aborting ${item.state} item  - `, item);
 
-	const state = queue.getState(),
-		item = state.items[id];
+    //manually finish request for item that hasnt reached the sender yet
+    processFinishedRequest(queue, [{
+        id: item.id,
+        info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
+    }], next);
 
-	if (item && isItemInProgress(item.state)) {
-		logger.debugLog(`uploader.queue: aborting item in progress - `, item);
+    if (!batchAbort) {
+        ensureNonUploadingBatchCleaned(queue, item.batchId);
+    }
 
-		if (item.state === FILE_STATES.UPLOADING) {
-			queue.updateState((state) => {
-				state.items[id].state = FILE_STATES.ABORTED;
-			});
+    return true;
+};
 
-			abortCalled = state.aborts[id]();
-		} else {
-			//manually finish request for added item that hasnt reached the sender yet
-			processFinishedRequest(queue, [{
-				id,
-				info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
-			}], next);
+const ITEM_STATE_ABORTS = {
+    [FILE_STATES.UPLOADING]: (queue, item) => {
+        logger.debugLog(`uploader.queue: aborting uploading item  - `, item);
+        return queue.getState().aborts[item.id]();
+    },
+    [FILE_STATES.ADDED]: abortNonUploadingItem,
+    [FILE_STATES.PENDING]: abortNonUploadingItem,
+};
 
-			abortCalled = true;
-		}
-	}
+const callAbortOnItem = (queue: QueueState, id: string, next: ProcessNextMethod, batchAbort = false) => {
+    const state = queue.getState(),
+        item = state.items[id],
+        itemState = item?.state;
 
-	return abortCalled;
+    return ITEM_STATE_ABORTS[itemState] ?
+        ITEM_STATE_ABORTS[itemState](queue, item, next, batchAbort) : false;
 };
 
 const abortAll = (queue: QueueState, next: ProcessNextMethod) => {
@@ -49,26 +58,25 @@ const abortAll = (queue: QueueState, next: ProcessNextMethod) => {
 	queue.trigger(UPLOADER_EVENTS.ALL_ABORT);
 };
 
-const abortItem = (queue: QueueState, id: string, next: ProcessNextMethod): boolean => {
-	return callAbortOnItem(queue, id, next);
-};
+const abortItem = (queue: QueueState, id: string, next: ProcessNextMethod): boolean =>
+    callAbortOnItem(queue, id, next);
 
 const abortBatch = (queue: QueueState, id: string, next: ProcessNextMethod): void => {
 	const state = queue.getState(),
 		batchData = state.batches[id],
 		batch = batchData?.batch;
 
-	if (batch && batch.state !== BATCH_STATES.CANCELLED
-		&& batch.state !== BATCH_STATES.FINISHED) {
+	if (batch && getIsAbortableBatch(batch)) {
+        batch.items.forEach((bi) =>
+            callAbortOnItem(queue, bi.id, next, true));
 
-		batch.items.forEach((bi) =>
-			callAbortOnItem(queue, bi.id, next));
+        queue.updateState((state) => {
+            getBatchFromState(state, id).state = BATCH_STATES.ABORTED;
+        });
 
-		queue.updateState((state) => {
-			getBatchFromState(state, id).state = BATCH_STATES.ABORTED;
-		});
+        triggerUploaderBatchEvent(queue, id, UPLOADER_EVENTS.BATCH_ABORT);
 
-		triggerUploaderBatchEvent(queue, id, UPLOADER_EVENTS.BATCH_ABORT);
+        ensureNonUploadingBatchCleaned(queue, batch.id);
 	}
 };
 

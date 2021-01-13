@@ -20,7 +20,6 @@ import type {
 
 import type  {
     UploaderType,
-    PendingBatch,
     CreateOptions,
 } from "./types";
 
@@ -36,8 +35,7 @@ export default (options?: CreateOptions): UploaderType => {
     const uploaderId = `uploader-${counter}`;
     let enhancerTime = false;
 
-    const pendingBatches = [],
-        extensions = {};
+    const extensions = {};
 
     logger.debugLog(`uploady.uploader: creating new instance (${uploaderId})`, { options, counter });
 
@@ -52,6 +50,10 @@ export default (options?: CreateOptions): UploaderType => {
     const add = (files: UploadInfo | UploadInfo[], addOptions?: ?UploadOptions): Promise<void> => {
         const processOptions: CreateOptions = merge({}, uploaderOptions, addOptions);
 
+        if (processOptions.clearPendingOnAdd) {
+            clearPending();
+        }
+
         const batch = processor.addNewBatch(files, uploader.id, processOptions);
         let resultP;
 
@@ -64,12 +66,6 @@ export default (options?: CreateOptions): UploaderType => {
 
                         if (processOptions.autoUpload) {
                             processor.process(batch);
-                        } else {
-                            if (processOptions.clearPendingOnAdd) {
-                                clearPending();
-                            }
-
-                            pendingBatches.push({ batch, uploadOptions: processOptions });
                         }
                     } else {
                         batch.state = BATCH_STATES.CANCELLED;
@@ -91,25 +87,15 @@ export default (options?: CreateOptions): UploaderType => {
         processor.abortBatch(id);
     };
 
-    const getPending = (): PendingBatch[] => {
-        return pendingBatches.slice();
-    };
-
     const clearPending = (): void => {
-        pendingBatches.splice(0);
+        processor.clearPendingBatches();
     };
 
     /**
-     * Tells the uploader to process batches that weren't auto-uploaded
+     * process batches that weren't auto-uploaded
      */
     const upload = (uploadOptions?: ?UploadOptions): void => {
-        pendingBatches
-            .splice(0)
-            .forEach(({ batch, uploadOptions: batchOptions }: PendingBatch) =>
-                processor.process(
-                    batch,
-                    merge({}, batchOptions, uploadOptions))
-            );
+        processor.processPendingBatches(uploadOptions);
     };
 
     const getOptions = (): CreateOptions => {
@@ -145,7 +131,6 @@ export default (options?: CreateOptions): UploaderType => {
             abort,
             abortBatch,
             getOptions,
-            getPending,
             clearPending,
             registerExtension,
             getExtension,

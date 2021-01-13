@@ -18,7 +18,7 @@ describe("ChunkedUploady - Abort and continue", () => {
         }).as("uploadReq");
 
         uploadFile(fileName, () => {
-            cy.get("button[data-test='story-abort-button']")
+            cy.get("button[data-test='abort-batch-0']")
                 .click();
 
             cy.storyLog().assertLogPattern(/BATCH_ABORT/);

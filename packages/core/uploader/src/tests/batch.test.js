@@ -19,7 +19,7 @@ describe("Batch tests", () => {
             "https://url.test"
         ];
 
-        const batch = createBatch(files, "uploader1", {});
+        const batch = createBatch(files, "uploader1", { autoUpload: true });
 
         expect(batch.id).toBeDefined();
         expect(batch.uploaderId).toBe("uploader1");
@@ -29,16 +29,20 @@ describe("Batch tests", () => {
         expect(batch.state).toBe(BATCH_STATES.ADDED);
 
         expect(createBatchItem).toHaveBeenCalledTimes(2);
-        expect(createBatchItem).toHaveBeenCalledWith(files[0], expect.any(String));
-        expect(createBatchItem).toHaveBeenCalledWith(files[1], expect.any(String));
+        expect(createBatchItem).toHaveBeenCalledWith(files[0], expect.any(String), false);
+        expect(createBatchItem).toHaveBeenCalledWith(files[1], expect.any(String), false);
+    });
+
+    it("should create new pending batch", () => {
+        const batch = createBatch([], "uploader1", { autoUpload: false });
+        expect(batch.state).toBe(BATCH_STATES.PENDING);
     });
 
     it("should work with file list", () => {
-
         const input = document.createElement("input");
         input.type = "file";
 
-        const batch = createBatch(input.files, "uploader1", {});
+        const batch = createBatch(input.files, "uploader1", { autoUpload: true });
 
         expect(batch.id).toBeDefined();
         expect(batch.uploaderId).toBe("uploader1");
@@ -52,10 +56,9 @@ describe("Batch tests", () => {
 
         expect(batch.id).toBeDefined();
         expect(batch.uploaderId).toBe("uploader1");
-        expect(batch.state).toBe(BATCH_STATES.ADDED);
         expect(batch.items).toHaveLength(1);
 
-        expect(createBatchItem).toHaveBeenCalledWith(file, expect.any(String));
+        expect(createBatchItem).toHaveBeenCalledWith(file, expect.any(String), true);
     });
 
     it("should use options file filter", () => {
@@ -70,6 +73,5 @@ describe("Batch tests", () => {
         });
 
         expect(batch.items).toHaveLength(1);
-
     });
 });

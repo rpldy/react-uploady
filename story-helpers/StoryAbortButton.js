@@ -1,13 +1,25 @@
 import React, { useCallback, useContext, useState } from "react";
-import { UploadyContext, useBatchAbortListener, useBatchStartListener, useAllAbortListener, useAbortAll } from "@rpldy/shared-ui";
+import {
+    UploadyContext,
+    useBatchAddListener,
+    useBatchAbortListener,
+    useAllAbortListener,
+    useAbortAll,
+    useAbortBatch,
+    useAbortItem,
+} from "@rpldy/shared-ui";
 
 const StoryAbortButton = () => {
     const context = useContext(UploadyContext);
-    const [uploadingId, setUploading] = useState(null);
+    const [files, setFiles] = useState([]);
+    const [batches, setBatches] = useState([]);
     const abortAll = useAbortAll();
+    const abortBatch = useAbortBatch();
+    const abortItem = useAbortItem();
 
-    useBatchStartListener((batch) => {
-        setUploading(batch.id);
+    useBatchAddListener((batch) => {
+        setFiles((prevFiles) => [...prevFiles, ...batch.items]);
+        setBatches((prevBatches) => [...prevBatches, batch.id]);
     });
 
     useBatchAbortListener((batch) => {
@@ -18,21 +30,34 @@ const StoryAbortButton = () => {
         console.log(">>>>> StoryAbortButton - (hook) ALL ABORT");
     });
 
-    const onClick = useCallback(() => {
-        console.log("ABORTING BATCH ", uploadingId);
-        context.abortBatch(uploadingId);
-    }, [context, uploadingId]);
-
     const onAbortAllClick = useCallback(() =>{
         abortAll();
     }, [context, abortAll]);
 
-    return context && uploadingId ?
-        (<>
-            <button onClick={onClick} data-test="story-abort-button">Abort</button>
-            <br/>
+    return <div>
+        {batches.length ? (<>
             <button onClick={onAbortAllClick} data-test="story-abort-all-button">Abort All</button>
-        </>) : null
+        </>) : null}
+        <br/>
+        Batches:
+        <ul>
+            {batches.map((bId, i) =>
+                <li key={bId}>
+                    <button data-test={`abort-batch-${i}`}
+                            onClick={() => abortBatch(bId)}>Abort batch: {bId}</button>
+                </li>)}
+        </ul>
+
+        <br/>
+            Files:
+        <ul>
+            {files.map((f, i) =>
+                <li key={f.id}>
+                    <button data-test={`abort-file-${i}`}
+                            onClick={() => abortItem(f.id)}>Abort file: {f.file.name}</button>
+                </li>)}
+        </ul>
+    </div>
 };
 
 export default StoryAbortButton;

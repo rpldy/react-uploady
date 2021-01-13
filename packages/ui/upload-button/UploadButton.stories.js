@@ -6,7 +6,6 @@ import React, {
 	useRef,
 	useCallback,
 	forwardRef,
-	useContext
 } from "react";
 import styled from "styled-components";
 import Uploady, {
@@ -23,7 +22,6 @@ import Uploady, {
 import {
     useStoryUploadySetup,
     StoryUploadProgress,
-    StoryAbortButton,
     uploadButtonCss,
     mockDestination,
     useEventsLogUpdater,
@@ -45,32 +43,8 @@ export const Simple = () => {
                     maxGroupSize={groupSize}
                     fileInputId={"rpldyInput"}>
 
-        <UploadButton />
+        <UploadButton/>
     </Uploady>;
-};
-
-const ProcessPending = () => {
-	const context= useContext(UploadyContext);
-	return <button onClick={() => {
-		context && context.processPending();
-	}}>PROCESS PENDING</button>
-}
-
-export const WithoutAutoUpload = () => {
-	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-
-	return <Uploady debug
-					multiple={multiple}
-					destination={destination}
-					enhancer={enhancer}
-					grouped={grouped}
-					maxGroupSize={groupSize}
-					fileInputId={"rpldyInput"}>
-
-		<UploadButton autoUpload={false}/>
-		<br/>
-		<ProcessPending/>
-	</Uploady>;
 };
 
 const StyledUploadButton = styled(UploadButton)`
@@ -230,23 +204,6 @@ export const WithClass = () => {
     </Uploady>;
 };
 
-export const WithAbort = () => {
-    const { enhancer, destination, multiple } = useStoryUploadySetup();
-
-    return <div>
-        <p>Be prepared to click the abort button as soon as it appears once upload begins</p>
-        <Uploady
-            debug
-            multiple={multiple}
-            destination={destination}
-            enhancer={enhancer}>
-
-            <UploadButton id="upload-button"/>
-            <StoryAbortButton/>
-        </Uploady>
-    </div>
-};
-
 const DisabledDuringUploadButton = () => {
     const [uploading, setUploading] = useState(false);
 
@@ -367,7 +324,6 @@ export const WithFileFilter = () => {
         <UploadButton id="upload-button"/>
     </Uploady>;
 };
-
 
 const Form = styled.form`
   display: flex;

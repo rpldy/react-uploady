@@ -6,8 +6,8 @@ import {
     localDestination,
     UMD_NAMES,
     addActionLogEnhancer,
-	useStoryUploadySetup,
-    getCsfExport,
+    useStoryUploadySetup,
+    getCsfExport, StoryAbortButton,
 } from "../../../story-helpers";
 import Uploady, {
     useUploady,
@@ -100,6 +100,80 @@ export const WithCustomFieldName = () => {
         maxGroupSize={groupSize}>
         <p>Send upload request with custom field name</p>
         <ContextUploadButton />
+    </Uploady>
+};
+
+const ProcessPending = ({ id = "process-pending", title = "PROCESS PENDING", options = undefined}) => {
+    const { processPending } = useUploady();
+    return <button id={id}
+                   onClick={() => processPending(options)}>{title}</button>;
+}
+
+const ClearPending = () => {
+    const { clearPending } = useUploady();
+    return <button id="clear-pending" onClick={clearPending}>CLEAR PENDING</button>;
+};
+
+export const WithAutoUploadOff = () => {
+    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+
+    return <Uploady
+        debug
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+        autoUpload={false}>
+        <ContextUploadButton />
+        <br/>
+        <hr/>
+        <ProcessPending/>
+        <br/>
+        <ProcessPending
+            id="process-pending-param"
+            title="PROCESS PENDING WITH PARAM"
+            options={{ params: { test: "123" } }}/>
+        <br/>
+        <ClearPending/>
+        <hr/>
+        <br/>
+        <StoryAbortButton/>
+    </Uploady>
+};
+
+export const WithAbort = () => {
+    const { enhancer, destination, multiple } = useStoryUploadySetup();
+
+    return <div>
+        <p>Be prepared to click the abort button as soon as it appears once upload begins</p>
+        <Uploady
+            debug
+            multiple={multiple}
+            destination={destination}
+            enhancer={enhancer}>
+
+            <ContextUploadButton />
+            <StoryAbortButton/>
+        </Uploady>
+    </div>
+};
+
+export const withConcurrent = () => {
+    const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
+
+    return <Uploady
+        debug
+        concurrent
+        maxConcurrent={10}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+        autoUpload={autoUpload}>
+        <p>Send concurrent uploads</p>
+        <ContextUploadButton />
+        <br/>
+        <ProcessPending />
     </Uploady>
 };
 

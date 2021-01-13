@@ -10,7 +10,7 @@
         "**/tests/**",
         "**/*.test.js"
       ],
-      "message": "chore: publish new version"
+      "message": "chore: publish new version: %v"
     }
   },
   "useWorkspaces": true,

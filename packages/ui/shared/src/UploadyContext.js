@@ -68,6 +68,10 @@ export const createContextApi =
 			uploader.upload(uploadOptions);
 		};
 
+        const clearPending = () => {
+            uploader.clearPending();
+        };
+
         const setOptions = (options: CreateOptions) => {
             uploader.update(options);
         };
@@ -108,6 +112,7 @@ export const createContextApi =
             showFileUpload,
             upload,
 			processPending,
+            clearPending,
             setOptions,
             getOptions,
             getExtension,

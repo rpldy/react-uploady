@@ -50,6 +50,10 @@ export default (options?: CreateOptions): UploaderType => {
     const add = (files: UploadInfo | UploadInfo[], addOptions?: ?UploadOptions): Promise<void> => {
         const processOptions: CreateOptions = merge({}, uploaderOptions, addOptions);
 
+        if (processOptions.clearPendingOnAdd) {
+            clearPending();
+        }
+
         const batch = processor.addNewBatch(files, uploader.id, processOptions);
         let resultP;
 
@@ -62,10 +66,6 @@ export default (options?: CreateOptions): UploaderType => {
 
                         if (processOptions.autoUpload) {
                             processor.process(batch);
-                        } else {
-                            if (processOptions.clearPendingOnAdd) {
-                                clearPending();
-                            }
                         }
                     } else {
                         batch.state = BATCH_STATES.CANCELLED;

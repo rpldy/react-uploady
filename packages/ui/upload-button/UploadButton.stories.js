@@ -6,7 +6,6 @@ import React, {
 	useRef,
 	useCallback,
 	forwardRef,
-	useContext
 } from "react";
 import styled from "styled-components";
 import Uploady, {
@@ -23,7 +22,6 @@ import Uploady, {
 import {
     useStoryUploadySetup,
     StoryUploadProgress,
-    StoryAbortButton,
     uploadButtonCss,
     mockDestination,
     useEventsLogUpdater,

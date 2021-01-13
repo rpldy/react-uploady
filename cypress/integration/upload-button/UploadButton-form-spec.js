@@ -1,6 +1,5 @@
 import uploadFile from "../uploadFile";
 
-
 describe("UploadButton - Form", () => {
     const fileName = "flower.jpg",
         fileName2 = "sea.jpg";

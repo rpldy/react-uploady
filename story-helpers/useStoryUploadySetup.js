@@ -101,7 +101,6 @@ const getDestinationOptions = ({destinations = null}) => {
 
 const useStoryDestination = (type, { noLong }) => {
     return DESTINATIONS[type]({ noLong });
-	// return useMemo(() => DESTINATIONS[type]({ noLong }), [type, noLong]);
 };
 
 const useStoryUploadySetup = (options = {}) => {
@@ -109,7 +108,8 @@ const useStoryUploadySetup = (options = {}) => {
         { destination, enhancer, destinationType } = useStoryDestination(type, options),
         multiple = boolean("multiple files", true, KNOB_GROUPS.SETTINGS),
         grouped = !options.noGroup && boolean("group files in single request", false, KNOB_GROUPS.SETTINGS),
-        groupSize = !options.noGroup && number("max in group", 2, {}, KNOB_GROUPS.SETTINGS);
+        groupSize = !options.noGroup && number("max in group", 2, {}, KNOB_GROUPS.SETTINGS),
+        autoUpload = boolean("auto upload on add", true, KNOB_GROUPS.SETTINGS);
 
     return useMemo(() => ({
             multiple,
@@ -117,9 +117,10 @@ const useStoryUploadySetup = (options = {}) => {
             enhancer: addActionLogEnhancer(enhancer),
             grouped,
             groupSize,
-            destinationType
+            destinationType,
+            autoUpload,
         }),
-        [type, multiple, grouped, groupSize, destination, enhancer, destinationType]);
+        [type, multiple, grouped, groupSize, destination, enhancer, destinationType, autoUpload]);
 };
 
 export default useStoryUploadySetup;

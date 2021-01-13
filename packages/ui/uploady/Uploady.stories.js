@@ -158,6 +158,22 @@ export const WithAbort = () => {
     </div>
 };
 
+export const withConcurrent = () => {
+    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+
+    return <Uploady
+        debug
+        concurrent
+        maxConcurrent={10}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}>
+        <p>Send concurrent uploads</p>
+        <ContextUploadButton />
+    </Uploady>
+};
+
 //expose react and react-dom for Uploady bundle
 window.react = React;
 window["react-dom"] = ReactDOM;

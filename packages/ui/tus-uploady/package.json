@@ -1,5 +1,5 @@
 {
-  "version": "0.8.3",
+  "version": "0.9.0",
   "name": "@rpldy/tus-uploady",
   "description": "wrapper&context component to expose and provide react-uploady functionality with TUS protocol support",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -31,12 +31,12 @@
     "access": "public"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.8.0",
-    "@rpldy/shared-ui": "^0.8.3",
-    "@rpldy/tus-sender": "^0.8.3"
+    "@rpldy/shared": "^0.9.0",
+    "@rpldy/shared-ui": "^0.9.0",
+    "@rpldy/tus-sender": "^0.9.0"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^0.8.3",
+    "@rpldy/upload-button": "^0.9.0",
     "@storybook/addon-knobs": "^6.1.10",
     "flow-bin": "^0.133.0"
   },

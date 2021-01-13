@@ -1,5 +1,5 @@
 {
-  "version": "0.8.0",
+  "version": "0.9.0",
   "name": "@rpldy/shared",
   "description": "internal set of utils+types for react-uploady",
   "author": "yoav niran (https://github.com/yoavniran)",

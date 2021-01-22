@@ -3,6 +3,27 @@ import { Batch, BatchItem, UploadInfo, UploadOptions } from "@rpldy/shared";
 import { CreateOptions, UploaderType } from "@rpldy/uploader";
 import { EventCallback, OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
 
+export {
+    Destination,
+    FormatParamGroupNameMethod,
+    FileFilterMethod,
+    UploadOptions,
+    Batch,
+    BatchItem,
+
+    BATCH_STATES,
+    FILE_STATES,
+} from "@rpldy/shared";
+
+export {
+    composeEnhancers,
+    UploadAddMethod,
+    UploaderEnhancer,
+    CreateOptions,
+
+    UPLOADER_EVENTS,
+} from "@rpldy/uploader";
+
 export type UploaderListeners = { [key: string]: EventCallback };
 
 export type AddUploadFunction = (files: UploadInfo | UploadInfo[], addOptions?: UploadOptions) => void;

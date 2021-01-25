@@ -82,7 +82,7 @@ uploader.add(myFile);
 | enhancer             | [UploaderEnhancer](../../uploader/src/types.js#L37) | undefined    | uploader [enhancer](../../../README.md#enhancer) function
 | concurrent           | boolean       | false          | issue multiple upload requests simultaneously
 | maxConcurrent        | number        | 2              | maximum allowed simultaneous requests
-| send                 | [SendMethod](../../shared/src/types.js#L100) | @rpldy/sender | how to send files to the server
+| send                 | [SendMethod](../sender/src/types.js#L38) | @rpldy/sender | how to send files to the server
 | sendWithFormData     | boolean       | true           | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data
 
 ## Uploader API

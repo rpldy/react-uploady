@@ -60,6 +60,7 @@ interface BatchItemBase {
     batchId: string;
     state: FILE_STATES;
     uploadResponse?: any;
+    uploadStatus: number;
     completed: number;
     loaded: number;
     recycled: boolean;

@@ -33,6 +33,7 @@ const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], n
                 const item = state.items[id];
                 item.state = info.state;
                 item.uploadResponse = info.response;
+                item.uploadStatus = info.status;
 
                 if (getIsFinalized(item)) {
                     delete state.aborts[id];

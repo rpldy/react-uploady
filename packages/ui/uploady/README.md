@@ -351,7 +351,7 @@ Called when item finished uploading
 
     const MyComponent = () => {
         useItemFinishListener((item) => {
-            console.log(`item ${item.id} finished uploading, response was: `, item.uploadResponse);  
+            console.log(`item ${item.id} finished uploading, response was: `, item.uploadResponse, item.uploadStatus);  
         });
 
         //...    

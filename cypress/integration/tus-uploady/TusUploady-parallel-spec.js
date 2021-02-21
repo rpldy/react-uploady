@@ -15,7 +15,7 @@ describe("TusUploady - Parallel", () => {
 
 		cy.route({
 			method: "POST",
-			url: "http://test.tus.com/upload",
+			url: "http://tes    t.tus.com/upload",
 			response: { success: true },
 			headers: {
 				"Tus-Resumable": "1.0.0"

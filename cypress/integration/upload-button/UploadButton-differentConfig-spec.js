@@ -4,7 +4,7 @@ describe("Different Configuration", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadButton", "different-configuration", true);
+        cy.visitStory("uploadButton", "different-configuration");
     });
 
     it("should allow overriding upload options from button", () => {
@@ -12,7 +12,7 @@ describe("Different Configuration", () => {
         uploadFile(fileName, () => {
             cy.wait(100);
             cy.storyLog().assertLogEntryCount(1);
-        }, "#upload-a", null);
+        }, "#upload-a");
 
         //test other button with custom destination header
         uploadFile(fileName, () => {
@@ -26,6 +26,6 @@ describe("Different Configuration", () => {
                     }
                 }
             });
-        }, "#upload-b", null);
+        }, "#upload-b");
     });
 });

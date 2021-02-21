@@ -22,7 +22,10 @@
     </a>
     <a href="CODE_OF_CONDUCT.md">
        <img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg"/> 
-    </a>    
+    </a>
+    <a href="https://www.npmjs.com/package/@rpldy/uploady">
+        <img src="https://img.shields.io/npm/dm/@rpldy/uploader.svg?style=plastic&color=blue&label=monthly%20downloads"/> 
+    </a>
 </p>
 
 <details>

@@ -8,19 +8,14 @@ describe("With Custom File Input And Form", () => {
     });
 
     it("should use form attributes ", () => {
-        cy.server();
-
-        cy.route({
-            method: "POST",
-            url: "http://react-uploady-dummy-server.comm",
-            response: { success: true }
+        cy.intercept("POST", "http://react-uploady-dummy-server.comm", {
+            statusCode: 200,
+            body: { success: true }
         }).as("uploadReq");
-
-        cy.iframe("#storybook-preview-iframe").as("iframe");
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq").then((xhr) => {
-                assert.isNotNull(xhr.response.body);
+                expect(xhr.response.body.success).to.eq(true);
             });
         });
     });

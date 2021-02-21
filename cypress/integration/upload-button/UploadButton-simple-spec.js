@@ -4,7 +4,7 @@ describe("UploadButton - Simple", () => {
 	const fileName = "flower.jpg";
 
 	before(() => {
-		cy.visitStory("uploadButton", "simple", true);
+		cy.visitStory("uploadButton", "simple");
 	});
 
 	it("should use uploady", () => {
@@ -13,8 +13,8 @@ describe("UploadButton - Simple", () => {
 			.as("fInput");
 
 		uploadFile(fileName, () => {
-			cy.wait(1500);
+			cy.wait(1000);
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
-		}, "button", null);
+		}, "button");
 	});
 });

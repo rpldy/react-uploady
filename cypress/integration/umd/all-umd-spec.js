@@ -4,16 +4,13 @@ describe("UMD ALL - Bundle", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploady", "umd-all", true);
+        cy.visitStory("uploady", "umd-all");
     });
 
     it("should use Uploady and UploadButton to upload file", () => {
-        cy.server();
-
-        cy.route({
-            method: "POST",
-            url: "http://localhost:4000/upload",
-            response: { success: true }
+        cy.intercept("POST", "http://localhost:4000/upload", {
+            statusCode: 200,
+            body: { success: true }
         }).as("uploadReq");
 
         uploadFile(fileName, () => {
@@ -26,15 +23,15 @@ describe("UMD ALL - Bundle", () => {
 				.its("status")
 				.should("eq", 200);
 
-			cy.get("@uploadReq")
-				.then((req) => {
-					expect(req.request.body.get("file").name).to.eq(fileName);
-				});
+            cy.wait("@uploadReq")
+                .interceptFormData((formData) => {
+                    expect(formData("file")).to.eq(fileName);
+                });
 
             cy.get("img[data-test='upload-preview']")
                 .should("be.visible")
                 .invoke("attr", "src")
                 .should("match", /blob:/);
-        }, "#upload-button", null);
+        }, "#upload-button");
     });
 });

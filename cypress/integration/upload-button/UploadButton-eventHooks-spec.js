@@ -8,13 +8,10 @@ describe("With Event Hooks", () => {
     });
 
     it("should use event hooks", () => {
-        cy.iframe("#storybook-preview-iframe").as("iframe");
-
         uploadFile(fileName, () => {
             cy.wait(1000);
 
-            cy.get("@iframe")
-                .find("ul[data-test='hooks-events']")
+            cy.get("ul[data-test='hooks-events']")
                 .should("be.visible")
                 .as("eventsLog");
 

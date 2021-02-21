@@ -1,20 +1,20 @@
 //https://www.cypress.io/blog/2020/02/12/working-with-iframes-in-cypress/
 
-const command = (selector) =>
-    cy.get(selector, { log: false })
-        .its("0.contentDocument.body", { log: false })
-        .should("not.be.empty")
-        .then((iframeBody)=>{
-
-            cy.window().then((appWindow) => {
-                iframeBody.ownerDocument.defaultView
-                    .XMLHttpRequest = appWindow.XMLHttpRequest
-            });
-
-            return cy.wrap(iframeBody);
-        });
-
-Cypress.Commands.add("iframe",command);
+// const command = (selector) =>
+//     cy.get(selector, { log: false })
+//         .its("0.contentDocument.body", { log: false })
+//         .should("not.be.empty")
+//         .then((iframeBody)=>{
+//
+//             cy.window().then((appWindow) => {
+//                 iframeBody.ownerDocument.defaultView
+//                     .XMLHttpRequest = appWindow.XMLHttpRequest
+//             });
+//
+//             return cy.wrap(iframeBody);
+//         });
+//
+// Cypress.Commands.add("iframe",command);
 
 // const iframe = cy.get(selector);
 //

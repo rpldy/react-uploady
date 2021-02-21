@@ -8,11 +8,8 @@ describe("With Progress", () => {
     });
 
     it("should show upload progress", () => {
-        cy.iframe("#storybook-preview-iframe").as("iframe");
-
         uploadFile(fileName, () => {
-            cy.wait(2000);
-
+            cy.wait(1000);
             cy.storyLog().assertLogPattern(/progress event uploaded: \d+, completed: \d+$/, {
                 times: 6,
                 different: true

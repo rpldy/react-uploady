@@ -1,5 +1,6 @@
 import "cypress-file-upload";
-import "./iframe";
+// import "./iframe";
 import "./storyLog";
 import "./visitStory";
+import "./interceptFormData";
 

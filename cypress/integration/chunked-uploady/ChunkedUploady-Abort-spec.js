@@ -4,17 +4,13 @@ describe("ChunkedUploady - Abort and continue", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("chunkedUploady", "with-abort-button&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url&knob-chunk size (bytes)_Upload Settings=50000", true);
+        cy.visitStory("chunkedUploady", "with-abort-button&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url&knob-chunk size (bytes)_Upload Settings=50000");
     });
 
     it("should be able to upload again after abort", () => {
-
-        cy.server();
-
-        cy.route({
-            method: "POST",
-            url: "http://test.upload/url",
-            response: { success: true }
+        cy.intercept("POST", "http://test.upload/url", {
+            statusCode: 200,
+            body: { success: true }
         }).as("uploadReq");
 
         uploadFile(fileName, () => {
@@ -33,24 +29,25 @@ describe("ChunkedUploady - Abort and continue", () => {
 
                 cy.wait("@uploadReq")
                     .then((xhr) => {
-                        uniqueHeader = xhr.request.headers["X-Unique-Upload-Id"];
+                        const headers = xhr.request.headers;
+                        uniqueHeader = headers["x-unique-upload-id"];
 
-                        expect(xhr.request.headers["X-Unique-Upload-Id"])
+                        expect(uniqueHeader)
                             .to.match(/rpldy-chunked-uploader-/);
 
-                        expect(xhr.request.headers["Content-Range"])
+                        expect(headers["content-range"])
                             .to.match(/bytes 0-49999\//);
                     });
 
                 cy.wait("@uploadReq")
                     .then((xhr) => {
                         expect(uniqueHeader).to.be.ok;
-                        expect(uniqueHeader).to.equal(xhr.request.headers["X-Unique-Upload-Id"]);
+                        expect(uniqueHeader).to.equal(xhr.request.headers["x-unique-upload-id"]);
 
-                        expect(xhr.request.headers["Content-Range"])
+                        expect(xhr.request.headers["content-range"])
                             .to.match(/bytes 50000-\d+\//);
                     });
-            }, "#upload-button", null);
-        }, "#upload-button", null);
+            }, "#upload-button");
+        }, "#upload-button");
     });
 });

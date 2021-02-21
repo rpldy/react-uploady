@@ -8,8 +8,6 @@ describe("UploadDropZone - Different Config", () => {
     });
 
     it("should allow overriding upload options from dropzone", () => {
-        cy.iframe("#storybook-preview-iframe").as("iframe");
-
         //test button with autoUpload = false
         dropFile(fileName, () => {
             cy.wait(100);

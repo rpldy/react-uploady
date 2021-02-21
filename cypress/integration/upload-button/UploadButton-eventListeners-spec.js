@@ -8,13 +8,10 @@ describe("With Event Listeners", () => {
     });
 
     it("should use event listeners", () => {
-        cy.iframe("#storybook-preview-iframe").as("iframe");
-
         uploadFile(fileName, () => {
             cy.wait(1000);
 
-            cy.get("@iframe")
-                .find("ul[data-test='hooks-events']")
+            cy.get("ul[data-test='hooks-events']")
                 .should("be.visible")
                 .as("eventsLog");
 

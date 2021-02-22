@@ -39,6 +39,7 @@ describe("onRequestFinished tests", () => {
 			id: itemId,
 			info: {
 				state: FILE_STATES.FINISHED,
+                status: 201,
 				response,
 			}
 		}], mockNext);
@@ -46,6 +47,7 @@ describe("onRequestFinished tests", () => {
 		expect(queueState.getState().items[itemId]).toMatchObject({
 			batchId: "b1",
 			state: FILE_STATES.FINISHED,
+            uploadStatus: 201,
 			uploadResponse: { success: true },
 		});
 
@@ -217,6 +219,7 @@ describe("onRequestFinished tests", () => {
 					id: "u2",
 					info: {
 						state: failState,
+                        status: 400,
 						response: response2,
 					}
 				}], mockNext);
@@ -227,6 +230,7 @@ describe("onRequestFinished tests", () => {
 			const item1 = queueState.getState().items.u1;
 			const item2 = queueState.getState().items.u2;
 
+            expect(queueState.getState().items.u2.uploadStatus).toBe(400);
 			expect(queueState.getState().items.u2).toEqual(item2);
 
 			expect(cleanUpFinishedBatch).toHaveBeenCalledTimes(1);

@@ -13,7 +13,7 @@ describe("With Styled Component", () => {
                 .should("have.css", "background-color", "rgb(1, 9, 22)")
                 .should("have.css", "color", "rgb(176, 177, 179)")
 
-            cy.wait(1000);
+            cy.wait(1500);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });

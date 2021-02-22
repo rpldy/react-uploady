@@ -4,8 +4,6 @@ const getFormDataFromRequest = (body, boundary) => {
     const decoded = decoder.decode(body);
     const parts = decoded.split(boundary);
 
-    console.log("!!!!!!! ", parts)
-
     return parts.reduce((res, p) => {
         const fileNameMatch = p.match(/name="([\w\[\]]+)"; filename="([\w.]+)"/m);
 
@@ -22,16 +20,19 @@ const getFormDataFromRequest = (body, boundary) => {
     }, {});
 };
 
+const interceptFormData = (request) => {
+    const { body, headers } = request;
+    const contentType = headers["content-type"];
+    const boundary = contentType.match(/boundary=([\w-]+)/)?.[1];
+
+    return getFormDataFromRequest(body, boundary);
+};
+
+export default interceptFormData;
+
 Cypress.Commands
     .add("interceptFormData", { prevSubject: true }, (interception, cb) => {
-        const { body, headers } = interception.request;
-        const contentType = headers["content-type"];
-        const boundary = contentType.match(/boundary=([\w-]+)/)?.[1];
-        const formData = getFormDataFromRequest(body, boundary);
-
-        console.log("!!!!!!! ", headers)
-
-        return cy.wrap(formData)
+        cy.wrap(interceptFormData(interception.request))
             .then(cb)
             .then(() => interception);
     });

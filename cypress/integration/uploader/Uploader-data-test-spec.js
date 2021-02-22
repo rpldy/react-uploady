@@ -9,7 +9,7 @@ describe("Uploader - Event data test", () => {
 
     it("should upload and trigger events with non-proxy data", () => {
         uploadFile(fileName, () =>{
-            cy.wait(500);
+            cy.wait(1500);
             cy.storyLog().assertFileItemStartFinish(fileName, 2);
 
             cy.storyLog().customAssertLogEntry("###BATCH-ADD", (logLine) => {

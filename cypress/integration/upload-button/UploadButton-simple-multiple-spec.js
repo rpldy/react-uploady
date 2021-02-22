@@ -13,12 +13,12 @@ describe("UploadButton - Simple - Multiple files", () => {
             .as("fInput");
 
         uploadFileTimes(fileName, () => {
-            cy.wait(1000);
+            cy.wait(1500);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
-            cy.wait(1000);
+            cy.wait(1500);
             cy.storyLog().assertFileItemStartFinish("flower2.jpg", 3);
-            cy.wait(1000);
+            cy.wait(1500);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg", 5);
-        }, 3, "button");
+        }, 3);
     });
 });

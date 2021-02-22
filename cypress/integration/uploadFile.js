@@ -1,4 +1,4 @@
-const uploadFile = (fileName, cb, button = "button", options = {}, iframe) => {
+const uploadFile = (fixtureName, cb, button = "button", options = {}, iframe) => {
     //support stories inside iframe and outside
     const get = (selector) => iframe ? cy.get(iframe).find(selector) : cy.get(selector);
 
@@ -13,8 +13,9 @@ const uploadFile = (fileName, cb, button = "button", options = {}, iframe) => {
 
     const times = options.times || 1;
     const mimeType = options.mimeType || "image/jpeg";
+    const fileName = options.fileName || fixtureName;
 
-    cy.fixture(fileName, "binary")
+    cy.fixture(fixtureName, "binary")
         .then(Cypress.Blob.binaryStringToBlob)
         .then((fileContent) => {
             const files = new Array(times)

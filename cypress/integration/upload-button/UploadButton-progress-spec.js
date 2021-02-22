@@ -9,7 +9,7 @@ describe("With Progress", () => {
 
     it("should show upload progress", () => {
         uploadFile(fileName, () => {
-            cy.wait(1000);
+            cy.wait(1500);
             cy.storyLog().assertLogPattern(/progress event uploaded: \d+, completed: \d+$/, {
                 times: 6,
                 different: true

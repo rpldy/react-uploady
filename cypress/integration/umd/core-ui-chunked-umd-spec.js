@@ -12,9 +12,6 @@ describe("UMD UI CORE - Bundle", () => {
         intercept("http://localhost:4000/upload");
 
         uploadFile(fileName, () => {
-            cy.wait(1000);
-            cy.storyLog().assertFileItemStartFinish(fileName, 1);
-
             let uniqueHeader;
 
             cy.wait("@uploadReq")
@@ -36,6 +33,9 @@ describe("UMD UI CORE - Bundle", () => {
                     expect(xhr.request.headers["content-range"])
                         .to.match(/bytes 10000-\d+\//);
                 });
+
+            cy.wait(1000);
+            cy.storyLog().assertFileItemStartFinish(fileName, 1);
         }, "#upload-button");
     });
 });

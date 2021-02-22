@@ -12,12 +12,11 @@ describe("UMD Core - Bundle", () => {
         intercept("http://localhost:4000/upload");
 
         uploadFile(fileName, () => {
-            cy.wait("@uploadReq").its("status").should("eq", 200);
-
             cy.wait("@uploadReq")
                 .interceptFormData((formData) => {
-                    expect(formData("file")).to.eq(fileName);
-                });
+                    expect(formData["file"]).to.eq(fileName);
+                })
+                .its("response.statusCode").should("eq", 200);
 
             cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 1 });
             cy.storyLog().assertLogPattern(/ITEM_START/, { times: 1 });

@@ -34,7 +34,7 @@ describe("UMD UI CORE - Bundle", () => {
                         .to.match(/bytes 10000-\d+\//);
                 });
 
-            cy.wait(2000);
+            cy.wait(3000);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         }, "#upload-button");
     });

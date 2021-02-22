@@ -5,13 +5,13 @@ describe("RetryHooks - Queue", () => {
         fileName2 = "sea.jpg";
 
     before(() => {
-        cy.visitStory("retryHooks", "with-retry-and-preview", true);
+        cy.visitStory("retryHooks", "with-retry-and-preview");
     });
 
     it("should use queue with retry", () => {
         uploadFile(fileName, () => {
             uploadFile(fileName2, () => {
-                cy.wait(1000);
+                cy.wait(1500);
                 cy.get("button[data-test='abort-button']:last")
                     .click();
 
@@ -42,7 +42,7 @@ describe("RetryHooks - Queue", () => {
                     .find("button[data-test='retry-button']")
                     .click();
 
-                cy.wait(500);
+                cy.wait(1500);
 
                 cy.get("@secondArticle")
                     .find("button[data-test='abort-button']")
@@ -61,8 +61,8 @@ describe("RetryHooks - Queue", () => {
                 cy.get("article[data-test='preview-item-container']")
                     .should("have.length", 0);
 
-            }, "#upload-button", null);
-        }, "#upload-button", null);
+            }, "#upload-button");
+        }, "#upload-button");
     });
 
     it("should abort and retry while batch still in progress", () => {
@@ -70,7 +70,6 @@ describe("RetryHooks - Queue", () => {
         cy.reload();
 
         uploadFileTimes(fileName, () => {
-
             cy.get("button[data-test='abort-button']")
                 .eq(1)
                 .click();
@@ -85,6 +84,6 @@ describe("RetryHooks - Queue", () => {
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg", 5);
             cy.storyLog().assertFileItemStartFinish("flower2.jpg", 7);
-        }, 3, "#upload-button", null);
+        }, 3, "#upload-button");
     });
 });

@@ -1,3 +1,4 @@
+import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 
 describe("UploadButton - Form", () => {
@@ -5,18 +6,11 @@ describe("UploadButton - Form", () => {
         fileName2 = "sea.jpg";
 
     before(() => {
-        cy.visitStory("uploadButton", "with-form&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url", true);
+        cy.visitStory("uploadButton", "with-form&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
     });
 
     it("should submit form with upload and other fields", () => {
-
-        cy.server();
-
-        cy.route({
-            method: "POST",
-            url: "http://test.upload/url",
-            response: { success: true }
-        }).as("uploadReq");
+        intercept();
 
         cy.get("#field-name")
             .type("james");
@@ -26,19 +20,19 @@ describe("UploadButton - Form", () => {
 
         uploadFile(fileName, () => {
             uploadFile(fileName2, () => {
-
                 cy.get("#form-submit")
                     .click();
 
                 cy.wait("@uploadReq")
-                    .then((xhr) => {
-                        expect(xhr.request.body.get("field-name")).to.eq("james");
-                        expect(xhr.request.body.get("field-age")).to.eq("22");
-                        expect(xhr.request.body.get("file").name).to.eq(fileName2);
+                    .interceptFormData((formData) => {
+                        expect(formData["field-name"]).to.eq("james");
+                        expect(formData["field-age"]).to.eq("22");
+                        expect(formData["file"]).to.eq(fileName2);
 
                         cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 1 });
                     });
-            }, "#form-upload-button", null);
-        }, "#form-upload-button", null);
+
+            }, "#form-upload-button");
+        }, "#form-upload-button");
     });
 });

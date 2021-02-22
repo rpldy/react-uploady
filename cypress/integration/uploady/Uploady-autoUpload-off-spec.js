@@ -5,7 +5,7 @@ describe("Uploady - autoUpload off tests", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploady", "with-auto-upload-off&knob-mock send delay_Upload Destination=200", true);
+        cy.visitStory("uploady", "with-auto-upload-off&knob-mock send delay_Upload Destination=200");
     });
 
     beforeEach(() => {
@@ -15,13 +15,12 @@ describe("Uploady - autoUpload off tests", () => {
 
     it("should not auto upload", () => {
         uploadFile(fileName, () => {
-
             uploadFile(fileName, () => {
                 cy.storyLog().assertLogPattern(BATCH_ADD, { times: 2 });
                 cy.wait(500);
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });
-            }, "#upload-button", null);
-        }, "#upload-button", null);
+            }, "#upload-button");
+        }, "#upload-button");
     });
 
     it("should process pending", () => {
@@ -36,8 +35,8 @@ describe("Uploady - autoUpload off tests", () => {
 
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
-            }, "#upload-button", null);
-        }, "#upload-button", null);
+            }, "#upload-button");
+        }, "#upload-button");
     });
 
     it("should clear pending", () => {
@@ -55,12 +54,11 @@ describe("Uploady - autoUpload off tests", () => {
 
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 1 });
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });
-            }, "#upload-button", null);
-        }, "#upload-button", null);
+            }, "#upload-button");
+        }, "#upload-button");
     });
 
     it("should abort individual pending item", () => {
-
         uploadFile(fileName, () => {
             uploadFile(fileName, () => {
                 cy.get("button[data-test='abort-file-0']")
@@ -72,7 +70,7 @@ describe("Uploady - autoUpload off tests", () => {
                 cy.wait(500);
 
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 1 });
-            }, "#upload-button", null);
-        }, "#upload-button", null);
+            }, "#upload-button");
+        }, "#upload-button");
     });
 });

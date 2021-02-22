@@ -1,3 +1,4 @@
+import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 
 describe("With Custom File Input And Form", () => {
@@ -8,19 +9,11 @@ describe("With Custom File Input And Form", () => {
     });
 
     it("should use form attributes ", () => {
-        cy.server();
-
-        cy.route({
-            method: "POST",
-            url: "http://react-uploady-dummy-server.comm",
-            response: { success: true }
-        }).as("uploadReq");
-
-        cy.iframe("#storybook-preview-iframe").as("iframe");
+        intercept("http://react-uploady-dummy-server.comm");
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq").then((xhr) => {
-                assert.isNotNull(xhr.response.body);
+                expect(xhr.response.body.success).to.eq(true);
             });
         });
     });

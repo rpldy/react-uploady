@@ -12,5 +12,6 @@ declare namespace Cypress {
     interface Chainable {
         storyLog: () => StoryLog,
         visitStory: (component: string, storyName: string, canvas?: boolean) => void;
+        interceptFormData: (cb: (formData: Record<string, any>) => void) => void;
     }
 }

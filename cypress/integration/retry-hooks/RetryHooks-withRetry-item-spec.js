@@ -5,7 +5,7 @@ describe("RetryHooks - Retry Upload", () => {
         fileName2 = "sea.jpg";
 
     before(() => {
-        cy.visitStory("retryHooks", "with-retry", true);
+        cy.visitStory("retryHooks", "with-retry");
     });
 
     it("should retry batch", () => {
@@ -23,10 +23,10 @@ describe("RetryHooks - Retry Upload", () => {
 
                 cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 3 });
 
-                cy.wait(3000);
+                cy.wait(1000);
 
                 cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 1 });
-            }, "#upload-button", null);
-        }, "#upload-button", null);
+            }, "#upload-button");
+        }, "#upload-button");
     });
 });

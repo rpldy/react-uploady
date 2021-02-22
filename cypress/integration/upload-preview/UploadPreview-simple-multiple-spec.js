@@ -4,7 +4,7 @@ describe("UploadPreview - Simple - Multiple files", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadPreview", "simple", true);
+        cy.visitStory("uploadPreview", "simple");
     });
 
     it("should show upload preview for multiple files", () => {
@@ -14,6 +14,6 @@ describe("UploadPreview - Simple - Multiple files", () => {
                 .should("have.length", 3)
                 .invoke("attr", "src")
                 .should("match", /blob:/)
-        }, 3, "button", null);
+        }, 3, "button");
     });
 });

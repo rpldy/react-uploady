@@ -1,3 +1,4 @@
+import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 import { ITEM_FINISH, ITEM_START } from "../storyLogPatterns";
 
@@ -5,17 +6,11 @@ describe("Uploady - autoUpload off tests", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploady", "with-auto-upload-off&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url", true);
+        cy.visitStory("uploady", "with-auto-upload-off&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
     });
 
     it("should process pending with options", () => {
-        cy.server();
-
-        cy.route({
-            method: "POST",
-            url: "http://test.upload/url",
-            response: { success: true }
-        }).as("uploadReq");
+        intercept();
 
         uploadFile(fileName, () => {
             cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });
@@ -23,17 +18,13 @@ describe("Uploady - autoUpload off tests", () => {
             cy.get("#process-pending-param")
                 .click();
 
-            cy.wait(500);
+            cy.wait("@uploadReq")
+                .interceptFormData((formData) => {
+                   expect(formData["test"]).to.equal("123");
+                });
 
             cy.storyLog().assertLogPattern(ITEM_START, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });
-
-            cy.wait("@uploadReq")
-                .its("request.body")
-                .should((body) => {
-                    expect(body.get("test")).to.equal("123");
-                });
-
-        }, "#upload-button", null);
+        }, "#upload-button");
     });
 });

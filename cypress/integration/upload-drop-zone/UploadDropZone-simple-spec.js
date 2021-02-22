@@ -8,10 +8,8 @@ describe("UploadDropZone - Simple", () => {
     });
 
     it("should upload dropped file", () => {
-        cy.iframe("#storybook-preview-iframe").as("iframe");
-
         dropFile(fileName, () => {
-            cy.wait(2000);
+            cy.wait(1500);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });

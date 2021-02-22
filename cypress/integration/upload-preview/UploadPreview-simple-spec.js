@@ -4,13 +4,12 @@ describe("UploadPreview - Simple", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadPreview", "simple", true);
+        cy.visitStory("uploadPreview", "simple");
     });
 
     it("should show upload preview", () => {
         uploadFile(fileName, () => {
             uploadFile(fileName, () => {
-
 				cy.get("img[data-test='upload-preview']")
 					.should("be.visible")
 					.invoke("attr", "src")
@@ -18,7 +17,7 @@ describe("UploadPreview - Simple", () => {
 
 				cy.get("img[data-test='upload-preview']")
 					.should("have.length", 1);
-			}, "button", null);
-        }, "button", null);
+			}, "button");
+        }, "button");
     });
 });

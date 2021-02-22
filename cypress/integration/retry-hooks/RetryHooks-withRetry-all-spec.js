@@ -5,7 +5,7 @@ describe("RetryHooks - Retry Upload", () => {
         fileName2 = "sea.jpg";
 
     before(() => {
-        cy.visitStory("retryHooks", "with-retry", true);
+        cy.visitStory("retryHooks", "with-retry");
     });
 
     it("should retry all failed uploads", () => {
@@ -32,7 +32,7 @@ describe("RetryHooks - Retry Upload", () => {
                     expect(Object.getOwnPropertySymbols(logLine[0][1])).to.have.lengthOf(1, "RETRY_EVENT item 1 - shouldnt have proxy symbols");
                 });
 
-            }, "#upload-button", null);
-        }, "#upload-button", null);
+            }, "#upload-button");
+        }, "#upload-button");
     });
 });

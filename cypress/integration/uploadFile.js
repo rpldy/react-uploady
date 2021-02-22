@@ -1,39 +1,39 @@
-const uploadFile = (fileName, cb, button = "button", iframe = "@iframe", options = {}) => {
-	//support stories inside iframe and outside
-	const get = (selector) => iframe ? cy.get(iframe).find(selector) : cy.get(selector);
+const uploadFile = (fixtureName, cb, button = "button", options = {}, iframe) => {
+    //support stories inside iframe and outside
+    const get = (selector) => iframe ? cy.get(iframe).find(selector) : cy.get(selector);
 
-	get(button)
+    get(button)
         .should("be.visible")
         .click()
         .as("uploadButton");
 
-	get(`input[type="file"]`)
+    get(`input[type="file"]`)
         .should("exist")
         .as("fInput");
 
-	const mimeType = options.mimeType || "image/jpeg";
+    const times = options.times || 1;
+    const mimeType = options.mimeType || "image/jpeg";
+    const fileName = options.fileName || fixtureName;
 
-    cy.fixture(fileName, "base64").then((fileContent) => {
-        let files = [{ fileContent, fileName, mimeType  }];
-
-        if (options.times) {
-            files = files.concat(new Array(options.times - 1)
+    cy.fixture(fixtureName, "binary")
+        .then(Cypress.Blob.binaryStringToBlob)
+        .then((fileContent) => {
+            const files = new Array(times)
                 .fill(null)
                 .map((f, i) => ({
                     fileContent,
-                    fileName: fileName.replace(".", `${i+2}.`),
                     mimeType,
-                })));
-        }
+                    fileName: !i ? fileName : fileName.replace(".", `${i + 1}.`),
+                }));
 
-        cy.get("@fInput")
-			.upload(files, { subjectType: "input" })
-			.then(cb);
-    });
+            cy.get("@fInput")
+                .attachFile(files)
+                .then(cb);
+        });
 };
 
-export const uploadFileTimes = (fileName, cb, times, button = "button", iframe = "@iframe", options = {}) => {
-    return uploadFile(fileName, cb, button, iframe, { times });
+export const uploadFileTimes = (fileName, cb, times, button = "button", options = {}, iframe) => {
+    return uploadFile(fileName, cb, button, { ...options, times, }, iframe);
 };
 
 export default uploadFile;

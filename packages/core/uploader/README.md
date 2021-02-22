@@ -234,7 +234,7 @@ Triggered when item finished uploading successfully
 
 - Parameters: _(item)_
 
-> The server response can be accessed through the item's uploadResponse property.
+> The server response can be accessed through the item's _uploadResponse_ property and status code through _uploadStatus_ 
 
 ### UPLOADER_EVENTS.ITEM_PROGRESS
 

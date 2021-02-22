@@ -11,7 +11,7 @@ describe("RetryHooks - Queue", () => {
     it("should use queue with retry", () => {
         uploadFile(fileName, () => {
             uploadFile(fileName2, () => {
-                cy.wait(1000);
+                cy.wait(1500);
                 cy.get("button[data-test='abort-button']:last")
                     .click();
 
@@ -42,7 +42,7 @@ describe("RetryHooks - Queue", () => {
                     .find("button[data-test='retry-button']")
                     .click();
 
-                cy.wait(500);
+                cy.wait(1500);
 
                 cy.get("@secondArticle")
                     .find("button[data-test='abort-button']")

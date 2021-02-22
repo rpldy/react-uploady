@@ -29,7 +29,10 @@ Cypress.Commands
         const boundary = contentType.match(/boundary=([\w-]+)/)?.[1];
         const formData = getFormDataFromRequest(body, boundary);
 
+        console.log("!!!!!!! ", headers)
+
         return cy.wrap(formData)
-            .then(cb);
+            .then(cb)
+            .then(() => interception);
     });
 

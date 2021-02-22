@@ -14,30 +14,25 @@ const uploadFile = (fileName, cb, button = "button", options = {}, iframe) => {
     const times = options.times || 1;
     const mimeType = options.mimeType || "image/jpeg";
 
-    if (times === 1) {
-        cy.get("@fInput")
-            .attachFile({ filePath: fileName, encoding: "utf-8", mimeType })
-            .then(cb);
-    } else {
-        cy.fixture(fileName, "base64")
-            .then((fileContent) => {
-                const files = new Array(times)
-                    .fill(null)
-                    .map((f, i) => ({
-                        fileContent,
-                        mimeType,
-                        fileName: !i ? fileName : fileName.replace(".", `${i + 1}.`),
-                    }));
+    cy.fixture(fileName, "binary")
+        .then(Cypress.Blob.binaryStringToBlob)
+        .then((fileContent) => {
+            const files = new Array(times)
+                .fill(null)
+                .map((f, i) => ({
+                    fileContent,
+                    mimeType,
+                    fileName: !i ? fileName : fileName.replace(".", `${i + 1}.`),
+                }));
 
-                cy.get("@fInput")
-                    .attachFile(files)
-                    .then(cb);
-            });
-    }
+            cy.get("@fInput")
+                .attachFile(files)
+                .then(cb);
+        });
 };
 
 export const uploadFileTimes = (fileName, cb, times, button = "button", options = {}, iframe) => {
-    return uploadFile(fileName, cb, button, {...options, times, }, iframe);
+    return uploadFile(fileName, cb, button, { ...options, times, }, iframe);
 };
 
 export default uploadFile;

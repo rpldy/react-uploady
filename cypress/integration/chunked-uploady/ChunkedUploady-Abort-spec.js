@@ -1,3 +1,4 @@
+import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 
 describe("ChunkedUploady - Abort and continue", () => {
@@ -8,10 +9,7 @@ describe("ChunkedUploady - Abort and continue", () => {
     });
 
     it("should be able to upload again after abort", () => {
-        cy.intercept("POST", "http://test.upload/url", {
-            statusCode: 200,
-            body: { success: true }
-        }).as("uploadReq");
+        intercept();
 
         uploadFile(fileName, () => {
             cy.get("button[data-test='abort-batch-0']")

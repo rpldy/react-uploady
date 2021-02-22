@@ -4,13 +4,12 @@ describe("Uploader - Event data test", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploader", "test-events-data", true);
+        cy.visitStory("uploader", "test-events-data");
     });
 
     it("should upload and trigger events with non-proxy data", () => {
-
         uploadFile(fileName, () =>{
-            cy.wait(2000);
+            cy.wait(500);
             cy.storyLog().assertFileItemStartFinish(fileName, 2);
 
             cy.storyLog().customAssertLogEntry("###BATCH-ADD", (logLine) => {
@@ -47,7 +46,6 @@ describe("Uploader - Event data test", () => {
                 expect(Object.getOwnPropertySymbols(logLine[0])).to.have.lengthOf(0, "BATCH-FINISH batch - shouldnt have proxy symbols");
                 expect(Object.getOwnPropertySymbols(logLine[0].items[0])).to.have.lengthOf(1, "BATCH-FINISH batch item - shouldnt have proxy symbols");
             });
-
-        }, "#upload-button", null);
+        }, "#upload-button");
     });
 });

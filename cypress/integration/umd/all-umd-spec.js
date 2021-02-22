@@ -1,3 +1,4 @@
+import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 
 describe("UMD ALL - Bundle", () => {
@@ -8,10 +9,7 @@ describe("UMD ALL - Bundle", () => {
     });
 
     it("should use Uploady and UploadButton to upload file", () => {
-        cy.intercept("POST", "http://localhost:4000/upload", {
-            statusCode: 200,
-            body: { success: true }
-        }).as("uploadReq");
+        intercept("http://localhost:4000/upload");
 
         uploadFile(fileName, () => {
             cy.wait(1000);

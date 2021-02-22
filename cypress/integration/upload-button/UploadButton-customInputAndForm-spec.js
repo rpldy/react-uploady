@@ -1,3 +1,4 @@
+import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 
 describe("With Custom File Input And Form", () => {
@@ -8,10 +9,7 @@ describe("With Custom File Input And Form", () => {
     });
 
     it("should use form attributes ", () => {
-        cy.intercept("POST", "http://react-uploady-dummy-server.comm", {
-            statusCode: 200,
-            body: { success: true }
-        }).as("uploadReq");
+        intercept("http://react-uploady-dummy-server.comm");
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq").then((xhr) => {

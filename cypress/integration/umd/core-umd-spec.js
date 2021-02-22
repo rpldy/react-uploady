@@ -1,3 +1,4 @@
+import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 
 describe("UMD Core - Bundle", () => {
@@ -8,10 +9,7 @@ describe("UMD Core - Bundle", () => {
     });
 
     it("should use upload with uploader", () => {
-        cy.intercept("POST", "http://localhost:4000/upload", {
-            statusCode: 200,
-            body: { success: true }
-        }).as("uploadReq");
+        intercept("http://localhost:4000/upload");
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq").its("status").should("eq", 200);

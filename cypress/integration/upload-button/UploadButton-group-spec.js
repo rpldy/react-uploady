@@ -1,3 +1,4 @@
+import intercept from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
 
 describe("UploadPreview - Simple - Multiple files", () => {
@@ -8,10 +9,7 @@ describe("UploadPreview - Simple - Multiple files", () => {
     });
 
     it("should show upload preview for multiple files", () => {
-        cy.intercept("POST", "http://localhost:4000/upload", {
-            statusCode: 200,
-            body: { success: true }
-        }).as("uploadReq");
+        intercept("http://localhost:4000/upload");
 
         uploadFileTimes(fileName, () => {
             cy.wait("@uploadReq")

@@ -1,3 +1,4 @@
+import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 
 describe("UploadButton - Form", () => {
@@ -9,10 +10,7 @@ describe("UploadButton - Form", () => {
     });
 
     it("should submit form with upload and other fields", () => {
-        cy.intercept("POST", "http://test.upload/url", {
-            statusCode: 200,
-            body: { success: true }
-        }).as("uploadReq");
+        intercept();
 
         cy.get("#field-name")
             .type("james");

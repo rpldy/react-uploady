@@ -1,3 +1,4 @@
+import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 
 describe("ChunkedUploady - WithChunkEventHooks", () => {
@@ -8,10 +9,7 @@ describe("ChunkedUploady - WithChunkEventHooks", () => {
     });
 
     it("should use chunked uploady with unique id", () => {
-        cy.intercept("POST", "http://test.upload/url", {
-            statusCode: 200,
-            body: { success: true }
-        }).as("uploadReq");
+        intercept();
 
         cy.get("input")
             .should("exist")

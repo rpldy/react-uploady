@@ -35,6 +35,10 @@ export type UploadData = {
 
 export type FormatParamGroupNameMethod = (number, string) => string;
 
+export type Headers = { [string]: string };
+
+export type FormatServerResponseMethod = (string, number, ?Headers) => any;
+
 type BatchItemBase = {|
 	id: string,
 	batchId: string,
@@ -110,6 +114,8 @@ export type UploadOptions = {|
 	withCredentials?: boolean,
     //whether file/url data will be sent as part of formdata (default: true)
     sendWithFormData?: boolean,
+    //optional function to create the batch item's uploadResponse from the raw xhr response
+    formatServerResponse?: FormatServerResponseMethod,
 |};
 
 export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];

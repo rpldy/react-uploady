@@ -7,11 +7,10 @@ import prepareFormData from "./prepareFormData";
 import type {
 	BatchItem,
 	UploadData,
+    Headers,
 } from "@rpldy/shared";
 
 import type { OnProgress, SendResult, SendOptions, XhrSendConfig } from "../types";
-
-type Headers = { [string]: string };
 
 type SendRequest = {
 	url: string,
@@ -85,9 +84,9 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
 const parseResponseJson = (response: string, headers: ?Headers, options: SendOptions): string | Object => {
 	let parsed = response;
 
-	const ct = headers && headers["content-type"];
+	const ct = headers?.["content-type"];
 
-	if (options.forceJsonResponse || (ct && ~ct.indexOf("json"))) {
+	if (options.forceJsonResponse || (ct?.includes("json"))) {
 		try {
 			parsed = JSON.parse(response);
 		} catch { //silent fail
@@ -112,7 +111,9 @@ const processResponse = (sendRequest: SendRequest, options: SendOptions): Promis
             const resHeaders = parseResponseHeaders(xhr);
 
             response = {
-                data: parseResponseJson(xhr.response, resHeaders, options),
+                data:
+                    options.formatServerResponse?.(xhr.response, status, resHeaders) ??
+                    parseResponseJson(xhr.response, resHeaders, options),
                 headers: resHeaders,
             };
 

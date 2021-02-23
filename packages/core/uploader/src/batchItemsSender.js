@@ -51,6 +51,7 @@ const createBatchItemsSender = (): ItemsSender => {
             formatGroupParamName: batchOptions.formatGroupParamName,
             headers: destination?.headers,
             sendWithFormData: batchOptions.sendWithFormData,
+            formatServerResponse: batchOptions.formatServerResponse,
         }, throttledProgress);
     };
 

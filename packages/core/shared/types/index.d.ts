@@ -8,22 +8,27 @@ export type Destination = {
 
 export type FormatParamGroupNameMethod = (index: number, paramName: string) => string;
 
+export type FormatServerResponseMethod = (response: string, status: number, headers: Record<string, string> | undefined) => unknown;
+
 export type FileFilterMethod = (file: unknown, index: number, files: unknown[]) => boolean;
 
 export interface UploadOptions {
     autoUpload?: boolean;
     clearPendingOnAdd?: boolean;
-    destination?: Destination;
-    inputFieldName?: string;
     formatGroupParamName?: FormatParamGroupNameMethod;
     grouped?: boolean;
     maxGroupSize?: number;
     fileFilter?: FileFilterMethod;
+
+    //send options
+    destination?: Destination;
+    inputFieldName?: string;
     method?: string;
     params?: Record<string, unknown>;
     forceJsonResponse?: boolean;
     withCredentials?: boolean;
     sendWithFormData?: boolean;
+    formatServerResponse?: FormatServerResponseMethod,
 }
 
 export enum BATCH_STATES {

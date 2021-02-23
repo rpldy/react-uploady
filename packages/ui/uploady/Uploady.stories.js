@@ -177,6 +177,26 @@ export const withConcurrent = () => {
     </Uploady>
 };
 
+export const withCustomResponseFormat = () => {
+    const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
+
+    const resFormatter = useCallback((res, status, headers) => {
+        console.log("!!!!!! running custom server response formatter", res, status, headers);
+        return `${status} - Yay!`;
+    }, []);
+
+    return <Uploady
+        debug
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+        autoUpload={autoUpload}
+        formatServerResponse={resFormatter}>
+        <ContextUploadButton />
+    </Uploady>;
+};
+
 //expose react and react-dom for Uploady bundle
 window.react = React;
 window["react-dom"] = ReactDOM;

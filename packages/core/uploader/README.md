@@ -69,7 +69,7 @@ uploader.add(myFile);
 | Name (* = mandatory) | Type          | Default       | Description  
 | --------------       | ------------- | ------------- | -------------
 | autoUpload           | boolean       | true          | automatically upload files when they are added 
-| destination          | [Destination](../../shared/src/types.js#L7)   | undefined     | configure the end-point to upload to
+| destination          | [Destination](../shared/src/types.js#L7)   | undefined     | configure the end-point to upload to
 | inputFieldName       | string        | "file"        | name (attribute) of the file input field (requires sendWithFormData = true)
 | grouped              | boolean       | false         | group multiple files in a single request 
 | maxGroupSize         | number        | 5             | maximum of files to group together in a single request 
@@ -79,11 +79,12 @@ uploader.add(myFile);
 | params               | Object        | undefined     | collection of params to pass along with the upload (requires sendWithFormData = true)
 | forceJsonResponse    | boolean       | false         | parse server response as JSON even if no JSON content-type header received            
 | withCredentials      | boolean       | false         | set XHR withCredentials to true
-| enhancer             | [UploaderEnhancer](../../uploader/src/types.js#L37) | undefined    | uploader [enhancer](../../../README.md#enhancer) function
+| enhancer             | [UploaderEnhancer](../uploader/src/types.js#L37) | undefined    | uploader [enhancer](../../../README.md#enhancer) function
 | concurrent           | boolean       | false          | issue multiple upload requests simultaneously
 | maxConcurrent        | number        | 2              | maximum allowed simultaneous requests
 | send                 | [SendMethod](../sender/src/types.js#L38) | @rpldy/sender | how to send files to the server
 | sendWithFormData     | boolean       | true           | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data
+| formatServerResponse | [FormatServerResponseMethod](../shared/src/types.js#L40) | undefined | function to create the batch item's uploadResponse from the raw xhr response
 
 ## Uploader API
 

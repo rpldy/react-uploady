@@ -117,7 +117,7 @@ const processResponse = (request, options: MandatoryMockOptions, sendOptions: Se
 				...mockResponse,
 				headers: mockHeaders,
 				data: options.response ||
-                    sendOptions?.formatServerResponse(mockResponseData, mockStatus, mockHeaders) ||
+                    sendOptions.formatServerResponse?.(JSON.stringify(mockResponseData), mockStatus, mockHeaders) ||
                     mockResponseData,
 			}
 		};

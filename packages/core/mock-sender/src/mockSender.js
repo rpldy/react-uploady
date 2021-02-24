@@ -100,22 +100,30 @@ const processResponse = (request, options: MandatoryMockOptions, sendOptions: Se
 	return request.then((mockResponse: MockResponse) => {
 		logger.debugLog("uploady.mockSender: mock request finished successfully");
 
+		const mockResponseData =  {
+            sendOptions,
+            mock: true,
+            success: true,
+        };
+
+		const mockHeaders = { "x-request-type": "react-uploady.mockSender" };
+
+		const mockStatus = options.responseStatus || 200;
+
 		return {
-            status: options.responseStatus || 200,
+            status: mockStatus,
 			state: FILE_STATES.FINISHED,
 			response: {
 				...mockResponse,
-				headers: { "x-request-type": "react-uploady.mockSender" },
-				data: options.response || {
-                    sendOptions,
-					mock: true,
-					success: true,
-				}
+				headers: mockHeaders,
+				data: options.response ||
+                    sendOptions.formatServerResponse?.(JSON.stringify(mockResponseData), mockStatus, mockHeaders) ||
+                    mockResponseData,
 			}
 		};
 	})
-		.catch(() => {
-			logger.debugLog("uploady.mockSender: mock request was aborted");
+		.catch((err) => {
+			logger.debugLog("uploady.mockSender: mock request was aborted", err);
 
 			return {
                 status: 0,

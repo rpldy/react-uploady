@@ -1,7 +1,8 @@
 // @flow
 import { debugLog } from "../logger";
+import type { Headers } from "../types";
 
-export default (xhr: XMLHttpRequest): ?Object => {
+export default (xhr: XMLHttpRequest): ?Headers => {
     let resHeaders;
 
     try {

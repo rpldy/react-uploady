@@ -1,9 +1,9 @@
 // @flow
-
 import type {
     BatchItem,
     UploadData,
     FormatParamGroupNameMethod,
+    FormatServerResponseMethod,
 } from "@rpldy/shared";
 
 export type SendOptions = {
@@ -15,6 +15,7 @@ export type SendOptions = {
     withCredentials: ?boolean,
     formatGroupParamName: ?FormatParamGroupNameMethod,
     sendWithFormData?: boolean,
+    formatServerResponse?: FormatServerResponseMethod,
 };
 
 export type SenderProgressEvent = { total: number, loaded: number };

@@ -61,6 +61,7 @@ It provides multiple hooks that enable more advanced features and data for clien
 | maxConcurrent        | number        | 2              | maximum allowed simultaneous requests
 | send                 | [SendMethod](../../core/sender/src/types.js#L38) | @rpldy/sender | how to send files to the server
 | sendWithFormData     | boolean       | true           | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data
+| formatServerResponse | [FormatServerResponseMethod](../../core/shared/src/types.js#L40) | undefined | function to create the batch item's uploadResponse from the raw xhr response
 | **Uploady Options**
 | debug                | boolean        | false | enable console logs from uploady packages
 | listeners            | Object        | undefined | map of [event](../../core/uploader/README.md#events) name and event handler

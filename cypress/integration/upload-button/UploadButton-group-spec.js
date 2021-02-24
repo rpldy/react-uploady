@@ -1,7 +1,7 @@
 import intercept from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
 
-describe("UploadPreview - Simple - Multiple files", () => {
+describe("UploadButton - Simple - Multiple files", () => {
     const fileName = "flower.jpg";
 
     before(() => {

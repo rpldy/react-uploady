@@ -1,4 +1,9 @@
-import { BatchItem, FormatParamGroupNameMethod, UploadData } from "@rpldy/shared";
+import {
+    BatchItem,
+    FormatParamGroupNameMethod,
+    UploadData,
+    FormatServerResponseMethod,
+} from "@rpldy/shared";
 
 export interface SendOptions  {
     method: string;
@@ -8,6 +13,8 @@ export interface SendOptions  {
     forceJsonResponse?: boolean;
     withCredentials?: boolean;
     formatGroupParamName?: FormatParamGroupNameMethod;
+    sendWithFormData?: boolean;
+    formatServerResponse?: FormatServerResponseMethod;
 }
 
 export interface XhrSendConfig {

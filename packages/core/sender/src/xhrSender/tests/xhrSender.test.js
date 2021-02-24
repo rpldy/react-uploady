@@ -36,7 +36,7 @@ describe("xhrSender tests", () => {
         const mockProgress = jest.fn();
         items = items || [{ id: "u1" }, { id: "u2" }];
 
-        if (options.sendWithFormData) {
+        if (options.sendWithFormData && !options.formatServerResponse) {
             prepareFormData.mockReturnValueOnce({ test: true });
         }
 
@@ -193,6 +193,7 @@ describe("xhrSender tests", () => {
             const result = await test.sendResult.request;
 
             expect(result.state).toEqual(FILE_STATES.FINISHED);
+
             expect(result.response.data).toEqual(JSON.stringify(responseData));
         });
     });
@@ -370,6 +371,23 @@ describe("xhrSender tests", () => {
 
             expect(request).toHaveBeenCalledWith(url, sendData, expect.any(Object));
             expect(prepareFormData).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("formatServerResponse tests", () => {
+        it("should use custom format function", async () => {
+            const formatServerResponse = jest.fn(() => "parsed");
+            const test = doTest({ formatServerResponse }, {});
+
+            test.xhr.status = 200;
+            test.xhr.response = "test";
+            test.xhrResolve();
+
+            const result = await test.sendResult.request;
+
+            expect(result.response.data).toBe("parsed");
+
+            expect(formatServerResponse).toHaveBeenCalledWith("test", 200, {});
         });
     });
 });

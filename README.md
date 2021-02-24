@@ -88,7 +88,7 @@ For a list of versions and changes, see the [CHANGELOG](CHANGELOG.md)
 
 ### Discussions
 
-Please check the [discussions area](https://github.com/rpldy/react-uploady/discussions) here in Github. If you have a question about use-cases or flows you'd like to achieve with Uploady, discussions is the place to look for existing questions or add your own.
+Please check the [discussions area](https://github.com/rpldy/react-uploady/discussions) here in Github. If you have a question about use-cases or flows you'd like to achieve with Uploady, discussions is the place to look for existing answers or add your own.
 
 If you're using Uploady in Production, please drop a comment [here](https://github.com/rpldy/react-uploady/discussions/131). It's always great to hear how people and companies use it.
 

@@ -76,7 +76,7 @@ It's also worth reading the  [Important Concepts](#important-concepts) section b
 
 In case you need UI components (like an upload button), check out the [UI packages](#ui-packages).
 
-**Additional Resources**
+### Additional Resources
 
 Our __[Storybook](https://react-uploady-storybook.netlify.com/)__ has many examples, both simple and advanced.
 
@@ -85,6 +85,12 @@ Check out our __[Guides](guides)__ section for additional examples & information
 ### Changelog
 
 For a list of versions and changes, see the [CHANGELOG](CHANGELOG.md)
+
+### Discussions
+
+Please check the [discussions area](https://github.com/rpldy/react-uploady/discussions) here in Github. If you have a question about use-cases or flows you'd like to achieve with Uploady, discussions is the place to look for existing questions or add your own.
+
+If you're using Uploady in Production, please drop a comment [here](https://github.com/rpldy/react-uploady/discussions/131). It's always great to hear how people and companies use it.
 
 ## Installation
 

@@ -122,8 +122,8 @@ const processResponse = (request, options: MandatoryMockOptions, sendOptions: Se
 			}
 		};
 	})
-		.catch(() => {
-			logger.debugLog("uploady.mockSender: mock request was aborted");
+		.catch((err) => {
+			logger.debugLog("uploady.mockSender: mock request was aborted", err);
 
 			return {
                 status: 0,

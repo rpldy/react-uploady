@@ -7028,6 +7028,11 @@ cypress-file-upload@^5.0.2:
   dependencies:
     mime "^2.5.0"
 
+cypress-intercept-formdata@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/cypress-intercept-formdata/-/cypress-intercept-formdata-0.1.2.tgz#9794f619b958ad7fb28166f1ea6cdca640998dd9"
+  integrity sha512-eq7QUxenfhBiSSUrV+19mhPs1HBazjAlGXLPuUljaZJvPDXz+jOmRaJw6MieSbXU02/hNdAy24exxLC3eOasRg==
+
 cypress@^6.5.0:
   version "6.5.0"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-6.5.0.tgz#d853d7a8f915f894249a8788294bfba077278c17"
@@ -13572,11 +13577,6 @@ parse-json@^5.0.0:
     error-ex "^1.3.1"
     json-parse-even-better-errors "^2.3.0"
     lines-and-columns "^1.1.6"
-
-parse-multipart@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/parse-multipart/-/parse-multipart-1.0.4.tgz#767b8788b2487b87b83a19615cd6ba78a8d14492"
-  integrity sha1-dnuHiLJIe4e4OhlhXNa6eKjRRJI=
 
 parse-passwd@^1.0.0:
   version "1.0.0"

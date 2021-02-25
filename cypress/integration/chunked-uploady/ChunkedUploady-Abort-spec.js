@@ -1,5 +1,5 @@
 import { interceptWithHandler } from "../intercept";
-import interceptFormData from "../../support/interceptFormData";
+import { interceptFormData } from "cypress-intercept-formdata";
 import uploadFile from "../uploadFile";
 
 describe("ChunkedUploady - Abort and continue", () => {

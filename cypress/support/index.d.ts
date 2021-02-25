@@ -1,3 +1,5 @@
+import { Interception } from "cypress/types/net-stubbing";
+
 interface StoryLog {
     assertFileItemStartFinish: (fileName: string, startIndex?: number) => void;
     assertUrlItemStartFinish: (fileName: string, startIndex?: number) => void;
@@ -12,6 +14,9 @@ declare namespace Cypress {
     interface Chainable {
         storyLog: () => StoryLog,
         visitStory: (component: string, storyName: string, canvas?: boolean) => void;
-        interceptFormData: (cb: (formData: Record<string, any>) => void) => void;
+    }
+
+    interface Chainable<Subject = Interception> {
+        interceptFormData(cb: (formData: Record<string, any>) => void): Chainable<Subject>;
     }
 }

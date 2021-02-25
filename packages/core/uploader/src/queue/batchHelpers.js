@@ -92,21 +92,30 @@ const loadNewBatchForItem = (queue: QueueState, itemId: string) => {
         });
 };
 
-const isBatchFinished = (queue: QueueState): boolean => {
-    const itemQueue = queue.getState().itemQueue;
-    return itemQueue.length === 0 ||
-        isNewBatchStarting(queue, itemQueue[0]);
-};
-
-const cleanUpFinishedBatch = (queue: QueueState) => {
+const cleanUpFinishedBatches = (queue: QueueState) => {
     const state = queue.getState();
-    const batchId = state.currentBatch;
 
-    if (batchId && state.batches[batchId] && isBatchFinished(queue)) {
-        triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_FINISH);
-        removeBatchItems(queue, batchId);
-        removeBatch(queue, batchId);
-    }
+    Object.keys(state.batches)
+        .forEach((batchId) => {
+            const { batch, finishedCounter } = state.batches[batchId];
+            const { items } = batch;
+
+            if (items.length === finishedCounter) {
+                queue.updateState((state: State) => {
+                    const batch = getBatchFromState(state, batchId);
+                    //set batch state to FINISHED before triggering event and removing it from queue
+                    batch.state = BATCH_STATES.FINISHED;
+
+                    if (state.currentBatch === batchId){
+                        state.currentBatch = null;
+                    }
+                });
+
+                triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_FINISH);
+                removeBatchItems(queue, batchId);
+                removeBatch(queue, batchId);
+            }
+        });
 };
 
 const triggerUploaderBatchEvent = (queue: QueueState, batchId: string, event: string) => {
@@ -193,15 +202,20 @@ const ensureNonUploadingBatchCleaned = (queue: QueueState, batchId: string): voi
     }
 };
 
+const incrementBatchFinishedCounter = (queue: QueueState, batchId: string): void => {
+    queue.updateState((state: State) => {
+        state.batches[batchId].finishedCounter +=1;
+    });
+};
+
 export {
-    isBatchFinished,
     loadNewBatchForItem,
     isNewBatchStarting,
     cancelBatchForItem,
     getBatchFromItemId,
     isItemBelongsToBatch,
     getBatchDataFromItemId,
-    cleanUpFinishedBatch,
+    cleanUpFinishedBatches,
     triggerUploaderBatchEvent,
     getIsItemBatchReady,
     getBatchFromState,
@@ -209,4 +223,5 @@ export {
     preparePendingForUpload,
     removePendingBatches,
     ensureNonUploadingBatchCleaned,
+    incrementBatchFinishedCounter,
 };

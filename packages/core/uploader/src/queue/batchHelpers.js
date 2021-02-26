@@ -106,12 +106,12 @@ const cleanUpFinishedBatches = (queue: QueueState) => {
     Object.keys(state.batches)
         .forEach((batchId) => {
             const { batch, finishedCounter } = state.batches[batchId];
-            const { orgItemsCount } = batch;
+            const { orgItemCount } = batch;
 
             //shouldnt be the case, but if wasnt cleaned before, it will now
             const alreadyFinalized = getIsBatchFinalized(batch);
 
-            if (orgItemsCount === finishedCounter) {
+            if (orgItemCount === finishedCounter) {
                 queue.updateState((state: State) => {
                     const batch = getBatchFromState(state, batchId);
                     //set batch state to FINISHED before triggering event and removing it from queue

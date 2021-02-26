@@ -81,8 +81,6 @@ describe("Uploady - autoUpload off tests", () => {
     };
 
     it("should update state for items from different batches after single abort", () => {
-        cy.visitStory("uploady", "with-auto-upload-off&knob-mock send delay_Upload Destination=500");
-
         uploadFileTimes(fileName, () => {
             uploadFileTimes(fileName, () => {
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });
@@ -90,12 +88,12 @@ describe("Uploady - autoUpload off tests", () => {
                 cy.get("#process-pending")
                     .click();
 
-                cy.wait(200);
+                cy.wait(100);
 
                 cy.get("button[data-test='abort-file-2']")
                     .click();
 
-                cy.wait(1500);
+                cy.wait(1400);
 
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 6 });
                 cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 1 });
@@ -106,5 +104,53 @@ describe("Uploady - autoUpload off tests", () => {
                 assertQueueItemState(7, "finished");
             }, 3, "#upload-button");
         }, 4, "#upload-button");
+    });
+
+    it("should abort batch before processing", () => {
+        uploadFileTimes(fileName, () => {
+            uploadFileTimes(fileName, () => {
+                cy.get("button[data-test='abort-batch-0']")
+                    .click();
+
+                cy.get("#process-pending")
+                    .click();
+
+                cy.wait(500);
+
+                cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 2 });
+                cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
+                cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
+
+                assertQueueItemState(1, "aborted");
+                assertQueueItemState(2, "aborted");
+                assertQueueItemState(3, "finished");
+                assertQueueItemState(4, "finished");
+            }, 2, "#upload-button");
+        }, 2, "#upload-button");
+    });
+
+    it("should abort batch after processing starts", () => {
+        uploadFileTimes(fileName, () => {
+            uploadFileTimes(fileName, () => {
+                cy.get("#process-pending")
+                    .click();
+
+                cy.wait(100);
+
+                cy.get("button[data-test='abort-batch-0']")
+                    .click();
+
+                cy.wait(500);
+
+                cy.storyLog().assertLogPattern(ITEM_START, { times: 4 });
+                cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 2 });
+                cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
+
+                assertQueueItemState(1, "aborted");
+                assertQueueItemState(2, "aborted");
+                assertQueueItemState(3, "finished");
+                assertQueueItemState(4, "finished");
+            }, 2, "#upload-button");
+        }, 2, "#upload-button");
     });
 });

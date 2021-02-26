@@ -1,5 +1,4 @@
 // @flow
-
 import type { Batch, BatchItem, Cancellable } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { ItemsSender, CreateOptions } from "../types";
@@ -16,6 +15,7 @@ export type State = {|
 |};
 
 export type QueueState = {|
+    uploaderId: string,
 	getOptions: () => CreateOptions,
 	getState: () => State,
 	getCurrentActiveCount: () => number,

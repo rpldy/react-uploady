@@ -129,6 +129,7 @@ const createUploaderQueue = (
     };
 
     const queueState = {
+        uploaderId,
         getOptions: () => options,
         getCurrentActiveCount: () => state.activeIds.length,
         getState,

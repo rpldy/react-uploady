@@ -29,12 +29,15 @@ export default (files: UploadInfo | UploadInfo[], uploaderId: string, options: C
 
     const isPending = !options.autoUpload;
 
+    const items = processFiles(id, files, isPending, options.fileFilter);
+
     return {
         id,
         uploaderId,
-        items: processFiles(id, files, isPending, options.fileFilter),
+        items,
         state: isPending ? BATCH_STATES.PENDING : BATCH_STATES.ADDED,
         completed: 0,
         loaded: 0,
+        orgItemCount: items.length,
     };
 };

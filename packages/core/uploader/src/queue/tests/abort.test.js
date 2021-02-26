@@ -4,7 +4,7 @@ import { UPLOADER_EVENTS } from "../../consts";
 import {
     triggerUploaderBatchEvent,
     getBatchFromState,
-    ensureNonUploadingBatchCleaned,
+    getIsBatchFinalized,
 } from "../batchHelpers";
 import processFinishedRequest from "../processFinishedRequest";
 import * as abortMethods from "../abort";
@@ -18,7 +18,6 @@ describe("abort tests", () => {
 	beforeEach(() => {
 		clearJestMocks(
 		    mockItemAbort,
-            ensureNonUploadingBatchCleaned,
         );
 	});
 
@@ -77,9 +76,6 @@ describe("abort tests", () => {
             }], next);
 
         expect(queue.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ALL_ABORT);
-
-        expect(ensureNonUploadingBatchCleaned).toHaveBeenCalledTimes(1);
-        expect(ensureNonUploadingBatchCleaned).toHaveBeenCalledWith(queue, "b1");
     });
 
     describe("abortItem tests", () => {
@@ -149,8 +145,6 @@ describe("abort tests", () => {
 					id: "u1",
 					info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
 				}], next);
-
-			expect(ensureNonUploadingBatchCleaned).toHaveBeenCalledWith(queue, "b1");
 		});
 
 		it.each([
@@ -186,6 +180,7 @@ describe("abort tests", () => {
 			const batch = getBatch(BATCH_STATES.ADDED);
 
 			getBatchFromState.mockReturnValueOnce(batch);
+            getIsBatchFinalized.mockReturnValueOnce(false);
 
 			const queue = getQueueState({
 				batches: {
@@ -204,7 +199,6 @@ describe("abort tests", () => {
 					"u3": mockItemAbort,
 				}
 			});
-
 			const next = "next";
 
 			abortMethods.abortBatch(queue, "b1", next);
@@ -227,14 +221,10 @@ describe("abort tests", () => {
 					id: "u1",
 					info: { status: 0, state: FILE_STATES.ABORTED, response: "aborted" },
 				}], next);
-
-            expect(ensureNonUploadingBatchCleaned).toHaveBeenCalledTimes(1);
-            expect(ensureNonUploadingBatchCleaned).toHaveBeenCalledWith(queue, batch.id);
 		});
 
 		it("shouldnt abort if already finished or cancelled", () => {
 			const batch = getBatch(BATCH_STATES.FINISHED);
-
 			const queue = getQueueState({
 				batches: {
 					"b1": {
@@ -242,6 +232,8 @@ describe("abort tests", () => {
 					}
 				}
 			});
+
+            getIsBatchFinalized.mockReturnValueOnce(true);
 
 			abortMethods.abortBatch(queue, "b1");
 

@@ -111,6 +111,8 @@ const cleanUpFinishedBatches = (queue: QueueState) => {
             //shouldnt be the case, but if wasnt cleaned before, it will now
             const alreadyFinalized = getIsBatchFinalized(batch);
 
+            console.log("!!!!!!1 ", { orgItemCount, alreadyFinalized, batch})
+
             if (orgItemCount === finishedCounter) {
                 queue.updateState((state: State) => {
                     const batch = getBatchFromState(state, batchId);

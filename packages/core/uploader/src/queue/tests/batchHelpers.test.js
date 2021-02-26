@@ -12,7 +12,7 @@ describe("batchHelpers tests", () => {
 			const batch = {
 				id: "b1",
 				items: [item1, item2],
-                orgItemsCount: 2,
+                orgItemCount: 2,
                 state: BATCH_STATES.PENDING,
 			};
 
@@ -47,7 +47,7 @@ describe("batchHelpers tests", () => {
 		});
 
 		it("shouldn't finalize batch if it has more uploads", () => {
-            const batch = { id: "b1", items: [1, 2], orgItemsCount: 2 };
+            const batch = { id: "b1", items: [1, 2], orgItemCount: 2 };
 
             const queueState = getQueueState({
                 currentBatch: "b1",
@@ -71,7 +71,7 @@ describe("batchHelpers tests", () => {
             const batch = {
                 id: "b1",
                 items: [item1, item2],
-                orgItemsCount: 2,
+                orgItemCount: 2,
                 state: BATCH_STATES.ABORTED,
             };
 

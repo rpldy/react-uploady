@@ -1,5 +1,5 @@
 {
-  "version": "0.9.0",
+  "version": "0.10.0",
   "name": "@rpldy/retry-hooks",
   "description": "useful hooks for the retry functionality from @rpldy/retry",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -26,18 +26,18 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js"
   },
   "dependencies": {
-    "@rpldy/retry": "^0.9.0",
-    "@rpldy/shared": "^0.9.0",
-    "@rpldy/shared-ui": "^0.9.0",
-    "@rpldy/uploader": "^0.9.0"
+    "@rpldy/retry": "^0.10.0",
+    "@rpldy/shared": "^0.10.0",
+    "@rpldy/shared-ui": "^0.10.0",
+    "@rpldy/uploader": "^0.10.0"
   },
   "peerDependencies": {
     "react": ">=16.8.x",
     "react-dom": ">=16.8.x"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^0.9.0",
-    "@rpldy/upload-preview": "^0.9.0",
+    "@rpldy/upload-button": "^0.10.0",
+    "@rpldy/upload-preview": "^0.10.0",
     "flow-bin": "^0.133.0",
     "rc-progress": "^3.0.0"
   },

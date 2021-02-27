@@ -1,22 +1,22 @@
 const mockIsNewBatchStarting = jest.fn(),
-	mockIsBatchFinished = jest.fn(),
+    mockIncrementBatchFinishedCounter = jest.fn(),
 	mockLoadNewBatchForItem = jest.fn(),
 	mockCancelBatchForItem = jest.fn(),
 	mockGetBatchFromItemId = jest.fn(),
 	mockIsItemBelongsToBatch = jest.fn(),
 	mockGetBatchDataFromItemId = jest.fn(),
-	mockCleanUpFinishedBatch = jest.fn(),
+	mockCleanUpFinishedBatches = jest.fn(),
 	mockGetIsItemBatchReady = jest.fn();
 
 const helpersMock = {
 	isNewBatchStarting: mockIsNewBatchStarting,
-	isBatchFinished: mockIsBatchFinished,
+    incrementBatchFinishedCounter: mockIncrementBatchFinishedCounter,
 	loadNewBatchForItem: mockLoadNewBatchForItem,
 	cancelBatchForItem: mockCancelBatchForItem,
 	getBatchFromItemId: mockGetBatchFromItemId,
 	isItemBelongsToBatch: mockIsItemBelongsToBatch,
 	getBatchDataFromItemId: mockGetBatchDataFromItemId,
-	cleanUpFinishedBatch: mockCleanUpFinishedBatch,
+	cleanUpFinishedBatches: mockCleanUpFinishedBatches,
 	getIsItemBatchReady: mockGetIsItemBatchReady,
 };
 

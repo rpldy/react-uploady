@@ -1,7 +1,7 @@
 // @flow
 import { BATCH_STATES, logger, merge, FILE_STATES } from "@rpldy/shared";
 import { unwrap } from "@rpldy/simple-state";
-import { UPLOADER_EVENTS, ITEM_FINALIZE_STATES } from "../consts";
+import { UPLOADER_EVENTS } from "../consts";
 
 import type { BatchData, QueueState, State } from "./types";
 import type { Batch, BatchItem, UploadOptions } from "@rpldy/shared";
@@ -10,6 +10,12 @@ const BATCH_READY_STATES = [
     BATCH_STATES.ADDED,
     BATCH_STATES.PROCESSING,
     BATCH_STATES.UPLOADING,
+];
+
+const BATCH_FINISHED_STATES = [
+    BATCH_STATES.ABORTED,
+    BATCH_STATES.CANCELLED,
+    BATCH_STATES.FINISHED
 ];
 
 const getBatchFromState = (state: State, id: string) =>
@@ -60,7 +66,7 @@ const cancelBatchForItem = (queue: QueueState, itemId: string) => {
     const batch = getBatchFromItemId(queue, itemId),
         batchId = batch.id;
 
-    logger.debugLog("uploady.uploader.processor: cancelling batch: ", { batch });
+    logger.debugLog("uploady.uploader.batchHelpers: cancelling batch: ", { batch });
 
     queue.updateState((state: State) => {
         const batch = getBatchFromState(state, batchId);
@@ -92,21 +98,40 @@ const loadNewBatchForItem = (queue: QueueState, itemId: string) => {
         });
 };
 
-const isBatchFinished = (queue: QueueState): boolean => {
-    const itemQueue = queue.getState().itemQueue;
-    return itemQueue.length === 0 ||
-        isNewBatchStarting(queue, itemQueue[0]);
-};
+const cleanUpFinishedBatches = (queue: QueueState) => {
+    //TODO: schedule clean up on requestAnimationFrame
 
-const cleanUpFinishedBatch = (queue: QueueState) => {
     const state = queue.getState();
-    const batchId = state.currentBatch;
 
-    if (batchId && state.batches[batchId] && isBatchFinished(queue)) {
-        triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_FINISH);
-        removeBatchItems(queue, batchId);
-        removeBatch(queue, batchId);
-    }
+    Object.keys(state.batches)
+        .forEach((batchId) => {
+            const { batch, finishedCounter } = state.batches[batchId];
+            const { orgItemCount } = batch;
+
+            //shouldnt be the case, but if wasnt cleaned before, it will now
+            const alreadyFinalized = getIsBatchFinalized(batch);
+
+            if (orgItemCount === finishedCounter) {
+                queue.updateState((state: State) => {
+                    const batch = getBatchFromState(state, batchId);
+                    //set batch state to FINISHED before triggering event and removing it from queue
+                    batch.state = alreadyFinalized ? batch.state : BATCH_STATES.FINISHED;
+
+                    if (state.currentBatch === batchId){
+                        state.currentBatch = null;
+                    }
+                });
+
+                logger.debugLog(`uploady.uploader.batchHelpers: cleaning up batch: ${batch.id}`);
+
+                if (!alreadyFinalized) {
+                    triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_FINISH);
+                }
+
+                removeBatchItems(queue, batchId);
+                removeBatch(queue, batchId);
+            }
+        });
 };
 
 const triggerUploaderBatchEvent = (queue: QueueState, batchId: string, event: string) => {
@@ -180,33 +205,29 @@ const removePendingBatches = (queue: QueueState): void => {
         });
 };
 
-const ensureNonUploadingBatchCleaned = (queue: QueueState, batchId: string): void => {
-    const state = queue.getState(),
-        batch: Batch = getBatchFromState(state, batchId);
-
-    const activeItem = batch.items.find((item) => !ITEM_FINALIZE_STATES.includes(item.state));
-
-    //no active item left in batch, can remove it
-    if (!activeItem) {
-        removeBatchItems(queue, batchId);
-        removeBatch(queue, batchId);
-    }
+const incrementBatchFinishedCounter = (queue: QueueState, batchId: string): void => {
+    queue.updateState((state: State) => {
+        state.batches[batchId].finishedCounter +=1;
+    });
 };
 
+const getIsBatchFinalized = (batch: Batch): boolean =>
+    BATCH_FINISHED_STATES.includes(batch.state);
+
 export {
-    isBatchFinished,
     loadNewBatchForItem,
     isNewBatchStarting,
     cancelBatchForItem,
     getBatchFromItemId,
     isItemBelongsToBatch,
     getBatchDataFromItemId,
-    cleanUpFinishedBatch,
+    cleanUpFinishedBatches,
     triggerUploaderBatchEvent,
     getIsItemBatchReady,
     getBatchFromState,
     detachRecycledFromPreviousBatch,
     preparePendingForUpload,
     removePendingBatches,
-    ensureNonUploadingBatchCleaned,
+    incrementBatchFinishedCounter,
+    getIsBatchFinalized,
 };

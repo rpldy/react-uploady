@@ -83,6 +83,8 @@ export type Batch = {
     completed: number,
     //sum of bytes uploaded for batch items
     loaded: number,
+    //number of items originally added to batch when its created
+    orgItemCount: number
 };
 
 export type FileFilterMethod = (File | string) => boolean;

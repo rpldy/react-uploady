@@ -1,7 +1,7 @@
 // @flow
 import { FILE_STATES, logger } from "@rpldy/shared";
 import { UPLOADER_EVENTS, ITEM_FINALIZE_STATES } from "../consts";
-import { cleanUpFinishedBatch } from "./batchHelpers";
+import { cleanUpFinishedBatches, incrementBatchFinishedCounter } from "./batchHelpers";
 
 import type { UploadData, BatchItem } from "@rpldy/shared";
 import type { ProcessNextMethod, QueueState } from "./types";
@@ -54,6 +54,7 @@ const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], n
             }
 
             if (getIsFinalized(item)) {
+                incrementBatchFinishedCounter(queue, item.batchId);
                 //trigger FINALIZE event
                 queue.trigger(UPLOADER_EVENTS.ITEM_FINALIZE, item);
             }
@@ -73,7 +74,8 @@ const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], n
         }
     });
 
-    cleanUpFinishedBatch(queue);
+    //ensure finished batches are remove from state
+    cleanUpFinishedBatches(queue);
 
     return next(queue);
 };

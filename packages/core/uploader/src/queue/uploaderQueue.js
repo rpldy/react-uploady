@@ -70,7 +70,7 @@ const createUploaderQueue = (
 
     const addBatch = (batch: Batch, batchOptions: CreateOptions) => {
         updateState((state) => {
-            state.batches[batch.id] = { batch, batchOptions };
+            state.batches[batch.id] = { batch, batchOptions, finishedCounter: 0 };
         });
 
         batch.items.forEach(add);
@@ -129,6 +129,7 @@ const createUploaderQueue = (
     };
 
     const queueState = {
+        uploaderId,
         getOptions: () => options,
         getCurrentActiveCount: () => state.activeIds.length,
         getState,

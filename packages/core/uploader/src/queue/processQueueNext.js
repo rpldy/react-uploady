@@ -66,7 +66,6 @@ export const getNextIdGroup = (queue: QueueState): ?string[] => {
 		} else {
 			nextGroup = [nextId];
 		}
-
 	}
 
 	return nextGroup;

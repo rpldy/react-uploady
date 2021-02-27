@@ -4,58 +4,16 @@ import * as batchHelpers from "../batchHelpers";
 import { BATCH_STATES, FILE_STATES } from "@rpldy/shared";
 
 describe("batchHelpers tests", () => {
-
-	describe("isBatchFinished tests", () => {
-
-		it("should be finished when no items in queue", () => {
-			const queueState = getQueueState({
-				itemQueue: []
-			});
-
-			expect(batchHelpers.isBatchFinished(queueState)).toBe(true);
-		});
-
-		it("should be finished when new batch is starting", () => {
-			const queueState = getQueueState({
-				currentBatch: "b1",
-				itemQueue: ["u2"],
-				items: {
-					"u2": { batchId: "b2" }
-				},
-				batches: {
-					"b2": { batch: { id: "b2" } }
-				}
-			});
-
-			expect(batchHelpers.isBatchFinished(queueState)).toBe(true);
-		});
-
-		it("shouldn't be finished when items in queue part of same batch", () => {
-			const queueState = getQueueState({
-				currentBatch: "b1",
-				itemQueue: ["u2"],
-				items: {
-					"u2": { batchId: "b1" }
-				},
-				batches: {
-					"b1": { batch: { id: "b1" } }
-				}
-			});
-
-			expect(batchHelpers.isBatchFinished(queueState)).toBe(false);
-		});
-	});
-
-	describe("cleanUpFinishedBatch tests", () => {
-
+	describe("cleanUpFinishedBatches tests", () => {
 		it("should finalize batch if no more uploads in queue", () => {
-
 			const item1 = { id: "u1" },
 				item2 = { id: "u2" };
 
 			const batch = {
 				id: "b1",
-				items: [item1, item2]
+				items: [item1, item2],
+                orgItemCount: 2,
+                state: BATCH_STATES.PENDING,
 			};
 
 			const queueState = getQueueState({
@@ -66,97 +24,89 @@ describe("batchHelpers tests", () => {
 					"u3": {},
 				},
 				batches: {
-					b1: { batch },
+					b1: { batch, finishedCounter: 2 },
 				},
 			});
 
 			const expectedBatch = expect.objectContaining({
 				...queueState.getState().batches.b1.batch,
+                state: BATCH_STATES.FINISHED,
 				items: [queueState.getState().items.u1, queueState.getState().items.u2],
 			});
 
-			batchHelpers.cleanUpFinishedBatch(queueState);
+			batchHelpers.cleanUpFinishedBatches(queueState);
 
 			const updatedState = queueState.getState();
 
-			expect(queueState.updateState).toHaveBeenCalledTimes(2);
+			expect(queueState.updateState).toHaveBeenCalledTimes(3);
 			expect(updatedState.batches.b1).toBeUndefined();
 			expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedBatch);
 			expect(updatedState.items.u1).toBeUndefined();
 			expect(updatedState.items.u2).toBeUndefined();
-		});
-
-		it("should finalize batch if next upload is from different batch", () => {
-
-			const item1 = { id: "u1", batchId: "b1"  };
-
-			const batch = {
-				items: [item1]
-			};
-
-			const queueState = getQueueState({
-				currentBatch: "b1",
-				batches: {
-					b1: { batch },
-					b2: {
-						batch: { id: "b2" },
-					}
-				},
-				items: {
-					"u1": item1,
-					"u2": { batchId: "b2" }
-				},
-				itemQueue: ["u2"]
-			});
-
-			const expectedBatch = expect.objectContaining({
-				...queueState.getState().batches.b1.batch,
-				items: [queueState.getState().items.u1],
-			});
-
-			batchHelpers.cleanUpFinishedBatch(queueState);
-
-			const updatedState = queueState.getState();
-
-			expect(queueState.updateState).toHaveBeenCalledTimes(2);
-			expect(updatedState.batches.b1).toBeUndefined();
-			expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedBatch);
-			expect(updatedState.items.u1).toBeUndefined();
-			expect(updatedState.items.u2).toBeDefined();
+			expect(updatedState.currentBatch).toBeNull();
 		});
 
 		it("shouldn't finalize batch if it has more uploads", () => {
-			const batch = { id: "b1" };
+            const batch = { id: "b1", items: [1, 2], orgItemCount: 2 };
 
-			const queueState = getQueueState({
-				currentBatch: "b1",
-				batches: {
-					b1: { batch },
-					b2: {
-						batch: { id: "b2" },
-					}
-				},
-				items: {
-					"u2": { batchId: "b1" },
-					"u3": { batchId: "b2" },
-				},
-				itemQueue: ["u2", "u3"]
-			});
+            const queueState = getQueueState({
+                currentBatch: "b1",
+                batches: {
+                    b1: { batch, finishedCounter: 1 },
+                },
+                itemQueue: ["u2", "u3"]
+            });
 
-			batchHelpers.cleanUpFinishedBatch(queueState);
+            batchHelpers.cleanUpFinishedBatches(queueState);
 
-			expect(queueState.updateState).not.toHaveBeenCalled();
-			expect(queueState.state.batches.b1).toBeDefined();
-			expect(queueState.trigger).not.toHaveBeenCalled();
-		});
+            expect(queueState.updateState).not.toHaveBeenCalled();
+            expect(queueState.state.batches.b1).toBeDefined();
+            expect(queueState.trigger).not.toHaveBeenCalled();
+        });
 
-        it("should'nt finalize batch if no longer in state", () => {
+		it("shouldn't trigger event for already finalized but should clean", () => {
+            const item1 = { id: "u1" },
+                item2 = { id: "u2" };
+
+            const batch = {
+                id: "b1",
+                items: [item1, item2],
+                orgItemCount: 2,
+                state: BATCH_STATES.ABORTED,
+            };
+
+            const queueState = getQueueState({
+                currentBatch: "b1",
+                items: {
+                    "u1": item1,
+                    "u2": item2,
+                    "u3": {},
+                },
+                batches: {
+                    b1: { batch, finishedCounter: 2 },
+                },
+            });
+
+            batchHelpers.cleanUpFinishedBatches(queueState);
+
+            const updatedState = queueState.getState();
+
+            expect(queueState.updateState).toHaveBeenCalledTimes(3);
+            expect(updatedState.batches.b1).toBeUndefined();
+            expect(queueState.trigger).not.toHaveBeenCalled();
+            expect(updatedState.items.u1).toBeUndefined();
+            expect(updatedState.items.u2).toBeUndefined();
+            expect(updatedState.currentBatch).toBeNull();
+
+        });
+
+        it("shouldn't finalize batch if no longer in state", () => {
             const queueState = getQueueState({
                 currentBatch: "b1",
                 batches: {}
             });
 
-            batchHelpers.cleanUpFinishedBatch(queueState);
+            batchHelpers.cleanUpFinishedBatches(queueState);
 
             expect(queueState.updateState).not.toHaveBeenCalled();
             expect(queueState.trigger).not.toHaveBeenCalled();
@@ -671,48 +621,31 @@ describe("batchHelpers tests", () => {
         });
     });
 
-    describe("ensureNonUploadingBatchCleaned tests", () => {
-
-        const getTestQueue = (itemState) => {
-            const item = { id: "i1", batchId: "b1", state: itemState };
-
-            return getQueueState({
-                items: {
-                    i1: item,
-                },
+    describe("incrementBatchFinishedCounter tests", () => {
+        it("should increment finished counter for batch", () => {
+            const queueState = getQueueState({
                 batches: {
-                    b1: {
-                        batch: { id: "b1", items: [item] }
-                    }
+                    "b1": { finishedCounter: 1 }
                 }
             });
-        };
 
-        it.each([
-            FILE_STATES.ADDED,
-            FILE_STATES.PENDING,
-            FILE_STATES.UPLOADING,
-        ])("should do nothing if still has item with active state: %s", (state) => {
-            const queue = getTestQueue(state);
-
-            batchHelpers.ensureNonUploadingBatchCleaned(queue, "b1");
-
-            expect(queue.getState().items.i1).toBeDefined();
-            expect(queue.getState().batches.b1).toBeDefined();
+            batchHelpers.incrementBatchFinishedCounter(queueState, "b1");
+            expect(queueState.getState().batches["b1"].finishedCounter).toBe(2);
         });
+    });
 
+    describe("getIsBatchFinalized tests", () => {
         it.each([
-            FILE_STATES.ABORTED,
-            FILE_STATES.ERROR,
-            FILE_STATES.FINISHED,
-            FILE_STATES.CANCELLED,
-        ])("should remove batch and items if only has finished items", (state) => {
-            const queue = getTestQueue(state);
-
-            batchHelpers.ensureNonUploadingBatchCleaned(queue, "b1");
-
-            expect(queue.getState().items.i1).toBeUndefined();
-            expect(queue.getState().batches.b1).toBeUndefined();
+            [BATCH_STATES.ABORTED, true],
+            [BATCH_STATES.FINISHED, true],
+            [BATCH_STATES.PROCESSING, false],
+            [BATCH_STATES.ADDED, false],
+            [BATCH_STATES.PENDING, false],
+            [BATCH_STATES.CANCELLED, true],
+            [BATCH_STATES.UPLOADING, false],
+        ])
+        ("for %s should return %s", (state, result) => {
+            expect(batchHelpers.getIsBatchFinalized({ state })).toBe(result);
         });
     });
 });

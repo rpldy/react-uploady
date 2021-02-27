@@ -7,12 +7,21 @@ import {
     UMD_NAMES,
     addActionLogEnhancer,
     useStoryUploadySetup,
-    getCsfExport, StoryAbortButton,
+    getCsfExport,
+    StoryAbortButton,
 } from "../../../story-helpers";
 import Uploady, {
+    FILE_STATES,
+
     useUploady,
     NoDomUploady,
     useUploadOptions,
+    useBatchAddListener,
+    useItemStartListener,
+    useItemFinishListener,
+    useItemErrorListener,
+    useItemCancelListener,
+    useItemAbortListener,
 } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -114,6 +123,51 @@ const ClearPending = () => {
     return <button id="clear-pending" onClick={clearPending}>CLEAR PENDING</button>;
 };
 
+const STATE_COLORS = {
+    [FILE_STATES.FINISHED]: "green",
+    [FILE_STATES.UPLOADING]: "blue",
+    [FILE_STATES.ERROR]: "red",
+    [FILE_STATES.PENDING]: "gray",
+    [FILE_STATES.ABORTED]: "orange",
+    [FILE_STATES.CANCELLED]: "magenta",
+};
+
+const QueueItem = ({ item }) => {
+    const { id } = item;
+    const [state, setState] = useState(item.state);
+
+    useItemStartListener(() => setState(FILE_STATES.UPLOADING), id);
+    useItemFinishListener(() => setState(FILE_STATES.FINISHED), id);
+    useItemErrorListener(() => setState(FILE_STATES.ERROR), id);
+    useItemCancelListener(() => setState(FILE_STATES.CANCELLED), id);
+    useItemAbortListener(() => setState(FILE_STATES.ABORTED), id);
+
+    return <li data-test="queue-item">
+        <span>NAME: {item.file.name}</span>
+        <br/>
+        <span>STATE:
+            <span data-test="queue-item-state" style={{ color: STATE_COLORS[state] }}>{state}</span>
+        </span>
+        <br/>
+        <span>BATCH: {item.batchId}</span>
+        <hr/>
+    </li>;
+};
+
+const QueueList = () => {
+    const [items, setItems] = useState([]);
+
+    useBatchAddListener((batch) => {
+        setItems((prev) => [...prev, ...batch.items]);
+    });
+
+   return <ul data-test="queue-list">
+        {items.map((item) => (
+            <QueueItem key={item.id} item={item} />
+        ))}
+    </ul>
+};
+
 export const WithAutoUploadOff = () => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
 
@@ -123,9 +177,15 @@ export const WithAutoUploadOff = () => {
         enhancer={enhancer}
         grouped={grouped}
         maxGroupSize={groupSize}
-        autoUpload={false}>
+        autoUpload={false}
+        concurrent
+        maxConcurrent={10}>
         <ContextUploadButton />
         <br/>
+        <hr/>
+
+        <QueueList/>
+
         <hr/>
         <ProcessPending/>
         <br/>

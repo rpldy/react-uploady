@@ -124,7 +124,7 @@ const STATES = {
 const STATE_COLORS = {
 	[STATES.PROGRESS]: "#f4e4a4",
 	[STATES.DONE]: "#a5f7b3",
-	[STATES.ABORTED]: "#f7cdcd",
+	[STATES.ABORTED]: "#b855da",
 	[STATES.ERROR]: "#ee4c4c",
 };
 
@@ -275,7 +275,7 @@ const QueueItem = memo((props) => {
 
 	return (
 		<PreviewItemContainer state={itemState} data-test="preview-item-container" data-state={itemState}>
-			<ImageName>{props.name}</ImageName>
+			<ImageName>{props.id} : {props.name}</ImageName>
 			<PreviewImageWrapper>
 				<PreviewImage src={props.url}/>
 			</PreviewImageWrapper>

@@ -5,13 +5,13 @@ describe("RetryHooks - Queue", () => {
         fileName2 = "sea.jpg";
 
     before(() => {
-        cy.visitStory("retryHooks", "with-retry-and-preview");
+        cy.visitStory("retryHooks", "with-retry-and-preview&knob-mock send delay_Upload Destination=500");
     });
 
     it("should use queue with retry", () => {
         uploadFile(fileName, () => {
             uploadFile(fileName2, () => {
-                cy.wait(1500);
+                cy.wait(400);
                 cy.get("button[data-test='abort-button']:last")
                     .click();
 
@@ -80,9 +80,30 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.wait(3500);
+            cy.wait(2000);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg", 5);
+            cy.storyLog().assertFileItemStartFinish("flower2.jpg", 7);
+        }, 3, "#upload-button");
+    });
+
+    it("should abort and retry after batch finished", () => {
+        cy.reload();
+
+        uploadFileTimes(fileName, () => {
+            cy.get("button[data-test='abort-button']")
+                .eq(1)
+                .click();
+
+            cy.wait(2000);
+            cy.storyLog().assertFileItemStartFinish(fileName, 1);
+            cy.storyLog().assertFileItemStartFinish("flower3.jpg", 4);
+
+            cy.get("button[data-test='retry-button']")
+                .eq(1)
+                .click();
+
+            cy.wait(500);
             cy.storyLog().assertFileItemStartFinish("flower2.jpg", 7);
         }, 3, "#upload-button");
     });

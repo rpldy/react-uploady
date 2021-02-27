@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.10.0 (2021-02-27)
+
+### Features
+
+- `[uploady]` - expose more TS types (shared, uploader, useFileInput, file&batch states)
+- `[uploader]` - add server status code to batch item
+- `[sender]` - new formatServerResponse option to customize uploadResponse added to batch item   
+
+### Docs
+
+- `[uploady]` - SendMethod link fix
+
+### Bug fixes
+
+- `[uploader]` - batch and items state corrupted. Fix for #144
+
+### Internal
+
+- `e2e` - upgrade to cypress.io latest (6.5.0)
+- `e2e` - use cypress-intercept-formdata package
+
 ## 0.9.0 (2021-01-14)
 
 ### Features

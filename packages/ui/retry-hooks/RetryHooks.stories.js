@@ -12,11 +12,19 @@ import Uploady, {
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadPreview from "@rpldy/upload-preview";
-import { getCsfExport, logToCypress, StoryUploadProgress, useStoryUploadySetup } from "../../../story-helpers";
+import {
+    getCsfExport,
+    logToCypress,
+    StoryUploadProgress,
+    useStoryUploadySetup,
+    type CsfExport
+} from "../../../story-helpers";
 import retryEnhancer, { useBatchRetry, useRetry, useRetryListener, RETRY_EVENT } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
+
+import type {Node} from "React";
 
 const RetryUi = () => {
 	const [seenItems, setItems] = useState({});
@@ -94,7 +102,7 @@ const RetryUi = () => {
 	</>
 };
 
-export const WithRetry = () => {
+export const WithRetry = (): Node => {
 	const storySetup = useStoryUploadySetup();
 	const { destination, multiple, grouped, groupSize } = storySetup;
 	let { enhancer } = storySetup;
@@ -314,7 +322,7 @@ const Queue = () => {
 	</PreviewsContainer>
 };
 
-export const WithRetryAndPreview = () => {
+export const WithRetryAndPreview = (): Node => {
 	const storySetup = useStoryUploadySetup();
 	const { destination, multiple, grouped, groupSize } = storySetup;
 	let { enhancer } = storySetup;
@@ -339,4 +347,4 @@ export const WithRetryAndPreview = () => {
 	);
 };
 
-export default getCsfExport(undefined, "Retry Hooks", readme);
+export default (getCsfExport(undefined, "Retry Hooks", readme): any);

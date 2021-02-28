@@ -14,7 +14,7 @@ import {
 import type { TriggerCancellableOutcome, Batch, BatchItem, UploadOptions } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { ItemsSender, CreateOptions } from "../types";
-import type { State } from "./types";
+import type { State, UploaderQueue } from "./types";
 
 const createUploaderQueue = (
     options: CreateOptions,
@@ -22,7 +22,7 @@ const createUploaderQueue = (
     cancellable: TriggerCancellableOutcome,
     sender: ItemsSender,
     uploaderId: string,
-) => {
+) : UploaderQueue => {
     const { state, update } = createState<State>({
         itemQueue: [],
         currentBatch: null,

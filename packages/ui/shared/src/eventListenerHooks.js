@@ -6,31 +6,43 @@ import {
 } from "./utils";
 
 import type { Batch, BatchItem } from "@rpldy/shared";
+import type { CreateOptions } from "@rpldy/uploader";
+import type {
+    BatchEventHook,
+    BatchCancellableEventHook,
+    BatchEventHookWithState,
+    ItemEventHook,
+    ItemCancellableEventHook,
+    ItemEventHookWithState,
+    PreSendData,
+} from "./types";
 
-const useBatchAddListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ADD, false);
-const useBatchStartListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);
-const useBatchFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINISH);
-const useBatchCancelledListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_CANCEL);
-const useBatchAbortListener = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ABORT);
+type RequestPreSendHook = (cb: (data: PreSendData) => { items?: BatchItem[]; options?: CreateOptions }) => void;
 
-const useBatchProgressListener = generateUploaderEventHookWithState(
+const useBatchAddListener: BatchCancellableEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ADD, false);
+const useBatchStartListener: BatchCancellableEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);
+const useBatchFinishListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINISH);
+const useBatchCancelledListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_CANCEL);
+const useBatchAbortListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ABORT);
+
+const useBatchProgressListener: BatchEventHookWithState = generateUploaderEventHookWithState(
     UPLOADER_EVENTS.BATCH_PROGRESS,
     (batch: Batch) => ({ ...batch }));
 
-const useItemStartListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_START);
-const useItemFinishListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_FINISH);
-const useItemCancelListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_CANCEL);
-const useItemErrorListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_ERROR);
-const useItemAbortListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_ABORT);
-const useItemFinalizeListener = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_FINALIZE);
+const useItemStartListener: ItemCancellableEventHook = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_START);
+const useItemFinishListener: ItemEventHook = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_FINISH);
+const useItemCancelListener: ItemEventHook = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_CANCEL);
+const useItemErrorListener: ItemEventHook = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_ERROR);
+const useItemAbortListener: ItemEventHook = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_ABORT);
+const useItemFinalizeListener: ItemEventHook = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_FINALIZE);
 
-const useItemProgressListener = generateUploaderEventHookWithState(
+const useItemProgressListener: ItemEventHookWithState = generateUploaderEventHookWithState(
     UPLOADER_EVENTS.ITEM_PROGRESS,
     (item: BatchItem) => ({ ...item }));
 
-const useRequestPreSend = generateUploaderEventHook(UPLOADER_EVENTS.REQUEST_PRE_SEND, false);
+const useRequestPreSend: RequestPreSendHook = generateUploaderEventHook(UPLOADER_EVENTS.REQUEST_PRE_SEND, false);
 
-const useAllAbortListener = generateUploaderEventHook(UPLOADER_EVENTS.ALL_ABORT, false);
+const useAllAbortListener: (cb: () => void) => void = generateUploaderEventHook(UPLOADER_EVENTS.ALL_ABORT, false);
 
 export {
     useBatchAddListener,

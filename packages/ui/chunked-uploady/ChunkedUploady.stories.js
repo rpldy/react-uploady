@@ -21,10 +21,13 @@ import {
     addActionLogEnhancer,
     logToCypress,
     getCsfExport,
+    type CsfExport
 } from "../../../story-helpers";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
+
+import type { Node, Element } from "React";
 
 //expose react and react-dom for Uploady bundle
 window.react = React;
@@ -53,7 +56,7 @@ const useChunkedStoryHelper = () => {
     return { ...setup, chunkSize };
 };
 
-export const Simple = () => {
+export const Simple = (): Node => {
     const { enhancer, destination, multiple, chunkSize } = useChunkedStoryHelper();
 
     return <ChunkedUploady
@@ -66,7 +69,7 @@ export const Simple = () => {
     </ChunkedUploady>;
 };
 
-export const WithProgress = () => {
+export const WithProgress = (): Node => {
     const { enhancer, destination, multiple, chunkSize } = useChunkedStoryHelper();
 
     return <ChunkedUploady
@@ -80,7 +83,7 @@ export const WithProgress = () => {
     </ChunkedUploady>;
 };
 
-export const WithAbortButton = () => {
+export const WithAbortButton = (): Node => {
     const { enhancer, destination, multiple, chunkSize } = useChunkedStoryHelper();
 
     return <ChunkedUploady
@@ -109,7 +112,7 @@ const ChunkEventLog = () => {
 	return null;
 };
 
-export const WithChunkEventHooks = () => {
+export const WithChunkEventHooks = (): Node => {
 	const { enhancer, destination, multiple, chunkSize } = useChunkedStoryHelper();
 
 	return <ChunkedUploady
@@ -167,7 +170,7 @@ const renderChunkedUploadyFromBundle = () => {
     );
 };
 
-export const UMD_CoreChunkedUI = () => {
+export const UMD_CoreChunkedUI = (): Element<"div"> => {
     const [UploadyUI, setUploadyUI] = useState(null);
 
     const onBundleLoad = useCallback(() => {
@@ -182,4 +185,4 @@ export const UMD_CoreChunkedUI = () => {
     </div>;
 };
 
-export default getCsfExport(ChunkedUploady, "Chunked Uploady", readme);
+export default (getCsfExport<typeof ChunkedUploady>(ChunkedUploady, "Chunked Uploady", readme): CsfExport<typeof ChunkedUploady>);

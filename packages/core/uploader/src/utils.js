@@ -24,7 +24,7 @@ const getMandatoryOptions = (options?: CreateOptions): CreateOptions => {
     };
 };
 
-const getIsFileList = (files: any) =>
+const getIsFileList = (files: any): boolean =>
     //in case files list was created in a different context(window) need to check toString
     (FILE_LIST_SUPPORT && files instanceof FileList) || files.toString() === "[object FileList]";
 

@@ -1,11 +1,11 @@
 // @flow
 import { useState, useCallback } from "react";
-import { isFunction } from "@rpldy/shared";
+import isFunction from "@rpldy/shared/src/utils/isFunction";
 import { useBatchStartListener } from "@rpldy/shared-ui";
 import { PREVIEW_TYPES } from "./consts";
 import {
     getWithMandatoryOptions,
-    getFallbackUrl,
+    getFallbackUrlData,
     getFileObjectUrlByType
 } from "./utils";
 
@@ -42,7 +42,7 @@ const loadPreviewData = (
         data = getFilePreviewUrl(item.file, options);
 
         if (!data) {
-            data = getFallbackUrl(options.fallbackUrl, file);
+            data = getFallbackUrlData(options.fallbackUrl, file);
 			isFallback = true;
         }
     } else {

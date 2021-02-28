@@ -6,7 +6,7 @@ import type { ComponentType } from "react";
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadButtonProps } from "./types";
 
-export default (Component: ComponentType<any>) => {
+export default (Component: ComponentType<any>): React$AbstractComponent<UploadButtonProps, mixed> => {
     const AsUploadButton = (props: UploadButtonProps, ref) => {
         const { showFileUpload } = useUploadyContext();
         const { id, className, text, children, extraProps, onClick, ...uploadOptions } = props;

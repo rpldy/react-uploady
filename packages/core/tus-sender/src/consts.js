@@ -1,6 +1,6 @@
 // @flow
 
-export const TUS_EXT = Symbol.for("__upldy-tus__");
+export const TUS_EXT: symbol = Symbol.for("__upldy-tus__");
 
 export const TUS_SENDER_TYPE = "rpldy-tus-sender";
 

@@ -14,7 +14,9 @@ import createUploader, { UPLOADER_EVENTS } from "./src";
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-export const WithCustomUI = () => {
+import type {Element} from "React";
+
+export const WithCustomUI = (): Element<"div"> => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
     const uploaderRef = useRef(null);
     const inputRef = useRef(null);
@@ -49,7 +51,7 @@ export const WithCustomUI = () => {
     </div>;
 };
 
-export const TEST_EventsData = () => {
+export const TEST_EventsData = (): Element<"div"> => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
     const uploaderRef = useRef(null);
     const inputRef = useRef(null);
@@ -112,7 +114,7 @@ export const TEST_EventsData = () => {
     </div>;
 };
 
-export const UMD_Core = () => {
+export const UMD_Core = (): Element<"div"> => {
     const [uploaderReady, setUploaderReady] = useState(false);
     const inputRef = useRef(null);
     const uploaderRef = useRef(null);
@@ -149,4 +151,4 @@ export const UMD_Core = () => {
     </div>;
 };
 
-export default getCsfExport(undefined, "Uploader", readme);
+export default (getCsfExport(undefined, "Uploader", readme): any);

@@ -133,7 +133,15 @@ const processResponse = (request, options: MandatoryMockOptions, sendOptions: Se
 		});
 };
 
-export default (options?: MockOptions) => {
+export default (options?: MockOptions): {|
+  send: (
+    items: Array<BatchItem>,
+    url: ?string,
+    sendOptions: SendOptions,
+    onProgress: OnProgress
+  ) => SendResult,
+  update: (updated: MockOptions) => void,
+|} => {
 	let mockOptions: MandatoryMockOptions = { ...MOCK_DEFAULTS, ...options };
 
 	const update = (updated: MockOptions) => {

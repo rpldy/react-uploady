@@ -5,13 +5,16 @@ import {
     useStoryUploadySetup,
     StoryUploadProgress,
     getCsfExport,
+    type CsfExport,
 } from "../../../story-helpers";
 import UploadUrlInput from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-export const Simple = () => {
+import type { Node } from "React";
+
+export const Simple = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady
@@ -26,7 +29,7 @@ export const Simple = () => {
     </Uploady>;
 };
 
-export const WithRef = () => {
+export const WithRef = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     const inputRef = useRef();
@@ -59,7 +62,7 @@ export const WithRef = () => {
     </Uploady>;
 };
 
-export const WithButtonAndValidate = () => {
+export const WithButtonAndValidate = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
     const [error, setError] = useState(null);
     const uploadRef = useRef(null);
@@ -93,4 +96,4 @@ export const WithButtonAndValidate = () => {
     </Uploady>;
 };
 
-export default getCsfExport(UploadUrlInput, "Upload Url Input", readme);
+export default (getCsfExport<typeof UploadUrlInput>(UploadUrlInput, "Upload Url Input", readme): CsfExport<typeof UploadUrlInput>);

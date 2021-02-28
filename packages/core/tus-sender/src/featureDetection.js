@@ -110,7 +110,7 @@ const handleResponse = (pXhr: Promise<XMLHttpRequest>, url: string, tusState: Tu
             }
         });
 
-export const requestFeaturesFromServer = (url: string, tusState: TusState) => {
+export const requestFeaturesFromServer = (url: string, tusState: TusState): {|abort: () => boolean, request: Promise<void>|} => {
 	const { options } = tusState.getState();
 
 	const pXhr = request(url, null, {

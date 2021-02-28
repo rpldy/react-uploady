@@ -4,9 +4,10 @@ import { logger } from "@rpldy/shared";
 import UploadyContext, { createContextApi } from "./UploadyContext";
 import useUploader from "./useUploader";
 
+import type { Node } from "React";
 import type { NoDomUploadyProps } from "./types";
 
-const NoDomUploady = (props: NoDomUploadyProps) => {
+const NoDomUploady = (props: NoDomUploadyProps): Node => {
     const {
         listeners,
         debug,

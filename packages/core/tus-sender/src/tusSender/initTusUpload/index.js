@@ -1,5 +1,5 @@
 // @flow
-import { logger } from "@rpldy/shared";
+import type { UploadData } from "../../../../shared/src/types.js";import { logger } from "@rpldy/shared";
 import { retrieveResumable } from "../../resumableStore";
 import createUpload from "./createUpload";
 import resumeUpload from "./resumeUpload";
@@ -28,7 +28,7 @@ export default (items: BatchItem[],
 				tusState: TusState,
 				chunkedSender: ChunkedSender,
 				parallelIdentifier: ?string = null
-) => {
+): {|abort: () => boolean, request: Promise<UploadData>|} => {
 	const { options } = tusState.getState(),
 		//parallel upload when we're seeing the batch item, not the parallel chunk items
 		isParallel = +options.parallel > 1 && !parallelIdentifier,

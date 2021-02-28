@@ -2,11 +2,19 @@
 import React from "react";
 import UploadButton from "@rpldy/upload-button";
 import { number, boolean } from "@storybook/addon-knobs";
-import { DESTINATION_TYPES, getCsfExport, KNOB_GROUPS, useStoryUploadySetup } from "../../../story-helpers";
+import {
+    DESTINATION_TYPES,
+    getCsfExport,
+    KNOB_GROUPS,
+    useStoryUploadySetup,
+    type CsfExport,
+} from "../../../story-helpers";
 import TusUploady from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
+
+import type { Node } from "React";
 
 const useTusStoryHelper = () => {
 	const setup = useStoryUploadySetup({
@@ -33,7 +41,7 @@ const useTusStoryHelper = () => {
 	};
 };
 
-export const Simple = () => {
+export const Simple = (): Node => {
 	const storySetup = useTusStoryHelper();
 	let { destination } = storySetup;
 	const { enhancer, chunkSize, forgetOnSuccess, resume, ignoreModifiedDateInStorage, sendDataOnCreate, sendWithCustomHeader } = storySetup;
@@ -55,7 +63,7 @@ export const Simple = () => {
 	</TusUploady>;
 };
 
-export const WithTusConcatenation = () => {
+export const WithTusConcatenation = (): Node => {
 	const { enhancer, destination, chunkSize, forgetOnSuccess, resume, ignoreModifiedDateInStorage, sendDataOnCreate } = useTusStoryHelper();
 
 	return <TusUploady
@@ -72,4 +80,4 @@ export const WithTusConcatenation = () => {
 	</TusUploady>;
 };
 
-export default getCsfExport(TusUploady, "Tus Uploady", readme);
+export default (getCsfExport<typeof TusUploady>(TusUploady, "Tus Uploady", readme): CsfExport<typeof TusUploady>);

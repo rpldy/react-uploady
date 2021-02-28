@@ -9,7 +9,7 @@ type MergeFn = (target: Object, ...sources: Object[]) => any;
  * @param mergeFn the merge function to use (default: utils/merge)
  * @returns {Object}
  */
-export default (obj: Object, mergeFn: MergeFn = merge) =>
+export default (obj: Object, mergeFn: MergeFn = merge): any =>
 	isMergeObj(obj) ?
 		mergeFn((Array.isArray(obj) ? [] : {}), obj) :
 		obj;

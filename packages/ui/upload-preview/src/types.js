@@ -12,8 +12,8 @@ export type PreviewItem = {
 	url: string,
 	name: string,
 	type: PreviewType,
-	isFallback: boolean,
-    props: Object,
+	isFallback?: boolean,
+    props?: Object,
 };
 
 export type PreviewData = {
@@ -63,11 +63,12 @@ export type PreviewProps =  {|
 |};
 
 export type MandatoryPreviewOptions = {|
+    rememberPreviousBatches: boolean,
     loadFirstOnly: boolean,
     maxPreviewImageSize: number,
     maxPreviewVideoSize: number,
     fallbackUrl: string | FallbackMethod,
     imageMimeTypes: string[],
     videoMimeTypes: string[],
-    previewComponentProps?: PreviewComponentPropsOrMethod,
+    previewComponentProps: PreviewComponentPropsOrMethod,
 |};

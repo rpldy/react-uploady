@@ -10,7 +10,7 @@ import type { TriggerMethod } from "@rpldy/life-events";
 import type { MandatoryChunkedOptions, ChunkedSendOptions } from "../types";
 import type { State, ChunksSendResponse, Chunk } from "./types";
 
-export const abortChunkedRequest = (state: State, item: BatchItem) => {
+export const abortChunkedRequest = (state: State, item: BatchItem): boolean => {
     logger.debugLog(`chunkedSender: aborting chunked upload for item: ${item.id}`);
 
     if (!state.finished && !state.aborted) {

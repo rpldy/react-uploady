@@ -1,7 +1,7 @@
 // @flow
 import React, { useCallback, useEffect, useImperativeHandle } from "react";
 import usePreviewsLoader from "./usePreviewsLoader";
-import { getFallbackUrl } from "./utils";
+import { getFallbackUrlData } from "./utils";
 import { PREVIEW_TYPES } from "./consts";
 
 import type { Element, ComponentType } from "react";
@@ -34,7 +34,7 @@ const UploadPreview = (props: PreviewProps): Element<"img">[] | Element<Componen
 	const onImagePreviewLoadError = useCallback((e) => {
 		const img = e.target;
 
-		const fallback = getFallbackUrl(props.fallbackUrl, img.src);
+		const fallback = getFallbackUrlData(props.fallbackUrl, img.src);
 
 		if (fallback) {
 			img.src = fallback.url;
@@ -49,6 +49,7 @@ const UploadPreview = (props: PreviewProps): Element<"img">[] | Element<Componen
 
 	return previews.map((data: PreviewItem): Element<any> => {
 		const { id, url, type, name, isFallback, props: previewProps } = data;
+
 		return PreviewComponent ?
 			<PreviewComponent key={id + url} id={id} url={url} type={type}
 							  name={name} isFallback={isFallback} {...previewProps} /> :

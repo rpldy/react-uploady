@@ -1,10 +1,12 @@
 // @flow
 import React, { useCallback, useContext, useRef } from "react";
-import { useStoryUploadySetup, getCsfExport } from "../../../story-helpers";
+import { useStoryUploadySetup, getCsfExport, type CsfExport } from "../../../story-helpers";
 import NativeUploady, { UploadyContext } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
+
+import type { Node } from "React";
 
 const WithCustomUI = () => {
     const uploadyContext = useContext(UploadyContext);
@@ -27,7 +29,7 @@ const WithCustomUI = () => {
     </div>;
 };
 
-export const Simple = () => {
+export const Simple = (): Node => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
 
     return <NativeUploady
@@ -40,4 +42,4 @@ export const Simple = () => {
     </NativeUploady>
 };
 
-export default getCsfExport(NativeUploady, "Native Uploady", readme);
+export default (getCsfExport<typeof NativeUploady>(NativeUploady, "Native Uploady", readme): CsfExport<typeof NativeUploady>);

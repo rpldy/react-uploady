@@ -5,6 +5,7 @@ import { logWarning } from "@rpldy/shared-ui";
 import Uploady, { composeEnhancers } from "@rpldy/uploady";
 import getChunkedEnhancer, { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
 
+import type { Node } from "React";
 import type { UploaderEnhancer } from "@rpldy/uploader";
 import type { ChunkedOptions } from "@rpldy/chunked-sender";
 import type { ChunkedUploadyProps } from "./types";
@@ -14,7 +15,7 @@ const getEnhancer = (options: ChunkedOptions, enhancer: ?UploaderEnhancer) => {
     return enhancer ? composeEnhancers(chunkedEnhancer, enhancer) : chunkedEnhancer;
 };
 
-const ChunkedUploady = (props: ChunkedUploadyProps) => {
+const ChunkedUploady = (props: ChunkedUploadyProps): Node => {
     const { chunked, chunkSize, retries, parallel, ...uploadyProps } = props;
 
     const enhancer = useMemo(

@@ -8,7 +8,7 @@ import type { SendResult } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { State } from "./types";
 
-export default (state: State, item: BatchItem, chunkId: string, chunkSendResult: SendResult, trigger: TriggerMethod) => {
+const handleChunkRequest =  (state: State, item: BatchItem, chunkId: string, chunkSendResult: SendResult, trigger: TriggerMethod): Promise<void> => {
     state.requests[chunkId] = {
         id: chunkId,
         abort: chunkSendResult.abort,
@@ -41,3 +41,5 @@ export default (state: State, item: BatchItem, chunkId: string, chunkSendResult:
             }
         });
 };
+
+export default handleChunkRequest;

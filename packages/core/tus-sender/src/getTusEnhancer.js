@@ -6,7 +6,7 @@ import type { UploaderType } from "@rpldy/uploader";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { TusOptions } from "./types";
 
-export default (options?: TusOptions) => {
+export default (options?: TusOptions): ((uploader: UploaderType, trigger: TriggerMethod) => UploaderType) => {
 	//return uploader enhancer
 	return (uploader: UploaderType, trigger: TriggerMethod): UploaderType => {
 		const sender = createTusSender(uploader, options, trigger);

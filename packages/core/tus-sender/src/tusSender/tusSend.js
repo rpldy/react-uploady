@@ -42,7 +42,14 @@ const doUpload = (
 	};
 };
 
-export default (chunkedSender: ChunkedSender, tusState: TusState) => {
+export default (chunkedSender: ChunkedSender, tusState: TusState):
+  | any
+  | ((
+    items: Array<BatchItem>,
+    url: ?string,
+    sendOptions: ChunkedSendOptions,
+    onProgress: OnProgress
+  ) => SendResult) => {
 	const tusSend = (
 		items: BatchItem[],
 		url: ?string,

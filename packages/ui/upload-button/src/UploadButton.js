@@ -2,6 +2,10 @@
 import React, { forwardRef } from "react";
 import asUploadButton from "./asUploadButton";
 
-export default asUploadButton(forwardRef(
+import type { ComponentType } from "react";
+
+const UploadButton =  (asUploadButton(forwardRef(
     (props, ref) =>
-        <button ref={ref} {...props}/>));
+        <button ref={ref} {...props}/>)): ComponentType<any>);
+
+export default UploadButton;

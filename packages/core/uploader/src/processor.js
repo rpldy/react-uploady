@@ -5,9 +5,9 @@ import createBatch from "./batch";
 
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { Batch, TriggerCancellableOutcome, UploadInfo, UploadOptions } from "@rpldy/shared";
-import type { CreateOptions } from "./types";
+import type { CreateOptions, UploaderProcessor } from "./types";
 
-export default (trigger: TriggerMethod, cancellable: TriggerCancellableOutcome, options: CreateOptions, uploaderId: string) => {
+export default (trigger: TriggerMethod, cancellable: TriggerCancellableOutcome, options: CreateOptions, uploaderId: string): UploaderProcessor => {
     const sender = createItemsSender(),
         queue = createUploadQueue(options, trigger, cancellable, sender, uploaderId);
 

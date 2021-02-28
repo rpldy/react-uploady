@@ -1,5 +1,8 @@
 // @flow
 
-const isFunction = (f: mixed): boolean %checks => typeof (f) === "function";
+//defined as function for flow's sake... (https://github.com/facebook/flow/issues/3635)
+function isFunction(f: mixed): boolean %checks {
+    return typeof (f) === "function";
+}
 
-export default isFunction;
+module.exports = isFunction;

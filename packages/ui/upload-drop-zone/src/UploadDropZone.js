@@ -5,7 +5,7 @@ import { useUploadyContext } from "@rpldy/shared-ui";
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadDropZoneProps } from "./types";
 
-const UploadDropZone = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
+const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivElement> = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
     (props, ref) => {
         const containerRef = useRef(null);
 

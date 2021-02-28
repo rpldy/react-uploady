@@ -76,8 +76,8 @@ describe("sessionStorage tests", () => {
 
 		it("should always return null", () => {
 			safeSessionStorage.setItem("test", "123");
-			expect(safeSessionStorage.getItem("test")).toBe(null);
-			expect(safeSessionStorage.getItem("test2")).toBe(null);
+			expect(safeSessionStorage.getItem("test")).toBeUndefined();
+			expect(safeSessionStorage.getItem("test2")).toBeUndefined();
 		});
 	});
 
@@ -113,8 +113,8 @@ describe("sessionStorage tests", () => {
 
         it("should always return null", () => {
             safeSessionStorage.setItem("test", "123");
-            expect(safeSessionStorage.getItem("test")).toBe(null);
-            expect(safeSessionStorage.getItem("test2")).toBe(null);
+            expect(safeSessionStorage.getItem("test")).toBeUndefined();
+            expect(safeSessionStorage.getItem("test2")).toBeUndefined();
         });
     });
 });

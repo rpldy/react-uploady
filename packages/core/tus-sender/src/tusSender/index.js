@@ -47,7 +47,7 @@ const getResolvedOptions = (options: ?TusOptions): TusOptions => {
 	return options;
 };
 
-export default (uploader: UploaderType, options: ?TusOptions, trigger: TriggerMethod) => {
+export default (uploader: UploaderType, options: ?TusOptions, trigger: TriggerMethod): {|getOptions: () => TusOptions, send: any|} => {
 	options = getResolvedOptions(options);
 	const chunkedSender = createChunkedSender(options, trigger);
 

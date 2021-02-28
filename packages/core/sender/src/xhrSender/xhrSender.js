@@ -155,7 +155,12 @@ const abortRequest = (sendRequest: SendRequest) => {
 	return abortCalled;
 };
 
-const getXhrSend = (config?: XhrSendConfig) =>
+const getXhrSend = (config?: XhrSendConfig): ((
+  items: Array<BatchItem>,
+  url: ?string,
+  options: SendOptions,
+  onProgress?: OnProgress
+) => SendResult) =>
     (items: BatchItem[], url: ?string, options: SendOptions, onProgress?: OnProgress): SendResult => {
         if (!url) {
             throw new MissingUrlError(XHR_SENDER_TYPE);

@@ -39,7 +39,7 @@ const getFormFileField = (fd: FormData, items: BatchItem[], options: SendOptions
     });
 };
 
-const prepareFormData = (items: BatchItem[], options: SendOptions) => {
+const prepareFormData = (items: BatchItem[], options: SendOptions): FormData => {
     const fd = new FormData();
 
     if (options.params) {

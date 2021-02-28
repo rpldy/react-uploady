@@ -1,7 +1,15 @@
 // @flow
 import { hasWindow } from "@rpldy/shared";
 
-export default (storageType: string) => {
+export default (storageType: string): {
+    length: number;
+    getItem(key: string): ?string;
+    setItem(key: string, data: string): void;
+    clear(): void;
+    removeItem(key: string): void;
+    key(index: number): ?string;
+    isSupported: boolean,
+} => {
 	let isSupported = false;
 
 	const checkSupport = () => {
@@ -24,7 +32,7 @@ export default (storageType: string) => {
 
 	const safeStorage = methods.reduce((res, method) => {
 		res[method] = (...args: mixed[]) =>
-			isSupported ? window[storageType][method](...args) : null;
+			isSupported ? window[storageType][method](...args) : undefined;
 
 		return res;
 	}, {});

@@ -70,8 +70,8 @@ describe("localStorage tests", () => {
 
 		it("should always return null", () => {
 			safeLocalStorage.setItem("test", "123");
-			expect(safeLocalStorage.getItem("test")).toBe(null);
-			expect(safeLocalStorage.getItem("test2")).toBe(null);
+			expect(safeLocalStorage.getItem("test")).toBeUndefined();
+			expect(safeLocalStorage.getItem("test2")).toBeUndefined();
 		});
 	});
 
@@ -107,8 +107,8 @@ describe("localStorage tests", () => {
 
         it("should always return null", () => {
             safeLocalStorage.setItem("test", "123");
-            expect(safeLocalStorage.getItem("test")).toBe(null);
-            expect(safeLocalStorage.getItem("test2")).toBe(null);
+            expect(safeLocalStorage.getItem("test")).toBeUndefined();
+            expect(safeLocalStorage.getItem("test2")).toBeUndefined();
         });
     });
 });

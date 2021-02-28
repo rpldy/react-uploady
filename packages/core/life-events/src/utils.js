@@ -7,7 +7,7 @@ const validateFunction = (f: any, name: string) => {
 	}
 };
 
-const isUndefined = (val: any) => typeof (val) === "undefined";
+const isUndefined = (val: any): boolean => typeof (val) === "undefined";
 
 export {
 	validateFunction,

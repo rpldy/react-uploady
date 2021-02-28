@@ -2,4 +2,4 @@
 
 import createSafeStorage from "./safeStorageCreator";
 
-export default createSafeStorage("localStorage");
+export default (createSafeStorage("localStorage"): any);

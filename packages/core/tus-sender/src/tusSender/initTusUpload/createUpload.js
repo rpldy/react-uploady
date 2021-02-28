@@ -9,7 +9,7 @@ import type { SendOptions } from "@rpldy/sender";
 import type { InitUploadResult  } from "../types";
 import type { State, TusState } from "../../types";
 
-export const resolveUploadUrl = (createUrl: string, location: string) => {
+export const resolveUploadUrl = (createUrl: string, location: string): string => {
     let uploadUrl;
 
     if (/^(http:|https:)?\/\//.test(location)) {

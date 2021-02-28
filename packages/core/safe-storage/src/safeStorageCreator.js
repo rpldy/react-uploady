@@ -1,15 +1,8 @@
 // @flow
 import { hasWindow } from "@rpldy/shared";
+import type { SafeStorage } from "./types";
 
-export default (storageType: string): {
-    length: number;
-    getItem(key: string): ?string;
-    setItem(key: string, data: string): void;
-    clear(): void;
-    removeItem(key: string): void;
-    key(index: number): ?string;
-    isSupported: boolean,
-} => {
+export default (storageType: string): SafeStorage => {
 	let isSupported = false;
 
 	const checkSupport = () => {

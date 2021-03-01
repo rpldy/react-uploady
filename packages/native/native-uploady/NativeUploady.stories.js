@@ -42,4 +42,4 @@ export const Simple = (): Node => {
     </NativeUploady>
 };
 
-export default (getCsfExport<typeof NativeUploady>(NativeUploady, "Native Uploady", readme): CsfExport<typeof NativeUploady>);
+export default (getCsfExport(NativeUploady, "Native Uploady", readme): CsfExport);

@@ -8,6 +8,7 @@ import {
     useStoryUploadySetup,
     logToCypress,
     getCsfExport,
+    type CsfExport
 } from "../../../story-helpers";
 import createUploader, { UPLOADER_EVENTS } from "./src";
 
@@ -151,4 +152,4 @@ export const UMD_Core = (): Element<"div"> => {
     </div>;
 };
 
-export default (getCsfExport(undefined, "Uploader", readme): any);
+export default (getCsfExport(undefined, "Uploader", readme): CsfExport);

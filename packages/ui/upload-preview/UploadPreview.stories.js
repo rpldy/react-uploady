@@ -360,4 +360,4 @@ export const WithCrop = (): Node => {
 	</Uploady>;
 };
 
-export default (getCsfExport<typeof UploadPreview>(UploadPreview, "Upload Preview", readme): CsfExport<typeof UploadPreview>);
+export default (getCsfExport(UploadPreview, "Upload Preview", readme): CsfExport);

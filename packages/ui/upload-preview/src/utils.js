@@ -11,8 +11,6 @@ import type {
     PreviewItem
 } from "./types";
 
-// const isFunction = (f: mixed): boolean %checks => typeof (f) === "function";
-
 const getWithMandatoryOptions = (options: ?PreviewOptions): MandatoryPreviewOptions => {
 	return {
 		...PREVIEW_DEFAULTS,

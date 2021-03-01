@@ -7,13 +7,13 @@ import type { UploadData, BatchItem } from "@rpldy/shared";
 import type { ProcessNextMethod, QueueState } from "./types";
 
 export const FILE_STATE_TO_EVENT_MAP: {|
-  aborted: any,
-  added: any,
-  cancelled: any,
-  error: any,
-  finished: any,
+  aborted: string,
+  added: string,
+  cancelled: string,
+  error: string,
+  finished: string,
   pending: null,
-  uploading: any,
+  uploading: string,
 |} = {
     [FILE_STATES.PENDING]: null,
     [FILE_STATES.ADDED]: UPLOADER_EVENTS.ITEM_START,

@@ -1,7 +1,7 @@
 // @flow
 import { devFreeze, FILE_STATES } from "@rpldy/shared";
 
-export const UPLOADER_EVENTS: any = devFreeze({
+export const UPLOADER_EVENTS: Object = devFreeze({
     BATCH_ADD: "BATCH-ADD",
     BATCH_START: "BATCH-START",
     BATCH_PROGRESS: "BATCH_PROGRESS",
@@ -24,7 +24,7 @@ export const UPLOADER_EVENTS: any = devFreeze({
 
 export const PROGRESS_DELAY = 50;
 
-export const SENDER_EVENTS: any = devFreeze({
+export const SENDER_EVENTS: Object = devFreeze({
     ITEM_PROGRESS: "ITEM_PROGRESS",
     BATCH_PROGRESS: "BATCH_PROGRESS",
 });

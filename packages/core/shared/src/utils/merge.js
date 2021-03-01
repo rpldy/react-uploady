@@ -7,6 +7,8 @@ export type MergeOptions = {
     predicate?: (mixed, mixed) => boolean,
 };
 
+type MergeMethod = (target: Object, ...sources: Array<Object>) => Object;
+
 export const isMergeObj = (obj: Object): boolean => isPlainObject(obj) || Array.isArray(obj);
 
 const getKeys = (obj: Object, options: MergeOptions) => {
@@ -16,7 +18,7 @@ const getKeys = (obj: Object, options: MergeOptions) => {
 		keys;
 };
 
-const getMerge = (options: MergeOptions = {}): ((target: any, ...sources: Array<any>) => any) => {
+const getMerge = (options: MergeOptions = {}): MergeMethod => {
    const merge = (target: Object, ...sources: Object[]) => {
        if (target && sources.length) {
            sources.forEach((source) => {
@@ -61,7 +63,7 @@ const getMerge = (options: MergeOptions = {}): ((target: any, ...sources: Array<
  *
  * No recursion protection
  */
-export default (getMerge(): (target: any, ...sources: Array<any>) => any);
+export default (getMerge(): MergeMethod);
 
 export {
     getMerge,

@@ -80,4 +80,4 @@ export const WithTusConcatenation = (): Node => {
 	</TusUploady>;
 };
 
-export default (getCsfExport<typeof TusUploady>(TusUploady, "Tus Uploady", readme): CsfExport<typeof TusUploady>);
+export default (getCsfExport(TusUploady, "Tus Uploady", readme): CsfExport);

@@ -347,4 +347,4 @@ export const WithRetryAndPreview = (): Node => {
 	);
 };
 
-export default (getCsfExport(undefined, "Retry Hooks", readme): any);
+export default (getCsfExport(undefined, "Retry Hooks", readme): CsfExport);

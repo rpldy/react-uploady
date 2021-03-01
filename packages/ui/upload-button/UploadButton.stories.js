@@ -1,5 +1,5 @@
 // @flow
-;import React, {
+import React, {
 	Component,
 	useMemo,
 	useState,
@@ -425,4 +425,4 @@ export const WithForm = (): Node => {
     );
 };
 
-export default (getCsfExport<typeof UploadButton>(UploadButton, "Upload Button",readme): CsfExport<typeof UploadButton>);
+export default (getCsfExport(UploadButton, "Upload Button",readme): CsfExport);

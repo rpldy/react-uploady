@@ -1,11 +1,11 @@
 // @flow
-export type CsfExport<T> = {
-    component: ?T,
+export type CsfExport = {
+    component: ?React$AbstractComponent<any, any>,
     title: string,
     parameters: Object,
 };
 
-const getCsfExport = <T>(component: ?T, title: string, readme: any, options: any = {}) : CsfExport<T> => ({
+const getCsfExport = (component: ?React$AbstractComponent<any, any>, title: string, readme: any, options: any = {}) : CsfExport => ({
     component,
     title,
     parameters: {

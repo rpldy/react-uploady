@@ -232,4 +232,4 @@ export const WithAsUploadButton = (): Node => {
 	</Uploady>
 };
 
-export default (getCsfExport<typeof UploadDropZone>(UploadDropZone, "Upload Drop Zone",readme): CsfExport<typeof UploadDropZone>);
+export default (getCsfExport(UploadDropZone, "Upload Drop Zone",readme): CsfExport);

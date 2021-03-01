@@ -46,7 +46,7 @@ const persistResumable = (item: BatchItem, uploadUrl: string, options: TusOption
 //     }
 // };
 
-const retrieveResumable = (item: BatchItem, options: TusOptions, identifier: ?string): any | void => {
+const retrieveResumable = (item: BatchItem, options: TusOptions, identifier: ?string): string | void => {
 	let uploadUrl;
 	const key = getPersistKey(item, options, identifier);
 

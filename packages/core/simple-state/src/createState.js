@@ -36,7 +36,7 @@ const deepProxy = (obj, traps) => {
 	return proxy || obj;
 };
 
-const unwrapProxy = (proxy: Object): any =>
+const unwrapProxy = (proxy: Object): Object =>
 	isProxy(proxy) ? clone(proxy, mergeWithSymbols) : proxy;
 
 /**

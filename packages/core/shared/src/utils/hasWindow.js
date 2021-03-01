@@ -1,5 +1,5 @@
 // @flow
 
-const hasWindow = (): any | boolean => (typeof window === "object" && !!window.document);
+const hasWindow = (): boolean => (typeof window === "object" && !!window.document);
 
 export default hasWindow;

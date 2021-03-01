@@ -361,4 +361,4 @@ export const UMD_ALL = (): Element<"div"> => {
     </div>;
 };
 
-export default (getCsfExport<typeof Uploady>(Uploady, "Uploady", readme): CsfExport<typeof Uploady>);
+export default (getCsfExport(Uploady, "Uploady", readme): CsfExport);

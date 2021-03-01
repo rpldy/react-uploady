@@ -2,7 +2,7 @@
 import { devFreeze } from "@rpldy/shared";
 import { CHUNKED_DEFAULT_OPTIONS } from "@rpldy/chunked-sender";
 
-export const DEFAULT_OPTIONS: any = devFreeze({
+export const DEFAULT_OPTIONS: Object = devFreeze({
 	...CHUNKED_DEFAULT_OPTIONS,
     featureDetection: false,
 	featureDetectionUrl: null,

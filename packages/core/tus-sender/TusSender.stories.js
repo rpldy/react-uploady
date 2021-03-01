@@ -2,13 +2,13 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { logger } from "@rpldy/shared";
 import createUploader, { composeEnhancers } from "@rpldy/uploader";
-import { useStoryUploadySetup, DESTINATION_TYPES, getCsfExport } from "../../../story-helpers";
+import { useStoryUploadySetup, DESTINATION_TYPES, getCsfExport, type CsfExport } from "../../../story-helpers";
 import getTusEnhancer from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type {Element} from "React";
+import type { Element } from "React";
 
 logger.setDebug(true);
 
@@ -136,4 +136,4 @@ export const WithFeatureDetection = (): Element<"div"> => {
 	</div>
 };
 
-export default (getCsfExport(undefined, "TUS Sender", readme): any);
+export default (getCsfExport(undefined, "TUS Sender", readme): CsfExport);

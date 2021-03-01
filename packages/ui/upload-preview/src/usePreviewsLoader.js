@@ -1,6 +1,6 @@
 // @flow
 import { useState, useCallback } from "react";
-import isFunction from "@rpldy/shared/src/utils/isFunction";
+import { isFunction } from "@rpldy/shared";
 import { useBatchStartListener } from "@rpldy/shared-ui";
 import { PREVIEW_TYPES } from "./consts";
 import {

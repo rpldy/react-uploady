@@ -9,7 +9,7 @@ const isProxy = (obj: Object): boolean =>
 //check if object is File or react-native file object (it wont by instanceof File in react-native)
 const isNativeFile = (obj: any) => (hasWindow() && obj instanceof File) || (obj.name && obj.size && obj.uri);
 
-const isProxiable = (obj: any): any | boolean =>
+const isProxiable = (obj: any): boolean =>
     Array.isArray(obj) || (isPlainObject(obj) && !isNativeFile(obj));
 
 export {

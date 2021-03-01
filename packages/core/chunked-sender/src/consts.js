@@ -1,7 +1,7 @@
 // @flow
 import { devFreeze } from "@rpldy/shared";
 
-export const CHUNK_EVENTS: any = devFreeze({
+export const CHUNK_EVENTS: Object = devFreeze({
     CHUNK_START: "CHUNK_START",
     CHUNK_FINISH: "CHUNK_FINISH",
 });

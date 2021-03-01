@@ -1,11 +1,11 @@
 // @flow
-import type { UploadData } from "../../../../shared/src/types.js";import { logger } from "@rpldy/shared";
+import { logger } from "@rpldy/shared";
 import { retrieveResumable } from "../../resumableStore";
 import createUpload from "./createUpload";
 import resumeUpload from "./resumeUpload";
 import handleTusUpload from "../handleTusUpload";
 
-import type { BatchItem } from "@rpldy/shared";
+import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { ChunkedSender, ChunkedSendOptions, OnProgress } from "@rpldy/chunked-sender";
 import type { TusState, State } from "../../types";
 

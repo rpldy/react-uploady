@@ -10,10 +10,13 @@ import {
     useStoryUploadySetup,
     StoryUploadProgress,
     getCsfExport,
+    type CsfExport,
 } from "../../../story-helpers";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
+
+import type { Node } from "React";
 
 const dzCss = css`
   display: flex;
@@ -49,7 +52,7 @@ const SmallDropZone = styled(StyledDropZone)`
   height: 200px;
 `;
 
-export const Simple = () => {
+export const Simple = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady debug
@@ -66,7 +69,7 @@ export const Simple = () => {
     </Uploady>;
 };
 
-export const WithProgress = () => {
+export const WithProgress = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady debug
@@ -85,7 +88,7 @@ export const WithProgress = () => {
     </Uploady>;
 };
 
-export const WithDropHandler = () => {
+export const WithDropHandler = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     const dropHandler = useCallback((e) => {
@@ -112,7 +115,7 @@ const DifferentWrapper = styled.div`
   justify-content: space-around;
 `;
 
-export const DifferentConfiguration = () => {
+export const DifferentConfiguration = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     const destinationOverride = useMemo(() => ({
@@ -177,7 +180,7 @@ const ThirdPartyDropZoneContainer = () => {
     </ThirdPartyDropZone>;
 };
 
-export const WithThirdPartyDropZone = () => {
+export const WithThirdPartyDropZone = (): Node => {
 	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
 	return <DndProvider backend={Backend}>
@@ -213,7 +216,7 @@ const MyClickableDropZone = forwardRef((props, ref) => {
 
 const DropZoneButton = asUploadButton(MyClickableDropZone);
 
-export const WithAsUploadButton = () => {
+export const WithAsUploadButton = (): Node => {
 	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
 	return <Uploady debug
@@ -229,4 +232,4 @@ export const WithAsUploadButton = () => {
 	</Uploady>
 };
 
-export default getCsfExport(UploadDropZone, "Upload Drop Zone",readme);
+export default (getCsfExport(UploadDropZone, "Upload Drop Zone",readme): CsfExport);

@@ -19,7 +19,7 @@ const getValidLE = (obj: Object) => {
 	return le;
 };
 
-const isLE = (obj: Object) => !!getLE(obj);
+const isLE = (obj: Object): boolean => !!getLE(obj);
 
 const addRegistration = (obj: Object, name: any, cb: Function, once: boolean = false) => {
 	validateFunction(cb, "cb");

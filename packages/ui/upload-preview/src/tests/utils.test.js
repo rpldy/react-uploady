@@ -1,11 +1,10 @@
 import { PREVIEW_TYPES } from "../consts";
 import { PREVIEW_DEFAULTS } from "../defaults";
-import { getFallbackUrl, getWithMandatoryOptions, getFileObjectUrlByType } from "../utils";
+import { getFallbackUrlData, getWithMandatoryOptions, getFileObjectUrlByType } from "../utils";
 
 describe("utils tests", () => {
 
     describe("getWithMandatoryOptions tests", () => {
-
         it("should return with defaults and overrides", () => {
             const props = {
                 loadFirstOnly: true,
@@ -24,36 +23,38 @@ describe("utils tests", () => {
         });
     });
 
-    describe("getFallbackUrl tests", () => {
+    describe("getFallbackUrlData tests", () => {
 
         it("should use fallbackProp as function returning object", () => {
-
-            const result = getFallbackUrl(() => ({ test: true }), {});
+            const result = getFallbackUrlData(() => ({ test: true }), {});
 
             expect(result).toEqual({ test: true });
         });
 
         it("should use fallbackProp as function returning string", () => {
-
-            const result = getFallbackUrl(() => "test.com", {});
+            const result = getFallbackUrlData(() => "test.com", {});
 
             expect(result).toEqual({
+                id: "",
+                name: undefined,
                 url: "test.com",
                 type: PREVIEW_TYPES.IMAGE
             });
         });
 
         it("should use fallbackProp as string", () => {
+            const result = getFallbackUrlData("test.com", {});
 
-            const result = getFallbackUrl("test.com", {});
             expect(result).toEqual({
+                id: "",
+                name: undefined,
                 url: "test.com",
                 type: PREVIEW_TYPES.IMAGE
             });
         });
 
         it("should use fallbackProp as object", () => {
-            const result = getFallbackUrl({ test: true }, {});
+            const result = getFallbackUrlData({ test: true }, {});
             expect(result).toEqual({ test: true });
         });
     });

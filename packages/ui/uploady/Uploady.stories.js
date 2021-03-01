@@ -9,6 +9,7 @@ import {
     useStoryUploadySetup,
     getCsfExport,
     StoryAbortButton,
+    type CsfExport
 } from "../../../story-helpers";
 import Uploady, {
     FILE_STATES,
@@ -27,6 +28,8 @@ import Uploady, {
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
+import type { Node, Element } from "React";
+
 const ContextUploadButton = () => {
     const uploadyContext = useUploady();
 
@@ -37,7 +40,7 @@ const ContextUploadButton = () => {
     return <button id="upload-button" onClick={onClick}>Custom Upload Button</button>
 };
 
-export const ButtonWithContextApi = () => {
+export const ButtonWithContextApi = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady
@@ -61,7 +64,7 @@ const UrlUploadButton = () => {
     return <button onClick={onClick}>Url Upload</button>;
 };
 
-export const UrlUploadWithContextApi = () => {
+export const UrlUploadWithContextApi = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady
@@ -84,7 +87,7 @@ const ListOfUploadOptions = () => {
     </ul>
 };
 
-export const WithNoDomUploady = () => {
+export const WithNoDomUploady = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <NoDomUploady
@@ -97,7 +100,7 @@ export const WithNoDomUploady = () => {
     </NoDomUploady>
 };
 
-export const WithCustomFieldName = () => {
+export const WithCustomFieldName = (): Node => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady
@@ -124,6 +127,7 @@ const ClearPending = () => {
 };
 
 const STATE_COLORS = {
+    [FILE_STATES.ADDED]: "black",
     [FILE_STATES.FINISHED]: "green",
     [FILE_STATES.UPLOADING]: "blue",
     [FILE_STATES.ERROR]: "red",
@@ -168,7 +172,7 @@ const QueueList = () => {
     </ul>
 };
 
-export const WithAutoUploadOff = () => {
+export const WithAutoUploadOff = (): Node => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady
@@ -201,7 +205,7 @@ export const WithAutoUploadOff = () => {
     </Uploady>
 };
 
-export const WithAbort = () => {
+export const WithAbort = (): Element<"div"> => {
     const { enhancer, destination, multiple } = useStoryUploadySetup();
 
     return <div>
@@ -218,7 +222,7 @@ export const WithAbort = () => {
     </div>
 };
 
-export const withConcurrent = () => {
+export const withConcurrent = (): Node => {
     const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
 
     return <Uploady
@@ -237,7 +241,7 @@ export const withConcurrent = () => {
     </Uploady>
 };
 
-export const withCustomResponseFormat = () => {
+export const withCustomResponseFormat = (): Node => {
     const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
 
     const resFormatter = useCallback((res, status, headers) => {
@@ -303,7 +307,7 @@ const renderUploadyFromBundle = () => {
     return result;
 };
 
-export const UMD_CoreUI = () => {
+export const UMD_CoreUI = (): Element<"div"> => {
     const [UploadyUI, setUploadyUI] = useState(null);
 
     const onBundleLoad = useCallback(() => {
@@ -342,7 +346,7 @@ const renderUploadyAll = () => {
         [uploadButton, uploadPreview]);
 };
 
-export const UMD_ALL = () => {
+export const UMD_ALL = (): Element<"div"> => {
     const [UploadyUI, setUploadyUI] = useState(null);
 
     const onBundleLoad = useCallback(() => {
@@ -357,4 +361,4 @@ export const UMD_ALL = () => {
     </div>;
 };
 
-export default getCsfExport(Uploady, "Uploady", readme);
+export default (getCsfExport(Uploady, "Uploady", readme): CsfExport);

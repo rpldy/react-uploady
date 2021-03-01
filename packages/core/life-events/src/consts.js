@@ -1,4 +1,4 @@
 // @flow
-export const LESYM = Symbol.for("__le__");
+export const LESYM: symbol = Symbol.for("__le__");
 
-export const LE_PACK_SYM = Symbol.for("__le__pack__");
+export const LE_PACK_SYM: symbol = Symbol.for("__le__pack__");

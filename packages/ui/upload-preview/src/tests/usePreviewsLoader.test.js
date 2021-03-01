@@ -1,12 +1,12 @@
 import { act } from "react-dom/test-utils";
 import { useBatchStartListener } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
-import { getFallbackUrl, getFileObjectUrlByType } from "../utils";
+import { getFallbackUrlData, getFileObjectUrlByType } from "../utils";
 import { PREVIEW_TYPES } from "../consts";
 import usePreviewsLoader from "../usePreviewsLoader";
 
 jest.mock("../utils", () => ({
 	getWithMandatoryOptions: jest.fn((o) => o),
-	getFallbackUrl: jest.fn(),
+	getFallbackUrlData: jest.fn(),
 	getFileObjectUrlByType: jest.fn(),
 }));
 
@@ -155,7 +155,7 @@ describe("usePreviewLoader tests", () => {
 
 	it("should return fallback url", () => {
 
-		getFallbackUrl.mockReturnValueOnce({ url: "fallback.test", type: "fallback" });
+		getFallbackUrlData.mockReturnValueOnce({ url: "fallback.test", type: "fallback" });
 
 		const { getHookResult, items, props } = testPreviewsLoader({
 			fallbackUrl: "external fallback",
@@ -171,12 +171,12 @@ describe("usePreviewLoader tests", () => {
 		expect(previews[0].isFallback).toBe(true);
 		expect(previews[0].props).toEqual({ test: "f1-fallback.test-fallback" });
 
-		expect(getFallbackUrl).toHaveBeenCalledWith(props.fallbackUrl, items[0].file);
+		expect(getFallbackUrlData).toHaveBeenCalledWith(props.fallbackUrl, items[0].file);
 	});
 
 	it("should filter preview if no fallback url", () => {
 
-		getFallbackUrl.mockReturnValueOnce(null);
+		getFallbackUrlData.mockReturnValueOnce(null);
 
 		const { getHookResult, items } = testPreviewsLoader();
 

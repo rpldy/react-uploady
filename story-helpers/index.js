@@ -1,3 +1,4 @@
+// @flow
 import { KNOB_GROUPS, DESTINATION_TYPES, UMD_NAMES} from "./consts";
 import useStoryUploadySetup, {
     mockDestination,
@@ -40,3 +41,4 @@ export {
 };
 
 export { default as getCsfExport } from "./getCsfExport";
+export type { CsfExport } from "./getCsfExport";

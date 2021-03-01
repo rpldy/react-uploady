@@ -6,7 +6,7 @@ import type { UploadInfo, UploadOptions, GetExact } from "@rpldy/shared";
 import type { EventCallback } from "@rpldy/life-events";
 import type { UploadyContextType, InputRef } from "./types";
 
-const UploadyContext = React.createContext<?UploadyContextType>(null);
+const UploadyContext: React$Context<?UploadyContextType> = React.createContext<?UploadyContextType>(null);
 
 const NO_INPUT_ERROR_MSG = "Uploady - Context. File input isn't available";
 

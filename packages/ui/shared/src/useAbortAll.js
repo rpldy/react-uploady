@@ -2,11 +2,13 @@
 import { useCallback } from "react";
 import useUploadyContext from "./useUploadyContext";
 
-export default () => {
-	const context = useUploadyContext();
+const useAbortAll: () => () => void = () => {
+    const context = useUploadyContext();
 
-	return useCallback(
-		() => context.abort(),
-		[context]
-	);
+    return useCallback(
+        () => context.abort(),
+        [context]
+    );
 };
+
+export default useAbortAll;

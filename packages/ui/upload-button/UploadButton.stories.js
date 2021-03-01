@@ -26,13 +26,16 @@ import {
     mockDestination,
     useEventsLogUpdater,
     getCsfExport,
+    type CsfExport,
 } from "../../../story-helpers";
 import UploadButton, { asUploadButton } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from './README.md';
 
-export const Simple = () => {
+import type { Node, Element } from "React"
+
+export const Simple = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady debug
@@ -51,7 +54,7 @@ const StyledUploadButton = styled(UploadButton)`
   ${uploadButtonCss}
 `;
 
-export const WithStyledComponent = () => {
+export const WithStyledComponent = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady debug
@@ -79,7 +82,7 @@ const EventsLog = ({ setUpdater }) => {
     </ul>
 };
 
-export const WithEventListeners = () => {
+export const WithEventListeners = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
     const { setUpdater, logEvent } = useEventsLogUpdater();
 
@@ -138,7 +141,7 @@ const HookedUploadButton = () => {
     </>;
 };
 
-export const withEventHooks = () => {
+export const withEventHooks = (): Node => {
     const { enhancer, destination, multiple } = useStoryUploadySetup();
 
     return <Uploady
@@ -151,7 +154,7 @@ export const withEventHooks = () => {
     </Uploady>;
 };
 
-export const WithProgress = () => {
+export const WithProgress = (): Node => {
     const { enhancer, destination, multiple } = useStoryUploadySetup();
 
     return <Uploady
@@ -193,7 +196,7 @@ class ClassUsingCustomButton extends Component<any> {
     }
 }
 
-export const WithClass = () => {
+export const WithClass = (): Node => {
     const { enhancer, destination, multiple } = useStoryUploadySetup();
     return <Uploady
         debug
@@ -218,7 +221,7 @@ const DisabledDuringUploadButton = () => {
     return <StyledUploadButton extraProps={{ disabled: uploading }}/>;
 };
 
-export const DisabledDuringUpload = () => {
+export const DisabledDuringUpload = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady
@@ -233,7 +236,7 @@ export const DisabledDuringUpload = () => {
     </Uploady>;
 };
 
-export const DifferentConfiguration = () => {
+export const DifferentConfiguration = (): Element<"div"> => {
     const { enhancer, destination, multiple } = useStoryUploadySetup();
 
     const destinationOverride = useMemo(() => ({
@@ -270,7 +273,7 @@ const DivUploadButton = asUploadButton(forwardRef((props, ref) => {
     </div>
 }));
 
-export const WithComponentAsButton = () => {
+export const WithComponentAsButton = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady debug
@@ -293,7 +296,7 @@ const ExampleForm = ({ url }) => {
     </form>;
 };
 
-export const WithCustomFileInputAndForm = () => {
+export const WithCustomFileInputAndForm = (): Element<"section"> => {
     return <section>
         <Uploady
             debug
@@ -305,7 +308,7 @@ export const WithCustomFileInputAndForm = () => {
     </section>
 };
 
-export const WithFileFilter = () => {
+export const WithFileFilter = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     const filterBySize = useCallback((file) => {
@@ -400,7 +403,7 @@ const MyForm = () => {
     );
 };
 
-export const WithForm = () => {
+export const WithForm = (): Node => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
 
     return (
@@ -422,4 +425,4 @@ export const WithForm = () => {
     );
 };
 
-export default getCsfExport(UploadButton, "Upload Button",readme);
+export default (getCsfExport(UploadButton, "Upload Button",readme): CsfExport);

@@ -2,11 +2,13 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { logger } from "@rpldy/shared";
 import createUploader, { composeEnhancers } from "@rpldy/uploader";
-import { useStoryUploadySetup, DESTINATION_TYPES, getCsfExport } from "../../../story-helpers";
+import { useStoryUploadySetup, DESTINATION_TYPES, getCsfExport, type CsfExport } from "../../../story-helpers";
 import getTusEnhancer from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
+
+import type { Element } from "React";
 
 logger.setDebug(true);
 
@@ -35,7 +37,7 @@ const useUploaderWithTus = (tusOptions = {}) => {
 	return uploaderRef;
 };
 
-export const WithTusSender = () => {
+export const WithTusSender = (): Element<"div"> => {
 	const inputRef = useRef(null);
 	const uploaderRef = useUploaderWithTus();
 
@@ -58,7 +60,7 @@ export const WithTusSender = () => {
 	</div>
 };
 
-export const WithTusDataOnCreate = () => {
+export const WithTusDataOnCreate = (): Element<"div"> => {
 	const inputRef = useRef(null);
 	const uploaderRef = useUploaderWithTus({ sendDataOnCreate: true });
 
@@ -81,7 +83,7 @@ export const WithTusDataOnCreate = () => {
 	</div>
 };
 
-export const WithTusConcatenation = () => {
+export const WithTusConcatenation = (): Element<"div"> => {
 	const inputRef = useRef(null);
 	const uploaderRef = useUploaderWithTus({ parallel: 2 });
 
@@ -104,7 +106,7 @@ export const WithTusConcatenation = () => {
 	</div>
 };
 
-export const WithFeatureDetection = () => {
+export const WithFeatureDetection = (): Element<"div"> => {
 	const inputRef = useRef(null);
 	const uploaderRef = useUploaderWithTus({
 		featureDetection: true,
@@ -134,4 +136,4 @@ export const WithFeatureDetection = () => {
 	</div>
 };
 
-export default getCsfExport(undefined, "TUS Sender", readme);
+export default (getCsfExport(undefined, "TUS Sender", readme): CsfExport);

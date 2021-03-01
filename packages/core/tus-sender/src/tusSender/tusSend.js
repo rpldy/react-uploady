@@ -1,7 +1,7 @@
 // @flow
 import { logger } from "@rpldy/shared";
 import { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
-import xhrSend, { MissingUrlError } from "@rpldy/sender";
+import xhrSend, { MissingUrlError, type SendMethod, type SendOptions } from "@rpldy/sender";
 import initTusUpload from "./initTusUpload";
 import { TUS_SENDER_TYPE } from "../consts";
 import doFeatureDetection from "../featureDetection";
@@ -42,7 +42,7 @@ const doUpload = (
 	};
 };
 
-export default (chunkedSender: ChunkedSender, tusState: TusState) => {
+export default (chunkedSender: ChunkedSender, tusState: TusState): SendMethod<ChunkedSendOptions> | SendMethod<SendOptions> => {
 	const tusSend = (
 		items: BatchItem[],
 		url: ?string,

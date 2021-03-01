@@ -5,10 +5,6 @@ export {
     CHUNKING_SUPPORT
 };
 
-export {
-    TUS_EXT
-} from "../src/consts";
-
 export interface TusOptions extends ChunkedOptions {
     version?: string;
     featureDetection?: boolean;

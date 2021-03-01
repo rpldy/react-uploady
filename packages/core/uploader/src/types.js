@@ -5,6 +5,7 @@ import type {
     BatchItem,
     Batch,
     Trigger,
+    Cancellable,
 } from "@rpldy/shared";
 
 import type { OnAndOnceMethod, OffMethod } from "@rpldy/life-events";
@@ -46,3 +47,17 @@ export type ItemsSender = {
 	send: (BatchItem[], Batch, CreateOptions) => SendResult,
 	on: OnAndOnceMethod,
 };
+
+export type UploaderProcessor = {|
+    abort: (id?: string) => void,
+    abortBatch: (batchId: string) => void,
+    addNewBatch: (
+        files: UploadInfo | Array<UploadInfo>,
+        uploaderId: string,
+        processOptions: CreateOptions
+    ) => any,
+    clearPendingBatches: () => void,
+    process: (batch: Batch, batchOptions?: CreateOptions) => void,
+    processPendingBatches: (uploadOptions: ?UploadOptions) => void,
+    runCancellable: Cancellable,
+|}

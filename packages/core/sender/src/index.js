@@ -1,8 +1,9 @@
 // @flow
 import getXhrSend from "./xhrSender/xhrSender";
 import { XHR_SENDER_TYPE } from "./consts";
+import type { SendMethod, SendOptions } from "./types";
 
-const send = getXhrSend();
+const send: SendMethod<SendOptions> = getXhrSend();
 
 export default send;
 

@@ -6,7 +6,15 @@ import { cleanUpFinishedBatches, incrementBatchFinishedCounter } from "./batchHe
 import type { UploadData, BatchItem } from "@rpldy/shared";
 import type { ProcessNextMethod, QueueState } from "./types";
 
-export const FILE_STATE_TO_EVENT_MAP = {
+export const FILE_STATE_TO_EVENT_MAP: {|
+  aborted: string,
+  added: string,
+  cancelled: string,
+  error: string,
+  finished: string,
+  pending: null,
+  uploading: string,
+|} = {
     [FILE_STATES.PENDING]: null,
     [FILE_STATES.ADDED]: UPLOADER_EVENTS.ITEM_START,
     [FILE_STATES.FINISHED]: UPLOADER_EVENTS.ITEM_FINISH,
@@ -21,7 +29,7 @@ type FinishData = { id: string, info: UploadData };
 const getIsFinalized = (item: BatchItem) =>
 	!!~ITEM_FINALIZE_STATES.indexOf(item.state);
 
-const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], next: ProcessNextMethod) => {
+const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], next: ProcessNextMethod): Promise<void> => {
     finishedData.forEach((itemData: FinishData) => {
         const state = queue.getState();
         const { id, info } = itemData;

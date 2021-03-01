@@ -18,7 +18,7 @@ const BATCH_FINISHED_STATES = [
     BATCH_STATES.FINISHED
 ];
 
-const getBatchFromState = (state: State, id: string) =>
+const getBatchFromState = (state: State, id: string): Batch =>
     state.batches[id].batch;
 
 const getBatch = (queue: QueueState, id: string): Batch => {
@@ -83,7 +83,7 @@ const isNewBatchStarting = (queue: QueueState, itemId: string): boolean => {
     return queue.getState().currentBatch !== batch.id;
 };
 
-const loadNewBatchForItem = (queue: QueueState, itemId: string) => {
+const loadNewBatchForItem = (queue: QueueState, itemId: string): Promise<boolean> => {
     const batch = getBatchFromItemId(queue, itemId);
 
     return queue.runCancellable(UPLOADER_EVENTS.BATCH_START, batch)

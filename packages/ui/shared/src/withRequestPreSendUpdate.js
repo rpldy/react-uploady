@@ -3,9 +3,11 @@ import React, { useLayoutEffect, useState } from "react";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import useUploadyContext from "./useUploadyContext";
 
+import type { Node } from "React";
+
 type Props = { id: string };
 
-export default (Component: React$ComponentType<any>) =>
+export default (Component: React$ComponentType<any>): ((props: Props) => Node) =>
 	(props: Props) => {
 		const context = useUploadyContext();
 		const { id } = props;

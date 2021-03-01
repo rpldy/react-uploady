@@ -3,7 +3,7 @@ import type { Trigger, Updater } from "./types";
 
 type Outcome<T> = Promise<?T> | Updater<?T>;
 
-const isEmpty = (val) =>
+const isEmpty = (val: any) =>
 	(val === null || val === undefined);
 
 export default <T>(trigger: Trigger<T>, event?: string, ...args?: mixed[]): Outcome<T> => {

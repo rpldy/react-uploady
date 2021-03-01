@@ -4,7 +4,7 @@ import type { SendOptions } from "@rpldy/sender";
 import type { UploadData } from "@rpldy/shared";
 import { FILE_STATES } from "@rpldy/shared";
 
-const getUploadMetadata = (sendOptions: SendOptions) => {
+const getUploadMetadata = (sendOptions: SendOptions): void | string => {
 	const keys = sendOptions.params && Object.keys(sendOptions.params);
 
 	return keys?.length ?

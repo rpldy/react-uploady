@@ -5,7 +5,7 @@ import createUpload from "./createUpload";
 import resumeUpload from "./resumeUpload";
 import handleTusUpload from "../handleTusUpload";
 
-import type { BatchItem } from "@rpldy/shared";
+import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { ChunkedSender, ChunkedSendOptions, OnProgress } from "@rpldy/chunked-sender";
 import type { TusState, State } from "../../types";
 
@@ -28,7 +28,7 @@ export default (items: BatchItem[],
 				tusState: TusState,
 				chunkedSender: ChunkedSender,
 				parallelIdentifier: ?string = null
-) => {
+): {|abort: () => boolean, request: Promise<UploadData>|} => {
 	const { options } = tusState.getState(),
 		//parallel upload when we're seeing the batch item, not the parallel chunk items
 		isParallel = +options.parallel > 1 && !parallelIdentifier,

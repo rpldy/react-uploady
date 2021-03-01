@@ -4,7 +4,7 @@ import { useUploadyContext } from "@rpldy/shared-ui";
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadUrlInputProps, UploadMethod } from "./types";
 
-const UploadUrlInput = forwardRef<UploadUrlInputProps, ?HTMLInputElement>(
+const UploadUrlInput: React$AbstractComponent<UploadUrlInputProps, ?HTMLInputElement> = forwardRef<UploadUrlInputProps, ?HTMLInputElement>(
     (props: UploadUrlInputProps, ref) => {
         const inputRef = useRef<?HTMLInputElement>(null);
         const context = useUploadyContext();

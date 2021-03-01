@@ -8,7 +8,7 @@ let isDebug;
 const isEnvDebug =  () =>
     !isProduction() && process.env.DEBUG;
 
-const isDebugOn = () => {
+const isDebugOn = (): boolean | string => {
 	if (typeof isDebug !== "boolean") {
         isDebug = isEnvDebug() ||
             (hasWindow() &&

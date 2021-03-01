@@ -8,6 +8,7 @@ import type {
     PreviewType,
     MandatoryPreviewOptions,
     PreviewOptions,
+    PreviewItem
 } from "./types";
 
 const getWithMandatoryOptions = (options: ?PreviewOptions): MandatoryPreviewOptions => {
@@ -17,13 +18,14 @@ const getWithMandatoryOptions = (options: ?PreviewOptions): MandatoryPreviewOpti
 	};
 };
 
-const getFallbackUrl = (fallbackProp: ?string | FallbackMethod, file: Object) => {
+const getFallbackUrlData = (fallbackProp: ?string | FallbackMethod, file: Object) : ?PreviewItem => {
     let data = isFunction(fallbackProp) ?
         fallbackProp(file) :
         fallbackProp;
 
     if (typeof data === "string") {
         data = {
+            id: "",
             url: data,
 			name: file.name,
             type: PREVIEW_TYPES.IMAGE,
@@ -33,7 +35,12 @@ const getFallbackUrl = (fallbackProp: ?string | FallbackMethod, file: Object) =>
     return data;
 };
 
-const getFileObjectUrlByType = (type: PreviewType, mimeTypes: string[], max: number, file: Object) => {
+const getFileObjectUrlByType = (
+    type: PreviewType,
+    mimeTypes: string[],
+    max: number,
+    file: Object
+): void | {| name: any, type: PreviewType, url: string |} => {
     let data;
 
     if (mimeTypes && ~mimeTypes.indexOf(file.type)) {
@@ -49,7 +56,8 @@ const getFileObjectUrlByType = (type: PreviewType, mimeTypes: string[], max: num
     return data;
 };
 export {
+    isFunction,
     getWithMandatoryOptions,
-    getFallbackUrl,
+    getFallbackUrlData,
     getFileObjectUrlByType,
 };

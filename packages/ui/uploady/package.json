@@ -37,7 +37,7 @@
     "react-dom": ">=16.8.x"
   },
   "devDependencies": {
-    "flow-bin": "^0.133.0"
+    "flow-bin": "^0.145.0"
   },
   "publishConfig": {
     "access": "public"

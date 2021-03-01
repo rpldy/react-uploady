@@ -15,6 +15,8 @@ export {
     useRetryListener,
 };
 
-
-
-
+export type {
+    RetryEventData,
+    RetryEventCallback,
+    RetryListenerHook,
+} from "./types";

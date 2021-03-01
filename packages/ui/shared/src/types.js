@@ -1,8 +1,22 @@
 // @flow
 import type { Node } from "react";
-import type { UploadInfo, UploadOptions } from "@rpldy/shared";
+import type { UploadInfo, UploadOptions, Batch, BatchItem } from "@rpldy/shared";
 import type { CreateOptions } from "@rpldy/uploader";
 import type { OnAndOnceMethod, OffMethod, EventCallback } from "@rpldy/life-events";
+
+export type PreSendData = { items: BatchItem[]; options: CreateOptions };
+
+type EventHook<T> = (cb: (obj: T) => void, id?: string) => void;
+type CancellableHook<T> = (cb: (obj: T) => boolean | void, id?: string) => void;
+type EventHookWithState<T> = (cb?: (obj: T) => void, id?: string) => T;
+
+export type ItemEventHook = EventHook<BatchItem>;
+export type ItemCancellableEventHook = CancellableHook<BatchItem>;
+export type ItemEventHookWithState = EventHookWithState<BatchItem>;
+
+export type BatchEventHook = EventHook<Batch>;
+export type BatchCancellableEventHook = CancellableHook<Batch>;
+export type BatchEventHookWithState = EventHookWithState<Batch>;
 
 export type RefObject<T: mixed> = {current: null | void | T};
 

@@ -23,7 +23,7 @@ const isChunkingSupported = (): boolean => {
     return !!sliceMethod;
 };
 
-const CHUNKING_SUPPORT = isChunkingSupported();
+const CHUNKING_SUPPORT: boolean = isChunkingSupported();
 
 const getChunkDataFromFile = (file: FileLike, start: number, end: number): ?Blob => {
     const blob = sliceMethod?.call(file, start, end, file.type);

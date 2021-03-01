@@ -18,11 +18,14 @@ import {
     uploadUrlInputCss,
     cropImage,
     getCsfExport,
+    type CsfExport,
 } from "../../../story-helpers";
 import UploadPreview, { PREVIEW_TYPES } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
+
+import type {Node} from "React";
 
 const StyledUploadButton = styled(UploadButton)`
 	${uploadButtonCss}
@@ -35,7 +38,7 @@ const usePreviewStorySetup = () => {
     return {...setup, maxImageSize};
 };
 
-export const Simple = () => {
+export const Simple = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize, maxImageSize } = usePreviewStorySetup();
 
     return <Uploady
@@ -75,7 +78,7 @@ const CustomImagePreview = (props) => {
     return <PreviewImage src={props.url} completed={completed}/>;
 };
 
-export const WithProgress = () => {
+export const WithProgress = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     const getPreviewProps = useCallback((item) => ({ id: item.id, }), []);
@@ -99,7 +102,7 @@ export const WithProgress = () => {
     </Uploady>;
 };
 
-export const WithCustomProps = () => {
+export const WithCustomProps = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     const getPreviewProps = useCallback((item, url, type) => {
@@ -135,7 +138,7 @@ const Button  = styled.button`
   ${uploadButtonCss}
 `;
 
-export const WithUrls = () => {
+export const WithUrls = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
     const uploadRef = useRef(null);
 
@@ -174,7 +177,7 @@ const PreviewContainer = styled.div`
 	}
 `;
 
-export const WithRememberPrevious = () => {
+export const WithRememberPrevious = (): Node => {
 	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
 	return <Uploady
@@ -236,7 +239,7 @@ const PreviewsWithClear = () => {
 	</>;
 };
 
-export const WithPreviewMethods = () => {
+export const WithPreviewMethods = (): Node => {
 	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
 	return <Uploady
@@ -332,7 +335,7 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 		</>;
 });
 
-export const WithCrop = () => {
+export const WithCrop = (): Node => {
 	const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
 	const previewMethodsRef = useRef();
 
@@ -357,20 +360,4 @@ export const WithCrop = () => {
 	</Uploady>;
 };
 
-// export default {
-//     component: UploadPreview,
-//     title: "Upload Preview",
-//     decorators: [withKnobs],
-//     parameters: {
-//         readme: {
-//             sidebar: readme,
-//         },
-//         options: {
-//             showPanel: true,
-//             //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
-//             theme: {}
-//         },
-//     },
-// };
-
-export default getCsfExport(UploadPreview, "Upload Preview", readme);
+export default (getCsfExport(UploadPreview, "Upload Preview", readme): CsfExport);

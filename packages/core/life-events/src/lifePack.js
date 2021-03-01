@@ -7,7 +7,7 @@ import { LE_PACK_SYM } from "./consts";
  * @param creator - a function to return data that will become parameters for the event handler
  * array returned means more than 1 parameter. Any other value will be added to an array as a single param
  */
-const createLifePack = (creator: () => any) => {
+const createLifePack = (creator: () => any): {|resolve: () => Array<any>|} => {
     const lp = {
         resolve: (): any[] => [].concat(creator()),
     };

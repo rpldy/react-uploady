@@ -25,6 +25,8 @@ const runWithEnv = (pkgeName, env) => {
     } else {
         console.log(chalk.green(`___ finished building ${pkgeName} (${env}) ___`));
     }
+
+    return result.code;
 };
 
 const build = () => {

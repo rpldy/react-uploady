@@ -1,25 +1,24 @@
 import React from "react";
 import usePreviewsLoader from "../usePreviewsLoader";
-import { getFallbackUrl } from "../utils";
+import { getFallbackUrlData } from "../utils";
 import UploadPreview from "../UploadPreview";
 import { PREVIEW_TYPES } from "../consts";
 
 jest.mock("../usePreviewsLoader", () => jest.fn());
 
 jest.mock("../utils", () => ({
-    getFallbackUrl: jest.fn(),
+    getFallbackUrlData: jest.fn(),
 }));
 
 describe("UploadPreview tests", () => {
 
     beforeEach(() => {
         clearJestMocks(
-            getFallbackUrl,
+            getFallbackUrlData,
         );
     });
 
     it("should render with simple img preview", () => {
-
         usePreviewsLoader.mockReturnValueOnce({previews: [
             { url: "test.com", props: { "data-test": "123" } },
             { url: "test2.com", props: { "data-test": "456" } },
@@ -37,7 +36,6 @@ describe("UploadPreview tests", () => {
     });
 
     it("should render with simple video preview", () => {
-
         usePreviewsLoader.mockReturnValueOnce({previews: [{
             url: "video.mp4",
             type: PREVIEW_TYPES.VIDEO,
@@ -51,7 +49,6 @@ describe("UploadPreview tests", () => {
     });
 
     it("should render with PreviewComponent from props", () => {
-
         const PreviewComp = (props) => {
 			// eslint-disable-next-line no-unused-vars
             const { url, type, isFallback, ...previewProps } = props;
@@ -90,19 +87,18 @@ describe("UploadPreview tests", () => {
         const wrapper = mount(<UploadPreview
             fallbackUrl={fbUrl}/>);
 
-        getFallbackUrl.mockReturnValueOnce({ url: fbUrl });
+        getFallbackUrlData.mockReturnValueOnce({ url: fbUrl });
 
         const img = { src: previewUrl };
         wrapper.find("img").props().onError({ target: img });
         expect(img.src).toBe(fbUrl);
-        expect(getFallbackUrl).toHaveBeenCalledWith(fbUrl, previewUrl);
+        expect(getFallbackUrlData).toHaveBeenCalledWith(fbUrl, previewUrl);
 
         wrapper.find("img").props().onError({ target: img });
         expect(img.src).toBe(fbUrl);
     });
 
 	it("should provide methods ref and call onPreviewsChanged", () => {
-
 		const previews =  [
 			{ url: "test.com", props: { "data-test": "123" } },
 			{ url: "test2.com", props: { "data-test": "456" } },
@@ -125,7 +121,6 @@ describe("UploadPreview tests", () => {
 	});
 
 	it("should provide isFallback to custom preview component", () => {
-
 		usePreviewsLoader.mockReturnValueOnce({previews: [{isFallback: true, url: "fallback.com"}]});
 
 		const PreviewComp = (props) => {

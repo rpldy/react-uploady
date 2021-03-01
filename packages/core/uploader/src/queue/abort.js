@@ -11,7 +11,7 @@ import processFinishedRequest from "./processFinishedRequest";
 import type { BatchItem } from "@rpldy/shared";
 import type { ProcessNextMethod, QueueState } from "./types";
 
-const abortNonUploadingItem = (queue, item: BatchItem, next) => {
+const abortNonUploadingItem = (queue, item: BatchItem, next: ProcessNextMethod) => {
     logger.debugLog(`uploader.queue: aborting ${item.state} item  - `, item);
 
     //manually finish request for item that hasnt reached the sender yet
@@ -37,7 +37,10 @@ const callAbortOnItem = (queue: QueueState, id: string, next: ProcessNextMethod)
         item = state.items[id],
         itemState = item?.state;
 
+    //$FlowIssue[prop-missing]
     return ITEM_STATE_ABORTS[itemState] ?
+        //$FlowExpectedError[extra-arg]
+        //$FlowIssue[prop-missing]
         ITEM_STATE_ABORTS[itemState](queue, item, next) : false;
 };
 

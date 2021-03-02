@@ -25,6 +25,30 @@ It makes it easy to use retry from a React UI application.
    $ npm i @rpldy/uploady @rpldy/retry-hooks
 ``` 
 
+## Enabling Retry
+
+To enable retries for your Uploady instance, you need to use the provided (uploader enhancer): `retryEnhancer`.
+
+```javascript
+import Uploady from "@rpldy/uploady";
+import retryEnhancer from "@rpldy/retry-hooks";
+import UploadButton from "@rpldy/upload-button";
+
+const App = () => {
+    return <Uploady 
+              destination={{ url: "my-server.com/upload" }}
+              enhancer={retryEnhancer}
+           >
+              <UploadButton/>
+           </Uploady>;               
+};
+
+```
+
+This will add the retry capability for failed uploads. 
+
+See below how to use hooks in order to trigger a retry
+
 ## Events
 
 Retry related events.

@@ -25,8 +25,8 @@ export {
     generateUploaderEventHook,
     generateUploaderEventHookWithState,
     logWarning,
-    markAsUploadyComponent,
-    getIsUploadyComponent,
+    markAsUploadOptionsComponent,
+    getIsUploadOptionsComponent,
 } from "./utils";
 
 export { default as assertContext } from "./assertContext";

@@ -4,12 +4,12 @@ describe("With Event Hooks", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadButton", "with-event-hooks");
+        cy.visitStory("uploadButton", "with-event-hooks&knob-mock send delay_Upload Destination=100");
     });
 
     it("should use event hooks", () => {
         uploadFile(fileName, () => {
-            cy.wait(1000);
+            cy.wait(200);
 
             cy.get("ul[data-test='hooks-events']")
                 .should("be.visible")

@@ -1,6 +1,6 @@
 // @flow
 import React, { forwardRef } from "react";
-import { getIsUploadyComponent } from "@rpldy/shared-ui";
+import { getIsUploadOptionsComponent } from "@rpldy/shared-ui";
 import usePasteHandler from "./usePasteHandler";
 
 import type { ComponentType } from "react";
@@ -11,7 +11,7 @@ const withPasteUpload = (Component: ComponentType<any>): React$AbstractComponent
         const { id, className, children, onPasteUpload, extraProps, ...uploadOptions } = props;
         const onPaste = usePasteHandler(uploadOptions, onPasteUpload);
 
-        const isUploadyComp = getIsUploadyComponent(Component);
+        const isUploadyComp = getIsUploadOptionsComponent(Component);
 
         const compExtraProps = isUploadyComp ?
             //when wrapping an Uploady component (ex: UploadButton), need pass it all upload options

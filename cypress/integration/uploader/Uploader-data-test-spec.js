@@ -4,12 +4,12 @@ describe("Uploader - Event data test", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploader", "test-events-data");
+        cy.visitStory("uploader", "test-events-data&knob-mock send delay_Upload Destination=100");
     });
 
     it("should upload and trigger events with non-proxy data", () => {
         uploadFile(fileName, () =>{
-            cy.wait(1500);
+            cy.wait(200);
             cy.storyLog().assertFileItemStartFinish(fileName, 2);
 
             cy.storyLog().customAssertLogEntry("###BATCH-ADD", (logLine) => {

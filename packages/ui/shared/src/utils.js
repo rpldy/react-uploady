@@ -1,7 +1,7 @@
 // @flow
 import { useEffect, useState, useCallback } from "react";
 import { isProduction } from "@rpldy/shared";
-import { UPLOADY_COMP } from "./consts";
+import { UPLOAD_OPTIONS_COMP } from "./consts";
 import useUploadyContext from "./useUploadyContext";
 
 type Callback = (...args?: any) => ?any;
@@ -56,18 +56,18 @@ const logWarning = (condition: ?any, msg: string) => {
 	}
 };
 
-const markAsUploadyComponent = (Component: React$ComponentType<any>): void => {
-    Component[UPLOADY_COMP] = true;
+const markAsUploadOptionsComponent = (Component: React$ComponentType<any>): void => {
+    Component[UPLOAD_OPTIONS_COMP] = true;
 };
 
-const getIsUploadyComponent = (Component: any): boolean =>
-    Component.target?.[UPLOADY_COMP] === true ||
-    Component.render?.[UPLOADY_COMP] === true;
+const getIsUploadOptionsComponent = (Component: any): boolean =>
+    Component.target?.[UPLOAD_OPTIONS_COMP] === true ||
+    Component.render?.[UPLOAD_OPTIONS_COMP] === true;
 
 export {
 	generateUploaderEventHook,
 	generateUploaderEventHookWithState,
 	logWarning,
-    markAsUploadyComponent,
-    getIsUploadyComponent,
+    markAsUploadOptionsComponent,
+    getIsUploadOptionsComponent,
 };

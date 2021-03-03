@@ -1,7 +1,7 @@
 // @flow
 import React, { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
 import { getFilesFromDragEvent } from "html-dir-content";
-import { useUploadyContext, markAsUploadyComponent } from "@rpldy/shared-ui";
+import { useUploadyContext, markAsUploadOptionsComponent } from "@rpldy/shared-ui";
 
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadDropZoneProps } from "./types";
@@ -83,6 +83,6 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
         </div>;
     });
 
-markAsUploadyComponent(UploadDropZone);
+markAsUploadOptionsComponent(UploadDropZone);
 
 export default UploadDropZone;

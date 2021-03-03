@@ -7,8 +7,7 @@ describe("UploadPaste - Window Listener", () => {
 
     it("should upload pasted file from anywhere on the page", () => {
         cy.get("body")
-            .pasteFile(fileName)
-
+            .pasteFile(fileName);
 
         cy.wait(200);
         cy.storyLog().assertFileItemStartFinish(fileName, 1);

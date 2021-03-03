@@ -1,1 +1,1 @@
-export const UPLOADY_COMP = Symbol.for("rpldy_component");
+export const UPLOAD_OPTIONS_COMP = Symbol.for("rpldy_component");

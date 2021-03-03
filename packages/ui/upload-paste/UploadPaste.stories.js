@@ -108,18 +108,18 @@ const ElementPaste = (props) => {
     const pasteUpload = usePasteUpload(props, containerRef, onPasteUpload);
 
     return <>
-        <SimpleContainer ref={containerRef}>
+        <SimpleContainer id="element-paste" ref={containerRef}>
             Click here & Paste a file
         </SimpleContainer>
         <PasteToggle {...pasteUpload} />
     </>;
 };
 
-const ProcessPending = ({ id = "process-pending", title = "PROCESS PENDING" }) => {
+const ProcessPending = () => {
     const { processPending } = useUploady();
 
-    return <button id={id}
-                   onClick={processPending}>{title}</button>;
+    return <button id="process-pending"
+                   onClick={processPending}>PROCESS PENDING</button>;
 };
 
 export const WithElementPaste = (): Node => {
@@ -131,7 +131,7 @@ export const WithElementPaste = (): Node => {
                     enhancer={enhancer}
                     grouped={grouped}
                     maxGroupSize={groupSize}>
-        <ElementPaste autoUpload={false}/>
+        <ElementPaste autoUpload={false} params={{ test: "paste" }}/>
         <br/>
         <ProcessPending/>
         <StoryUploadProgress/>
@@ -153,7 +153,7 @@ export const WithPasteDropZone = (): Node => {
                     enhancer={enhancer}
                     grouped={grouped}
                     maxGroupSize={groupSize}>
-        <PasteUploadDropZone params={{ test: "paste" }}>
+        <PasteUploadDropZone id="upload-drop-zone" params={{ test: "paste" }}>
             You can drop a file here
             <br/>
             OR
@@ -194,7 +194,7 @@ export const WithPasteUploadButton = (): Node => {
                     enhancer={enhancer}
                     grouped={grouped}
                     maxGroupSize={groupSize}>
-        <PasteUploadButton params={{ test: "paste" }} extraProps={{ tabIndex: 1 }}>
+        <PasteUploadButton id="upload-button" params={{ test: "paste" }} extraProps={{ tabIndex: 1 }}>
             Click to upload
             <br/>
             OR

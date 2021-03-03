@@ -12,17 +12,10 @@ const dispatchPasteEvent = (element, dataTransfer) => {
 
 Cypress.Commands.add("pasteFile", { prevSubject: true },
     (subject, fixtureName, times = 1, mimeType = "image/jpeg") => {
-
         cy.window({ log: false }).then((window) => {
             cy.fixture(fixtureName, "binary")
                 .then(Cypress.Blob.binaryStringToBlob)
                 .then((fileContent) => {
-
-                    console.log("!!!!!!!!!!! PASTING !!!!!!! ", {
-                        fixtureName,
-                        fileContent,
-                    });
-
                     const dataTransfer = new window.DataTransfer();
 
                     new Array(times)

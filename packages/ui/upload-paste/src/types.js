@@ -20,6 +20,6 @@ export type PasteProps = {|
     ...PasteCompProps,
 |};
 
-export type PasteUploadHookResult = { toggle: () => boolean, getIsEnabled: boolean};
+export type PasteUploadHookResult = { toggle: () => boolean, getIsEnabled: () => boolean};
 
-export type PasteUploadHook = (UploadOptions, ?DOMElement, PasteUploadHandler) => PasteUploadHookResult;
+export type PasteUploadHook = (UploadOptions, ?HTMLElement, PasteUploadHandler) => PasteUploadHookResult;

@@ -5,7 +5,7 @@ import { useUploady } from "@rpldy/shared-ui";
 import type { UploadOptions } from "@rpldy/shared";
 import type { PasteUploadHandler } from "./types";
 
-const usePasteHandler = (uploadOptions: ?UploadOptions, onPasteUpload: ?PasteUploadHandler) => {
+const usePasteHandler = (uploadOptions: ?UploadOptions, onPasteUpload: ?PasteUploadHandler): ClipboardEventListener => {
     const { upload } = useUploady();
 
     //using ref so paste callback can stay memoized
@@ -13,11 +13,11 @@ const usePasteHandler = (uploadOptions: ?UploadOptions, onPasteUpload: ?PasteUpl
     uploadOptionsRef.current = uploadOptions;
 
     return useCallback((e) => {
-        const count = e.clipboardData?.files?.length;
+        const files = e.clipboardData?.files;
 
-        if (count) {
-            upload(e.clipboardData.files, uploadOptionsRef.current);
-            onPasteUpload?.({ count });
+        if (files?.length) {
+            upload(files, uploadOptionsRef.current);
+            onPasteUpload?.({ count: files.length });
         }
     }, [upload, uploadOptionsRef, onPasteUpload]);
 };

@@ -36,7 +36,7 @@ const SimpleContainer = styled.div`
     }
 `;
 
-const PasteArea = withPasteUpload(SimpleContainer)
+const PasteArea = withPasteUpload(SimpleContainer);
 
 export const Simple = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();

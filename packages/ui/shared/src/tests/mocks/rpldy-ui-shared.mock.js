@@ -22,6 +22,9 @@ const useUploadOptions = jest.fn();
 
 const NoDomUploady = jest.fn(({ children }) => <div>{children}</div>);
 
+const markAsUploadOptionsComponent = jest.fn();
+const getIsUploadOptionsComponent = jest.fn();
+
 const uiSharedMock = {
     UploadyContext: UploadyContextMock,
     NoDomUploady,
@@ -44,6 +47,8 @@ const uiSharedMock = {
     useUploader,
     useUploadOptions,
     logWarning,
+    markAsUploadOptionsComponent,
+    getIsUploadOptionsComponent,
 };
 
 jest.doMock("@rpldy/shared-ui", () => uiSharedMock);

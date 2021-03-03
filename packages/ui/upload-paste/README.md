@@ -11,8 +11,8 @@
 
 # Upload Paste
 
-The main feature is the `withPaste` HOC, which allows any component to become a trigger of paste-to-upload.
-A user pasting (ctrl/cmd+v) a file while focused on the element will trigger an upload 
+The main feature is the `withPasteUpload` HOC, which allows any component to become a trigger of paste-to-upload.
+A user pasting (ctrl/cmd+v) a file or files while focused on the element will trigger an upload 
 
 
 ## Installation
@@ -25,7 +25,11 @@ A user pasting (ctrl/cmd+v) a file while focused on the element will trigger an 
    $ npm i @rpldy/uploady @rpldy    /upload-paste   
 ``` 
 
-## Props
+## withPasteUpload
+
+_withPasteUpload(ComponentType<any>) => React.FC<PasteProps>_
+
+### PasteProps
 
 | Name (* = mandatory) | Type          | Default       | Description
 | --------------       | ------------- | ------------- | -------------
@@ -36,11 +40,77 @@ A user pasting (ctrl/cmd+v) a file while focused on the element will trigger an 
 | ref            | React ref         | undefined | will be passed to the button element to acquire a ref
 | onPasteUpload  | [PasteUploadHandler](src/types.js#L8) | undefined | function called when paste to upload occurs
 
+In addition, most [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to the component returned from calling withPasteUpload.
+In order to override configuration passed to the parent Uploady component.
+See [Uploady documentation](../uploady#props) for detailed list of upload options.
 
 ## Example
 
+```javascript
+import React from "react";
+import styled from "styled-components";
+import Uploady from "@rpldy/uploady";
+import withPasteUpload from "@rpldy/upload-paste";
+
+const SimpleContainer = styled.div`   
+    width: 400px;
+    height: 400px;   
+`;
+
+const PasteArea = withPasteUpload(SimpleContainer);
+
+const MyApp = () => {
+    const onPasteUpload = useCallback(({ count }) => {
+        console.log("PASTE-TO-UPLOAD file count: ", count);
+    }, []);
+    
+	return <Uploady destination={{ url: "my-server.com/upload" }}>
+        <PasteArea onPasteUpload={onPasteUpload} autoUpload={false}>
+            Paste file here to upload
+        </PasteArea>
+    </Uploady>;
+};
+
+```
 
 ## Hooks
 
 ### usePasteUpload
 
+_(uploadOptions: UploadOptions, element: React.RefObject<HTMLHtmlElement>, onPasteUpload: PasteUploadHandler) =>
+{ toggle: () => boolean, getIsEnabled: () => boolean }_
+
+The hook makes it possible to enable paste listening for file(s) on the window (so paste anywhere) or on a specific element (by passing a ref)
+
+
+```javascript
+import React from "react";
+import Uploady from "@rpldy/uploady";
+import { usePasteUpload } from "@rpldy/upload-paste";
+
+const ElementPaste = (props) => {
+    const containerRef = useRef(null);
+
+    const onPasteUpload = useCallback(({ count }) => {
+        console.log("ELEMENT PASTE-TO-UPLOAD files: ", count);
+    }, []);
+
+    const { toggle, getIsEnabled } = usePasteUpload(props, containerRef, onPasteUpload);
+
+    //toggle can be used in a button click handler to turn paste listening on/off
+    
+    return <>
+        <div ref={containerRef}>
+            Click here & Paste a file
+            Paste is: {getIsEnabled() ? "enabled" : "disabled"}
+        </div>
+    </>;
+};
+
+
+const MyApp = () => {
+    return <Uploady destination={{ url: "my-server.com/upload" }}>
+        <ElementPaste autoUpload={false} params={{ test: "paste" }}/>
+    </Uploady>;
+};
+```

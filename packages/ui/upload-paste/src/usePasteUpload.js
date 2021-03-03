@@ -15,7 +15,7 @@ const unregisterHandler = (element, handler) => {
     target.removeEventListener("paste", handler);
 };
 
-const usePasteUpload = (uploadOptions: UploadOptions, element?: PasteElementRef, onPasteUpload: PasteUploadHandler): PasteUploadHookResult => {
+const usePasteUpload = (uploadOptions: UploadOptions, element?: PasteElementRef, onPasteUpload?: PasteUploadHandler): PasteUploadHookResult => {
     const enabledRef = useRef(true);
 
     const onPaste = usePasteHandler(uploadOptions, onPasteUpload);

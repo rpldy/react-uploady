@@ -1,4 +1,4 @@
-export { default } from "./withPaste";
+export { default } from "./withPasteUpload";
 
 export { default as usePasteUpload } from "./usePasteUpload";
 

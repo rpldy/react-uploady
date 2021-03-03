@@ -23,3 +23,5 @@ export type PasteProps = {|
 export type PasteUploadHookResult = { toggle: () => boolean, getIsEnabled: () => boolean};
 
 export type PasteUploadHook = (UploadOptions, ?HTMLElement, PasteUploadHandler) => PasteUploadHookResult;
+
+export type PasteElementRef = { current: HTMLElement | null };

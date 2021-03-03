@@ -9,12 +9,13 @@
         "components": {
             "uploader": "uploader",
             "uploady": "uploady",
-            "uploadButton": "upload-button",
             "chunkedUploady": "chunked-uploady",
             "retryHooks": "retry-hooks",
+            "uploadButton": "upload-button",
             "uploadDropZone": "upload-drop-zone",
             "uploadUrlInput": "upload-url-input",
             "uploadPreview": "upload-preview",
+            "uploadPaste": "upload-paste",
             "tusUploady": "tus-uploady",
             "nativeUploady": "native-uploady"
         }

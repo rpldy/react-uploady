@@ -1,6 +1,6 @@
 // @flow
 import React, { forwardRef, useCallback, useRef } from "react";
-import { useUploadyContext } from "@rpldy/shared-ui";
+import { markAsUploadyComponent, useUploadyContext } from "@rpldy/shared-ui";
 
 import type { ComponentType } from "react";
 import type { UploadOptions } from "@rpldy/shared";
@@ -29,6 +29,8 @@ const asUploadButton = (Component: ComponentType<any>): React$AbstractComponent<
             {...extraProps}
         />;
     };
+
+    markAsUploadyComponent(AsUploadButton);
 
     return forwardRef<UploadButtonProps, mixed | React$ElementType>(AsUploadButton);
 };

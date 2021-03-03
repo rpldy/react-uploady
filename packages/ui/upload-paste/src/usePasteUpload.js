@@ -3,19 +3,19 @@ import { useEffect, useRef, useCallback } from "react";
 import usePasteHandler from "./usePasteHandler";
 
 import type { UploadOptions } from "@rpldy/shared";
-import type { PasteUploadHandler, PasteUploadHookResult } from "./types";
+import type { PasteUploadHandler, PasteUploadHookResult, PasteElementRef } from "./types";
 
 const registerHandler = (element, handler) => {
-    const target = element || window;
+    const target = element?.current || window;
     target.addEventListener("paste", handler);
 };
 
 const unregisterHandler = (element, handler) => {
-    const target = element || window;
+    const target = element?.current || window;
     target.removeEventListener("paste", handler);
 };
 
-const usePasteUpload = (uploadOptions: UploadOptions, element?: HTMLElement, onPasteUpload: PasteUploadHandler): PasteUploadHookResult => {
+const usePasteUpload = (uploadOptions: UploadOptions, element?: PasteElementRef, onPasteUpload: PasteUploadHandler): PasteUploadHookResult => {
     const enabledRef = useRef(true);
 
     const onPaste = usePasteHandler(uploadOptions, onPasteUpload);

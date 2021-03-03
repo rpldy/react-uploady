@@ -1,25 +1,26 @@
 // @flow
 import React, {
-    // Component,
-    // useMemo,
     useState,
     useRef,
     useCallback,
 } from "react";
 import styled from "styled-components";
-import Uploady from "@rpldy/uploady";
+import Uploady, { useUploady } from "@rpldy/uploady";
+import UploadDropZone from "@rpldy/upload-drop-zone";
+import { asUploadButton } from "@rpldy/upload-button";
 import {
     useStoryUploadySetup,
     StoryUploadProgress,
+    dropZoneCss,
     getCsfExport,
     type CsfExport,
 } from "../../../story-helpers";
-import withPaste, { usePasteUpload } from "./src";
+import withPasteUpload, { usePasteUpload } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type { Node, Element } from "React"
+import type { Node } from "React"
 
 const SimpleContainer = styled.div`
     top: 200px;
@@ -35,7 +36,7 @@ const SimpleContainer = styled.div`
     }
 `;
 
-const PasteArea = withPaste(SimpleContainer)
+const PasteArea = withPasteUpload(SimpleContainer)
 
 export const Simple = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
@@ -49,23 +50,16 @@ export const Simple = (): Node => {
                     destination={destination}
                     enhancer={enhancer}
                     grouped={grouped}
-                    maxGroupSize={groupSize}
-                    fileInputId={"rpldyInput"}>
+                    maxGroupSize={groupSize}>
 
-        <PasteArea onPasteUpload={onPasteUpload}>
+        <PasteArea onPasteUpload={onPasteUpload} id="paste-area">
             Click here & Paste a file
         </PasteArea>
         <StoryUploadProgress/>
     </Uploady>;
 };
 
-const WindowPaste = () => {
-    const onPasteUpload = useCallback(({ count }) => {
-        console.log("WINDOW PASTE-TO-UPLOAD files: ", count);
-    }, []);
-
-    const { toggle, getIsEnabled } = usePasteUpload(null, null, onPasteUpload);
-
+const PasteToggle = ({ toggle, getIsEnabled }) => {
     const [isEnabled, setIsEnabled] = useState(getIsEnabled);
 
     const onToggleClick = useCallback(() => {
@@ -76,6 +70,16 @@ const WindowPaste = () => {
         <h2>Paste Handling {isEnabled ? "Enabled" : "Disabled"}</h2>
         <button onClick={onToggleClick}>Toggle Paste Handling</button>
     </>;
+} ;
+
+const WindowPaste = () => {
+    const onPasteUpload = useCallback(({ count }) => {
+        console.log("WINDOW PASTE-TO-UPLOAD files: ", count);
+    }, []);
+
+    const pasteUpload = usePasteUpload(null, null, onPasteUpload);
+
+    return <PasteToggle {...pasteUpload} />;
 };
 
 export const WithWindowPaste = (): Node => {
@@ -86,8 +90,7 @@ export const WithWindowPaste = (): Node => {
                     destination={destination}
                     enhancer={enhancer}
                     grouped={grouped}
-                    maxGroupSize={groupSize}
-                    fileInputId={"rpldyInput"}>
+                    maxGroupSize={groupSize}>
 
         <h1>paste anywhere to initiate upload (registered on window)</h1>
         <WindowPaste/>
@@ -95,8 +98,28 @@ export const WithWindowPaste = (): Node => {
     </Uploady>;
 };
 
-const ElementPaste = () => {
+const ElementPaste = (props) => {
+    const containerRef = useRef(null);
 
+    const onPasteUpload = useCallback(({ count }) => {
+        console.log("ELEMENT PASTE-TO-UPLOAD files: ", count);
+    }, []);
+
+    const pasteUpload = usePasteUpload(props, containerRef, onPasteUpload);
+
+    return <>
+        <SimpleContainer ref={containerRef}>
+            Click here & Paste a file
+        </SimpleContainer>
+        <PasteToggle {...pasteUpload} />
+    </>;
+};
+
+const ProcessPending = ({ id = "process-pending", title = "PROCESS PENDING" }) => {
+    const { processPending } = useUploady();
+
+    return <button id={id}
+                   onClick={processPending}>{title}</button>;
 };
 
 export const WithElementPaste = (): Node => {
@@ -107,10 +130,78 @@ export const WithElementPaste = (): Node => {
                     destination={destination}
                     enhancer={enhancer}
                     grouped={grouped}
-                    maxGroupSize={groupSize}
-                    fileInputId={"rpldyInput"}>
+                    maxGroupSize={groupSize}>
+        <ElementPaste autoUpload={false}/>
+        <br/>
+        <ProcessPending/>
         <StoryUploadProgress/>
     </Uploady>;
-    };
+};
+
+const StyledDropZone = styled(UploadDropZone)`
+   ${dropZoneCss}
+`;
+
+const PasteUploadDropZone = withPasteUpload(StyledDropZone);
+
+export const WithPasteDropZone = (): Node => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    return <Uploady debug
+                    multiple={multiple}
+                    destination={destination}
+                    enhancer={enhancer}
+                    grouped={grouped}
+                    maxGroupSize={groupSize}>
+        <PasteUploadDropZone params={{ test: "paste" }}>
+            You can drop a file here
+            <br/>
+            OR
+            <br/>
+            click and paste a file to upload
+        </PasteUploadDropZone>
+    </Uploady>
+};
+
+const StyledDivButton = styled.div`
+    width: 300px;
+    height: 160px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid navy;
+    cursor: pointer;
+
+    &:active {
+        background-color: antiquewhite;
+    }
+
+    &:focus {
+        background-color: #4a9ae1;
+    }
+`;
+
+const DivUploadButton = asUploadButton(StyledDivButton);
+
+const PasteUploadButton = withPasteUpload(DivUploadButton);
+
+export const WithPasteUploadButton = (): Node => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    return <Uploady debug
+                    multiple={multiple}
+                    destination={destination}
+                    enhancer={enhancer}
+                    grouped={grouped}
+                    maxGroupSize={groupSize}>
+        <PasteUploadButton params={{ test: "paste" }} extraProps={{ tabIndex: 1 }}>
+            Click to upload
+            <br/>
+            OR
+            <br/>
+            if you're still focused on this div, paste to upload
+        </PasteUploadButton>
+    </Uploady>
+};
 
 export default (getCsfExport(undefined, "Upload Paste",readme): CsfExport);

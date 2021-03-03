@@ -1,6 +1,6 @@
 // @flow
 import React, { useRef, useCallback, forwardRef, useImperativeHandle } from "react";
-import { useUploadyContext } from "@rpldy/shared-ui";
+import { markAsUploadyComponent, useUploadyContext } from "@rpldy/shared-ui";
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadUrlInputProps, UploadMethod } from "./types";
 
@@ -48,5 +48,7 @@ const UploadUrlInput: React$AbstractComponent<UploadUrlInputProps, ?HTMLInputEle
             placeholder={placeholder}
         />;
     });
+
+markAsUploadyComponent(UploadUrlInput);
 
 export default UploadUrlInput;

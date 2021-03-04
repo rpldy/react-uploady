@@ -11,7 +11,7 @@ describe("With Progress", () => {
         uploadFile(fileName, () => {
             cy.wait(1000);
             cy.storyLog().assertLogPattern(/progress event uploaded: \d+, completed: \d+$/, {
-                times: 6,
+                times: 3,
                 different: true
             });
         });

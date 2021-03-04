@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.11.0 (2021-03-04)
+
+### Features
+
+- `[upload-paste]` - NEW PACKAGE! easily add paste-to-upload to React components
+
+### Docs
+
+- `guides` - new guide: DragAndPaste
+
+### Internal
+
+- `all` - upgraded to lastest flow 0.145.0
+- `storybook` - upgraded to SB 6.1.20
+
 ## 0.10.0 (2021-02-27)
 
 ### Features

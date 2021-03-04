@@ -1,4 +1,10 @@
-export { default } from "./withPasteUpload";
+import withPasteUpload from "./withPasteUpload";
+
+export {
+    withPasteUpload
+};
+
+export default withPasteUpload;
 
 export { default as usePasteUpload } from "./usePasteUpload";
 

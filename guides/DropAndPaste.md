@@ -48,5 +48,5 @@ export const MyApp = (): Node => {
 };
 ```
 
-> Note that the PasteUploadDropZone accepts [Upload Options](../packages/ui/uploady#props) that override
+> Note that the PasteUploadDropZone accepts [Upload Options](../packages/ui/uploady#props) that are merged (and can override)
 > the options given to the Uploady provider. 

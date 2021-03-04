@@ -18,7 +18,7 @@ Below is sample code that combines both features into one element/component:
 ```javascript
 import React from "react";
 import styled from "styled-components";
-import Uploady, { useUploady } from "@rpldy/uploady";
+import Uploady from "@rpldy/uploady";
 import UploadDropZone from "@rpldy/upload-drop-zone";
 import withPasteUpload from "@rpldy/upload-paste";
 

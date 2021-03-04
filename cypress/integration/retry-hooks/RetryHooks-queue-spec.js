@@ -80,7 +80,7 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.wait(2500);
+            cy.wait(3000);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg", 5);
             cy.storyLog().assertFileItemStartFinish("flower2.jpg", 7);

@@ -31,7 +31,7 @@ import {
 import UploadButton, { asUploadButton } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
-import readme from './README.md';
+import readme from "./README.md";
 
 import type { Node, Element } from "React"
 

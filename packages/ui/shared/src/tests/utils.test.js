@@ -1,10 +1,14 @@
+import React from "react";
 import "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { isProduction } from "@rpldy/shared";
+import { UPLOAD_OPTIONS_COMP } from "../consts";
 import assertContext from "../assertContext";
 import {
     generateUploaderEventHook,
     generateUploaderEventHookWithState,
     logWarning,
+    markAsUploadOptionsComponent,
+    getIsUploadOptionsComponent,
 } from "../utils";
 
 jest.mock("../assertContext", () => jest.fn());
@@ -207,5 +211,25 @@ describe("ui-shared utils tests", () => {
             expect(mockWarn).not.toHaveBeenCalled();
         });
 
+    });
+
+    describe("upload options component tests", () => {
+        it.each([
+            [{}, false],
+            [{ target: { [UPLOAD_OPTIONS_COMP]: true } }, true],
+            [{ render: { [UPLOAD_OPTIONS_COMP]: true } }, true],
+        ])("getIsUploadOptionsComponent - for %s should return %s", (comp, result) => {
+            expect(getIsUploadOptionsComponent(comp)).toBe(result);
+        });
+
+        it("should mark as UploadOptionsComponent", () => {
+            const MyComp = () => {
+                return <div/>;
+            };
+
+            markAsUploadOptionsComponent(MyComp);
+
+            expect(getIsUploadOptionsComponent(MyComp)).toBe(true);
+        });
     });
 });

@@ -15,6 +15,6 @@ export interface UploadButtonProps extends ButtonProps, UploadOptions {}
 export const UploadButton: React.ComponentType<React.PropsWithRef<UploadButtonProps>>;
 
 export const asUploadButton:
-    <T>(component: React.ForwardRefExoticComponent<React.PropsWithoutRef<UploadButtonProps> & React.RefAttributes<HTMLDivElement>>) => React.FC;
+    <T>(component: React.ForwardRefExoticComponent<T> | React.ComponentType<T>) => React.FC<UploadButtonProps>;
 
 export default UploadButton;

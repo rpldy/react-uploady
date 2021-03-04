@@ -131,3 +131,7 @@ export interface WithRequestPreSendUpdateWrappedProps {
 
 export const withRequestPreSendUpdate: <P extends WithRequestPreSendUpdateProps>(Comp: React.FC<P> | React.ComponentType<P>) =>
     React.FC<Omit<P, "updateRequest" | "requestData">>;
+
+export const markAsUploadOptionsComponent: (Component: React.ComponentType<unknown>) => void;
+
+export const getIsUploadOptionsComponent: (Component: React.ComponentType<unknown>) => boolean;

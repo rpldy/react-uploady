@@ -60,10 +60,10 @@ RU has a small footprint (by design) with very few (and small) dependencies.
 
 | Bundle         | Minified size | GZipped size
 | -------------- | ------------- | -------------
-| core                         | 32.8KB          | 10.7KB
-| core + ui                    | 43.9KB          | 13.5KB
-| core + ui + chunked support  | 53.6KB          | 16.0KB
-| everything                   | 78.7KB          | 22.9KB
+| core                         | 35.5KB          | 11.4KB
+| core + ui                    | 47.6KB          | 14.6KB
+| core + ui + chunked support  | 58.0KB          | 17.0KB
+| everything                   | 84.5KB          | 24.2KB
 
 ## Documentation
 
@@ -129,6 +129,7 @@ After that, you can add additional packages as needed. See below for more detail
 * [@rpldy/upload-preview](packages/ui/upload-preview) - Image&video preview component for files being uploaded 
 * [@rpldy/upload-url-input](packages/ui/upload-url-input) - Input component to send URL as upload info (ex: [Cloudinary](https://cloudinary.com/documentation/upload_images#auto_fetching_remote_images))
 * [@rpldy/upload-drop-zone](packages/ui/upload-drop-zone) - (Drag&)Drop zone to upload files and folder content
+* [@rpldy/upload-paste](packages/ui/upload-paste) - Easily add paste-to-upload to React components
 * [@rpldy/retry-hooks](packages/ui/retry-hooks) - Hooks to interact with the retry mechanism
 
 ### Providers

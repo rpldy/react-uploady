@@ -9,6 +9,7 @@ import UploadDropZone from "./src";
 import {
     useStoryUploadySetup,
     StoryUploadProgress,
+    dropZoneCss,
     getCsfExport,
     type CsfExport,
 } from "../../../story-helpers";
@@ -18,33 +19,8 @@ import readme from "./README.md";
 
 import type { Node } from "React";
 
-const dzCss = css`
-  display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 400px;
-    height: 400px;
-    border: 1px dotted #000;
-
-    #drop-text {
-      display: none;
-    }
-
-    &.drag-over {
-      background-color: rgba(114,255,59,0.6);
-        #drop-text {
-          display: block;
-        }
-
-        #drag-text {
-          display: none;
-        }
-    }
-`;
-
 const StyledDropZone = styled(UploadDropZone)`
-   ${dzCss}
+   ${dropZoneCss}
 `;
 
 const SmallDropZone = styled(StyledDropZone)`
@@ -155,7 +131,7 @@ export const DifferentConfiguration = (): Node => {
 };
 
 const ThirdPartyDropZone = styled.div`
-  ${dzCss}
+  ${dropZoneCss}
 `;
 
 const ThirdPartyDropZoneContainer = () => {

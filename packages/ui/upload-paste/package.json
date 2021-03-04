@@ -1,0 +1,46 @@
+{
+  "version": "0.10.0",
+  "name": "@rpldy/upload-paste",
+  "description": "easily add paste-to-upload to React components",
+  "author": "yoav niran (https://github.com/yoavniran)",
+  "main": "lib/cjs/index.js",
+  "module": "lib/esm/index.js",
+  "main:dev": "src/index.js",
+  "types": "types/index.d.ts",
+  "license": "MIT",
+  "keywords": [
+    "file",
+    "upload",
+    "file upload",
+    "react",
+    "hooks",
+    "paste",
+    "copy&paste"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rpldy/react-uploady.git",
+    "directory": "packages/ui/upload-paste"
+  },
+  "scripts": {
+    "build": "node ../../../scripts/build.js",
+    "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
+  },
+  "dependencies": {
+    "@rpldy/shared-ui": "^0.10.0"
+  },
+  "devDependencies": {
+    "@rpldy/uploady": "^0.10.0",
+    "@rpldy/upload-drop-zone": "^0.10.0",
+    "@rpldy/upload-button": "^0.10.0",
+    "flow-bin": "^0.145.0",
+    "styled-components": "^5.2.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.x",
+    "react-dom": ">=16.8.x"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

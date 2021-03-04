@@ -4,12 +4,12 @@ describe("With Event Listeners", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadButton", "with-event-listeners");
+        cy.visitStory("uploadButton", "with-event-listeners&knob-mock send delay_Upload Destination=100");
     });
 
     it("should use event listeners", () => {
         uploadFile(fileName, () => {
-            cy.wait(1000);
+            cy.wait(200);
 
             cy.get("ul[data-test='hooks-events']")
                 .should("be.visible")

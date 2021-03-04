@@ -29,3 +29,5 @@
 * [Crop](Crop.md) - Allow crop before image upload
 
 * [Cloudinary](Cloudinary.md) - Uploading to Cloudinary
+
+* [DropAndPaste](DropAndPaste.md) - Drop and Paste in one place

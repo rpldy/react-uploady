@@ -4,7 +4,7 @@ describe("UploadButton - Simple", () => {
 	const fileName = "flower.jpg";
 
 	before(() => {
-		cy.visitStory("uploadButton", "simple");
+		cy.visitStory("uploadButton", "simple&knob-mock send delay_Upload Destination=100");
 	});
 
 	it("should use uploady", () => {
@@ -13,7 +13,7 @@ describe("UploadButton - Simple", () => {
 			.as("fInput");
 
 		uploadFile(fileName, () => {
-			cy.wait(1500);
+			cy.wait(200);
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 		}, "button");
 	});

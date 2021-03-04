@@ -25,6 +25,8 @@ export {
     generateUploaderEventHook,
     generateUploaderEventHookWithState,
     logWarning,
+    markAsUploadOptionsComponent,
+    getIsUploadOptionsComponent,
 } from "./utils";
 
 export { default as assertContext } from "./assertContext";
@@ -36,7 +38,6 @@ export { default as NoDomUploady } from "./NoDomUploady";
 export { default as UploadyContext, createContextApi } from "./UploadyContext";
 export { default as withRequestPreSendUpdate } from "./withRequestPreSendUpdate";
 export { default as useUploadyContext, default as useUploady } from "./useUploadyContext";
-
 
 export type {
     InputRef,

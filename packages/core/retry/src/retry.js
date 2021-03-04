@@ -107,7 +107,7 @@ const registerEvents = (uploader: UploaderType, retryState: RetryState) => {
 /**
  * an uploader enhancer function to add retry functionality
  */
-export default (uploader: UploaderType, trigger: TriggerMethod): UploaderType => {
+const retryEnhancer = (uploader: UploaderType, trigger: TriggerMethod): UploaderType => {
     const retryState = createRetryState();
 
     registerEvents(uploader, retryState);
@@ -121,3 +121,5 @@ export default (uploader: UploaderType, trigger: TriggerMethod): UploaderType =>
 
     return uploader;
 };
+
+export default retryEnhancer;

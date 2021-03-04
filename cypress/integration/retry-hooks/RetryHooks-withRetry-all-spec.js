@@ -5,7 +5,7 @@ describe("RetryHooks - Retry Upload", () => {
         fileName2 = "sea.jpg";
 
     before(() => {
-        cy.visitStory("retryHooks", "with-retry");
+        cy.visitStory("retryHooks", "with-retry&knob-mock send delay_Upload Destination=100");
     });
 
     it("should retry all failed uploads", () => {
@@ -13,7 +13,7 @@ describe("RetryHooks - Retry Upload", () => {
         uploadFile(fileName, () => {
             //create second batch
             uploadFile(fileName2, () => {
-                cy.wait(1000);
+                cy.wait(400);
 
                 cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 2 });
                 cy.storyLog().assertLogPattern(/ITEM_START/, { times: 2 });
@@ -23,7 +23,7 @@ describe("RetryHooks - Retry Upload", () => {
                     .should("be.visible")
                     .click();
 
-                cy.wait(3000);
+                cy.wait(1000);
 
                 cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 2 });
 

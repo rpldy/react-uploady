@@ -16,11 +16,7 @@ With Uploady you can do this for your apps very easily:
 Below is sample code that combines both features into one element/component:
 
 ```javascript
-import React, {
-    useState,
-    useRef,
-    useCallback,
-} from "react";
+import React from "react";
 import styled from "styled-components";
 import Uploady, { useUploady } from "@rpldy/uploady";
 import UploadDropZone from "@rpldy/upload-drop-zone";

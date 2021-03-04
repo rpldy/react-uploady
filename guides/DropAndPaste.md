@@ -46,3 +46,6 @@ export const MyApp = (): Node => {
 
 > Note that the PasteUploadDropZone accepts [Upload Options](../packages/ui/uploady#props) that are merged (and can override)
 > the options given to the Uploady provider. 
+
+
+Try it out in this [code sandbox](https://codesandbox.io/s/react-uploady-drag-and-paste-usx9s?file=/src/App.js)

@@ -61,6 +61,7 @@ const markAsUploadOptionsComponent = (Component: React$ComponentType<any>): void
 };
 
 const getIsUploadOptionsComponent = (Component: any): boolean =>
+    Component[UPLOAD_OPTIONS_COMP] === true ||
     Component.target?.[UPLOAD_OPTIONS_COMP] === true ||
     Component.render?.[UPLOAD_OPTIONS_COMP] === true;
 

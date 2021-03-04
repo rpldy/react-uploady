@@ -1,7 +1,7 @@
 {
   "version": "0.10.0",
   "name": "@rpldy/upload-paste",
-  "description": "HOC that provides immediate upload on user paste event",
+  "description": "easily add paste-to-upload to React components",
   "author": "yoav niran (https://github.com/yoavniran)",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
@@ -14,7 +14,8 @@
     "file upload",
     "react",
     "hooks",
-    "upload button"
+    "paste",
+    "copy&paste"
   ],
   "repository": {
     "type": "git",

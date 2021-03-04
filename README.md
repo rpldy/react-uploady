@@ -129,6 +129,7 @@ After that, you can add additional packages as needed. See below for more detail
 * [@rpldy/upload-preview](packages/ui/upload-preview) - Image&video preview component for files being uploaded 
 * [@rpldy/upload-url-input](packages/ui/upload-url-input) - Input component to send URL as upload info (ex: [Cloudinary](https://cloudinary.com/documentation/upload_images#auto_fetching_remote_images))
 * [@rpldy/upload-drop-zone](packages/ui/upload-drop-zone) - (Drag&)Drop zone to upload files and folder content
+* [@rpldy/upload-paste](packages/ui/upload-paste) - Easily add paste-to-upload to React components
 * [@rpldy/retry-hooks](packages/ui/retry-hooks) - Hooks to interact with the retry mechanism
 
 ### Providers

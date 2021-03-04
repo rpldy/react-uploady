@@ -9,8 +9,8 @@ import type { PasteProps } from "./types";
 const withPasteUpload = (Component: ComponentType<any>): React$AbstractComponent<PasteProps, mixed> => {
     const PasteComponent = (props: PasteProps, ref) => {
         const { id, className, children, onPasteUpload, extraProps, ...uploadOptions } = props;
-        const onPaste = usePasteHandler(uploadOptions, onPasteUpload);
 
+        const onPaste = usePasteHandler(uploadOptions, onPasteUpload);
         const isUploadyComp = getIsUploadOptionsComponent(Component);
 
         const compExtraProps = isUploadyComp ?

@@ -6,7 +6,7 @@ import { isProduction } from "./utils";
 let isDebug;
 
 const isEnvDebug =  () =>
-    !isProduction() && process.env.DEBUG;
+    !isProduction() && process?.env?.DEBUG;
 
 const isDebugOn = (): boolean | string => {
 	if (typeof isDebug !== "boolean") {

@@ -62,7 +62,7 @@ module.exports = {
                 config: {
                     externals: ["react", "react-dom"],
                 },
-                maxSize: 17500,
+                maxSize: 18000,
             },
 
             /**

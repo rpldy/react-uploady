@@ -70,7 +70,7 @@ export const WelcomeReactUploady = () => {
             <h2>Welcome to React-Uploady Storybook</h2>
 
             <h4>Current Version</h4>
-            {rpldyVersion.map((v) => <span className="version" key={v}>{v}</span>)}
+            {BUILD_TIME_VERSION.map((v) => <span className="version" key={v}>{v}</span>)}
         </Container>
 
         <h3>Useful Links:</h3>

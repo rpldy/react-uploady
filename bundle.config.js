@@ -6,7 +6,8 @@ const path = require("path"),
     fs = require("fs-extra"),
     webpack = require("webpack"),
     _ = require("lodash"),
-    VirtualModulePlugin = require("virtual-module-webpack-plugin");
+    VirtualModulePlugin = require("virtual-module-webpack-plugin"),
+    uploadyPkg = require("./packages/ui/uploady/package.json");
 
 const PKGS = {
     LIFE_EVENTS: "@life-events",
@@ -22,6 +23,8 @@ let licenseContent;
 
 module.exports = {
     org: "@rpldy/",
+
+    version: uploadyPkg.version,
 
     library: "rpldy",
 
@@ -50,7 +53,7 @@ module.exports = {
                 config: {
                     externals: ["react", "react-dom"],
                 },
-                maxSize: 15000,
+                maxSize: 16000,
             },
 
             /**
@@ -108,7 +111,7 @@ module.exports = {
                         },
                     };
                 },
-                maxSize: 25000,
+                maxSize: 26000,
             },
 
             //TODO: find a way to make this work with global object assignment (wepackages/tus-sender/src/tusSender/initTusUpload/createUpload.js:88:94bpack externals root)

@@ -1,10 +1,16 @@
 # Changelog
 
+## 0.11.2-rc1
+
+### Features
+
+- `[shared-ui]` - Warn about uploady context version mix (provider/consumer different versions)
+
 ## 0.11.1 (2021-03-05)
 
 ### Bug fixes
 
-- `[shared]` - handle `prcoess.env` not available Fix for #149 
+- `[shared]` - handle `prcoess.env` not available. Fix for #149 
 
 ## 0.11.0 (2021-03-04)
 

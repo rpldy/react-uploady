@@ -6,7 +6,7 @@ const path = require("path"),
     shell = require("shelljs"),
     bytes = require("bytes"),
     _ = require("lodash"),
-    { merge: wpMerge } = require("webpack-merge"),
+    { mergeWithCustomize: wpMerge, customizeArray } = require("webpack-merge"),
     { logger, getMatchingPackages } = require("./utils");
 
 //TODO: should be passed by options or found in root (dynamically)
@@ -183,7 +183,18 @@ const getWebpackConfig = (type, name, definition, repoPackages) => {
 
     logger.verbose(`>>>> creating bundle: '${name}' of type: '${type}' - with entries: ${entries.length} - at: ${outputPath}`);
 
-    return wpMerge(
+    return wpMerge({
+        customizeArray: customizeArray({
+            "plugins": "append",
+        }),
+    })(
+        {
+            plugins: config.version ? [
+                new webpack.DefinePlugin({
+                    BUILD_TIME_VERSION: JSON.stringify(config.version),
+                })
+            ] : []
+        },
         config.webpackConfig.base,
         config.webpackConfig[process.env.NODE_ENV] || {},
         {
@@ -199,7 +210,9 @@ const getWebpackConfig = (type, name, definition, repoPackages) => {
                 // globalObject: "this",
             },
         },
-        _.isFunction(definition.config) ? definition.config(entries, isProduction, definition) : (definition.config || {}),
+        _.isFunction(definition.config) ?
+            definition.config(entries, isProduction, definition) :
+            (definition.config || {}),
     );
 }
 

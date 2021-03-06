@@ -44,7 +44,7 @@ module.exports = async () => {
                 statements: 98
             }
         },
-        "collectCoverageFrom": [
+        collectCoverageFrom: [
             "<rootDir>/packages/**/src/**/*.js",
             "!<rootDir>/packages/**/**/*.test.js",
             "!<rootDir>/packages/**/*.story.js",
@@ -56,10 +56,13 @@ module.exports = async () => {
             "<rootDir>/packages/(?:.+?)/lib/",
             "<rootDir>/cypress"
         ],
-        "setupFilesAfterEnv": [
+        setupFilesAfterEnv: [
             "./node_modules/jest-enzyme/lib/index.js",
             "<rootDir>/test/jestSetup.js"
         ],
-        "testEnvironment": "jest-environment-jsdom-global",
+        testEnvironment: "jest-environment-jsdom-global",
+        globals: {
+            "BUILD_TIME_VERSION": "0.0.0",
+        }
     };
 };

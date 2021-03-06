@@ -1,6 +1,8 @@
 // @flow
 import React from "react";
 import { logger, invariant } from "@rpldy/shared";
+import { registerUploadyContextVersion  } from "./uploadyVersion";
+
 import type { UploaderType, CreateOptions } from "@rpldy/uploader";
 import type { UploadInfo, UploadOptions, GetExact } from "@rpldy/shared";
 import type { EventCallback } from "@rpldy/life-events";
@@ -105,6 +107,10 @@ export const createContextApi =
         };
 
         const hasUploader = () => !!uploader;
+
+        //We register the version on the global object to be able to warn devs when they're using packages from different uploady versions
+        //causing the context not to be available
+        registerUploadyContextVersion();
 
         return {
             hasUploader,

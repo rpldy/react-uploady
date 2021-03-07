@@ -39,7 +39,12 @@ module.exports = {
 	],
 	env: {
 		test: {
-			plugins: ["@babel/plugin-transform-runtime"],
+			plugins: [
+			    "@babel/plugin-transform-runtime",
+                ["inline-replace-variables", {
+                    "BUILD_TIME_VERSION": "0.0.0"
+                }],
+            ],
 			presets: [
 				[
 					"@babel/env",

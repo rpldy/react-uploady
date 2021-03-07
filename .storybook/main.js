@@ -1,7 +1,8 @@
 const glob = require("fast-glob"),
     path = require("path"),
     webpack = require("webpack"),
-    pacote = require("pacote");
+    pacote = require("pacote"),
+    { getUploadyVersion } = require("../scripts/utils");
 
 const getCurrentNpmVersion = async () => {
     let result = [];
@@ -50,10 +51,30 @@ module.exports = {
             enforce: "pre",
         });
 
-        config.plugins.push(new webpack.DefinePlugin({
-            "BUILD_TIME_VERSION": JSON.stringify(config.mode !== "development" ? await getCurrentNpmVersion() : ["DEV"] ),
-            "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
-        }));
+        const publishedVersion = config.mode !== "development" ? await getCurrentNpmVersion() : ["DEV"];
+
+        const definePlugin = config.plugins.find((plugin) => plugin instanceof webpack.DefinePlugin);
+
+        if (definePlugin) {
+            definePlugin.definitions = {
+                ...definePlugin.definitions,
+                "PUBLISHED_VERSION": JSON.stringify(publishedVersion),
+                "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
+                "process.env": {
+                    ...definePlugin.definitions["process.env"],
+                    BUILD_TIME_VERSION: JSON.stringify(getUploadyVersion()),
+                }
+            }
+        } else {
+            config.plugins.push(new webpack.DefinePlugin({
+                "PUBLISHED_VERSION": JSON.stringify(publishedVersion),
+                "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
+                "process.env": JSON.stringify({
+                    ...process.env,
+                    BUILD_TIME_VERSION: getUploadyVersion()
+                }),
+            }));
+        }
 
         config.resolve = {
             mainFields: ["main:dev", "module", "main"],
@@ -63,4 +84,8 @@ module.exports = {
 
         return config;
     },
+
+    // managerWebpack: async (baseConfig, options) => {
+    //     return baseConfig;
+    // }
 };

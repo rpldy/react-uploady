@@ -11,6 +11,7 @@ import {
     StoryAbortButton,
     type CsfExport
 } from "../../../story-helpers";
+import { getUploadyVersion } from "@rpldy/shared-ui";
 import Uploady, {
     FILE_STATES,
 
@@ -50,6 +51,9 @@ export const ButtonWithContextApi = (): Node => {
         enhancer={enhancer}
         grouped={grouped}
         maxGroupSize={groupSize}>
+
+        version <span id="uploady-version">{getUploadyVersion()}</span>
+        <br/>
         <ContextUploadButton/>
     </Uploady>
 };

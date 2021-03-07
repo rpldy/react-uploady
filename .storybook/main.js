@@ -1,7 +1,8 @@
 const glob = require("fast-glob"),
     path = require("path"),
     webpack = require("webpack"),
-    pacote = require("pacote");
+    pacote = require("pacote"),
+    { getUploadyVersion } = require("../scripts/utils");
 
 const getCurrentNpmVersion = async () => {
     let result = [];
@@ -50,13 +51,30 @@ module.exports = {
             enforce: "pre",
         });
 
-        const buildTimeVersion = config.mode !== "development" ? await getCurrentNpmVersion() : ["DEV"];
-        process.env.BUILD_TIME_VERSION = buildTimeVersion[0];
+        const publishedVersion = config.mode !== "development" ? await getCurrentNpmVersion() : ["DEV"];
 
-        config.plugins.push(new webpack.DefinePlugin({
-            "BUILD_TIME_VERSION": JSON.stringify(buildTimeVersion),
-            "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
-        }));
+        const definePlugin = config.plugins.find((plugin) => plugin instanceof webpack.DefinePlugin);
+
+        if (definePlugin) {
+            definePlugin.definitions = {
+                ...definePlugin.definitions,
+                "PUBLISHED_VERSION": JSON.stringify(publishedVersion),
+                "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
+                "process.env": {
+                    ...definePlugin.definitions["process.env"],
+                    BUILD_TIME_VERSION: JSON.stringify(getUploadyVersion()),
+                }
+            }
+        } else {
+            config.plugins.push(new webpack.DefinePlugin({
+                "PUBLISHED_VERSION": JSON.stringify(publishedVersion),
+                "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
+                "process.env": JSON.stringify({
+                    ...process.env,
+                    BUILD_TIME_VERSION: getUploadyVersion()
+                }),
+            }));
+        }
 
         config.resolve = {
             mainFields: ["main:dev", "module", "main"],
@@ -66,4 +84,8 @@ module.exports = {
 
         return config;
     },
+
+    // managerWebpack: async (baseConfig, options) => {
+    //     return baseConfig;
+    // }
 };

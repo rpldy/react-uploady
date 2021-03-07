@@ -7,7 +7,7 @@ const productionConfig = {
     ]
 };
 
-module.exports = {
+const config =  {
     presets: [
         [
             "@babel/env",
@@ -32,7 +32,6 @@ module.exports = {
         }]
     ],
     env: {
-        production: productionConfig,
         esm: productionConfig,
         cjs: productionConfig,
 
@@ -53,3 +52,14 @@ module.exports = {
         },
     }
 };
+
+module.exports = config;
+//     () => {
+//     console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$ ", process.env.BUILD_TIME_VERSION)
+//
+//     // api.caller((caller) => {
+//     //     console.log("!!!!!!!!!!!!!!!!! BABEL CALLER !!!!!!!!!!!!!!! ", caller);
+//     // });
+//
+//     return config;
+// };

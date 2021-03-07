@@ -1,4 +1,4 @@
-const { getMatchingPackages } = require("./scripts/utils");
+const { getMatchingPackages } = require("./scripts/lernaUtils");
 
 module.exports = async () => {
     const { packages } = await getMatchingPackages({});

@@ -7,7 +7,7 @@ const path = require("path"),
     webpack = require("webpack"),
     _ = require("lodash"),
     VirtualModulePlugin = require("virtual-module-webpack-plugin"),
-    uploadyPkg = require("./packages/ui/uploady/package.json");
+    { getUploadyVersion } = require("./scripts/utils");
 
 const PKGS = {
     LIFE_EVENTS: "@life-events",
@@ -24,7 +24,7 @@ let licenseContent;
 module.exports = {
     org: "@rpldy/",
 
-    version: uploadyPkg.version,
+    version: getUploadyVersion(),
 
     library: "rpldy",
 

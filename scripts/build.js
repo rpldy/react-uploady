@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 const chalk = require("chalk"),
 	shell = require("shelljs"),
-	{ getPackageName, copyFilesToPackage } = require("./utils"),
-    uploadyPkg = require("../packages/ui/uploady/package.json");
+	{ getPackageName, copyFilesToPackage, getUploadyVersion } = require("./utils");
 
 const ENVS = ["esm", "cjs"];
 
@@ -16,7 +15,9 @@ const ignored = [
     "**/tests/**",
 ].join(",");
 
-const runWithEnv = (pkgeName, env, uploadyVersion) => {
+const uploadyVersion = getUploadyVersion();
+
+const runWithEnv = (pkgeName, env) => {
     console.log(chalk.bold(chalk.cyan(`___ building: ${pkgeName} ___ env = ${env}`)));
 
     const result = shell.exec(`BABEL_ENV="${env}" BUILD_TIME_VERSION="${uploadyVersion}" babel --root-mode upward ${src} -d lib/${env} --ignore ${ignored}`);
@@ -37,14 +38,12 @@ const build = () => {
 
     console.log(chalk.bold(chalk.cyan(`___ copying mandatory build files to: ${pkgeName} ___`)));
 
-    const uploadyVersion = uploadyPkg.version;
-
     copyFilesToPackage(scriptsDir, pkgDir, [
         "../.npmignore",
         "../LICENSE.md"
     ]);
 
-    const exitCodes = ENVS.map((env) => runWithEnv(pkgeName, env, uploadyVersion));
+    const exitCodes = ENVS.map((env) => runWithEnv(pkgeName, env));
 
     const failed = exitCodes.find(Boolean);
 

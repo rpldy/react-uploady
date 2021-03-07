@@ -7,7 +7,8 @@ const path = require("path"),
     bytes = require("bytes"),
     _ = require("lodash"),
     { mergeWithCustomize: wpMerge, customizeArray } = require("webpack-merge"),
-    { logger, getMatchingPackages } = require("./utils");
+    { getMatchingPackages } = require("./lernaUtils"),
+    { logger } = require("./utils");
 
 //TODO: should be passed by options or found in root (dynamically)
 const config = require("../bundle.config");

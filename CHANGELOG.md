@@ -2,9 +2,9 @@
 
 ## 0.11.2
 
-### Features
+### Bug fixes
 
-- `[shared-ui]` - Warn about uploady context version mix (provider/consumer different versions)
+- `[chunked-sender]` - ensure offset is added to the loaded calculation so resume is also reflected in progress
 
 ## 0.11.1 (2021-03-05)
 

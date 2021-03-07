@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.11.2
+## 0.11.3-alpha.0 (2021-03-08)
+
+### Bug fixes
+
+- `[shared-ui]` - Warn about uploady context version mix (provider/consumer different versions)
+
+## 0.11.2 (2021-03-07)
 
 ### Bug fixes
 

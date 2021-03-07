@@ -13,7 +13,7 @@
     "clean": "rimraf bundle; lerna exec --stream -- rimraf lib umd",
     "release": "yarn bootstrap; yarn clean; yarn build; yarn bundle:prod; lerna publish",
     "release:force": "yarn release --force-publish=*",
-    "release:beta": "yarn release --dist-tag beta",
+    "release:alpha": "yarn release --dist-tag alpha",
     "sb:start": "start-storybook -p 9111 --ci",
     "sb:build": "build-storybook -c .storybook -o .sb-static",
     "sb:bw": "yarn sb:build --watch",

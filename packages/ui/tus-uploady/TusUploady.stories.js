@@ -74,7 +74,7 @@ export const Simple = (): Node => {
 		resume={resume}
 		ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}
 		sendDataOnCreate={sendDataOnCreate}>
-		<UploadButton>Upload with TUS</UploadButton>
+		<UploadButton id="upload-button">Upload with TUS</UploadButton>
         <br/>
         <AbortButton/>
         <ItemProgress/>

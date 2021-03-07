@@ -50,6 +50,6 @@ describe("TusUploady - Send Data", () => {
                     expect(headers["upload-offset"]).to.eq("200000");
                     expect(headers["content-type"]).to.eq("application/offset+octet-stream");
                 });
-        }, "button");
+        }, "#upload-button");
     });
 });

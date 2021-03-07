@@ -1,60 +1,55 @@
 const env = process.env.BABEL_ENV;
 
+const productionConfig = {
+    plugins: [
+        //cant add to base because breaks unit-tests that modify process.env
+        "transform-inline-environment-variables",
+    ]
+};
+
 module.exports = {
-	presets: [
-		[
-			"@babel/env",
-			{
+    presets: [
+        [
+            "@babel/env",
+            {
                 // "loose":  true,
                 "modules": env === "esm" ? false : "commonjs"
-			},
-		],
-		"@babel/react",
-		"@babel/flow",
-	],
-	plugins: [
-		"@babel/plugin-proposal-function-bind",
-		"@babel/plugin-proposal-class-properties",
-		"@babel/plugin-proposal-optional-chaining",
+            },
+        ],
+        "@babel/react",
+        "@babel/flow",
+    ],
+    plugins: [
+        "@babel/plugin-proposal-function-bind",
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-proposal-optional-chaining",
         "@babel/plugin-proposal-export-default-from",
         "minify-dead-code-elimination",
-        ["inline-replace-variables", {
-            "BUILD_TIME_VERSION": {
-                type: "node",
-                replacement: "process.env.BUILD_TIME_VERSION"
-            }
-        }],
-        "transform-inline-environment-variables",
+        "lodash",
+        ["module-resolver", {
+            "root": ["./"],
+            // "alias": {}
+        }]
+    ],
+    env: {
+        production: productionConfig,
+        esm: productionConfig,
+        cjs: productionConfig,
 
-        // "@babel/plugin-transform-runtime",
-        // ["@babel/plugin-transform-runtime", {
-        //     corejs: 3,
-        //     "version": "^7.10.2"
-        // }],
-		"lodash",
-		["module-resolver", {
-			"root": ["./"],
-			// "alias": {}
-		}]
-	],
-	env: {
-		test: {
-			plugins: [
-			    "@babel/plugin-transform-runtime",
-                ["inline-replace-variables", {
-                    "BUILD_TIME_VERSION": "0.0.0"
-                }],
+        test: {
+            plugins: [
+                "@babel/plugin-transform-runtime",
             ],
-			presets: [
-				[
-					"@babel/env",
-					{
-						targets: {
-							node: true,
-						},
-					},
-				],
-			],
-		},
-	}
+            presets: [
+                [
+                    "@babel/env",
+                    {
+                        targets: {
+                            node: true,
+                        },
+                    },
+                ],
+            ],
+        },
+    }
 };

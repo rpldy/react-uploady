@@ -18,7 +18,6 @@ describe("processChunks tests", () => {
 	});
 
 	it("should create state and process chunks", () => {
-
 		const item = {file: {name: "file"}},
 			chunkedOptions = { parallel: true },
 			url = "test.com",
@@ -55,8 +54,12 @@ describe("processChunks tests", () => {
 			const state = {
 				uploaded: {},
 				chunks: [
+                    {
+                        start: 4,
+                    }
 				]
 			};
+
 			const item = { file: { size: 1000 }};
 			const onProgress = jest.fn();
 			const trigger = jest.fn();
@@ -70,7 +73,7 @@ describe("processChunks tests", () => {
 			onChunkProgress({ loaded: 200 }, [{id: "c1"}]);
 
 			expect(onProgress).toHaveBeenCalledWith({
-				loaded: 200,
+				loaded: 204,
 				total: 1000
 			}, [item]);
 
@@ -78,7 +81,7 @@ describe("processChunks tests", () => {
             onChunkProgress({ loaded: 300 }, [{id: "c1"}]);
 
 			expect(onProgress).toHaveBeenCalledWith({
-				loaded: 300,
+				loaded: 304,
 				total: 1000
 			}, [item]);
 
@@ -86,7 +89,7 @@ describe("processChunks tests", () => {
             onChunkProgress({ loaded: 300 }, [{id: "c2"}]);
 
             expect(onProgress).toHaveBeenCalledWith({
-                loaded: 600,
+                loaded: 604,
                 total: 1000
             }, [item]);
 

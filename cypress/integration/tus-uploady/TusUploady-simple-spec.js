@@ -73,7 +73,7 @@ describe("TusUploady - Simple", () => {
 						expect(events.finish.args[1].uploadResponse.message).to.eq("TUS server has file");
 						expect(events.finish.args[1].uploadResponse.location).to.eq("http://test.tus.com/upload/123");
 					});
-			}, "button");
-		}, "button");
+			}, "#upload-button");
+		}, "#upload-button");
 	});
 });

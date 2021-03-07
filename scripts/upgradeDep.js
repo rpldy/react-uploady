@@ -3,7 +3,8 @@ const yargs = require("yargs"),
     pacote = require("pacote"),
     semverUtils = require("semver-utils"),
     shell = require("shelljs"),
-    { logger, getMatchingPackages, isDevDep, isPeerDep } = require("./utils");
+    { getMatchingPackages } = require("./lernaUtils"),
+    { logger, isDevDep, isPeerDep } = require("./utils");
 
 const argv = yargs.argv;
 

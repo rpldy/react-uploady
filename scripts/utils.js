@@ -1,32 +1,7 @@
 const fs = require("fs"),
     path = require("path"),
     chalk = require("chalk"),
-    { getFilteredPackages } = require("@lerna/filter-options"),
-    { ListCommand } = require("@lerna/list");
-
-class DepListCommand extends ListCommand {
-    initialize() {
-        this.result = new Promise((resolve) => {
-            //replace the underlying List command result with objects (and not a string)
-            getFilteredPackages(this.packageGraph, this.execOpts, this.options)
-                .then((packages) => {
-                    resolve({
-                        packages,
-                        graph: this.packageGraph
-                    });
-                });
-        });
-
-        //stop the underlying List command from executing
-        return Promise.resolve(false);
-    }
-}
-
-const getMatchingPackages = async (argv) => {
-    const cmd = new DepListCommand(argv);
-    await cmd.runner;
-    return await cmd.result;
-};
+    uploadyPkg = require("../packages/ui/uploady/package.json");
 
 const isDevDep = (pkgJson, depName) => {
     return !!(pkgJson.devDependencies && pkgJson.devDependencies[depName]);
@@ -58,6 +33,10 @@ const copyFilesToPackage = (currentDir, destination, files = []) => {
     });
 };
 
+const getUploadyVersion = () => {
+    return uploadyPkg.version;
+};
+
 const logger = {
     verbose: (...args) => console.log(chalk.gray(...args)),
     log: (...args) => console.log(chalk.white(...args)),
@@ -70,7 +49,7 @@ module.exports = {
     logger,
     getPackageName,
     copyFilesToPackage,
-    getMatchingPackages,
     isDevDep,
     isPeerDep,
+    getUploadyVersion,
 };

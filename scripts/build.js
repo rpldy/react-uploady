@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const chalk = require("chalk"),
 	shell = require("shelljs"),
-	{ getPackageName, copyFilesToPackage } = require("./utils");
+	{ getPackageName, copyFilesToPackage, getUploadyVersion } = require("./utils");
 
 const ENVS = ["esm", "cjs"];
 
@@ -15,10 +15,12 @@ const ignored = [
     "**/tests/**",
 ].join(",");
 
+const uploadyVersion = getUploadyVersion();
+
 const runWithEnv = (pkgeName, env) => {
     console.log(chalk.bold(chalk.cyan(`___ building: ${pkgeName} ___ env = ${env}`)));
 
-    const result = shell.exec(`BABEL_ENV="${env}" babel --root-mode upward ${src} -d lib/${env} --ignore ${ignored}`);
+    const result = shell.exec(`BABEL_ENV="${env}" BUILD_TIME_VERSION="${uploadyVersion}" babel --root-mode upward ${src} -d lib/${env} --ignore ${ignored}`);
 
     if (result.code) {
         console.log(chalk.red(`BUILD ERROR!!! (${result.code}) (${env})`));

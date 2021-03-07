@@ -2,7 +2,8 @@
 const assert = require("assert"),
     path = require("path"),
     fs = require("fs-extra"),
-    { logger, getMatchingPackages } = require("./utils");
+    { getMatchingPackages } = require("./lernaUtils"),
+    { logger } = require("./utils");
 
 const TYPES_FOLDER = "types",
     DEF_FILE = "index.d.ts",

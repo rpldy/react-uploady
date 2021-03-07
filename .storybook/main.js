@@ -50,8 +50,11 @@ module.exports = {
             enforce: "pre",
         });
 
+        const buildTimeVersion = config.mode !== "development" ? await getCurrentNpmVersion() : ["DEV"];
+        process.env.BUILD_TIME_VERSION = buildTimeVersion[0];
+
         config.plugins.push(new webpack.DefinePlugin({
-            "BUILD_TIME_VERSION": JSON.stringify(config.mode !== "development" ? await getCurrentNpmVersion() : ["DEV"] ),
+            "BUILD_TIME_VERSION": JSON.stringify(buildTimeVersion),
             "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
         }));
 

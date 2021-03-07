@@ -18,6 +18,14 @@ module.exports = {
 		"@babel/plugin-proposal-optional-chaining",
         "@babel/plugin-proposal-export-default-from",
         "minify-dead-code-elimination",
+        ["inline-replace-variables", {
+            "BUILD_TIME_VERSION": {
+                type: "node",
+                replacement: "process.env.BUILD_TIME_VERSION"
+            }
+        }],
+        "transform-inline-environment-variables",
+
         // "@babel/plugin-transform-runtime",
         // ["@babel/plugin-transform-runtime", {
         //     corejs: 3,

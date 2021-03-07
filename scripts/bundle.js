@@ -183,18 +183,14 @@ const getWebpackConfig = (type, name, definition, repoPackages) => {
 
     logger.verbose(`>>>> creating bundle: '${name}' of type: '${type}' - with entries: ${entries.length} - at: ${outputPath}`);
 
+    //Must set this here for babel to pick up and replace inline variable (see in babel config)
+    process.env.BUILD_TIME_VERSION = config.version;
+
     return wpMerge({
         customizeArray: customizeArray({
             "plugins": "append",
         }),
     })(
-        {
-            plugins: config.version ? [
-                new webpack.DefinePlugin({
-                    BUILD_TIME_VERSION: JSON.stringify(config.version),
-                })
-            ] : []
-        },
         config.webpackConfig.base,
         config.webpackConfig[process.env.NODE_ENV] || {},
         {

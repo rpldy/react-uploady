@@ -1,5 +1,5 @@
 // @flow
-import React from "react";
+import React, { useState } from "react";
 import UploadButton from "@rpldy/upload-button";
 import { number, boolean } from "@storybook/addon-knobs";
 import {
@@ -9,7 +9,7 @@ import {
     useStoryUploadySetup,
     type CsfExport,
 } from "../../../story-helpers";
-import TusUploady from "./src";
+import TusUploady, { useAbortAll, useItemProgressListener } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
@@ -23,7 +23,7 @@ const useTusStoryHelper = () => {
 		noLong: true,
 	});
 
-	const chunkSize = number("chunk size (bytes)", 5242880, {}, KNOB_GROUPS.SETTINGS);
+	const chunkSize = number("chunk size (bytes)", 524288, {}, KNOB_GROUPS.SETTINGS);
 	const forgetOnSuccess = boolean("forget on success", false, KNOB_GROUPS.SETTINGS);
 	const resume = boolean("enable resume (storage)", true, KNOB_GROUPS.SETTINGS);
 	const ignoreModifiedDateInStorage = boolean("ignore modifiedDate in resume storage", false, KNOB_GROUPS.SETTINGS);
@@ -39,6 +39,21 @@ const useTusStoryHelper = () => {
 		sendDataOnCreate,
 		sendWithCustomHeader,
 	};
+};
+
+const AbortButton = () => {
+    const abortAll = useAbortAll();
+
+    return <button onClick={abortAll}>Abort</button>;
+};
+
+const ItemProgress = () => {
+    const [progress, setProgress] = useState([]);
+    useItemProgressListener(({ id, loaded, completed }) => {
+        setProgress((latest) => latest.concat(`${id}: LOADED - ${loaded} - COMPLETED - ${completed}`));
+    });
+
+    return progress.map((p) => <p key={p}>{p}</p>);
 };
 
 export const Simple = (): Node => {
@@ -59,7 +74,10 @@ export const Simple = (): Node => {
 		resume={resume}
 		ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}
 		sendDataOnCreate={sendDataOnCreate}>
-		<UploadButton>Upload with TUS</UploadButton>
+		<UploadButton id="upload-button">Upload with TUS</UploadButton>
+        <br/>
+        <AbortButton/>
+        <ItemProgress/>
 	</TusUploady>;
 };
 

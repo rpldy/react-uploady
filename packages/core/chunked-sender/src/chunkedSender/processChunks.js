@@ -40,8 +40,9 @@ export const process = (
             state.uploaded[id] = e.loaded;
 
             const loaded = Object.keys(state.uploaded)
-                .reduce((res, id) =>
-                    res + state.uploaded[id], 0);
+                .reduce((res, id) => res + state.uploaded[id],
+                    //we start from the offset of the first chunk to get an accurate progress on resumed uploads
+                    state.chunks[0].start);
 
             onProgress({ loaded, total: item.file.size }, [item]);
         },

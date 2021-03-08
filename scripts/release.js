@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 const { execSync } = require("child_process")
-const chalk = require("chalk");
-    // shell = require("shelljs");
+const chalk = require("chalk"),
+    shell = require("shelljs");
 
 const shellCommand = (command) => {
-    const result = { code: 0};
+    const result = { code: 0 };
 
     try {
         execSync(command, { stdio: "inherit" });
-    }
-    catch (ex) {
+    } catch (ex) {
         console.log(ex);
         result.code = 1;
     }

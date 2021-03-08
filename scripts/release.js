@@ -8,7 +8,7 @@ const release = () => {
         .join(" ");
 
     console.log(chalk.gray(`___ Running Lerna Version`));
-    let result = shell.exec(`lerna version`);
+    let result = shell.exec(`exec </dev/tty\\n lerna version`);
 
     if (!result.code) {
         console.log(chalk.green(`___ Lerna Version finished successfully`));

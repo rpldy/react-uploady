@@ -28,7 +28,7 @@ const release = () => {
         .join(" ");
 
     console.log(chalk.gray(`___ Running *Lerna Version*`));
-    let result = shellCommand(`lerna version --bla`)
+    let result = shellCommand(`lerna version`);
 
     if (!result.code) {
         console.log(chalk.green(`___ *Lerna Version* finished successfully`));

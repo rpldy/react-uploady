@@ -1,5 +1,5 @@
 {
-  "version": "0.11.2",
+  "version": "0.11.3-alpha.0",
   "name": "@rpldy/upload-url-input",
   "description": "input component to enter a URL (or any string for that matter) to be sent as an upload",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -18,11 +18,11 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore *.test.js --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.11.2",
-    "@rpldy/shared-ui": "^0.11.2"
+    "@rpldy/shared": "^0.11.3-alpha.0",
+    "@rpldy/shared-ui": "^0.11.3-alpha.0"
   },
   "devDependencies": {
-    "@rpldy/uploady": "^0.11.2",
+    "@rpldy/uploady": "^0.11.3-alpha.0",
     "flow-bin": "^0.145.0"
   },
   "peerDependencies": {

@@ -1,7 +1,21 @@
 #!/usr/bin/env node
-// const { execSync, execFileSync } = require("child_process")
-const chalk = require("chalk"),
-    shell = require("shelljs");
+const { execSync } = require("child_process")
+const chalk = require("chalk");
+    // shell = require("shelljs");
+
+const shellCommand = (command) => {
+    const result = { code: 0};
+
+    try {
+        execSync(command, { stdio: "inherit" });
+    }
+    catch (ex) {
+        console.log(ex);
+        result.code = 1;
+    }
+
+    return result;
+};
 
 /**
  * release script separates lerna version and lerna publish
@@ -14,7 +28,7 @@ const release = () => {
         .join(" ");
 
     console.log(chalk.gray(`___ Running *Lerna Version*`));
-    let result = shell.exec(`lerna version`, { stdio: "inherit" });
+    let result = shellCommand(`lerna version --bla`)
 
     if (!result.code) {
         console.log(chalk.green(`___ *Lerna Version* finished successfully`));
@@ -25,7 +39,7 @@ const release = () => {
             console.log(chalk.green(`___ *Build & Bundle* finished successfully`));
             console.log(chalk.gray(`___ Running *Lerna Publish* with args: ${publishArgs}`));
 
-            result = shell.exec(`lerna publish from-package ${publishArgs}`, { stdio: "inherit" });
+            result = shellCommand(`lerna publish from-package ${publishArgs}`);
         } else {
             console.log(chalk.red(`*Build & Bundle* failed !!! (${result.code})`));
         }

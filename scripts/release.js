@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-const { execSync, execFileSync } = require("child_process")
-chalk = require("chalk"),
+// const { execSync, execFileSync } = require("child_process")
+const chalk = require("chalk"),
     shell = require("shelljs");
 
 /**
@@ -25,7 +25,7 @@ const release = () => {
             console.log(chalk.green(`___ *Build & Bundle* finished successfully`));
             console.log(chalk.gray(`___ Running *Lerna Publish* with args: ${publishArgs}`));
 
-            // result = shell.exec(`lerna publish from-package ${publishArgs}`, { stdio: "inherit" });
+            result = shell.exec(`lerna publish from-package ${publishArgs}`, { stdio: "inherit" });
         } else {
             console.log(chalk.red(`*Build & Bundle* failed !!! (${result.code})`));
         }

@@ -23,8 +23,7 @@ const shellCommand = (command) => {
  * can work with the packages' bumped version
  */
 const release = () => {
-
-    const { publishArgs, versionArgs } = yargs.argv;
+    const { publishArgs = "", versionArgs = "" } = yargs.argv;
 
     console.log(chalk.gray(`___ Running *Lerna Version*`));
     let result = shellCommand(`lerna version ${versionArgs}`);

@@ -11,7 +11,7 @@
     "bundle:serve": "http-server ./bundle -p 8009",
     "build": "lerna exec --stream -- FORCE_COLOR=1 NODE_ENV=production yarn build;",
     "clean": "rimraf bundle; lerna exec --stream -- rimraf lib umd",
-    "release": "yarn bootstrap; yarn clean; yarn build; yarn bundle:prod; lerna publish",
+    "release": "yarn bootstrap; yarn clean; node scripts/release.js",
     "release:force": "yarn release --force-publish=*",
     "release:alpha": "yarn release --dist-tag alpha",
     "sb:start": "start-storybook -p 9111 --ci",

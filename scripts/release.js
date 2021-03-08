@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-const { execSync } = require("child_process")
-const chalk = require("chalk"),
+const { execSync } = require("child_process"),
+    yargs = require("yargs"),
+    chalk = require("chalk"),
     shell = require("shelljs");
 
 const shellCommand = (command) => {
@@ -22,11 +23,11 @@ const shellCommand = (command) => {
  * can work with the packages' bumped version
  */
 const release = () => {
-    const publishArgs = process.argv.slice(2)
-        .join(" ");
+
+    const { publishArgs, versionArgs } = yargs.argv;
 
     console.log(chalk.gray(`___ Running *Lerna Version*`));
-    let result = shellCommand(`lerna version`);
+    let result = shellCommand(`lerna version ${versionArgs}`);
 
     if (!result.code) {
         console.log(chalk.green(`___ *Lerna Version* finished successfully`));

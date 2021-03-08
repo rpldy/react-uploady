@@ -10,7 +10,7 @@ const release = () => {
 
     console.log(chalk.gray(`___ Running Lerna Version`));
     // let result = shell.exec(`exec </dev/tty\\n lerna version`);
-    let result = execFileSync("lerna version", { stdio: "inherit" });
+    let result = execSync("lerna version", { stdio: "inherit" });
 
     console.log("!!!!!!!!! version result = ", result);
 

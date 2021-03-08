@@ -3,7 +3,7 @@
   "npmClient": "yarn",
   "command": {
     "version": {
-      "allowBranch": "release-split"
+      "allowBranch": "release"
     },
     "publish": {
       "ignoreChanges": [

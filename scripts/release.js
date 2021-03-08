@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-const chalk = require("chalk"),
+const { execSync, execFileSync } = require("child_process")
+chalk = require("chalk"),
     shell = require("shelljs");
 
 const release = () => {
@@ -8,7 +9,11 @@ const release = () => {
         .join(" ");
 
     console.log(chalk.gray(`___ Running Lerna Version`));
-    let result = shell.exec(`exec </dev/tty\\n lerna version`);
+    // let result = shell.exec(`exec </dev/tty\\n lerna version`);
+    let result = execFileSync("lerna version", { stdio: "inherit" });
+
+    console.log("!!!!!!!!! version result = ", result);
+
 
     if (!result.code) {
         console.log(chalk.green(`___ Lerna Version finished successfully`));

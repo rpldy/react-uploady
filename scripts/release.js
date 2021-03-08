@@ -20,7 +20,6 @@ const shellCommand = (command) => {
  * release script separates lerna version and lerna publish
  * This way, versioning happens before build&bundle so these processes
  * can work with the packages' bumped version
- *
  */
 const release = () => {
     const publishArgs = process.argv.slice(2)

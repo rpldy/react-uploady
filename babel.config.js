@@ -1,4 +1,5 @@
-const env = process.env.BABEL_ENV;
+const env = process.env.BABEL_ENV,
+    isUploadyBundle = process.env.UPLOADY_BUNDLE;
 
 const productionConfig = {
     plugins: [
@@ -32,6 +33,8 @@ const config =  {
         }]
     ],
     env: {
+        //cant use plugn when building storybook :(
+        production: isUploadyBundle ? productionConfig : undefined,
         esm: productionConfig,
         cjs: productionConfig,
 
@@ -54,6 +57,7 @@ const config =  {
 };
 
 module.exports = config;
+
 //     () => {
 //     console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$ ", process.env.BUILD_TIME_VERSION)
 //

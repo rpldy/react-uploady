@@ -9,6 +9,7 @@ import {
 describe("uploadyVersion tests", () => {
 
     beforeEach(() => {
+        process.env.BUILD_TIME_VERSION = "0.0.0";
         delete window[GLOBAL_VERSION_SYM];
     });
 
@@ -27,6 +28,12 @@ describe("uploadyVersion tests", () => {
         registerUploadyContextVersion();
         expect(getIsVersionRegisteredAndDifferent()).toBe(false);
         global[GLOBAL_VERSION_SYM] = "diff";
+        expect(getIsVersionRegisteredAndDifferent()).toBe(true);
+    });
+
+    it("should handle no version registered", () => {
+        registerUploadyContextVersion();
+        process.env.BUILD_TIME_VERSION = null;
         expect(getIsVersionRegisteredAndDifferent()).toBe(true);
     });
 });

@@ -136,8 +136,9 @@ const handleStoredValue = (url: string, tusState: TusState, storedFd: string): ?
 	try {
 		parsed = JSON.parse(storedFd);
 		if (parsed?.extensions) {
+		    const { extensions, version } = parsed;
 			logger.debugLog(`tusSender.featureDetection: retrieved feature detection data from session storage`, parsed);
-			processResponse(tusState, parsed?.extensions, parsed.version);
+			processResponse(tusState, extensions, version);
 		} else{
 			parsed = null;
 		}

@@ -54,8 +54,10 @@ const loadPreviewData = (
     }
 
     if (data) {
+        const { url, type } = data;
+
         props = isFunction(previewComponentProps) ?
-            previewComponentProps(item, data.url, data.type) :
+            previewComponentProps(item, url, type) :
             previewComponentProps;
     }
 

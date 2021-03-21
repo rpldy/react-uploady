@@ -22,7 +22,7 @@ A user pasting (ctrl/cmd+v) a file or files while focused on the element will tr
    $ yarn add @rpldy/uploady @rpldy/upload-paste 
 
 #NPM:
-   $ npm i @rpldy/uploady @rpldy    /upload-paste   
+   $ npm i @rpldy/uploady @rpldy/upload-paste   
 ``` 
 
 ## withPasteUpload

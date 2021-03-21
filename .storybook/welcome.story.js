@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { DiGithubBadge, DiNpm } from "react-icons/di";
-import { TiSocialTwitter } from "react-icons/ti";
+import { TiSocialTwitter, TiSocialInstagram } from "react-icons/ti";
 
 const Container = styled.section`
   background-color: #010916;
@@ -35,29 +35,37 @@ const Container = styled.section`
 `;
 
 const Main = styled.main`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 100px;
 
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-top: 100px;
+    ul {
+        list-style-type: none;
+        padding: 0;
+        min-width: 300px;
+        text-align: center;
 
-  ul {
-      list-style-type: none;
-      padding: 0;
-      min-width: 300px;
+        li {
+            display: inline;
+            font-size: 22px;
+            line-height: 50px;
 
-      li {
-        display: flex;
-        font-size: 22px;
-        line-height: 50px;
-
-        svg {
-          margin-right: 12px;
+            svg {
+                margin-right: 12px;
+                fill: black;
+            }
         }
-      }
     }
+`;
+
+const InfoContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 `;
 
 export const WelcomeReactUploady = () => {
@@ -73,29 +81,39 @@ export const WelcomeReactUploady = () => {
             {PUBLISHED_VERSION.map((v) => <span className="version" key={v}>{v}</span>)}
         </Container>
 
-        <h3>Useful Links:</h3>
+        <InfoContainer>
         <ul>
             <li>
-                <DiGithubBadge size={48}/>
-                <a href="https://github.com/rpldy/react-uploady" target="_blank">rpldy/react-uploady</a>
+                <a href="https://github.com/rpldy/react-uploady" target="_blank" rel="noopener" title="rpldy/react-uploady">
+                    <DiGithubBadge size={48}/>
+                </a>
             </li>
             <li>
-                <DiNpm size={48}/>
-                <a href="https://www.npmjs.com/search?q=%40rpldy" target="_blank">@rpldy</a>
+                <a href="https://www.npmjs.com/search?q=%40rpldy" target="_blank" rel="noopener" title="@rpldy">
+                    <DiNpm size={48}/>
+                </a>
             </li>
         </ul>
 
-        <h3>Created By:</h3>
+        <h3>Created By Yoav Niran</h3>
         <ul>
             <li>
-                <TiSocialTwitter size={48}/>
-                <a href="https://twitter.com/poeticGeek" target="_blank">@poeticGeek</a>
+                <a href="https://twitter.com/poeticGeek" target="_blank" rel="noopener" title="@poeticGeek">
+                    <TiSocialTwitter size={48}/>
+                </a>
             </li>
             <li>
-                <DiGithubBadge size={48}/>
-                <a href="https://github.com/yoavniran" target="_blank">yoavniran</a>
+                <a href="https://www.instagram.com/literarycoder" target="_blank" rel="noopener" title="@literaryCoder">
+                    <TiSocialInstagram size={48}/>
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/yoavniran" target="_blank" rel="noopener" title="yoavniran">
+                    <DiGithubBadge size={48}/>
+                </a>
             </li>
         </ul>
+        </InfoContainer>
     </Main>;
 };
 

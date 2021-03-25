@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.11.4 (2021-03-25)
+
+### Bug fixes
+
+- `[shared-ui]` - added typing to support async version of hook. Fix for #158
+
+### Internal
+
+- `all` - upgraded to lastest flow 0.146.0
+- `storybook` - upgraded to SB 6.1.21
+
 ## 0.11.3 (2021-03-08)
 
 ### Bug fixes

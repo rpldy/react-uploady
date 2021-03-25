@@ -24,7 +24,13 @@ import {
     NoDomUploady,
     withRequestPreSendUpdate,
     WithRequestPreSendUpdateWrappedProps,
+    CreateOptions,
 } from "./index";
+
+const makeApiCall = (options: CreateOptions): Promise<{ important: string }> =>
+    new Promise((resolve) => {
+        resolve({ important: "info" });
+    });
 
 const EventHooksTest: React.FC = () => {
 
@@ -95,7 +101,17 @@ const EventHooksTest: React.FC = () => {
         }
 
         return {
-            options: { method }
+            options: { method },
+        };
+    });
+
+    useRequestPreSend(async ({ options }) => {
+        const apiResult = await makeApiCall(options);
+
+        return {
+           options: {
+               params: { foo: apiResult.important },
+           }
         };
     });
 

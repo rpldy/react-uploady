@@ -111,9 +111,11 @@ const sendAllowedItems = (queue: QueueState, itemsSendData: ItemsSendData, next:
         };
     }
 
+    const { request } = sendResult;
+
     updateUploadingState(queue, items, sendResult);
 
-    return sendResult.request
+    return request
         //wait for server request to return
         .then((requestInfo: UploadData) => {
             const finishedData = items.map((item) => ({

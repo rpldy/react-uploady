@@ -78,8 +78,10 @@ export const useAllAbortListener: (cb: () => void) => void;
 
 export type PreSendData = { items: BatchItem[]; options: CreateOptions };
 
+export type PreSendResponse = { items?: BatchItem[]; options?: CreateOptions };
+
 export const useRequestPreSend: (cb: (data: PreSendData) =>
-    { items?: BatchItem[]; options?: CreateOptions }) => void;
+    PreSendResponse | Promise<PreSendResponse>) => void;
 
 export const useUploadOptions: (options?: CreateOptions) => CreateOptions;
 

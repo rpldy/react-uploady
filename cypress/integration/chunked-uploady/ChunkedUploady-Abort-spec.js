@@ -10,15 +10,15 @@ describe("ChunkedUploady - Abort and continue", () => {
         cy.visitStory("chunkedUploady", "with-abort-button&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url&knob-chunk size (bytes)_Upload Settings=50000");
     });
 
-    //TODO !!!!! bring back test when cypress releases fix for: https://github.com/cypress-io/cypress/pull/14885 !!!!1111
-
-    it.skip("should be able to upload again after abort", () => {
+    it("should be able to upload again after abort", () => {
         let abortedRequests = 0;
 
         interceptWithHandler((req) => {
             const formData = interceptFormData(req);
 
             if (formData["file"] === abortedFileName) {
+                console.log("!!!!!!!!!!!!!! INTERCEPTED !!!!!!!!!!1 ", abortedRequests)
+
                 abortedRequests += 1;
             }
 
@@ -35,13 +35,11 @@ describe("ChunkedUploady - Abort and continue", () => {
             cy.storyLog().assertLogPattern(/ITEM_ABORT/);
 
             uploadFile(fileName, () => {
-                cy.wait(1000)
-                    .then(() => {
-                        for (let i = 0; i < abortedRequests; i++) {
-                            cy.wait("@uploadReq");
-                        }
+                for (let i = 0; i < (abortedRequests); i++) {
+                    cy.wait("@uploadReq");
+                }
 
-                    });
+                cy.wait(1000);
 
                 cy.storyLog().assertFileItemStartFinish(fileName, 5);
 

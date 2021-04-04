@@ -6967,7 +6967,7 @@ cypress-intercept-formdata@^0.1.2:
   resolved "https://registry.yarnpkg.com/cypress-intercept-formdata/-/cypress-intercept-formdata-0.1.2.tgz#9794f619b958ad7fb28166f1ea6cdca640998dd9"
   integrity sha512-eq7QUxenfhBiSSUrV+19mhPs1HBazjAlGXLPuUljaZJvPDXz+jOmRaJw6MieSbXU02/hNdAy24exxLC3eOasRg==
 
-cypress@^6.6.0:
+cypress@^6.8.0:
   version "6.8.0"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-6.8.0.tgz#8338f39212a8f71e91ff8c017a1b6e22d823d8c1"
   integrity sha512-W2e9Oqi7DmF48QtOD0LfsOLVq6ef2hcXZvJXI/E3PgFNmZXEVwBefhAxVCW9yTPortjYA2XkM20KyC4HRkOm9w==

@@ -22,14 +22,15 @@ const getCurrentNpmVersion = async () => {
 
 const addEnvParams = async (config) => {
     const publishedVersion = config.mode !== "development" ? await getCurrentNpmVersion() : ["DEV"];
-    const definePlugin = config.plugins.find((plugin) => plugin instanceof webpack.DefinePlugin);
+    const definePlugin = config.plugins.find((plugin) =>
+        plugin instanceof webpack.DefinePlugin) || { definitions: {} };
 
     const definitions = {
-        ...definePlugin?.definitions,
+        ...definePlugin.definitions,
         "PUBLISHED_VERSION": JSON.stringify(publishedVersion),
         "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
         "process.env": {
-            ...(definePlugin?.definitions["process.env"] || process.env),
+            ...(definePlugin.definitions["process.env"] || process.env),
             BUILD_TIME_VERSION: JSON.stringify(getUploadyVersion()),
         }
     }

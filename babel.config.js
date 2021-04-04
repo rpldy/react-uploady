@@ -34,7 +34,7 @@ const config =  {
         }]
     ],
     env: {
-        //cant use plugn when building storybook :(
+        //cant use plugin when building storybook :(
         production: isUploadyBundle ? productionConfig : undefined,
         esm: productionConfig,
         cjs: productionConfig,

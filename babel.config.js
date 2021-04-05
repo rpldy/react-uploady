@@ -25,6 +25,7 @@ const config =  {
         "@babel/plugin-proposal-class-properties",
         "@babel/plugin-proposal-optional-chaining",
         "@babel/plugin-proposal-export-default-from",
+        "@babel/plugin-proposal-nullish-coalescing-operator",
         "minify-dead-code-elimination",
         "lodash",
         ["module-resolver", {
@@ -33,7 +34,7 @@ const config =  {
         }]
     ],
     env: {
-        //cant use plugn when building storybook :(
+        //cant use plugin when building storybook :(
         production: isUploadyBundle ? productionConfig : undefined,
         esm: productionConfig,
         cjs: productionConfig,

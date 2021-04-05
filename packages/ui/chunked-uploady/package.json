@@ -38,8 +38,8 @@
   },
   "devDependencies": {
     "@rpldy/upload-button": "^0.11.4",
-    "@storybook/addon-knobs": "^6.1.10",
-    "flow-bin": "^0.146.0"
+    "@storybook/addon-knobs": "^6.2.1",
+    "flow-bin": "^0.147.0"
   },
   "peerDependencies": {
     "react": ">=16.8.x"

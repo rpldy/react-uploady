@@ -136,7 +136,7 @@ workflows:
           requires:
             - setup
           yarn: true
-          build: "yarn sb:build"
+          build: "yarn sb:build:prod"
           post-install:
             # this sucks! need to find way to use output from bundle job!!! doesnt seem possible because cypress orb hardcodes - attach_workspace: at: ~/
             - bundle

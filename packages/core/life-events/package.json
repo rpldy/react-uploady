@@ -27,7 +27,7 @@
     "is-promise": "^4.0.0"
   },
   "devDependencies": {
-    "flow-bin": "^0.146.0"
+    "flow-bin": "^0.147.0"
   },
   "publishConfig": {
     "access": "public"

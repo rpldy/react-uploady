@@ -40,7 +40,7 @@ module.exports = {
             "core": {
                 pkgs: [PKGS.LIFE_EVENTS, PKGS.SHARED, PKGS.SENDER, PKGS.UPLOADER],
                 target: PKGS.UPLOADER,
-                maxSize: 12000,
+                maxSize: 10500,
                 dontUsePolyfills: true,
             },
 
@@ -53,7 +53,7 @@ module.exports = {
                 config: {
                     externals: ["react", "react-dom"],
                 },
-                maxSize: 16000,
+                maxSize: 14000,
             },
 
             /**
@@ -65,7 +65,7 @@ module.exports = {
                 config: {
                     externals: ["react", "react-dom"],
                 },
-                maxSize: 18000,
+                maxSize: 16000,
             },
 
             /**
@@ -111,7 +111,7 @@ module.exports = {
                         },
                     };
                 },
-                maxSize: 26000,
+                maxSize: 24000,
             },
 
             //TODO: find a way to make this work with global object assignment (wepackages/tus-sender/src/tusSender/initTusUpload/createUpload.js:88:94bpack externals root)
@@ -175,7 +175,8 @@ module.exports = {
                             test: /[\\/]node_modules[\\/]/,
                             name: "polyfills",
                             filename: "[name]-bundle.js",
-                            chunks: "all"
+                            chunks: "all",
+                            minSize: 0,
                         }
                     }
                 }
@@ -212,7 +213,7 @@ module.exports = {
                 namedChunks: true,
                 //needed for production build to work with single/shared polyfills bundle
                 namedModules: true,
-                //use hashed ids for smaller bundles
+                //"total-size" is slightly smaller but requires that each bundle relies on its own polyfill bundle and cannot share
                 moduleIds: "hashed",
             },
             plugins: [

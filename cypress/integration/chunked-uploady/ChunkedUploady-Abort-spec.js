@@ -17,8 +17,6 @@ describe("ChunkedUploady - Abort and continue", () => {
             const formData = interceptFormData(req);
 
             if (formData["file"] === abortedFileName) {
-                console.log("!!!!!!!!!!!!!! INTERCEPTED !!!!!!!!!!1 ", abortedRequests)
-
                 abortedRequests += 1;
             }
 
@@ -26,6 +24,7 @@ describe("ChunkedUploady - Abort and continue", () => {
         });
 
         uploadFile(fileName, () => {
+            cy.wait(100);
             cy.get("button[data-test='abort-batch-0']")
                 .click();
 
@@ -34,10 +33,11 @@ describe("ChunkedUploady - Abort and continue", () => {
             cy.storyLog().assertLogPattern(/BATCH_ABORT/);
             cy.storyLog().assertLogPattern(/ITEM_ABORT/);
 
+            for (let i = 0; i < (abortedRequests); i++) {
+                cy.wait("@uploadReq");
+            }
+
             uploadFile(fileName, () => {
-                for (let i = 0; i < (abortedRequests); i++) {
-                    cy.wait("@uploadReq");
-                }
 
                 cy.wait(1000);
 
@@ -54,7 +54,7 @@ describe("ChunkedUploady - Abort and continue", () => {
                             .to.match(/rpldy-chunked-uploader-/);
 
                         expect(headers["content-range"])
-                            .to.match(/bytes 0-49999\//);
+                            .to.match(/bytes 0-49999\//, `aborted upload made: ${abortedRequests} requests`);
                     });
 
                 cy.wait("@uploadReq")

@@ -20,7 +20,7 @@
     "sb:bw": "yarn sb:build --watch",
     "sb:serve": "http-server ./.sb-static -p 8001",
     "start": "yarn sb:start",
-    "jest": "NODE_ENV=test jest",
+    "jest": "NODE_ENV=test jest --maxWorkers=25%",
     "jest:cov": "yarn jest --coverage",
     "jest:ci": "yarn jest:cov --ci --runInBand --reporters='default' --reporters='jest-junit' ",
     "flow:mono": "flow-mono create-symlinks ./.flowconfig",

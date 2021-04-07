@@ -22,7 +22,7 @@
     "start": "yarn sb:start",
     "jest": "NODE_ENV=test jest --maxWorkers=25%",
     "jest:cov": "yarn jest --coverage",
-    "jest:ci": "yarn jest:cov --ci --runInBand --reporters='default' --reporters='jest-junit' ",
+    "jest:ci": "NODE_ENV=test jest --coverage --ci --runInBand --reporters='default' --reporters='jest-junit'",
     "flow:mono": "flow-mono create-symlinks ./.flowconfig",
     "flow": "yarn flow:mono; flow --show-all-errors",
     "flow:copy": "lerna exec --stream -- yarn flow:copy",

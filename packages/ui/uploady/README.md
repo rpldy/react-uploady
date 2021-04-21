@@ -363,7 +363,7 @@ Called when item finished uploading
 
 Called every time progress data is received for this file upload
 
-> This event can be scoped to a specific batch by passing the item id as a second parameter
+> This event can be scoped to a specific item by passing the item id as a second parameter
 
 ```javascript
     import { useItemProgressListener } from "@rpldy/uploady";

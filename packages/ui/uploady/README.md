@@ -322,7 +322,7 @@ For grouped uploads (multiple files in same xhr request) ITEM_START is triggered
 
 > This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
 
-> This event can be scoped to a specific batch by passing the item id as a second parameter
+> This event can be scoped to a specific item by passing the item id as a second parameter
 
 ```javascript
     import { useItemStartListener } from "@rpldy/uploady";
@@ -345,7 +345,7 @@ For grouped uploads (multiple files in same xhr request) ITEM_START is triggered
 
 Called when item finished uploading
 
-> This event can be scoped to a specific batch by passing the item id as a second parameter
+> This event can be scoped to a specific item by passing the item id as a second parameter
 
 ```javascript
     import { useItemFinishListener } from "@rpldy/uploady";
@@ -383,7 +383,7 @@ Called every time progress data is received for this file upload
 
 Called in case item was cancelled from ITEM_START event handler
 
-> This event can be scoped to a specific batch by passing the item id as a second parameter
+> This event can be scoped to a specific item by passing the item id as a second parameter
 
 ```javascript
     import { useItemCancelListener } from "@rpldy/uploady";
@@ -401,7 +401,7 @@ Called in case item was cancelled from ITEM_START event handler
 
 Called in case item upload failed
 
-> This event can be scoped to a specific batch by passing the item id as a second parameter
+> This event can be scoped to a specific item by passing the item id as a second parameter
 
 ```javascript
     import { useItemErrorListener } from "@rpldy/uploady";
@@ -419,7 +419,7 @@ Called in case item upload failed
 
 Called in case [abort](#abort) was called for an item
 
-> This event can be scoped to a specific batch by passing the item id as a second parameter
+> This event can be scoped to a specific item by passing the item id as a second parameter
 
 ```javascript
     import { useItemAbortListener } from "@rpldy/uploady";
@@ -437,7 +437,7 @@ Called in case [abort](#abort) was called for an item
 
 Called for item when uploading is done due to: finished, error, cancel or abort
 
-> This event can be scoped to a specific batch by passing the item id as a second parameter
+> This event can be scoped to a specific item by passing the item id as a second parameter
 
 ```javascript
     import { useItemFinalizeListener } from "@rpldy/uploady";

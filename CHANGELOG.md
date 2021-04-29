@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.5 (2021-04-29)
+
+### Bug fixes
+
+- `[shared-ui]` - fix useRequestPreSend typing to support boolean return. Fix for #164
+
 ## 0.11.4 (2021-03-25)
 
 ### Bug fixes

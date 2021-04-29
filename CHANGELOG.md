@@ -6,6 +6,15 @@
 
 - `[shared-ui]` - fix useRequestPreSend typing to support boolean return. Fix for #164
 
+### Docs
+
+- `[uploady]` - fix useItemProgressListener description
+- `[uploady]` - fix item event hooks descriptions
+
+### Internal
+
+- `all` - upgraded deps: flow (0.147.0), storybook (6.2.2), cypress (6.8.0), babel (7.13.14)
+
 ## 0.11.4 (2021-03-25)
 
 ### Bug fixes

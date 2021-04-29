@@ -81,7 +81,7 @@ export type PreSendData = { items: BatchItem[]; options: CreateOptions };
 export type PreSendResponse = { items?: BatchItem[]; options?: CreateOptions };
 
 export const useRequestPreSend: (cb: (data: PreSendData) =>
-    PreSendResponse | Promise<PreSendResponse>) => void;
+    PreSendResponse | boolean | Promise<PreSendResponse> | Promise<boolean>) => void;
 
 export const useUploadOptions: (options?: CreateOptions) => CreateOptions;
 

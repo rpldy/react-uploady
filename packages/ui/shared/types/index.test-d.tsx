@@ -115,6 +115,15 @@ const EventHooksTest: React.FC = () => {
         };
     });
 
+    useRequestPreSend(() => {
+        return false;
+    });
+
+    useRequestPreSend(async () => {
+        await makeApiCall({});
+        return false;
+    });
+
     return <div>
         <div>test</div>
         <div>batch progress: ${batchProgress.completed}</div>

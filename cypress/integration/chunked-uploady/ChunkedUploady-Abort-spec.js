@@ -10,9 +10,7 @@ describe("ChunkedUploady - Abort and continue", () => {
         cy.visitStory("chunkedUploady", "with-abort-button&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url&knob-chunk size (bytes)_Upload Settings=50000");
     });
 
-    //TODO !!!!! bring back test when cypress releases fix for: https://github.com/cypress-io/cypress/pull/14885 !!!!1111
-
-    it.skip("should be able to upload again after abort", () => {
+    it("should be able to upload again after abort", () => {
         let abortedRequests = 0;
 
         interceptWithHandler((req) => {
@@ -26,6 +24,7 @@ describe("ChunkedUploady - Abort and continue", () => {
         });
 
         uploadFile(fileName, () => {
+            cy.wait(100);
             cy.get("button[data-test='abort-batch-0']")
                 .click();
 
@@ -34,14 +33,13 @@ describe("ChunkedUploady - Abort and continue", () => {
             cy.storyLog().assertLogPattern(/BATCH_ABORT/);
             cy.storyLog().assertLogPattern(/ITEM_ABORT/);
 
-            uploadFile(fileName, () => {
-                cy.wait(1000)
-                    .then(() => {
-                        for (let i = 0; i < abortedRequests; i++) {
-                            cy.wait("@uploadReq");
-                        }
+            for (let i = 0; i < (abortedRequests); i++) {
+                cy.wait("@uploadReq");
+            }
 
-                    });
+            uploadFile(fileName, () => {
+
+                cy.wait(1000);
 
                 cy.storyLog().assertFileItemStartFinish(fileName, 5);
 
@@ -56,7 +54,7 @@ describe("ChunkedUploady - Abort and continue", () => {
                             .to.match(/rpldy-chunked-uploader-/);
 
                         expect(headers["content-range"])
-                            .to.match(/bytes 0-49999\//);
+                            .to.match(/bytes 0-49999\//, `aborted upload made: ${abortedRequests} requests`);
                     });
 
                 cy.wait("@uploadReq")

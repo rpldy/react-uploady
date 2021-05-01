@@ -24,7 +24,7 @@ import {
     NoDomUploady,
     withRequestPreSendUpdate,
     WithRequestPreSendUpdateWrappedProps,
-    CreateOptions,
+    CreateOptions, PreSendResponse,
 } from "./index";
 
 const makeApiCall = (options: CreateOptions): Promise<{ important: string }> =>
@@ -103,6 +103,16 @@ const EventHooksTest: React.FC = () => {
         return {
             options: { method },
         };
+    });
+
+    useRequestPreSend(({ options }) => {
+        const method = options.method;
+
+        const res: Promise<boolean | PreSendResponse> = new Promise((resolve) => {
+            resolve(method === "GET" ? false : { options: { autoUpload: false } })
+        });
+
+        return res;
     });
 
     useRequestPreSend(async ({ options }) => {

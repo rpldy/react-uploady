@@ -109,7 +109,7 @@ const EventHooksTest: React.FC = () => {
         const method = options.method;
 
         const res: Promise<boolean | PreSendResponse> = new Promise((resolve) => {
-            resolve(method === "GET" ? false : { options: { autoUpload: false } })
+            resolve(method === "GET" ? false : { options: { autoUpload: false } });
         });
 
         return res;

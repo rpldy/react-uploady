@@ -1,5 +1,5 @@
 {
-    "version": "0.11.5",
+    "version": "0.11.6",
     "name": "@rpldy/shared-ui",
     "description": "internal set of utils+types for react-uploady UI",
     "author": "yoav niran (https://github.com/yoavniran)",

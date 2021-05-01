@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.6 (2021-05-01)
+
+### Bug fixes
+
+- `[shared-ui]` - fix useRequestPreSend typing to support return type: Promise<PreSendResponse | boolean>
+
 ## 0.11.5 (2021-04-29)
 
 ### Bug fixes

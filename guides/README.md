@@ -31,3 +31,5 @@
 * [Cloudinary](Cloudinary.md) - Uploading to Cloudinary
 
 * [DropAndPaste](DropAndPaste.md) - Drop and Paste in one place
+
+* [Custom Input](CustomInput.md) - Custom File Input

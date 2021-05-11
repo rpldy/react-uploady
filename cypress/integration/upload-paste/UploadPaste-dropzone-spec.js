@@ -8,7 +8,11 @@ describe("UploadPaste - Wrap Upload-DropZone", () => {
         cy.visitStory("uploadPaste", "with-paste-drop-zone&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
     });
 
-    it("should upload pasted file from drop-zone", () => {
+    beforeEach(() => {
+        cy.storyLog().resetStoryLog()
+    });
+
+    it("drop should continue working on wrapped drop-zone", () => {
         intercept("http://test.upload/url");
 
         dropFile(fileName, () => {
@@ -19,17 +23,21 @@ describe("UploadPaste - Wrap Upload-DropZone", () => {
 
             cy.wait(200);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
-
-            cy.get("#upload-drop-zone")
-                .pasteFile(fileName);
-
-            cy.wait("@uploadReq")
-                .interceptFormData((formData) => {
-                    expect(formData["test"]).to.eq("paste");
-                });
-
-            cy.wait(200);
-            cy.storyLog().assertFileItemStartFinish(fileName, 4);
         });
+    });
+
+    it("should upload file pasted to wrapper drop-zone", () => {
+        intercept("http://test.upload/url");
+
+        cy.get("#upload-drop-zone")
+            .pasteFile(fileName);
+
+        cy.wait("@uploadReq")
+            .interceptFormData((formData) => {
+                expect(formData["test"]).to.eq("paste");
+            });
+
+        cy.wait(200);
+        cy.storyLog().assertFileItemStartFinish(fileName, 1);
     });
 });

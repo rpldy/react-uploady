@@ -58,14 +58,17 @@ const getDestinationFromInput = (input: HTMLInputElement): ?DestinationShape => 
     return destination;
 };
 
-export default (fileInputRef: InputRef) => {
+const useFileInput = (fileInputRef?: InputRef): ?InputRef => {
     const context = useUploadyContext();
+    const inputGiven = !!fileInputRef;
 
-    context.setExternalFileInput(fileInputRef);
+    if (fileInputRef) {
+        context.setExternalFileInput(fileInputRef);
+    }
 
     useEffect(() => {
             //uses Element.prototype.closest so no IE11 support - use polyfill
-            if (fileInputRef.current && fileInputRef.current.closest) {
+            if (fileInputRef?.current && fileInputRef.current.closest) {
                 const input = fileInputRef.current;
                 const uploaderOptions = context.getOptions();
 
@@ -77,4 +80,8 @@ export default (fileInputRef: InputRef) => {
             }
         },
         [fileInputRef, context]);
+
+    return inputGiven ? fileInputRef : context.getInternalFileInput();
 };
+
+export default useFileInput;

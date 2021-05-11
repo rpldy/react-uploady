@@ -15,6 +15,7 @@ const NO_INPUT_ERROR_MSG = "Uploady - Context. File input isn't available";
 export const createContextApi =
     (uploader: UploaderType, internalInputRef: ?InputRef): UploadyContextType => {
         let fileInputRef, showFileUploadOptions;
+        let isUsingExternalInput = false;
 
         if (internalInputRef) {
             fileInputRef = internalInputRef;
@@ -25,8 +26,20 @@ export const createContextApi =
         const getInputField = () => fileInputRef?.current;
 
         const setExternalFileInput = (extRef: InputRef) => {
+            isUsingExternalInput = true;
             fileInputRef = extRef;
         };
+
+        const getInternalFileInput = (): ?InputRef => {
+            //retrieving the internal file input in userland means Uploady considers the input as custom from now on
+            if (fileInputRef) {
+                isUsingExternalInput = true;
+            }
+
+            return fileInputRef;
+        };
+
+        const getIsUsingExternalInput = (): boolean => isUsingExternalInput;
 
         const showFileUpload = (addOptions?: ?GetExact<UploadOptions>) => {
             const input: ?HTMLInputElement = getInputField();
@@ -114,7 +127,9 @@ export const createContextApi =
 
         return {
             hasUploader,
+            getInternalFileInput,
             setExternalFileInput,
+            getIsUsingExternalInput,
             showFileUpload,
             upload,
 			processPending,

@@ -5,6 +5,7 @@ const UploadyContextMock = {
     getOptions: jest.fn(),
     setOptions: jest.fn(),
     setExternalFileInput: jest.fn(),
+    getInternalFileInput: jest.fn(),
     upload: jest.fn(),
     getExtension: jest.fn(),
     on: jest.fn(),

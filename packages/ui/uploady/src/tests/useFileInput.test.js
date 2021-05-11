@@ -132,4 +132,18 @@ describe("useFileInput tests", () => {
         expect(UploadyContext.setOptions)
             .not.toHaveBeenCalled();
     });
+
+    it("should return context internal input if no params passed", () => {
+        const TestCompNoParam = () => {
+          const fileInput = useFileInput();
+
+          return <div>{fileInput}</div>;
+        };
+
+        UploadyContext.getInternalFileInput.mockReturnValueOnce("file input");
+
+        const wrapper = mount(<TestCompNoParam />);
+
+        expect(wrapper).toHaveText("file input");
+    });
 });

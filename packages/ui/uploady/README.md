@@ -583,15 +583,12 @@ Returns abort all method
 When customInput prop is set to true, Uploady will not create its own file input element.
 In this case, Uploady will wait for a ref to an existing input.
 
-
 The way you pass in your own input element is by using this hook.
 
 In case Uploady wasn't provided with a destination prop or if it doesn't have a URL property, 
 Uploady will check whether the input resides in a form. It will then use the form's action and method to set the upload endpoint and request method.
  
 > In case the form's attributes were used for the upload destination, updating the form's attributes dynamically won't affect the uploader configuration once it was set.
- 
- 
 
 ```javascript
 import Uploady, { useFileInput } from "@rpldy/uploady";
@@ -619,6 +616,25 @@ export const WithCustomFileInputAndForm = () => {
 };
 
 ```
+
+This hook can also be used to retrieve Uploady's internal file input. Calling the hook without parameters will return the ref.
+
+```javascript
+
+const inputRef = useFileInput();
+
+if (inputRef.current) {
+    inputRef.current.setAttribute("webkitdirectory", "true");
+}
+
+```
+
+__NOTE!__ This isn't the recommended, or the 'Reacty' way to do things. It is still recommended to pass along a ref to an input that you render.
+In the future, accessing the internal input may have other consequences related to opting to interact with it directly instead of passing props to the Uploady component.
+
+
+
+Check out the [Custom Input guide](../../../guides/CustomInput.md) for more details and examples.
 
 ## HOCs
 

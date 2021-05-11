@@ -11,7 +11,8 @@ const createResponse = (options = {}) => ({
     ...options,
 });
 
-export const interceptWithHandler = (handler, alias, url = DEFAULT_URL, method: DEFAULT_METHOD) => intercept(url, method, handler, alias);
+export const interceptWithHandler = (handler, alias, url = DEFAULT_URL, method: DEFAULT_METHOD) =>
+    intercept(url, method, handler, alias);
 
 const intercept = (url = DEFAULT_URL, method = DEFAULT_METHOD, resOptions, alias = "uploadReq") => {
     const handler = (typeof resOptions === "function")  ? resOptions : createResponse(resOptions)

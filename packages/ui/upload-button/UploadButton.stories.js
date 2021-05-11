@@ -17,7 +17,7 @@ import Uploady, {
     useBatchStartListener,
     useBatchFinishListener,
     useBatchAddListener,
-    useUploadyContext,
+    useUploady,
 } from "@rpldy/uploady";
 import {
     useStoryUploadySetup,
@@ -308,6 +308,55 @@ export const WithCustomFileInputAndForm = (): Element<"section"> => {
     </section>
 };
 
+const ExampleFormWithCustomButton = ({ url }) => {
+    const { showFileUpload } = useUploady();
+    const [selectDir, setSelectDir] = useState(false);
+    const inputRef = useRef();
+    useFileInput(inputRef);
+
+    const onSelectChange = useCallback((e) => {
+        setSelectDir(e.target.value === "dir");
+    }, []);
+
+    const onClick = useCallback(() => {
+        showFileUpload();
+    }, []);
+
+    return <>
+        <form action={url} method="POST">
+            <input
+                type="file"
+                name="testFile"
+                style={{ display: "none" }}
+                ref={inputRef}
+                webkitdirectory={selectDir ? "true" : undefined}
+            />
+        </form>
+        <select id="select-input-type" onChange={onSelectChange}>
+            <option value="file">File</option>
+            <option value="dir">Directory</option>
+        </select>
+        <button onClick={onClick}>Upload</button>
+    </>;
+};
+
+export const WithCustomFileInputAndCustomButton = (): Element<"section"> => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    return <section>
+        <Uploady
+            debug
+            customInput
+            multiple={multiple}
+            enhancer={enhancer}
+            grouped={grouped}
+            maxGroupSize={groupSize}
+        >
+            <ExampleFormWithCustomButton url={destination.url}/>
+        </Uploady>
+    </section>
+};
+
 export const WithFileFilter = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
@@ -373,11 +422,11 @@ const MyUploadField = asUploadButton(
 const MyForm = () => {
     const [fields, setFields] = useState({});
     const [fileName, setFileName] = useState(null);
-    const uploadyContext = useUploadyContext();
+    const { processPending } = useUploady();
 
     const onSubmit = useCallback(() => {
-        uploadyContext.processPending({ params: fields });
-    }, [fields, uploadyContext]);
+        processPending({ params: fields });
+    }, [fields, processPending]);
 
     const onFieldChange = useCallback((e) => {
         setFields({

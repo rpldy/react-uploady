@@ -6965,10 +6965,10 @@ cypress-file-upload@^5.0.7:
   resolved "https://registry.yarnpkg.com/cypress-file-upload/-/cypress-file-upload-5.0.7.tgz#acf24fe08a92b2d0c892a58b56811fb933d34ea9"
   integrity sha512-cgWsWx7igxjyyVm9/VJ9ukdy69jL00I7z0lrwUWtXXLPvX4neO+8JAZ054Ax8Xf+mdV9OerenXzb9nqRoafjHA==
 
-cypress-intercept-formdata@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/cypress-intercept-formdata/-/cypress-intercept-formdata-0.1.2.tgz#9794f619b958ad7fb28166f1ea6cdca640998dd9"
-  integrity sha512-eq7QUxenfhBiSSUrV+19mhPs1HBazjAlGXLPuUljaZJvPDXz+jOmRaJw6MieSbXU02/hNdAy24exxLC3eOasRg==
+cypress-intercept-formdata@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/cypress-intercept-formdata/-/cypress-intercept-formdata-0.3.0.tgz#f1bf64eca99f57e100290474958efef83672c724"
+  integrity sha512-2K8sbCtLYuK5w9mFk+1NAYoUjhUEpknP/xmCpLMgu011y3I6zlnRIceb3fHG0V/5Ru+b6RARdPfUAsjHEV0bpw==
 
 cypress@^7.3.0:
   version "7.3.0"

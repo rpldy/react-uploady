@@ -113,6 +113,7 @@ describe("UploadyContext tests", () => {
         context.setExternalFileInput({ current: fileInput });
         context.showFileUpload();
         expect(fileInput.click).toHaveBeenCalled();
+        expect(context.getIsUsingExternalInput()).toBe(true);
     });
 
     it("should clear uploader pending", () => {
@@ -127,6 +128,24 @@ describe("UploadyContext tests", () => {
 
         it("should return false when uploader not provided", () => {
             expect(getTestContext(null, null).hasUploader()).toBe(false);
+        });
+    });
+
+    describe("getInternalFileInput tests", () => {
+        it("should return internal input ref", () => {
+            const context = getTestContext();
+
+            const internalRef = context.getInternalFileInput();
+            expect(internalRef.current).toStrictEqual(fileInput);
+            expect(context.getIsUsingExternalInput()).toBe(true);
+        });
+
+        it("should handle get when no internal ref available", () => {
+            const context = getTestContext(false);
+            const internalRef = context.getInternalFileInput();
+
+            expect(internalRef).toBeUndefined();
+            expect(context.getIsUsingExternalInput()).toBe(false);
         });
     });
 

@@ -9,13 +9,14 @@ import {
     useStoryUploadySetup,
     getCsfExport,
     StoryAbortButton,
-    type CsfExport
+    type CsfExport,
 } from "../../../story-helpers";
 import { getUploadyVersion } from "@rpldy/shared-ui";
 import Uploady, {
     FILE_STATES,
 
     useUploady,
+    useFileInput,
     NoDomUploady,
     useUploadOptions,
     useBatchAddListener,
@@ -262,6 +263,43 @@ export const withCustomResponseFormat = (): Node => {
         autoUpload={autoUpload}
         formatServerResponse={resFormatter}>
         <ContextUploadButton />
+    </Uploady>;
+};
+
+const UploadFormWithInternalInput = () => {
+    const inputRef = useFileInput();
+
+    const onSelectChange = useCallback((e) => {
+        if (e.target.value === "dir") {
+            inputRef?.current?.setAttribute("webkitdirectory", "true");
+        } else {
+            inputRef?.current?.removeAttribute("webkitdirectory");
+        }
+    }, []);
+
+    return <>
+        <select id="select-input-type" onChange={onSelectChange}>
+            <option value="file">File</option>
+            <option value="dir">Directory</option>
+        </select>
+        <ContextUploadButton/>
+    </>;
+};
+
+export const withExposedInternalInput = (): Node => {
+    const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
+
+    return <Uploady
+        debug
+        concurrent
+        maxConcurrent={10}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+        autoUpload={autoUpload}>
+
+        <UploadFormWithInternalInput/>
     </Uploady>;
 };
 

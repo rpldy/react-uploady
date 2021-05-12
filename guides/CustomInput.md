@@ -90,3 +90,42 @@ export const App = () => {
 The code above will change the `webkitdirectory` based on user selection. 
 This should be useful for applications where something about the file input should change based on user interaction or any other kind of business logic.  
 
+### Access Uploady's File Input
+
+In case you don't want to create your own file input but still want to directly influence the input in your own code, useFileInput can be used as well.
+When useFileInput is called without parameters, it will return a ref to the internal input Uploady renders when its created.
+
+> Note: This isn't the recommended, or the 'Reacty' way to do things. It is still recommended to pass along a ref to an input that you render
+
+```javascript
+import Uploady, { useFileInput } from "@rpldy/uploady";
+import UploadButton from "@rpldy/upload-button";
+
+const UploadFormWithInternalInput = () => {
+    const inputRef = useFileInput();
+
+    const onSelectChange = useCallback((e) => {
+        if (e.target.value === "dir") {
+            inputRef.current.setAttribute("webkitdirectory", true);
+        } else {
+            inputRef.current.removeAttribute("webkitdirectory");
+        }
+    }, []);
+
+    return <>
+        <select id="select-input-type" onChange={onSelectChange}>
+            <option value="file">File</option>
+            <option value="dir">Directory</option>
+        </select>
+        <UploadButton/>
+    </>;
+};
+
+export const App = () => {
+    return <section>
+        <Uploady>
+            <UploadFormWithInternalInput/>
+        </Uploady>
+    </section>
+};
+```

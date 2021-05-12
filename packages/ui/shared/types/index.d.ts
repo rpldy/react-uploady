@@ -31,7 +31,9 @@ export type AddUploadFunction = (files: UploadInfo | UploadInfo[], addOptions?: 
 export type InputRef = { current: HTMLInputElement | null };
 
 export type UploadyContextType = {
+    getInternalFileInput: () => InputRef | undefined;
     setExternalFileInput: (inputRef: InputRef) => void;
+    getIsUsingExternalInput: () => boolean;
     hasUploader: () => boolean;
     showFileUpload: (options?: UploadOptions) => void;
     upload: AddUploadFunction;

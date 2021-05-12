@@ -12,7 +12,7 @@
 
 ### Internal
 
-- `all` - upgraded to lastest flow (0.150.1)
+- `all` - upgraded to latest flow (0.150.1)
 - `e2e` - upgrade to cypress.io latest (7.3.0)
 
 ## 0.11.6 (2021-05-01)

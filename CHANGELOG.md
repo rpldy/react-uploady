@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.12.0 (2021-05-12)
+
+### Features
+
+- `[uploady]` - useFileInput hook now returns internal input
+
+### Docs
+
+- `guides` - new guide: CustomInput
+
+### Internal
+
+- `all` - upgraded to lastest flow (0.150.1)
+- `e2e` - upgrade to cypress.io latest (7.3.0)
+
 ## 0.11.6 (2021-05-01)
 
 ### Bug fixes

@@ -13,4 +13,4 @@ export const Uploady: React.ComponentType<UploadyProps>;
 
 export default Uploady;
 
-export const useFileInput: (fileInputRef: InputRef) => InputRef;
+export const useFileInput: (fileInputRef?: InputRef) => InputRef;

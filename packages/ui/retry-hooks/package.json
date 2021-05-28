@@ -1,5 +1,5 @@
 {
-  "version": "0.12.0",
+  "version": "0.12.1",
   "name": "@rpldy/retry-hooks",
   "description": "useful hooks for the retry functionality from @rpldy/retry",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -36,8 +36,8 @@
     "react-dom": ">=16.8.x"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^0.12.0",
-    "@rpldy/upload-preview": "^0.12.0",
+    "@rpldy/upload-button": "^0.12.1",
+    "@rpldy/upload-preview": "^0.12.1",
     "flow-bin": "^0.150.1",
     "rc-progress": "^3.0.0"
   },

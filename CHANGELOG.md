@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.1 (2021-05-28)
+
+### Bug fixes
+
+- `[uploady]` - fix typings for useFileInput (no params). Fix for #181
+
 ## 0.12.0 (2021-05-12)
 
 ### Features

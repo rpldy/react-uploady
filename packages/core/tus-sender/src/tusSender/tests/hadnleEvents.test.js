@@ -405,13 +405,12 @@ describe("handleEvents tests", () => {
 								index: 2
 							},
 							item: { id: "i1", file: { size: 999 } },
-							chunkCount: 3,
+							remainingCount: 0,
 						});
 
 						expect(result.url).toBe("upload.url");
 						expect(result.sendOptions.sendWithFormData).toBe(false);
 						expect(result.sendOptions.method).toBe("PATCH");
-
 						expect(result.sendOptions.headers["Upload-Length"]).toBe(999);
 					}
 				});

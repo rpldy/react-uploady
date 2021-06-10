@@ -32,7 +32,8 @@ export type ChunkStartEventData = {
     chunkItem: BatchItem;
     sendOptions: SendOptions;
     url: string;
-    chunkCount: number;
+    remainingCount: number,
+    totalCount: number,
     onProgress: OnProgress
 };
 

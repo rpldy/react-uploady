@@ -54,7 +54,7 @@ describe("sendChunk tests", () => {
         createBatchItem.mockReturnValueOnce(chunkItem);
         xhrSend.mockResolvedValueOnce(xhrSendResult);
 
-		const sendResult = sendChunk(chunk, { url, sendOptions, chunks }, { file }, onProgress, trigger);
+		const sendResult = sendChunk(chunk, { url, sendOptions, chunks, chunkCount: 4 }, { file }, onProgress, trigger);
 
         const result = await sendResult.request;
 
@@ -97,7 +97,8 @@ describe("sendChunk tests", () => {
             },
             sendOptions: updatedSendOptions,
             url,
-			chunkCount: 3,
+			remainingCount: 3,
+            totalCount: 4,
 			chunkIndex: 2,
 			chunkItem,
 			onProgress

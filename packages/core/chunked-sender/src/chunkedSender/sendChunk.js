@@ -64,7 +64,8 @@ const uploadChunkWithUpdatedData = (
         sendOptions,
         url: state.url,
         chunkIndex,
-        chunkCount: state.chunks.length,
+        remainingCount: state.chunks.length,
+        totalCount: state.chunkCount,
         onProgress,
     })
         // $FlowFixMe - https://github.com/facebook/flow/issues/8215

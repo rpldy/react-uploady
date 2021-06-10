@@ -50,7 +50,7 @@ const handleParallelChunk = (tusState: TusState, chunkedSender: ChunkedSender, d
 };
 
 const updateChunkStartData = (tusState: TusState, data: ChunkStartEventData, isParallel) => {
-	const { item: orgItem, chunk, chunkItem, chunkCount } = data;
+	const { item: orgItem, chunk, chunkItem, remainingCount } = data;
 	const { options } = tusState.getState();
 	const itemInfo = tusState.getState().items[isParallel ? chunkItem.id : orgItem.id];
 	const offset = isParallel ? 0 : (itemInfo.offset || chunk.start);
@@ -63,7 +63,7 @@ const updateChunkStartData = (tusState: TusState, data: ChunkStartEventData, isP
 		"Content-Range": undefined,
 		"X-HTTP-Method-Override": options.overrideMethod ? PATCH : undefined,
 		//for deferred length, send the file size header with the last chunk
-		"Upload-Length": options.deferLength && (chunk.index === (chunkCount - 1)) ? orgItem.file.size : undefined,
+		"Upload-Length": (options.deferLength && !remainingCount) ? orgItem.file.size : undefined,
 		"Upload-Concat": isParallel ? "partial" : undefined,
 	};
 

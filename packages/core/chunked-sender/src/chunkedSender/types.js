@@ -25,6 +25,7 @@ export type State = {|
     uploaded: { [string]: number },
     url: ?string,
     sendOptions: SendOptions,
+    chunkCount: number,
 |};
 
 export type ChunksSendResponse = {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.13.0 (2021-06-11)
+
+### Features
+
+- `[chunked-sender]` - BREAKING! - rename CHUNK_START event's `chunkCount` param to `remainingCount` 
+  Also added `totalCount` param
+
 ## 0.12.1 (2021-05-28)
 
 ### Bug fixes

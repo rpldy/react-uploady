@@ -76,6 +76,7 @@ const processChunks = (
         uploaded: {},
         requests: {},
         responses: [],
+        chunkCount: chunks.length,
         chunks,
         url,
         sendOptions,

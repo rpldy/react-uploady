@@ -40,6 +40,7 @@ describe("processChunks tests", () => {
 			uploaded: {},
 			requests: {},
 			responses: [],
+            chunkCount: chunks.length,
 			chunks,
 			url,
 			sendOptions,

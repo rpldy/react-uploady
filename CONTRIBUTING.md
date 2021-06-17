@@ -85,3 +85,13 @@ All PRs opened will be considered but final decision is reserved for the project
 **Thank you for contributing!**
 
 [tracker]: https://github.com/rpldy/react-uploady/issues
+
+## Financial Contributors
+
+Want to help sustain and grow Uploday? You can become a financial backer on OpenCollective.
+
+Become a financial contributor and help us sustain our community.
+
+> You can make a one-time contribution or on a monthly basis
+
+<a href="https://opencollective.com/react-uploady" target="_blank"><img src="https://images.opencollective.com/static/images/become_backer.svg"></a>

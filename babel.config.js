@@ -9,6 +9,9 @@ const productionConfig = {
 };
 
 const config =  {
+    exclude: [
+        /isProduction/
+    ],
     presets: [
         [
             "@babel/env",

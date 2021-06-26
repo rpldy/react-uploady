@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.13.1 (2021-06-26)
+
+### Bug fixes
+
+- `[shared]` - fix "ReferenceError: process is not defined" error. Fix for #199
+
 ## 0.13.0 (2021-06-11)
 
 ### Features

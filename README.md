@@ -164,7 +164,7 @@ For upload options see the [@rpldy/uploady docs](packages/ui/uploady).
 
 ### Simple Upload Button
 
-This examples shows how you add Uploady and UploadButton to your app.
+This example shows how you add Uploady and UploadButton to your app.
 This is all it takes to get file uploading to work in your React application.
 
 ```javascript 

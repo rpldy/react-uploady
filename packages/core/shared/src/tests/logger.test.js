@@ -2,9 +2,20 @@ import { DEBUG_LOG_KEY } from "../consts";
 
 describe("logger tests", () => {
 
-    let logger;
-    beforeEach(() => {
+    let logger, hasWindow;
+
+    const resetLogger = (resetWindow = true) => {
+        jest.resetModules();
+        if (resetWindow) {
+            window[DEBUG_LOG_KEY] = undefined;
+        }
+        jest.doMock("../utils/hasWindow", () => jest.fn(() => true));
         logger = require("../logger");
+        hasWindow = require("../utils/hasWindow");
+    };
+
+    beforeEach(() => {
+        resetLogger();
     });
 
     afterEach(() => {
@@ -22,9 +33,17 @@ describe("logger tests", () => {
         expect(logger.isDebugOn()).toBe(state);
     });
 
+    it("should not set debug without window", () => {
+        hasWindow.mockReturnValueOnce(false);
+        logger.setDebug(true);
+        resetLogger(false);
+        expect(logger.isDebugOn()).toBe(false);
+    });
+
     it("should write to console when debug enabled", () => {
         const consoleLog = jest.spyOn(console, "log")
-            .mockImplementationOnce(()=>{});
+            .mockImplementationOnce(() => {
+            });
 
         logger.setDebug(true);
         logger.debugLog("hello", 1, { foo: "bar" });
@@ -46,9 +65,6 @@ describe("logger tests", () => {
         jsdom.reconfigure({
             url: "https://test.com/?foo=bar&rpldy_debug=true"
         });
-
-        jest.resetModules();
-        logger = require("../logger");
 
         expect(logger.isDebugOn()).toBe(true);
     });

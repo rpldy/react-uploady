@@ -10,7 +10,7 @@ const productionConfig = {
 
 const config =  {
     exclude: [
-        /isProduction/
+        /utils\/isProduction/,
     ],
     presets: [
         [

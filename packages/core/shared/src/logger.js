@@ -1,22 +1,17 @@
 // @flow
 import { DEBUG_LOG_KEY } from "./consts";
 import hasWindow from "./utils/hasWindow";
-import { isProduction } from "./utils";
 
 let isDebug;
 
-const isEnvDebug =  () =>
-    !isProduction() && process?.env?.DEBUG;
-
 const isDebugOn = (): boolean | string => {
 	if (typeof isDebug !== "boolean") {
-        isDebug = isEnvDebug() ||
-            (hasWindow() &&
+        isDebug = (hasWindow() &&
                 (("location" in window && !!~window.location.search.indexOf("rpldy_debug=true")) ||
                     window[DEBUG_LOG_KEY] === true));
     }
 
-	return isDebug;
+	return !!isDebug;
 };
 
 const setDebug = (debugOn: boolean) => {

@@ -39,6 +39,7 @@
 * [Important Concepts](#important-concepts)
 * [Resumable Uploads](#resumable-uploads)
 * [UMD Bundles](#umd-bundles)
+* [Contribute](#contribute)  
 * [Acknowledgements](#acknowledgements)   
 </details>
 
@@ -348,6 +349,26 @@ You will most likely need the polyfill (core js) bundle as well (load it first):
 
 > Note that unpkg does a redirect to the latest version in case the URL doesn't already contain it. So don't copy any of the URLs above into your code. 
 > Instead, load them in the browser first and then copy the final URL from there (after the redirect).  
+
+## Contribute
+
+Show Uploady your support by giving us a [⭐](https://github.com/rpldy/react-uploady/stargazers). 
+
+If you'd like to help Uploady grow & improve, take a look at the [Contributing](CONTRIBUTING.md) doc.
+
+The [Discussions](https://github.com/rpldy/react-uploady/discussions) page is a great place to ask questions, raise ideas and interact with Uploady maintainer, users and contributors.
+
+Already using Uploady in Production? Let us know how & where in this open [discussion](https://github.com/rpldy/react-uploady/discussions/131).
+
+### Financial Contributors
+
+Want to help sustain and grow Uploday? You can become a financial backer on OpenCollective.
+
+Become a financial contributor and help us sustain our community.
+
+> You can make a one-time contribution or on a monthly basis
+
+<a href="https://opencollective.com/react-uploady" target="_blank"><img src="https://images.opencollective.com/static/images/become_backer.svg"></a>
 
 ## Acknowledgements 
 

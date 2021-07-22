@@ -16,7 +16,7 @@ const getBatchItemWithFile = (batchItem: Object, file: Object): BatchItem => {
 	return batchItem;
 };
 
-const isLikeFile = (f: UploadInfo) => f && (f instanceof Blob || f instanceof File || (typeof f === "object" && f.name && f.type));
+const isLikeFile = (f: UploadInfo) => f && (f instanceof File || f instanceof Blob || (typeof f === "object" && f.name && f.type));
 
 export default (f: UploadInfo, batchId: string, isPending: boolean = false): BatchItem => {
     iCounter += (f.id && f.batchId) ? 0 : 1;

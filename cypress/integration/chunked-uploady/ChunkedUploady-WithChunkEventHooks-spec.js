@@ -16,7 +16,7 @@ describe("ChunkedUploady - WithChunkEventHooks", () => {
             .as("fInput");
 
         uploadFile(fileName, () => {
-            cy.wait(500);
+            cy.wait(1000);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             let uniqueHeader;
@@ -42,7 +42,6 @@ describe("ChunkedUploady - WithChunkEventHooks", () => {
                 });
 
             cy.storyLog().customAssertLogEntry("###CHUNK_START", (logLine) => {
-                console.log("!!!!!!!!!1 ITEM ", logLine[0].item)
                 expect(Object.getOwnPropertySymbols(logLine[0].item)).to.have.lengthOf(1, "CHUNK_START item - shouldnt have proxy symbols");
                 expect(Object.getOwnPropertySymbols(logLine[0].chunk)).to.have.lengthOf(0, "CHUNK_START chunk - shouldnt have proxy symbols");
                 expect(Object.getOwnPropertySymbols(logLine[0].sendOptions)).to.have.lengthOf(0, "CHUNK_START sendOptions - shouldnt have proxy symbols");

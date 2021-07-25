@@ -35,16 +35,18 @@ export const process = (
     const onChunkProgress = throttle(
         (e, chunks: Chunk[]) => {
             //we only ever send one chunk per request
-            const { id } = chunks[0];
+            const { id: chunkId } = chunks[0];
 
-            state.uploaded[id] = e.loaded;
+            state.uploaded[chunkId] = e.loaded;
 
             const loaded = Object.keys(state.uploaded)
                 .reduce((res, id) => res + state.uploaded[id],
                     //we start from the offset of the first chunk to get an accurate progress on resumed uploads
-                    state.chunks[0].start);
+                    state.startByte);
 
-            onProgress({ loaded, total: item.file.size }, [item]);
+            const total = item.file.size;
+
+            onProgress({ loaded: Math.min(loaded, total), total  }, [item]);
         },
         100, true);
 
@@ -77,6 +79,7 @@ const processChunks = (
         requests: {},
         responses: [],
         chunkCount: chunks.length,
+        startByte: sendOptions.startByte || 0,
         chunks,
         url,
         sendOptions,

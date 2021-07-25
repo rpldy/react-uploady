@@ -86,35 +86,37 @@ const uploadChunkWithUpdatedData = (
         });
 };
 
-export default (
-	chunk: Chunk,
-	state: State,
-	item: BatchItem,
-	onProgress: OnProgress,
-	trigger: TriggerMethod,
+const sendChunk = (
+    chunk: Chunk,
+    state: State,
+    item: BatchItem,
+    onProgress: OnProgress,
+    trigger: TriggerMethod,
 ): SendResult => {
-	if (!chunk.data) {
-		//slice the chunk based on bit position
-		chunk.data = getChunkDataFromFile(item.file, chunk.start, chunk.end);
-	}
+    if (!chunk.data) {
+        //slice the chunk based on bit position
+        chunk.data = getChunkDataFromFile(item.file, chunk.start, chunk.end);
+    }
 
-	if (!chunk.data) {
-		throw new ChunkedSendError("chunk failure - failed to slice");
-	}
+    if (!chunk.data) {
+        throw new ChunkedSendError("chunk failure - failed to slice");
+    }
 
-	logger.debugLog(`chunkedSender.sendChunk: about to send chunk ${chunk.id} [${chunk.start}-${chunk.end}] to: ${state.url || ""}`);
+    logger.debugLog(`chunkedSender.sendChunk: about to send chunk ${chunk.id} [${chunk.start}-${chunk.end}] to: ${state.url || ""}`);
 
-	const chunkXhrRequest = uploadChunkWithUpdatedData(chunk, state, item, onProgress, trigger);
+    const chunkXhrRequest = uploadChunkWithUpdatedData(chunk, state, item, onProgress, trigger);
 
-	const abort = () => {
-		chunkXhrRequest.then(({ abort }) => abort());
-		return true;
-	};
+    const abort = () => {
+        chunkXhrRequest.then(({ abort }) => abort());
+        return true;
+    };
 
-	return {
-		request: chunkXhrRequest.then(({ request }) => request),
-		abort,
-		//this type isnt relevant because it isnt exposed
-		senderType: "chunk-passthrough-sender",
-	};
+    return {
+        request: chunkXhrRequest.then(({ request }) => request),
+        abort,
+        //this type isnt relevant because it isnt exposed
+        senderType: "chunk-passthrough-sender",
+    };
 };
+
+export default sendChunk;

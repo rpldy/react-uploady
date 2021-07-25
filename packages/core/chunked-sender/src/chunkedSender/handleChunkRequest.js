@@ -25,6 +25,7 @@ const handleChunkRequest =  (state: State, item: BatchItem, chunkId: string, chu
             if (~index) {
                 if (result.state === FILE_STATES.FINISHED) {
                     //remove chunk so eventually there are no more chunks to send
+                    //TODO: splicing array is dangerous. Need to find a better (immutable) way to progress chunk upload
                     const spliced = state.chunks.splice(index, 1);
 
                     trigger(CHUNK_EVENTS.CHUNK_FINISH, {

@@ -26,6 +26,7 @@ export type State = {|
     url: ?string,
     sendOptions: SendOptions,
     chunkCount: number,
+    startByte: number,
 |};
 
 export type ChunksSendResponse = {

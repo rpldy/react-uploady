@@ -1,7 +1,6 @@
 // @flow
 import React, { useCallback, useState } from "react";
 import ReactDOM from "react-dom";
-import { number } from "@storybook/addon-knobs";
 import UploadButton from "@rpldy/upload-button";
 import ChunkedUploady, {
 	useRequestPreSend,
@@ -13,7 +12,7 @@ import {
     KNOB_GROUPS,
     UMD_NAMES,
 
-    useStoryUploadySetup,
+    useChunkedStoryHelper,
     StoryUploadProgress,
     StoryAbortButton,
     UmdBundleScript,
@@ -47,13 +46,6 @@ const UploadButtonWithUniqueIdHeader = () => {
     });
 
     return <UploadButton id="upload-button"/>
-};
-
-const useChunkedStoryHelper = () => {
-    const setup = useStoryUploadySetup({ noGroup: true });
-    const chunkSize = number("chunk size (bytes)", 5242880, {}, KNOB_GROUPS.SETTINGS);
-
-    return { ...setup, chunkSize };
 };
 
 export const Simple = (): Node => {

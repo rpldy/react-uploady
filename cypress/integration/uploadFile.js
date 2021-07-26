@@ -1,11 +1,14 @@
-const uploadFile = (fixtureName, cb, button = "button", options = {}, iframe) => {
+const uploadFile = (fixtureName, cb, button = "button", options = {}) => {
     //support stories inside iframe and outside
-    const get = (selector) => iframe ? cy.get(iframe).find(selector) : cy.get(selector);
+    const get = (selector) => options.iframe ?
+        cy.get(options.iframe).find(selector) : cy.get(selector);
 
-    get(button)
-        .should("be.visible")
-        .click()
-        .as("uploadButton");
+    if (button !== false) {
+        get(button)
+            .should("be.visible")
+            .click()
+            .as("uploadButton");
+    }
 
     get(`input[type="file"]`)
         .should("exist")

@@ -1,6 +1,7 @@
 import { interceptWithHandler } from "../intercept";
 import { interceptFormData } from "cypress-intercept-formdata";
 import uploadFile from "../uploadFile";
+import { ITEM_ABORT, BATCH_ABORT } from "../storyLogPatterns";
 
 describe("ChunkedUploady - Abort and continue", () => {
     const fileName = "flower.jpg",
@@ -30,8 +31,8 @@ describe("ChunkedUploady - Abort and continue", () => {
 
             cy.wait(500);
 
-            cy.storyLog().assertLogPattern(/BATCH_ABORT/);
-            cy.storyLog().assertLogPattern(/ITEM_ABORT/);
+            cy.storyLog().assertLogPattern(BATCH_ABORT);
+            cy.storyLog().assertLogPattern(ITEM_ABORT);
 
             for (let i = 0; i < (abortedRequests); i++) {
                 cy.wait("@uploadReq");

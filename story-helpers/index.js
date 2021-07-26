@@ -6,6 +6,7 @@ import useStoryUploadySetup, {
     urlDestination,
     addActionLogEnhancer,
 } from "./useStoryUploadySetup";
+import useChunkedStoryHelper from "./useChunkedStoryHelper";
 import StoryUploadProgress from "./StoryUploadProgress";
 import StoryAbortButton from "./StoryAbortButton"
 import useEventsLogUpdater from "./useEventsLogUpdater";
@@ -29,6 +30,7 @@ export {
 
     StoryUploadProgress,
     useStoryUploadySetup,
+    useChunkedStoryHelper,
     StoryAbortButton,
     mockDestination,
     localDestination,

@@ -1,5 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
+import { ITEM_FINISH } from "../storyLogPatterns";
 
 describe("With Custom File Input And Button", () => {
     const fileName = "flower.jpg";
@@ -19,7 +20,7 @@ describe("With Custom File Input And Button", () => {
                 .interceptFormData((formData) => {
                     expect(formData["testFile"]).to.eq(fileName);
 
-                    cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 1 });
+                    cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });
                 });
         });
 

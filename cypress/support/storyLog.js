@@ -68,11 +68,20 @@ Cypress.Commands.add("assertLogEntryContains", { prevSubject: true }, (storyLog,
     expect(match, `expect log line ${index} to contain obj`).to.exist;
 });
 
-Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, eventName, asserter) => {
-    const logLine = storyLog.find((item) => item.args[0] === eventName).args.slice(1);
+Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, eventName, asserter, options = {}) => {
+    let logLine;
 
-    // cy.wrap(logLine)
-    //     .should(asserter);
+    if (options.index) {
+        logLine = storyLog[options.index];
+        expect(logLine.args[0]).to.equal(eventName);
+    } else {
+        logLine = storyLog.find((item) => item.args[0] === eventName);
+    }
+
+    console.log("customAssertLogEntry logline ========= ", logLine, storyLog)
+
+    logLine = logLine?.args.slice(1);
+
     asserter(logLine, storyLog._env);
 });
 

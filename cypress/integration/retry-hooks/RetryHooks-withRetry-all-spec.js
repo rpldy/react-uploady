@@ -1,4 +1,5 @@
 import uploadFile from "../uploadFile";
+import { ITEM_START, ITEM_ABORT, ITEM_FINISH, BATCH_ADD } from "../storyLogPatterns";
 
 describe("RetryHooks - Retry Upload", () => {
     const fileName = "flower.jpg",
@@ -15,9 +16,9 @@ describe("RetryHooks - Retry Upload", () => {
             uploadFile(fileName2, () => {
                 cy.wait(400);
 
-                cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 2 });
-                cy.storyLog().assertLogPattern(/ITEM_START/, { times: 2 });
-                cy.storyLog().assertLogPattern(/ITEM_ABORT/, { times: 2 });
+                cy.storyLog().assertLogPattern(BATCH_ADD, { times: 2 });
+                cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
+                cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 2 });
 
                 cy.get("#retry-all")
                     .should("be.visible")
@@ -25,7 +26,7 @@ describe("RetryHooks - Retry Upload", () => {
 
                 cy.wait(1000);
 
-                cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 2 });
+                cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
 
                 cy.storyLog().customAssertLogEntry("###RETRY_EVENT", (logLine) => {
                     expect(Object.getOwnPropertySymbols(logLine[0][0])).to.have.lengthOf(1, "RETRY_EVENT item 0 - shouldnt have proxy symbols");

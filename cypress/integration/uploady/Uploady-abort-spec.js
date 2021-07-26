@@ -1,4 +1,5 @@
 import uploadFile from "../uploadFile";
+import { ITEM_ABORT, BATCH_ABORT, ITEM_FINISH } from "../storyLogPatterns";
 
 describe("Uploady - With Abort", () => {
     const fileName = "flower.jpg";
@@ -20,9 +21,9 @@ describe("Uploady - With Abort", () => {
 
             cy.wait(500);
 
-            cy.storyLog().assertLogPattern(/ITEM_ABORT/);
-            cy.storyLog().assertLogPattern(/BATCH_ABORT/);
-            cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 0 });
+            cy.storyLog().assertLogPattern(ITEM_ABORT);
+            cy.storyLog().assertLogPattern(BATCH_ABORT);
+            cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 0 });
         }, "#upload-button");
     });
 });

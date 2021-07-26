@@ -33,10 +33,10 @@ export const WithChunkedSender = (): Node => {
             enhancer: addActionLogEnhancer(chunkedEnhancer),
         });
 
-        uploader.on(UPLOADER_EVENTS.ITEM_PROGRESS, (item) => {
-            console.log(`item ${item.file.name} Item Progress ${item.completed}% uploaded`);
-            logToCypress("ITEM_PROGRESS", item);
-        });
+        // uploader.on(UPLOADER_EVENTS.ITEM_PROGRESS, (item) => {
+        //     console.log(`item ${item.file.name} Item Progress ${item.completed}% uploaded`);
+        //     logToCypress("ITEM_PROGRESS", item);
+        // });
 
         uploader.on(CHUNK_EVENTS.CHUNK_START, (data) => {
             const { chunk, totalCount } = data;

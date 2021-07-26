@@ -17,46 +17,29 @@ describe("ChunkedSender - Progress", () => {
                 .should("be.visible")
                 .click();
 
-            // setTimeout(() => {
             cy.wait(2000);
 
-                cy.storyLog().assertFileItemStartFinish(fileName, 1);
+            cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
-                cy.storyLog().assertLogEntryContains(3, {
+            cy.storyLog().assertLogEntryContains(3, {
+                item: {
                     id: "batch-1.item-1",
                     loaded: 50376,
-                });
+                }
+            });
 
-                // cy.storyLog().assertLogEntryContains(5, {
-                //     totalCount: 8,
-                // });
-                //
-                // cy.storyLog().assertLogEntryContains(15, {
-                //     item: {
-                //         id: "batch-1.item-1",
-                //         loaded: 100752
-                //     }
-                // });
-                //
-                // cy.storyLog().customAssertLogEntry("ITEM_PROGRESS", (logLine) => {
-                //     expect(logLine[0].completed).to.be.closeTo(40, 0.6);
-                // }, { index: 17 });
+            cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLine) => {
+                expect(logLine[0].item.completed).to.be.closeTo(20, 10);
+            }, { index: 17 });
 
-                cy.storyLog().assertLogEntryContains(21, {
-                    id: "batch-1.item-1",
-                    completed: 100,
-                    loaded: 372445,
-                });
+            cy.storyLog().assertLogEntryContains(18, {
+                id: "batch-1.item-1",
+                completed: 100,
+                loaded: 372445,
+            });
 
-                cy.storyLog().assertLogEntryContains(22, {
-                    id: "batch-1.item-1",
-                    completed: 100,
-                    loaded: 372445,
-                });
-
-                cy.storyLog().assertLogPattern(CHUNK_START, { times: 8 });
-                cy.storyLog().assertLogPattern(CHUNK_FINISH, { times: 8 });
-            // }, 1000);
+            cy.storyLog().assertLogPattern(CHUNK_START, { times: 8 });
+            cy.storyLog().assertLogPattern(CHUNK_FINISH, { times: 8 });
         }, false);
 
     });

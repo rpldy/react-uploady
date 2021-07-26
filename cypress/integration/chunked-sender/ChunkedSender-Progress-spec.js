@@ -21,12 +21,9 @@ describe("ChunkedSender - Progress", () => {
 
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
-            cy.storyLog().assertLogEntryContains(3, {
-                item: {
-                    id: "batch-1.item-1",
-                    loaded: 50376,
-                }
-            });
+            cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLine) => {
+                expect(logLine[0].item.loaded).to.be.closeTo(5000, 1000);
+            }, { index: 17 });
 
             cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLine) => {
                 expect(logLine[0].item.completed).to.be.closeTo(20, 10);

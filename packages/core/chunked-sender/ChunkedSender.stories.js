@@ -69,7 +69,7 @@ export const WithChunkedSender = (): Node => {
                 PROCESS ENV:
                 {Object.entries(process.env).map(([key, value]) =>
                     // $FlowFixMe - bla
-                    <p>{key} = {value}</p>)}
+                    <p key={key}>{key} = {value}</p>)}
             </div>
             <input onChange={onFileChange} id="field-age" type="file" placeholder="browse File" />
 

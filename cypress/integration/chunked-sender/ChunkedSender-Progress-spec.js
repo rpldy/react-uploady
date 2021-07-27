@@ -21,13 +21,17 @@ describe("ChunkedSender - Progress", () => {
 
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
-            cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLine) => {
-                expect(logLine[0].item.loaded).to.be.closeTo(50000, 20000);
-            }, { index: 3 });
+            cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLines) => {
+                let lastValue = 0;
 
-            cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLine) => {
-                expect(logLine[0].item.completed).to.be.lessThan(logLine[0].item.file.size);
-            }, { index: 17 });
+                logLines.forEach(([data, index]) =>{
+                    expect(data.item.loaded).to.be.greaterThan(lastValue);
+                    lastValue = data.item.loaded;
+                    if (index < (logLines.length - 1)) {
+                        expect(data.item.loaded).to.be.lessThan(data.item.file.size);
+                    }
+                });
+            }, { all: true });
 
             cy.storyLog().assertLogEntryContains(18, {
                 id: "batch-1.item-1",

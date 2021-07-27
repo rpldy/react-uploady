@@ -2,13 +2,21 @@
 import { FILE_STATES, logger, pick } from "@rpldy/shared";
 import { unwrap } from "@rpldy/simple-state";
 import { CHUNK_EVENTS } from "../consts";
+import processChunkProgressData from "./processChunkProgressData";
 
 import type { BatchItem } from "@rpldy/shared";
-import type { SendResult } from "@rpldy/sender";
+import type { OnProgress, SendResult } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { State } from "./types";
 
-const handleChunkRequest =  (state: State, item: BatchItem, chunkId: string, chunkSendResult: SendResult, trigger: TriggerMethod): Promise<void> => {
+const handleChunkRequest = (
+    state: State,
+    item: BatchItem,
+    chunkId: string,
+    chunkSendResult: SendResult,
+    trigger: TriggerMethod,
+    onProgress: OnProgress,
+): Promise<void> => {
     state.requests[chunkId] = {
         id: chunkId,
         abort: chunkSendResult.abort,
@@ -28,9 +36,19 @@ const handleChunkRequest =  (state: State, item: BatchItem, chunkId: string, chu
                     //TODO: splicing array is dangerous. Need to find a better (immutable) way to progress chunk upload
                     const spliced = state.chunks.splice(index, 1);
 
+                    //issue progress event when chunk finished uploading, so item progress data is updated
+                    const chunkSize = spliced[0].end - spliced[0].start;
+                    const progressData = processChunkProgressData(state, item,chunkId, chunkSize);
+                    onProgress(progressData, [item]);
+
                     trigger(CHUNK_EVENTS.CHUNK_FINISH, {
                         chunk: pick(spliced[0], ["id", "start", "end", "index", "attempt"]),
-                        item: unwrap(item),
+                        item: {
+                            ...unwrap(item),
+                            //expose most up to date loaded/completed data
+                            loaded: progressData.loaded,
+                            completed: Math.min(((progressData.loaded / item.file.size) * 100), 100),
+                        },
                         uploadData: result,
                     });
                 } else if (result.state !== FILE_STATES.ABORTED) {

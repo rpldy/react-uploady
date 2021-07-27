@@ -3,6 +3,7 @@ import { logger, throttle } from "@rpldy/shared";
 import getChunks from "./getChunks";
 import sendChunks from "./sendChunks";
 import { CHUNKED_SENDER_TYPE } from "../consts";
+import processChunkProgressData from "./processChunkProgressData";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { OnProgress, SendResult } from "@rpldy/sender";
@@ -35,20 +36,10 @@ export const process = (
     const onChunkProgress = throttle(
         (e, chunks: Chunk[]) => {
             //we only ever send one chunk per request
-            const { id: chunkId } = chunks[0];
-
-            state.uploaded[chunkId] = e.loaded;
-
-            const loaded = Object.keys(state.uploaded)
-                .reduce((res, id) => res + state.uploaded[id],
-                    //we start from the offset of the first chunk to get an accurate progress on resumed uploads
-                    state.startByte);
-
-            const total = item.file.size;
-
-            onProgress({ loaded: Math.min(loaded, total), total  }, [item]);
+            const progressData = processChunkProgressData(state, item,chunks[0].id, e.loaded);
+            onProgress(progressData, [item]);
         },
-        100, true);
+        50, true);
 
     const sendPromise = new Promise((resolve) => {
         sendChunks(state, item, onChunkProgress, resolve, trigger);

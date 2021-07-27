@@ -1,6 +1,9 @@
 import { FILE_STATES } from "@rpldy/shared";
 import handleChunkRequest from "../handleChunkRequest";
 import { CHUNK_EVENTS } from "../../consts";
+import processChunkProgressData from "../processChunkProgressData";
+
+jest.mock("../processChunkProgressData");
 
 describe("handleChunkRequest tests", () => {
 
@@ -9,8 +12,11 @@ describe("handleChunkRequest tests", () => {
 	});
 
 	const doTest = async (chunks, response, trigger) => {
-	    const item = {
+	    const onProgress = jest.fn();
 
+	    const item = {
+            id: "i1",
+            file: { size: 2000 }
         };
 
 		const state = {
@@ -32,7 +38,7 @@ describe("handleChunkRequest tests", () => {
 			}
 		};
 
-		const test = handleChunkRequest(state, item, "c1", sendResult, trigger);
+		const test = handleChunkRequest(state, item, "c1", sendResult, trigger, onProgress);
 
 		expect(state.requests.c1.id).toBe("c1");
 		expect(state.requests.c1.abort).toBeInstanceOf(Function);
@@ -41,7 +47,7 @@ describe("handleChunkRequest tests", () => {
 
 		await test;
 
-		return { state, item };
+		return { state, item, onProgress };
 	};
 
 	it("should handle send success", async () => {
@@ -51,7 +57,12 @@ describe("handleChunkRequest tests", () => {
             state: FILE_STATES.FINISHED,
             response: "success"
         };
-        const { state, item } = await doTest(null, response, trigger);
+
+        const progressData = { loaded: 1000, total: 2000 };
+
+        processChunkProgressData.mockReturnValueOnce(progressData);
+
+        const { state, item, onProgress } = await doTest(null, response, trigger);
 
         expect(state.requests.c1).toBeUndefined();
         expect(state.chunks).toHaveLength(1);
@@ -60,15 +71,21 @@ describe("handleChunkRequest tests", () => {
 
         expect(trigger).toHaveBeenCalledWith(CHUNK_EVENTS.CHUNK_FINISH, {
             chunk: { id: "c1", start: 1, end: 2, attempt: 0 },
-            item,
+            item : {
+                ...item,
+                completed: 50,
+                loaded: 1000,
+            },
             uploadData: response,
         });
+
+        expect(onProgress).toHaveBeenCalledWith(progressData, [item]);
     });
 
 	it("should handle send fail", async () => {
         const trigger = jest.fn();
 
-		const { state } = await doTest(null, {
+		const { state, onProgress } = await doTest(null, {
 			state: FILE_STATES.ERROR,
 			response: "fail"
 		}, trigger);
@@ -80,6 +97,7 @@ describe("handleChunkRequest tests", () => {
 		expect(state.responses[0]).toBe("fail");
 
         expect(trigger).not.toHaveBeenCalled();
+        expect(onProgress).not.toHaveBeenCalled();
 	});
 
 	it("should handle abort", async () => {

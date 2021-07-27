@@ -13,6 +13,7 @@ describe("handleChunkRequest tests", () => {
 
 	const doTest = async (chunks, response, trigger) => {
 	    const onProgress = jest.fn();
+        chunks = chunks ? chunks : [{ id: "c1", start: 1, end: 2, attempt: 0 }, { id: "c2" }];
 
 	    const item = {
             id: "i1",
@@ -24,7 +25,7 @@ describe("handleChunkRequest tests", () => {
 				"c1": {},
 				"c2": {}
 			},
-			chunks: chunks ? chunks : [{ id: "c1", start: 1, end: 2, attempt: 0 }, { id: "c2" }],
+			chunks: chunks.slice(),
 			responses: []
 		};
 
@@ -47,11 +48,10 @@ describe("handleChunkRequest tests", () => {
 
 		await test;
 
-		return { state, item, onProgress };
+		return { state, item, onProgress, chunks };
 	};
 
 	it("should handle send success", async () => {
-
         const trigger = jest.fn();
         const response = {
             state: FILE_STATES.FINISHED,
@@ -62,7 +62,9 @@ describe("handleChunkRequest tests", () => {
 
         processChunkProgressData.mockReturnValueOnce(progressData);
 
-        const { state, item, onProgress } = await doTest(null, response, trigger);
+        const { state, item, onProgress, chunks } = await doTest(null, response, trigger);
+
+        const finishedChunk = chunks[0];
 
         expect(state.requests.c1).toBeUndefined();
         expect(state.chunks).toHaveLength(1);
@@ -79,7 +81,7 @@ describe("handleChunkRequest tests", () => {
             uploadData: response,
         });
 
-        expect(onProgress).toHaveBeenCalledWith(progressData, [item]);
+        expect(onProgress).toHaveBeenCalledWith({ loaded: 1, total: item.file.size }, [finishedChunk]);
     });
 
 	it("should handle send fail", async () => {

@@ -35,14 +35,17 @@ const handleChunkRequest = (
                     //remove chunk so eventually there are no more chunks to send
                     //TODO: splicing array is dangerous. Need to find a better (immutable) way to progress chunk upload
                     const spliced = state.chunks.splice(index, 1);
+                    const finishedChunk = spliced[0];
 
                     //issue progress event when chunk finished uploading, so item progress data is updated
-                    const chunkSize = spliced[0].end - spliced[0].start;
+                    const chunkSize = finishedChunk.end - finishedChunk.start;
+
+                    onProgress({ loaded: chunkSize, total: item.file.size }, [finishedChunk]);
+
                     const progressData = processChunkProgressData(state, item,chunkId, chunkSize);
-                    onProgress(progressData, [item]);
 
                     trigger(CHUNK_EVENTS.CHUNK_FINISH, {
-                        chunk: pick(spliced[0], ["id", "start", "end", "index", "attempt"]),
+                        chunk: pick(finishedChunk, ["id", "start", "end", "index", "attempt"]),
                         item: {
                             ...unwrap(item),
                             //expose most up to date loaded/completed data

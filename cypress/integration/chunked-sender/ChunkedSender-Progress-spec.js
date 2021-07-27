@@ -23,7 +23,7 @@ describe("ChunkedSender - Progress", () => {
 
             cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLine) => {
                 expect(logLine[0].item.loaded).to.be.closeTo(5000, 1000);
-            }, { index: 17 });
+            }, { index: 3 });
 
             cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLine) => {
                 expect(logLine[0].item.completed).to.be.closeTo(20, 10);

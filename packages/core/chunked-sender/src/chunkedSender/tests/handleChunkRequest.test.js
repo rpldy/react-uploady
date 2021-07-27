@@ -1,9 +1,6 @@
 import { FILE_STATES } from "@rpldy/shared";
 import handleChunkRequest from "../handleChunkRequest";
 import { CHUNK_EVENTS } from "../../consts";
-import processChunkProgressData from "../processChunkProgressData";
-
-jest.mock("../processChunkProgressData");
 
 describe("handleChunkRequest tests", () => {
 
@@ -51,16 +48,12 @@ describe("handleChunkRequest tests", () => {
 		return { state, item, onProgress, chunks };
 	};
 
-	it("should handle send success", async () => {
+    it("should handle send success", async () => {
         const trigger = jest.fn();
         const response = {
             state: FILE_STATES.FINISHED,
             response: "success"
         };
-
-        const progressData = { loaded: 1000, total: 2000 };
-
-        processChunkProgressData.mockReturnValueOnce(progressData);
 
         const { state, item, onProgress, chunks } = await doTest(null, response, trigger);
 
@@ -73,11 +66,7 @@ describe("handleChunkRequest tests", () => {
 
         expect(trigger).toHaveBeenCalledWith(CHUNK_EVENTS.CHUNK_FINISH, {
             chunk: { id: "c1", start: 1, end: 2, attempt: 0 },
-            item : {
-                ...item,
-                completed: 50,
-                loaded: 1000,
-            },
+            item,
             uploadData: response,
         });
 

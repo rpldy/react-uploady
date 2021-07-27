@@ -2,7 +2,6 @@
 import { FILE_STATES, logger, pick } from "@rpldy/shared";
 import { unwrap } from "@rpldy/simple-state";
 import { CHUNK_EVENTS } from "../consts";
-import processChunkProgressData from "./processChunkProgressData";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { OnProgress, SendResult } from "@rpldy/sender";
@@ -42,16 +41,9 @@ const handleChunkRequest = (
 
                     onProgress({ loaded: chunkSize, total: item.file.size }, [finishedChunk]);
 
-                    const progressData = processChunkProgressData(state, item,chunkId, chunkSize);
-
                     trigger(CHUNK_EVENTS.CHUNK_FINISH, {
                         chunk: pick(finishedChunk, ["id", "start", "end", "index", "attempt"]),
-                        item: {
-                            ...unwrap(item),
-                            //expose most up to date loaded/completed data
-                            loaded: progressData.loaded,
-                            completed: Math.min(((progressData.loaded / item.file.size) * 100), 100),
-                        },
+                        item: unwrap(item),
                         uploadData: result,
                     });
                 } else if (result.state !== FILE_STATES.ABORTED) {

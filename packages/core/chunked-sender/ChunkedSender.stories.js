@@ -45,7 +45,7 @@ export const WithChunkedSender = (): Node => {
 
         uploader.on(CHUNK_EVENTS.CHUNK_FINISH, (data) => {
             const { item } = data;
-            console.log(`CHUNK_EVENTS.CHUNK_FINISH -> ${item.completed}% completed, ${item.loaded} uploaded`);
+            console.log(`CHUNK_EVENTS.CHUNK_FINISH -> ${item.completed}% completed, ${item.loaded} uploaded`, data);
             logToCypress("CHUNK_FINISH", data);
         });
 
@@ -56,7 +56,6 @@ export const WithChunkedSender = (): Node => {
         console.log("submitting -------------- ", { file } );
 
         uploader.add([file], {params: { name: "textures" }});
-        // uploader.add(fileName2, {params: { name: "asset" }});
         uploader.upload();
     };
 
@@ -66,6 +65,10 @@ export const WithChunkedSender = (): Node => {
 
     return (
         <form>
+            <div>
+                PROCESS ENV:
+                {Object.entries(process.env).map(([key, value]) => <p>{key} = {value}</p>)}
+            </div>
             <input onChange={onFileChange} id="field-age" type="file" placeholder="browse File" />
 
             <button id="form-submit" type="button" onClick={onSubmit} disabled={!file || undefined} >

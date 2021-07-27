@@ -63,14 +63,11 @@ export const WithChunkedSender = (): Node => {
         setFile(event.target.files[0]);
     };
 
+    const isCircle = process.env.CIRCLECI;
+
     return (
         <form>
-            <div>
-                PROCESS ENV:
-                {Object.entries(process.env).map(([key, value]) =>
-                    // $FlowFixMe - bla
-                    <p key={key}>{key} = {value}</p>)}
-            </div>
+            IS CIRCLE = {isCircle}
             <input onChange={onFileChange} id="field-age" type="file" placeholder="browse File" />
 
             <button id="form-submit" type="button" onClick={onSubmit} disabled={!file || undefined} >

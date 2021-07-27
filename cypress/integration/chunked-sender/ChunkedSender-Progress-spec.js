@@ -24,11 +24,17 @@ describe("ChunkedSender - Progress", () => {
             cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLines) => {
                 let lastValue = 0;
 
-                logLines.forEach(([data, index]) =>{
-                    expect(data.item.loaded).to.be.greaterThan(lastValue);
-                    lastValue = data.item.loaded;
+                logLines.forEach(([data], index) =>{
+                    const uploaded = data.item.loaded;
+                    expect(uploaded,
+                        `chunk ${index} finished. uploaded ${uploaded} should be greater than previous chunk: ${lastValue}`)
+                        .to.be.greaterThan(lastValue);
+
+                    lastValue = uploaded;
+
                     if (index < (logLines.length - 1)) {
-                        expect(data.item.loaded).to.be.lessThan(data.item.file.size);
+                        expect(uploaded,
+                            `chunk ${index} finished. uploaded ${uploaded} should be less than total: ${data.item.file.size}`).to.be.lessThan(data.item.file.size);
                     }
                 });
             }, { all: true });

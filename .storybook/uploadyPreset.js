@@ -32,8 +32,8 @@ const addEnvParams = async (config) => {
         "process.env": {
             ...(definePlugin.definitions["process.env"] || process.env),
             BUILD_TIME_VERSION: JSON.stringify(getUploadyVersion()),
-            CIRCLECI: process.env.CIRCLECI,
-            CIRCLECI_BRANCH: process.env.CIRCLE_BRANCH,
+            CIRCLECI: JSON.stringify(process.env.CIRCLECI),
+            CIRCLECI_BRANCH:  JSON.stringify(process.env.CIRCLE_BRANCH),
         }
     }
 

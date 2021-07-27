@@ -22,11 +22,11 @@ describe("ChunkedSender - Progress", () => {
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLine) => {
-                expect(logLine[0].item.loaded).to.be.closeTo(5000, 1000);
+                expect(logLine[0].item.loaded).to.be.closeTo(50000, 20000);
             }, { index: 3 });
 
             cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLine) => {
-                expect(logLine[0].item.completed).to.be.closeTo(20, 10);
+                expect(logLine[0].item.completed).to.be.lessThan(logLine[0].item.file.size);
             }, { index: 17 });
 
             cy.storyLog().assertLogEntryContains(18, {

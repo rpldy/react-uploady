@@ -35,10 +35,9 @@ const handleChunkRequest = (
                     //TODO: splicing array is dangerous. Need to find a better (immutable) way to progress chunk upload
                     const spliced = state.chunks.splice(index, 1);
                     const finishedChunk = spliced[0];
-
-                    //issue progress event when chunk finished uploading, so item progress data is updated
                     const chunkSize = finishedChunk.end - finishedChunk.start;
 
+                    //issue progress event when chunk finished uploading, so item progress data is updated
                     onProgress({ loaded: chunkSize, total: item.file.size }, [finishedChunk]);
 
                     trigger(CHUNK_EVENTS.CHUNK_FINISH, {

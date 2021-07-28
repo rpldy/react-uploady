@@ -1,4 +1,4 @@
-import intercept from "../intercept";
+import { interceptWithHandler, RESPONSE_DEFAULTS } from "../intercept";
 import uploadFile from "../uploadFile";
 import { CHUNK_START, CHUNK_FINISH } from "../storyLogPatterns";
 
@@ -10,7 +10,13 @@ describe("ChunkedSender - Progress", () => {
     });
 
     it("should use chunked sender with progress events", () => {
-        intercept();
+        interceptWithHandler((req) => {
+            req.reply({
+                ...RESPONSE_DEFAULTS,
+                //delay response so we dont miss events due to progress event throttling
+                delay: 200,
+            });
+        });
 
         uploadFile(fileName, () => {
             cy.get("#form-submit")

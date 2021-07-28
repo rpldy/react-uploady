@@ -1,7 +1,7 @@
 const DEFAULT_URL = "http://test.upload/url",
 DEFAULT_METHOD = "POST";
 
-const RESPONSE_DEFAULTS = {
+export const RESPONSE_DEFAULTS = {
     statusCode: 200,
     body: { success: true },
 };
@@ -11,7 +11,7 @@ const createResponse = (options = {}) => ({
     ...options,
 });
 
-export const interceptWithHandler = (handler, alias, url = DEFAULT_URL, method: DEFAULT_METHOD) =>
+export const interceptWithHandler = (handler, alias = "uploadReq", url = DEFAULT_URL, method = DEFAULT_METHOD) =>
     intercept(url, method, handler, alias);
 
 const intercept = (url = DEFAULT_URL, method = DEFAULT_METHOD, resOptions, alias = "uploadReq") => {

@@ -1,4 +1,5 @@
 import uploadFile from "../uploadFile";
+import { BATCH_ADD, ITEM_ABORT, ITEM_FINISH } from "../storyLogPatterns";
 
 describe("RetryHooks - Retry Upload", () => {
     const fileName = "flower.jpg",
@@ -15,23 +16,23 @@ describe("RetryHooks - Retry Upload", () => {
             uploadFile(fileName2, () => {
                 cy.wait(400);
 
-                cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 2 });
-                cy.storyLog().assertLogPattern(/ITEM_ABORT/, { times: 2 });
+                cy.storyLog().assertLogPattern(BATCH_ADD, { times: 2 });
+                cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 2 });
 
                 cy.get("li[data-test='batch-retry-0']")
                     .click();
 
-                cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 3 });
+                cy.storyLog().assertLogPattern(BATCH_ADD, { times: 3 });
 
                 cy.wait(400);
 
-                cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 1 });
+                cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });
 
                 //same batch, second time should do nothing
                 cy.get("li[data-test='batch-retry-0']")
                     .click();
 
-                cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 3 });
+                cy.storyLog().assertLogPattern(BATCH_ADD, { times: 3 });
             }, "#upload-button");
         }, "#upload-button");
     });

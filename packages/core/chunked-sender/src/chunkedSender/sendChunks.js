@@ -59,7 +59,7 @@ export const handleChunk = (
         try {
             const chunkSendResult = sendChunk(chunk, state, item, onProgress, trigger);
 
-            handleChunkRequest(state, item, chunk.id, chunkSendResult, trigger)
+            handleChunkRequest(state, item, chunk.id, chunkSendResult, trigger, onProgress)
                 .then(() => {
                     resolve();
 

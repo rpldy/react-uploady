@@ -44,6 +44,7 @@ describe("processChunks tests", () => {
 			chunks,
 			url,
 			sendOptions,
+            startByte: 0,
 			...chunkedOptions,
 		}, item, expect.any(Function), expect.any(Function), expect.any(Function));
 	});
@@ -58,7 +59,8 @@ describe("processChunks tests", () => {
                     {
                         start: 4,
                     }
-				]
+				],
+                startByte: 4,
 			};
 
 			const item = { file: { size: 1000 }};
@@ -118,7 +120,6 @@ describe("processChunks tests", () => {
 	});
 
 	describe("abortChunkedRequest", () => {
-
 		it("should do nothing for finished request", () => {
 			const abort = jest.fn();
 

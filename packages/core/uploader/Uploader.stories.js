@@ -1,5 +1,5 @@
 // @flow
-import React, { useCallback, useState, useRef, useEffect } from "react";
+import React, { useCallback, useState, useRef, useEffect, type Element } from "react";
 import {
     UmdBundleScript,
     localDestination,
@@ -14,8 +14,6 @@ import createUploader, { UPLOADER_EVENTS } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
-
-import type {Element} from "React";
 
 export const WithCustomUI = (): Element<"div"> => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();

@@ -17,7 +17,8 @@
             "uploadPreview": "upload-preview",
             "uploadPaste": "upload-paste",
             "tusUploady": "tus-uploady",
-            "nativeUploady": "native-uploady"
+            "nativeUploady": "native-uploady",
+            "chunkedSender": "chunked-sender"
         }
     },
     "pluginsFile": false,

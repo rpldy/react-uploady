@@ -30,7 +30,7 @@ const EXT_OUTSIDE_ENHANCER_TIME = "Uploady - uploader extensions can only be reg
 
 let counter = 0;
 
-export default (options?: CreateOptions): UploaderType => {
+const createUploader = (options?: CreateOptions): UploaderType => {
     counter += 1;
     const uploaderId = `uploader-${counter}`;
     let enhancerTime = false;
@@ -162,3 +162,5 @@ export default (options?: CreateOptions): UploaderType => {
 
     return devFreeze(uploader);
 };
+
+export default createUploader;

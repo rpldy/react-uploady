@@ -1,5 +1,6 @@
 import intercept from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
+import { ITEM_START, ITEM_FINISH } from "../storyLogPatterns";
 
 describe("UploadButton - Simple - Multiple files", () => {
     const fileName = "flower.jpg";
@@ -25,13 +26,13 @@ describe("UploadButton - Simple - Multiple files", () => {
 
             cy.wait(1000);
 
-            cy.storyLog().assertLogPattern(/ITEM_START/, { index: 1 });
-            cy.storyLog().assertLogPattern(/ITEM_START/, { index: 2 });
-            cy.storyLog().assertLogPattern(/ITEM_START/, { index: 5 });
+            cy.storyLog().assertLogPattern(ITEM_START, { index: 1 });
+            cy.storyLog().assertLogPattern(ITEM_START, { index: 2 });
+            cy.storyLog().assertLogPattern(ITEM_START, { index: 5 });
 
-            cy.storyLog().assertLogPattern(/ITEM_FINISH/, { index: 3 });
-            cy.storyLog().assertLogPattern(/ITEM_FINISH/, { index: 4 });
-            cy.storyLog().assertLogPattern(/ITEM_FINISH/, { index: 6 });
+            cy.storyLog().assertLogPattern(ITEM_FINISH, { index: 3 });
+            cy.storyLog().assertLogPattern(ITEM_FINISH, { index: 4 });
+            cy.storyLog().assertLogPattern(ITEM_FINISH, { index: 6 });
         }, 3);
     });
 });

@@ -1,4 +1,5 @@
 // @flow
+import { cloneDeep } from "lodash";
 import React, { useState, useMemo, type Node } from "react";
 import createUploader, { UPLOADER_EVENTS }  from "@rpldy/uploader";
 import {
@@ -46,7 +47,7 @@ export const WithChunkedSender = (): Node => {
         uploader.on(CHUNK_EVENTS.CHUNK_FINISH, (data) => {
             const { item } = data;
             console.log(`CHUNK_EVENTS.CHUNK_FINISH -> ${item.completed}% completed, ${item.loaded} uploaded`, data);
-            logToCypress("CHUNK_FINISH", data);
+            logToCypress("CHUNK_FINISH", cloneDeep(data));
         });
 
         return uploader;

@@ -23,9 +23,11 @@ describe("ChunkedSender - Progress", () => {
                 .should("be.visible")
                 .click();
 
-            cy.wait(2000);
+            cy.wait(3000);
 
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
+            cy.storyLog().assertLogPattern(CHUNK_START, { times: 8 });
+            cy.storyLog().assertLogPattern(CHUNK_FINISH, { times: 8 });
 
             cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLines) => {
                 let lastValue = 0;
@@ -50,10 +52,6 @@ describe("ChunkedSender - Progress", () => {
                 completed: 100,
                 loaded: 372445,
             });
-
-            cy.storyLog().assertLogPattern(CHUNK_START, { times: 8 });
-            cy.storyLog().assertLogPattern(CHUNK_FINISH, { times: 8 });
         }, false);
-
     });
 });

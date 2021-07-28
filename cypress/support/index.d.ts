@@ -5,7 +5,7 @@ interface StoryLog {
     assertUrlItemStartFinish: (fileName: string, startIndex?: number) => void;
     assertLogEntryCount: (count: number, obj: any) => void;
     assertLogEntryContains: (index: number) => void;
-    customAssertLogEntry: (event: string, asserter: (logLine: any[], env: string) => void, options?: { index?: number}) => void;
+    customAssertLogEntry: (event: string, asserter: (logLine: any[], env: string) => void, options?: { index?: number, all?: boolean }) => void;
     assertLogPattern: (pattern: RegExp, options: { times?: number, index?: number, different?: boolean }) => void;
     resetStoryLog: () => void;
 }

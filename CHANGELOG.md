@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.13.3 (2021-07-29)
+
+### Bug fixes
+
+- `[chunked-sender]` - fix progress data calculation & add progress event on chunk finish. Fix for #203 
+
+### Storybook
+
+- `[chunked-sender]` - added first story with item, chunk-start,chunk-finish events logging
+
+### Docs
+
+- `root` - fix link to destination type & typo in README.md 
+
+### Internal
+
+- `all` - upgraded to latest flow (0.156.0)
+
 ## 0.13.2 (2021-06-26),
 ## 0.13.1 (2021-06-26)
 

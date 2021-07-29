@@ -90,6 +90,7 @@ const createRequest = (options: MandatoryMockOptions, items: BatchItem[]) => {
 	}
 
 	return {
+        //$FlowExpectedError[method-unbinding] flow 0.153 !!!
 		then: p.then.bind(p),
 		abort,
 		onProgress,

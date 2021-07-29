@@ -9,8 +9,12 @@ describe("handleChunkRequest tests", () => {
 	});
 
 	const doTest = async (chunks, response, trigger) => {
-	    const item = {
+	    const onProgress = jest.fn();
+        chunks = chunks ? chunks : [{ id: "c1", start: 1, end: 2, attempt: 0 }, { id: "c2" }];
 
+	    const item = {
+            id: "i1",
+            file: { size: 2000 }
         };
 
 		const state = {
@@ -18,7 +22,7 @@ describe("handleChunkRequest tests", () => {
 				"c1": {},
 				"c2": {}
 			},
-			chunks: chunks ? chunks : [{ id: "c1", start: 1, end: 2, attempt: 0 }, { id: "c2" }],
+			chunks: chunks.slice(),
 			responses: []
 		};
 
@@ -32,7 +36,7 @@ describe("handleChunkRequest tests", () => {
 			}
 		};
 
-		const test = handleChunkRequest(state, item, "c1", sendResult, trigger);
+		const test = handleChunkRequest(state, item, "c1", sendResult, trigger, onProgress);
 
 		expect(state.requests.c1.id).toBe("c1");
 		expect(state.requests.c1.abort).toBeInstanceOf(Function);
@@ -41,17 +45,19 @@ describe("handleChunkRequest tests", () => {
 
 		await test;
 
-		return { state, item };
+		return { state, item, onProgress, chunks };
 	};
 
-	it("should handle send success", async () => {
-
+    it("should handle send success", async () => {
         const trigger = jest.fn();
         const response = {
             state: FILE_STATES.FINISHED,
             response: "success"
         };
-        const { state, item } = await doTest(null, response, trigger);
+
+        const { state, item, onProgress, chunks } = await doTest(null, response, trigger);
+
+        const finishedChunk = chunks[0];
 
         expect(state.requests.c1).toBeUndefined();
         expect(state.chunks).toHaveLength(1);
@@ -63,12 +69,14 @@ describe("handleChunkRequest tests", () => {
             item,
             uploadData: response,
         });
+
+        expect(onProgress).toHaveBeenCalledWith({ loaded: 1, total: item.file.size }, [finishedChunk]);
     });
 
 	it("should handle send fail", async () => {
         const trigger = jest.fn();
 
-		const { state } = await doTest(null, {
+		const { state, onProgress } = await doTest(null, {
 			state: FILE_STATES.ERROR,
 			response: "fail"
 		}, trigger);
@@ -80,6 +88,7 @@ describe("handleChunkRequest tests", () => {
 		expect(state.responses[0]).toBe("fail");
 
         expect(trigger).not.toHaveBeenCalled();
+        expect(onProgress).not.toHaveBeenCalled();
 	});
 
 	it("should handle abort", async () => {

@@ -13,6 +13,6 @@ describe("UploadPreview - Simple", () => {
 				.should("be.visible")
 				.invoke("attr", "src")
 				.should("match", /https:\/\/icon-library.net\/images/);
-		}, "button");
+		});
 	});
 });

@@ -164,7 +164,7 @@ For upload options see the [@rpldy/uploady docs](packages/ui/uploady).
 
 ### Simple Upload Button
 
-This examples shows how you add Uploady and UploadButton to your app.
+This example shows how you add Uploady and UploadButton to your app.
 This is all it takes to get file uploading to work in your React application.
 
 ```javascript 
@@ -275,7 +275,7 @@ Or even during [upload processing](guides/DynamicParameters.md).
 ### Destination
 
 Passed as a part of the upload options. It's an object that is used to configure the end-point where the files will be uploaded to.
-It's type is defined [here](packages/shared/src/types.js#L7).
+Its type is defined [here](packages/core/shared/src/types.js#L7).
 
 See more information in the [Uploady](packages/ui/uploady#props) README.
 

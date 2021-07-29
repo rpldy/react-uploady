@@ -68,7 +68,7 @@ const useFileInput = (fileInputRef?: InputRef): ?InputRef => {
 
     useEffect(() => {
             //uses Element.prototype.closest so no IE11 support - use polyfill
-            if (fileInputRef?.current && fileInputRef.current.closest) {
+            if (fileInputRef?.current && "closest" in fileInputRef.current) {
                 const input = fileInputRef.current;
                 const uploaderOptions = context.getOptions();
 

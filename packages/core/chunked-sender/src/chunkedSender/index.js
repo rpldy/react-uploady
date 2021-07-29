@@ -9,7 +9,7 @@ import type { OnProgress, SendResult } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { ChunkedOptions, ChunkedSender, ChunkedSendOptions } from "../types";
 
-export default (chunkedOptions: ?ChunkedOptions, trigger: TriggerMethod): ChunkedSender => {
+const createChunkedSender = (chunkedOptions: ?ChunkedOptions, trigger: TriggerMethod): ChunkedSender => {
     const options = getMandatoryOptions(chunkedOptions);
 
     const send = (items: BatchItem[], url: ?string, sendOptions: ChunkedSendOptions, onProgress: OnProgress): SendResult => {
@@ -19,20 +19,22 @@ export default (chunkedOptions: ?ChunkedOptions, trigger: TriggerMethod): Chunke
             result = xhrSend(items, url, sendOptions, onProgress);
             logger.debugLog(`chunkedSender: sending items as normal, un-chunked requests`);
         } else {
-			logger.debugLog(`chunkedSender: sending file as a chunked request`);
-			result = processChunks(
-				items[0],
-				options,
-				url,
-				sendOptions,
-				onProgress,
-				trigger);
-		}
+            logger.debugLog(`chunkedSender: sending file as a chunked request`);
+            result = processChunks(
+                items[0],
+                options,
+                url,
+                sendOptions,
+                onProgress,
+                trigger);
+        }
 
-		return result;
-	};
+        return result;
+    };
 
-	return {
-		send,
-	};
+    return {
+        send,
+    };
 };
+
+export default createChunkedSender;

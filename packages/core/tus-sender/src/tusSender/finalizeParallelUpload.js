@@ -19,7 +19,7 @@ const handleFinalizeResponse = (pXhr, chunkedUploadData: UploadData) : Promise<U
             const successCode = !!~SUCCESS_CODES.indexOf(status);
 
             const resLocation = successCode &&
-                xhr?.getResponseHeader &&
+                (xhr && "getResponseHeader" in xhr) &&
                 xhr.getResponseHeader("Location");
 
             if (resLocation) {

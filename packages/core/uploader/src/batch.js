@@ -16,6 +16,7 @@ let bCounter = 0;
 
 const processFiles = (batchId, files: UploadInfo, isPending: boolean, fileFilter: ?FileFilterMethod): BatchItem[] =>
     Array.prototype
+        //$FlowExpectedError[method-unbinding] flow 0.153 !!!
         .filter.call(files, fileFilter || DEFAULT_FILTER)
         .map((f) => createBatchItem(f, batchId, isPending));
 

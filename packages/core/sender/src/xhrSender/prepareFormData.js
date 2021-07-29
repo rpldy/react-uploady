@@ -10,11 +10,11 @@ import type { SendOptions } from "../types";
  */
 const addToFormData = (fd, name, ...rest) => {
     //rest = [value, fileName = undefined]
-    if (fd.set) {
+    if ("set" in fd) {
         // $FlowFixMe - ignore flow for not allowing FileLike here
         fd.set(name, ...rest);
     } else {
-        if (fd.delete) {
+        if ("delete" in fd) {
             fd.delete(name);
         }
         // $FlowFixMe - ignore flow for not allowing FileLike here

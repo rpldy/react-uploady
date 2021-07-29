@@ -17,7 +17,7 @@ describe("UploadPreview - Simple", () => {
 
 				cy.get("img[data-test='upload-preview']")
 					.should("have.length", 1);
-			}, "button");
-        }, "button");
+			});
+        });
     });
 });

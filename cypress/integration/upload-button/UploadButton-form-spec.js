@@ -1,5 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
+import { ITEM_FINISH } from "../storyLogPatterns";
 
 describe("UploadButton - Form", () => {
     const fileName = "flower.jpg",
@@ -29,7 +30,7 @@ describe("UploadButton - Form", () => {
                         expect(formData["field-age"]).to.eq("22");
                         expect(formData["file"]).to.eq(fileName2);
 
-                        cy.storyLog().assertLogPattern(/ITEM_FINISH/, { times: 1 });
+                        cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });
                     });
 
             }, "#form-upload-button");

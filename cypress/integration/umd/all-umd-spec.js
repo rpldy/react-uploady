@@ -1,5 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
+import { BATCH_ADD, ITEM_START } from "../storyLogPatterns";
 
 describe("UMD ALL - Bundle", () => {
     const fileName = "flower.jpg";
@@ -19,8 +20,8 @@ describe("UMD ALL - Bundle", () => {
                 .its("response.statusCode")
                 .should("eq", 200);
 
-            cy.storyLog().assertLogPattern(/BATCH_ADD/, { times: 1 });
-            cy.storyLog().assertLogPattern(/ITEM_START/, { times: 1 });
+            cy.storyLog().assertLogPattern(BATCH_ADD, { times: 1 });
+            cy.storyLog().assertLogPattern(ITEM_START, { times: 1 });
 
             cy.get("img[data-test='upload-preview']")
                 .should("be.visible")

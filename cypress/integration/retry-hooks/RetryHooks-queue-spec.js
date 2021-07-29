@@ -1,4 +1,5 @@
 import uploadFile, { uploadFileTimes } from "../uploadFile";
+import { ITEM_ABORT } from "../storyLogPatterns";
 
 describe("RetryHooks - Queue", () => {
     const fileName = "flower.jpg",
@@ -74,7 +75,7 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.storyLog().assertLogPattern(/ITEM_ABORT/, { times: 1 });
+            cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 1 });
 
             cy.get("button[data-test='retry-button']")
                 .eq(1)

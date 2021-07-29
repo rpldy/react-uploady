@@ -21,6 +21,6 @@ describe("Uploady - filesParamName", () => {
                 .interceptFormData((formData) => {
                     expect(formData["customFieldName"]).to.equal(fileName);
                 });
-        }, "button");
+        });
     });
 });

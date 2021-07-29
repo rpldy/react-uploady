@@ -161,12 +161,13 @@ describe("sendChunks tests", () => {
 
             const resolve = jest.fn();
             const trigger = jest.fn();
+            const onProgress = jest.fn();
 
-            await handleChunk(state, {}, {}, resolve, { id: chunkId }, trigger);
+            await handleChunk(state, {}, onProgress, resolve, { id: chunkId }, trigger);
 
             const item = {};
 
-            expect(handleChunkRequest).toHaveBeenCalledWith(state, item, chunkId, result, trigger);
+            expect(handleChunkRequest).toHaveBeenCalledWith(state, item, chunkId, result, trigger, onProgress);
 
             expect(state.finished).toBe(true);
 

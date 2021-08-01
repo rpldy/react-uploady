@@ -1,5 +1,5 @@
 {
-  "version": "0.13.2",
+  "version": "0.13.3",
   "name": "@rpldy/upload-preview",
   "description": "preview component to show image or video being uploaded",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -18,12 +18,12 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore *.test.js --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.13.2",
-    "@rpldy/shared-ui": "^0.13.2"
+    "@rpldy/shared": "^0.13.3",
+    "@rpldy/shared-ui": "^0.13.3"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^0.13.2",
-    "@rpldy/upload-url-input": "^0.13.2",
+    "@rpldy/upload-button": "^0.13.3",
+    "@rpldy/upload-url-input": "^0.13.3",
     "@storybook/addon-knobs": "^6.2.1",
     "flow-bin": "^0.156.0",
     "react-image-crop": "^8.6.4",

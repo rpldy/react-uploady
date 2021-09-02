@@ -110,7 +110,7 @@ export const App = () => {
 
 ### Custom Preview
  
-For an example of using a custom preview component see [this story](http://localhost:9111/?path=/story/upload-preview--with-progress). 
+For an example of using a custom preview component see [this story](https://react-uploady-storybook.netlify.app/?path=/story/upload-preview--with-progress). 
 
 ## Default image types
 

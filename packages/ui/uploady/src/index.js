@@ -20,5 +20,6 @@ export {
 export type {
     UploadyContextType,
     UploadyProps,
+    PreSendData,
 } from "@rpldy/shared-ui";
 

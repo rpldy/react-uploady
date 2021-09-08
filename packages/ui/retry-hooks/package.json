@@ -38,7 +38,7 @@
   "devDependencies": {
     "@rpldy/upload-button": "^0.13.3",
     "@rpldy/upload-preview": "^0.13.3",
-    "flow-bin": "^0.156.0",
+    "flow-bin": "^0.159.0",
     "rc-progress": "^3.0.0"
   },
   "publishConfig": {

@@ -40,11 +40,12 @@ const deepProxyUnwrap = (obj: any, level: number = 0): any => {
             result = unwrap(obj);
         } else if (level < 3 && isProxiable(obj)) {
             result = Array.isArray(obj) ?
-                obj.map<any[]>((key) => deepProxyUnwrap(obj[key])) :
-                Object.keys(obj).reduce<{ [string]: any }>((res, key) => {
-                    res[key] = deepProxyUnwrap(obj[key], level + 1);
-                    return res;
-                }, {});
+                obj.map<any[]>((sub) => deepProxyUnwrap(sub, level + 1)) :
+                Object.keys(obj)
+                    .reduce<{ [string]: any }>((res, key) => {
+                        res[key] = deepProxyUnwrap(obj[key], level + 1);
+                        return res;
+                    }, {});
         }
     }
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.13.4 (2021-09-09)
+
+### Bug fixes
+
+- `[uploader]` - fix bug in deep proxy unwrap before trigger. Fix for #232
+
+### Internal
+
+- `all` - upgraded to latest flow (0.159.0)
+
 ## 0.13.3 (2021-07-29)
 
 ### Bug fixes

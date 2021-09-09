@@ -25,6 +25,9 @@ import Uploady, {
     useItemErrorListener,
     useItemCancelListener,
     useItemAbortListener,
+    useRequestPreSend,
+
+    type PreSendData,
 } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -300,6 +303,47 @@ export const withExposedInternalInput = (): Node => {
         autoUpload={autoUpload}>
 
         <UploadFormWithInternalInput/>
+    </Uploady>;
+};
+
+const ExampleRequestPreSend = () => {
+    const [namesLengths, setLengths] = useState("");
+
+    useRequestPreSend(({ items }: PreSendData) => {
+        const namesLengths = items.filter((item) => !!item.file)
+            .map((item) => item.file.name.length)
+            .join(",");
+
+        setLengths(namesLengths);
+
+        return {
+            options: {
+                destination: {
+                    headers: {
+                        "x-file-names-lengths": namesLengths,
+                    }
+                }
+            }
+        };
+    });
+
+    return namesLengths ? <p>{namesLengths}</p> : null;
+};
+
+export const withHeaderFromFileName = (): Node => {
+    const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
+
+    return <Uploady
+        debug
+        concurrent
+        maxConcurrent={10}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+        autoUpload={autoUpload}>
+        <ExampleRequestPreSend/>
+        <ContextUploadButton/>
     </Uploady>;
 };
 

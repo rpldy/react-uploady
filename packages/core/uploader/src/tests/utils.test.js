@@ -114,6 +114,40 @@ describe("uploader utils tests", () => {
             expect(unwrap).toHaveBeenCalledTimes(2);
         });
 
+        it("should unwrap object with array and object", () => {
+            const obj = {
+                    "items": [
+                        { "id": "batch-1.item-1" },
+                        { "id": "batch-1.item-2" }],
+                    "options": {
+                        "autoUpload": true,
+                    }
+                };
+            isProxy.mockReturnValueOnce(false)
+                .mockReturnValueOnce(false)
+                .mockReturnValueOnce(true)
+                .mockReturnValueOnce(true)
+                .mockReturnValueOnce(true);
+
+            isProxiable
+                .mockReturnValueOnce(true)
+                .mockReturnValueOnce(true);
+
+            const unwrapImp = (o) => ({...o});
+
+            unwrap.mockImplementationOnce(unwrapImp)
+                .mockImplementationOnce(unwrapImp)
+                .mockImplementationOnce(unwrapImp);
+
+            const result = deepProxyUnwrap(obj);
+
+            expect(obj.items).not.toBe(result.items);
+            expect(obj.items[0]).toEqual(result.items[0]);
+            expect(obj.items[1]).toEqual(result.items[1]);
+            expect(obj.options).not.toBe(result.options);
+            expect(obj.options).toEqual(result.options);
+        });
+
         it("should unwrap array items on level 1", () => {
             const obj = {
                 items: ["a", "b"]

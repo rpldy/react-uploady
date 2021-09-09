@@ -46,6 +46,7 @@ export type {
 	RefObject,
     UploaderListeners,
     UploadyProps,
-    NoDomUploadyProps
+    NoDomUploadyProps,
+    PreSendData,
 } from "./types";
 

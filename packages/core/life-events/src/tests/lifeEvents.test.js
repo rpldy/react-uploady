@@ -245,7 +245,7 @@ describe("life-events tests", () => {
 
     describe("life pack tests", () => {
 
-        it("should not unpkac when no listeners", () => {
+        it("should not unpack when no listeners", () => {
 
             const api = addLife();
 

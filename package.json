@@ -105,7 +105,7 @@
     "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-react-hooks": "^4.0.4",
     "fast-glob": "^3.2.2",
-    "flow-bin": "^0.156.0",
+    "flow-bin": "^0.159.0",
     "flow-copy-source": "^2.0.9",
     "flow-mono-cli": "^1.5.3",
     "fs-extra": "^9.0.0",

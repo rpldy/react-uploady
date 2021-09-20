@@ -95,3 +95,54 @@ export default function App() {
 ```
 
 check out this [sandbox](https://codesandbox.io/s/react-uploady-cloudinary-signed-sample-8tw8d) with the same code.
+
+
+### Chunked Uploads
+
+Cloudinary supports chunked uploads. This is especially useful for large files. 
+Two requirements must be fulfilled for chunked uploads to work with Cloudinary: 
+
+1.  Chunks must be at least 5MB
+2.  Chunk requests for the same file must provide the same header (X-Unique-Upload-Id)
+
+
+This can be done easily with Uploady and the useRequestPreSend event hook:
+
+```javascript 
+improt React from "react";
+import ChunkedUploady from "@rpldy/chunked-uploady";
+import UploadButton from "@rpldy/upload-button";
+
+const UploadButtonWithUniqueIdHeader = () => {
+    useRequestPreSend((data) => {
+        return {
+            options: {
+                destination: {
+                    headers: {
+                        "X-Unique-Upload-Id": `example-unique-${Date.now()}`,
+                    }
+                }
+            }
+        };
+    });
+
+    return <UploadButton />;
+};
+
+export const App = () => {    
+    return <ChunkedUploady               
+         destination={{
+          url: `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`,
+          params: {
+            upload_preset: UPLOAD_PRESET,            
+            //additional cloudinary upload params can be defined here
+          }
+        }}
+        chunkSize={1e+7}>
+        <UploadButtonWithUniqueIdHeader/>
+    </ChunkedUploady>;
+};
+
+
+```
+

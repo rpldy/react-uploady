@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.13.5 (2021-09-28)
+
+### Bug fixes
+
+- `[tus-sender]` - fix bug in upload url concatenate of absolute location header. Fix for #242
+
+### Docs
+
+- `storybook` - force story view mode
+
 ## 0.13.4 (2021-09-09)
 
 ### Bug fixes

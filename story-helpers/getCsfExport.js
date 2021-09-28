@@ -9,6 +9,7 @@ const getCsfExport = (component: ?React$AbstractComponent<any, any>, title: stri
     component,
     title,
     parameters: {
+        viewMode: "story",
         docs: {
             description: { component: readme },
         },

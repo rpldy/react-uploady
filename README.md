@@ -136,6 +136,8 @@ After that, you can add additional packages as needed. See below for more detail
 ### Providers
 * [@rpldy/chunked-uploady](packages/ui/chunked-uploady) - Wrapper for Uploady with support for chunked uploads
 * [@rpldy/tus-uploady](packages/ui/tus-uploady) - Wrapper for Uploady with support for tus(resumable) uploads  
+* [@rpldy/native-uploady](packages/native/native-uploady) - Uploay for React Native (no react-dom)
+
 
 ### Senders
 * [@rpldy/sender](packages/core/sender) - Uploady's main file sender (XHR)
@@ -143,18 +145,16 @@ After that, you can add additional packages as needed. See below for more detail
 * [@rpldy/tus-sender](packages/core/tus-sender) - add TUS resumable upload support  
 * [@rpldy/mock-sender](packages/core/mock-sender) - use Mock sender for testing purposes 
 
-### Extra
+### Extras
 * [@rpldy/retry](packages/core/retry) - Add support for retrying failed uploads
 
-### Shared Packages
+### Internal Packages
 * [@rpldy/shared](packages/core/shared) - Internal set of utils+types that all packages require  
 * [@rpldy/shared-ui](packages/ui/shared) - Internal set of utils+types that all UI packages require 
 * [@rpldy/life-events](packages/core/life-events) - provides **cancellable** pub/sub "events" 
 * [@rpldy/safe-storage](packages/core/safe-storage) - safe (don't throw) versions of local and session storage
 * [@rpldy/simple-state](packages/core/simple-state) - deep proxy object, so it's only updateable through an update method
 
-### React Native
-* [@rpldy/native-uploady](packages/native/native-uploady) - Uploay for React Native (no react-dom)
 
 ## Examples
 

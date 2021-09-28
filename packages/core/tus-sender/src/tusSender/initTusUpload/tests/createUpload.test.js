@@ -8,7 +8,6 @@ jest.mock("@rpldy/chunked-sender", () => ({
 }));
 
 describe("createUpload tests", () => {
-
 	describe("resolveUploadUrl tests", () => {
 		it.each([
 			"//", "http://", "https://"
@@ -18,25 +17,25 @@ describe("createUpload tests", () => {
 				.toEqual(loc);
 		});
 
-		it.each([
-			"/upload/123",
-			"upload/123"
-		])("should combine location with create url without trailing /", (loc) => {
-			expect(resolveUploadUrl("https://www.test.com/tus", loc))
-				.toEqual("https://www.test.com/tus/upload/123");
-		});
+        it.each([
+            ["https://www.test.com/tus", "/upload/123"],
+            ["https://www.test.com/tus/", "/upload/123"],
+        ])("should combine createUrl %s with absolute location %s", (url, loc) => {
+            expect(resolveUploadUrl(url, loc))
+            		.toEqual("https://www.test.com/upload/123");
+        });
 
-		it.each([
-			"/upload/123",
-			"upload/123"
-		])("should combine location with create url with trailing /", (loc) => {
-			expect(resolveUploadUrl("https://www.test.com/tus/", loc))
-				.toEqual("https://www.test.com/tus/upload/123");
-		});
+        it.each([
+            ["https://www.test.com", "upload/123", "https://www.test.com/upload/123"],
+            ["https://www.test.com/tus", "upload/123", "https://www.test.com/tus/upload/123"],
+            ["https://www.test.com/tus/", "upload/123", "https://www.test.com/tus/upload/123"],
+        ])("should combine createUrl %s with relative location %s", (url, loc, expected) => {
+            expect(resolveUploadUrl(url, loc))
+                .toEqual(expected);
+        });
 	});
 
 	describe("createUpload tests", () => {
-
 		beforeEach(() => {
 			clearJestMocks(
 				request

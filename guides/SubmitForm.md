@@ -95,8 +95,7 @@ Only calling `processPending` will initiate the upload.
 
 Finally, we render our form inside the <Uploady> provider so it all works:
 
-```
-
+```jsx
 const App = () => {
     return (
         <Uploady

@@ -1,5 +1,5 @@
 {
-  "version": "0.13.4",
+  "version": "0.13.5",
   "name": "@rpldy/upload-drop-zone",
   "description": "drop zone (container) component to initiate file and folder content uploads",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -27,13 +27,13 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore *.test.js --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared-ui": "^0.13.4",
+    "@rpldy/shared-ui": "^0.13.5",
     "html-dir-content": "^0.3.2"
   },
   "devDependencies": {
-    "@rpldy/shared": "^0.13.4",
-    "@rpldy/upload-button": "^0.13.4",
-    "@rpldy/uploady": "^0.13.4",
+    "@rpldy/shared": "^0.13.5",
+    "@rpldy/upload-button": "^0.13.5",
+    "@rpldy/uploady": "^0.13.5",
     "flow-bin": "^0.159.0",
     "react-dnd": "^11.1.3",
     "react-dnd-html5-backend": "^10.0.2",

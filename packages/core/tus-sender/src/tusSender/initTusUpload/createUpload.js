@@ -16,7 +16,8 @@ export const resolveUploadUrl = (createUrl: string, location: string): string =>
         uploadUrl = location;
     } else if (location.startsWith("/")) {
         //absolute location, concatenate to upload URL without any other path
-        uploadUrl = new URL(createUrl).origin.replace(/\/$/, "") + location;
+        uploadUrl = (createUrl.startsWith("/") ?
+            "" : new URL(createUrl).origin.replace(/\/$/, "")) + location;
     } else {
         uploadUrl = [
             createUrl.replace(/\/$/, ""),

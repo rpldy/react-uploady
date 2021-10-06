@@ -1,5 +1,5 @@
 {
-  "version": "0.13.5",
+  "version": "0.13.6",
   "name": "@rpldy/chunked-uploady",
   "description": "wrapper&context component to expose and provide react-uploady functionality with chunked upload support",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -29,15 +29,15 @@
     "access": "public"
   },
   "dependencies": {
-    "@rpldy/chunked-sender": "^0.13.5",
-    "@rpldy/sender": "^0.13.5",
-    "@rpldy/shared": "^0.13.5",
-    "@rpldy/shared-ui": "^0.13.5",
-    "@rpldy/uploader": "^0.13.5",
-    "@rpldy/uploady": "^0.13.5"
+    "@rpldy/chunked-sender": "^0.13.6",
+    "@rpldy/sender": "^0.13.6",
+    "@rpldy/shared": "^0.13.6",
+    "@rpldy/shared-ui": "^0.13.6",
+    "@rpldy/uploader": "^0.13.6",
+    "@rpldy/uploady": "^0.13.6"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^0.13.5",
+    "@rpldy/upload-button": "^0.13.6",
     "@storybook/addon-knobs": "^6.2.1",
     "flow-bin": "^0.159.0"
   },

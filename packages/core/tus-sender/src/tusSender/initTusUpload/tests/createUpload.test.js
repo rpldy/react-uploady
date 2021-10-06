@@ -33,7 +33,15 @@ describe("createUpload tests", () => {
             expect(resolveUploadUrl(url, loc))
                 .toEqual(expected);
         });
-	});
+
+        it.each([
+            ["/upload", "/files", "/files"],
+            ["/upload", "files", "/upload/files"],
+        ])("should combine location: %s with non-origin createUrl: %s", (url, loc, expected) => {
+            expect(resolveUploadUrl(url, loc))
+                .toEqual(expected);
+        });
+    });
 
 	describe("createUpload tests", () => {
 		beforeEach(() => {

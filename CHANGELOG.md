@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.13.6 (2021-10-07)
+
+### Bug fixes
+
+- `[tus-sender]` - fix bug in upload url when destination url is origin-less. Fix for #246
+
+
 ## 0.13.5 (2021-09-28)
 
 ### Bug fixes

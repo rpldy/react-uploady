@@ -70,6 +70,8 @@ RU has a small footprint (by design) with very few (and small) dependencies.
 
 **Getting Started**
 
+A great place to start is our [Intro & Tutorials video on Youtube](https://youtu.be/bxvHE4hWu3c).
+
 We recommend checking out the [Uploady](packages/ui/uploady) README first to understand how to configure your uploads
 and how to access upload data (using the provided hooks or events).
 

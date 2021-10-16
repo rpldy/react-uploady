@@ -101,9 +101,9 @@ const createUploaderQueue = (
 
             if (batchItems) {
                 const [completed, loaded] = batchItems
-                    .reduce((res, item) => {
-                        res[0] += item.completed;
-                        res[1] += item.loaded;
+                    .reduce((res, { completed, loaded }) => {
+                        res[0] += completed;
+                        res[1] += loaded;
                         return res;
                     }, [0, 0]);
 

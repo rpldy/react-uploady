@@ -112,12 +112,24 @@ const cleanUpFinishedBatches = (queue: QueueState) => {
             const alreadyFinalized = getIsBatchFinalized(batch);
 
             if (orgItemCount === finishedCounter) {
+                //batch may not be updated with completed/loaded with 100% values
+                if (!alreadyFinalized && batch.completed !== 100) {
+                    queue.updateState((state: State) => {
+                        const batch: Batch = getBatchFromState(state, batchId);
+                        batch.completed = 100;
+                        batch.loaded = batch.items.reduce((res, { loaded }) => res + loaded, 0);
+                    });
+
+                    //ensure we trigger progress event with completed = 100 for all items
+                    triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_PROGRESS);
+                }
+
                 queue.updateState((state: State) => {
-                    const batch = getBatchFromState(state, batchId);
+                    const batch: Batch = getBatchFromState(state, batchId);
                     //set batch state to FINISHED before triggering event and removing it from queue
                     batch.state = alreadyFinalized ? batch.state : BATCH_STATES.FINISHED;
 
-                    if (state.currentBatch === batchId){
+                    if (state.currentBatch === batchId) {
                         state.currentBatch = null;
                     }
                 });

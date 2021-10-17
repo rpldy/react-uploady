@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.14.1 (2021-10-16)
+
+## Bug fixes
+
+- `[uploader]` - fix batch data potentially not having completed values when finished
+
 ## 0.13.6 (2021-10-07)
 
 ### Bug fixes

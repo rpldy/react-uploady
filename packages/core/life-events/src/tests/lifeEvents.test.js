@@ -30,7 +30,6 @@ describe("life-events tests", () => {
         });
 
         it("should create with defined events", () => {
-
             const obj = {};
             addLife(obj, ["test", "test2"]);
             expect(obj.getEvents()).toEqual(["test", "test2"]);
@@ -41,6 +40,14 @@ describe("life-events tests", () => {
             addLife(obj, ["test", "test2"]);
             addLife(obj, ["test", "test2"]);
             expect(obj.getEvents()).toEqual(["test", "test2"]);
+        });
+
+        it("should throw when LE symbol not found", () => {
+            //contrived test but just in case
+            expect(() => {
+                const api = addLife();
+                api.target.on.call({}, "test", noOp);
+            }).toThrow("Didnt find LE internal object.");
         });
     });
 
@@ -305,6 +312,13 @@ describe("life-events tests", () => {
 
             expect(api.hasEventRegistrations("test")).toBe(true);
 
+            api.target.off("test");
+            expect(api.hasEventRegistrations("test")).toBe(false);
+        });
+
+        it("should do nothing for non-registered event", () => {
+            const api = addLife();
+            expect(api.hasEventRegistrations("test")).toBe(false);
             api.target.off("test");
             expect(api.hasEventRegistrations("test")).toBe(false);
         });

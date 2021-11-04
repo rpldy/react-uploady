@@ -52,7 +52,7 @@ const findRegistrations = (obj: Object, name?: any): RegItem[] => {
 
 	return name ?
 		(registry[name] ? registry[name].slice() : []) :
-		// $FlowFixMe - flow doesnt know about Array.prototype.flat yet...
+        //$FlowIssue - flow doesnt know how to work with Array.values() :(
 		Object.values(registry).flat();
 };
 

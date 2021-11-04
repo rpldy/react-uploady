@@ -104,10 +104,10 @@ It wraps the uploader and exposes everything the app using it needs.
 
 ```javascript
 import React, { useContext, useCallback } from "react";
-import Uploady, { UploadyContext } from "@rpldy/uploady";
+import Uploady, { useUploady } from "@rpldy/uploady";
 
 const MyComponent = () => { 
-    const uploady = useContext(UploadyContext);
+    const uploady = useUploady();
 
     const onClick = useCallback(()=> {
             uploady.showFileUpload();

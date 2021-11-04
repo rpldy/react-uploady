@@ -8,7 +8,6 @@ jest.mock("html-dir-content", () => ({
 }));
 
 describe("UploadDropZone tests", () => {
-
     beforeEach(() => {
         clearJestMocks(
             UploadyContext.upload,
@@ -16,15 +15,20 @@ describe("UploadDropZone tests", () => {
         );
     });
 
-    const testDropZone = (props) => {
+    const testDropZone = (props = {}) => {
         const mockRef = jest.fn();
 
-        const wrapper = mount(<UploadDropZone
-            {...props} ref={mockRef}>
-            <span>test</span>
-        </UploadDropZone>);
+        const wrapper = mount(
+            <UploadDropZone
+                {...props}
+                ref={mockRef}
+            >
+                <span>test</span>
+            </UploadDropZone>
+        );
 
         const div = wrapper.find("div");
+        const span = wrapper.find("span");
 
         const dropEvent = {
             dataTransfer: {},
@@ -38,12 +42,12 @@ describe("UploadDropZone tests", () => {
             wrapper,
             div,
             dropEvent,
-            mockRef
+            mockRef,
+            span,
         };
     };
 
     it("should render drop zone & handle drop", async () => {
-
         const { div, dropEvent } = testDropZone({
             id: "testZone",
             className: "test-zone",
@@ -89,7 +93,6 @@ describe("UploadDropZone tests", () => {
     });
 
     it("should use provided drop handler", async () => {
-
         const dropHandler = jest.fn();
 
         const { div, dropEvent } = testDropZone({
@@ -108,26 +111,39 @@ describe("UploadDropZone tests", () => {
     });
 
     it("should add & remove drag className", () => {
-
         const onDragOverClassName = "drag-over";
 
-        const { div, mockRef } = testDropZone({
+        const { div, span, mockRef } = testDropZone({
             onDragOverClassName
         });
 
         const refElm = mockRef.mock.calls[0][0];
 
+        div.simulate("dragenter");
         div.simulate("dragover");
         expect(refElm.classList.contains("drag-over")).toBe(true);
         div.simulate("dragend");
         expect(refElm.classList.contains("drag-over")).toBe(false);
 
-        div.simulate("dragover");
+        div.simulate("dragenter");
+
+        //simulate drag is over child element
+        span.simulate("dragenter");
+        div.simulate("dragleave");
+
         expect(refElm.classList.contains("drag-over")).toBe(true);
+        div.simulate("dragenter");
         div.simulate("dragleave");
         expect(refElm.classList.contains("drag-over")).toBe(false);
+    });
 
-        // withForwardRefMock.ref.current = null;
-        // div.simulate("dragover");
+    it("should not add className if non provided", () => {
+        const { div, mockRef } = testDropZone();
+
+        const refElm = mockRef.mock.calls[0][0];
+
+        div.simulate("dragenter");
+        div.simulate("dragover");
+        expect(refElm.classList.contains("drag-over")).toBe(false);
     });
 });

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.14.2 (2021-11-04)
+
+## Bug fixes
+
+- `[upload-drop-zone]` - fix drop zone flickering when over child elements. Fix for #256
+
 ## 0.14.1 (2021-10-16)
 
 ## Bug fixes

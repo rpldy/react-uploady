@@ -119,7 +119,7 @@ workflows:
             - setup
       - cypress/install:
           name: Prepare E2E (cypress)
-          executor: cypress/base-14
+          executor: cypress/base-16
           requires:
             - setup
           yarn: true
@@ -130,7 +130,7 @@ workflows:
             - bundle
       - cypress/run:
           name: E2E (cypress)
-          executor: cypress/base-12-14-0
+          executor: cypress/base-16
           requires:
             - Prepare E2E (cypress)
           attach-workspace: true

@@ -50,6 +50,7 @@ jobs:
                     paths:
                         - node_modules
                         - packages
+                        - /home/circleci/.cache/Cypress
 
     test:
         working_directory: *workspace_root
@@ -75,7 +76,6 @@ jobs:
                   root: .
                   paths:
                       - .jest-coverage
-                      - packages
 
     coverage:
         working_directory: *workspace_root
@@ -117,12 +117,24 @@ jobs:
         steps:
             - checkout
             - attach_workspace:
-                  at: .
+                at: .
             - prepare-e2e
             - persist_to_workspace:
                   root: .
                   paths:
                       - .sb-static
+
+    cypress-run:
+        working_directory: *workspace_root
+        executor:
+            name: node/default
+            tag: *node_version
+        steps:
+            - checkout
+            - attach_workspace:
+                at: .
+            - store_artifacts:
+                path: cypress/results
 
 workflows:
     create-rpldy:
@@ -143,7 +155,9 @@ workflows:
             - cypress-prepare:
                   requires:
                       - setup
-
+            - cypress-run:
+                  requires:
+                      - cypress-prepare
 
 
 #      - cypress/install:

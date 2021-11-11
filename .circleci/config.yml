@@ -37,6 +37,11 @@ jobs:
           key: v1-deps-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
+      -   persist_to_workspace:
+            root: .
+            paths:
+              - node_modules
+              - packages
 
   test:
     working_directory: *workspace_root

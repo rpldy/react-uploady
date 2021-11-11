@@ -14,7 +14,7 @@ commands:
     description: "Setup command to install/bootstrap/build"
     steps:
       #- run: yarn install --pure-lockfile
-      - run: yarn bootstrap -- --pure-lockfile
+      - run: yarn bootstrap:pure
       - run: yarn build
   bundle:
     description: "Create UMD bundles"

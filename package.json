@@ -5,6 +5,7 @@
   "scripts": {
     "upgradep": "node scripts/upgradeDep.js",
     "bootstrap": "lerna bootstrap --use-workspaces",
+    "bootstrap:pure": "lerna bootstrap --use-workspaces -- --pure-lockfile",
     "coverage": "codecov",
     "bundle": "rimraf bundle; node scripts/bundle.js --validate",
     "bundle:prod": "UPLOADY_BUNDLE=true NODE_ENV=production yarn bundle",

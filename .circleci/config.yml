@@ -12,7 +12,8 @@ commands:
     setup:
         description: "Setup command to install/bootstrap/build"
         steps:
-            - run: "ls; pwd; PATH=$PATH:./node_modules/.bin"
+#            - run: "ls; pwd; PATH=$PATH:./node_modules/.bin"
+            - run: yarn --pure-lockfile
             - run: yarn bootstrap:pure
             - run: yarn build
     bundle:

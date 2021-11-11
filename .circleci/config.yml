@@ -22,10 +22,10 @@ commands:
     prepare-e2e:
         description: "Prepare for cypress e2e tests"
         steps:
-            - run: "ls"
+            - run: "ls; pwd"
             - run:
                   name: Install cypress
-                  command: cypress install
+                  command: yarn cypress install
             - run:
                   name: Verify cypress
                   command: npx cypress verify

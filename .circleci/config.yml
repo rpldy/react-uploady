@@ -1,143 +1,148 @@
 version: 2.1
 orbs:
-  node: circleci/node@4.7.0
-  #cypress: cypress-io/cypress@1.29.0
+    node: circleci/node@4.7.0
 
 references:
-  workspace_root: &workspace_root
-                    /tmp/build
-  node_version: &node_version
-    "14.17.6"
-
-executors:
-  cypress-node-14:
-    docker:
-      - image: 'cypress/base:14.17.3'
+    workspace_root: &workspace_root
+                        /tmp/build
+    node_version: &node_version
+                      "14.17.6"
 
 commands:
-  setup:
-    description: "Setup command to install/bootstrap/build"
-    steps:
-      #- run: yarn install --pure-lockfile
-      - run: yarn bootstrap:pure
-      - run: yarn build
-  bundle:
-    description: "Create UMD bundles"
-    steps:
-      - run: yarn bundle:prod
+    setup:
+        description: "Setup command to install/bootstrap/build"
+        steps:
+            #- run: yarn install --pure-lockfile
+            - run: yarn bootstrap:pure
+            - run: yarn build
+    bundle:
+        description: "Create UMD bundles"
+        steps:
+            - run: yarn bundle:prod
+    prepare-e2e:
+        description: "Prepare for cypress e2e tests"
+        steps:
+            - run:
+                  name: Verify cypress
+                  command: npx cypress verify
+            - run:
+                  name: Build Storybook
+                  command: yarn sb:build:prod
 
 jobs:
-  setup:
-    working_directory: *workspace_root
-    executor:
-      name: node/default
-      tag: *node_version
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-deps-{{ checksum "yarn.lock" }}
-      - setup
-      - save_cache:
-          key: v1-deps-{{ checksum "yarn.lock" }}
-          paths:
-            - node_modules
-      -   persist_to_workspace:
-            root: .
-            paths:
-              - node_modules
-              - packages
+    setup:
+        working_directory: *workspace_root
+        executor:
+            name: node/default
+            tag: *node_version
+        steps:
+            - checkout
+            - restore_cache:
+                  keys:
+                      - v1-deps-{{ checksum "yarn.lock" }}
+            - setup
+            - save_cache:
+                  key: v1-deps-{{ checksum "yarn.lock" }}
+                  paths:
+                      - node_modules
+            -   persist_to_workspace:
+                    root: .
+                    paths:
+                        - node_modules
+                        - packages
 
-  test:
-    working_directory: *workspace_root
-    executor:
-      name: node/default
-      tag: *node_version
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Test Code (lint, flow, jest, types)
-          command: yarn test:ci
-          environment:
-            JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
-      - store_test_results:
-          path: reports/junit
-      - store_artifacts:
-          path: reports/junit
-      - store_artifacts:
-          path: .jest-coverage
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .jest-coverage
-            - packages
+    test:
+        working_directory: *workspace_root
+        executor:
+            name: node/default
+            tag: *node_version
+        steps:
+            - checkout
+            - attach_workspace:
+                  at: .
+            - run:
+                  name: Test Code (lint, flow, jest, types)
+                  command: yarn test:ci
+                  environment:
+                      JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+            - store_test_results:
+                  path: reports/junit
+            - store_artifacts:
+                  path: reports/junit
+            - store_artifacts:
+                  path: .jest-coverage
+            - persist_to_workspace:
+                  root: .
+                  paths:
+                      - .jest-coverage
+                      - packages
 
-  coverage:
-    working_directory: *workspace_root
-    executor:
-      name: node/default
-      tag: *node_version
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Upload Coverage
-          command: yarn coverage
-      - store_artifacts:
-          path: .jest-coverage
+    coverage:
+        working_directory: *workspace_root
+        executor:
+            name: node/default
+            tag: *node_version
+        steps:
+            - checkout
+            - attach_workspace:
+                  at: .
+            - run:
+                  name: Upload Coverage
+                  command: yarn coverage
+            - store_artifacts:
+                  path: .jest-coverage
 
-  bundle:
-    working_directory: *workspace_root
-    executor:
-      name: node/default
-      tag: *node_version
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - bundle
-      - store_artifacts:
-          path: bundle
-      - persist_to_workspace:
-          root: .
-          paths:
+    bundle:
+        working_directory: *workspace_root
+        executor:
+            name: node/default
+            tag: *node_version
+        steps:
+            - checkout
+            - attach_workspace:
+                  at: .
             - bundle
+            - store_artifacts:
+                  path: bundle
+            - persist_to_workspace:
+                  root: .
+                  paths:
+                      - bundle
 
-  cypress-prepare:
-    working_directory: *workspace_root
-    executor:
-      name: node/default
-      tag: *node_version
-    steps:
-       - run:
-          name: Verify cypress
-          command: npx cypress verify
-      - run:
-          name: Build Storybook
-          command: yarn sb:build:prod
+    cypress-prepare:
+        working_directory: *workspace_root
+        executor:
+            name: node/default
+            tag: *node_version
+        steps:
+            - checkout
+            - attach_workspace:
+                  at: .
+            - prepare-e2e
+            - persist_to_workspace:
+                  root: .
+                  paths:
+                      - .sb-static
 
 workflows:
-  create-rpldy:
-    jobs:
-      - setup
-      - test:
-          requires:
+    create-rpldy:
+        jobs:
             - setup
-      - coverage:
-          requires:
-            - test
-          filters:
-            branches:
-              only: master
-      - bundle:
-          requires:
-            - setup
-      - cypress-prepare:
-          requires:
-            - setup
+            - test:
+                  requires:
+                      - setup
+            - coverage:
+                  requires:
+                      - test
+                  filters:
+                      branches:
+                          only: master
+            - bundle:
+                  requires:
+                      - setup
+            - cypress-prepare:
+                  requires:
+                      - setup
 
 
 

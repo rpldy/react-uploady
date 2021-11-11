@@ -20,7 +20,7 @@ const processFiles = (batchId, files: UploadInfo, isPending: boolean, fileFilter
         .filter.call(files, fileFilter || DEFAULT_FILTER)
         .map((f) => createBatchItem(f, batchId, isPending));
 
-export default (files: UploadInfo | UploadInfo[], uploaderId: string, options: CreateOptions): Batch => {
+const createBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, options: CreateOptions): Batch => {
     bCounter += 1;
     const id = `batch-${bCounter}`;
 
@@ -42,3 +42,5 @@ export default (files: UploadInfo | UploadInfo[], uploaderId: string, options: C
         orgItemCount: items.length,
     };
 };
+
+export default createBatch;

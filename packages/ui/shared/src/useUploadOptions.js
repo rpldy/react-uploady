@@ -3,7 +3,7 @@ import useUploadyContext from "./useUploadyContext";
 
 import type { CreateOptions } from "@rpldy/uploader";
 
-export default (options?: CreateOptions): CreateOptions => {
+const useUploadOptions = (options?: CreateOptions): CreateOptions => {
     const context = useUploadyContext();
 
     if (options) {
@@ -12,3 +12,5 @@ export default (options?: CreateOptions): CreateOptions => {
 
     return context.getOptions();
 };
+
+export default useUploadOptions;

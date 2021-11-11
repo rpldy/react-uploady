@@ -6,7 +6,7 @@ import { NO_EXT } from "./consts";
 
 import type { UploadOptions } from "@rpldy/shared";
 
-export default (): (itemId?: string, options?: UploadOptions) => boolean => {
+const useRetry = (): (itemId?: string, options?: UploadOptions) => boolean => {
     const context = useUploadyContext();
     const ext = context.getExtension(RETRY_EXT);
 
@@ -14,3 +14,5 @@ export default (): (itemId?: string, options?: UploadOptions) => boolean => {
 
     return ext.retry;
 };
+
+export default useRetry;

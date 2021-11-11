@@ -55,9 +55,7 @@ describe("sessionStorage tests", () => {
 		});
 
         beforeEach(() => {
-            beforeEach(() => {
-                hasWindow.mockReturnValueOnce(true);
-            });
+            hasWindow.mockReturnValueOnce(true);
         });
 
 		afterAll(() => {

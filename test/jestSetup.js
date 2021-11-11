@@ -1,4 +1,4 @@
-import EnzymeAdapter from "enzyme-adapter-react-16";
+import EnzymeAdapter from "@wojtekmaj/enzyme-adapter-react-17";
 import { shallow, mount, configure } from "enzyme";
 import testCustomHook from "./testCustomHook";
 

@@ -23,6 +23,9 @@ commands:
         description: "Prepare for cypress e2e tests"
         steps:
             - run:
+                  name: Install cypress
+                  command: cypress install
+            - run:
                   name: Verify cypress
                   command: npx cypress verify
             - run:

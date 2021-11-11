@@ -44,6 +44,7 @@ jobs:
       name: node/default
       tag: *node_version
     steps:
+      - checkout
       - attach_workspace:
           at: .
       - run:
@@ -69,6 +70,7 @@ jobs:
       name: node/default
       tag: *node_version
     steps:
+      - checkout
       - attach_workspace:
           at: .
       - run:
@@ -83,6 +85,7 @@ jobs:
       name: node/default
       tag: *node_version
     steps:
+      - checkout
       - attach_workspace:
           at: .
       - bundle

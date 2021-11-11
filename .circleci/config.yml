@@ -22,6 +22,7 @@ commands:
     prepare-e2e:
         description: "Prepare for cypress e2e tests"
         steps:
+            - run: "ls"
             - run:
                   name: Install cypress
                   command: cypress install
@@ -161,6 +162,7 @@ workflows:
             - cypress-run:
                   requires:
                       - cypress-prepare
+                      - bundle
 
 
 #      - cypress/install:

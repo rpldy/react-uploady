@@ -53,7 +53,7 @@ jobs:
                     paths:
                         - node_modules
                         - packages
-                        - /home/circleci/.cache/Cypress
+#                        - /home/circleci/.cache/Cypress
 
     test:
         working_directory: *workspace_root

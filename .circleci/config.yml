@@ -20,6 +20,7 @@ commands:
     description: "Create UMD bundles"
     steps:
       - run: yarn bundle:prod
+
 jobs:
   setup:
     working_directory: *workspace_root
@@ -28,18 +29,12 @@ jobs:
       tag: *node_version
     steps:
       - checkout
-      - node/with-cache:
-          cache-version: v1
-          cache-key: yarn.lock
-          steps:
-            - attach_workspace:
-                at: .
-            - setup
-            - persist_to_workspace:
-                root: .
-                paths:
-                  - node_modules
-                  - packages
+      - setup
+      - save_cache:
+          key: v1-deps-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+            - packages
 
   build-and-test:
     working_directory: *workspace_root
@@ -47,29 +42,27 @@ jobs:
       name: node/default
       tag: *node_version
     steps:
-      - checkout
-      - node/with-cache:
-          cache-version: v1
-          cache-key: yarn.lock
-          steps:
-            - attach_workspace:
-                at: .
-            - run:
-                name: Test Code (lint, flow, jest, types)
-                command: yarn test:ci
-                environment:
-                  JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
-            - store_test_results:
-                path: reports/junit
-            - store_artifacts:
-                path: reports/junit
-            - store_artifacts:
-                path: .jest-coverage
-            - persist_to_workspace:
-                root: .
-                paths:
-                  - .jest-coverage
-                  - packages
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys:
+            - v1-deps-{{ checksum "yarn.lock" }}
+      - run:
+          name: Test Code (lint, flow, jest, types)
+          command: yarn test:ci
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+      - store_test_results:
+          path: reports/junit
+      - store_artifacts:
+          path: reports/junit
+      - store_artifacts:
+          path: .jest-coverage
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .jest-coverage
+            - packages
 
   coverage:
     working_directory: *workspace_root
@@ -77,18 +70,16 @@ jobs:
       name: node/default
       tag: *node_version
     steps:
-      - checkout
-      - node/with-cache:
-          cache-version: v1
-          cache-key: yarn.lock
-          steps:
-            - attach_workspace:
-                at: .
-            - run:
-                name: Upload Coverage
-                command: yarn coverage
-            - store_artifacts:
-                path: .jest-coverage
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys:
+            - v1-deps-{{ checksum "yarn.lock" }}            
+      - run:
+          name: Upload Coverage
+          command: yarn coverage
+      - store_artifacts:
+          path: .jest-coverage
 
   bundle:
     working_directory: *workspace_root
@@ -96,23 +87,22 @@ jobs:
       name: node/default
       tag: *node_version
     steps:
-      - checkout
-      - node/with-cache:
-          cache-version: v1
-          cache-key: yarn.lock
-          steps:
-            - attach_workspace:
-                at: .
-            - bundle
+      - checkout                
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys:
+            - v1-deps-{{ checksum "yarn.lock" }}             
+      - bundle
             #            - run:
             #                name: Bundle it up
             #                command: yarn bundle:prod
-            - store_artifacts:
-                path: bundle
-            - persist_to_workspace:
-                root: .
-                paths:
-                  - bundle
+      - store_artifacts:
+          path: bundle
+      - persist_to_workspace:
+          root: .
+          paths:
+            - bundle
 
 workflows:
   create-rpldy:

@@ -130,7 +130,7 @@ workflows:
           yarn: true
           cache-key: v1-deps-{{ checksum "yarn.lock" }}
           # no need to run `yarn install` again, since was done already and modules are cached
-          install-command: "yarn sb:build:prod"
+          install-command: "pwd; yarn sb:build:prod"
           post-install:
             # this sucks! need to find way to use output from bundle job!!! doesnt seem possible because cypress orb hardcodes - attach_workspace: at: ~/
             - bundle

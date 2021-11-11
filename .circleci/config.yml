@@ -29,14 +29,16 @@ jobs:
       tag: *node_version
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-deps-{{ checksum "yarn.lock" }}
       - setup
       - save_cache:
           key: v1-deps-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
-            - packages
 
-  build-and-test:
+  test:
     working_directory: *workspace_root
     executor:
       name: node/default
@@ -44,9 +46,6 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - restore_cache:
-          keys:
-            - v1-deps-{{ checksum "yarn.lock" }}
       - run:
           name: Test Code (lint, flow, jest, types)
           command: yarn test:ci
@@ -72,9 +71,6 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - restore_cache:
-          keys:
-            - v1-deps-{{ checksum "yarn.lock" }}            
       - run:
           name: Upload Coverage
           command: yarn coverage
@@ -87,16 +83,9 @@ jobs:
       name: node/default
       tag: *node_version
     steps:
-      - checkout                
       - attach_workspace:
           at: .
-      - restore_cache:
-          keys:
-            - v1-deps-{{ checksum "yarn.lock" }}             
       - bundle
-            #            - run:
-            #                name: Bundle it up
-            #                command: yarn bundle:prod
       - store_artifacts:
           path: bundle
       - persist_to_workspace:
@@ -108,12 +97,12 @@ workflows:
   create-rpldy:
     jobs:
       - setup
-      - build-and-test:
+      - test:
           requires:
             - setup
       - coverage:
           requires:
-            - build-and-test
+            - test
           filters:
             branches:
               only: master

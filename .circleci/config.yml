@@ -12,7 +12,7 @@ commands:
     setup:
         description: "Setup command to install/bootstrap/build"
         steps:
-            - run: "PATH=$PATH:./node_modules/.bin"
+            - run: "ls; pwd; PATH=$PATH:./node_modules/.bin"
             - run: yarn bootstrap:pure
             - run: yarn build
     bundle:

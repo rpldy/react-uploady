@@ -9,6 +9,11 @@ references:
   node_version: &node_version
     "14.17.6"
 
+executors:
+  cypress-node-14:
+    docker:
+      - image: 'cypress/base:14.17.3'
+
 commands:
   setup:
     description: "Setup command to install/bootstrap/build"
@@ -119,7 +124,7 @@ workflows:
             - setup
       - cypress/install:
           name: Prepare E2E (cypress)
-          executor: cypress/base-16
+          executor: cypress-node-14
           requires:
             - setup
           yarn: true
@@ -130,7 +135,7 @@ workflows:
             - bundle
       - cypress/run:
           name: E2E (cypress)
-          executor: cypress/base-16
+          executor: cypress-node-14
           requires:
             - Prepare E2E (cypress)
           attach-workspace: true

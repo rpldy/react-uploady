@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@4.7.0
-  cypress: cypress-io/cypress@1.19.2
+  cypress: cypress-io/cypress@1.29.0
 
 references:
   workspace_root: &workspace_root
@@ -119,10 +119,11 @@ workflows:
             - setup
       - cypress/install:
           name: Prepare E2E (cypress)
-          executor: cypress/base-12-14-0
+          executor: cypress/base-14
           requires:
             - setup
           yarn: true
+          cache-key: v1-deps-{{ checksum "yarn.lock" }}
           build: "yarn sb:build:prod"
           post-install:
             # this sucks! need to find way to use output from bundle job!!! doesnt seem possible because cypress orb hardcodes - attach_workspace: at: ~/
@@ -134,6 +135,7 @@ workflows:
             - Prepare E2E (cypress)
           attach-workspace: true
           yarn: true
+          cache-key: v1-deps-{{ checksum "yarn.lock" }}
           start: yarn deps:serve
           wait-on: "http://localhost:8001"
           #            record: true

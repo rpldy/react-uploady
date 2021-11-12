@@ -115,6 +115,10 @@ jobs:
             - attach_workspace:
                   at: .
             - prepare-e2e
+            - save_cache:
+                    key: cy-install-{{ checksum "yarn.lock" }}
+                    paths:
+                        - /root/.cache/Cypress
 
     cypress-run:
         docker: *docker_image
@@ -122,6 +126,7 @@ jobs:
             - checkout
             - attach_workspace:
                   at: .
+            - restore_cache: cy-install-{{ checksum "yarn.lock" }}
             - run-e2e
             - store_artifacts:
                   path: cypress/results

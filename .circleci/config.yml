@@ -2,19 +2,19 @@ version: 2.1
 #orbs:
 #    node: circleci/node@4.7.0
 
-#references:
-#    workspace_root: &workspace_root
-#                        /tmp/build
-#    node_version: &node_version
-#                      "14.17.6"
+references:
+    docker_image: &docker_image
+        - image: cypress/base:14.17.6
+          environment:
+              TERM: xterm
 
 commands:
     setup:
         description: "Setup command to install/bootstrap/build"
         steps:
-#            - run: "ls; pwd; PATH=$PATH:./node_modules/.bin"
+            #            - run: "ls; pwd; PATH=$PATH:./node_modules/.bin"
             - run: yarn --pure-lockfile
-            - run: yarn bootstrap:pure
+            #- run: yarn bootstrap:pure
             - run: yarn build
     bundle:
         description: "Create UMD bundles"
@@ -36,12 +36,12 @@ commands:
 
 jobs:
     setup:
-        docker:
-          - image: cimg/node:14.17.6
-#        working_directory: *workspace_root
-#        executor:
-#            name: node/default
-#            tag: *node_version
+        docker: *docker_image
+        #          - image: cimg/node:14.17.6
+        #        working_directory: *workspace_root
+        #        executor:
+        #            name: node/default
+        #            tag: *node_version
         steps:
             - checkout
             - restore_cache:
@@ -57,15 +57,14 @@ jobs:
                     paths:
                         - node_modules
                         - packages
-#                        - /home/circleci/.cache/Cypress
+    #                        - /home/circleci/.cache/Cypress
 
     test:
-#        working_directory: *workspace_root
-#        executor:
-#            name: node/default
-#            tag: *node_version
-        docker:
-          - image: cimg/node:14.17.6
+        #        working_directory: *workspace_root
+        #        executor:
+        #            name: node/default
+        #            tag: *node_version
+        docker: *docker_image
         steps:
             - checkout
             - attach_workspace:
@@ -87,12 +86,11 @@ jobs:
                       - .jest-coverage
 
     coverage:
-#        working_directory: *workspace_root
-#        executor:
-#            name: node/default
-#            tag: *node_version
-        docker:
-          - image: cimg/node:14.17.6
+        #        working_directory: *workspace_root
+        #        executor:
+        #            name: node/default
+        #            tag: *node_version
+        docker: *docker_image
         steps:
             - checkout
             - attach_workspace:
@@ -104,12 +102,11 @@ jobs:
                   path: .jest-coverage
 
     bundle:
-#        working_directory: *workspace_root
-#        executor:
-#            name: node/default
-#            tag: *node_version
-        docker:
-          - image: cimg/node:14.17.6
+        #        working_directory: *workspace_root
+        #        executor:
+        #            name: node/default
+        #            tag: *node_version
+        docker: *docker_image
         steps:
             - checkout
             - attach_workspace:
@@ -123,16 +120,15 @@ jobs:
                       - bundle
 
     cypress-prepare:
-#        working_directory: *workspace_root
-#        executor:
-#            name: node/default
-#            tag: *node_version
-        docker:
-          - image: cimg/node:14.17.6
+        #        working_directory: *workspace_root
+        #        executor:
+        #            name: node/default
+        #            tag: *node_version
+        docker: *docker_image
         steps:
             - checkout
             - attach_workspace:
-                at: .
+                  at: .
             - prepare-e2e
             - persist_to_workspace:
                   root: .
@@ -140,18 +136,17 @@ jobs:
                       - .sb-static
 
     cypress-run:
-#        working_directory: *workspace_root
-#        executor:
-#            name: node/default
-#            tag: *node_version
-        docker:
-          - image: cimg/node:14.17.6
+        #        working_directory: *workspace_root
+        #        executor:
+        #            name: node/default
+        #            tag: *node_version
+        docker: *docker_image
         steps:
             - checkout
             - attach_workspace:
-                at: .
+                  at: .
             - store_artifacts:
-                path: cypress/results
+                  path: cypress/results
 
 workflows:
     create-rpldy:

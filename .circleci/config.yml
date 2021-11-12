@@ -58,7 +58,6 @@ jobs:
                     paths:
                         - node_modules
                         - packages
-                        - ~/.cache/yarn
 
     test:
         docker: *docker_image

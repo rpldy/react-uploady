@@ -12,6 +12,7 @@ commands:
         steps:
             #            - run: "ls; pwd; PATH=$PATH:./node_modules/.bin"
             - run: yarn --pure-lockfile
+            - run: yarn cache dir
             #- run: yarn bootstrap:pure
             - run: yarn build
     bundle:

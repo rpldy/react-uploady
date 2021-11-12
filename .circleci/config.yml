@@ -126,7 +126,9 @@ jobs:
             - checkout
             - attach_workspace:
                   at: .
-            - restore_cache: cy-install-{{ checksum "yarn.lock" }}
+            - restore_cache:
+                keys:
+                    - cy-install-{{ checksum "yarn.lock" }}
             - run-e2e
             - store_artifacts:
                   path: cypress/results

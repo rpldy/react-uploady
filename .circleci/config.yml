@@ -1,6 +1,4 @@
 version: 2.1
-#orbs:
-#    node: circleci/node@4.7.0
 
 references:
     docker_image: &docker_image
@@ -48,17 +46,19 @@ jobs:
             - checkout
             - restore_cache:
                   keys:
-                      - v1-deps-{{ checksum "yarn.lock" }}
+                      - yarn-deps-{{ checksum "yarn.lock" }}
             - setup
             - save_cache:
-                  key: v1-deps-{{ checksum "yarn.lock" }}
+                  key: yarn-deps-{{ checksum "yarn.lock" }}
                   paths:
                       - node_modules
+                      - ~/.cache/yarn
             -   persist_to_workspace:
                     root: .
                     paths:
                         - node_modules
                         - packages
+                        - ~/.cache/yarn
 
     test:
         docker: *docker_image
@@ -116,10 +116,6 @@ jobs:
             - attach_workspace:
                   at: .
             - prepare-e2e
-#            - persist_to_workspace:
-#                  root: .
-#                  paths:
-#
 
     cypress-run:
         docker: *docker_image
@@ -127,6 +123,7 @@ jobs:
             - checkout
             - attach_workspace:
                   at: .
+            - run-e2e
             - store_artifacts:
                   path: cypress/results
             - store_test_results:

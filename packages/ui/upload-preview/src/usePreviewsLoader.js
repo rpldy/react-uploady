@@ -86,13 +86,13 @@ const mergePreviewData = (prev, next) => {
 	return prev.concat(newItems);
 };
 
-export default (props: PreviewOptions): PreviewData => {
+const usePreviewsLoader = (props: PreviewOptions): PreviewData => {
     const [previews, setPreviews] = useState<PreviewItem[]>([]);
     const previewOptions: MandatoryPreviewOptions = getWithMandatoryOptions(props);
 
-	const clearPreviews = useCallback(() => {
-		setPreviews([]);
-	}, []);
+    const clearPreviews = useCallback(() => {
+        setPreviews([]);
+    }, []);
 
     useBatchStartListener((batch: Batch) => {
         const items: BatchItem[] = previewOptions.loadFirstOnly ? batch.items.slice(0, 1) : batch.items;
@@ -102,9 +102,11 @@ export default (props: PreviewOptions): PreviewData => {
             .filter(Boolean);
 
         setPreviews(props.rememberPreviousBatches ?
-			mergePreviewData(previews, previewsData) :
-			previewsData);
+            mergePreviewData(previews, previewsData) :
+            previewsData);
     });
 
     return { previews, clearPreviews };
 };
+
+export default usePreviewsLoader;

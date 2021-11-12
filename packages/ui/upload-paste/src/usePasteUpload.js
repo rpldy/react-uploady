@@ -5,13 +5,13 @@ import usePasteHandler from "./usePasteHandler";
 import type { UploadOptions } from "@rpldy/shared";
 import type { PasteUploadHandler, PasteUploadHookResult, PasteElementRef } from "./types";
 
-const registerHandler = (element, handler) => {
-    const target = element?.current || window;
+const registerHandler = (refElm, handler) => {
+    const target = refElm || window;
     target.addEventListener("paste", handler);
 };
 
-const unregisterHandler = (element, handler) => {
-    const target = element?.current || window;
+const unregisterHandler = (refElm, handler) => {
+    const target = refElm || window;
     target.removeEventListener("paste", handler);
 };
 
@@ -21,12 +21,13 @@ const usePasteUpload = (uploadOptions: UploadOptions, element?: PasteElementRef,
     const onPaste = usePasteHandler(uploadOptions, onPasteUpload);
 
     const toggle = useCallback(() => {
+        const refElm = element?.current;
         enabledRef.current = !enabledRef.current;
 
         if (enabledRef.current) {
-            registerHandler(element, onPaste);
+            registerHandler(refElm, onPaste);
         } else {
-            unregisterHandler(element, onPaste);
+            unregisterHandler(refElm, onPaste);
         }
 
         return enabledRef.current;
@@ -35,13 +36,15 @@ const usePasteUpload = (uploadOptions: UploadOptions, element?: PasteElementRef,
     const getIsEnabled = useCallback(() => enabledRef.current, []);
 
     useEffect(() => {
+        const refElm = element?.current;
+
         if (enabledRef.current) {
-            registerHandler(element, onPaste);
+            registerHandler(refElm, onPaste);
         }
 
         return () => {
             if (enabledRef.current) {
-                unregisterHandler(element, onPaste);
+                unregisterHandler(refElm, onPaste);
             }
         };
     }, [element, onPaste]);

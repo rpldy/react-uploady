@@ -6,11 +6,11 @@ type Outcome<T> = Promise<?T> | Updater<?T>;
 const isEmpty = (val: any) =>
 	(val === null || val === undefined);
 
-export default <T>(trigger: Trigger<T>, event?: string, ...args?: mixed[]): Outcome<T> => {
-	const doTrigger = (event: string, ...args?: mixed[]): Promise<?T> => new Promise((resolve, reject) => {
-		const results: Promise<?T>[] = trigger(event, ...args);
+const triggerUpdater = <T>(trigger: Trigger<T>, event?: string, ...args?: mixed[]): Outcome<T> => {
+    const doTrigger = (event: string, ...args?: mixed[]): Promise<?T> => new Promise((resolve, reject) => {
+        const results: Promise<?T>[] = trigger(event, ...args);
 
-		if (results && results.length) {
+        if (results && results.length) {
             Promise.all(results)
                 .catch(reject)
                 .then((resolvedResults) => {
@@ -23,10 +23,12 @@ export default <T>(trigger: Trigger<T>, event?: string, ...args?: mixed[]): Outc
 
                     resolve(isEmpty(result) ? undefined : result);
                 });
-		} else {
-		    resolve();
+        } else {
+            resolve();
         }
-	});
+    });
 
-	return event ? doTrigger(event, ...args) : doTrigger;
+    return event ? doTrigger(event, ...args) : doTrigger;
 };
+
+export default triggerUpdater;

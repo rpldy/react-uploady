@@ -6,16 +6,18 @@ import type { UploaderType } from "@rpldy/uploader";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { TusOptions } from "./types";
 
-export default (options?: TusOptions): ((uploader: UploaderType, trigger: TriggerMethod) => UploaderType) => {
-	//return uploader enhancer
-	return (uploader: UploaderType, trigger: TriggerMethod): UploaderType => {
-		const sender = createTusSender(uploader, options, trigger);
-		uploader.update({ send: sender.send });
+const getTusEnhancer = (options?: TusOptions): ((uploader: UploaderType, trigger: TriggerMethod) => UploaderType) => {
+    //return uploader enhancer
+    return (uploader: UploaderType, trigger: TriggerMethod): UploaderType => {
+        const sender = createTusSender(uploader, options, trigger);
+        uploader.update({ send: sender.send });
 
-		uploader.registerExtension(TUS_EXT, {
-			getOptions: sender.getOptions,
-		});
+        uploader.registerExtension(TUS_EXT, {
+            getOptions: sender.getOptions,
+        });
 
-		return uploader;
-	};
+        return uploader;
+    };
 };
+
+export default getTusEnhancer;

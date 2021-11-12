@@ -134,36 +134,38 @@ const processResponse = (request, options: MandatoryMockOptions, sendOptions: Se
 		});
 };
 
-export default (options?: MockOptions): {|
-  send: (
-    items: Array<BatchItem>,
-    url: ?string,
-    sendOptions: SendOptions,
-    onProgress: OnProgress
-  ) => SendResult,
-  update: (updated: MockOptions) => void,
+const mockSender = (options?: MockOptions): {|
+    send: (
+        items: Array<BatchItem>,
+        url: ?string,
+        sendOptions: SendOptions,
+        onProgress: OnProgress
+    ) => SendResult,
+    update: (updated: MockOptions) => void,
 |} => {
-	let mockOptions: MandatoryMockOptions = { ...MOCK_DEFAULTS, ...options };
+    let mockOptions: MandatoryMockOptions = { ...MOCK_DEFAULTS, ...options };
 
-	const update = (updated: MockOptions) => {
-		mockOptions = { ...mockOptions, ...updated };
-	};
+    const update = (updated: MockOptions) => {
+        mockOptions = { ...mockOptions, ...updated };
+    };
 
-	const send = (items: BatchItem[], url: ?string, sendOptions: SendOptions, onProgress: OnProgress): SendResult => {
-		logger.debugLog("uploady.mockSender: about to make a mock request for items: ", items);
-		const request = createRequest(mockOptions, items);
+    const send = (items: BatchItem[], url: ?string, sendOptions: SendOptions, onProgress: OnProgress): SendResult => {
+        logger.debugLog("uploady.mockSender: about to make a mock request for items: ", items);
+        const request = createRequest(mockOptions, items);
 
-		request.onProgress(onProgress);
+        request.onProgress(onProgress);
 
-		return {
-			request: processResponse(request, mockOptions, sendOptions),
-			abort: request.abort,
+        return {
+            request: processResponse(request, mockOptions, sendOptions),
+            abort: request.abort,
             senderType: MOCK_SENDER_TYPE,
-		};
-	};
+        };
+    };
 
-	return {
-		send,
-		update,
-	};
+    return {
+        send,
+        update,
+    };
 };
+
+export default mockSender;

@@ -3,7 +3,7 @@ import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { hasWindow } from "@rpldy/shared";
 import getTusSend from "../tusSend";
 import handleEvents from "../handleEvents";
-import createTusSender from "../index";
+import createTusSender from "../createTusSender";
 
 jest.mock("@rpldy/chunked-sender", () => ({
 	createChunkedSender: jest.fn(),

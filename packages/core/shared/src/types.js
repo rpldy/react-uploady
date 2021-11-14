@@ -116,6 +116,8 @@ export type UploadOptions = {|
 	withCredentials?: boolean,
     //whether file/url data will be sent as part of formdata (default: true)
     sendWithFormData?: boolean,
+    //whether to include params with undefined value (default: false)
+    formDataAllowUndefined?: boolean,
     //optional function to create the batch item's uploadResponse from the raw xhr response
     formatServerResponse?: FormatServerResponseMethod,
 |};

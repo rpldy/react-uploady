@@ -15,6 +15,7 @@ export type SendOptions = {
     withCredentials: ?boolean,
     formatGroupParamName: ?FormatParamGroupNameMethod,
     sendWithFormData?: boolean,
+    formDataAllowUndefined?: boolean,
     formatServerResponse?: FormatServerResponseMethod,
 };
 

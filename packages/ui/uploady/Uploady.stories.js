@@ -9,6 +9,7 @@ import {
     useStoryUploadySetup,
     getCsfExport,
     StoryAbortButton,
+
     type CsfExport,
 } from "../../../story-helpers";
 import { getUploadyVersion } from "@rpldy/shared-ui";
@@ -46,7 +47,7 @@ const ContextUploadButton = () => {
 };
 
 export const ButtonWithContextApi = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+    const { enhancer, destination, multiple, grouped, groupSize, extOptions } = useStoryUploadySetup();
 
     return <Uploady
         debug
@@ -54,7 +55,9 @@ export const ButtonWithContextApi = (): Node => {
         destination={destination}
         enhancer={enhancer}
         grouped={grouped}
-        maxGroupSize={groupSize}>
+        maxGroupSize={groupSize}
+        {...extOptions}
+    >
 
         version <span id="uploady-version">{getUploadyVersion()}</span>
         <br/>
@@ -322,7 +325,8 @@ const ExampleRequestPreSend = () => {
                     headers: {
                         "x-file-names-lengths": namesLengths,
                     }
-                }
+                },
+                ...(window.parent.__extPreSendOptions || {})
             }
         };
     });
@@ -331,7 +335,7 @@ const ExampleRequestPreSend = () => {
 };
 
 export const withHeaderFromFileName = (): Node => {
-    const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
+    const { enhancer, destination, grouped, groupSize, autoUpload, extOptions } = useStoryUploadySetup();
 
     return <Uploady
         debug
@@ -341,7 +345,9 @@ export const withHeaderFromFileName = (): Node => {
         enhancer={enhancer}
         grouped={grouped}
         maxGroupSize={groupSize}
-        autoUpload={autoUpload}>
+        autoUpload={autoUpload}
+        {...extOptions}
+    >
         <ExampleRequestPreSend/>
         <ContextUploadButton/>
     </Uploady>;

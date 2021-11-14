@@ -1,7 +1,6 @@
 import {
     UploadOptions,
     Batch,
-    FormatParamGroupNameMethod,
     Trigger,
     UploadInfo,
 } from "@rpldy/shared";
@@ -10,17 +9,6 @@ import {
 } from "@rpldy/sender";
 
 import { OnAndOnceMethod, OffMethod } from "@rpldy/life-events";
-
-export type SendOptions = {
-    method: string;
-    paramName: string;
-    params: Record<string, unknown>;
-    headers?: Record<string, unknown>;
-    forceJsonResponse?: boolean;
-    withCredentials?: boolean;
-    formatGroupParamName?: FormatParamGroupNameMethod;
-    sendWithFormData: boolean;
-};
 
 export type UploadAddMethod = (files: UploadInfo | UploadInfo[], addOptions?: UploadOptions) => Promise<void>
 
@@ -85,3 +73,5 @@ export enum UPLOADER_EVENTS {
 }
 
 export default createUploader;
+
+export { SendOptions } from "@rpldy/sender";

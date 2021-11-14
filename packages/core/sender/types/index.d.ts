@@ -1,21 +1,8 @@
 import {
     BatchItem,
-    FormatParamGroupNameMethod,
     UploadData,
-    FormatServerResponseMethod,
+    SendOptions
 } from "@rpldy/shared";
-
-export interface SendOptions  {
-    method: string;
-    paramName: string;
-    params?: Record<string, unknown>;
-    headers?: Record<string, unknown>;
-    forceJsonResponse?: boolean;
-    withCredentials?: boolean;
-    formatGroupParamName?: FormatParamGroupNameMethod;
-    sendWithFormData?: boolean;
-    formatServerResponse?: FormatServerResponseMethod;
-}
 
 export interface XhrSendConfig {
     preRequestHandler: (
@@ -48,3 +35,7 @@ export const getXhrSend: (config?: XhrSendConfig) => SendMethod;
 export const send: SendMethod;
 
 export default send;
+
+export {
+    SendOptions,
+};

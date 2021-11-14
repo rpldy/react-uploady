@@ -122,7 +122,7 @@ const createUploaderQueue = (
     const runCancellable = (name: string, ...args: mixed[]) => {
         if (!isFunction(cancellable)) {
             //for flow :(
-            throw new Error("cancellable is of wrong type");
+            throw new Error("Uploader queue - cancellable is of wrong type");
         }
 
         return cancellable(name, ...args);

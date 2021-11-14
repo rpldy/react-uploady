@@ -5,6 +5,7 @@ import { getMockSenderEnhancer } from "@rpldy/mock-sender";
 import { DESTINATION_TYPES, KNOB_GROUPS} from "./consts";
 import { actionLogEnhancer, isCypress } from "./uploadyStoryLogger";
 import { isProd } from "./helpers";
+import { useExternalUploadOptionsProvider } from "./useExternalUploadOptionsProvider";
 
 console.log(`** React Uploady - storybook helper running in ${isProd ? "production" : "development"} mode. **`);
 
@@ -111,6 +112,8 @@ const useStoryUploadySetup = (options = {}) => {
         groupSize = !options.noGroup && number("max in group", 2, {}, KNOB_GROUPS.SETTINGS),
         autoUpload = boolean("auto upload on add", true, KNOB_GROUPS.SETTINGS);
 
+    const extOptions = useExternalUploadOptionsProvider();
+
     return useMemo(() => ({
             multiple,
             destination,
@@ -119,8 +122,9 @@ const useStoryUploadySetup = (options = {}) => {
             groupSize,
             destinationType,
             autoUpload,
+            extOptions
         }),
-        [type, multiple, grouped, groupSize, destination, enhancer, destinationType, autoUpload]);
+        [type, multiple, grouped, groupSize, destination, enhancer, destinationType, autoUpload, extOptions]);
 };
 
 export default useStoryUploadySetup;

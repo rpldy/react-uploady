@@ -132,7 +132,7 @@ jobs:
                     - cy-install-{{ checksum "yarn.lock" }}
             - run-e2e
             - store_artifacts:
-                  path: cypress/results/screenshots
+                  path: cypress/screenshots
             - store_test_results:
                   path: cypress/results
 workflows:

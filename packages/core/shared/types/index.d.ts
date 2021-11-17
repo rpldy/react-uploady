@@ -12,23 +12,28 @@ export type FormatServerResponseMethod = (response: string, status: number, head
 
 export type FileFilterMethod = (file: unknown, index: number, files: unknown[]) => boolean;
 
-export interface UploadOptions {
+export interface SendOptions  {
+    method: string;
+    paramName: string;
+    params?: Record<string, unknown>;
+    headers?: Record<string, unknown>;
+    forceJsonResponse?: boolean;
+    withCredentials?: boolean;
+    formatGroupParamName?: FormatParamGroupNameMethod;
+    sendWithFormData?: boolean;
+    formDataAllowUndefined?: boolean;
+    formatServerResponse?: FormatServerResponseMethod;
+}
+
+export interface UploadOptions extends Partial<SendOptions>{
     autoUpload?: boolean;
     clearPendingOnAdd?: boolean;
     formatGroupParamName?: FormatParamGroupNameMethod;
     grouped?: boolean;
     maxGroupSize?: number;
     fileFilter?: FileFilterMethod;
-
-    //send options
     destination?: Destination;
     inputFieldName?: string;
-    method?: string;
-    params?: Record<string, unknown>;
-    forceJsonResponse?: boolean;
-    withCredentials?: boolean;
-    sendWithFormData?: boolean;
-    formatServerResponse?: FormatServerResponseMethod,
 }
 
 export enum BATCH_STATES {

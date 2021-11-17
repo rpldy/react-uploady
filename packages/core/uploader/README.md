@@ -85,6 +85,7 @@ uploader.add(myFile);
 | send                 | [SendMethod](../sender/src/types.js#L38) | @rpldy/sender | how to send files to the server
 | sendWithFormData     | boolean       | true           | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data
 | formatServerResponse | [FormatServerResponseMethod](../shared/src/types.js#L40) | undefined | function to create the batch item's uploadResponse from the raw xhr response
+| formDataAllowUndefined | boolean     | false          | //whether to include params with undefined value
 
 ## Uploader API
 

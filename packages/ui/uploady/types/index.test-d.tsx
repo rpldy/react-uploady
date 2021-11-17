@@ -21,7 +21,23 @@ const testUseFileInput = (): JSX.Element => <Uploady debug>
     <MyComponent />
 </Uploady>;
 
+const testWithSendProps = (): JSX.Element => (
+    <Uploady
+        formDataAllowUndefined
+        forceJsonResponse
+        autoUpload={false}
+        destination={{
+            url: "https://somewhere.over/the/rainbow",
+            params: {
+                foo: "bar"
+            }
+        }}
+    >
+        <div>test</div>
+    </Uploady>
+);
 export {
     testMyApp,
-    testUseFileInput
+    testUseFileInput,
+    testWithSendProps
 };

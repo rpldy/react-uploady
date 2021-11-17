@@ -15,6 +15,8 @@ declare namespace Cypress {
         storyLog: () => StoryLog,
         visitStory: (component: string, storyName: string, canvas?: boolean) => void;
         pasteFile: (fixtureName: string, times?: number, mimeType?: string) => Chainable;
+        setUploadOptions: (options: Object) => void;
+        setPreSendOptions: (options: Object) => void;
     }
 
     interface Chainable<Subject = Interception> {

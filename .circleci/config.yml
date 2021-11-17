@@ -10,11 +10,11 @@ commands:
     setup:
         description: "Setup command to install/bootstrap/build"
         steps:
-            #            - run: "ls; pwd; PATH=$PATH:./node_modules/.bin"
             - run: yarn --pure-lockfile
             - run: yarn cache dir
             #- run: yarn bootstrap:pure
             - run: yarn build
+
     bundle:
         description: "Create UMD bundles"
         steps:
@@ -24,6 +24,7 @@ commands:
             - run:
                   name: Build Storybook
                   command: yarn sb:build:prod
+
     prepare-e2e:
         description: "Prepare for cypress e2e tests"
         steps:
@@ -33,6 +34,7 @@ commands:
             - run:
                   name: Verify cypress
                   command: npx cypress verify
+
     run-e2e-http:
         description: "Run http servers for e2e tests"
         steps:
@@ -50,7 +52,7 @@ commands:
        steps:
            - run:
                  name: Run cypress e2e
-                 command: cy:run:ci
+                 command: yarn cy:run:ci
                  #yarn e2e:ci
 
 jobs:
@@ -149,6 +151,7 @@ jobs:
                   path: cypress/results/screenshots
             - store_test_results:
                   path: cypress/results
+
 workflows:
     create-rpldy:
         jobs:

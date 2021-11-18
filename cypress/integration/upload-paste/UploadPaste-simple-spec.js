@@ -28,6 +28,6 @@ describe("UploadPaste - Simple", () => {
 
         cy.wait(WAIT_SHORT);
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
-        cy.storyLog().assertFileItemStartFinish("flower2.jpg", 6);
+        cy.storyLog().assertFileItemStartFinish("flower2.jpg", 3);
     });
 });

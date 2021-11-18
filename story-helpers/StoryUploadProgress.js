@@ -9,22 +9,28 @@ const StyledProgressCircle = styled(Circle)`
   height: 100px;
 `;
 
-const StoryUploadProgress = ({ batchProgress = false }) => {
+const StoryUploadProgress = ({ batchProgress = false, itemProgress = false }) => {
     const [uploads, setUploads] = React.useState({});
     const progressData = useItemProgressListener((item) => {
         console.log(">>>>> (hook) File Progress - ", item);
-        logToCypress(`progress event uploaded: ${item.loaded}, completed: ${item.completed} - ${item.id}`);
+
+        if (itemProgress) {
+            logToCypress(`progress event uploaded: ${item.loaded}, completed: ${item.completed} - ${item.id}`);
+        }
     });
 
-    if (batchProgress) {
-        useBatchProgressListener((batch) => {
+    useBatchProgressListener((batch) => {
+        if (batchProgress) {
             logToCypress(`Batch Progress - ${batch.id} : completed = ${batch.completed}, loaded = ${batch.loaded}`);
-        });
+        }
+    });
 
-        useBatchFinishListener((batch) => {
-           logToCypress(`Batch Finished - ${batch.id} : completed = ${batch.completed}, loaded = ${batch.loaded}`);
-        });
-    }
+    useBatchFinishListener((batch) => {
+        if (batchProgress) {
+            logToCypress(`Batch Finished - ${batch.id} : completed = ${batch.completed}, loaded = ${batch.loaded}`);
+        }
+    });
+
 
     //TODO : add error hook - paint circle red on error
 

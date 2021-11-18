@@ -40,7 +40,6 @@ describe("ChunkedUploady - Abort and continue", () => {
             }
 
             uploadFile(fileName, () => {
-
                 cy.wait(WAIT_MEDIUM);
 
                 cy.storyLog().assertFileItemStartFinish(fileName, 5);

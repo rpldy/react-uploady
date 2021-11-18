@@ -1,5 +1,6 @@
 import uploadFile from "../uploadFile";
 import { BATCH_ADD, ITEM_FINISH, ITEM_ABORT } from "../storyLogPatterns";
+import { WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("RetryHooks - Retry Upload", () => {
     const fileName = "flower.jpg",
@@ -14,7 +15,7 @@ describe("RetryHooks - Retry Upload", () => {
         uploadFile(fileName, () => {
             //create second batch
             uploadFile(fileName2, () => {
-                cy.wait(200);
+                cy.wait(WAIT_X_SHORT);
 
                 cy.storyLog().assertLogPattern(BATCH_ADD, { times: 2 });
                 cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 2 });
@@ -24,7 +25,7 @@ describe("RetryHooks - Retry Upload", () => {
 
                 cy.storyLog().assertLogPattern(BATCH_ADD, { times: 3 });
 
-                cy.wait(200);
+                cy.wait(WAIT_X_SHORT);
 
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });
             }, "#upload-button");

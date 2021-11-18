@@ -1,5 +1,6 @@
 import uploadFile from "../uploadFile";
 import intercept from "../intercept";
+import { WAIT_SHORT } from "../specWaitTimes";
 
 describe("TusUploady - Send Data", () => {
     const fileName = "flower.jpg";
@@ -28,7 +29,7 @@ describe("TusUploady - Send Data", () => {
             .as("fInput");
 
         uploadFile(fileName, () => {
-            cy.wait(500);
+            cy.wait(WAIT_SHORT);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             cy.wait("@createReq")

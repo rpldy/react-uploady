@@ -1,4 +1,5 @@
 import dropFile from "../dropFile";
+import { WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("UploadDropZone - Simple", () => {
     const fileName = "flower.jpg";
@@ -9,7 +10,7 @@ describe("UploadDropZone - Simple", () => {
 
     it("should upload dropped file", () => {
         dropFile(fileName, () => {
-            cy.wait(200);
+            cy.wait(WAIT_X_SHORT);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });

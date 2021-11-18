@@ -1,5 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
+import { WAIT_X_LONG } from "../specWaitTimes";
 
 describe("UMD UI CORE - Bundle", () => {
     const fileName = "flower.jpg";
@@ -34,7 +35,7 @@ describe("UMD UI CORE - Bundle", () => {
                         .to.match(/bytes 10000-\d+\//);
                 });
 
-            cy.wait(3000);
+            cy.wait(WAIT_X_LONG);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         }, "#upload-button");
     });

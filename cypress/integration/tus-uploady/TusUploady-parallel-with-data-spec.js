@@ -1,4 +1,5 @@
 import uploadFile from "../uploadFile";
+import { WAIT_SHORT } from "../specWaitTimes";
 
 describe("TusUploady - Parallel with Data on Create", () => {
 	const fileName = "flower.jpg";
@@ -27,7 +28,7 @@ describe("TusUploady - Parallel with Data on Create", () => {
 			.as("fInput");
 
 		uploadFile(fileName, () => {
-			cy.wait(500);
+			cy.wait(WAIT_SHORT);
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
 			cy.wait("@createReq")

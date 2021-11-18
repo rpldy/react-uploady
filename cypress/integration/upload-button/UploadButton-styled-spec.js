@@ -1,4 +1,5 @@
 import uploadFile from "../uploadFile";
+import { WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("With Styled Component", () => {
     const fileName = "flower.jpg";
@@ -13,7 +14,7 @@ describe("With Styled Component", () => {
                 .should("have.css", "background-color", "rgb(1, 9, 22)")
                 .should("have.css", "color", "rgb(176, 177, 179)")
 
-            cy.wait(200);
+            cy.wait(WAIT_X_SHORT);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });

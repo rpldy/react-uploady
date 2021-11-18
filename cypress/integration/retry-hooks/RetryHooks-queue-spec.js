@@ -1,5 +1,6 @@
 import uploadFile, { uploadFileTimes } from "../uploadFile";
 import { ITEM_ABORT } from "../storyLogPatterns";
+import { WAIT_LONG, WAIT_MEDIUM, WAIT_SHORT, WAIT_X_LONG } from "../specWaitTimes";
 
 describe("RetryHooks - Queue", () => {
     const fileName = "flower.jpg",
@@ -12,7 +13,7 @@ describe("RetryHooks - Queue", () => {
     it("should use queue with retry", () => {
         uploadFile(fileName, () => {
             uploadFile(fileName2, () => {
-                cy.wait(400);
+                cy.wait(WAIT_SHORT);
                 cy.get("button[data-test='abort-button']:last")
                     .click();
 
@@ -43,7 +44,7 @@ describe("RetryHooks - Queue", () => {
                     .find("button[data-test='retry-button']")
                     .click();
 
-                cy.wait(1500);
+                cy.wait(WAIT_MEDIUM);
 
                 cy.get("@secondArticle")
                     .find("button[data-test='abort-button']")
@@ -81,7 +82,7 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.wait(3000);
+            cy.wait(WAIT_X_LONG);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg", 5);
             cy.storyLog().assertFileItemStartFinish("flower2.jpg", 7);
@@ -96,7 +97,7 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.wait(2000);
+            cy.wait(WAIT_LONG);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg", 4);
 
@@ -104,7 +105,7 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.wait(500);
+            cy.wait(WAIT_SHORT);
             cy.storyLog().assertFileItemStartFinish("flower2.jpg", 7);
         }, 3, "#upload-button");
     });

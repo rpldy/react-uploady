@@ -1,6 +1,7 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 import { BATCH_ADD, ITEM_START, ITEM_FINISH, ITEM_CANCEL } from "../storyLogPatterns";
+import { WAIT_SHORT } from "../specWaitTimes";
 
 describe("UploadPreview - Crop", () => {
     const fileName = "flower.jpg";
@@ -17,7 +18,7 @@ describe("UploadPreview - Crop", () => {
         intercept();
 
         uploadFile(fileName, () => {
-            cy.wait(500);
+            cy.wait(WAIT_SHORT);
 
             cy.get("img.ReactCrop__image")
                 .should("be.visible");

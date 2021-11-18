@@ -1,5 +1,6 @@
 import uploadFile, { uploadFileTimes } from "../uploadFile";
 import { BATCH_ADD, ITEM_START, ITEM_FINISH, ITEM_ABORT } from "../storyLogPatterns";
+import { WAIT_MEDIUM, WAIT_SHORT, WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("Uploady - autoUpload off tests", () => {
     const fileName = "flower.jpg";
@@ -17,7 +18,7 @@ describe("Uploady - autoUpload off tests", () => {
         uploadFile(fileName, () => {
             uploadFile(fileName, () => {
                 cy.storyLog().assertLogPattern(BATCH_ADD, { times: 2 });
-                cy.wait(500);
+                cy.wait(WAIT_SHORT);
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });
             }, "#upload-button");
         }, "#upload-button");
@@ -31,7 +32,7 @@ describe("Uploady - autoUpload off tests", () => {
                 cy.get("#process-pending")
                     .click();
 
-                cy.wait(500);
+                cy.wait(WAIT_SHORT);
 
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
@@ -50,7 +51,7 @@ describe("Uploady - autoUpload off tests", () => {
                 cy.get("#process-pending")
                     .click();
 
-                cy.wait(500);
+                cy.wait(WAIT_SHORT);
 
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 1 });
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });
@@ -67,7 +68,7 @@ describe("Uploady - autoUpload off tests", () => {
                 cy.get("#process-pending")
                     .click();
 
-                cy.wait(500);
+                cy.wait(WAIT_SHORT);
 
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 1 });
             }, "#upload-button");
@@ -88,12 +89,12 @@ describe("Uploady - autoUpload off tests", () => {
                 cy.get("#process-pending")
                     .click();
 
-                cy.wait(100);
+                cy.wait(WAIT_X_SHORT);
 
                 cy.get("button[data-test='abort-file-2']")
                     .click();
 
-                cy.wait(1400);
+                cy.wait(WAIT_MEDIUM);
 
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 6 });
                 cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 1 });
@@ -115,7 +116,7 @@ describe("Uploady - autoUpload off tests", () => {
                 cy.get("#process-pending")
                     .click();
 
-                cy.wait(500);
+                cy.wait(WAIT_SHORT);
 
                 cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 2 });
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
@@ -135,12 +136,12 @@ describe("Uploady - autoUpload off tests", () => {
                 cy.get("#process-pending")
                     .click();
 
-                cy.wait(100);
+                cy.wait(WAIT_X_SHORT);
 
                 cy.get("button[data-test='abort-batch-0']")
                     .click();
 
-                cy.wait(500);
+                cy.wait(WAIT_SHORT);
 
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 4 });
                 cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 2 });

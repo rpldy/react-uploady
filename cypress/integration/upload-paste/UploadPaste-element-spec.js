@@ -1,5 +1,6 @@
 import intercept from "../intercept";
 import { ITEM_START } from "../storyLogPatterns";
+import { WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("UploadPaste - Element Listener", () => {
     const fileName = "flower.jpg";
@@ -19,7 +20,7 @@ describe("UploadPaste - Element Listener", () => {
         cy.get("#element-paste")
             .pasteFile(fileName);
 
-        cy.wait(200);
+        cy.wait(WAIT_X_SHORT);
 
         cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });
 
@@ -31,7 +32,7 @@ describe("UploadPaste - Element Listener", () => {
                 expect(formData["test"]).to.eq("paste");
             });
 
-        cy.wait(200);
+        cy.wait(WAIT_X_SHORT);
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
     });
 });

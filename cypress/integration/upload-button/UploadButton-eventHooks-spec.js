@@ -1,4 +1,5 @@
 import uploadFile from "../uploadFile";
+import { WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("With Event Hooks", () => {
     const fileName = "flower.jpg";
@@ -9,7 +10,7 @@ describe("With Event Hooks", () => {
 
     it("should use event hooks", () => {
         uploadFile(fileName, () => {
-            cy.wait(200);
+            cy.wait(WAIT_X_SHORT);
 
             cy.get("ul[data-test='hooks-events']")
                 .should("be.visible")

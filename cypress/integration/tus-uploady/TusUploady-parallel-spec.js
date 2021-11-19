@@ -1,6 +1,6 @@
 import uploadFile from "../uploadFile";
 import intercept from "../intercept";
-import { WAIT_SHORT } from "../specWaitTimes";
+import { WAIT_LONG, WAIT_SHORT } from "../specWaitTimes";
 
 describe("TusUploady - Parallel", () => {
     const fileName = "flower.jpg";
@@ -77,7 +77,7 @@ describe("TusUploady - Parallel", () => {
                     expect(xhr.request.headers["upload-concat"])
                         .to.eq("final;http://test.tus.com/upload/123 http://test.tus.com/upload/456");
 
-                    cy.wait(WAIT_SHORT);
+                    cy.wait(WAIT_LONG);
 
                     cy.storyLog().assertFileItemStartFinish(fileName, 1)
                         .then((events) => {

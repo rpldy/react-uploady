@@ -2,7 +2,7 @@ import { interceptWithHandler } from "../intercept";
 import { interceptFormData } from "cypress-intercept-formdata";
 import uploadFile from "../uploadFile";
 import { ITEM_ABORT, BATCH_ABORT } from "../storyLogPatterns";
-import { WAIT_MEDIUM, WAIT_SHORT, WAIT_X_SHORT } from "../specWaitTimes";
+import { WAIT_LONG, WAIT_SHORT, WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("ChunkedUploady - Abort and continue", () => {
     const fileName = "flower.jpg",

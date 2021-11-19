@@ -23,7 +23,7 @@ describe("ChunkedUploady - Abort and continue", () => {
             }
 
             req.reply(200, { success: true });
-        });
+        }, "canceledReq");
 
         uploadFile(fileName, () => {
             cy.wait(WAIT_X_SHORT);
@@ -35,14 +35,12 @@ describe("ChunkedUploady - Abort and continue", () => {
             cy.storyLog().assertLogPattern(BATCH_ABORT);
             cy.storyLog().assertLogPattern(ITEM_ABORT);
 
-            for (let i = 0; i < (abortedRequests); i++) {
-                cy.wait("@uploadReq");
-            }
+            interceptWithHandler((req) => {
+                req.reply(200, { success: true });
+            }, "uploadReq");
 
             uploadFile(fileName, () => {
                 cy.wait(WAIT_LONG);
-
-                cy.storyLog().assertFileItemStartFinish(fileName, 5);
 
                 let uniqueHeader;
 
@@ -65,6 +63,8 @@ describe("ChunkedUploady - Abort and continue", () => {
 
                         expect(xhr.request.headers["content-range"])
                             .to.match(/bytes 50000-\d+\//);
+
+                        cy.storyLog().assertFileItemStartFinish(fileName, 5);
                     });
             }, "#upload-button");
         }, "#upload-button", { fileName: abortedFileName });

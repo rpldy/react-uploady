@@ -1,3 +1,5 @@
+const _get = require("lodash/get");
+
 const isObject = (obj) => obj && typeof obj === "object";
 
 const isContains = (a, b) => {
@@ -30,10 +32,16 @@ const serializeLog = (log) => {
 }
 
 const assertStartFinish = (storyLog, startIndex, prop, value) => {
-    expect(storyLog[startIndex].args[0]).to.equal("ITEM_START", `expect ITEM_START at: ${startIndex} in log: ${serializeLog(storyLog)}`);
+    if (!isNaN(startIndex)) {
+        expect(storyLog[startIndex].args[0]).to.equal("ITEM_START", `expect ITEM_START at: ${startIndex} in log: ${serializeLog(storyLog)}`);
 
-    cy.wrap(storyLog[startIndex].args[1])
-        .its(prop).should("eq", value);
+        cy.wrap(storyLog[startIndex].args[1])
+            .its(prop).should("eq", value);
+    } else {
+        startIndex = storyLog.findIndex(({ args }) => args[0] === "ITEM_START" && _get(args[1], prop) === value);
+
+        expect(startIndex).to.be.above(-1, `expect to find ITEM_START for ${value} in log: ${serializeLog(storyLog)}`);
+    }
 
     const itemId = storyLog[startIndex].args[1].id;
 
@@ -45,12 +53,12 @@ const assertStartFinish = (storyLog, startIndex, prop, value) => {
     expect(matchingFinish, `expect matching ITEM_FINISH for ID: ${itemId} in log: ${serializeLog(storyLog)}`).to.exist;
 
     return cy.wrap({
-    	start: storyLog[startIndex],
-		finish: matchingFinish
-	});
+        start: storyLog[startIndex],
+        finish: matchingFinish
+    });
 };
 
-Cypress.Commands.add("assertFileItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex = 0) => {
+Cypress.Commands.add("assertFileItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex) => {
     console.log("assertFileItemStartFinish received log", storyLog);
     assertStartFinish(storyLog, startIndex, "file.name", fileName);
 });

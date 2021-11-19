@@ -9,7 +9,7 @@ describe("UMD Core - Bundle", () => {
         cy.visitStory("uploader", "umd-core");
     });
 
-    it("should use upload with uploader", () => {
+    it("should use uploady with uploader", () => {
         intercept("http://localhost:4000/upload");
 
         uploadFile(fileName, () => {

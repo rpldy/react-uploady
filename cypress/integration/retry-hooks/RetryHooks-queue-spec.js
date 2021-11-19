@@ -79,7 +79,13 @@ describe("RetryHooks - Queue", () => {
     it("should abort and retry while batch still in progress", () => {
         //reload to clear story log from window
         cy.reload();
-        intercept();
+
+        interceptWithHandler((req) => {
+            req.reply({
+                ...RESPONSE_DEFAULTS,
+                delay: 100,
+            });
+        });
 
         uploadFileTimes(fileName, () => {
             cy.get("button[data-test='abort-button']")
@@ -94,8 +100,8 @@ describe("RetryHooks - Queue", () => {
 
             cy.wait(WAIT_MEDIUM);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
-            cy.storyLog().assertFileItemStartFinish("flower3.jpg", 5);
-            cy.storyLog().assertFileItemStartFinish("flower2.jpg", 8);
+            cy.storyLog().assertFileItemStartFinish("flower3.jpg");
+            cy.storyLog().assertFileItemStartFinish("flower2.jpg");
         }, 3, "#upload-button");
     });
 
@@ -110,14 +116,14 @@ describe("RetryHooks - Queue", () => {
 
             cy.wait(WAIT_MEDIUM);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
-            cy.storyLog().assertFileItemStartFinish("flower3.jpg", 5);
+            cy.storyLog().assertFileItemStartFinish("flower3.jpg");
 
             cy.get("button[data-test='retry-button']")
                 .eq(1)
                 .click();
 
             cy.wait(WAIT_SHORT);
-            cy.storyLog().assertFileItemStartFinish("flower2.jpg", 8);
+            cy.storyLog().assertFileItemStartFinish("flower2.jpg");
         }, 3, "#upload-button");
     });
 });

@@ -1,5 +1,5 @@
 import uploadFile from "../uploadFile";
-import { WAIT_X_SHORT } from "../specWaitTimes";
+import { WAIT_SHORT } from "../specWaitTimes";
 
 describe("UploadButton - Simple", () => {
 	const fileName = "flower.jpg";
@@ -14,7 +14,7 @@ describe("UploadButton - Simple", () => {
 			.as("fInput");
 
 		uploadFile(fileName, () => {
-			cy.wait(WAIT_X_SHORT);
+			cy.wait(WAIT_SHORT);
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 		}, "button");
 	});

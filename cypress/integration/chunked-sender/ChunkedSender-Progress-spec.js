@@ -15,7 +15,7 @@ describe("ChunkedSender - Progress", () => {
             req.reply({
                 ...RESPONSE_DEFAULTS,
                 //delay response so we dont miss events due to progress event throttling
-                delay: 200,
+                delay: 50,
             });
         });
 

@@ -15,11 +15,11 @@ describe("Uploady - filesParamName", () => {
             cy.get("#upload-button")
                 .click();
 
-            cy.storyLog().assertFileItemStartFinish(fileName, 1);
-
             cy.wait("@uploadReq")
                 .interceptFormData((formData) => {
                     expect(formData["customFieldName"]).to.equal(fileName);
+
+                    cy.storyLog().assertFileItemStartFinish(fileName, 1);
                 });
         });
     });

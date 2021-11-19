@@ -42,6 +42,7 @@ describe("TusUploady - Parallel", () => {
 
         uploadFile(fileName, () => {
             cy.wait(WAIT_SHORT);
+
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             cy.wait("@createReq")
@@ -75,6 +76,8 @@ describe("TusUploady - Parallel", () => {
 
                     expect(xhr.request.headers["upload-concat"])
                         .to.eq("final;http://test.tus.com/upload/123 http://test.tus.com/upload/456");
+
+                    cy.wait(WAIT_SHORT);
 
                     cy.storyLog().assertFileItemStartFinish(fileName, 1)
                         .then((events) => {

@@ -1,8 +1,8 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_X_LONG } from "../specWaitTimes";
+import { WAIT_SHORT } from "../specWaitTimes";
 
-describe("UMD UI CORE - Bundle", () => {
+describe("UMD UI CHUNKED - Bundle", () => {
     const fileName = "flower.jpg";
 
     before(() => {
@@ -33,10 +33,10 @@ describe("UMD UI CORE - Bundle", () => {
 
                     expect(xhr.request.headers["content-range"])
                         .to.match(/bytes 10000-\d+\//);
-                });
 
-            cy.wait(WAIT_X_LONG);
-            cy.storyLog().assertFileItemStartFinish(fileName, 1);
+                    cy.wait(WAIT_SHORT);
+                    cy.storyLog().assertFileItemStartFinish(fileName, 1);
+                });
         }, "#upload-button");
     });
 });

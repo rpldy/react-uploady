@@ -25,8 +25,12 @@ Cypress.Commands.add("storyLog", () =>
 			return w.__cypressResults.storyLog;
 		}));
 
+const serializeLog = (log) => {
+    return log.map(({ args }, index) => `[${index}]=${args[0]}`).join(",");
+}
+
 const assertStartFinish = (storyLog, startIndex, prop, value) => {
-    expect(storyLog[startIndex].args[0]).to.equal("ITEM_START");
+    expect(storyLog[startIndex].args[0]).to.equal("ITEM_START", `expect ITEM_START at: ${startIndex} in log: ${serializeLog(storyLog)}`);
 
     cy.wrap(storyLog[startIndex].args[1])
         .its(prop).should("eq", value);
@@ -38,7 +42,7 @@ const assertStartFinish = (storyLog, startIndex, prop, value) => {
         .find((entry) =>
             entry.args[0] === "ITEM_FINISH" && entry.args[1].id === itemId);
 
-    expect(matchingFinish, `expect matching ITEM_FINISH for ID: ${itemId}`).to.exist;
+    expect(matchingFinish, `expect matching ITEM_FINISH for ID: ${itemId} in log: ${serializeLog(storyLog)}`).to.exist;
 
     return cy.wrap({
     	start: storyLog[startIndex],
@@ -92,6 +96,8 @@ Cypress.Commands.add("assertLogPattern", { prevSubject: true }, (storyLog, patte
         different: false,
     }, options);
 
+    let between = options.between || [options.times, options.times];
+
     console.log("assertLogPattern received log", storyLog, options);
 
     const matches = storyLog.reduce((res, line, index) => {
@@ -106,7 +112,12 @@ Cypress.Commands.add("assertLogPattern", { prevSubject: true }, (storyLog, patte
         const inLine = matches.find(({index}) => index === options.index);
         expect(inLine.index, `expect pattern match to be in index: ${options.index}`).to.eq(options.index);
     } else {
-        expect(matches.length).to.equal(options.times, `expect to find match: ${pattern} in log ${options.times} times`);
+        if (between[0] === between[1]) {
+            expect(matches.length).to.equal(options.times, `expect to find match: ${pattern} in log ${options.times} times`);
+        } else {
+            expect(matches.length).least(between[0], `expect to find match: ${pattern} in log at least: ${between[0]} times`);
+            expect(matches.length).most(between[1], `expect to find match: ${pattern} in log at most: ${between[1]} times`)
+        }
 
         if (options.different) {
             const checked = [];

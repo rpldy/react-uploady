@@ -12,12 +12,12 @@ describe("With Progress", () => {
         uploadFileTimes(fileName, () => {
             cy.wait(WAIT_LONG);
             cy.storyLog().assertLogPattern(/progress event uploaded: \d+, completed: \d+ - batch-1.item-\d$/, {
-                times: 6,
+                between: [5, 6],
                 different: true
             });
 
             cy.storyLog().assertLogPattern(/Batch Progress - batch-1 : completed = [\d.]+, loaded = \d+$/, {
-                times: 5
+                between: [4, 5],
             });
 
             cy.storyLog().assertLogPattern(/Batch Progress - batch-1 : completed = 100, loaded = 744890/,{

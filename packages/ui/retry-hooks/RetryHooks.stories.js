@@ -9,6 +9,7 @@ import Uploady, {
 	useItemAbortListener,
 	useItemErrorListener,
 	useAbortItem,
+    useItemFinishListener,
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadPreview from "@rpldy/upload-preview";
@@ -264,14 +265,14 @@ const QueueItem = memo((props) => {
 	const [progress, setProgress] = useState(0);
 	const [itemState, setItemState] = useState(0);
 
-	useItemProgressListener(item => {
+	useItemProgressListener((item) => {
 		if (item.completed > progress) {
 			setProgress(() => item.completed);
-			setItemState(() =>
-				item.completed === 100 ? STATES.DONE : STATES.PROGRESS
-			);
+			setItemState(() => STATES.PROGRESS);
 		}
 	}, props.id);
+
+    useItemFinishListener(() => setItemState(() => STATES.DONE), props.id)
 
 	useItemAbortListener((item) => {
 		setItemState(STATES.ABORTED);

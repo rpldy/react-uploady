@@ -1,5 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
+import { WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("Uploady - Undefined params", () => {
     const fileName = "flower.jpg";
@@ -9,7 +10,7 @@ describe("Uploady - Undefined params", () => {
     });
 
     const testUndefinedNotPassed = () => {
-        cy.wait(100);
+        cy.wait(WAIT_X_SHORT);
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq")
@@ -47,7 +48,7 @@ describe("Uploady - Undefined params", () => {
 
         cy.setPreSendOptions({ params: { empty: undefined } });
 
-        cy.wait(100);
+        cy.wait(WAIT_X_SHORT);
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq")

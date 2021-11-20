@@ -1,6 +1,7 @@
 import intercept from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
 import { ITEM_START, ITEM_FINISH } from "../storyLogPatterns";
+import { WAIT_MEDIUM } from "../specWaitTimes";
 
 describe("UploadButton - Simple - Multiple files", () => {
     const fileName = "flower.jpg";
@@ -24,7 +25,7 @@ describe("UploadButton - Simple - Multiple files", () => {
                     expect(formData["file"]).to.eq("flower3.jpg");
                 });
 
-            cy.wait(1000);
+            cy.wait(WAIT_MEDIUM);
 
             cy.storyLog().assertLogPattern(ITEM_START, { index: 1 });
             cy.storyLog().assertLogPattern(ITEM_START, { index: 2 });

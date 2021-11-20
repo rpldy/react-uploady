@@ -1,5 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
+import { WAIT_MEDIUM } from "../specWaitTimes";
 
 describe("ChunkedUploady - WithChunkEventHooks", () => {
     const fileName = "flower.jpg";
@@ -16,7 +17,7 @@ describe("ChunkedUploady - WithChunkEventHooks", () => {
             .as("fInput");
 
         uploadFile(fileName, () => {
-            cy.wait(1000);
+            cy.wait(WAIT_MEDIUM);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             let uniqueHeader;

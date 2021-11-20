@@ -9,7 +9,13 @@ import {
     useStoryUploadySetup,
     type CsfExport,
 } from "../../../story-helpers";
-import TusUploady, { useAbortAll, useItemProgressListener } from "./src";
+import TusUploady,
+{
+    useAbortAll,
+    useItemProgressListener,
+    useItemStartListener,
+    useItemFinishListener,
+} from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
@@ -81,6 +87,21 @@ export const Simple = (): Node => {
 	</TusUploady>;
 };
 
+const TusConcatUploadLog = () => {
+    const [log, setLog] = useState([]);
+
+    useItemStartListener(() => {
+        setLog((log) => log.concat("ITEM STARTED UPLOADING..."));
+    });
+
+    useItemFinishListener(() => {
+        setLog((log) => log.concat("ITEM FINISHED UPLOADING!"));
+    });
+
+    return (log.map((line) =>
+        <p key={line}>{line}</p>));
+};
+
 export const WithTusConcatenation = (): Node => {
 	const { enhancer, destination, chunkSize, forgetOnSuccess, resume, ignoreModifiedDateInStorage, sendDataOnCreate } = useTusStoryHelper();
 
@@ -95,6 +116,7 @@ export const WithTusConcatenation = (): Node => {
 		ignoreModifiedDateInStorage={!ignoreModifiedDateInStorage}
 		sendDataOnCreate={sendDataOnCreate}>
 		<UploadButton>Upload with TUS Concatenation</UploadButton>
+        <TusConcatUploadLog/>
 	</TusUploady>;
 };
 

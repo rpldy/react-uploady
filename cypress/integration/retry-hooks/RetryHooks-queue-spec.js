@@ -1,18 +1,28 @@
+import intercept, { interceptWithHandler, RESPONSE_DEFAULTS } from "../intercept";
 import uploadFile, { uploadFileTimes } from "../uploadFile";
 import { ITEM_ABORT } from "../storyLogPatterns";
+import { WAIT_MEDIUM, WAIT_SHORT, } from "../specWaitTimes";
 
 describe("RetryHooks - Queue", () => {
     const fileName = "flower.jpg",
         fileName2 = "sea.jpg";
 
     before(() => {
-        cy.visitStory("retryHooks", "with-retry-and-preview&knob-mock send delay_Upload Destination=500");
+        cy.visitStory("retryHooks", "with-retry-and-preview", { useMock: false, }); //&knob-mock send delay_Upload Destination=500");
     });
 
     it("should use queue with retry", () => {
+        interceptWithHandler((req) => {
+            req.reply({
+                ...RESPONSE_DEFAULTS,
+                delay: 800,
+            });
+        });
+
         uploadFile(fileName, () => {
             uploadFile(fileName2, () => {
-                cy.wait(400);
+                cy.wait(WAIT_SHORT);
+
                 cy.get("button[data-test='abort-button']:last")
                     .click();
 
@@ -43,7 +53,7 @@ describe("RetryHooks - Queue", () => {
                     .find("button[data-test='retry-button']")
                     .click();
 
-                cy.wait(1500);
+                cy.wait(WAIT_MEDIUM);
 
                 cy.get("@secondArticle")
                     .find("button[data-test='abort-button']")
@@ -70,6 +80,13 @@ describe("RetryHooks - Queue", () => {
         //reload to clear story log from window
         cy.reload();
 
+        interceptWithHandler((req) => {
+            req.reply({
+                ...RESPONSE_DEFAULTS,
+                delay: 100,
+            });
+        });
+
         uploadFileTimes(fileName, () => {
             cy.get("button[data-test='abort-button']")
                 .eq(1)
@@ -81,31 +98,32 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.wait(3000);
+            cy.wait(WAIT_MEDIUM);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
-            cy.storyLog().assertFileItemStartFinish("flower3.jpg", 5);
-            cy.storyLog().assertFileItemStartFinish("flower2.jpg", 7);
+            cy.storyLog().assertFileItemStartFinish("flower3.jpg");
+            cy.storyLog().assertFileItemStartFinish("flower2.jpg");
         }, 3, "#upload-button");
     });
 
     it("should abort and retry after batch finished", () => {
         cy.reload();
+        intercept();
 
         uploadFileTimes(fileName, () => {
             cy.get("button[data-test='abort-button']")
                 .eq(1)
                 .click();
 
-            cy.wait(2000);
+            cy.wait(WAIT_MEDIUM);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
-            cy.storyLog().assertFileItemStartFinish("flower3.jpg", 4);
+            cy.storyLog().assertFileItemStartFinish("flower3.jpg");
 
             cy.get("button[data-test='retry-button']")
                 .eq(1)
                 .click();
 
-            cy.wait(500);
-            cy.storyLog().assertFileItemStartFinish("flower2.jpg", 7);
+            cy.wait(WAIT_SHORT);
+            cy.storyLog().assertFileItemStartFinish("flower2.jpg");
         }, 3, "#upload-button");
     });
 });

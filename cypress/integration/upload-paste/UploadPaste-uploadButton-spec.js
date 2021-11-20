@@ -1,5 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
+import { WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("UploadPaste - Wrap Upload-Button", () => {
     const fileName = "flower.jpg";
@@ -17,7 +18,7 @@ describe("UploadPaste - Wrap Upload-Button", () => {
                     expect(formData["test"]).to.eq("paste");
                 });
 
-            cy.wait(200);
+            cy.wait(WAIT_X_SHORT);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             cy.get("#upload-button")
@@ -28,7 +29,7 @@ describe("UploadPaste - Wrap Upload-Button", () => {
                     expect(formData["test"]).to.eq("paste");
                 });
 
-            cy.wait(200);
+            cy.wait(WAIT_X_SHORT);
             cy.storyLog().assertFileItemStartFinish(fileName, 4);
         }, "#upload-button");
     });

@@ -1,4 +1,5 @@
 import uploadFile from "../uploadFile";
+import { WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("NativeUploady - Simple", () => {
     const fileName = "flower.jpg";
@@ -9,7 +10,7 @@ describe("NativeUploady - Simple", () => {
 
     it("should use native uploady", () => {
         uploadFile(fileName, () => {
-            cy.wait(200);
+            cy.wait(WAIT_X_SHORT);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });

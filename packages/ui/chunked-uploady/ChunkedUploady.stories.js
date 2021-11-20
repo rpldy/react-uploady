@@ -150,7 +150,7 @@ const renderChunkedUploadyFromBundle = () => {
         debug: true,
         destination: localDestination().destination,
         enhancer: addActionLogEnhancer(),
-        chunkSize: 10000,
+        chunkSize: 200000,
     };
 
     // $FlowFixMe - react & rpldy

@@ -50,7 +50,7 @@ describe("TusUploady - Parallel with Data on Create", () => {
 						.to.eq("final;http://test.tus.com/upload/123 http://test.tus.com/upload/456");
 				});
 
-            cy.wait(WAIT_LONG)
+            cy.wait("@createReq")
                 .then(() =>{
                     cy.storyLog().assertFileItemStartFinish(fileName, 1)
                         .then((events) => {

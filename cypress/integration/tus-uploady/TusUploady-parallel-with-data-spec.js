@@ -1,5 +1,5 @@
 import uploadFile from "../uploadFile";
-import { WAIT_SHORT } from "../specWaitTimes";
+import { WAIT_LONG, WAIT_SHORT } from "../specWaitTimes";
 
 describe("TusUploady - Parallel with Data on Create", () => {
 	const fileName = "flower.jpg";
@@ -33,12 +33,12 @@ describe("TusUploady - Parallel with Data on Create", () => {
 
 			cy.wait("@createReq")
 				.then((xhr) => {
-					expect(xhr.request.headers["upload-length"]).to.eq("200000")
+					expect(xhr.request.headers["upload-length"]).to.eq("200000");
 				});
 
 			cy.wait("@createReq")
 				.then((xhr) => {
-					expect(xhr.request.headers["upload-length"]).to.eq("172445")
+					expect(xhr.request.headers["upload-length"]).to.eq("172445");
 				});
 
 			cy.wait("@createReq")
@@ -48,12 +48,15 @@ describe("TusUploady - Parallel with Data on Create", () => {
 
 					expect(xhr.request.headers["upload-concat"])
 						.to.eq("final;http://test.tus.com/upload/123 http://test.tus.com/upload/456");
+				});
 
+            cy.wait(WAIT_LONG)
+                .then(() =>{
                     cy.storyLog().assertFileItemStartFinish(fileName, 1)
                         .then((events) => {
                             expect(events.finish.args[1].uploadResponse.location).to.eq("http://test.tus.com/upload/final");
                         });
-				});
+                })
 		});
 	});
 });

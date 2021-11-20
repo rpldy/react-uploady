@@ -1,6 +1,5 @@
-import intercept from "../intercept";
+import intercept  from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_LONG } from "../specWaitTimes";
 
 describe("UMD UI CHUNKED - Bundle", () => {
     const fileName = "flower.jpg";
@@ -23,7 +22,7 @@ describe("UMD UI CHUNKED - Bundle", () => {
                         .to.match(/umd-test-\d/);
 
                     expect(xhr.request.headers["content-range"])
-                        .to.match(/bytes 0-9999\//);
+                        .to.match(/bytes 0-199999\//);
                 });
 
             cy.wait("@uploadReq")
@@ -32,11 +31,10 @@ describe("UMD UI CHUNKED - Bundle", () => {
                     expect(uniqueHeader).to.equal(xhr.request.headers["x-unique-upload-id"]);
 
                     expect(xhr.request.headers["content-range"])
-                        .to.match(/bytes 10000-\d+\//);
-
-                    cy.wait(WAIT_LONG);
-                    cy.storyLog().assertFileItemStartFinish(fileName, 1);
+                        .to.match(/bytes 200000-\d+\//);
                 });
+
+            cy.storyLog().assertFileItemStartFinish(fileName, 1);
         }, "#upload-button");
     });
 });

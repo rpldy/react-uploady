@@ -1,7 +1,7 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 
-describe("With Custom File Input And Form", () => {
+describe("UploadButton - With Custom File Input And Form", () => {
     const fileName = "flower.jpg";
 
     before(() => {

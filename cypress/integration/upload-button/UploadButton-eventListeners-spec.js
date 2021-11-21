@@ -1,7 +1,7 @@
 import uploadFile from "../uploadFile";
 import { WAIT_X_SHORT } from "../specWaitTimes";
 
-describe("With Event Listeners", () => {
+describe("UploadButton - With Event Listeners", () => {
     const fileName = "flower.jpg";
 
     before(() => {

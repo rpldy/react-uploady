@@ -1,7 +1,7 @@
 import uploadFile from "../uploadFile";
 import { WAIT_X_SHORT } from "../specWaitTimes";
 
-describe("Different Configuration", () => {
+describe("UploadButton - Different Configuration", () => {
     const fileName = "flower.jpg";
 
     before(() => {

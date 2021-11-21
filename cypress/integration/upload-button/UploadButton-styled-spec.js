@@ -1,7 +1,7 @@
 import uploadFile from "../uploadFile";
 import { WAIT_SHORT } from "../specWaitTimes";
 
-describe("With Styled Component", () => {
+describe("UploadButton - With Styled Component", () => {
     const fileName = "flower.jpg";
 
     before(() => {

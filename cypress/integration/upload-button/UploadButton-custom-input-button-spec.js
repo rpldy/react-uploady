@@ -2,7 +2,7 @@ import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 import { ITEM_FINISH } from "../storyLogPatterns";
 
-describe("With Custom File Input And Button", () => {
+describe("UploadButton - With Custom File Input And Button", () => {
     const fileName = "flower.jpg";
 
     before(() => {

@@ -1,7 +1,7 @@
 import uploadFile from "../uploadFile";
 import { WAIT_MEDIUM, WAIT_X_SHORT } from "../specWaitTimes";
 
-describe("Disabled During Upload", () => {
+describe("UploadButton - Disabled During Upload", () => {
     const fileName = "flower.jpg";
 
     before(() => {

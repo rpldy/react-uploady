@@ -1,7 +1,7 @@
 import intercept, { interceptWithHandler, RESPONSE_DEFAULTS } from "../intercept";
 import uploadFile, { uploadFileTimes } from "../uploadFile";
 import { ITEM_ABORT } from "../storyLogPatterns";
-import { WAIT_MEDIUM, WAIT_SHORT, } from "../specWaitTimes";
+import { WAIT_MEDIUM, WAIT_SHORT, WAIT_X_LONG, } from "../specWaitTimes";
 
 describe("RetryHooks - Queue", () => {
     const fileName = "flower.jpg",
@@ -98,7 +98,7 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.wait(WAIT_MEDIUM);
+            cy.wait(WAIT_X_LONG);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg");
             cy.storyLog().assertFileItemStartFinish("flower2.jpg");
@@ -114,7 +114,7 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.wait(WAIT_MEDIUM);
+            cy.wait(WAIT_X_LONG);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg");
 

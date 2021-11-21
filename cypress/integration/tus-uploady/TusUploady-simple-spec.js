@@ -1,6 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_SHORT } from "../specWaitTimes";
+import { WAIT_LONG, WAIT_SHORT } from "../specWaitTimes";
 
 describe("TusUploady - Simple", () => {
 	const fileName = "flower.jpg";
@@ -29,7 +29,7 @@ describe("TusUploady - Simple", () => {
 			.as("fInput");
 
 		uploadFile(fileName, () => {
-			cy.wait(WAIT_SHORT);
+			cy.wait(WAIT_LONG);
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
 			cy.wait("@createReq")
@@ -67,7 +67,7 @@ describe("TusUploady - Simple", () => {
 
 			//upload again, should be resumed!
 			uploadFile(fileName, () => {
-				cy.wait(WAIT_SHORT);
+				cy.wait(WAIT_LONG);
 
 				cy.storyLog().assertFileItemStartFinish(fileName, 4)
 					.then((events) => {

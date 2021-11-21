@@ -6,7 +6,7 @@ describe("Uploady - autoUpload off tests", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploady", "with-auto-upload-off&knob-mock send delay_Upload Destination=400");
+        cy.visitStory("uploady", "with-auto-upload-off&knob-mock send delay_Upload Destination=500");
     });
 
     beforeEach(() => {
@@ -94,7 +94,7 @@ describe("Uploady - autoUpload off tests", () => {
                 cy.get("button[data-test='abort-file-2']")
                     .click();
 
-                cy.wait(WAIT_SHORT);
+                cy.wait(WAIT_MEDIUM);
 
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 6 });
                 cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 1 });

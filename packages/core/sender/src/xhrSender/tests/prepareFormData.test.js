@@ -15,7 +15,6 @@ describe("prepareFormData tests", () => {
     });
 
     const testPrepare = (items, options) => {
-
         options = {
             paramName,
             ...options
@@ -25,7 +24,6 @@ describe("prepareFormData tests", () => {
     };
 
     it("should create FD for File", () => {
-
         const items = [{
             file: {
                 name: "aaa",
@@ -114,7 +112,6 @@ describe("prepareFormData tests", () => {
     });
 
     it("should add extra params", () => {
-
         const items = [{ url: "https://test.com" }];
 
         testPrepare(items, {
@@ -172,5 +169,41 @@ describe("prepareFormData tests", () => {
 
         expect(mockFormDataSet).not.toHaveBeenCalled();
         expect(fdAppend).toHaveBeenCalledWith(paramName, items[0].file, items[0].file.name);
+    });
+
+    describe("undefined values", () => {
+        it("should not add undefined values by default", () => {
+            const items = [{
+                file: {
+                    name: "aaa",
+                }
+            }];
+
+            testPrepare(items, {
+                params: {
+                    "foo": undefined,
+                }
+            });
+
+            expect(mockFormDataSet).toHaveBeenCalledTimes(1);
+        });
+
+        it("should add undefined values when formDataAllowUndefined = true", () => {
+            const items = [{
+                file: {
+                    name: "aaa",
+                }
+            }];
+
+            testPrepare(items, {
+                formDataAllowUndefined: true,
+                params: {
+                    "foo": undefined,
+                }
+            });
+
+            expect(mockFormDataSet).toHaveBeenCalledTimes(2);
+            expect(mockFormDataSet).toHaveBeenCalledWith("foo", undefined);
+        });
     });
 });

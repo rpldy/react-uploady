@@ -111,6 +111,8 @@ const makeResumeRequest = (item: BatchItem, url: string, tusState: TusState, par
 	};
 };
 
-export default (item: BatchItem, url: string, tusState: TusState, parallelIdentifier: ?string): InitUploadResult => {
-	return makeResumeRequest(item, url, tusState, parallelIdentifier, 0);
+const resumeUpload = (item: BatchItem, url: string, tusState: TusState, parallelIdentifier: ?string): InitUploadResult => {
+    return makeResumeRequest(item, url, tusState, parallelIdentifier, 0);
 };
+
+export default resumeUpload;

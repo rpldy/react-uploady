@@ -1,5 +1,6 @@
 import intercept from "../intercept";
 import dropFile from "../dropFile";
+import { WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("UploadPaste - Wrap Upload-DropZone", () => {
     const fileName = "flower.jpg";
@@ -21,7 +22,7 @@ describe("UploadPaste - Wrap Upload-DropZone", () => {
                     expect(formData["test"]).to.eq("paste");
                 });
 
-            cy.wait(200);
+            cy.wait(WAIT_X_SHORT);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });
@@ -37,7 +38,7 @@ describe("UploadPaste - Wrap Upload-DropZone", () => {
                 expect(formData["test"]).to.eq("paste");
             });
 
-        cy.wait(200);
+        cy.wait(WAIT_X_SHORT);
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
     });
 });

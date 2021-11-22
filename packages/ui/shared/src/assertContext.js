@@ -8,7 +8,7 @@ export const ERROR_MSG = "Uploady - Valid UploadyContext not found. Make sure yo
 export const DIFFERENT_VERSION_ERROR_MSG = `Uploady - Valid UploadyContext not found.
 You may be using packages of different Uploady versions. <Uploady> and all other packages using the context provider must be of the same version: %s`;
 
-export default (context: ?UploadyContextType): UploadyContextType => {
+const assertContext = (context: ?UploadyContextType): UploadyContextType => {
     invariant(
         !getIsVersionRegisteredAndDifferent(),
         DIFFERENT_VERSION_ERROR_MSG,
@@ -22,3 +22,5 @@ export default (context: ?UploadyContextType): UploadyContextType => {
 
     return context;
 };
+
+export default assertContext;

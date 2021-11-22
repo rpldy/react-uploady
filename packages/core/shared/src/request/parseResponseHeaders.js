@@ -2,7 +2,7 @@
 import { debugLog } from "../logger";
 import type { Headers } from "../types";
 
-export default (xhr: XMLHttpRequest): ?Headers => {
+const parseResponseHeaders = (xhr: XMLHttpRequest): ?Headers => {
     let resHeaders;
 
     try {
@@ -19,3 +19,5 @@ export default (xhr: XMLHttpRequest): ?Headers => {
 
     return resHeaders;
 };
+
+export default parseResponseHeaders;

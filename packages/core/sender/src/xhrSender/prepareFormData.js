@@ -11,13 +11,13 @@ import type { SendOptions } from "../types";
 const addToFormData = (fd, name, ...rest) => {
     //rest = [value, fileName = undefined]
     if ("set" in fd) {
-        // $FlowFixMe - ignore flow for not allowing FileLike here
+        //$FlowExpectedError[speculation-ambiguous] - ignore flow for not allowing FileLike here
         fd.set(name, ...rest);
     } else {
         if ("delete" in fd) {
             fd.delete(name);
         }
-        // $FlowFixMe - ignore flow for not allowing FileLike here
+        //$FlowExpectedError[speculation-ambiguous] - ignore flow for not allowing FileLike here
         fd.append(name, ...rest);
     }
 };
@@ -44,8 +44,11 @@ const prepareFormData = (items: BatchItem[], options: SendOptions): FormData => 
 
     if (options.params) {
         Object.entries(options.params)
-            .forEach(([key, val]: [string, any]) =>
-                addToFormData(fd, key, val));
+            .forEach(([key, val]: [string, any]) => {
+                if (options.formDataAllowUndefined || val !== undefined) {
+                    addToFormData(fd, key, val);
+                }
+            });
     }
 
     getFormFileField(fd, items, options);

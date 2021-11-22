@@ -11,26 +11,29 @@ jest.mock("../utils", () => ({
 }));
 
 describe("eventListenerHooks tests", () => {
-    describe("generateUploaderEventHook tests", () => {
+    describe("generateUploaderEventHook tests without scope", () => {
         it.each([
-            [UPLOADER_EVENTS.BATCH_ADD, true],
-            [UPLOADER_EVENTS.BATCH_START, false],
-            [UPLOADER_EVENTS.BATCH_FINISH, false],
-            [UPLOADER_EVENTS.BATCH_CANCEL, false],
-            [UPLOADER_EVENTS.BATCH_ABORT, false],
-            [UPLOADER_EVENTS.ITEM_START, false],
-            [UPLOADER_EVENTS.ITEM_FINISH, false],
-            [UPLOADER_EVENTS.ITEM_CANCEL, false],
-            [UPLOADER_EVENTS.ITEM_ERROR, false],
-            [UPLOADER_EVENTS.ITEM_FINALIZE, false],
-            [UPLOADER_EVENTS.REQUEST_PRE_SEND, true],
-            [UPLOADER_EVENTS.ALL_ABORT, true],
-        ])("should generate hook for: %s", (event, cantScope) => {
-        	if (cantScope) {
-				expect(generateUploaderEventHook).toHaveBeenCalledWith(event, false);
-			} else {
-				expect(generateUploaderEventHook).toHaveBeenCalledWith(event);
-			}
+            [UPLOADER_EVENTS.BATCH_ADD],
+            [UPLOADER_EVENTS.REQUEST_PRE_SEND],
+            [UPLOADER_EVENTS.ALL_ABORT],
+        ])("should generate hook for: %s", (event) => {
+            expect(generateUploaderEventHook).toHaveBeenCalledWith(event, false);
+        });
+    });
+
+    describe("generateUploaderEventHook tests with scope", () => {
+        it.each([
+            [UPLOADER_EVENTS.BATCH_START],
+            [UPLOADER_EVENTS.BATCH_FINISH],
+            [UPLOADER_EVENTS.BATCH_CANCEL],
+            [UPLOADER_EVENTS.BATCH_ABORT],
+            [UPLOADER_EVENTS.ITEM_START],
+            [UPLOADER_EVENTS.ITEM_FINISH],
+            [UPLOADER_EVENTS.ITEM_CANCEL],
+            [UPLOADER_EVENTS.ITEM_ERROR],
+            [UPLOADER_EVENTS.ITEM_FINALIZE],
+        ])("should generate hook for: %s", (event) => {
+            expect(generateUploaderEventHook).toHaveBeenCalledWith(event);
         });
     });
 

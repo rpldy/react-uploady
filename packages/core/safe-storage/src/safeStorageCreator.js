@@ -2,42 +2,43 @@
 import { hasWindow } from "@rpldy/shared";
 import type { SafeStorage } from "./types";
 
-export default (storageType: string): SafeStorage => {
-	let isSupported = false;
+const safeStorageCreator = (storageType: string): SafeStorage => {
+    let isSupported = false;
 
-	const checkSupport = () => {
-		try {
-			if (hasWindow() && storageType in window) {
-				const key = "__lsTest";
-				window[storageType].setItem(key, `__test-${Date.now()}`);
-				window[storageType].removeItem(key);
-				isSupported = true;
-			}
-		}
-		catch(ex){
-			//fail silently
-		}
-	};
+    const checkSupport = () => {
+        try {
+            if (hasWindow() && storageType in window) {
+                const key = "__lsTest";
+                window[storageType].setItem(key, `__test-${Date.now()}`);
+                window[storageType].removeItem(key);
+                isSupported = true;
+            }
+        }
+        catch(ex){
+            //fail silently
+        }
+    };
 
-	checkSupport();
+    checkSupport();
 
-	const methods = ["key", "getItem", "setItem", "removeItem", "clear"];
+    const methods = ["key", "getItem", "setItem", "removeItem", "clear"];
 
-	const safeStorage = methods.reduce((res, method) => {
-		res[method] = (...args: mixed[]) =>
-			isSupported ? window[storageType][method](...args) : undefined;
+    const safeStorage = methods.reduce((res, method) => {
+        res[method] = (...args: mixed[]) =>
+            isSupported ? window[storageType][method](...args) : undefined;
 
-		return res;
-	}, {});
+        return res;
+    }, {});
 
-	safeStorage.isSupported = isSupported;
+    safeStorage.isSupported = isSupported;
 
-	Object.defineProperty(safeStorage, "length", {
-		get(){
-			return isSupported ? window[storageType].length : 0;
-		}
-	});
+    Object.defineProperty(safeStorage, "length", {
+        get(){
+            return isSupported ? window[storageType].length : 0;
+        }
+    });
 
-	return safeStorage;
+    return safeStorage;
 };
 
+export default safeStorageCreator;

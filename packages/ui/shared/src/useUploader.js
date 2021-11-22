@@ -6,7 +6,7 @@ import createUploader from "@rpldy/uploader";
 import type { UploaderType, CreateOptions } from "@rpldy/uploader";
 import type { UploaderListeners } from "./types";
 
-export default (options: CreateOptions, listeners: ?UploaderListeners): UploaderType => {
+const useUploader = (options: CreateOptions, listeners: ?UploaderListeners): UploaderType => {
     //avoid creating new instance of uploader (unless enhancer method changed)
     const uploader = useMemo<UploaderType>(
         () => {
@@ -42,3 +42,5 @@ export default (options: CreateOptions, listeners: ?UploaderListeners): Uploader
 
     return uploader;
 };
+
+export default useUploader;

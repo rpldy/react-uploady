@@ -2,6 +2,7 @@ import { interceptWithHandler } from "../intercept";
 import { interceptFormData } from "cypress-intercept-formdata";
 import uploadFile from "../uploadFile";
 import { ITEM_ABORT, BATCH_ABORT } from "../storyLogPatterns";
+import { WAIT_SHORT, WAIT_X_LONG, WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("ChunkedUploady - Abort and continue", () => {
     const fileName = "flower.jpg",
@@ -22,27 +23,24 @@ describe("ChunkedUploady - Abort and continue", () => {
             }
 
             req.reply(200, { success: true });
-        });
+        }, "canceledReq");
 
         uploadFile(fileName, () => {
-            cy.wait(100);
+            cy.wait(WAIT_X_SHORT);
             cy.get("button[data-test='abort-batch-0']")
                 .click();
 
-            cy.wait(500);
+            cy.wait(WAIT_SHORT);
 
             cy.storyLog().assertLogPattern(BATCH_ABORT);
             cy.storyLog().assertLogPattern(ITEM_ABORT);
 
-            for (let i = 0; i < (abortedRequests); i++) {
-                cy.wait("@uploadReq");
-            }
+            interceptWithHandler((req) => {
+                req.reply(200, { success: true });
+            }, "uploadReq");
 
             uploadFile(fileName, () => {
-
-                cy.wait(1500);
-
-                cy.storyLog().assertFileItemStartFinish(fileName, 5);
+                cy.wait(WAIT_X_LONG);
 
                 let uniqueHeader;
 
@@ -65,6 +63,8 @@ describe("ChunkedUploady - Abort and continue", () => {
 
                         expect(xhr.request.headers["content-range"])
                             .to.match(/bytes 50000-\d+\//);
+
+                        cy.storyLog().assertFileItemStartFinish(fileName, 5);
                     });
             }, "#upload-button");
         }, "#upload-button", { fileName: abortedFileName });

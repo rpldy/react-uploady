@@ -1,3 +1,5 @@
+import { WAIT_X_SHORT } from "../specWaitTimes";
+
 describe("UploadPaste - Window Listener", () => {
     const fileName = "flower.jpg";
 
@@ -9,7 +11,7 @@ describe("UploadPaste - Window Listener", () => {
         cy.get("body")
             .pasteFile(fileName);
 
-        cy.wait(200);
+        cy.wait(WAIT_X_SHORT);
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
     });
 });

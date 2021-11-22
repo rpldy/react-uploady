@@ -54,73 +54,75 @@ const unwrapProxy = (proxy: Object): Object =>
  * @param obj
  * @returns {{state, update, unwrap}}
  */
-export default <T>(obj: Object): SimpleState<T> => {
-	const traps = {
-		set: (obj, key, value) => {
-			if (getIsUpdateable(proxy)) {
-				obj[key] = deepProxy(value, traps);
-			}
+const createState =  <T>(obj: Object): SimpleState<T> => {
+    const traps = {
+        set: (obj, key, value) => {
+            if (getIsUpdateable(proxy)) {
+                obj[key] = deepProxy(value, traps);
+            }
 
-			return true;
-		},
+            return true;
+        },
 
-		get: (obj, key) => {
-			return key === PROXY_SYM ? unwrapProxy(obj) : obj[key];
-		},
+        get: (obj, key) => {
+            return key === PROXY_SYM ? unwrapProxy(obj) : obj[key];
+        },
 
-		defineProperty: () => {
-			throw new Error("Simple State doesnt support defining property");
-		},
+        defineProperty: () => {
+            throw new Error("Simple State doesnt support defining property");
+        },
 
-		setPrototypeOf: () => {
-			throw new Error("Simple State doesnt support setting prototype");
-		},
+        setPrototypeOf: () => {
+            throw new Error("Simple State doesnt support setting prototype");
+        },
 
-		deleteProperty: (obj, key) => {
-			if (getIsUpdateable(proxy)) {
-				delete obj[key];
-			}
+        deleteProperty: (obj, key) => {
+            if (getIsUpdateable(proxy)) {
+                delete obj[key];
+            }
 
-			return true;
-		},
-	};
+            return true;
+        },
+    };
 
-	if (!isProduction() && !isProxy(obj)) {
-		Object.defineProperty(obj, STATE_SYM, {
-			value: { isUpdateable: false },
-			configurable: true,
-		});
-	}
+    if (!isProduction() && !isProxy(obj)) {
+        Object.defineProperty(obj, STATE_SYM, {
+            value: { isUpdateable: false },
+            configurable: true,
+        });
+    }
 
-	const proxy = !isProduction() ? deepProxy(obj, traps) : obj;
+    const proxy = !isProduction() ? deepProxy(obj, traps) : obj;
 
-	const update = (fn) => {
-		if (!isProduction() && getIsUpdateable(proxy)) {
-			throw new Error("Can't call update on State already being updated!");
-		}
+    const update = (fn) => {
+        if (!isProduction() && getIsUpdateable(proxy)) {
+            throw new Error("Can't call update on State already being updated!");
+        }
 
-		try {
-			setIsUpdateable(proxy, true);
+        try {
+            setIsUpdateable(proxy, true);
             fn(proxy);
         } finally {
             setIsUpdateable(proxy, false);
         }
 
         return proxy;
-	};
+    };
 
-	const unwrap = (entry?: Object) => entry ?
-			//simply clone the provided object (if its a proxy)
-			unwrapProxy(entry) :
-			//unwrap entire proxy state
-			(isProxy(proxy) ? unwrapProxy(proxy) : proxy);
+    const unwrap = (entry?: Object) => entry ?
+        //simply clone the provided object (if its a proxy)
+        unwrapProxy(entry) :
+        //unwrap entire proxy state
+        (isProxy(proxy) ? unwrapProxy(proxy) : proxy);
 
-	return {
-		state: proxy,
-		update,
-		unwrap,
-	};
+    return {
+        state: proxy,
+        update,
+        unwrap,
+    };
 };
+
+export default createState;
 
 export {
 	isProxy,

@@ -1,7 +1,7 @@
-import intercept from "../intercept";
+import intercept  from "../intercept";
 import uploadFile from "../uploadFile";
 
-describe("UMD UI CORE - Bundle", () => {
+describe("UMD UI CHUNKED - Bundle", () => {
     const fileName = "flower.jpg";
 
     before(() => {
@@ -22,7 +22,7 @@ describe("UMD UI CORE - Bundle", () => {
                         .to.match(/umd-test-\d/);
 
                     expect(xhr.request.headers["content-range"])
-                        .to.match(/bytes 0-9999\//);
+                        .to.match(/bytes 0-199999\//);
                 });
 
             cy.wait("@uploadReq")
@@ -31,10 +31,9 @@ describe("UMD UI CORE - Bundle", () => {
                     expect(uniqueHeader).to.equal(xhr.request.headers["x-unique-upload-id"]);
 
                     expect(xhr.request.headers["content-range"])
-                        .to.match(/bytes 10000-\d+\//);
+                        .to.match(/bytes 200000-\d+\//);
                 });
 
-            cy.wait(3000);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         }, "#upload-button");
     });

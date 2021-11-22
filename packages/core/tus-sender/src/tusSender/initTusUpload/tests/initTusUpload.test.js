@@ -3,7 +3,7 @@ import { retrieveResumable } from "../../../resumableStore";
 import handleTusUpload from "../../handleTusUpload";
 import createUpload from "../createUpload";
 import resumeUpload from "../resumeUpload";
-import initTusUpload from "../index";
+import initTusUpload from "../initTusUpload";
 
 jest.mock("../../../resumableStore", () => ({
 	retrieveResumable: jest.fn(),

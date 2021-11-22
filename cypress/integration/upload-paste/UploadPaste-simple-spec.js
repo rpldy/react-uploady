@@ -1,3 +1,5 @@
+import { WAIT_MEDIUM } from "../specWaitTimes";
+
 describe("UploadPaste - Simple", () => {
     const fileName = "flower.jpg";
 
@@ -15,7 +17,7 @@ describe("UploadPaste - Simple", () => {
             .should("exist")
             .pasteFile(fileName);
 
-         cy.wait(200);
+         cy.wait(WAIT_MEDIUM);
          cy.storyLog().assertFileItemStartFinish(fileName, 1);
     });
 
@@ -24,8 +26,8 @@ describe("UploadPaste - Simple", () => {
             .should("exist")
             .pasteFile(fileName, 2);
 
-        cy.wait(500);
+        cy.wait(WAIT_MEDIUM);
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
-        cy.storyLog().assertFileItemStartFinish("flower2.jpg", 6);
+        cy.storyLog().assertFileItemStartFinish("flower2.jpg", 3);
     });
 });

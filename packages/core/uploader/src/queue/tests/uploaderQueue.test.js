@@ -182,6 +182,13 @@ describe("queue tests", () => {
         expect(processQueueNext).toHaveBeenCalled();
     });
 
+    it("should throw if cancellable isnt a function", () => {
+        const queue = createQueue({ destination: "foo" }, trigger, "not-a-function", sender, uploaderId);
+
+        expect(queue.runCancellable)
+            .toThrow("Uploader queue - cancellable is of wrong type");
+    });
+
     describe("UPLOADER_EVENTS.ITEM_PROGRESS tests", () => {
         it("should trigger UPLOADER_EVENTS.ITEM_PROGRESS on sender item progress", () => {
             const queue = createQueue({ destination: "foo" }, trigger,cancellable, sender, uploaderId);

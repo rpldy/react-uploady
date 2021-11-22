@@ -46,3 +46,5 @@ export { default as getCsfExport } from "./getCsfExport";
 export type { CsfExport } from "./getCsfExport";
 
 export { default as dropZoneCss } from "./dropZoneCss";
+
+export { useExternalUploadOptionsProvider } from "./useExternalUploadOptionsProvider";

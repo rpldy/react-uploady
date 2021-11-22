@@ -1,6 +1,7 @@
 import uploadFile from "../uploadFile";
+import { WAIT_X_SHORT } from "../specWaitTimes";
 
-describe("Different Configuration", () => {
+describe("UploadButton - Different Configuration", () => {
     const fileName = "flower.jpg";
 
     before(() => {
@@ -10,13 +11,13 @@ describe("Different Configuration", () => {
     it("should allow overriding upload options from button", () => {
         //test button with autoUpload = false
         uploadFile(fileName, () => {
-            cy.wait(100);
+            cy.wait(WAIT_X_SHORT);
             cy.storyLog().assertLogEntryCount(1);
         }, "#upload-a");
 
         //test other button with custom destination header
         uploadFile(fileName, () => {
-            cy.wait(100);
+            cy.wait(WAIT_X_SHORT);
 
             cy.storyLog().assertLogEntryContains(1, {
                 destination: {

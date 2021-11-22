@@ -82,36 +82,36 @@ const updateChunkStartData = (tusState: TusState, data: ChunkStartEventData, isP
 	};
 };
 
-export default (uploader: UploaderType, tusState: TusState, chunkedSender: ChunkedSender) => {
-	if (CHUNKING_SUPPORT) {
-		uploader.on(UPLOADER_EVENTS.ITEM_FINALIZE, (item) => {
-			const { items, options } = tusState.getState(),
-				itemData = items[item.id];
+const handleEvents = (uploader: UploaderType, tusState: TusState, chunkedSender: ChunkedSender) => {
+    if (CHUNKING_SUPPORT) {
+        uploader.on(UPLOADER_EVENTS.ITEM_FINALIZE, (item) => {
+            const { items, options } = tusState.getState(),
+                itemData = items[item.id];
 
-			if (itemData) {
-				logger.debugLog(`tusSender.handleEvents: item ${item.id} finalized (${item.state}). Removing from state`);
+            if (itemData) {
+                logger.debugLog(`tusSender.handleEvents: item ${item.id} finalized (${item.state}). Removing from state`);
 
-				const parallelChunks = itemData.parallelChunks;
+                const parallelChunks = itemData.parallelChunks;
 
-				tusState.updateState((state: State) => {
-					if (parallelChunks.length) {
-						parallelChunks.forEach((chunkItemId) => {
-							delete state.items[chunkItemId];
-						});
-					}
+                tusState.updateState((state: State) => {
+                    if (parallelChunks.length) {
+                        parallelChunks.forEach((chunkItemId) => {
+                            delete state.items[chunkItemId];
+                        });
+                    }
 
-					delete state.items[item.id];
-				});
+                    delete state.items[item.id];
+                });
 
-				if (options.forgetOnSuccess) {
-					logger.debugLog(`tusSender.handleEvents: forgetOnSuccess enabled, removing item url from storage: ${item.id}`);
-					removeResumable(item, options);
-				}
-			}
-		});
+                if (options.forgetOnSuccess) {
+                    logger.debugLog(`tusSender.handleEvents: forgetOnSuccess enabled, removing item url from storage: ${item.id}`);
+                    removeResumable(item, options);
+                }
+            }
+        });
 
-		uploader.on(CHUNK_EVENTS.CHUNK_START, (data: ChunkStartEventData) => {
-			const { options } = tusState.getState(),
+        uploader.on(CHUNK_EVENTS.CHUNK_START, (data: ChunkStartEventData) => {
+            const { options } = tusState.getState(),
                 isParallel = +options.parallel > 1;
 
             const continueP = isParallel ?
@@ -123,28 +123,30 @@ export default (uploader: UploaderType, tusState: TusState, chunkedSender: Chunk
             );
         });
 
-		uploader.on(CHUNK_EVENTS.CHUNK_FINISH, ({ item, chunk, uploadData }: ChunkFinishEventData) => {
-			const { items, options } = tusState.getState(),
-				isParallel = +options.parallel > 1;
+        uploader.on(CHUNK_EVENTS.CHUNK_FINISH, ({ item, chunk, uploadData }: ChunkFinishEventData) => {
+            const { items, options } = tusState.getState(),
+                isParallel = +options.parallel > 1;
 
-			if (isParallel) {
-				if (options.forgetOnSuccess) {
-					const parallelId = getParallelChunkIdentifier(options, chunk.index);
-					logger.debugLog(`tusSender.handleEvents: forgetOnSuccess enabled, removing parallel chunk url from storage: ${parallelId}`);
-					removeResumable(item, options, parallelId);
-				}
-			} else if (items[item.id]) {
-				const { status, response } = uploadData;
-				logger.debugLog(`tusSender.handleEvents: received upload response (code: ${status}) for : ${item.id}, chunk: ${chunk.id}`, response);
+            if (isParallel) {
+                if (options.forgetOnSuccess) {
+                    const parallelId = getParallelChunkIdentifier(options, chunk.index);
+                    logger.debugLog(`tusSender.handleEvents: forgetOnSuccess enabled, removing parallel chunk url from storage: ${parallelId}`);
+                    removeResumable(item, options, parallelId);
+                }
+            } else if (items[item.id]) {
+                const { status, response } = uploadData;
+                logger.debugLog(`tusSender.handleEvents: received upload response (code: ${status}) for : ${item.id}, chunk: ${chunk.id}`, response);
 
-				if (~SUCCESS_CODES.indexOf(status) && response.headers) {
-					//update state's offset for non-parallel chunks
-					tusState.updateState((state: State) => {
-						const data = state.items[item.id];
-						data.offset = response.headers["upload-offset"];
-					});
-				}
-			}
-		});
-	}
+                if (~SUCCESS_CODES.indexOf(status) && response.headers) {
+                    //update state's offset for non-parallel chunks
+                    tusState.updateState((state: State) => {
+                        const data = state.items[item.id];
+                        data.offset = response.headers["upload-offset"];
+                    });
+                }
+            }
+        });
+    }
 };
+
+export default handleEvents;

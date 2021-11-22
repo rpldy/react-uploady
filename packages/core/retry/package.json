@@ -18,11 +18,12 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
+    "@rpldy/simple-state": "^0.14.2",
     "@rpldy/shared": "^0.14.2",
     "@rpldy/uploader": "^0.14.2"
   },
   "devDependencies": {
-    "flow-bin": "^0.159.0"
+    "flow-bin": "^0.164.0"
   },
   "publishConfig": {
     "access": "public"

@@ -163,7 +163,7 @@ export const WithProgress = (): Node => {
         destination={destination}
         enhancer={enhancer}>
         <UploadButton/>
-        <StoryUploadProgress batchProgress/>
+        <StoryUploadProgress batchProgress itemProgress/>
     </Uploady>;
 };
 

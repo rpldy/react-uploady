@@ -1,5 +1,6 @@
 import uploadFile from "../uploadFile";
 import { ITEM_ABORT, BATCH_ABORT, ITEM_FINISH } from "../storyLogPatterns";
+import { WAIT_SHORT } from "../specWaitTimes";
 
 describe("Uploady - With Abort", () => {
     const fileName = "flower.jpg";
@@ -19,7 +20,7 @@ describe("Uploady - With Abort", () => {
                 .should("be.visible")
                 .click();
 
-            cy.wait(500);
+            cy.wait(WAIT_SHORT);
 
             cy.storyLog().assertLogPattern(ITEM_ABORT);
             cy.storyLog().assertLogPattern(BATCH_ABORT);

@@ -1,4 +1,5 @@
 import uploadFile from "../uploadFile";
+import { WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("Uploader - Event data test", () => {
     const fileName = "flower.jpg";
@@ -9,7 +10,7 @@ describe("Uploader - Event data test", () => {
 
     it("should upload and trigger events with non-proxy data", () => {
         uploadFile(fileName, () =>{
-            cy.wait(200);
+            cy.wait(WAIT_X_SHORT);
             cy.storyLog().assertFileItemStartFinish(fileName, 2);
 
             cy.storyLog().customAssertLogEntry("###BATCH-ADD", (logLine) => {

@@ -155,20 +155,22 @@ const handleStoredValue = (url: string, tusState: TusState, storedFd: string): ?
 		requestFeaturesFromServer(url, tusState);
 };
 
-export default (url: string, tusState: TusState): ?RequestResult<void> => {
-	let result;
-	const { options, featureDetection } = tusState.getState();
+const featureDetection = (url: string, tusState: TusState): ?RequestResult<void> => {
+    let result;
+    const { options, featureDetection } = tusState.getState();
 
-	url = options.featureDetectionUrl || url;
-	logger.debugLog(`tusSender.featureDetection: about to request server info`, url);
+    url = options.featureDetectionUrl || url;
+    logger.debugLog(`tusSender.featureDetection: about to request server info`, url);
 
-	const storedFd = safeSessionStorage.getItem(getStorageKey(url));
+    const storedFd = safeSessionStorage.getItem(getStorageKey(url));
 
-	if (!featureDetection.processed) {
-		result = storedFd ?
-			handleStoredValue(url, tusState, storedFd) :
-			requestFeaturesFromServer(url, tusState);
-	}
+    if (!featureDetection.processed) {
+        result = storedFd ?
+            handleStoredValue(url, tusState, storedFd) :
+            requestFeaturesFromServer(url, tusState);
+    }
 
-	return result;
+    return result;
 };
+
+export default featureDetection;

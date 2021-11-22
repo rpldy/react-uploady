@@ -1,5 +1,6 @@
 import uploadFile from "../uploadFile";
 import intercept from "../intercept";
+import { WAIT_MEDIUM } from "../specWaitTimes";
 
 describe("TusUploady - Parallel", () => {
     const fileName = "flower.jpg";
@@ -40,44 +41,44 @@ describe("TusUploady - Parallel", () => {
             .as("fInput");
 
         uploadFile(fileName, () => {
-            cy.wait(500);
-            cy.storyLog().assertFileItemStartFinish(fileName, 1);
+            cy.wait(WAIT_MEDIUM);
 
-            cy.wait("@createReq")
-                .then((xhr) => {
-                    expect(xhr.request.headers["upload-length"]).to.eq("200000")
-                });
+            cy.storyLog()
+                .assertFileItemStartFinish(fileName, 1)
+                .then((startFinishEvents) => {
+                    cy.wait("@createReq")
+                        .then((xhr) => {
+                            expect(xhr.request.headers["upload-length"]).to.eq("200000")
+                        });
 
-            cy.wait("@createReq")
-                .then((xhr) => {
-                    expect(xhr.request.headers["upload-length"]).to.eq("172445")
-                });
+                    cy.wait("@createReq")
+                        .then((xhr) => {
+                            expect(xhr.request.headers["upload-length"]).to.eq("172445")
+                        });
 
-            cy.wait("@patchReq1")
-                .then(({ request }) => {
-                    const { headers } = request;
-                    expect(headers["content-length"]).to.eq("200000");
-                    expect(headers["content-type"]).to.eq("application/offset+octet-stream");
-                });
+                    cy.wait("@patchReq1")
+                        .then(({ request }) => {
+                            const { headers } = request;
+                            expect(headers["content-length"]).to.eq("200000");
+                            expect(headers["content-type"]).to.eq("application/offset+octet-stream");
+                        });
 
-            cy.wait("@patchReq2")
-                .then(({ request }) => {
-                    const { headers } = request;
-                    expect(headers["content-length"]).to.eq("172445");
-                    expect(headers["content-type"]).to.eq("application/offset+octet-stream");
-                });
+                    cy.wait("@patchReq2")
+                        .then(({ request }) => {
+                            const { headers } = request;
+                            expect(headers["content-length"]).to.eq("172445");
+                            expect(headers["content-type"]).to.eq("application/offset+octet-stream");
+                        });
 
-            cy.wait("@createReq")
-                .then((xhr) => {
-                    expect(xhr.request.headers["upload-metadata"])
-                        .to.eq("foo YmFy");
+                    cy.wait("@createReq")
+                        .then((xhr) => {
+                            expect(xhr.request.headers["upload-metadata"])
+                                .to.eq("foo YmFy");
 
-                    expect(xhr.request.headers["upload-concat"])
-                        .to.eq("final;http://test.tus.com/upload/123 http://test.tus.com/upload/456");
+                            expect(xhr.request.headers["upload-concat"])
+                                .to.eq("final;http://test.tus.com/upload/123 http://test.tus.com/upload/456");
 
-                    cy.storyLog().assertFileItemStartFinish(fileName, 1)
-                        .then((events) => {
-                            expect(events.finish.args[1].uploadResponse.location).to.eq("http://test.tus.com/upload/final");
+                            expect(startFinishEvents.finish.args[1].uploadResponse.location).to.eq("http://test.tus.com/upload/final");
                         });
                 });
         });

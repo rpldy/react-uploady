@@ -52,6 +52,7 @@ const createBatchItemsSender = (): ItemsSender => {
             headers: destination?.headers,
             sendWithFormData: batchOptions.sendWithFormData,
             formatServerResponse: batchOptions.formatServerResponse,
+            formDataAllowUndefined: batchOptions.formDataAllowUndefined
         }, throttledProgress);
     };
 

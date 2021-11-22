@@ -1,162 +1,214 @@
 version: 2.1
-orbs:
-  node: circleci/node@1.1.6
-  cypress: cypress-io/cypress@1.19.2
 
 references:
-  workspace_root: &workspace_root
-                    /tmp/build
-  node_version: &node_version
-    "12.16.2"
+    docker_image: &docker_image
+        - image: cypress/base:14.17.3
+          environment:
+              TERM: xterm
 
 commands:
-  setup:
-    description: "Setup command to install/bootstrap/build"
-    steps:
-      - run: yarn install --pure-lockfile
-      - run: yarn bootstrap
-      - run: yarn build
-  bundle:
-    description: "Create UMD bundles"
-    steps:
-      - run: yarn bundle:prod
+    setup:
+        description: "Setup command to install/bootstrap/build"
+        steps:
+            - run: yarn --pure-lockfile
+            - run: yarn cache dir
+            #- run: yarn bootstrap:pure
+            - run: yarn build
+
+    bundle:
+        description: "Create UMD bundles"
+        steps:
+            - run:
+                  name: Bundle for Production
+                  command: yarn bundle:prod
+            - run:
+                  name: Build Storybook
+                  command: yarn sb:build:prod
+
+    prepare-e2e:
+        description: "Prepare for cypress e2e tests"
+        steps:
+            - run:
+                  name: Install cypress
+                  command: yarn cypress install
+            - run:
+                  name: Verify cypress
+                  command: npx cypress verify
+
+    run-e2e-http:
+        description: "Run http servers for e2e tests"
+        steps:
+          - run:
+                name: Serve built Storybook
+                command: yarn sb:serve
+                background: true
+          - run:
+                name: Serve bundled js files
+                command: yarn bundle:serve
+                background: true
+
+    run-e2e:
+       description: "Run cypress e2e tests"
+       steps:
+           - run:
+                 name: Run cypress e2e
+                 command: yarn cy:run:ci
+                 #yarn e2e:ci
+
 jobs:
-  setup:
-    working_directory: *workspace_root
-    executor:
-      name: node/default
-      tag: *node_version
-    steps:
-      - checkout
-      - node/with-cache:
-          cache-version: v1
-          cache-key: yarn.lock
-          steps:
-            - attach_workspace:
-                at: .
+    setup:
+        docker: *docker_image
+        steps:
+            - checkout
+            - restore_cache:
+                  keys:
+                      - yarn-deps-{{ checksum "yarn.lock" }}
             - setup
-            - persist_to_workspace:
-                root: .
-                paths:
-                  - node_modules
-                  - packages
+            - save_cache:
+                  key: yarn-deps-{{ checksum "yarn.lock" }}
+                  paths:
+                      - node_modules
+                      - ~/.cache/yarn
+            -   persist_to_workspace:
+                    root: .
+                    paths:
+                        - node_modules
+                        - packages
 
-  build-and-test:
-    working_directory: *workspace_root
-    executor:
-      name: node/default
-      tag: *node_version
-    steps:
-      - checkout
-      - node/with-cache:
-          cache-version: v1
-          cache-key: yarn.lock
-          steps:
+    test:
+        docker: *docker_image
+        steps:
+            - checkout
             - attach_workspace:
-                at: .
+                  at: .
             - run:
-                name: Test Code (lint, flow, jest, types)
-                command: yarn test:ci
-                environment:
-                  JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+                  name: Test Code (lint, flow, jest, types)
+                  command: yarn test:ci
+                  environment:
+                      JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
             - store_test_results:
-                path: reports/junit
+                  path: reports/junit
             - store_artifacts:
-                path: reports/junit
+                  path: reports/junit
             - store_artifacts:
-                path: .jest-coverage
+                  path: .jest-coverage
             - persist_to_workspace:
-                root: .
-                paths:
-                  - .jest-coverage
-                  - packages
+                  root: .
+                  paths:
+                      - .jest-coverage
 
-  coverage:
-    working_directory: *workspace_root
-    executor:
-      name: node/default
-      tag: *node_version
-    steps:
-      - checkout
-      - node/with-cache:
-          cache-version: v1
-          cache-key: yarn.lock
-          steps:
+    coverage:
+        docker: *docker_image
+        steps:
+            - checkout
             - attach_workspace:
-                at: .
+                  at: .
             - run:
-                name: Upload Coverage
-                command: yarn coverage
+                  name: Upload Coverage
+                  command: yarn coverage
             - store_artifacts:
-                path: .jest-coverage
+                  path: .jest-coverage
 
-  bundle:
-    working_directory: *workspace_root
-    executor:
-      name: node/default
-      tag: *node_version
-    steps:
-      - checkout
-      - node/with-cache:
-          cache-version: v1
-          cache-key: yarn.lock
-          steps:
+    bundle:
+        docker: *docker_image
+        steps:
+            - checkout
             - attach_workspace:
-                at: .
+                  at: .
             - bundle
-            #            - run:
-            #                name: Bundle it up
-            #                command: yarn bundle:prod
             - store_artifacts:
-                path: bundle
+                  path: bundle
             - persist_to_workspace:
-                root: .
-                paths:
-                  - bundle
+                  root: .
+                  paths:
+                      - bundle
+                      - .sb-static
+
+    cypress-prepare:
+        docker: *docker_image
+        steps:
+            - checkout
+            - attach_workspace:
+                  at: .
+            - prepare-e2e
+            - save_cache:
+                    key: cy-install-{{ checksum "yarn.lock" }}
+                    paths:
+                        - /root/.cache/Cypress
+
+    cypress-run:
+        docker: *docker_image
+        steps:
+            - checkout
+            - attach_workspace:
+                  at: .
+            - run-e2e-http
+            - restore_cache:
+                keys:
+                    - cy-install-{{ checksum "yarn.lock" }}
+            - run-e2e
+            - store_artifacts:
+                  path: cypress/screenshots
+            - store_artifacts:
+                  path: cypress/videos
+            - store_test_results:
+                  path: cypress/results
 
 workflows:
-  create-rpldy:
-    jobs:
-      - setup
-      - build-and-test:
-          requires:
+    create-rpldy:
+        jobs:
             - setup
-      - coverage:
-          requires:
-            - build-and-test
-          filters:
-            branches:
-              only: master
-      - bundle:
-          requires:
-            - setup
-      - cypress/install:
-          name: Prepare E2E (cypress)
-          executor: cypress/base-12-14-0
-          requires:
-            - setup
-          yarn: true
-          build: "yarn sb:build:prod"
-          post-install:
-            # this sucks! need to find way to use output from bundle job!!! doesnt seem possible because cypress orb hardcodes - attach_workspace: at: ~/
-            - bundle
-      - cypress/run:
-          name: E2E (cypress)
-          executor: cypress/base-12-14-0
-          requires:
-            - Prepare E2E (cypress)
-          attach-workspace: true
-          yarn: true
-          start: yarn deps:serve
-          wait-on: "http://localhost:8001"
-          #            record: true
-          #            parallel: true
-          #            parallelism: 2
-          #            group: rpldy-ci
-          store_artifacts: true
-          post-steps:
-            - store_test_results:
-                path: cypress/results
+            - test:
+                  requires:
+                      - setup
+            - coverage:
+                  requires:
+                      - test
+                  filters:
+                      branches:
+                          only: master
+            - bundle:
+                  requires:
+                      - setup
+            - cypress-prepare:
+                  requires:
+                      - setup
+            - cypress-run:
+                  requires:
+                      - cypress-prepare
+                      - bundle
+
+
+#      - cypress/install:
+#          name: Prepare E2E (cypress)
+#          executor: cypress-node-14
+#          requires:
+#            - setup
+#          yarn: true
+#          cache-key: v1-deps-{{ checksum "yarn.lock" }}
+#          # no need to run `yarn install` again, since was done already and modules are cached
+#          install-command: "pwd; yarn sb:build:prod"
+#          post-install:
+#            # this sucks! need to find way to use output from bundle job!!! doesnt seem possible because cypress orb hardcodes - attach_workspace: at: ~/
+#            - bundle
+#      - cypress/run:
+#          name: E2E (cypress)
+#          executor: cypress-node-14
+#          requires:
+#            - Prepare E2E (cypress)
+#          attach-workspace: true
+#          yarn: true
+#          cache-key: v1-deps-{{ checksum "yarn.lock" }}
+#          start: yarn deps:serve
+#          wait-on: "http://localhost:8001"
+#          #            record: true
+#          #            parallel: true
+#          #            parallelism: 2
+#          #            group: rpldy-ci
+#          store_artifacts: true
+#          post-steps:
+#            - store_test_results:
+#                path: cypress/results
 
 #requires paid plan:
 #executors:

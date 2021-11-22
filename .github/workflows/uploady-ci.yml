@@ -67,7 +67,7 @@ jobs:
       - run: |
           ls node_modules/
       - run: |
-          ls packages/core/uploader/lib
+          ls packages/core/uploader/
       - name: "Test Code (lint, flow, jest, types)"    
         run: yarn test:ci
         env: 

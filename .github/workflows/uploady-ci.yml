@@ -17,10 +17,15 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "14.17.6"
-          cache: "yarn"
-          cache-dependency-path: "**/yarn.lock"
-          key: yarn-${{ hashFiles('yarn.lock') }}
-          restore-keys: yarn-
+#           cache: "yarn"
+#           cache-dependency-path: "**/yarn.lock"
+#           key: yarn-${{ hashFiles('yarn.lock') }}
+#           restore-keys: yarn-
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles("**/yarn.lock") }}
+          
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn --pure-lockfile
@@ -47,10 +52,14 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "14.17.6"
-          cache: "yarn"
-          cache-dependency-path: "**/yarn.lock"
-          key: yarn-${{ hashFiles('yarn.lock') }}
-          restore-keys: yarn-
+#           cache: "yarn"
+#           cache-dependency-path: "**/yarn.lock"
+#           key: yarn-${{ hashFiles('yarn.lock') }}
+#           restore-keys: yarn-
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles("**/yarn.lock") }}
       - name: Download built-libs
         uses: actions/download-artifact@v2
         with:

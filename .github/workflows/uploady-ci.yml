@@ -25,9 +25,10 @@ jobs:
         uses: actions/upload-artifact@v2
         with:    
           name: setup-modules
-          path: |
-            node_modules
-            packages/**/node_modules
+          path: node_modules
+#           |
+#             node_modules
+#             packages/**/node_modules
   
   test:
     needs: setup

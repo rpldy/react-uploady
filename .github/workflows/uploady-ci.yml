@@ -56,9 +56,9 @@ jobs:
         with:
           name: built-libs  
       - run: |
-          ll node_modules/.bin
+          ls node_modules/.bin
       - run: |
-          ll packages/core/uploader/lib
+          ls packages/core/uploader/lib
       - name: "Test Code (lint, flow, jest, types)"    
         run: yarn test:ci
         env: 

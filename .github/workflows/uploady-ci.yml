@@ -17,33 +17,24 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "14.17.6"
-#           cache: "yarn"
-#           cache-dependency-path: "**/yarn.lock"
-#           key: yarn-${{ hashFiles('yarn.lock') }}
-#           restore-keys: yarn-
       - uses: actions/cache@v2
         with:
           path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-          
-      - name: Install dependencies
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}          
+      - name: "Install dependencies"
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn --pure-lockfile
-      # If you use postinstall scripts you need to run them manually when using cache.
-      - name: Run postinstall if cached
+        run: yarn --pure-lockfile      
+      - name: "Run postinstall if cached"
         if: steps.yarn-cache.outputs.cache-hit == 'true'
-        run: yarn postinstall    
-        
-      - run: yarn build
+        run: yarn postinstall            
+      - name: "Build uploady libs"
+        run: yarn build
       - name: "Upload Artifacts: built-libs"
         uses: actions/upload-artifact@v2
         with:    
           name: built-libs
           path: packages/**/lib          
-#           |
-#             node_modules
-#             packages/**/node_modules
-  
+
   test:
     needs: setup
     runs-on: ubuntu-latest
@@ -60,13 +51,37 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: built-libs         
-          path: packages
-      - run: |
-          ls packages/core/uploader
+          path: packages          
       - name: "Test Code (lint, flow, jest, types)"    
         run: yarn test:ci
         env: 
           JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+      - name: "Upload Artifacts: test coverage report"
+        uses: actions/upload-artifact@v2
+        with:    
+          name: jest-coverage
+          path: .jest-coverage     
+
+  coverage:
+    needs: test
+    if: github.ref == "refs/heads/master"
+    runs-on: ubuntu-latest  
+    steps:
+      - name: "Download artifacts: test coverage report"
+        uses: actions/download-artifact@v2
+        with:
+          name: jest-coverage 
+      - name: "Report Coverage to Codecov"
+        uses: codecov/codecov-action@v2.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+    
+  
+#           cache: "yarn"
+#           cache-dependency-path: "**/yarn.lock"
+#           key: yarn-${{ hashFiles('yarn.lock') }}
+#           restore-keys: yarn-
+
 #   build:
 
 #     runs-on: ubuntu-latest

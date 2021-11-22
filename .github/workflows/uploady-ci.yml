@@ -35,7 +35,7 @@ jobs:
         run: yarn postinstall    
         
       - run: yarn build
-      - name: store setup artifacts
+      - name: "Upload Artifacts: built-libs"
         uses: actions/upload-artifact@v2
         with:    
           name: built-libs
@@ -56,12 +56,13 @@ jobs:
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - name: Download built-libs
+      - name: "Download artifacts: built-libs"
         uses: actions/download-artifact@v2
         with:
-          name: built-libs  
+          name: built-libs         
+          path: packages
       - run: |
-          ls /home/runner/work/react-uploady/react-uploady/
+          ls packages/core/uploader
       - name: "Test Code (lint, flow, jest, types)"    
         run: yarn test:ci
         env: 

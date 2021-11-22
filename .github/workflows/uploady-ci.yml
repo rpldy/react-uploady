@@ -76,7 +76,31 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
     
-  
+  bundle:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2      
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14.17.6"
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: "Bundle libs & storybook"
+        run: yarn bundle:ci
+      - name: "Upload Artifacts: libs bundle"
+        uses: actions/upload-artifact@v2
+        with:    
+          name: libs-bundle
+          path: bundle
+      - name: "Upload Artifacts: storybook build"
+        uses: actions/upload-artifact@v2
+        with:    
+          name: sb-build
+          path: .sb-static     
+          
 #           cache: "yarn"
 #           cache-dependency-path: "**/yarn.lock"
 #           key: yarn-${{ hashFiles('yarn.lock') }}

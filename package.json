@@ -37,7 +37,7 @@
     "ci-test-types": "yarn types",
     "test:ci": "concurrently -s all --kill-others-on-fail \"yarn:ci-test-*\"",
     "ci-bundle-libs": "yarn bundle:prod",
-    "ci-bundle-sb": "sb:build:prod",
+    "ci-bundle-sb": "yarn sb:build:prod",
     "bundle:ci": "concurrently -s all --kill-others-on-fail \"yarn:ci-bundle-*\"",
     "deps:serve": "concurrently --kill-others \"yarn sb:serve\" \"yarn bundle:serve\"",
     "cy:open": "CYPRESS_SB_PORT=9111 cypress open",

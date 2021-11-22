@@ -1,5 +1,5 @@
 {
-  "version": "0.14.2",
+  "version": "0.15.0",
   "name": "@rpldy/retry",
   "description": "adds the capability to retry failed uploads",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -18,9 +18,9 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/simple-state": "^0.14.2",
-    "@rpldy/shared": "^0.14.2",
-    "@rpldy/uploader": "^0.14.2"
+    "@rpldy/shared": "^0.15.0",
+    "@rpldy/simple-state": "^0.15.0",
+    "@rpldy/uploader": "^0.15.0"
   },
   "devDependencies": {
     "flow-bin": "^0.164.0"

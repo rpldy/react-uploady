@@ -55,8 +55,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: built-libs  
-      - run: ll node_modules/.bin
-      - run: ll packages/core/uploader/lib
+      - run: |
+          ll node_modules/.bin
+      - run: |
+          ll packages/core/uploader/lib
       - name: "Test Code (lint, flow, jest, types)"    
         run: yarn test:ci
         env: 

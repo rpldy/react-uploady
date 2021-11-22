@@ -1,10 +1,26 @@
 # Changelog
 
+## 0.15.0 (2021-11-22)
+
+## Bug fixes
+
+- `[sender]` - stop sending (by default) undefined params as part of formData. Fix for [#263](https://github.com/rpldy/react-uploady/issues/263)
+
+## Features
+
+- `[uploady]` - introduce new prop: `formDataAllowUndefined` (default: false) to change new default to send undefined params in formData 
+
+## Internal
+
+- `all` - upgraded to latest flow (0.164.0), babel, and most other deps
+
+
+
 ## 0.14.2 (2021-11-04)
 
 ## Bug fixes
 
-- `[upload-drop-zone]` - fix drop zone flickering when over child elements. Fix for #256
+- `[upload-drop-zone]` - fix drop zone flickering when over child elements. Fix for [#256](https://github.com/rpldy/react-uploady/issues/256)
 
 ## 0.14.1 (2021-10-16)
 
@@ -12,38 +28,41 @@
 
 - `[uploader]` - fix batch data potentially not having completed values when finished
 
+
 ## 0.13.6 (2021-10-07)
 
 ### Bug fixes
 
-- `[tus-sender]` - fix bug in upload url when destination url is origin-less. Fix for #246
+- `[tus-sender]` - fix bug in upload url when destination url is origin-less. Fix for [#246](https://github.com/rpldy/react-uploady/issues/246)
 
 
 ## 0.13.5 (2021-09-28)
 
 ### Bug fixes
 
-- `[tus-sender]` - fix bug in upload url concatenate of absolute location header. Fix for #242
+- `[tus-sender]` - fix bug in upload url concatenate of absolute location header. Fix for [#242](https://github.com/rpldy/react-uploady/issues/242)
 
 ### Docs
 
 - `storybook` - force story view mode
 
+
 ## 0.13.4 (2021-09-09)
 
 ### Bug fixes
 
-- `[uploader]` - fix bug in deep proxy unwrap before trigger. Fix for #232
+- `[uploader]` - fix bug in deep proxy unwrap before trigger. Fix for [#232](https://github.com/rpldy/react-uploady/issues/232)
 
 ### Internal
 
 - `all` - upgraded to latest flow (0.159.0)
 
+
 ## 0.13.3 (2021-07-29)
 
 ### Bug fixes
 
-- `[chunked-sender]` - fix progress data calculation & add progress event on chunk finish. Fix for #203 
+- `[chunked-sender]` - fix progress data calculation & add progress event on chunk finish. Fix for [#203](https://github.com/rpldy/react-uploady/issues/203) 
 
 ### Storybook
 
@@ -57,12 +76,14 @@
 
 - `all` - upgraded to latest flow (0.156.0)
 
+
 ## 0.13.2 (2021-06-26),
 ## 0.13.1 (2021-06-26)
 
 ### Bug fixes
 
-- `[shared]` - fix "ReferenceError: process is not defined" error. Fix for #199
+- `[shared]` - fix "ReferenceError: process is not defined" error. [Fix for #199](https://github.com/rpldy/react-uploady/issues/199)
+
 
 ## 0.13.0 (2021-06-11)
 
@@ -71,11 +92,12 @@
 - `[chunked-sender]` - BREAKING! - rename CHUNK_START event's `chunkCount` param to `remainingCount` 
   Also added `totalCount` param
 
+
 ## 0.12.1 (2021-05-28)
 
 ### Bug fixes
 
-- `[uploady]` - fix typings for useFileInput (no params). Fix for #181
+- `[uploady]` - fix typings for useFileInput (no params). Fix for [#181](https://github.com/rpldy/react-uploady/issues/181)
 
 ## 0.12.0 (2021-05-12)
 
@@ -102,7 +124,7 @@
 
 ### Bug fixes
 
-- `[shared-ui]` - fix useRequestPreSend typing to support boolean return. Fix for #164
+- `[shared-ui]` - fix useRequestPreSend typing to support boolean return. Fix for [#164](https://github.com/rpldy/react-uploady/issues/164)
 
 ### Docs
 
@@ -117,7 +139,7 @@
 
 ### Bug fixes
 
-- `[shared-ui]` - added typing to support async version of hook. Fix for #158
+- `[shared-ui]` - added typing to support async version of hook. Fix for [#158](https://github.com/rpldy/react-uploady/issues/158)
 
 ### Internal
 
@@ -140,7 +162,7 @@
 
 ### Bug fixes
 
-- `[shared]` - handle `prcoess.env` not available. Fix for #149 
+- `[shared]` - handle `prcoess.env` not available. Fix for [#149](https://github.com/rpldy/react-uploady/issues/149) 
 
 ## 0.11.0 (2021-03-04)
 
@@ -171,7 +193,7 @@
 
 ### Bug fixes
 
-- `[uploader]` - batch and items state corrupted. Fix for #144
+- `[uploader]` - batch and items state corrupted. Fix for [#144](https://github.com/rpldy/react-uploady/issues/144)
 
 ### Internal
 
@@ -186,7 +208,7 @@
 
 ### Bug fixes
 
-- `[uploader]` - abort works for pending files and batches. Fix for #119
+- `[uploader]` - abort works for pending files and batches. Fix for [#119](https://github.com/rpldy/react-uploady/issues/119)
 
 ### Internal
 
@@ -201,7 +223,7 @@
 
 ### Bug fixes
 
-- `[uploader]` - respect filesParamName in upload options. Fix for #117
+- `[uploader]` - respect filesParamName in upload options. Fix for [#117](https://github.com/rpldy/react-uploady/issues/117)
 
 ### Internal
 
@@ -217,7 +239,7 @@
 
 ### Bug fixes
 
-- `[chunked-sender]` - fixed abort flow for chunked sender. Fix for #109
+- `[chunked-sender]` - fixed abort flow for chunked sender. Fix for [#109](https://github.com/rpldy/react-uploady/issues/109)
 
 ### Internal
 
@@ -227,14 +249,14 @@
 
 ## Bug fixes
 
-- `[simple-state]` - fix: File object not available in ssr. Fix for #106
+- `[simple-state]` - fix: File object not available in ssr. Fix for [#106](https://github.com/rpldy/react-uploady/issues/106)
 
 ## 0.8.0 (2020-11-28)
 
 ### Features
 
 - `[uploady]` - hook alias: useUploady for useUploadyContext
-- `[sender]` - add file/url to form data last (after params). Fix for #103
+- `[sender]` - add file/url to form data last (after params). Fix for [#103](https://github.com/rpldy/react-uploady/issues/103)
 
 ### Docs
 
@@ -270,11 +292,11 @@
 ### Bug fixes
 
 - `[uploader]` - recover from sender exception 
-- `[chunked-sender]` - handle 0 byte file size (#91) 
+- `[chunked-sender]` - handle 0 byte file size. Fix for [#91](https://github.com/rpldy/react-uploady/issues/91) 
 
 ### Docs
 
-- `[uploady]` - clarify file input options only affect uploads from FS selection dialog (#92)
+- `[uploady]` - clarify file input options only affect uploads from FS selection dialog [#92](https://github.com/rpldy/react-uploady/issues/92)
 - `guides` - new guide: Cloudinary
 
 ## 0.7.0 (2020-10-01)

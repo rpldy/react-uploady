@@ -32,8 +32,8 @@
     "@rpldy/uploader": "^0.14.2"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": ">=16.8",
+    "react-dom": ">=16.8"
   },
   "devDependencies": {
     "@rpldy/upload-button": "^0.14.2",

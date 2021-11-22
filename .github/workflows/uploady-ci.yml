@@ -52,10 +52,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "14.17.6"
-#           cache: "yarn"
-#           cache-dependency-path: "**/yarn.lock"
-#           key: yarn-${{ hashFiles('yarn.lock') }}
-#           restore-keys: yarn-
       - uses: actions/cache@v2
         with:
           path: "**/node_modules"
@@ -65,9 +61,7 @@ jobs:
         with:
           name: built-libs  
       - run: |
-          ls node_modules/
-      - run: |
-          ls packages/core/uploader/
+          ls /home/runner/work/react-uploady/react-uploady/
       - name: "Test Code (lint, flow, jest, types)"    
         run: yarn test:ci
         env: 

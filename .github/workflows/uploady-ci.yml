@@ -56,7 +56,7 @@ jobs:
         with:
           name: built-libs  
       - run: |
-          ls node_modules/.bin
+          ls node_modules/
       - run: |
           ls packages/core/uploader/lib
       - name: "Test Code (lint, flow, jest, types)"    

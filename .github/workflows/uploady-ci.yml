@@ -101,6 +101,27 @@ jobs:
           name: sb-build
           path: .sb-static     
           
+  cypress-e2e:
+    needs: bundle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Download artifacts: libs bundle"
+        uses: actions/download-artifact@v2
+        with:
+          name: libs-bundle             
+      - name: "Download artifacts: storybook build"
+        uses: actions/download-artifact@v2
+        with:
+          name: sb-build        
+      - name: "Cypress run E2E"
+        uses: cypress-io/github-action@v2
+        with:
+          command: yarn cy:run:ci
+          
+          
+          
+          
 #           cache: "yarn"
 #           cache-dependency-path: "**/yarn.lock"
 #           key: yarn-${{ hashFiles('yarn.lock') }}

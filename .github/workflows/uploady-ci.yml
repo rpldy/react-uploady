@@ -117,7 +117,7 @@ jobs:
       - name: "Cypress run E2E"
         uses: cypress-io/github-action@v2
         with:
-          command: yarn cy:run:ci
+          command: yarn e2e:ci
           
           
           

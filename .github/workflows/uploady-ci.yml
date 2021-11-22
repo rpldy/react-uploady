@@ -115,7 +115,7 @@ jobs:
         with:
           name: sb-build    
       - run: |
-            ls .sb-static/  
+            ls
 #       - name: "Cypress run E2E"
 #         uses: cypress-io/github-action@v2
 #         with:

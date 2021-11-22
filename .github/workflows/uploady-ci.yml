@@ -105,6 +105,7 @@ jobs:
     needs: bundle
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: "Download artifacts: libs bundle"
         uses: actions/download-artifact@v2
         with:

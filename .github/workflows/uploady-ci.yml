@@ -109,17 +109,19 @@ jobs:
       - name: "Download artifacts: libs bundle"
         uses: actions/download-artifact@v2
         with:
-          name: libs-bundle             
+          name: libs-bundle 
+          path: bundle
       - name: "Download artifacts: storybook build"
         uses: actions/download-artifact@v2
         with:
-          name: sb-build    
+          name: sb-build
+          path: .sb-static
       - run: |
             ls
-#       - name: "Cypress run E2E"
-#         uses: cypress-io/github-action@v2
-#         with:
-#           command: yarn e2e:ci
+      - name: "Cypress run E2E"
+        uses: cypress-io/github-action@v2
+        with:
+          command: yarn e2e:ci
           
           
           

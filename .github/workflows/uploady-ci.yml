@@ -115,19 +115,19 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: sb-build
-          path: .sb-static
-      - run: |
-            ls
+          path: .sb-static     
       - name: "Cypress run E2E"
         uses: cypress-io/github-action@v2
         with:
           command: yarn e2e:ci
       - name: "Upload Artifacts: cypress screenshots"
+        if: always()
         uses: actions/upload-artifact@v2
         with:    
           name: cy-shots
           path: cypress/screenshots         
       - name: "Upload Artifacts: cypress videos"
+        if: always()
         uses: actions/upload-artifact@v2
         with:    
           name: cy-vids

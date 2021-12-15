@@ -37,6 +37,14 @@ const config =  {
         }]
     ],
     env: {
+        development: {
+            //adding loose = true to remove warnings in SB build
+            plugins: [
+                ["@babel/plugin-proposal-class-properties", { loose: true }],
+                ["@babel/plugin-proposal-private-methods", { loose: true }],
+                ["@babel/plugin-proposal-private-property-in-object", { loose: true }],
+            ]
+        },
         //cant use plugin when building storybook :(
         production: isUploadyBundle ? productionConfig : undefined,
         esm: productionConfig,

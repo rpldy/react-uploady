@@ -21,6 +21,10 @@ module.exports = {
         // "./.storybook/cypressAddon/register",
     ],
 
+    features: {
+        postcss: false,
+    },
+
     // webpackFinal: async (config) => { return config; },
     // managerWebpack: async (baseConfig, options) =>  { return baseConfig; }
 };

@@ -3,10 +3,12 @@ import type { PropsWithChildren } from "react";
 import { FileLike } from "@rpldy/shared";
 import Uploady, {
     withRequestPreSendUpdate,
-    useItemFinalizeListener, WithRequestPreSendUpdateProps
+    useItemFinalizeListener,
+    useBatchAddListener,
+    WithRequestPreSendUpdateProps
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
-import UploadPreview, { PreviewComponentProps, PreviewType, PreviewMethods } from "./index";
+import UploadPreview, { getUploadPreviewForBatchItemsMethod, PreviewComponentProps, PreviewType, PreviewMethods } from "./index";
 
 const CustomImagePreview = (props: PreviewComponentProps): JSX.Element => {
     return <img src={props.url}/>;
@@ -154,6 +156,8 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props: PropsWithChildren<P
     );
 });
 
+const CustomUploadPreview = getUploadPreviewForBatchItemsMethod(useBatchAddListener);
+
 export default function App(): JSX.Element {
     const previewMethodsRef = React.useRef<PreviewMethods | null>(null);
 
@@ -166,6 +170,14 @@ export default function App(): JSX.Element {
                 <UploadButton>Upload Files</UploadButton>
                 <br />
                 <UploadPreview
+                    PreviewComponent={ItemPreviewWithCrop}
+                    previewComponentProps={{ previewMethods: previewMethodsRef }}
+                    previewMethodsRef={previewMethodsRef}
+                    fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+                />
+
+                <CustomUploadPreview
+                    maxPreviewVideoSize={2}
                     PreviewComponent={ItemPreviewWithCrop}
                     previewComponentProps={{ previewMethods: previewMethodsRef }}
                     previewMethodsRef={previewMethodsRef}

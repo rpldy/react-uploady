@@ -2,7 +2,7 @@ import { act } from "react-dom/test-utils";
 import { useBatchStartListener } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import { getFallbackUrlData, getFileObjectUrlByType } from "../utils";
 import { PREVIEW_TYPES } from "../consts";
-import usePreviewsLoader from "../usePreviewsLoader";
+import { getPreviewsLoaderHook } from "../usePreviewsLoader";
 
 jest.mock("../utils", () => ({
 	getWithMandatoryOptions: jest.fn((o) => o),
@@ -18,7 +18,6 @@ describe("usePreviewLoader tests", () => {
 	});
 
 	const testPreviewsLoader = (props = {}, items) => {
-
 		items = items || [
 			{ id: "f1", file: {} },
 			{ id: "u2", url: "upload2.test" }
@@ -32,6 +31,8 @@ describe("usePreviewLoader tests", () => {
 			.mockImplementationOnce((cb) => {
 				cb(batch);
 			});
+
+        const usePreviewsLoader = getPreviewsLoaderHook(useBatchStartListener);
 
 		const { wrapper, getHookResult } = testCustomHook(usePreviewsLoader, props);
 

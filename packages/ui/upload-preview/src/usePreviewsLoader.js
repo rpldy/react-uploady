@@ -1,7 +1,6 @@
 // @flow
 import { useState, useCallback } from "react";
 import { isFunction } from "@rpldy/shared";
-import { useBatchStartListener } from "@rpldy/shared-ui";
 import { PREVIEW_TYPES } from "./consts";
 import {
     getWithMandatoryOptions,
@@ -12,10 +11,12 @@ import {
 import type { Batch, BatchItem } from "@rpldy/shared";
 import type {
     PreviewComponentPropsOrMethod,
-	PreviewItem,
+    PreviewItem,
     PreviewOptions,
     MandatoryPreviewOptions,
-	PreviewData
+    PreviewData,
+    PreviewBatchItemsMethod,
+    PreviewsLoaderHook,
 } from "./types";
 
 const getFilePreviewUrl = (file, options: MandatoryPreviewOptions) => {
@@ -43,12 +44,12 @@ const loadPreviewData = (
 
         if (!data) {
             data = getFallbackUrlData(options.fallbackUrl, file);
-			isFallback = true;
+            isFallback = true;
         }
     } else {
         data = {
             url: item.url,
-			name: item.url,
+            name: item.url,
             type: PREVIEW_TYPES.IMAGE,
         };
     }
@@ -63,50 +64,54 @@ const loadPreviewData = (
 
     return data && {
         ...data,
-		id: item.id,
-		isFallback,
+        id: item.id,
+        isFallback,
         props
     };
 };
 
 const mergePreviewData = (prev, next) => {
-	const newItems = [];
+    const newItems = [];
 
-	//dedupe and merge new with existing
-	next.forEach((n) => {
-		const existingIndex = prev.findIndex((p) => p.id === n.id);
+    //dedupe and merge new with existing
+    next.forEach((n) => {
+        const existingIndex = prev.findIndex((p) => p.id === n.id);
 
-		if (~existingIndex) {
-			prev.splice(existingIndex, 1, n);
-		} else {
-			newItems.push(n);
-		}
-	});
-
-	return prev.concat(newItems);
-};
-
-const usePreviewsLoader = (props: PreviewOptions): PreviewData => {
-    const [previews, setPreviews] = useState<PreviewItem[]>([]);
-    const previewOptions: MandatoryPreviewOptions = getWithMandatoryOptions(props);
-
-    const clearPreviews = useCallback(() => {
-        setPreviews([]);
-    }, []);
-
-    useBatchStartListener((batch: Batch) => {
-        const items: BatchItem[] = previewOptions.loadFirstOnly ? batch.items.slice(0, 1) : batch.items;
-
-        const previewsData = items
-            .map((item) => loadPreviewData(item, previewOptions, props.previewComponentProps))
-            .filter(Boolean);
-
-        setPreviews(props.rememberPreviousBatches ?
-            mergePreviewData(previews, previewsData) :
-            previewsData);
+        if (~existingIndex) {
+            prev.splice(existingIndex, 1, n);
+        } else {
+            newItems.push(n);
+        }
     });
 
-    return { previews, clearPreviews };
+    return prev.concat(newItems);
 };
 
-export default usePreviewsLoader;
+const getPreviewsLoaderHook = (batchItemsMethod: PreviewBatchItemsMethod): PreviewsLoaderHook  => {
+    return (props: PreviewOptions): PreviewData => {
+        const [previews, setPreviews] = useState<PreviewItem[]>([]);
+        const previewOptions: MandatoryPreviewOptions = getWithMandatoryOptions(props);
+
+        const clearPreviews = useCallback(() => {
+            setPreviews([]);
+        }, []);
+
+        batchItemsMethod((batch: Batch) => {
+            const items: BatchItem[] = previewOptions.loadFirstOnly ? batch.items.slice(0, 1) : batch.items;
+
+            const previewsData = items
+                .map((item) => loadPreviewData(item, previewOptions, props.previewComponentProps))
+                .filter(Boolean);
+
+            setPreviews(props.rememberPreviousBatches ?
+                mergePreviewData(previews, previewsData) :
+                previewsData);
+        });
+
+        return { previews, clearPreviews };
+    };
+};
+
+export {
+    getPreviewsLoaderHook
+};

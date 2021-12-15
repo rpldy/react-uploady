@@ -1,17 +1,18 @@
 // @flow
-import UploadPreview from "./UploadPreview";
-import type { PreviewProps } from "./types";
+import UploadPreview, { getUploadPreviewForBatchItemsMethod } from "./UploadPreview";
 
 export {
-	PREVIEW_TYPES,
+    PREVIEW_TYPES,
 } from "./consts";
+
+export type {
+    PreviewProps,
+} from "./types";
 
 export default UploadPreview;
 
 export {
+    getUploadPreviewForBatchItemsMethod,
     UploadPreview,
 };
 
-export type {
-	PreviewProps,
-};

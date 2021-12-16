@@ -55,6 +55,12 @@ export interface PreviewProps extends PreviewOptions {
     onPreviewsChanged?: (previews: PreviewItem[]) => void;
 }
 
-export const UploadPreview: (props: PreviewProps) => JSX.Element;
+export type PreviewBatchItemsMethod = (cb: (batch: { items: BatchItem[] }) => void) => void;
+
+export type UploadPreviewType = (props: PreviewProps) => JSX.Element;
+
+export const getUploadPreviewForBatchItemsMethod: (method: PreviewBatchItemsMethod) => UploadPreviewType;
+
+export const UploadPreview: UploadPreviewType;
 
 export default UploadPreview;

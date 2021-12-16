@@ -18,7 +18,7 @@ describe("UploadButton - With Progress", () => {
             });
 
             cy.storyLog().assertLogPattern(/Batch Progress - batch-1 : completed = [\d.]+, loaded = \d+$/, {
-                between: [4, 5],
+                between: [3, 5],
             });
 
             cy.storyLog().assertLogPattern(/Batch Progress - batch-1 : completed = 100, loaded = 744890/,{

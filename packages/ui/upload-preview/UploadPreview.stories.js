@@ -6,8 +6,9 @@ import "react-image-crop/dist/ReactCrop.css";
 import { number } from "@storybook/addon-knobs";
 import Uploady, {
     useItemProgressListener,
-	useItemFinalizeListener,
-	withRequestPreSendUpdate,
+    useItemFinalizeListener,
+    withRequestPreSendUpdate,
+    useBatchAddListener,
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
@@ -20,12 +21,14 @@ import {
     getCsfExport,
     type CsfExport,
 } from "../../../story-helpers";
-import UploadPreview, { PREVIEW_TYPES } from "./src";
+import UploadPreview, {
+    getUploadPreviewForBatchItemsMethod,
+    PREVIEW_TYPES
+} from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
-
-import type {Node} from "React";
+import type { Node } from "React";
 
 const StyledUploadButton = styled(UploadButton)`
 	${uploadButtonCss}
@@ -204,7 +207,7 @@ export const WithRememberPrevious = (): Node => {
  * separating into component so previews change dont cause
  * Uploady to re-render
  */
-const PreviewsWithClear = () => {
+const PreviewsWithClear = ({PreviewComp = UploadPreview}) => {
 	const previewMethodsRef = useRef();
 	const [previews, setPreviews] = useState([]);
 
@@ -229,12 +232,13 @@ const PreviewsWithClear = () => {
 		<button id="clear-btn" onClick={onClear}>Clear {previews.length} previews</button>
 		<br/>
 		<PreviewContainer>
-			<UploadPreview
+			<PreviewComp
 				rememberPreviousBatches
 				previewComponentProps={getPreviewProps}
 				previewMethodsRef={previewMethodsRef}
 				onPreviewsChanged={onPreviewsChanged}
-				fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"/>
+				fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+            />
 		</PreviewContainer>
 	</>;
 };
@@ -249,7 +253,6 @@ export const WithPreviewMethods = (): Node => {
 		enhancer={enhancer}
 		grouped={grouped}
 		maxGroupSize={groupSize}>
-
 		<StyledUploadButton id="upload-btn">
 			Upload
 		</StyledUploadButton>
@@ -358,6 +361,28 @@ export const WithCrop = (): Node => {
 			fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
 		/>
 	</Uploady>;
+};
+
+const CustomUploadPreview = getUploadPreviewForBatchItemsMethod(useBatchAddListener);
+
+export const WithDifferentBatchItemMethod = (): Node => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+        autoUpload={false}
+    >
+        <StyledUploadButton id="upload-btn">
+            Upload
+        </StyledUploadButton>
+
+        <PreviewsWithClear PreviewComp={CustomUploadPreview}/>
+    </Uploady>;
 };
 
 export default (getCsfExport(UploadPreview, "Upload Preview", readme): CsfExport);

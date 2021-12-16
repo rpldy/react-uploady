@@ -2,7 +2,7 @@
 import * as React from "react";
 import { PREVIEW_TYPES } from "./consts";
 
-import type { BatchItem } from "@rpldy/shared";
+import type { BatchItem, Batch } from "@rpldy/shared";
 import type { RefObject } from "@rpldy/shared-ui";
 
 export type PreviewType = $Values<typeof PREVIEW_TYPES>;
@@ -30,6 +30,8 @@ export type PreviewComponentPropsOrMethod = Object | (item: BatchItem, url: stri
 export type PreviewMethods = {
 	clear: () => void,
 };
+
+export type PreviewBatchItemsMethod = (cb: (batch: Batch) => void) => void;
 
 export type PreviewOptions = {|
 	//whether to show previous batches' previews as opposed to just the last (default: false)
@@ -72,3 +74,5 @@ export type MandatoryPreviewOptions = {|
     videoMimeTypes: string[],
     previewComponentProps: PreviewComponentPropsOrMethod,
 |};
+
+export type PreviewsLoaderHook = (props: PreviewOptions) => PreviewData;

@@ -41,7 +41,7 @@ By default, will present a preview of the file being uploaded in case its an ima
 | previewMethodsRef     | React Ref   | undefined | ref will be set with preview helper [methods](src/types.js#L29)
 | onPreviewsChanged     | (PreviewItem[]) => void | undefined | callback will be called whenever preview items array changes
 
-## Example
+## Usage
 
 ```javascript
 
@@ -57,9 +57,9 @@ export const App = () => (
 );
 ```
 
-### Advanced Usage
+## Advanced Usage
 
-_The props _rememberPreviousBatches_, _previewMethodsRef_, and _onPreviewsChanged_ make it possible to do more with previews.
+The props _rememberPreviousBatches_, _previewMethodsRef_, and _onPreviewsChanged_ make it possible to do more with previews.
 Specifically, the make it possible to create a visual queue of the uploads.
 
 This is especially useful when adding other features such as abort and [retry](../core/retry-hooks).   
@@ -108,9 +108,51 @@ export const App = () => {
 
 ```
 
-### Custom Preview
+### Custom Preview Component
  
 For an example of using a custom preview component see [this story](https://react-uploady-storybook.netlify.app/?path=/story/upload-preview--with-progress). 
+
+### Custom Batch Items Method
+
+The default way the UploadPreview component learns which items to show previews for is done by internally using the [useBatchStartListener](../uploady/README.md#usebatchstartlistener-event-hook) hook.
+This means that for a batch that hasn't started uploading, because a previous batch hasn't finished or when `autoUpload = false`, the previews for the next batch will not be shown.
+
+If there's a different event (or one completely custom) you want to listen to, for example: the [useBatchAddListener](../uploady/README.md#usebatchaddlistener-event-hook) hook, you can do that with `getUploadPreviewForBatchItemsMethod`.
+With useBatchAddListener, the previews will be shown even for batches that hadn't started to upload yet.
+
+This method expects a hook method as a parameter that will return a [batch](../../../README.md#batch)(-like) object with a `items` property as an array of [BatchItem](../../../README.md#batchitem)s.
+It returns a UploadPreview component that will use the custom hook method to learn about the items to preview.
+
+Below is an example of how to use it:
+
+```javascript
+import React from "react";
+import Uploady, { useBatchAddListener } from "@rpldy/uploady";
+import { getUploadPreviewForBatchItemsMethod } from "@rpldy/upload-preview";
+import UploadButton from "@rpldy/upload-button";
+
+const MyUploadPreview = getUploadPreviewForBatchItemsMethod(useBatchAddListener);
+
+export const App = () => {
+    return (
+        <Uploady
+            destination={{ url: "[upload-url]" }}
+        >
+            <div className="App">
+                <UploadButton>Upload Files</UploadButton>
+                <br />
+  
+                <MyUploadPreview
+                    maxPreviewVideoSize={2}
+                    fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+                />
+            </div>
+        </Uploady>
+    );
+}
+
+```
+
 
 ## Default image types
 

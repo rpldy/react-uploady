@@ -1,6 +1,7 @@
 // @flow
 import React, { useCallback, useEffect, useImperativeHandle } from "react";
-import usePreviewsLoader from "./usePreviewsLoader";
+import { useBatchStartListener } from "@rpldy/shared-ui";
+import { getPreviewsLoaderHook } from "./usePreviewsLoader";
 import { getFallbackUrlData } from "./utils";
 import { PREVIEW_TYPES } from "./consts";
 
@@ -10,6 +11,7 @@ import type {
 	PreviewData,
 	PreviewItem,
 	PreviewMethods,
+    PreviewBatchItemsMethod,
 } from "./types";
 
 const showBasicPreview = (type, url, previewProps, onImgError) =>
@@ -27,34 +29,48 @@ const usePreviewMethods = (previews, clearPreviews, previewMethodsRef, onPreview
 	},[previews, onPreviewsChanged]);
 };
 
-const UploadPreview = (props: PreviewProps): Element<"img">[] | Element<ComponentType<any>>[] => {
-	const { PreviewComponent, previewMethodsRef, onPreviewsChanged, ...previewOptions } = props;
-	const { previews, clearPreviews }: PreviewData = usePreviewsLoader(previewOptions);
+const getUploadPreviewForBatchItemsMethod =
+    (method: PreviewBatchItemsMethod = useBatchStartListener): React$StatelessFunctionalComponent<PreviewProps> => {
+    const usePreviewsLoader = getPreviewsLoaderHook(method);
 
-	const onImagePreviewLoadError = useCallback((e) => {
-		const img = e.target;
+    return (props: PreviewProps): Element<"img">[] | Element<ComponentType<any>>[] => {
+        const { PreviewComponent, previewMethodsRef, onPreviewsChanged, ...previewOptions } = props;
+        const { previews, clearPreviews }: PreviewData = usePreviewsLoader(previewOptions);
 
-		const fallback = getFallbackUrlData(props.fallbackUrl, img.src);
+        const onImagePreviewLoadError = useCallback((e) => {
+            const img = e.target;
 
-		if (fallback) {
-			img.src = fallback.url;
-		}
-	}, [props.fallbackUrl]);
+            const fallback = getFallbackUrlData(props.fallbackUrl, img.src);
 
-	usePreviewMethods(
-		previews,
-		clearPreviews,
-		previewMethodsRef,
-		onPreviewsChanged);
+            if (fallback) {
+                img.src = fallback.url;
+            }
+        }, [props.fallbackUrl]);
 
-	return previews.map((data: PreviewItem): Element<any> => {
-		const { id, url, type, name, isFallback, props: previewProps } = data;
+        usePreviewMethods(
+            previews,
+            clearPreviews,
+            previewMethodsRef,
+            onPreviewsChanged);
 
-		return PreviewComponent ?
-			<PreviewComponent key={id + url} id={id} url={url} type={type}
-							  name={name} isFallback={isFallback} {...previewProps} /> :
-			showBasicPreview(type, url, previewProps, onImagePreviewLoadError);
-	});
+        return previews.map((data: PreviewItem): Element<any> => {
+            const { id, url, type, name, isFallback, props: previewProps } = data;
+
+            return PreviewComponent ?
+                <PreviewComponent key={id + url} id={id} url={url} type={type}
+                                  name={name} isFallback={isFallback} {...previewProps} /> :
+                showBasicPreview(type, url, previewProps, onImagePreviewLoadError);
+        });
+    };
+};
+
+/**
+ * UploadPreview uses Batch start event to display uploading items
+ */
+const UploadPreview: React$StatelessFunctionalComponent<PreviewProps> = getUploadPreviewForBatchItemsMethod();
+
+export {
+    getUploadPreviewForBatchItemsMethod
 };
 
 export default UploadPreview;

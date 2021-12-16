@@ -1,28 +1,42 @@
 import React from "react";
-import usePreviewsLoader from "../usePreviewsLoader";
+import { getPreviewsLoaderHook } from "../usePreviewsLoader";
 import { getFallbackUrlData } from "../utils";
-import UploadPreview from "../UploadPreview";
 import { PREVIEW_TYPES } from "../consts";
 
-jest.mock("../usePreviewsLoader", () => jest.fn());
+jest.mock("../usePreviewsLoader", () => ({
+    getPreviewsLoaderHook: jest.fn()
+}));
 
 jest.mock("../utils", () => ({
     getFallbackUrlData: jest.fn(),
 }));
 
 describe("UploadPreview tests", () => {
+    const mockUsePreviewsLoader = jest.fn();
+    let UploadPreview, getUploadPreviewForBatchItemsMethod;
+
+    beforeAll(() => {
+        getPreviewsLoaderHook.mockReturnValue(mockUsePreviewsLoader);
+
+        const mdl = require("../UploadPreview");
+        UploadPreview = mdl.default;
+        getUploadPreviewForBatchItemsMethod = mdl.getUploadPreviewForBatchItemsMethod;
+    });
 
     beforeEach(() => {
         clearJestMocks(
+            mockUsePreviewsLoader,
             getFallbackUrlData,
         );
     });
 
     it("should render with simple img preview", () => {
-        usePreviewsLoader.mockReturnValueOnce({previews: [
-            { url: "test.com", props: { "data-test": "123" } },
-            { url: "test2.com", props: { "data-test": "456" } },
-        ]});
+        mockUsePreviewsLoader.mockReturnValueOnce({
+            previews: [
+                { url: "test.com", props: { "data-test": "123" } },
+                { url: "test2.com", props: { "data-test": "456" } },
+            ]
+        });
 
         const wrapper = mount(<UploadPreview/>);
 
@@ -36,10 +50,12 @@ describe("UploadPreview tests", () => {
     });
 
     it("should render with simple video preview", () => {
-        usePreviewsLoader.mockReturnValueOnce({previews: [{
-            url: "video.mp4",
-            type: PREVIEW_TYPES.VIDEO,
-        }]});
+        mockUsePreviewsLoader.mockReturnValueOnce({
+            previews: [{
+                url: "video.mp4",
+                type: PREVIEW_TYPES.VIDEO,
+            }]
+        });
 
         const wrapper = mount(<UploadPreview/>);
 
@@ -50,17 +66,19 @@ describe("UploadPreview tests", () => {
 
     it("should render with PreviewComponent from props", () => {
         const PreviewComp = (props) => {
-			// eslint-disable-next-line no-unused-vars
+            // eslint-disable-next-line no-unused-vars
             const { url, type, isFallback, ...previewProps } = props;
             return <article data-preview-type={type} {...previewProps}>
                 {url}
             </article>;
         };
 
-        usePreviewsLoader.mockReturnValueOnce({previews: [
-            { url: "test.com", type: "img", props: { "data-test": "123" } },
-            { url: "test2.com", type: "img", props: { "data-test": "456" } },
-        ]});
+        mockUsePreviewsLoader.mockReturnValueOnce({
+            previews: [
+                { url: "test.com", type: "img", props: { "data-test": "123" } },
+                { url: "test2.com", type: "img", props: { "data-test": "456" } },
+            ]
+        });
 
         const wrapper = mount(<UploadPreview
             PreviewComponent={PreviewComp}/>);
@@ -80,9 +98,11 @@ describe("UploadPreview tests", () => {
         const previewUrl = "test.com",
             fbUrl = "fallback.com";
 
-        usePreviewsLoader.mockReturnValueOnce({previews: [
-            { url: previewUrl, type: "img", props: { "data-test": "123" } },
-        ]});
+        mockUsePreviewsLoader.mockReturnValueOnce({
+            previews: [
+                { url: previewUrl, type: "img", props: { "data-test": "123" } },
+            ]
+        });
 
         const wrapper = mount(<UploadPreview
             fallbackUrl={fbUrl}/>);
@@ -98,42 +118,55 @@ describe("UploadPreview tests", () => {
         expect(img.src).toBe(fbUrl);
     });
 
-	it("should provide methods ref and call onPreviewsChanged", () => {
-		const previews =  [
-			{ url: "test.com", props: { "data-test": "123" } },
-			{ url: "test2.com", props: { "data-test": "456" } },
-		];
+    it("should provide methods ref and call onPreviewsChanged", () => {
+        const previews = [
+            { url: "test.com", props: { "data-test": "123" } },
+            { url: "test2.com", props: { "data-test": "456" } },
+        ];
 
-		usePreviewsLoader.mockReturnValueOnce({previews, clearPreviews: "clear"});
+        mockUsePreviewsLoader.mockReturnValueOnce({ previews, clearPreviews: "clear" });
 
-		const onPreviewsChanged = jest.fn();
+        const onPreviewsChanged = jest.fn();
 
-		const methodsRef = {current: null};
+        const methodsRef = { current: null };
 
-		mount(<UploadPreview
-			onPreviewsChanged={onPreviewsChanged}
-			previewMethodsRef={methodsRef}
-		/>);
+        mount(<UploadPreview
+            onPreviewsChanged={onPreviewsChanged}
+            previewMethodsRef={methodsRef}
+        />);
 
-		expect(onPreviewsChanged).toHaveBeenCalledWith(previews);
+        expect(onPreviewsChanged).toHaveBeenCalledWith(previews);
 
-		expect(methodsRef.current.clear).toBe("clear");
-	});
+        expect(methodsRef.current.clear).toBe("clear");
+    });
 
-	it("should provide isFallback to custom preview component", () => {
-		usePreviewsLoader.mockReturnValueOnce({previews: [{isFallback: true, url: "fallback.com"}]});
+    it("should provide isFallback to custom preview component", () => {
+        mockUsePreviewsLoader.mockReturnValueOnce({ previews: [{ isFallback: true, url: "fallback.com" }] });
 
-		const PreviewComp = (props) => {
-			const { url, isFallback, ...previewProps } = props;
-			return <article data-fallback={isFallback} {...previewProps}>
-				{url}
-			</article>;
-		};
+        const PreviewComp = (props) => {
+            const { url, isFallback, ...previewProps } = props;
+            return <article data-fallback={isFallback} {...previewProps}>
+                {url}
+            </article>;
+        };
 
-		const wrapper = mount(<UploadPreview
-			PreviewComponent={PreviewComp}/>);
+        const wrapper = mount(<UploadPreview
+            PreviewComponent={PreviewComp}
+        />);
 
-		expect(wrapper.find("article")).toHaveProp("data-fallback", true);
-	});
+        expect(wrapper.find("article")).toHaveProp("data-fallback", true);
+    });
+
+    it("should use custom batch items method", () => {
+        mockUsePreviewsLoader.mockReturnValueOnce({ previews: [] });
+
+        const customBatchItemsMethod = () => {};
+
+        const CustomUploadPreview = getUploadPreviewForBatchItemsMethod(customBatchItemsMethod);
+
+        mount(<CustomUploadPreview/>);
+
+        expect(getPreviewsLoaderHook).toHaveBeenLastCalledWith(customBatchItemsMethod);
+    });
 });
 

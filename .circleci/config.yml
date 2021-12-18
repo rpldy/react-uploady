@@ -53,7 +53,6 @@ commands:
            - run:
                  name: Run cypress e2e
                  command: yarn cy:run:ci
-                 #yarn e2e:ci
 
 jobs:
     setup:
@@ -144,6 +143,7 @@ jobs:
             - attach_workspace:
                   at: .
             - run:
+                name: Split tests by timing
                 command: |
                     circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings
             - run-e2e-http
@@ -154,8 +154,8 @@ jobs:
             -  run:
                 when: always
                 name: Fix junit reporter file attribute
-                    command: |
-                        yarn node scripts/fix-junit-xml.js
+                command: |
+                    yarn node scripts/fix-junit-xml.js
             - store_artifacts:
                   path: cypress/screenshots
             - store_artifacts:

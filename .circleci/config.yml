@@ -138,7 +138,12 @@ jobs:
 
     cypress-run:
         docker: *docker_image
+        parallelism: 4
         steps:
+            - run:
+                command: |
+                    echo $(circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings)
+                                circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings | xargs -n 1 echo
             - checkout
             - attach_workspace:
                   at: .

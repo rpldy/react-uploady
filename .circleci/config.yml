@@ -140,12 +140,18 @@ jobs:
         docker: *docker_image
         parallelism: 4
         steps:
-            - run:
-                command: |
-                  circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings
             - checkout
             - attach_workspace:
                   at: .
+            - run:
+                command: |
+                    TESTFILES=$( circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings)
+                    echo ${TESTFILES}
+                    # bundle exec rake knapsack_pro:minitest
+                    bundle exec rspec --format progress \
+                    --format RspecJunitFormatter \
+                    -o test/reports/rspec.xml \
+                    -- ${TESTFILES}
             - run-e2e-http
             - restore_cache:
                 keys:

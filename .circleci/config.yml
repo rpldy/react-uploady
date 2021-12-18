@@ -145,9 +145,7 @@ jobs:
                   at: .
             - run:
                 command: |
-                    TESTFILES=$(circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings)
-                    echo ${TESTFILES}
-                    TESTFILES
+                    circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings
             - run-e2e-http
             - restore_cache:
                 keys:

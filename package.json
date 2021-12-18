@@ -144,6 +144,7 @@
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-merge": "^5.0.9",
+    "xml2js": "^0.4.23",
     "yargs": "^17.2.1"
   },
   "optionalDependencies": {

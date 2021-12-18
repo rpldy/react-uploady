@@ -151,12 +151,18 @@ jobs:
                 keys:
                     - cy-install-{{ checksum "yarn.lock" }}
             - run-e2e
+            -  run:
+                when: always
+                name: Fix junit reporter file attribute
+                    command: |
+                        yarn node scripts/fix-junit-xml.js
             - store_artifacts:
                   path: cypress/screenshots
             - store_artifacts:
                   path: cypress/videos
             - store_test_results:
                   path: cypress/results
+
 
 workflows:
     create-rpldy:

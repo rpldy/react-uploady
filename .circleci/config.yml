@@ -142,8 +142,7 @@ jobs:
         steps:
             - run:
                 command: |
-                    echo $(circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings)
-                                circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings | xargs -n 1 echo
+                  circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings
             - checkout
             - attach_workspace:
                   at: .

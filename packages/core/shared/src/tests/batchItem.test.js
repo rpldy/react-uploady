@@ -2,7 +2,6 @@ import createItem from "../batchItem";
 import { FILE_STATES } from "../consts";
 
 describe("create batchItem tests", () => {
-
     it("should create batch item with file", () => {
         const file = { name: "test", type: "image/jpg" };
 
@@ -28,7 +27,6 @@ describe("create batchItem tests", () => {
     });
 
     it("should create batch item with url", () => {
-
         const url = "test";
 
         const fileItem = createItem(url, "b1");
@@ -48,7 +46,6 @@ describe("create batchItem tests", () => {
     });
 
 	it("should recycle file batch item", () => {
-
 		const file = { name: "test", type: "image/jpg" };
 		const fileItem = createItem(file, "b1");
 
@@ -68,7 +65,6 @@ describe("create batchItem tests", () => {
 	});
 
 	it("should recycle url batch item", () => {
-
 		const fileItem = createItem( "file.com", "b1");
 
 		fileItem.state = "DONE";
@@ -85,4 +81,11 @@ describe("create batchItem tests", () => {
 		expect(recycled.aborted).toBe(false);
 		expect(recycled.url).toBe("file.com");
 	});
+
+    it("should create pending batch item", () => {
+        const file = { name: "test", type: "image/jpg" };
+        const fileItem = createItem(file, "b1", true);
+
+        expect(fileItem.state).toBe(FILE_STATES.PENDING);
+    });
 });

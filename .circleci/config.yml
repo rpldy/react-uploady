@@ -138,10 +138,14 @@ jobs:
 
     cypress-run:
         docker: *docker_image
+        parallelism: 4
         steps:
             - checkout
             - attach_workspace:
                   at: .
+            - run:
+                command: |
+                    circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings
             - run-e2e-http
             - restore_cache:
                 keys:

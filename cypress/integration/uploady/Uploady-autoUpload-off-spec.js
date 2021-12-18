@@ -1,6 +1,6 @@
 import uploadFile, { uploadFileTimes } from "../uploadFile";
 import { BATCH_ADD, ITEM_START, ITEM_FINISH, ITEM_ABORT } from "../storyLogPatterns";
-import { WAIT_MEDIUM, WAIT_SHORT, WAIT_X_SHORT } from "../specWaitTimes";
+import { WAIT_LONG, WAIT_SHORT, WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("Uploady - autoUpload off tests", () => {
     const fileName = "flower.jpg";
@@ -94,7 +94,7 @@ describe("Uploady - autoUpload off tests", () => {
                 cy.get("button[data-test='abort-file-2']")
                     .click();
 
-                cy.wait(WAIT_MEDIUM);
+                cy.wait(WAIT_LONG);
 
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 6 });
                 cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 1 });

@@ -53,7 +53,6 @@ commands:
            - run:
                  name: Run cypress e2e
                  command: yarn cy:run:ci
-                 #yarn e2e:ci
 
 jobs:
     setup:
@@ -144,6 +143,7 @@ jobs:
             - attach_workspace:
                   at: .
             - run:
+                name: Split tests by timing
                 command: |
                     circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings
             - run-e2e-http
@@ -151,12 +151,18 @@ jobs:
                 keys:
                     - cy-install-{{ checksum "yarn.lock" }}
             - run-e2e
+            -  run:
+                when: always
+                name: Fix junit reporter file attribute
+                command: |
+                    node cypress/fix-junit-report.js
             - store_artifacts:
                   path: cypress/screenshots
             - store_artifacts:
                   path: cypress/videos
             - store_test_results:
                   path: cypress/results
+
 
 workflows:
     create-rpldy:

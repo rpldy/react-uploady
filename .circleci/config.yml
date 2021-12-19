@@ -154,7 +154,7 @@ jobs:
 
     cypress-run:
         docker: *docker_image
-        parallelism: 4
+        parallelism: 5
         steps:
             - checkout
             - attach_workspace:

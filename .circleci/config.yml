@@ -10,9 +10,8 @@ commands:
     setup:
         description: "Setup command to install/bootstrap/build"
         steps:
-            - run: yarn --pure-lockfile
-            - run: yarn cache dir
-            #- run: yarn bootstrap:pure
+            - run: yarn --frozen-lockfile
+#            - run: yarn cache dir
             - run: yarn build
 
     bundle:

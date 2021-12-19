@@ -56,8 +56,8 @@ commands:
            - run:
                  name: Run cypress e2e
                  command: |
-                    echo RUNNING SPECS = $(sed 's/ /,/g' /tmp/specs-to-run)
-                    yarn cy:run:ci --spec $(sed 's/ /,/g' /tmp/specs-to-run)
+                    echo RUNNING SPECS = $(sed 's/\ /, /g' /tmp/specs-to-run)
+                    yarn cy:run:ci --spec $(sed 's/\ /, /g' /tmp/specs-to-run)
 
 jobs:
     setup:

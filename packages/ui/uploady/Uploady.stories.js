@@ -194,7 +194,8 @@ export const WithAutoUploadOff = (): Node => {
         maxGroupSize={groupSize}
         autoUpload={false}
         concurrent
-        maxConcurrent={10}>
+        maxConcurrent={10}
+    >
         <ContextUploadButton />
         <br/>
         <hr/>
@@ -233,7 +234,7 @@ export const WithAbort = (): Element<"div"> => {
     </div>
 };
 
-export const withConcurrent = (): Node => {
+export const WithConcurrent = (): Node => {
     const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
 
     return <Uploady
@@ -252,7 +253,7 @@ export const withConcurrent = (): Node => {
     </Uploady>
 };
 
-export const withCustomResponseFormat = (): Node => {
+export const WithCustomResponseFormat = (): Node => {
     const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
 
     const resFormatter = useCallback((res, status, headers) => {

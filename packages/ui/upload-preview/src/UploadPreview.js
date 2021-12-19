@@ -57,8 +57,15 @@ const getUploadPreviewForBatchItemsMethod =
             const { id, url, type, name, isFallback, props: previewProps } = data;
 
             return PreviewComponent ?
-                <PreviewComponent key={id + url} id={id} url={url} type={type}
-                                  name={name} isFallback={isFallback} {...previewProps} /> :
+                <PreviewComponent
+                    key={id + url}
+                    id={id}
+                    url={url}
+                    type={type}
+                    name={name}
+                    isFallback={isFallback}
+                    {...previewProps}
+                /> :
                 showBasicPreview(type, url, previewProps, onImagePreviewLoadError);
         });
     };

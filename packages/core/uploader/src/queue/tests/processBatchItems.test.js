@@ -8,7 +8,7 @@ import processBatchItems from "../processBatchItems";
 import processFinishedRequest from "../processFinishedRequest";
 import { UPLOADER_EVENTS } from "../../consts";
 
-jest.mock("../processFinishedRequest"); //, () => jest.fn());
+jest.mock("../processFinishedRequest");
 
 describe("processBatchItems tests", () => {
     const mockNext = jest.fn();
@@ -71,7 +71,6 @@ describe("processBatchItems tests", () => {
         expect(processFinishedRequest)
             .toHaveBeenCalledWith(queueState, [{ id: "u1", info: requestResponse }], mockNext);
 
-        expect(queueState.getState().activeIds).toEqual(["u1"]);
         expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
 
         expect(mockNext).toHaveBeenCalledWith(queueState);
@@ -103,7 +102,6 @@ describe("processBatchItems tests", () => {
                 { id: "u1", info: requestResponse },
                 { id: "u2", info: requestResponse }], mockNext);
 
-        expect(queueState.getState().activeIds).toEqual(["u1", "u2"]);
         expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
         expect(queueState.getState().aborts.u2).toBe(sendResult.abort);
     });
@@ -278,8 +276,6 @@ describe("processBatchItems tests", () => {
                         info: { state: FILE_STATES.CANCELLED, response: "cancel", status: 0}
                     }], mockNext);
 
-        expect(queueState.state.activeIds).toHaveLength(0);
-
         expect(queueState.state.items.u1.abort).toBeUndefined();
         expect(queueState.state.items.u2.abort).toBeUndefined();
     });
@@ -315,8 +311,6 @@ describe("processBatchItems tests", () => {
                     id: "u2",
                     info: { state: FILE_STATES.CANCELLED, response: "cancel", status: 0 }
                 }], mockNext);
-
-        expect(queueState.getState().activeIds).toEqual(["u1"]);
 
         expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
         expect(queueState.getState().aborts.u2).toBeUndefined();

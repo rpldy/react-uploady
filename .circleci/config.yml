@@ -52,7 +52,9 @@ commands:
        steps:
            - run:
                  name: Run cypress e2e
-                 command: yarn cy:run:ci
+                 command: |
+                    echo RUNNING SPECS = $(sed -r 's/ /,/g' /tmp/specs-to-run)
+                    yarn cy:run:ci --spec $(sed -r 's/ /,/g' /tmp/specs-to-run)
 
 jobs:
     setup:
@@ -145,7 +147,8 @@ jobs:
             - run:
                 name: Split tests by timing
                 command: |
-                    circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings
+                    circleci tests glob "cypress/integration/**/*-spec.js" | circleci tests split --split-by=timings > /tmp/specs-to-run
+                    cat /tmp/specs-to-run
             - run-e2e-http
             - restore_cache:
                 keys:

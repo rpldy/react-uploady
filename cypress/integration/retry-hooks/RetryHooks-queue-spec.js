@@ -1,4 +1,4 @@
-import intercept, { interceptWithHandler, RESPONSE_DEFAULTS } from "../intercept";
+import { interceptWithDelay } from "../intercept";
 import uploadFile, { uploadFileTimes } from "../uploadFile";
 import { ITEM_ABORT } from "../storyLogPatterns";
 import { WAIT_MEDIUM, WAIT_SHORT, WAIT_X_LONG, } from "../specWaitTimes";
@@ -12,12 +12,7 @@ describe("RetryHooks - Queue", () => {
     });
 
     it("should use queue with retry", () => {
-        interceptWithHandler((req) => {
-            req.reply({
-                ...RESPONSE_DEFAULTS,
-                delay: 800,
-            });
-        });
+        interceptWithDelay(800);
 
         uploadFile(fileName, () => {
             uploadFile(fileName2, () => {
@@ -80,12 +75,7 @@ describe("RetryHooks - Queue", () => {
         //reload to clear story log from window
         cy.reload();
 
-        interceptWithHandler((req) => {
-            req.reply({
-                ...RESPONSE_DEFAULTS,
-                delay: 100,
-            });
-        });
+        interceptWithDelay(100);
 
         uploadFileTimes(fileName, () => {
             cy.get("button[data-test='abort-button']")
@@ -108,12 +98,7 @@ describe("RetryHooks - Queue", () => {
     it("should abort and retry after batch finished", () => {
         //reload to clear story log from window
         cy.reload();
-        interceptWithHandler((req) => {
-            req.reply({
-                ...RESPONSE_DEFAULTS,
-                delay: 200,
-            });
-        });
+        interceptWithDelay(200);
 
         uploadFileTimes(fileName, () => {
             cy.get("button[data-test='abort-button']")

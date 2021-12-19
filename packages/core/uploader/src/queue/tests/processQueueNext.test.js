@@ -15,7 +15,6 @@ import {
 import processQueueNext, { getNextIdGroup, findNextItemIndex } from "../processQueueNext";
 
 describe("processQueueNext tests", () => {
-
 	beforeAll(()=>{
 		getIsItemBatchReady.mockReturnValue(true);
 	});
@@ -23,17 +22,17 @@ describe("processQueueNext tests", () => {
 	beforeEach(() => {
 		clearJestMocks(
 			mockProcessBatchItems,
-			getBatchDataFromItemId,
 			isItemBelongsToBatch,
 			isNewBatchStarting,
 			loadNewBatchForItem,
 			cancelBatchForItem,
 			getIsItemBatchReady
 		);
+
+        getBatchDataFromItemId.mockReset();
 	});
 
 	describe("getNextIdGroup tests", () => {
-
 		it("should return the next id without grouping", () => {
 			const batch = { id: "b1" };
 
@@ -337,7 +336,39 @@ describe("processQueueNext tests", () => {
 		expect(queueState.runCancellable).not.toHaveBeenCalled();
 	});
 
-	it("should process next item without new batch", async () => {
+    it("should process next item", async () => {
+        const queueState = getQueueState({
+            currentBatch: "b1",
+            items: {
+                "u1": { batchId: "b1", state: FILE_STATES.ADDED },
+                "u2": { batchId: "b1", state: FILE_STATES.ADDED },
+            },
+            batches: {
+                b1: {
+                    batch: { id: "b1" },
+                    batchOptions: {}
+                },
+            },
+            activeIds: [],
+            itemQueue: ["u1", "u2"],
+        }, {});
+
+        getBatchDataFromItemId.mockReturnValueOnce(
+            queueState.state.batches.b1
+        );
+
+        await processQueueNext(queueState);
+
+        expect(mockProcessBatchItems).toHaveBeenCalledTimes(1);
+
+        expect(mockProcessBatchItems).toHaveBeenCalledWith(
+            expect.any(Object),
+            ["u1"],
+            expect.any(Function)
+        );
+    });
+
+    it("should process next item without new batch, concurrent = true", async () => {
 		const queueState = getQueueState({
 			currentBatch: "b1",
 			items: {
@@ -366,6 +397,8 @@ describe("processQueueNext tests", () => {
 		expect(queueState.getCurrentActiveCount).toHaveBeenCalled();
 		expect(queueState.runCancellable).not.toHaveBeenCalled();
 
+        expect(queueState.getState().activeIds).toEqual(expect.arrayContaining(["u1", "u2"]));
+
 		expect(mockProcessBatchItems).toHaveBeenCalledWith(
 			expect.any(Object),
 			["u2"],
@@ -374,7 +407,6 @@ describe("processQueueNext tests", () => {
 	});
 
 	it("should process next item from new batch", async () => {
-
 		const queueState = getQueueState({
 				currentBatch: "b1",
 				items: {
@@ -414,7 +446,6 @@ describe("processQueueNext tests", () => {
 	});
 
 	it("should handle next item from cancelled new batch", async () => {
-
 		const queueState = getQueueState({
 				currentBatch: "b1",
 				items: {
@@ -455,4 +486,78 @@ describe("processQueueNext tests", () => {
 
 		expect(mockProcessBatchItems).not.toHaveBeenCalled();
 	});
+
+    it("should handle next item after concurrent max is passed", async () => {
+        const queueState = getQueueState({
+                currentBatch: "b1",
+                items: {
+                    "u1": { batchId: "b1", state: FILE_STATES.ADDED },
+                    "u2": { batchId: "b1", state: FILE_STATES.ADDED },
+                    "u3": { batchId: "b1", state: FILE_STATES.ADDED },
+                },
+                batches: {
+                    b1: {
+                        batch: { id: "b1" },
+                        batchOptions: {}
+                    },
+                },
+                activeIds: [],
+                itemQueue: ["u1", "u2", "u3"],
+            },
+            {
+                concurrent: true,
+                maxConcurrent: 2,
+            });
+
+        getBatchDataFromItemId.mockReturnValue(
+            queueState.state.batches.b1
+        );
+
+        await processQueueNext(queueState);
+
+        expect(mockProcessBatchItems).toHaveBeenCalledTimes(2);
+
+        expect(queueState.getState().activeIds)
+            .toEqual(expect.arrayContaining(["u1", "u2"]));
+    });
+
+    it("should handle next already active due to async processing and ignore", async () => {
+        const queueState = getQueueState({
+                currentBatch: "",
+                items: {
+                    "u1": { batchId: "b1", state: FILE_STATES.ADDED },
+                },
+                batches: {
+                    b1: {
+                        batch: { id: "b1" },
+                        batchOptions: {}
+                    },
+                },
+                activeIds: [],
+                itemQueue: ["u1"],
+            },
+            {
+                concurrent: true,
+                maxConcurrent: 2,
+            });
+
+        isNewBatchStarting.mockReturnValueOnce(true);
+
+        loadNewBatchForItem.mockResolvedValueOnce(true);
+
+        getBatchDataFromItemId.mockReturnValue(
+            queueState.state.batches.b1
+        );
+
+        const p = processQueueNext(queueState);
+
+        //intentionally set item as active before it is processed
+        queueState.updateState((state) => {
+            state.activeIds = ["u1"];
+        });
+
+        await p;
+
+        expect(mockProcessBatchItems).toHaveBeenCalledTimes(0);
+    });
 });

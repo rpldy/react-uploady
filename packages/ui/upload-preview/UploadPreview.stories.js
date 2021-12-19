@@ -9,6 +9,7 @@ import Uploady, {
     useItemFinalizeListener,
     withRequestPreSendUpdate,
     useBatchAddListener,
+    useUploady,
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
@@ -278,7 +279,7 @@ const PreviewButtons = (props) => {
 	const { finished, crop, updateRequest, onUploadCancel, onUploadCrop } = props;
 
 	return <ButtonsWrapper>
-		<button id="crop-btn" style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
+		<button id="crop-btn" className="preview-crop-btn" style={{ display: !finished && updateRequest && crop ? "block" : "none" }}
 				onClick={onUploadCrop}>
 			Upload Cropped
 		</button>
@@ -363,9 +364,39 @@ export const WithCrop = (): Node => {
 	</Uploady>;
 };
 
+export const WithMultiCrop = (): Node => {
+    const { enhancer, destination } = useStoryUploadySetup();
+    const previewMethodsRef = useRef();
+
+    return <Uploady
+        concurrent
+        maxConcurrent={2}
+        debug
+        destination={destination}
+        enhancer={enhancer}
+    >
+        <StyledUploadButton id="upload-btn">
+            Select Files
+        </StyledUploadButton>
+
+        <UploadPreview
+            PreviewComponent={ItemPreviewWithCrop}
+            previewComponentProps={{ previewMethods: previewMethodsRef }}
+            previewMethodsRef={previewMethodsRef}
+            fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+        />
+    </Uploady>;
+};
+
 const CustomUploadPreview = getUploadPreviewForBatchItemsMethod(useBatchAddListener);
 
-export const WithDifferentBatchItemMethod = (): Node => {
+const UploadPendingButton = () => {
+    const { processPending } = useUploady();
+
+    return <Button onClick={processPending} id="upload-pending-btn">Upload</Button>;
+};
+
+export const WithDifferentBatchItemsMethod = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <Uploady
@@ -378,10 +409,12 @@ export const WithDifferentBatchItemMethod = (): Node => {
         autoUpload={false}
     >
         <StyledUploadButton id="upload-btn">
-            Upload
+            Select Files
         </StyledUploadButton>
 
         <PreviewsWithClear PreviewComp={CustomUploadPreview}/>
+
+        <UploadPendingButton/>
     </Uploady>;
 };
 

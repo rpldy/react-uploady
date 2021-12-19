@@ -1,0 +1,78 @@
+#name: Uploady CI Flow
+
+#on:
+#  push:
+#    branches: [ master ]
+#  pull_request:
+#    branches: [ master ]
+
+# defaults:
+#   run:
+
+#jobs:
+#  setup:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-node@v2
+#        with:
+#          node-version: "14.17.6"
+#          cache: "yarn"
+#          cache-dependency-path: "**/yarn.lock"
+#      - run: yarn --pure-lockfile
+#      - run: yarn build
+#      - name: store setup artifacts
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: setup-modules
+#          path: |
+#            node_modules
+#            packages/**/node_modules
+#
+#  test:
+#    needs: setup
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-node@v2
+#        with:
+#          node-version: "14.17.6"
+#          cache: "yarn"
+#          cache-dependency-path: "**/yarn.lock"
+#      - name: Download setup modules
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: setup-modules
+#      - name: "Test Code (lint, flow, jest, types)"
+#        run: yarn test:ci
+#        env:
+#          JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+
+
+
+
+
+
+
+
+
+
+#   build:
+
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       matrix:
+#         node-version: [14.7.6]
+#         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+#     steps:
+#     - uses: actions/checkout@v2
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v2
+#       with:
+#         node-version: ${{ matrix.node-version }}
+#         cache: 'npm'
+#     - run: npm ci
+#     - run: npm run build --if-present
+#     - run: npm test

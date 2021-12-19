@@ -17,12 +17,16 @@ commands:
     bundle:
         description: "Create UMD bundles"
         steps:
-            - run:
-                  name: Bundle for Production
-                  command: yarn bundle:prod
-            - run:
-                  name: Build Storybook
-                  command: yarn sb:build:prod
+           - run:
+            name: Bundle for Production
+            command: yarn bundle:prod
+
+    sb:
+       description: Build Storybook
+       steps:
+           - run:
+            name: Build Storybook
+            command: yarn sb:build:prod
 
     prepare-e2e:
         description: "Prepare for cypress e2e tests"
@@ -115,15 +119,27 @@ jobs:
         steps:
             - checkout
             - attach_workspace:
-                  at: .
+                at: .
             - bundle
             - store_artifacts:
-                  path: bundle
+                path: bundle
             - persist_to_workspace:
-                  root: .
-                  paths:
-                      - bundle
-                      - .sb-static
+                root: .
+                paths:
+                    - bundle
+#                   - .sb-static
+
+    build-sb:
+        docker: *docker_image
+        steps:
+            - checkout
+            - attach_workspace:
+                at: .
+            - sb
+            - persist_to_workspace:
+                root: .
+                paths:
+                   - .sb-static
 
     cypress-prepare:
         docker: *docker_image
@@ -182,6 +198,9 @@ workflows:
             - bundle:
                   requires:
                       - setup
+            - build-sb:
+                  requires:
+                      - setup
             - cypress-prepare:
                   requires:
                       - setup
@@ -189,7 +208,7 @@ workflows:
                   requires:
                       - cypress-prepare
                       - bundle
-
+                      - build-sb
 
 #      - cypress/install:
 #          name: Prepare E2E (cypress)

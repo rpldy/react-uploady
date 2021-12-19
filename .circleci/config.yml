@@ -62,10 +62,10 @@ jobs:
             - checkout
             - restore_cache:
                   keys:
-                      - yarn-deps-{{ checksum "yarn.lock" }}
+                      - yarn-deps-v2-{{ checksum "yarn.lock" }}
             - setup
             - save_cache:
-                  key: yarn-deps-{{ checksum "yarn.lock" }}
+                  key: yarn-deps-v2-{{ checksum "yarn.lock" }}
                   paths:
                       - node_modules
                       - ~/.cache/yarn
@@ -165,7 +165,6 @@ jobs:
                   path: cypress/videos
             - store_test_results:
                   path: cypress/results
-
 
 workflows:
     create-rpldy:

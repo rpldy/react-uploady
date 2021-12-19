@@ -17,16 +17,16 @@ commands:
     bundle:
         description: "Create UMD bundles"
         steps:
-           - run:
-            name: Bundle for Production
-            command: yarn bundle:prod
+            - run:
+                name: Bundle for Production
+                command: yarn bundle:prod
 
     sb:
        description: Build Storybook
        steps:
            - run:
-            name: Build Storybook
-            command: yarn sb:build:prod
+                name: Build Storybook
+                command: yarn sb:build:prod
 
     prepare-e2e:
         description: "Prepare for cypress e2e tests"

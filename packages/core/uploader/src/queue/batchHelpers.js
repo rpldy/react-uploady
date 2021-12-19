@@ -99,7 +99,7 @@ const loadNewBatchForItem = (queue: QueueState, itemId: string): Promise<boolean
 };
 
 const cleanUpFinishedBatches = (queue: QueueState) => {
-    //TODO: schedule clean up on requestAnimationFrame
+    //TODO: schedule clean up on requestIdle
 
     const state = queue.getState();
 

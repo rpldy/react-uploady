@@ -14,9 +14,10 @@ import type { BatchItem } from "@rpldy/shared";
 import type { QueueState } from "./types";
 
 const getIsItemInActiveRequest = (queue: QueueState, itemId: string): boolean => {
-    return !!~queue.getState().activeIds
+    return queue.getState().activeIds
         // $FlowIssue - no flat
-        .flat().indexOf(itemId);
+        .flat()
+        .includes(itemId);
 };
 
 const getIsItemReady = (item: BatchItem) =>
@@ -71,6 +72,47 @@ export const getNextIdGroup = (queue: QueueState): ?string[] => {
     return nextGroup;
 };
 
+const updateItemAsActive = (queue: QueueState, ids) => {
+    const alreadyActive = ids.find((id) => getIsItemInActiveRequest(queue, id));
+
+    if (!alreadyActive) {
+        queue.updateState((state) => {
+            //immediately mark items as active to support concurrent uploads without getting into infinite loops
+            state.activeIds = state.activeIds.concat(ids);
+        });
+    } else {
+        logger.debugLog(`uploader.processor: encountered already active item: ${alreadyActive}`);
+    }
+
+    return !alreadyActive;
+};
+
+const processNextWithBatch = (queue, ids) => {
+    let newBatchP;
+
+    if (isNewBatchStarting(queue, ids[0])) {
+        newBatchP = loadNewBatchForItem(queue, ids[0])
+            .then((allowBatch) => {
+                let cancelled = !allowBatch;
+
+                if (cancelled) {
+                    cancelBatchForItem(queue, ids[0]);
+                    processNext(queue);
+                } else {
+                    const success = updateItemAsActive(queue, ids);
+                    cancelled = !success;
+                }
+
+                return cancelled;
+            });
+    } else {
+        const success = updateItemAsActive(queue, ids);
+        newBatchP = Promise.resolve(!success);
+    }
+
+    return newBatchP;
+};
+
 const processNext = (queue: QueueState): Promise<void> => {
     const ids = getNextIdGroup(queue);
     let resultP = Promise.resolve();
@@ -85,31 +127,9 @@ const processNext = (queue: QueueState): Promise<void> => {
                 currentCount,
             });
 
-            let cancelled = false;
-            let newBatchP = Promise.resolve(false);
-
-            if (isNewBatchStarting(queue, ids[0])) {
-                newBatchP = loadNewBatchForItem(queue, ids[0])
-                    .then((allowBatch) => {
-                        cancelled = !allowBatch;
-
-                        if (cancelled) {
-                            cancelBatchForItem(queue, ids[0]);
-                            processNext(queue);
-                        }
-
-                        return cancelled;
-                    });
-            }
-
-            resultP = newBatchP
+            resultP = processNextWithBatch(queue, ids)
                 .then((cancelled: boolean) => {
                     if (!cancelled) {
-                        queue.updateState((state) => {
-                            //immediately mark items as active to support concurrent uploads without getting into infinite loops
-                            state.activeIds = state.activeIds.concat(ids);
-                        });
-
                         processBatchItems(queue, ids, processNext);
 
                         if (concurrent) {

@@ -520,4 +520,44 @@ describe("processQueueNext tests", () => {
         expect(queueState.getState().activeIds)
             .toEqual(expect.arrayContaining(["u1", "u2"]));
     });
+
+    it("should handle next already active due to async processing and ignore", async () => {
+        const queueState = getQueueState({
+                currentBatch: "",
+                items: {
+                    "u1": { batchId: "b1", state: FILE_STATES.ADDED },
+                },
+                batches: {
+                    b1: {
+                        batch: { id: "b1" },
+                        batchOptions: {}
+                    },
+                },
+                activeIds: [],
+                itemQueue: ["u1"],
+            },
+            {
+                concurrent: true,
+                maxConcurrent: 2,
+            });
+
+        isNewBatchStarting.mockReturnValueOnce(true);
+
+        loadNewBatchForItem.mockResolvedValueOnce(true);
+
+        getBatchDataFromItemId.mockReturnValue(
+            queueState.state.batches.b1
+        );
+
+        const p = processQueueNext(queueState);
+
+        //intentionally set item as active before it is processed
+        queueState.updateState((state) => {
+            state.activeIds = ["u1"];
+        });
+
+        await p;
+
+        expect(mockProcessBatchItems).toHaveBeenCalledTimes(0);
+    });
 });

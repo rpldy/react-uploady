@@ -194,7 +194,8 @@ export const WithAutoUploadOff = (): Node => {
         maxGroupSize={groupSize}
         autoUpload={false}
         concurrent
-        maxConcurrent={10}>
+        maxConcurrent={10}
+    >
         <ContextUploadButton />
         <br/>
         <hr/>

@@ -16,7 +16,8 @@ import type { MockOptions, MandatoryMockOptions, } from "./types";
 
 type MockResponse = {
 	time: number,
-	progressEvents: SenderProgressEvent[]
+	progressEvents: SenderProgressEvent[],
+    items: BatchItem[]
 };
 
 const createRequest = (options: MandatoryMockOptions, items: BatchItem[]) => {
@@ -64,6 +65,7 @@ const createRequest = (options: MandatoryMockOptions, items: BatchItem[]) => {
 				options,
 				time: (performance.now() - start),
 				progressEvents: progressEventsData,
+                items,
 			});
 			clearTimeouts();
 		}, options.delay || 0);
@@ -98,8 +100,8 @@ const createRequest = (options: MandatoryMockOptions, items: BatchItem[]) => {
 };
 
 const processResponse = (request, options: MandatoryMockOptions, sendOptions: SendOptions): Promise<UploadData> => {
-	return request.then((mockResponse: MockResponse) => {
-		logger.debugLog("uploady.mockSender: mock request finished successfully");
+	return request.then(({ items, ...mockResponse }: MockResponse) => {
+		logger.debugLog("uploady.mockSender: mock request finished successfully", items);
 
 		const mockResponseData =  {
             sendOptions,

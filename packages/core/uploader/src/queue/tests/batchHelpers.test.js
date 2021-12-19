@@ -48,6 +48,49 @@ describe("batchHelpers tests", () => {
 			expect(updatedState.currentBatch).toBeNull();
 		});
 
+        it("should finalize batch if no more uploads in queue for non-current batch", () => {
+            const item1 = { id: "u1" },
+                item2 = { id: "u2" };
+
+            const batch = {
+                id: "b1",
+                items: [item1, item2],
+                orgItemCount: 2,
+                state: BATCH_STATES.PENDING,
+                completed: 100,
+            };
+
+            const queueState = getQueueState({
+                currentBatch: "b0",
+                items: {
+                    "u1": item1,
+                    "u2": item2,
+                    "u3": {},
+                },
+                batches: {
+                    b1: { batch, finishedCounter: 2 },
+                },
+            });
+
+            const expectedBatch = expect.objectContaining({
+                ...queueState.getState().batches.b1.batch,
+                state: BATCH_STATES.FINISHED,
+                items: [queueState.getState().items.u1, queueState.getState().items.u2],
+            });
+
+            batchHelpers.cleanUpFinishedBatches(queueState);
+
+            const updatedState = queueState.getState();
+
+            expect(queueState.updateState).toHaveBeenCalledTimes(3);
+            expect(updatedState.batches.b1).toBeUndefined();
+            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedBatch);
+            expect(queueState.trigger).not.toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS, expect.any(Object));
+            expect(updatedState.items.u1).toBeUndefined();
+            expect(updatedState.items.u2).toBeUndefined();
+            expect(updatedState.currentBatch).toBe("b0");
+        });
+
         it("should finalize batch and add progress if values not completed", () => {
             const item1 = { id: "u1", loaded: 100, },
                 item2 = { id: "u2", loaded: 101 };

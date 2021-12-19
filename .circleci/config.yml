@@ -11,7 +11,7 @@ commands:
         description: "Setup command to install/bootstrap/build"
         steps:
             - run: yarn --frozen-lockfile
-#            - run: yarn cache dir
+            - run: yarn cache dir
             - run: yarn build
 
     bundle:
@@ -69,6 +69,7 @@ jobs:
                   paths:
                       - node_modules
                       - ~/.cache/yarn
+                      - /usr/local/share/.cache/yarn/
             -   persist_to_workspace:
                     root: .
                     paths:

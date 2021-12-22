@@ -2,9 +2,22 @@
 import { BATCH_STATES, logger, merge, FILE_STATES } from "@rpldy/shared";
 import { unwrap } from "@rpldy/simple-state";
 import { UPLOADER_EVENTS } from "../consts";
+import { getItemsPrepareUpdater } from "./preSendPrepare";
 
 import type { BatchData, QueueState, State } from "./types";
 import type { Batch, BatchItem, UploadOptions } from "@rpldy/shared";
+import type { ItemsSendData } from "./preSendPrepare";
+
+const prepareBatchStartItems = getItemsPrepareUpdater<Batch>(
+    UPLOADER_EVENTS.BATCH_START,
+    (batch: Batch): BatchItem[] => batch.items,
+    null,
+    ({ batch }) => {
+        if (batch)  {
+            throw new Error(`BATCH_START event handlers cannot update batch data. Only items & options`);
+        }
+    },
+);
 
 const BATCH_READY_STATES = [
     BATCH_STATES.ADDED,
@@ -86,15 +99,15 @@ const isNewBatchStarting = (queue: QueueState, itemId: string): boolean => {
 const loadNewBatchForItem = (queue: QueueState, itemId: string): Promise<boolean> => {
     const batch = getBatchFromItemId(queue, itemId);
 
-    return queue.runCancellable(UPLOADER_EVENTS.BATCH_START, batch)
-        .then((isCancelled: boolean) => {
-            if (!isCancelled) {
+    return prepareBatchStartItems(queue, batch)
+        .then(({ cancelled }: ItemsSendData) => {
+            if (!cancelled) {
                 queue.updateState((state) => {
                     state.currentBatch = batch.id;
                 });
             }
 
-            return !isCancelled;
+            return !cancelled;
         });
 };
 

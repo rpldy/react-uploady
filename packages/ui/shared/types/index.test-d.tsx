@@ -221,6 +221,31 @@ const testWithRequestPreSendUpdate = (): JSX.Element => {
     </div>;
 };
 
+interface WithBatchStartProps extends WithRequestPreSendUpdateWrappedProps {
+ name: string
+}
+
+const testWithBatchStartUpdate = (): JSX.Element =>  {
+
+    const myComp: React.FC<WithBatchStartProps> = (props) => {
+        const { updateRequest, requestData } = props;
+
+        React.useEffect(() => {
+            if (updateRequest) {
+                updateRequest({
+                    options: {
+                        destination: { url: "different-server.com" }
+                    },
+                    items: items.
+                });
+            }
+        }, [updateRequest]);
+
+        return <span>test {props.id} - {props.name}</span>;
+    };
+
+};
+
 export {
     testEventHooks,
     testUploadyContext,

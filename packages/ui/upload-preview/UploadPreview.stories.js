@@ -364,9 +364,19 @@ export const WithCrop = (): Node => {
 	</Uploady>;
 };
 
+
+const MultiCropQueue = ()  => {
+    // const previewMethodsRef = useRef();
+   return <UploadPreview
+        PreviewComponent={ItemPreviewWithCrop}
+        previewComponentProps={{ previewMethods: previewMethodsRef }}
+        previewMethodsRef={previewMethodsRef}
+        fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+    />
+};
+
 export const WithMultiCrop = (): Node => {
     const { enhancer, destination } = useStoryUploadySetup();
-    const previewMethodsRef = useRef();
 
     return <Uploady
         concurrent
@@ -379,12 +389,7 @@ export const WithMultiCrop = (): Node => {
             Select Files
         </StyledUploadButton>
 
-        <UploadPreview
-            PreviewComponent={ItemPreviewWithCrop}
-            previewComponentProps={{ previewMethods: previewMethodsRef }}
-            previewMethodsRef={previewMethodsRef}
-            fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
-        />
+        <MultiCropQueue  />
     </Uploady>;
 };
 

@@ -19,26 +19,30 @@ export {
     useRequestPreSend,
 
     useAllAbortListener,
-} from "./eventListenerHooks";
+} from "./hooks/eventListenerHooks";
 
 export {
-    generateUploaderEventHook,
-    generateUploaderEventHookWithState,
     logWarning,
     markAsUploadOptionsComponent,
     getIsUploadOptionsComponent,
 } from "./utils";
 
-export { default as assertContext } from "./assertContext";
-export { default as useUploadOptions } from "./useUploadOptions";
-export { default as useAbortItem } from "./useAbortItem";
-export { default as useAbortBatch } from "./useAbortBatch";
-export { default as useAbortAll } from "./useAbortAll";
-export { default as NoDomUploady } from "./NoDomUploady";
-export { default as UploadyContext, createContextApi } from "./UploadyContext";
-export { default as withRequestPreSendUpdate } from "./withRequestPreSendUpdate";
-export { default as useUploadyContext, default as useUploady } from "./useUploadyContext";
+export {
+    generateUploaderEventHook,
+    generateUploaderEventHookWithState,
+} from "./hooks/hooksUtils";
+
 export { getVersion as getUploadyVersion } from "./uploadyVersion";
+export { default as NoDomUploady } from "./NoDomUploady";
+export { default as assertContext } from "./assertContext";
+export { default as UploadyContext, createContextApi } from "./UploadyContext";
+export { default as useUploadOptions } from "./hooks/useUploadOptions";
+export { default as useAbortItem } from "./hooks/useAbortItem";
+export { default as useAbortBatch } from "./hooks/useAbortBatch";
+export { default as useAbortAll } from "./hooks/useAbortAll";
+export { default as useUploadyContext, default as useUploady } from "./hooks/useUploadyContext";
+export { default as withRequestPreSendUpdate } from "./hocs/withRequestPreSendUpdate";
+export { default as withBatchStartUpdate } from "./hocs/withBatchStartUpdate";
 
 export type {
     InputRef,

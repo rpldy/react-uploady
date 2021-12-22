@@ -1,12 +1,12 @@
 import React from "react";
 import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
-import useUploader from "../useUploader";
+import useUploader from "../hooks/useUploader";
 import NoDomUploady from "../NoDomUploady";
 import { createContextApi } from "../UploadyContext";
 
 jest.mock("../UploadyContext", () => require("./mocks/UploadyContext.mock").default);
 
-jest.mock("../useUploader", () => jest.fn());
+jest.mock("../hooks/useUploader", () => jest.fn());
 
 describe("Uploady tests", () => {
 

@@ -50,7 +50,6 @@ describe("processBatchItems tests", () => {
     });
 
     it("should send allowed item", async () => {
-
         const queueState = getQueueState(getMockStateData());
 
         queueState.runCancellable.mockResolvedValueOnce(false);

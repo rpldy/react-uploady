@@ -3,7 +3,7 @@ import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import {
     generateUploaderEventHook,
     generateUploaderEventHookWithState
-} from "./utils";
+} from "./hooksUtils";
 
 import type { Batch, BatchItem } from "@rpldy/shared";
 import type { CreateOptions } from "@rpldy/uploader";
@@ -15,7 +15,7 @@ import type {
     ItemCancellableEventHook,
     ItemEventHookWithState,
     PreSendData,
-} from "./types";
+} from "../types";
 
 type RequestPreSendHook = (cb: (data: PreSendData) => { items?: BatchItem[]; options?: CreateOptions }) => void;
 

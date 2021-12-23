@@ -12,7 +12,7 @@ const prepareBatchStartItems = getItemsPrepareUpdater<Batch>(
     UPLOADER_EVENTS.BATCH_START,
     (batch: Batch): BatchItem[] => batch.items,
     null,
-    ({ batch }) => {
+    ({ batch } = {}) => {
         if (batch)  {
             throw new Error(`BATCH_START event handlers cannot update batch data. Only items & options`);
         }
@@ -28,7 +28,8 @@ const BATCH_READY_STATES = [
 const BATCH_FINISHED_STATES = [
     BATCH_STATES.ABORTED,
     BATCH_STATES.CANCELLED,
-    BATCH_STATES.FINISHED
+    BATCH_STATES.FINISHED,
+    BATCH_STATES.ERROR,
 ];
 
 const getBatchFromState = (state: State, id: string): Batch =>
@@ -87,6 +88,22 @@ const cancelBatchForItem = (queue: QueueState, itemId: string) => {
     });
 
     triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_CANCEL);
+    removeBatchItems(queue, batchId);
+    removeBatch(queue, batchId);
+};
+
+const failBatchForItem = (queue: QueueState, itemId: string) => {
+    const batch = getBatchFromItemId(queue, itemId),
+        batchId = batch.id;
+
+    logger.debugLog("uploady.uploader.batchHelpers: failing batch: ", { batch });
+
+    queue.updateState((state: State) => {
+        const batch = getBatchFromState(state, batchId);
+        batch.state = BATCH_STATES.ERROR;
+    });
+
+    triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_ERROR);
     removeBatchItems(queue, batchId);
     removeBatch(queue, batchId);
 };
@@ -255,4 +272,5 @@ export {
     removePendingBatches,
     incrementBatchFinishedCounter,
     getIsBatchFinalized,
+    failBatchForItem,
 };

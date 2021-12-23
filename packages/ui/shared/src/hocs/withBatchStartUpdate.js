@@ -5,7 +5,7 @@ import { createRequestUpdateHoc, type RequestUpdateHoc } from "./createRequestUp
 const withBatchStartUpdate: RequestUpdateHoc = createRequestUpdateHoc(
     UPLOADER_EVENTS.BATCH_START,
     (id, batch) => (batch.id === id),
-    (batch, options) => ({ items: batch.items, options, batch }),
+    (batch, options) => ({ batch, items: batch.items, options }),
 );
 
 export default withBatchStartUpdate;

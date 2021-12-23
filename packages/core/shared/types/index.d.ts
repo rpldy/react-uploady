@@ -44,6 +44,7 @@ export enum BATCH_STATES {
     CANCELLED = "cancelled",
     FINISHED = "finished",
     ABORTED = "aborted",
+    ERROR = "error",
 }
 
 export type Batch = {

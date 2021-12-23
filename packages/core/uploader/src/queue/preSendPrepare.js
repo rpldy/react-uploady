@@ -38,15 +38,21 @@ const processPrepareResponse = (eventType, items, options, updated) => {
     return { items, options, cancelled: (updated === false) };
 };
 
-const triggerItemsPrepareEvent =
-    (queue: QueueState, eventSubject, items: BatchItem[], options: CreateOptions, eventType: string, validateResponse: ResponseValidator): Promise<ItemsSendData> =>
-        triggerUpdater<{ subject: Object, options: CreateOptions }>(
-            queue.trigger, eventType, eventSubject, options)
-            // $FlowIssue - https://github.com/facebook/flow/issues/8215
-            .then((updated: ?{ items: BatchItem[], options: CreateOptions }) => {
-                validateResponse(updated);
-                return processPrepareResponse(eventType, items, options, updated);
-            });
+const triggerItemsPrepareEvent = (
+    queue: QueueState,
+    eventSubject,
+    items: BatchItem[],
+    options: CreateOptions,
+    eventType: string,
+    validateResponse: ?ResponseValidator
+): Promise<ItemsSendData> =>
+    triggerUpdater<{ subject: Object, options: CreateOptions }>(
+        queue.trigger, eventType, eventSubject, options)
+        // $FlowIssue - https://github.com/facebook/flow/issues/8215
+        .then((updated: ?{ items: BatchItem[], options: CreateOptions }) => {
+            validateResponse?.(updated);
+            return processPrepareResponse(eventType, items, options, updated);
+        });
 
 const persistPrepareResponse = (queue, prepared) => {
     //update potentially changed data back into queue state
@@ -63,7 +69,6 @@ const persistPrepareResponse = (queue, prepared) => {
     prepared.items = prepared.items.map((item) => updatedState.items[item.id]);
     prepared.options = updatedState.batches[prepared.items[0].batchId].batchOptions;
 };
-
 
 const prepareItems = <T>(
     queue: QueueState,

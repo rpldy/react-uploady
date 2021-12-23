@@ -17,10 +17,14 @@ import type {
     PreSendData,
 } from "../types";
 
-type RequestPreSendHook = (cb: (data: PreSendData) => { items?: BatchItem[]; options?: CreateOptions }) => void;
+type RequestPreSendHook = (cb: (data: PreSendData) =>
+    { items?: BatchItem[], options?: CreateOptions } | boolean | void) => void;
+
+type BatchStartHook = (cb: (Batch, BatchItem[], CreateOptions) =>
+    { items?: BatchItem[], options?: CreateOptions } | boolean | void) => void;
 
 const useBatchAddListener: BatchCancellableEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ADD, false);
-const useBatchStartListener: BatchCancellableEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);
+const useBatchStartListener: BatchStartHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);
 const useBatchFinishListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINISH);
 const useBatchCancelledListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_CANCEL);
 const useBatchAbortListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ABORT);

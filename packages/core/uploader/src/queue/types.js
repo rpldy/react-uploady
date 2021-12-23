@@ -42,4 +42,4 @@ export type UploaderQueue = {|
     uploadPendingBatches: (uploadOptions: ?UploadOptions) => void,
 |};
 
-export type ProcessNextMethod = (QueueState) => Promise<void>;
+export type ProcessNextMethod = (QueueState) => void;

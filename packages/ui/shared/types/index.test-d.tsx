@@ -226,8 +226,7 @@ interface WithBatchStartProps extends WithRequestPreSendUpdateWrappedProps {
 }
 
 const testWithBatchStartUpdate = (): JSX.Element =>  {
-
-    const myComp: React.FC<WithBatchStartProps> = (props) => {
+    const MyComp: React.FC<WithBatchStartProps> = (props) => {
         const { updateRequest, requestData } = props;
 
         React.useEffect(() => {
@@ -236,14 +235,19 @@ const testWithBatchStartUpdate = (): JSX.Element =>  {
                     options: {
                         destination: { url: "different-server.com" }
                     },
-                    items: items.
+                    items: requestData.items,
                 });
             }
-        }, [updateRequest]);
+        }, [updateRequest, requestData]);
 
         return <span>test {props.id} - {props.name}</span>;
     };
 
+    const TestPreReqComp = withRequestPreSendUpdate(MyComp);
+
+    return <div>
+        <TestPreReqComp id="bi1" name="test"/>
+    </div>;
 };
 
 export {
@@ -252,4 +256,5 @@ export {
     testUseUploadOptions,
     testNoDomUploady,
     testWithRequestPreSendUpdate,
+    testWithBatchStartUpdate,
 };

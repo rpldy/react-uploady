@@ -29,7 +29,7 @@ type FinishData = { id: string, info: UploadData };
 const getIsFinalized = (item: BatchItem) =>
 	!!~ITEM_FINALIZE_STATES.indexOf(item.state);
 
-const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], next: ProcessNextMethod): Promise<void> => {
+const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], next: ProcessNextMethod): void => {
     finishedData.forEach((itemData: FinishData) => {
         const state = queue.getState();
         const { id, info } = itemData;
@@ -85,7 +85,7 @@ const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], n
     //ensure finished batches are remove from state
     cleanUpFinishedBatches(queue);
 
-    return next(queue);
+    next(queue);
 };
 
 export default processFinishedRequest;

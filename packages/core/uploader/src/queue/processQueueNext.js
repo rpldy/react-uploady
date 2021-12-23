@@ -8,6 +8,7 @@ import {
     cancelBatchForItem,
     loadNewBatchForItem,
     isItemBelongsToBatch,
+    failBatchForItem,
 } from "./batchHelpers";
 
 import type { BatchItem } from "@rpldy/shared";
@@ -104,6 +105,12 @@ const processNextWithBatch = (queue, ids) => {
                 }
 
                 return cancelled;
+            })
+            .catch((err) => {
+                logger.debugLog("uploader.processor: encountered error while preparing batch for request", err);
+                failBatchForItem(queue, ids[0]);
+                processNext(queue);
+                return true;
             });
     } else {
         const success = updateItemAsActive(queue, ids);
@@ -113,9 +120,8 @@ const processNextWithBatch = (queue, ids) => {
     return newBatchP;
 };
 
-const processNext = (queue: QueueState): Promise<void> => {
+const processNext = (queue: QueueState): void => {
     const ids = getNextIdGroup(queue);
-    let resultP = Promise.resolve();
 
     if (ids) {
         const currentCount = queue.getCurrentActiveCount(),
@@ -127,9 +133,9 @@ const processNext = (queue: QueueState): Promise<void> => {
                 currentCount,
             });
 
-            resultP = processNextWithBatch(queue, ids)
-                .then((cancelled: boolean) => {
-                    if (!cancelled) {
+            processNextWithBatch(queue, ids)
+                .then((failedOrCancelled: boolean) => {
+                    if (!failedOrCancelled) {
                         processBatchItems(queue, ids, processNext);
 
                         if (concurrent) {
@@ -140,8 +146,6 @@ const processNext = (queue: QueueState): Promise<void> => {
                 });
         }
     }
-
-    return resultP;
 };
 
 export default processNext;

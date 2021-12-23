@@ -369,8 +369,8 @@ const MultiCropQueue = ()  => {
     // const previewMethodsRef = useRef();
    return <UploadPreview
         PreviewComponent={ItemPreviewWithCrop}
-        previewComponentProps={{ previewMethods: previewMethodsRef }}
-        previewMethodsRef={previewMethodsRef}
+        // previewComponentProps={{ previewMethods: previewMethodsRef }}
+        // previewMethodsRef={previewMethodsRef}
         fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
     />
 };

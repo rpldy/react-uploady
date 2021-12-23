@@ -26,7 +26,7 @@ commands:
        steps:
            - run:
                 name: Build Storybook
-                command: yarn sb:build:prod
+                command: yarn sb:build:internal
 
     prepare-e2e:
         description: "Prepare for cypress e2e tests"

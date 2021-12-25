@@ -25,7 +25,7 @@ export type FallbackType = string | PreviewItem;
 
 export type FallbackMethod = (file: Object) => ?FallbackType;
 
-export type PreviewComponentPropsOrMethod = Object | (item: BatchItem, url: string, type: PreviewType) => Object
+export type PreviewComponentPropsOrMethod = Object | (item: ?BatchItem, url: string, type: PreviewType) => Object
 
 export type PreviewMethods = {
 	clear: () => void,
@@ -57,7 +57,7 @@ export type PreviewOptions = {|
 export type PreviewProps =  {|
     ...PreviewOptions,
 	//custom component to render the preview (default: img tag)
-	PreviewComponent?: React.ComponentType<$Shape<PreviewItem>>,
+	PreviewComponent?: React.ComponentType<$Shape<PreviewItem & { [key: string]: any; }>>,
 	//ref will be set with API methods (PreviewMethods)
 	previewMethodsRef?: RefObject<PreviewMethods>,
 	//callback that will be called when preview items are loaded or changed

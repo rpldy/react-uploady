@@ -76,7 +76,6 @@ describe("usePreviewLoader tests", () => {
 	});
 
 	it("should use previewComponentProps as a function", () => {
-
 		getFileObjectUrlByType
 			.mockReturnValueOnce({ url: "preview.test", type: "img" });
 
@@ -134,8 +133,33 @@ describe("usePreviewLoader tests", () => {
 		expect(previews[1].props).toEqual({ test: "123" });
 	});
 
-	it("should return preview for video", () => {
+    it("should update props when previewComponentProps object changes", () => {
+        getFileObjectUrlByType
+            .mockReturnValueOnce({ url: "preview.test", type: "img" });
 
+        const { getHookResult, wrapper } = testPreviewsLoader({
+            previewComponentProps: { test: "123" }
+        });
+
+        const { previews } = getHookResult();
+
+        expect(previews).toHaveLength(2);
+        expect(previews[0].url).toBe("preview.test");
+        expect(previews[0].props).toEqual({ test: "123" });
+        expect(previews[1].props).toEqual({ test: "123" });
+
+        wrapper.setProps({  previewComponentProps: { test: "456" } });
+        wrapper.update();
+
+        const { previews: updatedPreviews } = getHookResult();
+
+        expect(updatedPreviews).toHaveLength(2);
+        expect(updatedPreviews[0].url).toBe("preview.test");
+        expect(updatedPreviews[0].props).toEqual({ test: "456" });
+        expect(updatedPreviews[1].props).toEqual({ test: "456" });
+    });
+
+    it("should return preview for video", () => {
 		getFileObjectUrlByType
 			.mockReturnValueOnce(null)
 			.mockReturnValueOnce({ url: "video.test", type: "video" });
@@ -155,7 +179,6 @@ describe("usePreviewLoader tests", () => {
 	});
 
 	it("should return fallback url", () => {
-
 		getFallbackUrlData.mockReturnValueOnce({ url: "fallback.test", type: "fallback" });
 
 		const { getHookResult, items, props } = testPreviewsLoader({

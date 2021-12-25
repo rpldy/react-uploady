@@ -1,5 +1,5 @@
 // @flow
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { isFunction } from "@rpldy/shared";
 import { PREVIEW_TYPES } from "./consts";
 import {
@@ -17,6 +17,7 @@ import type {
     PreviewData,
     PreviewBatchItemsMethod,
     PreviewsLoaderHook,
+    PreviewType,
 } from "./types";
 
 const getFilePreviewUrl = (file, options: MandatoryPreviewOptions) => {
@@ -31,12 +32,18 @@ const getFilePreviewUrl = (file, options: MandatoryPreviewOptions) => {
     return data;
 };
 
+const getItemProps = (previewComponentProps: PreviewComponentPropsOrMethod, item: ?BatchItem, url: string, type: PreviewType) => {
+    return isFunction(previewComponentProps) ?
+        previewComponentProps(item, url, type) :
+        previewComponentProps;
+};
+
 const loadPreviewData = (
     item: BatchItem,
-    options: MandatoryPreviewOptions,
-    previewComponentProps: PreviewComponentPropsOrMethod): ?PreviewItem => {
+    options: MandatoryPreviewOptions
+): ?PreviewItem => {
 
-    let data, props, isFallback = false;
+    let data, isFallback = false;
 
     if (item.file) {
         const file = item.file;
@@ -54,19 +61,10 @@ const loadPreviewData = (
         };
     }
 
-    if (data) {
-        const { url, type } = data;
-
-        props = isFunction(previewComponentProps) ?
-            previewComponentProps(item, url, type) :
-            previewComponentProps;
-    }
-
     return data && {
         ...data,
         id: item.id,
         isFallback,
-        props
     };
 };
 
@@ -87,28 +85,52 @@ const mergePreviewData = (prev, next) => {
     return prev.concat(newItems);
 };
 
+const getPreviewsDataWithItemProps = (previewsData, items, previewComponentProps: PreviewComponentPropsOrMethod) => {
+    let newData = previewsData;
+
+    if (previewComponentProps) {
+        newData = previewsData.map((pd) => ({
+            ...pd,
+            props: getItemProps(
+                previewComponentProps,
+                items.find(({ id }) => id === pd.id),
+                pd.url, pd.type
+            ),
+        }));
+    }
+
+    return newData;
+};
+
 const getPreviewsLoaderHook = (batchItemsMethod: PreviewBatchItemsMethod): PreviewsLoaderHook  => {
     return (props: PreviewOptions): PreviewData => {
-        const [previews, setPreviews] = useState<PreviewItem[]>([]);
+        const previewComponentProps = props.previewComponentProps;
+        const [previews, setPreviews] = useState<{ previews: PreviewItem[], items: BatchItem[] }>({ previews: [], items: [] });
         const previewOptions: MandatoryPreviewOptions = getWithMandatoryOptions(props);
 
         const clearPreviews = useCallback(() => {
-            setPreviews([]);
+            setPreviews({ previews: [], items: [] });
         }, []);
 
         batchItemsMethod((batch: Batch) => {
             const items: BatchItem[] = previewOptions.loadFirstOnly ? batch.items.slice(0, 1) : batch.items;
 
             const previewsData = items
-                .map((item) => loadPreviewData(item, previewOptions, props.previewComponentProps))
+                .map((item) => loadPreviewData(item, previewOptions))
                 .filter(Boolean);
 
-            setPreviews(props.rememberPreviousBatches ?
-                mergePreviewData(previews, previewsData) :
-                previewsData);
+            setPreviews({
+                previews: props.rememberPreviousBatches ?
+                    mergePreviewData(previews.previews, previewsData) : previewsData,
+                items,
+            });
         });
 
-        return { previews, clearPreviews };
+        const previewsWithItemProps = useMemo(() =>
+                getPreviewsDataWithItemProps(previews.previews, previews.items, previewComponentProps),
+            [previews, previewComponentProps]);
+
+        return { previews: previewsWithItemProps, clearPreviews };
     };
 };
 

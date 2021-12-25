@@ -18,17 +18,17 @@ describe("withRequestPreSendUpdate tests", () => {
         );
     });
 
-    it("should do nothing without id", () => {
-        const MyComp = withBatchStartUpdate((props) => {
-            return <div>{props.name}</div>;
-        });
-
-        const wrapper = mount(<MyComp name="bob"/>);
-
-        expect(wrapper).toHaveText("bob");
-
-        expect(mockContext.on).not.toHaveBeenCalled();
-    });
+    // it("should do nothing without id", () => {
+    //     const MyComp = withBatchStartUpdate((props) => {
+    //         return <div>{props.name}</div>;
+    //     });
+    //
+    //     const wrapper = mount(<MyComp name="bob"/>);
+    //
+    //     expect(wrapper).toHaveText("bob");
+    //
+    //     expect(mockContext.on).not.toHaveBeenCalled();
+    // });
 
     it("shouldn't unregister if no id on first render", () => {
         const MyComp = withBatchStartUpdate((props) => {

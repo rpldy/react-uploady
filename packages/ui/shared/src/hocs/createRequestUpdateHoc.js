@@ -1,56 +1,66 @@
 // @flow
 import React, { useLayoutEffect, useState } from "react";
+import { isFunction } from "@rpldy/shared";
 import useUploadyContext from "../hooks/useUploadyContext";
 
 import type { Node } from "React";
 import type { BatchItem } from "@rpldy/shared";
 import type { CreateOptions } from "@rpldy/uploader";
 
-type Props = { id: string };
+type RegisterValidator<T> = (T) => boolean;
 type EventDataValidator = (id: string, ...params: any[]) => boolean;
 type RequestDataCreator = (...params: any[]) => { items: BatchItem[], options: CreateOptions };
-export type RequestUpdateHoc =  (Component: React$ComponentType<any>) => React$ComponentType<Props>;
+type DependenciesRetriever<T> = (T) => any[];
+export type RequestUpdateHoc<T> =  (Component: React$ComponentType<any>) => React$ComponentType<T>;
 
-const createRequestUpdateHoc = (
+const createRequestUpdateHoc = <T>(
     eventType: string,
+    getCanRegister: boolean | RegisterValidator<T>,
     getIsValidEventData: EventDataValidator,
     getRequestData: RequestDataCreator,
-) : RequestUpdateHoc =>
-    (Component: React$ComponentType<any>): ((props: Props) => Node) =>
-        (props: Props) => {
+    getDeps: ?DependenciesRetriever<T>,
+) : RequestUpdateHoc<T> =>
+    (Component: React$ComponentType<any>): ((props: T) => Node) =>
+        (props: T) => {
             const context = useUploadyContext();
-            const { id } = props;
 
             const [updater, setUpdater] = useState({
                 updateRequest: null,
                 requestData: null,
             });
 
+            const canRegister = getCanRegister === true ||
+                (isFunction(getCanRegister) && getCanRegister(props));
+
+            const deps = getDeps?.(props) || [];
+
             //need layout effect to register to event in time (block)
             useLayoutEffect(() => {
-                const handleEvent = (...params) =>
-                    getIsValidEventData(id, ...params) &&
-                    new Promise((resolve) => {
-                        setUpdater(() => ({
-                            updateRequest: (data) => {
-                                //unregister handler so this instance doesnt continue listening unnecessarily
-                                context.off(eventType, handleEvent);
-                                resolve(data);
-                            },
-                            requestData: getRequestData(...params),
-                        }));
-                    });
+                const handleEvent = (...params) => {
+                    return getIsValidEventData(...deps, ...params) &&
+                        new Promise((resolve) => {
+                            setUpdater(() => ({
+                                updateRequest: (data) => {
+                                    //unregister handler so this instance doesnt continue listening unnecessarily
+                                    context.off(eventType, handleEvent);
+                                    resolve(data);
+                                },
+                                requestData: getRequestData(...params),
+                            }));
+                        });
+                };
 
-                if (id) {
+                if (canRegister) {
                     context.on(eventType, handleEvent);
                 }
 
                 return () => {
-                    if (id) {
+                    if (canRegister) {
                         context.off(eventType, handleEvent);
                     }
                 };
-            }, [context, id]);
+                //eslint-disable-next-line react-hooks/exhaustive-deps
+            }, [context, canRegister, ...deps]);
 
             return <Component {...props} {...updater} />;
         };

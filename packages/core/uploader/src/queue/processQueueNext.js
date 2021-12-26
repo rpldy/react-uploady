@@ -73,23 +73,17 @@ export const getNextIdGroup = (queue: QueueState): ?string[] => {
     return nextGroup;
 };
 
-const updateItemAsActive = (queue: QueueState, ids) => {
-    const alreadyActive = ids.find((id) => getIsItemInActiveRequest(queue, id));
-
-    if (!alreadyActive) {
-        queue.updateState((state) => {
-            //immediately mark items as active to support concurrent uploads without getting into infinite loops
-            state.activeIds = state.activeIds.concat(ids);
-        });
-    } else {
-        logger.debugLog(`uploader.processor: encountered already active item: ${alreadyActive}`);
-    }
-
-    return !alreadyActive;
+const updateItemsAsActive = (queue: QueueState, ids) => {
+    queue.updateState((state) => {
+        //immediately mark items as active to support concurrent uploads without getting into infinite loops
+        state.activeIds = state.activeIds.concat(ids);
+    });
 };
 
 const processNextWithBatch = (queue, ids) => {
     let newBatchP;
+
+    updateItemsAsActive(queue, ids);
 
     if (isNewBatchStarting(queue, ids[0])) {
         newBatchP = loadNewBatchForItem(queue, ids[0])
@@ -99,9 +93,6 @@ const processNextWithBatch = (queue, ids) => {
                 if (cancelled) {
                     cancelBatchForItem(queue, ids[0]);
                     processNext(queue);
-                } else {
-                    const success = updateItemAsActive(queue, ids);
-                    cancelled = !success;
                 }
 
                 return cancelled;
@@ -113,14 +104,16 @@ const processNextWithBatch = (queue, ids) => {
                 return true;
             });
     } else {
-        const success = updateItemAsActive(queue, ids);
-        newBatchP = Promise.resolve(!success);
+        newBatchP = Promise.resolve(false);
     }
 
     return newBatchP;
 };
 
-const processNext = (queue: QueueState): void => {
+const processNext = (queue: QueueState): Promise<void> | void => {
+    //using promise only for testing purposes, actual code doesnt require awaiting on this method
+    let processPromise;
+
     const ids = getNextIdGroup(queue);
 
     if (ids) {
@@ -133,7 +126,7 @@ const processNext = (queue: QueueState): void => {
                 currentCount,
             });
 
-            processNextWithBatch(queue, ids)
+            processPromise = processNextWithBatch(queue, ids)
                 .then((failedOrCancelled: boolean) => {
                     if (!failedOrCancelled) {
                         processBatchItems(queue, ids, processNext);
@@ -146,6 +139,8 @@ const processNext = (queue: QueueState): void => {
                 });
         }
     }
+
+    return processPromise;
 };
 
 export default processNext;

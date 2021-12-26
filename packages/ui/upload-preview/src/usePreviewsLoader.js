@@ -122,7 +122,7 @@ const getPreviewsLoaderHook = (batchItemsMethod: PreviewBatchItemsMethod): Previ
             setPreviews({
                 previews: props.rememberPreviousBatches ?
                     mergePreviewData(previews.previews, previewsData) : previewsData,
-                items,
+                items: props.rememberPreviousBatches ? previews.items.concat(items) : items,
             });
         });
 

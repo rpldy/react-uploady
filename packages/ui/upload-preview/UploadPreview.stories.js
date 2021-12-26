@@ -10,7 +10,8 @@ import Uploady, {
     withRequestPreSendUpdate,
     withBatchStartUpdate,
     useBatchAddListener,
-    useBatchStartListener,
+    useBatchFinalizeListener,
+    useBatchProgressListener,
     useUploady,
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
@@ -29,7 +30,7 @@ import UploadPreview, {
     PREVIEW_TYPES
 } from "./src";
 
-// $FlowFixMe - doesnt understand loading readme
+// $FlowIssue - doesnt understand loading readme
 import readme from "./README.md";
 import type { Node } from "React";
 
@@ -366,15 +367,13 @@ export const WithCrop = (): Node => {
 	</Uploady>;
 };
 
-const BatchStartUploadPreview = getUploadPreviewForBatchItemsMethod(useBatchStartListener);
-
 const MultiCropContainer = styled.div`
     display: flex;
     flex-direction: column;
 `;
 
 const dotCss = css`
-    &:after {
+    &:before {
         content: "";
         width: 12px;
         height: 12px;
@@ -387,17 +386,35 @@ const dotCss = css`
     }
 `;
 
+const finishedCss = css`
+    &:after {
+        content: "";
+        position: absolute;
+        z-index: 10;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(34, 34, 34, 0.6);
+    }
+
+    cursor: default;
+`;
+
 const ItemPreviewImgWrapper = styled.div`
     margin-right: 10px;
     position: relative;
+    cursor: pointer;
 
-    ${({$isCropped}) => $isCropped ? dotCss : ""}
+    ${({ $isCropped }) => $isCropped ? dotCss : ""}
+
+    ${({ $isFinished }) => $isFinished ? finishedCss : ""}
 `;
 
 const ItemPreviewImg = styled.img`
     max-height: 160px;
     max-width: 160px;
-    cursor: pointer;
+
     transition: box-shadow 0.5s;
 
     &:hover {
@@ -410,12 +427,17 @@ const PreviewsContainer = styled.div`
     margin-bottom: 20px;
 `;
 
-const ItemPreviewThumb = ({ url, id, onPreviewSelected, getIsCroppedSet }) => {
+const ItemPreviewThumb = ({ id, url, onPreviewSelected, isCroppedSet, isFinished }) => {
     const onPreviewClick = () => {
-        onPreviewSelected({id, url});
+        if (!isFinished) {
+            onPreviewSelected({ id, url });
+        }
     };
 
-    return <ItemPreviewImgWrapper $isCropped={getIsCroppedSet(id)}>
+    return <ItemPreviewImgWrapper
+        $isCropped={isCroppedSet}
+        $isFinished={isFinished}
+    >
         <ItemPreviewImg
             onClick={onPreviewClick}
             src={url}
@@ -452,52 +474,106 @@ const CropperForMultiCrop = ({ item, url, setCropForItem }) => {
     </CropperContainer>);
 };
 
-const MultiCropQueue = withBatchStartUpdate((props)  => {
-    const { id, requestData, updateRequest } = props;
-    const [selected, setSelected] = useState(null);
+const BatchCrop = withBatchStartUpdate((props) => {
+    const { id, updateRequest, requestData, uploadInProgress } = props;
+    const [selected, setSelected] = useState({ url: null, id: null });
+    const [finishedItems, setFinishedItems] = useState([]);
     const [cropped, setCropped] = useState({});
+    const hasData = !!(id && requestData);
+    const selectedItem = !!selected && requestData?.items.find(({ id }) => id === selected.id);
 
-    const getIsCroppedSet = useCallback((id) => !!cropped[id], [cropped]);
-
-    const setCropForItem  = (id, data) => {
-        setCropped((cropped) => ({...cropped, [id]: data}));
+    const setCropForItem = (id, data) => {
+        setCropped((cropped) => ({ ...cropped, [id]: data }));
     };
 
+    const onUploadAll = () => {
+        if (updateRequest) {
+            const readyItems = requestData.items
+                .map((item) => {
+                    item.file = cropped[item.id] || item.file;
+                    return item;
+                });
+
+            updateRequest({ items: readyItems });
+        }
+    };
+
+    useItemFinalizeListener(({ id }) => {
+        setFinishedItems((finished) => finished.concat(id))
+    });
+
+    const getPreviewCompProps = useCallback((item) => {
+        return ({
+            onPreviewSelected: setSelected,
+            isCroppedSet: cropped[item.id],
+            isFinished: !!~finishedItems.indexOf(item.id),
+        });
+    }, [cropped, setSelected, finishedItems]);
+
     return (<MultiCropContainer>
-        {requestData && <Button>Upload All</Button>}
+        {hasData && !uploadInProgress &&
+        <Button onClick={onUploadAll}>Upload All</Button>}
+
         <PreviewsContainer>
-            <BatchStartUploadPreview
+            <UploadPreview
+                rememberPreviousBatches
                 PreviewComponent={ItemPreviewThumb}
                 fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
-                previewComponentProps={{
-                    onPreviewSelected: setSelected,
-                    getIsCroppedSet,
-                }}
+                previewComponentProps={getPreviewCompProps}
             />
         </PreviewsContainer>
-        {selected && requestData &&
+        {selectedItem && hasData && !uploadInProgress &&
         <CropperForMultiCrop
             {...selected}
-            item={requestData.items.find(({ id }) => id === selected.id)}
+            item={selectedItem}
             setCropForItem={setCropForItem}
         />}
     </MultiCropContainer>);
 });
 
+const MultiCropQueue = () => {
+    const [currentBatch, setCurrentBatch] = useState(null);
+    const [inProgress, setInProgress] = useState(false);
+
+    useBatchAddListener((batch) => setCurrentBatch(batch.id));
+
+    useBatchFinalizeListener(() =>{
+        setCurrentBatch(null);
+        setInProgress(false);
+    });
+
+    useBatchProgressListener(() => {
+        if (!inProgress) {
+            setInProgress(true);
+        }
+    });
+
+    return (
+        <div>
+            {inProgress &&
+            <h2>Uploading...</h2>}
+
+            {!currentBatch &&
+            <StyledUploadButton id="upload-btn">
+                Select Files
+            </StyledUploadButton>}
+
+            <BatchCrop
+                id={currentBatch}
+                uploadInProgress={inProgress}
+            />
+        </div>
+    );
+};
+
 export const WithMultiCrop = (): Node => {
     const { enhancer, destination } = useStoryUploadySetup();
 
     return <Uploady
-        concurrent
-        maxConcurrent={2}
         debug
         destination={destination}
         enhancer={enhancer}
     >
-        <StyledUploadButton id="upload-btn">
-            Select Files
-        </StyledUploadButton>
-
         <MultiCropQueue  />
     </Uploady>;
 };

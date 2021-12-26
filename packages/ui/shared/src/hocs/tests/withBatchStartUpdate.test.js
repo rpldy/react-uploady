@@ -18,17 +18,17 @@ describe("withRequestPreSendUpdate tests", () => {
         );
     });
 
-    // it("should do nothing without id", () => {
-    //     const MyComp = withBatchStartUpdate((props) => {
-    //         return <div>{props.name}</div>;
-    //     });
-    //
-    //     const wrapper = mount(<MyComp name="bob"/>);
-    //
-    //     expect(wrapper).toHaveText("bob");
-    //
-    //     expect(mockContext.on).not.toHaveBeenCalled();
-    // });
+    it("should do nothing without id", () => {
+        const MyComp = withBatchStartUpdate((props) => {
+            return <div>{props.name}</div>;
+        });
+
+        const wrapper = mount(<MyComp name="bob"/>);
+
+        expect(wrapper).toHaveText("bob");
+
+        expect(mockContext.on).not.toHaveBeenCalled();
+    });
 
     it("shouldn't unregister if no id on first render", () => {
         const MyComp = withBatchStartUpdate((props) => {
@@ -50,7 +50,7 @@ describe("withRequestPreSendUpdate tests", () => {
         const batch = { id: "b1", items };
 
         const MockComp = jest.fn((props) =>
-            <div>{props.id}-{props.name}-{props.requestData?.batch.id || ""}</div>);
+            <div>{props.name}-{props.requestData?.batch.id || ""}</div>);
 
         mockContext.on.mockImplementationOnce((name, handler) => {
             handlerPromise = handler(batch, options);
@@ -59,9 +59,9 @@ describe("withRequestPreSendUpdate tests", () => {
 
         const MyComp = withBatchStartUpdate(MockComp);
 
-        const wrapper = mount(<MyComp id="b1" name="bob"/>);
+        const wrapper = mount(<MyComp id={"b1"} name="bob"/>);
 
-        expect(wrapper).toHaveText("b1-bob-b1");
+        expect(wrapper).toHaveText("bob-b1");
 
         expect(MockComp).toHaveBeenCalledWith({
             id: "b1",
@@ -90,25 +90,23 @@ describe("withRequestPreSendUpdate tests", () => {
     });
 
     it("shouldn't provide update data for different item id", () => {
-        let handlerPromise;
-
         const items = [{ id: "bi0" }, { id: "bi1" }];
         const options = { option: 1 };
         const batch = { id: "b1", items };
 
         const MockComp = jest.fn((props) =>
-            <div>{props.id}-{props.name}</div>);
+            <div>{props.id}-{props.name}-{props.requestData?.batch.id || ""}</div>);
 
         mockContext.on.mockImplementationOnce((name, handler) => {
-            handlerPromise = handler(batch, options);
+            const handlerPromise = handler(batch, options);
             expect(handlerPromise).toBe(false);
         });
 
         const MyComp = withBatchStartUpdate(MockComp);
 
-        const wrapper = mount(<MyComp id="b2" name="bob"/>);
+        const wrapper = mount(<MyComp id={"b2"} name="bob"/>);
 
-        expect(wrapper).toHaveText("b2-bob");
+        expect(wrapper).toHaveText("b2-bob-");
 
         expect(mockContext.on)
             .toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_START, expect.any(Function));
@@ -123,23 +121,25 @@ describe("withRequestPreSendUpdate tests", () => {
         }, {});
     });
 
-    it("should unregister handler on id change", () => {
+    it("should unregister handler on id change", async () => {
+        const items = [{ id: "bi0" }, { id: "bi1" }];
+        const options = { option: 1 };
+        const batch = { id: "b1", items };
+
         const MockComp = jest.fn((props) =>
-            <div>{props.id}-{props.name}</div>);
+            <div>{props.name}-{props.requestData?.batch.id || ""}</div>);
+
+        mockContext.on.mockImplementationOnce((name, handler) => {
+            const handlerPromise = handler(batch, options);
+            expect(handlerPromise).toBeInstanceOf(Promise);
+        });
 
         const MyComp = withBatchStartUpdate(MockComp);
 
-        const wrapper = mount(<MyComp id="b1" name="bob"/>);
-
-        expect(wrapper).toHaveText("b1-bob");
+        const wrapper = mount(<MyComp id={"b1"} name="bob"/>);
 
         expect(mockContext.on)
             .toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_START, expect.any(Function));
-
-        mockContext.on.mockImplementationOnce((name, handler) => {
-            const handlerPromise = handler({ id: "b2" });
-            expect(handlerPromise).toBeInstanceOf(Promise);
-        });
 
         wrapper.setProps({ id: "b2" });
 
@@ -147,5 +147,6 @@ describe("withRequestPreSendUpdate tests", () => {
             .toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_START, expect.any(Function));
 
         expect(mockContext.on).toHaveBeenCalledTimes(2);
+
     });
 });

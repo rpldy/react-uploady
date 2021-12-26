@@ -46,7 +46,6 @@ describe("usePreviewLoader tests", () => {
 	};
 
 	it("should load preview for first item in batch only", () => {
-
 		getFileObjectUrlByType
 			.mockReturnValueOnce({ url: "preview.test" });
 
@@ -199,7 +198,6 @@ describe("usePreviewLoader tests", () => {
 	});
 
 	it("should filter preview if no fallback url", () => {
-
 		getFallbackUrlData.mockReturnValueOnce(null);
 
 		const { getHookResult, items } = testPreviewsLoader();
@@ -213,7 +211,13 @@ describe("usePreviewLoader tests", () => {
 		getFileObjectUrlByType
 			.mockReturnValueOnce({ url: "preview1.test" });
 
-		const { getHookResult, wrapper } = testPreviewsLoader({ rememberPreviousBatches: true });
+		const { getHookResult, wrapper } = testPreviewsLoader({
+            rememberPreviousBatches: true,
+            previewComponentProps: (item, url) => ({
+                test: `${item.id}-${url}`
+            }),
+        });
+
 		const { previews } = getHookResult();
 		expect(previews).toHaveLength(2);
 
@@ -240,9 +244,13 @@ describe("usePreviewLoader tests", () => {
 		expect(newPreviews).toHaveLength(4);
 
 		expect(newPreviews[0].id).toBe("f1");
+		expect(newPreviews[0].props.test).toBe("f1-preview1.test");
 		expect(newPreviews[1].id).toBe("u2");
+        expect(newPreviews[1].props.test).toBe("u2-upload2.test");
 		expect(newPreviews[2].id).toBe("f3");
+        expect(newPreviews[2].props.test).toBe("f3-preview3.test");
 		expect(newPreviews[3].id).toBe("f4");
+        expect(newPreviews[3].props.test).toBe("f4-preview4.test");
 	});
 
 	it("clearPreviews should clear previous", () => {

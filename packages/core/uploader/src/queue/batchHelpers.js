@@ -76,6 +76,11 @@ const removeBatch = (queue, batchId: string) => {
     });
 };
 
+const finalizeBatch = (queue, batchId, eventType) => {
+    triggerUploaderBatchEvent(queue, batchId, eventType);
+    triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_FINALIZE);
+};
+
 const cancelBatchForItem = (queue: QueueState, itemId: string) => {
     const batch = getBatchFromItemId(queue, itemId),
         batchId = batch.id;
@@ -87,7 +92,7 @@ const cancelBatchForItem = (queue: QueueState, itemId: string) => {
         batch.state = BATCH_STATES.CANCELLED;
     });
 
-    triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_CANCEL);
+    finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_CANCEL);
     removeBatchItems(queue, batchId);
     removeBatch(queue, batchId);
 };
@@ -103,7 +108,7 @@ const failBatchForItem = (queue: QueueState, itemId: string) => {
         batch.state = BATCH_STATES.ERROR;
     });
 
-    triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_ERROR);
+    finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_ERROR);
     removeBatchItems(queue, batchId);
     removeBatch(queue, batchId);
 };
@@ -167,7 +172,7 @@ const cleanUpFinishedBatches = (queue: QueueState) => {
                 logger.debugLog(`uploady.uploader.batchHelpers: cleaning up batch: ${batch.id}`);
 
                 if (!alreadyFinalized) {
-                    triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_FINISH);
+                    finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_FINISH);
                 }
 
                 removeBatchItems(queue, batchId);

@@ -70,6 +70,8 @@ export const useBatchProgressListener: BatchEventHookWithState;
 export const useBatchFinishListener: BatchEventHook;
 export const useBatchCancelledListener: BatchEventHook;
 export const useBatchAbortListener: BatchEventHook;
+export const useBatchErrorListener: BatchEventHook;
+export const useBatchFinalizeListener: BatchEventHook;
 
 export const useItemStartListener: ItemCancellableEventHook;
 export const useItemFinishListener: ItemEventHook;
@@ -137,9 +139,11 @@ export interface BatchStartData extends PreSendData {
     batch: Batch;
 }
 
+export type RequestUpdater = (data?: boolean | { items?: BatchItem[], options?: CreateOptions }) => void;
+
 export interface WithRequestPreSendUpdateWrappedProps {
     id: string;
-    updateRequest: (data?: boolean | {items?: BatchItem[]; options?: CreateOptions }) => void;
+    updateRequest: RequestUpdater;
     requestData: BatchStartData;
 }
 

@@ -7,6 +7,8 @@ export {
     useBatchFinishListener,
     useBatchCancelledListener,
     useBatchAbortListener,
+    useBatchErrorListener,
+    useBatchFinalizeListener,
 
     useItemStartListener,
     useItemFinishListener,

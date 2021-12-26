@@ -100,12 +100,13 @@ const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids
         preparePreRequestItems(queue, allowedItems) :
         Promise.resolve();
 
-    afterPreparePromise
+   return afterPreparePromise
         .catch((err) => {
             logger.debugLog("uploader.queue: encountered error while preparing items for request", err);
             reportPreparedError(err, queue, items, next);
         })
         .then((itemsSendData: ?ItemsSendData) => {
+            let nextP;
             if (itemsSendData) {
                 if (itemsSendData.cancelled) {
                     cancelledResults = ids.map(() => true);
@@ -120,20 +121,24 @@ const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids
 
             //if no cancelled we can go to process more items immediately (and not wait for upload responses)
             if (!reportCancelledItems(queue, items, cancelledResults, next)) {
-                next(queue); //when concurrent is allowed, we can go ahead and process more
+                nextP = next(queue); //when concurrent is allowed, we can go ahead and process more
             }
+
+            //returning promise for testing purposes
+            return nextP;
         });
 };
 
 //send group of items to be uploaded
-const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMethod): void => {
+const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMethod): Promise<void> => {
     const state = queue.getState();
     //ids will have more than one when grouping is allowed
     let items: any[] = Object.values(state.items);
     items = items.filter((item: BatchItem) => !!~ids.indexOf(item.id));
 
     //allow user code cancel items from start event handler(s)
-    Promise.all(items.map((i: BatchItem) =>
+    //returning promise for testing purposes
+    return Promise.all(items.map((i: BatchItem) =>
         queue.runCancellable(UPLOADER_EVENTS.ITEM_START, i)))
         .then((cancelledResults) => {
             let allowedItems: BatchItem[] = cancelledResults

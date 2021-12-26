@@ -27,6 +27,8 @@ const useBatchAddListener: BatchCancellableEventHook = generateUploaderEventHook
 const useBatchStartListener: BatchStartHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);
 const useBatchFinishListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINISH);
 const useBatchCancelledListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_CANCEL);
+const useBatchErrorListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ERROR);
+const useBatchFinalizeListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINALIZE);
 const useBatchAbortListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ABORT);
 
 const useBatchProgressListener: BatchEventHookWithState = generateUploaderEventHookWithState(
@@ -55,6 +57,8 @@ export {
     useBatchCancelledListener,
     useBatchAbortListener,
     useBatchProgressListener,
+    useBatchErrorListener,
+    useBatchFinalizeListener,
 
     useItemStartListener,
     useItemFinishListener,

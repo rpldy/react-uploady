@@ -9,9 +9,9 @@ import {
     useStoryUploadySetup,
     getCsfExport,
     StoryAbortButton,
-    type CsfExport,
+    type CsfExport, logToCypress,
 } from "../../../story-helpers";
-import { getUploadyVersion } from "@rpldy/shared-ui";
+import { getUploadyVersion, useBatchErrorListener, useBatchFinalizeListener } from "@rpldy/shared-ui";
 import Uploady, {
     FILE_STATES,
 
@@ -488,6 +488,14 @@ const UploadButtonWithInvalidBatchStart = () => {
             //$FlowExpectedError - intentionally cause error for the first batch since changing batch is forbidden
             batch: {}
         } : {};
+    });
+
+    useBatchErrorListener((batch) => {
+        logToCypress("BATCH_ERROR", batch);
+    });
+
+    useBatchFinalizeListener((batch) => {
+       logToCypress("BATCH_FINALIZE", batch);
     });
 
     return <ContextUploadButton/>;

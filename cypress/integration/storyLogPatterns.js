@@ -1,6 +1,10 @@
 
 export const BATCH_ADD = /BATCH_ADD/;
 
+export const BATCH_ERROR = /BATCH_ERROR/;
+
+export const BATCH_FINALIZE = /BATCH_FINALIZE/;
+
 export const BATCH_ABORT = /BATCH_ABORT/;
 
 export const ITEM_START = /ITEM_START/;

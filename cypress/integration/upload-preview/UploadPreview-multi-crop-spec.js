@@ -73,7 +73,7 @@ describe("UploadPreview - Multi Crop", () => {
         }, 3, "#upload-btn");
     });
 
-    it("should perform crop for items in consecutive branches", () => {
+    it("should perform crop for items in consecutive batches", () => {
         cy.reload();
         interceptWithDelay(100);
 

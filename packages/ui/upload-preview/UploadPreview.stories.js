@@ -439,6 +439,7 @@ const ItemPreviewThumb = ({ id, url, onPreviewSelected, isCroppedSet, isFinished
         $isFinished={isFinished}
     >
         <ItemPreviewImg
+            className={`preview-thumb ${isFinished ? "finished" : (isCroppedSet ? "cropped" : "")}`}
             onClick={onPreviewClick}
             src={url}
         />
@@ -469,8 +470,8 @@ const CropperForMultiCrop = ({ item, url, setCropForItem }) => {
             onChange={setCrop}
             onComplete={setCrop}
         />
-        <Button onClick={onSaveCrop}>Save Crop</Button>
-        <Button onClick={onUnsetCrop}>Dont use Crop</Button>
+        <Button onClick={onSaveCrop} id="save-crop-btn">Save Crop</Button>
+        <Button onClick={onUnsetCrop} id="unset-crop-btn">Dont use Crop</Button>
     </CropperContainer>);
 };
 
@@ -512,7 +513,7 @@ const BatchCrop = withBatchStartUpdate((props) => {
 
     return (<MultiCropContainer>
         {hasData && !uploadInProgress &&
-        <Button onClick={onUploadAll}>Upload All</Button>}
+        <Button onClick={onUploadAll} id="upload-all-btn">Upload All</Button>}
 
         <PreviewsContainer>
             <UploadPreview

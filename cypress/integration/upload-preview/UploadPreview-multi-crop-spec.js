@@ -1,6 +1,6 @@
 import { interceptWithDelay } from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
-import { BATCH_ADD, ITEM_START } from "../storyLogPatterns";
+import { BATCH_ADD, ITEM_START, ITEM_FINISH } from "../storyLogPatterns";
 import { WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("UploadPreview - Multi Crop", () => {
@@ -14,7 +14,7 @@ describe("UploadPreview - Multi Crop", () => {
         cy.storyLog().resetStoryLog()
     });
 
-    const examineUploadReq = (req, name) =>
+    const examineCroppedUploadReq = (req, name) =>
         req.interceptFormData((formData) => {
             expect(formData["file"]).to.eq(name);
         })
@@ -24,34 +24,87 @@ describe("UploadPreview - Multi Crop", () => {
                 expect(parseInt(length)).to.be.lessThan(1500);
             });
 
-    it("should show upload crop for each item before upload", () => {
+    const examineFullUploadRequest = (req, name) =>
+        req.interceptFormData((formData) => {
+            expect(formData["file"]).to.eq(name);
+        })
+            .its("request.headers")
+            .its("content-length")
+            .then((length) => {
+                expect(parseInt(length)).to.be.least(37200);
+            });
+
+    it("should allow cropping for all items in a batch" , () => {
         interceptWithDelay(100);
 
         uploadFileTimes(fileName, () => {
             cy.wait(WAIT_X_SHORT);
 
             cy.storyLog().assertLogPattern(BATCH_ADD);
-            cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
+            cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });
+
+            cy.get("#upload-btn")
+                .should("have.length", 0);
+
+            cy.get("img.preview-thumb")
+                .should("have.length", 3)
+                .eq("0").click();
 
             cy.get("img.ReactCrop__image")
+                .should("have.length", 1);
+
+            cy.get("#save-crop-btn").click();
+            cy.get("img.preview-thumb.cropped")
+                .should("have.length", 1);
+
+            cy.get("img.preview-thumb").eq(1).click();
+            cy.get("#save-crop-btn").click();
+            cy.get("img.preview-thumb.cropped")
                 .should("have.length", 2);
 
-            cy.get(".preview-crop-btn").eq(0).click();
-            cy.get(".preview-crop-btn").eq(1).click();
+            cy.get("#upload-all-btn").click();
 
-            examineUploadReq(cy.wait("@uploadReq"), "flower.jpg");
-            examineUploadReq(cy.wait("@uploadReq"), "flower2.jpg");
+            examineCroppedUploadReq(cy.wait("@uploadReq"), "flower.jpg");
+            examineCroppedUploadReq(cy.wait("@uploadReq"), "flower2.jpg");
+            examineFullUploadRequest(cy.wait("@uploadReq"), "flower3.jpg");
 
-            cy.storyLog().assertFileItemStartFinish(fileName, 1);
-            cy.storyLog().assertFileItemStartFinish("flower2.jpg", 2);
-
-            cy.get("img.ReactCrop__image")
-                .should("have.length", 3);
-
-            cy.get(".preview-crop-btn").eq(2).click();
-
-            examineUploadReq(cy.wait("@uploadReq"), "flower3.jpg");
-            cy.storyLog().assertFileItemStartFinish("flower3.jpg", 4);
+            cy.storyLog().assertLogPattern(ITEM_START, { times: 3 });
+            cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 3 });
         }, 3, "#upload-btn");
+    });
+
+    it("should perform crop for items in consecutive branches", () => {
+        cy.reload();
+        interceptWithDelay(100);
+
+        uploadFileTimes(fileName, () => {
+            cy.wait(WAIT_X_SHORT);
+
+            cy.get("img.preview-thumb").eq(1).click();
+            cy.get("#save-crop-btn").click();
+
+            cy.get("#upload-all-btn").click();
+
+            examineFullUploadRequest(cy.wait("@uploadReq"), "flower.jpg");
+            examineCroppedUploadReq(cy.wait("@uploadReq"), "flower2.jpg");
+
+            cy.get("img.preview-thumb.finished")
+                .should("have.length", 2);
+
+            uploadFileTimes(fileName, () => {
+                cy.wait(WAIT_X_SHORT);
+                cy.get("img.preview-thumb").eq(2).click();
+                cy.get("#save-crop-btn").click();
+                cy.get("#upload-all-btn").click();
+
+                examineCroppedUploadReq(cy.wait("@uploadReq"), "flower.jpg");
+                examineFullUploadRequest(cy.wait("@uploadReq"), "flower2.jpg");
+
+                cy.storyLog().assertLogPattern(ITEM_START, { times: 4 });
+                cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 4 });
+            }, 2, "#upload-btn");
+        }, 2, "#upload-btn");
+
+
     });
 });

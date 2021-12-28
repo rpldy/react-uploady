@@ -52,7 +52,6 @@ describe("create batchItem tests", () => {
 		fileItem.state = "DONE";
 		fileItem.completed = 100;
 		fileItem.loaded = 1000;
-		fileItem.aborted = true;
 
 		const recycled = createItem(fileItem, "b2");
 
@@ -60,7 +59,6 @@ describe("create batchItem tests", () => {
 		expect(recycled.state).toBe(FILE_STATES.ADDED);
 		expect(recycled.completed).toBe(0);
 		expect(recycled.loaded).toBe(0);
-		expect(recycled.aborted).toBe(false);
 		expect(recycled.file).toEqual(file);
 	});
 
@@ -70,7 +68,6 @@ describe("create batchItem tests", () => {
 		fileItem.state = "DONE";
 		fileItem.completed = 100;
 		fileItem.loaded = 1000;
-		fileItem.aborted = true;
 
 		const recycled = createItem(fileItem, "b2");
 
@@ -78,7 +75,6 @@ describe("create batchItem tests", () => {
 		expect(recycled.state).toBe(FILE_STATES.ADDED);
 		expect(recycled.completed).toBe(0);
 		expect(recycled.loaded).toBe(0);
-		expect(recycled.aborted).toBe(false);
 		expect(recycled.url).toBe("file.com");
 	});
 

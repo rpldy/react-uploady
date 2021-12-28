@@ -39,10 +39,10 @@ describe("processBatchItems tests", () => {
         destination: {}
     };
 
-    const getMockStateData = () => ({
+    const getMockStateData = (itemState = FILE_STATES.ADDED) => ({
         items: {
-            "u1": { id: "u1", batchId: "b1" },
-            "u2": { id: "u2", batchId: "b2" },
+            "u1": { id: "u1", batchId: "b1", state: itemState },
+            "u2": { id: "u2", batchId: "b2", state: itemState },
         },
         batches: {
             "b1": {
@@ -98,6 +98,26 @@ describe("processBatchItems tests", () => {
         expect(queueState.getState().aborts.u1).toBe(sendResult.abort);
 
         expect(mockNext).toHaveBeenCalledWith(queueState);
+    });
+
+    describe("items with finalized state test", () => {
+        it.each([
+            [FILE_STATES.ABORTED],
+            [FILE_STATES.FINISHED],
+            [FILE_STATES.ERROR],
+            [FILE_STATES.CANCELLED],
+        ])("should not send items that have finalized state", async (state) => {
+            const queueState = getQueueState(getMockStateData(state));
+
+            queueState.runCancellable
+                .mockResolvedValueOnce(false)
+                .mockResolvedValueOnce(false);
+
+            await processBatchItems(queueState, ["u1", "u2"], mockNext);
+            await waitForTest();
+
+            expect(queueState.sender.send).not.toHaveBeenCalled();
+        });
     });
 
     it("should send allowed (multiple) items", async () => {

@@ -3,7 +3,7 @@ import {
     FILE_STATES,
     logger,
 } from "@rpldy/shared";
-import { UPLOADER_EVENTS } from "../consts";
+import { ITEM_FINALIZE_STATES, UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 import { getItemsPrepareUpdater } from "./preSendPrepare";
 
@@ -92,8 +92,10 @@ const reportPreparedError = (error, queue: QueueState, items: BatchItem[], next:
 };
 
 //make sure item is still pending. Something might have changed while waiting for ITEM_START handling. Maybe someone called abort...
-const getAllowedItem = (id: string, queue: QueueState) =>
-    queue.getState().items[id];
+const getAllowedItem = (id: string, queue: QueueState) => {
+    const item: BatchItem = queue.getState().items[id];
+    return item && !ITEM_FINALIZE_STATES.includes(item.state) ? item : undefined;
+};
 
 const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids, next }) => {
     const afterPreparePromise = allowedItems.length ?

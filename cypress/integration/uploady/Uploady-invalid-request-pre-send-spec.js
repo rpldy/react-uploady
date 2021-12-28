@@ -1,6 +1,6 @@
 import intercept from "../intercept";
-import uploadFile, { uploadFileTimes } from "../uploadFile";
-import { WAIT_X_SHORT } from "../specWaitTimes";
+import { uploadFileTimes } from "../uploadFile";
+import { WAIT_SHORT } from "../specWaitTimes";
 import { ITEM_ERROR, ITEM_FINISH, ITEM_START } from "../storyLogPatterns";
 
 describe("Uploady - invalid requestPreSend", () => {
@@ -14,7 +14,7 @@ describe("Uploady - invalid requestPreSend", () => {
         intercept("http://localhost:4000/upload");
 
         uploadFileTimes(fileName, () => {
-            cy.wait(WAIT_X_SHORT);
+            cy.wait(WAIT_SHORT);
 
             cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });

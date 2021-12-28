@@ -7,9 +7,9 @@ import {
     isNewBatchStarting,
     cancelBatchForItem,
     loadNewBatchForItem,
-    isItemBelongsToBatch,
     failBatchForItem,
 } from "./batchHelpers";
+import { isItemBelongsToBatch } from "./itemHelpers";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { QueueState } from "./types";
@@ -99,7 +99,7 @@ const processNextWithBatch = (queue, ids) => {
             })
             .catch((err) => {
                 logger.debugLog("uploader.processor: encountered error while preparing batch for request", err);
-                failBatchForItem(queue, ids[0]);
+                failBatchForItem(queue, ids[0], err);
                 processNext(queue);
                 return true;
             });

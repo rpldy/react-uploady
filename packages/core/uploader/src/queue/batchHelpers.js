@@ -3,6 +3,7 @@ import { BATCH_STATES, logger, merge, FILE_STATES } from "@rpldy/shared";
 import { unwrap } from "@rpldy/simple-state";
 import { UPLOADER_EVENTS } from "../consts";
 import { getItemsPrepareUpdater } from "./preSendPrepare";
+import { finalizeItem } from "./itemHelpers";
 
 import type { BatchData, QueueState, State } from "./types";
 import type { Batch, BatchItem, UploadOptions } from "@rpldy/shared";
@@ -39,11 +40,6 @@ const getBatch = (queue: QueueState, id: string): Batch => {
     return getBatchFromState(queue.getState(), id);
 };
 
-const isItemBelongsToBatch = (queue: QueueState, itemId: string, batchId: string): boolean => {
-    return queue.getState()
-        .items[itemId].batchId === batchId;
-};
-
 const getBatchDataFromItemId = (queue: QueueState, itemId: string): BatchData => {
     const state = queue.getState();
     const item = state.items[itemId];
@@ -57,17 +53,8 @@ const getBatchFromItemId = (queue: QueueState, itemId: string): Batch => {
 const removeBatchItems = (queue: QueueState, batchId: string) => {
     const batch = getBatch(queue, batchId);
 
-    queue.updateState((state: State) => {
-        batch.items.forEach(({ id }: BatchItem) => {
-            delete state.items[id];
-
-            const index = state.itemQueue.indexOf(id);
-
-            if (~index) {
-                state.itemQueue.splice(index, 1);
-            }
-        });
-    });
+    batch.items.forEach(({ id }: BatchItem) =>
+        finalizeItem(queue, id, true));
 };
 
 const removeBatch = (queue, batchId: string) => {
@@ -97,7 +84,7 @@ const cancelBatchForItem = (queue: QueueState, itemId: string) => {
     removeBatch(queue, batchId);
 };
 
-const failBatchForItem = (queue: QueueState, itemId: string) => {
+const failBatchForItem = (queue: QueueState, itemId: string, err: Error) => {
     const batch = getBatchFromItemId(queue, itemId),
         batchId = batch.id;
 
@@ -106,6 +93,7 @@ const failBatchForItem = (queue: QueueState, itemId: string) => {
     queue.updateState((state: State) => {
         const batch = getBatchFromState(state, batchId);
         batch.state = BATCH_STATES.ERROR;
+        batch.additionalInfo = err.message;
     });
 
     finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_ERROR);
@@ -266,7 +254,6 @@ export {
     isNewBatchStarting,
     cancelBatchForItem,
     getBatchFromItemId,
-    isItemBelongsToBatch,
     getBatchDataFromItemId,
     cleanUpFinishedBatches,
     triggerUploaderBatchEvent,

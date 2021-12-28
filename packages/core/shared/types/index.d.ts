@@ -55,6 +55,7 @@ export type Batch = {
     completed: number;
     loaded: number;
     orgItemCount: number;
+    additionalInfo: string | null;
 };
 
 export enum FILE_STATES {

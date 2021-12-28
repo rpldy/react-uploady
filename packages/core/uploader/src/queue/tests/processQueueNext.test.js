@@ -573,11 +573,12 @@ describe("processQueueNext tests", () => {
             queueState.state.batches.b2
         );
 
+        const err = { error: true };
         isNewBatchStarting.mockReturnValueOnce(true);
-        loadNewBatchForItem.mockRejectedValueOnce({ error: true });
+        loadNewBatchForItem.mockRejectedValueOnce(err);
 
         await processQueueNext(queueState);
 
-        expect(failBatchForItem).toHaveBeenCalledWith(expect.any(Object), "u2");
+        expect(failBatchForItem).toHaveBeenCalledWith(expect.any(Object), "u2", err);
     });
 });

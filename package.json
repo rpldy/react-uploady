@@ -15,9 +15,10 @@
     "release": "yarn bootstrap; yarn clean; node scripts/release.js",
     "release:force": "yarn release --versionArgs=\"--force-publish=*\" ",
     "release:alpha": "yarn release --publishArgs=\"--dist-tag alpha\" ",
-    "sb:start": "start-storybook -p 9111 --ci",
-    "sb:build": "build-storybook -c .storybook -o .sb-static",
+    "sb:start": "SB_INTERNAL=true start-storybook --modern -p 9111 --ci",
+    "sb:build": "build-storybook -c .storybook -o .sb-static --modern",
     "sb:build:prod": "SB_OPTIMIZE=true yarn sb:build",
+    "sb:build:internal": "SB_INTERNAL=true yarn sb:build:prod",
     "sb:bw": "yarn sb:build --watch",
     "sb:serve": "http-server ./.sb-static -p 8001",
     "start": "yarn sb:start",
@@ -74,12 +75,12 @@
     "@commitlint/cli": "^14.1.0",
     "@commitlint/config-conventional": "^14.1.0",
     "@commitlint/config-lerna-scopes": "^14.0.0",
-    "@storybook/addon-actions": "^6.2.2",
+    "@storybook/addon-actions": "~6.3",
     "@storybook/addon-console": "^1.2.3",
-    "@storybook/addon-essentials": "^6.2.2",
-    "@storybook/addon-knobs": "^6.2.2",
-    "@storybook/addon-storysource": "^6.2.2",
-    "@storybook/react": "^6.2.2",
+    "@storybook/addon-essentials": "~6.3",
+    "@storybook/addon-knobs": "~6.3",
+    "@storybook/addon-storysource": "~6.3",
+    "@storybook/react": "~6.3",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.5",
@@ -144,9 +145,10 @@
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-merge": "^5.0.9",
+    "xml2js": "^0.4.23",
     "yargs": "^17.2.1"
   },
   "optionalDependencies": {
-    "fsevents": "^2.1.2"
+    "fsevents": "^2.3.2"
   }
 }

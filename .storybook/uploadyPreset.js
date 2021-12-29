@@ -34,6 +34,7 @@ const addEnvParams = async (config) => {
             BUILD_TIME_VERSION: JSON.stringify(getUploadyVersion()),
             CIRCLECI: JSON.stringify(process.env.CIRCLECI),
             CIRCLECI_BRANCH:  JSON.stringify(process.env.CIRCLE_BRANCH),
+            SB_INTERNAL: JSON.stringify(process.env.SB_INTERNAL),
         }
     }
 

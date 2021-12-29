@@ -23,8 +23,10 @@ import {
     assertContext,
     NoDomUploady,
     withRequestPreSendUpdate,
+    withBatchStartUpdate,
     WithRequestPreSendUpdateWrappedProps,
-    CreateOptions, PreSendResponse,
+    CreateOptions,
+    PreSendResponse,
 } from "./index";
 
 const makeApiCall = (options: CreateOptions): Promise<{ important: string }> =>
@@ -221,10 +223,42 @@ const testWithRequestPreSendUpdate = (): JSX.Element => {
     </div>;
 };
 
+interface WithBatchStartProps extends WithRequestPreSendUpdateWrappedProps {
+ name: string
+}
+
+const testWithBatchStartUpdate = (): JSX.Element =>  {
+    const MyComp: React.FC<WithBatchStartProps> = (props) => {
+        const { updateRequest, requestData } = props;
+
+        React.useEffect(() => {
+            updateRequest({
+                    options: {
+                        autoUpload: !requestData.options.autoUpload,
+                        destination: { url: "different-server.com" }
+                    },
+                    items: requestData.items,
+                });
+        }, [updateRequest, requestData]);
+
+        return <>
+            <span>test {props.name} {requestData.batch.id}</span>
+            {requestData.items.map(({ id }) => <li key={id}>{id}</li>)}
+            </>;
+    };
+
+    const TestPreReqComp = withBatchStartUpdate(MyComp);
+
+    return <div>
+        <TestPreReqComp name="test" id="b1"/>
+    </div>;
+};
+
 export {
     testEventHooks,
     testUploadyContext,
     testUseUploadOptions,
     testNoDomUploady,
     testWithRequestPreSendUpdate,
+    testWithBatchStartUpdate,
 };

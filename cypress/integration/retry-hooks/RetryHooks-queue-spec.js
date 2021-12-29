@@ -1,7 +1,7 @@
-import intercept, { interceptWithHandler, RESPONSE_DEFAULTS } from "../intercept";
+import { interceptWithDelay } from "../intercept";
 import uploadFile, { uploadFileTimes } from "../uploadFile";
 import { ITEM_ABORT } from "../storyLogPatterns";
-import { WAIT_MEDIUM, WAIT_SHORT, WAIT_X_LONG, } from "../specWaitTimes";
+import { WAIT_LONG, WAIT_MEDIUM, WAIT_SHORT } from "../specWaitTimes";
 
 describe("RetryHooks - Queue", () => {
     const fileName = "flower.jpg",
@@ -12,12 +12,7 @@ describe("RetryHooks - Queue", () => {
     });
 
     it("should use queue with retry", () => {
-        interceptWithHandler((req) => {
-            req.reply({
-                ...RESPONSE_DEFAULTS,
-                delay: 800,
-            });
-        });
+        interceptWithDelay(800);
 
         uploadFile(fileName, () => {
             uploadFile(fileName2, () => {
@@ -71,7 +66,6 @@ describe("RetryHooks - Queue", () => {
 
                 cy.get("article[data-test='preview-item-container']")
                     .should("have.length", 0);
-
             }, "#upload-button");
         }, "#upload-button");
     });
@@ -80,12 +74,7 @@ describe("RetryHooks - Queue", () => {
         //reload to clear story log from window
         cy.reload();
 
-        interceptWithHandler((req) => {
-            req.reply({
-                ...RESPONSE_DEFAULTS,
-                delay: 100,
-            });
-        });
+        interceptWithDelay(100);
 
         uploadFileTimes(fileName, () => {
             cy.get("button[data-test='abort-button']")
@@ -98,7 +87,7 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.wait(WAIT_X_LONG);
+            cy.wait(WAIT_LONG);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg");
             cy.storyLog().assertFileItemStartFinish("flower2.jpg");
@@ -106,15 +95,17 @@ describe("RetryHooks - Queue", () => {
     });
 
     it("should abort and retry after batch finished", () => {
+        //reload to clear story log from window
         cy.reload();
-        intercept();
+        interceptWithDelay(200);
 
         uploadFileTimes(fileName, () => {
             cy.get("button[data-test='abort-button']")
                 .eq(1)
                 .click();
 
-            cy.wait(WAIT_X_LONG);
+            //wait until the other two files finished uploading
+            cy.wait(WAIT_LONG);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg");
 

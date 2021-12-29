@@ -52,7 +52,6 @@ describe("useUploader tests", () => {
     });
 
     it("should render Uploady with listeners", () => {
-
         const listeners = {
             a: "111",
             b: "222"

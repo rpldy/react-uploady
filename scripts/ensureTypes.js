@@ -10,7 +10,6 @@ const TYPES_FOLDER = "types",
     DEF_TEST_FILE = "index.test-d.ts";
 
 const ensurePackageTypeDefinitions = (pkg) => {
-
     logger.verbose(`>>>> ensuring types for package: '${pkg.name}'`);
 
     assert.ok(pkg.get("types"), `expect ${pkg.name} package.json types field is defined`);

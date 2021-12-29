@@ -2,6 +2,7 @@
 import { FILE_STATES, logger } from "@rpldy/shared";
 import { UPLOADER_EVENTS, ITEM_FINALIZE_STATES } from "../consts";
 import { cleanUpFinishedBatches, incrementBatchFinishedCounter } from "./batchHelpers";
+import { finalizeItem } from "./itemHelpers";
 
 import type { UploadData, BatchItem } from "@rpldy/shared";
 import type { ProcessNextMethod, QueueState } from "./types";
@@ -29,7 +30,7 @@ type FinishData = { id: string, info: UploadData };
 const getIsFinalized = (item: BatchItem) =>
 	!!~ITEM_FINALIZE_STATES.indexOf(item.state);
 
-const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], next: ProcessNextMethod): Promise<void> => {
+const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], next: ProcessNextMethod): void => {
     finishedData.forEach((itemData: FinishData) => {
         const state = queue.getState();
         const { id, info } = itemData;
@@ -68,24 +69,13 @@ const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], n
             }
         }
 
-        const index = state.itemQueue.indexOf(id);
-
-        if (~index) {
-            queue.updateState((state) => {
-                state.itemQueue.splice(index, 1);
-                const activeIndex = state.activeIds.indexOf(id);
-
-                if (~activeIndex) {
-                    state.activeIds.splice(activeIndex, 1);
-                }
-            });
-        }
+        finalizeItem(queue, id);
     });
 
     //ensure finished batches are remove from state
     cleanUpFinishedBatches(queue);
 
-    return next(queue);
+    next(queue);
 };
 
 export default processFinishedRequest;

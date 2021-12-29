@@ -1,12 +1,12 @@
 import React from "react";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
-import useUploadyContext from "../useUploadyContext";
+import useUploadyContext from "../../hooks/useUploadyContext";
 import withRequestPreSendUpdate from "../withRequestPreSendUpdate";
-import mockContext from "./mocks/UploadyContext.mock";
+import mockContext from "../../tests/mocks/UploadyContext.mock";
 
-jest.mock("../useUploadyContext");
+jest.mock("../../hooks/useUploadyContext");
 
-describe("withRequestPreSendUpdate tests", () => {
+describe("withBatchStartUpdate tests", () => {
 
     beforeAll(()=>{
         useUploadyContext.mockReturnValue(mockContext);
@@ -19,7 +19,6 @@ describe("withRequestPreSendUpdate tests", () => {
 	});
 
 	it("should do nothing without id", () => {
-
 		const MyComp = withRequestPreSendUpdate((props) => {
 			return <div>{props.name}</div>;
 		});
@@ -32,19 +31,18 @@ describe("withRequestPreSendUpdate tests", () => {
 	});
 
 	it("shouldn't unregister if no id on first render", () => {
+        const MyComp = withRequestPreSendUpdate((props) => {
+            return <div>{props.name}</div>;
+        });
 
-		const MyComp = withRequestPreSendUpdate((props) => {
-			return <div>{props.name}</div>;
-		});
+        const wrapper = mount(<MyComp name="bob"/>);
 
-		const wrapper = mount(<MyComp name="bob"/>);
+        wrapper.setProps({ id: "bi1" });
+        expect(mockContext.on).toHaveBeenCalledTimes(1);
+        expect(mockContext.off).not.toHaveBeenCalled();
+    });
 
-		wrapper.setProps({id: "bi1"});
-		expect(mockContext.on).toHaveBeenCalledTimes(1);
-		expect(mockContext.off).not.toHaveBeenCalled();
-	});
-
-	it("shouldn't provide update data for matching item id", async () => {
+	it("should provide update data for matching item id", async () => {
 		let handlerPromise;
 
 		const requestData = { items: [{ id: "bi0" }, { id: "bi1" }] };
@@ -122,7 +120,6 @@ describe("withRequestPreSendUpdate tests", () => {
 	});
 
 	it("should unregister handler on id change", () => {
-
 		const MockComp = jest.fn((props) =>
 			<div>{props.id}-{props.name}</div>);
 

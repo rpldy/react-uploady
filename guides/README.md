@@ -33,3 +33,5 @@
 * [DropAndPaste](DropAndPaste.md) - Drop and Paste in one place
 
 * [Custom Input](CustomInput.md) - Custom File Input
+
+* [Multi Crop](MultiCrop.md) - Multi Crop before images upload

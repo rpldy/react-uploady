@@ -18,6 +18,7 @@ const getCsfExport = (component: ?React$AbstractComponent<any, any>, title: stri
             ...options
         },
     },
+    excludeStories: !process.env.SB_INTERNAL ? /^TEST_|^UMD_/ : [],
 });
 
 export default getCsfExport;

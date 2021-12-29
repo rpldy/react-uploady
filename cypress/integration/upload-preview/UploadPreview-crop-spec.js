@@ -37,9 +37,9 @@ describe("UploadPreview - Crop", () => {
                 .its("content-length")
                 .then((length) => {
                     expect(parseInt(length)).to.be.lessThan(1500);
-                });
 
-            cy.storyLog().assertFileItemStartFinish(fileName, 1);
+                    cy.storyLog().assertFileItemStartFinish(fileName, 1);
+                });
         }, "#upload-btn");
     });
 

@@ -2,10 +2,10 @@ import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import {
 	generateUploaderEventHook,
 	generateUploaderEventHookWithState
-} from "../utils";
+} from "../hooksUtils";
 import "../eventListenerHooks";
 
-jest.mock("../utils", () => ({
+jest.mock("../hooksUtils", () => ({
     generateUploaderEventHook: jest.fn(),
     generateUploaderEventHookWithState: jest.fn(),
 }));
@@ -27,6 +27,8 @@ describe("eventListenerHooks tests", () => {
             [UPLOADER_EVENTS.BATCH_FINISH],
             [UPLOADER_EVENTS.BATCH_CANCEL],
             [UPLOADER_EVENTS.BATCH_ABORT],
+            [UPLOADER_EVENTS.BATCH_ERROR],
+            [UPLOADER_EVENTS.BATCH_FINALIZE],
             [UPLOADER_EVENTS.ITEM_START],
             [UPLOADER_EVENTS.ITEM_FINISH],
             [UPLOADER_EVENTS.ITEM_CANCEL],

@@ -2,7 +2,7 @@
 import React, { useMemo } from "react";
 import { logger } from "@rpldy/shared";
 import UploadyContext, { createContextApi } from "./UploadyContext";
-import useUploader from "./useUploader";
+import useUploader from "./hooks/useUploader";
 
 import type { Node } from "React";
 import type { NoDomUploadyProps } from "./types";

@@ -221,6 +221,20 @@ Triggered in case the batch was [aborted](#abortBatch)
 
 - Parameters: _(batch)_
 
+### UPLOADER_EVENTS.BATCH_ERROR
+
+Triggered in case the batch was failed with an error. 
+These errors will most likely occur due to invalid event handling.
+For instance, by a handler (ex: BATCH_START) throwing an error.
+
+- Parameters: _(batch)_
+
+### UPLOADER_EVENTS.BATCH_FINALIZE
+
+Triggered when all batch items have finished uploading or in case the batch was cancelled(abort) or had an error
+
+- Parameters: _(batch)_
+
 ### UPLOADER_EVENTS.ITEM_START
 
 Triggered when item starts uploading (just before)

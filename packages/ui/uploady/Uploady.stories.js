@@ -9,10 +9,9 @@ import {
     useStoryUploadySetup,
     getCsfExport,
     StoryAbortButton,
-
-    type CsfExport,
+    type CsfExport, logToCypress,
 } from "../../../story-helpers";
-import { getUploadyVersion } from "@rpldy/shared-ui";
+import { getUploadyVersion, useBatchErrorListener, useBatchFinalizeListener } from "@rpldy/shared-ui";
 import Uploady, {
     FILE_STATES,
 
@@ -20,6 +19,7 @@ import Uploady, {
     useFileInput,
     NoDomUploady,
     useUploadOptions,
+    useBatchStartListener,
     useBatchAddListener,
     useItemStartListener,
     useItemFinishListener,
@@ -194,7 +194,8 @@ export const WithAutoUploadOff = (): Node => {
         maxGroupSize={groupSize}
         autoUpload={false}
         concurrent
-        maxConcurrent={10}>
+        maxConcurrent={10}
+    >
         <ContextUploadButton />
         <br/>
         <hr/>
@@ -233,7 +234,7 @@ export const WithAbort = (): Element<"div"> => {
     </div>
 };
 
-export const withConcurrent = (): Node => {
+export const WithConcurrent = (): Node => {
     const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
 
     return <Uploady
@@ -252,7 +253,7 @@ export const withConcurrent = (): Node => {
     </Uploady>
 };
 
-export const withCustomResponseFormat = (): Node => {
+export const WithCustomResponseFormat = (): Node => {
     const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
 
     const resFormatter = useCallback((res, status, headers) => {
@@ -451,6 +452,66 @@ export const UMD_ALL = (): Element<"div"> => {
 
         {UploadyUI}
     </div>;
+};
+
+const UploadButtonWithInvalidPreSend = () => {
+    useRequestPreSend(({ items }) => {
+
+        return {
+            items: items[0].id === "batch-1.item-1" ? [
+                //intentionally cause error for the first upload since changing item id is forbidden
+                { ...items[0], id: "invalid-id" },
+                ...items.slice(1),
+            ] : undefined,
+        }
+    });
+
+    return <ContextUploadButton/>;
+};
+
+export const TEST_InvalidPreSend = (): Node => {
+    const { enhancer, destination, multiple } = useStoryUploadySetup();
+
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+    >
+        <UploadButtonWithInvalidPreSend/>
+    </Uploady>;
+};
+
+const UploadButtonWithInvalidBatchStart = () => {
+    useBatchStartListener((batch) => {
+        return batch.id === "batch-1" ? {
+            //$FlowExpectedError - intentionally cause error for the first batch since changing batch is forbidden
+            batch: {}
+        } : {};
+    });
+
+    useBatchErrorListener((batch) => {
+        logToCypress("BATCH_ERROR", batch);
+    });
+
+    useBatchFinalizeListener((batch) => {
+       logToCypress("BATCH_FINALIZE", batch);
+    });
+
+    return <ContextUploadButton/>;
+};
+
+export const TEST_InvalidBatchStart = (): Node => {
+    const { enhancer, destination, multiple } = useStoryUploadySetup();
+
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+    >
+        <UploadButtonWithInvalidBatchStart/>
+    </Uploady>;
 };
 
 export default (getCsfExport(Uploady, "Uploady", readme): CsfExport);

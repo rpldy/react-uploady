@@ -1,82 +1,21 @@
 // @flow
 import {
-    triggerUpdater,
-    isSamePropInArrays,
     FILE_STATES,
     logger,
-    getMerge
 } from "@rpldy/shared";
-import { UPLOADER_EVENTS } from "../consts";
+import { ITEM_FINALIZE_STATES, UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
+import { getItemsPrepareUpdater } from "./preSendPrepare";
 
 import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { SendResult } from "@rpldy/sender";
-import type { CreateOptions } from "../types";
 import type { QueueState, ProcessNextMethod } from "./types";
+import type { ItemsSendData } from "./preSendPrepare";
 
-type ItemsSendData = {
-    items: BatchItem[],
-    options: CreateOptions,
-	cancelled?: boolean,
-};
-
-const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
-
-const triggerPreSendUpdate = (queue: QueueState, items: BatchItem[], options: CreateOptions): Promise<ItemsSendData> => {
-    return triggerUpdater<{ items: BatchItem[], options: CreateOptions }>(
-        queue.trigger, UPLOADER_EVENTS.REQUEST_PRE_SEND, { items, options })
-        // $FlowFixMe - https://github.com/facebook/flow/issues/8215
-        .then((updated: ?{ items: BatchItem[], options: CreateOptions }) => {
-            if (updated) {
-                logger.debugLog(`uploader.queue: REQUEST_PRE_SEND event returned updated items/options`, updated);
-                if (updated.items) {
-                    //can't change items count at this point.
-                    if (updated.items.length !== items.length ||
-                        !isSamePropInArrays(updated.items, items, ["id", "batchId", "recycled"])) {
-                        throw new Error(`REQUEST_PRE_SEND event handlers must return same items with same ids`);
-                    }
-
-                    items = updated.items;
-                }
-
-                if (updated.options) {
-                    options = mergeWithUndefined({}, options, updated.options);
-                }
-            }
-
-            return { items, options, cancelled: (updated === false) };
-        });
-};
-
-const prepareAllowedItems = (queue: QueueState, items: BatchItem[]): Promise<ItemsSendData> => {
-    const allowedIds = items.map((item: BatchItem) => item.id);
-
-    queue.updateState((state) => {
-        state.activeIds = state.activeIds.concat(allowedIds);
-    });
-
-	return triggerPreSendUpdate(queue, items,
-		queue.getState().batches[items[0].batchId].batchOptions)
-        .then((prepared: { items: BatchItem[], options: CreateOptions, cancelled?: boolean }) => {
-            if (!prepared.cancelled) {
-                //update potentially changed data back into queue state
-                queue.updateState((state) => {
-                    prepared.items.forEach((i) => {
-                        state.items[i.id] = i;
-                    });
-
-                    state.batches[items[0].batchId].batchOptions = prepared.options;
-                });
-
-                //use objects from internal state(proxies) - not objects from userland
-                const updatedState = queue.getState();
-                prepared.items = prepared.items.map((item) => updatedState.items[item.id]);
-                prepared.options = updatedState.batches[items[0].batchId].batchOptions;
-            }
-
-            return prepared;
-        });
-};
+const preparePreRequestItems = getItemsPrepareUpdater<BatchItem[]>(
+    UPLOADER_EVENTS.REQUEST_PRE_SEND,
+    (items: BatchItem[]) => items,
+    (items: BatchItem[], options) => ({ items, options }));
 
 const updateUploadingState = (queue: QueueState, items: BatchItem[], sendResult: SendResult) => {
     queue.updateState((state) => {
@@ -96,8 +35,7 @@ const sendAllowedItems = (queue: QueueState, itemsSendData: ItemsSendData, next:
 
     try {
         sendResult = queue.sender.send(items, batch, options);
-    }
-    catch (ex) {
+    } catch (ex) {
         logger.debugLog(`uploader.queue: sender failed with unexpected error`, ex);
         //provide error result so file(s) are marked as failed
         sendResult = {
@@ -144,9 +82,54 @@ const reportCancelledItems = (queue: QueueState, items: BatchItem[], cancelledRe
     return !!cancelledItemsIds.length;
 };
 
+const reportPreparedError = (error, queue: QueueState, items: BatchItem[], next: ProcessNextMethod) => {
+    const finishedData = items.map(({ id }: BatchItem) => ({
+        id,
+        info: { status: 0, state: FILE_STATES.ERROR, response: error },
+    }));
+
+    processFinishedRequest(queue, finishedData, next); //report about failed items
+};
+
 //make sure item is still pending. Something might have changed while waiting for ITEM_START handling. Maybe someone called abort...
-const getAllowedItem = (id: string, queue: QueueState) =>
-	queue.getState().items[id];
+const getAllowedItem = (id: string, queue: QueueState) => {
+    const item: BatchItem = queue.getState().items[id];
+    return item && !ITEM_FINALIZE_STATES.includes(item.state) ? item : undefined;
+};
+
+const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids, next }) => {
+    const afterPreparePromise = allowedItems.length ?
+        preparePreRequestItems(queue, allowedItems) :
+        Promise.resolve();
+
+   return afterPreparePromise
+        .catch((err) => {
+            logger.debugLog("uploader.queue: encountered error while preparing items for request", err);
+            reportPreparedError(err, queue, items, next);
+        })
+        .then((itemsSendData: ?ItemsSendData) => {
+            let nextP;
+            if (itemsSendData) {
+                if (itemsSendData.cancelled) {
+                    cancelledResults = ids.map(() => true);
+                } else {
+                    //we dont need to wait for the response here
+                    sendAllowedItems(queue, {
+                        items: itemsSendData.items,
+                        options: itemsSendData.options,
+                    }, next);
+                }
+            }
+
+            //if no cancelled we can go to process more items immediately (and not wait for upload responses)
+            if (!reportCancelledItems(queue, items, cancelledResults, next)) {
+                nextP = next(queue); //when concurrent is allowed, we can go ahead and process more
+            }
+
+            //returning promise for testing purposes
+            return nextP;
+        });
+};
 
 //send group of items to be uploaded
 const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMethod): Promise<void> => {
@@ -156,6 +139,7 @@ const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMe
     items = items.filter((item: BatchItem) => !!~ids.indexOf(item.id));
 
     //allow user code cancel items from start event handler(s)
+    //returning promise for testing purposes
     return Promise.all(items.map((i: BatchItem) =>
         queue.runCancellable(UPLOADER_EVENTS.ITEM_START, i)))
         .then((cancelledResults) => {
@@ -164,34 +148,16 @@ const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMe
                     isCancelled ? null : getAllowedItem(items[index].id, queue))
                 .filter(Boolean);
 
-            return { allowedItems, cancelledResults };
+            return {
+                allowedItems,
+                cancelledResults,
+                queue,
+                items,
+                ids,
+                next,
+            };
         })
-        .then(({ allowedItems, cancelledResults }) => {
-            const afterPreparePromise = allowedItems.length ?
-                prepareAllowedItems(queue, allowedItems)
-                    .then() : Promise.resolve();
-
-            return afterPreparePromise
-                .then((itemsSendData: ?ItemsSendData) => {
-                    let nextP;
-
-                    if (itemsSendData) {
-                        if (itemsSendData.cancelled) {
-                            cancelledResults = ids.map(() => true);
-                        } else {
-                            //we dont need to wait for the response here
-                            sendAllowedItems(queue, itemsSendData, next);
-                        }
-                    }
-
-                    //if no cancelled we can go to process more items immediately (and not wait for upload responses)
-                    if (!reportCancelledItems(queue, items, cancelledResults, next)) {
-                        nextP = next(queue); //when concurrent is allowed, we can go ahead and process more
-                    }
-
-                    return nextP;
-                });
-        });
+        .then(processAllowedItems);
 };
 
 export default processBatchItems;

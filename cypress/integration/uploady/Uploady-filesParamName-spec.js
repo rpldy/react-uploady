@@ -1,5 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
+import { WAIT_SHORT } from "../specWaitTimes";
 
 describe("Uploady - filesParamName", () => {
     const fileName = "flower.jpg";
@@ -18,7 +19,7 @@ describe("Uploady - filesParamName", () => {
             cy.wait("@uploadReq")
                 .interceptFormData((formData) => {
                     expect(formData["customFieldName"]).to.equal(fileName);
-
+                    cy.wait(WAIT_SHORT)
                     cy.storyLog().assertFileItemStartFinish(fileName, 1);
                 });
         });

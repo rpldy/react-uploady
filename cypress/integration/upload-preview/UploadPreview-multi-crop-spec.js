@@ -1,7 +1,7 @@
 import { interceptWithDelay } from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
 import { BATCH_ADD, ITEM_START, ITEM_FINISH } from "../storyLogPatterns";
-import { WAIT_MEDIUM, WAIT_SHORT, WAIT_X_SHORT } from "../specWaitTimes";
+import { WAIT_SHORT, WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("UploadPreview - Multi Crop", () => {
     const fileName = "flower.jpg";
@@ -82,7 +82,7 @@ describe("UploadPreview - Multi Crop", () => {
 
             cy.get("img.preview-thumb").eq(1).click();
             cy.get("#save-crop-btn").click();
-
+            cy.wait(WAIT_SHORT);
             cy.get("#upload-all-btn").click();
 
             examineFullUploadRequest(cy.wait("@uploadReq"), "flower.jpg");
@@ -95,7 +95,7 @@ describe("UploadPreview - Multi Crop", () => {
                 cy.wait(WAIT_X_SHORT);
                 cy.get("img.preview-thumb").eq(2).click();
                 cy.get("#save-crop-btn").click();
-                cy.wait(WAIT_MEDIUM);
+                cy.wait(WAIT_SHORT);
                 cy.get("#upload-all-btn").click();
 
                 examineCroppedUploadReq(cy.wait("@uploadReq"), "flower.jpg");

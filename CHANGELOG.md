@@ -1,19 +1,42 @@
 # Changelog
 
+## 0.16.0 (2021-12-29)
+
+## Features
+
+- `[uploader]` - new events: BATCH_ERROR, BATCH_FINALIZE
+- `[uploader]` - BATCH_START now accepts changes to items/options (similar to REQUEST_PRE_SEND event)
+- `[uploady]` - new event hooks: useBatchErrorListener, useBatchFinalizeListener
+- `[uploady]` - new HOC: withBatchStartUpdate
+- `[upload-preview]` - ability to customize UploadPreview batch items method
+- `[uploader]` - added new prop to Batch: additionalInfo
+- 
+## Bug fixes
+
+- `[uploader]` - fix concurrent uploads waiting for async event callbacks
+- `[uploader]` - fix: correctly catch pre-req errors and process in queue
+
+### Docs
+
+- `guides` - new guide: Multi Crop
+- `[upload-preview]` - add getUploadPreviewForBatchItemsMethod documentation
+- `storybook` - exclude test purposes stories in external build
+- `storybook` - use --modern for sb to use es modules
+- `storybook` - upgrade to SB 6.3.12
+
 ## 0.15.0 (2021-11-22)
+
+## Features
+
+- `[uploady]` - introduce new prop: `formDataAllowUndefined` (default: false) to change new default to send undefined params in formData
 
 ## Bug fixes
 
 - `[sender]` - stop sending (by default) undefined params as part of formData. Fix for [#263](https://github.com/rpldy/react-uploady/issues/263)
 
-## Features
-
-- `[uploady]` - introduce new prop: `formDataAllowUndefined` (default: false) to change new default to send undefined params in formData 
-
 ## Internal
 
 - `all` - upgraded to latest flow (0.164.0), babel, and most other deps
-
 
 
 ## 0.14.2 (2021-11-04)

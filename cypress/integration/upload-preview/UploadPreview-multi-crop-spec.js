@@ -96,6 +96,8 @@ describe("UploadPreview - Multi Crop", () => {
                 cy.get("img.preview-thumb").eq(2).click();
                 cy.get("#save-crop-btn").click();
                 cy.wait(WAIT_SHORT);
+                cy.get("img.preview-thumb.cropped")
+                    .eq(0).should("exist");
                 cy.get("#upload-all-btn").click();
 
                 examineCroppedUploadReq(cy.wait("@uploadReq"), "flower.jpg");

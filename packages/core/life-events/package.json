@@ -1,5 +1,5 @@
 {
-  "version": "0.16.0",
+  "version": "0.15.0",
   "name": "@rpldy/life-events",
   "description": "events pub/sub management with return values",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -23,7 +23,7 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.16.0",
+    "@rpldy/shared": "^0.15.0",
     "is-promise": "^4.0.0"
   },
   "devDependencies": {

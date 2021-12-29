@@ -40,6 +40,7 @@ const createBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, optio
         completed: 0,
         loaded: 0,
         orgItemCount: items.length,
+        additionalInfo: null,
     };
 };
 

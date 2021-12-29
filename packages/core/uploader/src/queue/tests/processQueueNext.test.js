@@ -11,6 +11,7 @@ import {
 	loadNewBatchForItem,
 	cancelBatchForItem,
 	getIsItemBatchReady,
+    failBatchForItem,
 } from "../batchHelpers";
 import processQueueNext, { getNextIdGroup, findNextItemIndex } from "../processQueueNext";
 
@@ -26,7 +27,8 @@ describe("processQueueNext tests", () => {
 			isNewBatchStarting,
 			loadNewBatchForItem,
 			cancelBatchForItem,
-			getIsItemBatchReady
+			getIsItemBatchReady,
+            failBatchForItem,
 		);
 
         getBatchDataFromItemId.mockReset();
@@ -202,7 +204,6 @@ describe("processQueueNext tests", () => {
 		});
 
 		it("should return nothing in case all items already active", () => {
-
 			const queueState = getQueueState({
 				currentBatch: "b1",
 				items: {
@@ -256,9 +257,7 @@ describe("processQueueNext tests", () => {
 	});
 
 	describe("findNextNotActiveItemIndex tests", () => {
-
 		it("should skip non-ready batches", () => {
-
 			getIsItemBatchReady
 				.mockReturnValueOnce(false)
 				.mockReturnValueOnce(false)
@@ -282,7 +281,6 @@ describe("processQueueNext tests", () => {
 		});
 
 		it("should skip non FILE_STATES.ADDED", () => {
-
 			const queueState = getQueueState({
 				activeIds: ["u1"],
 				items: {
@@ -300,7 +298,6 @@ describe("processQueueNext tests", () => {
 	});
 
 	it("should do nothing if no next ids", async () => {
-
 		const queueState = getQueueState();
 
 		await processQueueNext(queueState);
@@ -309,8 +306,7 @@ describe("processQueueNext tests", () => {
 	});
 
 	it("should do nothing if already active upload and no concurrent", async () => {
-
-		const queueState = getQueueState({
+        const queueState = getQueueState({
 			currentBatch: "b1",
 			items: {
 				"u1": { batchId: "b1" },
@@ -521,7 +517,7 @@ describe("processQueueNext tests", () => {
             .toEqual(expect.arrayContaining(["u1", "u2"]));
     });
 
-    it("should handle next already active due to async processing and ignore", async () => {
+    it("should set item as active before loading new batch", async () => {
         const queueState = getQueueState({
                 currentBatch: "",
                 items: {
@@ -543,21 +539,46 @@ describe("processQueueNext tests", () => {
 
         isNewBatchStarting.mockReturnValueOnce(true);
 
-        loadNewBatchForItem.mockResolvedValueOnce(true);
+        loadNewBatchForItem.mockReturnValueOnce(new Promise(() => {
+        }));
 
         getBatchDataFromItemId.mockReturnValue(
             queueState.state.batches.b1
         );
 
-        const p = processQueueNext(queueState);
+        processQueueNext(queueState);
 
-        //intentionally set item as active before it is processed
-        queueState.updateState((state) => {
-            state.activeIds = ["u1"];
-        });
+        expect(queueState.getState().activeIds).toContain("u1");
+    });
 
-        await p;
+    it("should handle reject from load batch", async () => {
+        const queueState = getQueueState({
+                currentBatch: null,
+                items: {
+                    "u1": { batchId: "b1" },
+                    "u2": { batchId: "b2", state: FILE_STATES.ADDED },
+                },
+                batches: {
+                    b2: {
+                        batch: { id: "b2" },
+                        batchOptions: {}
+                    },
+                },
+                activeIds: [],
+                itemQueue: ["u1", "u2"],
+            },
+            {});
 
-        expect(mockProcessBatchItems).toHaveBeenCalledTimes(0);
+        getBatchDataFromItemId.mockReturnValueOnce(
+            queueState.state.batches.b2
+        );
+
+        const err = { error: true };
+        isNewBatchStarting.mockReturnValueOnce(true);
+        loadNewBatchForItem.mockRejectedValueOnce(err);
+
+        await processQueueNext(queueState);
+
+        expect(failBatchForItem).toHaveBeenCalledWith(expect.any(Object), "u2", err);
     });
 });

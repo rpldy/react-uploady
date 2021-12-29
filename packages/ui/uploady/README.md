@@ -244,6 +244,10 @@ Called when batch items start uploading
     };
 ```
 
+The callback passed to the hook may also return an object containing items and/or options
+in order to update the request dynamically, similar to [useRequestPreSend](#userequestpresend-event-hook) only for the entire batch.
+See [withBatchStartUpdate](#withbatchstartupdate) HOC below for more details.
+
 ### useBatchProgressListener (event hook)
 
 Called every time progress data is received from the upload request(s)
@@ -315,7 +319,44 @@ Called in case [abortBatch](#abortBatch) was called
         //...    
     };
 ```
- 
+
+### useBatchErrorListener (event hook)
+
+Called in case batch failed with an error. These errors will most likely occur due to invalid event handling.
+For instance, by a handler (ex: BATCH_START) throwing an error. 
+
+> This event can be scoped to a specific batch by passing the batch id as a second parameter
+
+```javascript
+    import { useBatchErrorListener } from "@rpldy/uploady";
+
+    const MyComponent = () => {
+        useBatchErrorListener((batch) => {
+            console.log(`batch ${batch.id} had an error: ${batch.additionalInfo}`);  
+        });
+
+        //...    
+    };
+```
+
+### useBatchFinalizeListener (event hook)
+
+Called for batch when all its items have finished uploading or in case the batch was cancelled(abort) or had an error 
+
+> This event can be scoped to a specific batch by passing the batch id as a second parameter
+
+```javascript
+    import { useBatchFinalizeListener } from "@rpldy/uploady";
+
+    const MyComponent = () => {
+        useBatchFinalizeListener((batch) => {
+            console.log(`batch ${batch.id} finished uploading with status: ${batch.state}`);  
+        });
+
+        //...    
+    };
+```
+
 ### useItemStartListener (event hook)
 
 Called when item starts uploading (just before)
@@ -481,7 +522,7 @@ See simple example below or this more detailed [guide](../../../guides/DynamicPa
 
         //...    
     };
-``` 
+```
 
 ### useAllAbortListener (event hook)
 
@@ -634,7 +675,6 @@ __NOTE!__ This isn't the recommended, or the 'Reacty' way to do things. It is st
 In the future, accessing the internal input may have other consequences related to opting to interact with it directly instead of passing props to the Uploady component.
 
 
-
 Check out the [Custom Input guide](../../../guides/CustomInput.md) for more details and examples.
 
 ## HOCs
@@ -650,11 +690,11 @@ When rendering the HOC's output, the id of the batch-item must be provided as a 
 This ensures the HOC only re-renders for a specific item and not for all.
 The id of the batch-item can be obtained from a hook (ex: [useItemStartListener](#useitemstartlistener-event-hook) or [useBatchStartListener](#usebatchstartlistener-event-hook))
 
-
 ```javascript
     import React, { useState, useCallback } from "react";
     import Cropper from "react-easy-crop";
 	import Uploady, { withRequestPreSendUpdate } from "@rpldy/uploady";
+	import UploadButton from "@rpldy/upload-button";
     import cropImage from "./my-image-crop-code";
 
     const ItemCrop = withRequestPreSendUpdate((props) => {
@@ -691,13 +731,127 @@ The id of the batch-item can be obtained from a hook (ex: [useItemStartListener]
     });
 
     const MyApp = () => {
-        return <Uploady destination={{url: "my-server.com/upload"}}>
+        return <Uploady destination={{ url: "my-server.com/upload" }}>
+            <UploadButton />
             <ItemCrop id="batch-item-1" />
         </Uploady>
     }
 ```
 
 See the [Crop Guide](../../../guides/Crop.md) for a full example.
+
+
+### withBatchStartUpdate
+
+HOC to enable components to interact with the upload data and options of the batch just-in-time before the items
+are processed and requests are being sent.
+
+This makes it possible to create a UI that will allow the user to interact and possible make changes to different or all items
+within the batch before a single request is made.
+For example: cropping multiple items prior to upload.
+
+When rendering the HOC's output, the id of the batch must be provided as a prop.
+The id of the batch can be obtained from the [useBatchAddListener](#usebatchaddlistener-event-hook)
+
+```javascript
+    import React, { useState, useCallback } from "react";
+    import Cropper from "react-easy-crop";
+    import Uploady, { withBatchStartUpdate } from "@rpldy/uploady";
+    import UploadButton from "@rpldy/upload-button";
+    import UploadPreview from "@rpldy/upload-preview";
+    import cropImage from "./my-image-crop-code";
+    
+    const CropperForMultiCrop = ({ item, url, setCropForItem }) => {
+        const [crop, setCrop] = useState({ x: 0, y: 0 });
+        const [cropPixels, setCropPixels] = useState(null);
+		
+        const onSaveCrop = async () => {
+            const cropped = await cropImage(url, item.file, cropPixels);
+            setCropForItem(item.id, cropped);
+        };
+
+        const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+            setCropPixels(croppedAreaPixels);
+        }, []);
+		
+        return (<div>
+            <Cropper
+                image={url}
+                crop={crop}
+                onCropChange={setCrop}
+                onCropComplete={onCropComplete}
+            />
+            {cropPixels && 
+                <Button onClick={onSaveCrop} id="save-crop-btn">Save Crop</Button>}
+        </div>);
+    };
+
+    const BatchCrop = withBatchStartUpdate((props) => {
+	    const { id, updateRequest, requestData } = props;
+        const [cropped, setCropped] = useState({});
+        const hasData = !!(id && requestData);
+		
+        const setCropForItem = (id, data) => {
+            setCropped((cropped) => ({ ...cropped, [id]: data }));
+        };
+		
+        const onUploadAll = () => {
+            if (updateRequest) {
+                const readyItems = requestData.items
+                    .map((item) => {
+                        item.file = cropped[item.id] || item.file;
+                        return item;
+                    });
+
+				//update the items in the batch with the cropped files
+                updateRequest({ items: readyItems });
+            }
+        };
+
+        const getPreviewCompProps = useCallback((item) => {
+            return ({
+                onPreviewSelected: setSelected,
+                isCroppedSet: cropped[item.id],
+            });
+        }, [cropped, setSelected]);
+
+        return (<div>
+            {hasData &&
+                <button onClick={onUploadAll}>Upload All</button>}
+
+            <UploadPreview
+                rememberPreviousBatches
+                PreviewComponent={ItemPreviewThumb}
+                fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+                previewComponentProps={getPreviewCompProps}
+            />
+
+            {selectedItem && hasData &&
+                <CropperForMultiCrop
+                    {...selected}
+                    item={selectedItem}
+                    setCropForItem={setCropForItem}
+                />}
+        </div>);
+    });
+	
+    const MultiCropQueue = () => {
+        const [currentBatch, setCurrentBatch] = useState(null);
+    
+        useBatchAddListener((batch) => setCurrentBatch(batch.id));
+    
+        return <BatchCrop id={currentBatch} />;
+    };
+	
+    export const MyApp = () => {
+        return <Uploady destination={{ url: "my-server.com/upload" }}>
+            <UploadButton />
+            <MultiCropQueue  />
+        </Uploady>;
+    };
+```
+
+See the [Multi Crop Guide](../../../guides/MultiCrop.md) for a full example.
 
 ## Contribute
 

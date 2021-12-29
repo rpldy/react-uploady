@@ -61,12 +61,17 @@ type BatchEventHook = EventHook<Batch>;
 type BatchCancellableEventHook = CancellableHook<Batch>;
 type BatchEventHookWithState = EventHookWithState<Batch>;
 
+type BatchStartHook = (cb: (batch: Batch, items: BatchItem[], options: CreateOptions) =>
+    { items?: BatchItem[]; options?: CreateOptions } | boolean | void) => void;
+
 export const useBatchAddListener: BatchCancellableEventHook;
-export const useBatchStartListener: BatchCancellableEventHook;
+export const useBatchStartListener: BatchStartHook;
 export const useBatchProgressListener: BatchEventHookWithState;
 export const useBatchFinishListener: BatchEventHook;
 export const useBatchCancelledListener: BatchEventHook;
 export const useBatchAbortListener: BatchEventHook;
+export const useBatchErrorListener: BatchEventHook;
+export const useBatchFinalizeListener: BatchEventHook;
 
 export const useItemStartListener: ItemCancellableEventHook;
 export const useItemFinishListener: ItemEventHook;
@@ -78,7 +83,10 @@ export const useItemFinalizeListener: ItemEventHook;
 
 export const useAllAbortListener: (cb: () => void) => void;
 
-export type PreSendData = { items: BatchItem[]; options: CreateOptions };
+export interface PreSendData {
+    items: BatchItem[];
+    options: CreateOptions;
+}
 
 export type PreSendResponse = { items?: BatchItem[]; options?: CreateOptions };
 
@@ -127,13 +135,22 @@ export interface WithRequestPreSendUpdateProps {
     id: string;
 }
 
+export interface BatchStartData extends PreSendData {
+    batch: Batch;
+}
+
+export type RequestUpdater = (data?: boolean | { items?: BatchItem[], options?: CreateOptions }) => void;
+
 export interface WithRequestPreSendUpdateWrappedProps {
     id: string;
-    updateRequest: (data?: boolean | { items?: BatchItem[]; options?: CreateOptions }) => void;
-    requestData: PreSendData;
+    updateRequest: RequestUpdater;
+    requestData: BatchStartData;
 }
 
 export const withRequestPreSendUpdate: <P extends WithRequestPreSendUpdateProps>(Comp: React.FC<P> | React.ComponentType<P>) =>
+    React.FC<Omit<P, "updateRequest" | "requestData">>;
+
+export const withBatchStartUpdate: <P extends WithRequestPreSendUpdateProps>(Comp: React.FC<P> | React.ComponentType<P>) =>
     React.FC<Omit<P, "updateRequest" | "requestData">>;
 
 export const markAsUploadOptionsComponent: (Component: React.ComponentType<unknown>) => void;

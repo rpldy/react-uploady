@@ -3,7 +3,7 @@ import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import {
     generateUploaderEventHook,
     generateUploaderEventHookWithState
-} from "./utils";
+} from "./hooksUtils";
 
 import type { Batch, BatchItem } from "@rpldy/shared";
 import type { CreateOptions } from "@rpldy/uploader";
@@ -15,14 +15,20 @@ import type {
     ItemCancellableEventHook,
     ItemEventHookWithState,
     PreSendData,
-} from "./types";
+} from "../types";
 
-type RequestPreSendHook = (cb: (data: PreSendData) => { items?: BatchItem[]; options?: CreateOptions }) => void;
+type RequestPreSendHook = (cb: (data: PreSendData) =>
+    { items?: BatchItem[], options?: CreateOptions } | boolean | void) => void;
+
+type BatchStartHook = (cb: (Batch, BatchItem[], CreateOptions) =>
+    { items?: BatchItem[], options?: CreateOptions } | boolean | void) => void;
 
 const useBatchAddListener: BatchCancellableEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ADD, false);
-const useBatchStartListener: BatchCancellableEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);
+const useBatchStartListener: BatchStartHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);
 const useBatchFinishListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINISH);
 const useBatchCancelledListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_CANCEL);
+const useBatchErrorListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ERROR);
+const useBatchFinalizeListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINALIZE);
 const useBatchAbortListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ABORT);
 
 const useBatchProgressListener: BatchEventHookWithState = generateUploaderEventHookWithState(
@@ -51,6 +57,8 @@ export {
     useBatchCancelledListener,
     useBatchAbortListener,
     useBatchProgressListener,
+    useBatchErrorListener,
+    useBatchFinalizeListener,
 
     useItemStartListener,
     useItemFinishListener,

@@ -7,8 +7,9 @@ import {
     isNewBatchStarting,
     cancelBatchForItem,
     loadNewBatchForItem,
-    isItemBelongsToBatch,
+    failBatchForItem,
 } from "./batchHelpers";
+import { isItemBelongsToBatch } from "./itemHelpers";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { QueueState } from "./types";
@@ -72,23 +73,17 @@ export const getNextIdGroup = (queue: QueueState): ?string[] => {
     return nextGroup;
 };
 
-const updateItemAsActive = (queue: QueueState, ids) => {
-    const alreadyActive = ids.find((id) => getIsItemInActiveRequest(queue, id));
-
-    if (!alreadyActive) {
-        queue.updateState((state) => {
-            //immediately mark items as active to support concurrent uploads without getting into infinite loops
-            state.activeIds = state.activeIds.concat(ids);
-        });
-    } else {
-        logger.debugLog(`uploader.processor: encountered already active item: ${alreadyActive}`);
-    }
-
-    return !alreadyActive;
+const updateItemsAsActive = (queue: QueueState, ids) => {
+    queue.updateState((state) => {
+        //immediately mark items as active to support concurrent uploads without getting into infinite loops
+        state.activeIds = state.activeIds.concat(ids);
+    });
 };
 
 const processNextWithBatch = (queue, ids) => {
     let newBatchP;
+
+    updateItemsAsActive(queue, ids);
 
     if (isNewBatchStarting(queue, ids[0])) {
         newBatchP = loadNewBatchForItem(queue, ids[0])
@@ -98,24 +93,28 @@ const processNextWithBatch = (queue, ids) => {
                 if (cancelled) {
                     cancelBatchForItem(queue, ids[0]);
                     processNext(queue);
-                } else {
-                    const success = updateItemAsActive(queue, ids);
-                    cancelled = !success;
                 }
 
                 return cancelled;
+            })
+            .catch((err) => {
+                logger.debugLog("uploader.processor: encountered error while preparing batch for request", err);
+                failBatchForItem(queue, ids[0], err);
+                processNext(queue);
+                return true;
             });
     } else {
-        const success = updateItemAsActive(queue, ids);
-        newBatchP = Promise.resolve(!success);
+        newBatchP = Promise.resolve(false);
     }
 
     return newBatchP;
 };
 
-const processNext = (queue: QueueState): Promise<void> => {
+const processNext = (queue: QueueState): Promise<void> | void => {
+    //using promise only for testing purposes, actual code doesnt require awaiting on this method
+    let processPromise;
+
     const ids = getNextIdGroup(queue);
-    let resultP = Promise.resolve();
 
     if (ids) {
         const currentCount = queue.getCurrentActiveCount(),
@@ -127,9 +126,9 @@ const processNext = (queue: QueueState): Promise<void> => {
                 currentCount,
             });
 
-            resultP = processNextWithBatch(queue, ids)
-                .then((cancelled: boolean) => {
-                    if (!cancelled) {
+            processPromise = processNextWithBatch(queue, ids)
+                .then((failedOrCancelled: boolean) => {
+                    if (!failedOrCancelled) {
                         processBatchItems(queue, ids, processNext);
 
                         if (concurrent) {
@@ -141,7 +140,7 @@ const processNext = (queue: QueueState): Promise<void> => {
         }
     }
 
-    return resultP;
+    return processPromise;
 };
 
 export default processNext;

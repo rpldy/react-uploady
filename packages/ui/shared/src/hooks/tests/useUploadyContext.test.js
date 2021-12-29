@@ -1,7 +1,7 @@
-import assertContext from "../assertContext";
+import assertContext from "../../assertContext";
 import useUploadyContext from "../useUploadyContext";
 
-jest.mock("../assertContext");
+jest.mock("../../assertContext");
 
 describe("useUploadyContext tests", () => {
 

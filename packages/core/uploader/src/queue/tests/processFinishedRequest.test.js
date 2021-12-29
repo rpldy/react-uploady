@@ -7,7 +7,6 @@ import { cleanUpFinishedBatches, incrementBatchFinishedCounter } from "../batchH
 import processFinishedRequest, { FILE_STATE_TO_EVENT_MAP } from "../processFinishedRequest";
 
 describe("onRequestFinished tests", () => {
-
 	const mockNext = jest.fn();
 
 	beforeEach(() => {
@@ -18,7 +17,7 @@ describe("onRequestFinished tests", () => {
         );
 	});
 
-	const testSingleItem = async (activeIds, completed = 100, itemId = "u1") => {
+	const testSingleItem = async (activeIds =  ["u1"], completed = 100, itemId = "u1", state = FILE_STATES.FINISHED) => {
 		const batch = { id: "b1" };
 		const response = { success: true };
 		const queueState = getQueueState({
@@ -31,7 +30,7 @@ describe("onRequestFinished tests", () => {
 				b1: { batch, batchOptions: {} },
 			},
 			itemQueue: [itemId],
-			activeIds: activeIds || ["u1"],
+			activeIds,
 			aborts: {
 				[itemId]: "abort",
 			}
@@ -40,7 +39,7 @@ describe("onRequestFinished tests", () => {
 		await processFinishedRequest(queueState, [{
 			id: itemId,
 			info: {
-				state: FILE_STATES.FINISHED,
+				state,
                 status: 201,
 				response,
 			}
@@ -48,7 +47,7 @@ describe("onRequestFinished tests", () => {
 
 		expect(queueState.getState().items[itemId]).toMatchObject({
 			batchId: batch.id,
-			state: FILE_STATES.FINISHED,
+			state,
             uploadStatus: 201,
 			uploadResponse: { success: true },
 		});
@@ -64,12 +63,15 @@ describe("onRequestFinished tests", () => {
 			...queueState.getState().items[itemId]
 		});
 
-		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, finishedItem);
-		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, finishedItem);
-        expect( incrementBatchFinishedCounter).toHaveBeenCalledWith(expect.any(Object), batch.id);
+        if (state === UPLOADER_EVENTS.ITEM_FINISH) {
+            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, finishedItem);
+        }
 
-		expect(queueState.updateState).toHaveBeenCalledTimes(2);
-		expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();
+		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, finishedItem);
+        expect(incrementBatchFinishedCounter).toHaveBeenCalledWith(expect.any(Object), batch.id);
+
+        expect(queueState.updateState).toHaveBeenCalledTimes(2);
+        expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();
 
 		expect(queueState.getState().itemQueue).toHaveLength(0);
 		expect(queueState.getState().activeIds).toHaveLength(0);
@@ -87,7 +89,7 @@ describe("onRequestFinished tests", () => {
 		expect(test.queueState.handleItemProgress).not.toHaveBeenCalled();
 	});
 
-	it("should handle item progress if not complete === 100", async () => {
+    it("should handle item progress if not complete === 100", async () => {
 		const test = await testSingleItem(["u1"], 99);
 
 		const item = test.queueState.getState().items["u1"];
@@ -146,7 +148,6 @@ describe("onRequestFinished tests", () => {
 		expect(queueState.getState().aborts["u1"]).toBeUndefined();
 	});
 
-
 	describe("non finalize state tests", () => {
 		it.each([
 			FILE_STATES.UPLOADING,
@@ -178,10 +179,37 @@ describe("onRequestFinished tests", () => {
 
 			const item = queueState.getState().items.u1;
 
-			expect(queueState.trigger).toHaveBeenNthCalledWith(1, FILE_STATE_TO_EVENT_MAP[state], item);
+            expect(queueState.trigger).toHaveBeenNthCalledWith(1, FILE_STATE_TO_EVENT_MAP[state], item);
 			expect(queueState.trigger).not.toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, item);
 		});
 	});
+
+    it("should handle unknown finished state and not trigger finish/finalize events", async () => {
+        const batch = { id: "b1" };
+        const response = { success: true };
+
+        const queueState = getQueueState({
+            currentBatch: "b1",
+            items: {
+                "u1": { batchId: "b1" },
+            },
+            batches: {
+                b1: { batch, batchOptions: {} },
+            },
+            itemQueue: ["u1"],
+            activeIds: ["u1"],
+        });
+
+        await processFinishedRequest(queueState, [{
+            id: "u1",
+            info: {
+                state: "UNKNOWN",
+                response,
+            }
+        }], mockNext);
+
+        expect(queueState.trigger).not.toHaveBeenCalled();
+    });
 
 	describe("finalize with fail state tests", () => {
 		it.each([

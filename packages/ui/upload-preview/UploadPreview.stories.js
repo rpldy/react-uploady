@@ -1,6 +1,6 @@
 // @flow
 import React, { useCallback, useState, useRef } from "react";
-import styled from "styled-components";
+import styled,  { css } from "styled-components";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { number } from "@storybook/addon-knobs";
@@ -8,7 +8,10 @@ import Uploady, {
     useItemProgressListener,
     useItemFinalizeListener,
     withRequestPreSendUpdate,
+    withBatchStartUpdate,
     useBatchAddListener,
+    useBatchFinalizeListener,
+    useBatchProgressListener,
     useUploady,
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
@@ -27,7 +30,7 @@ import UploadPreview, {
     PREVIEW_TYPES
 } from "./src";
 
-// $FlowFixMe - doesnt understand loading readme
+// $FlowIssue - doesnt understand loading readme
 import readme from "./README.md";
 import type { Node } from "React";
 
@@ -138,7 +141,7 @@ const StyledUploadUrlInput = styled(UploadUrlInput)`
   ${uploadUrlInputCss}
 `;
 
-const Button  = styled.button`
+const Button = styled.button`
   ${uploadButtonCss}
 `;
 
@@ -265,7 +268,7 @@ export const WithPreviewMethods = (): Node => {
 const StyledReactCrop = styled(ReactCrop)`
   width: 100%;
   max-width: 900px;
-  height: 400px;
+  max-height: 400px;
 `;
 
 const ButtonsWrapper = styled.div`
@@ -364,27 +367,215 @@ export const WithCrop = (): Node => {
 	</Uploady>;
 };
 
+const MultiCropContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+const dotCss = css`
+    &:before {
+        content: "";
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        background-color: #00ff4e;
+        border: 1px solid #eeeeee;
+        border-radius: 100%;
+    }
+`;
+
+const finishedCss = css`
+    &:after {
+        content: "";
+        position: absolute;
+        z-index: 10;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(34, 34, 34, 0.6);
+    }
+
+    cursor: default;
+`;
+
+const ItemPreviewImgWrapper = styled.div`
+    margin-right: 10px;
+    position: relative;
+    cursor: pointer;
+
+    ${({ $isCropped }) => $isCropped ? dotCss : ""}
+
+    ${({ $isFinished }) => $isFinished ? finishedCss : ""}
+`;
+
+const ItemPreviewImg = styled.img`
+    max-height: 160px;
+    max-width: 160px;
+
+    transition: box-shadow 0.5s;
+
+    &:hover {
+        box-shadow: 0 0 1px 2px #222222;
+    }
+`;
+
+const PreviewsContainer = styled.div`
+    display: flex;
+    margin-bottom: 20px;
+`;
+
+const ItemPreviewThumb = ({ id, url, onPreviewSelected, isCroppedSet, isFinished }) => {
+    const onPreviewClick = () => {
+        if (!isFinished) {
+            onPreviewSelected({ id, url });
+        }
+    };
+
+    return <ItemPreviewImgWrapper
+        $isCropped={isCroppedSet}
+        $isFinished={isFinished}
+    >
+        <ItemPreviewImg
+            className={`preview-thumb ${isFinished ? "finished" : (isCroppedSet ? "cropped" : "")}`}
+            onClick={onPreviewClick}
+            src={url}
+        />
+    </ItemPreviewImgWrapper>
+};
+
+const CropperContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+const CropperForMultiCrop = ({ item, url, setCropForItem }) => {
+    const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
+
+    const onSaveCrop = async () => {
+        const cropped = await cropImage(url, item.file, crop);
+        setCropForItem(item.id, cropped);
+    };
+
+    const onUnsetCrop = () => {
+        setCropForItem(item.id, null);
+    };
+
+    return (<CropperContainer>
+        <StyledReactCrop
+            src={url}
+            crop={crop}
+            onChange={setCrop}
+            onComplete={setCrop}
+        />
+        <Button onClick={onSaveCrop} id="save-crop-btn">Save Crop</Button>
+        <Button onClick={onUnsetCrop} id="unset-crop-btn">Dont use Crop</Button>
+    </CropperContainer>);
+};
+
+const BatchCrop = withBatchStartUpdate((props) => {
+    const { id, updateRequest, requestData, uploadInProgress } = props;
+    const [selected, setSelected] = useState({ url: null, id: null });
+    const [finishedItems, setFinishedItems] = useState([]);
+    const [cropped, setCropped] = useState({});
+    const hasData = !!(id && requestData);
+    const selectedItem = !!selected && requestData?.items.find(({ id }) => id === selected.id);
+
+    const setCropForItem = (id, data) => {
+        setCropped((cropped) => ({ ...cropped, [id]: data }));
+    };
+
+    const onUploadAll = () => {
+        if (updateRequest) {
+            const readyItems = requestData.items
+                .map((item) => {
+                    item.file = cropped[item.id] || item.file;
+                    return item;
+                });
+
+            updateRequest({ items: readyItems });
+        }
+    };
+
+    useItemFinalizeListener(({ id }) => {
+        setFinishedItems((finished) => finished.concat(id))
+    });
+
+    const getPreviewCompProps = useCallback((item) => {
+        return ({
+            onPreviewSelected: setSelected,
+            isCroppedSet: cropped[item.id],
+            isFinished: !!~finishedItems.indexOf(item.id),
+        });
+    }, [cropped, setSelected, finishedItems]);
+
+    return (<MultiCropContainer>
+        {hasData && !uploadInProgress &&
+        <Button onClick={onUploadAll} id="upload-all-btn">Upload All</Button>}
+
+        <PreviewsContainer>
+            <UploadPreview
+                rememberPreviousBatches
+                PreviewComponent={ItemPreviewThumb}
+                fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+                previewComponentProps={getPreviewCompProps}
+            />
+        </PreviewsContainer>
+        {selectedItem && hasData && !uploadInProgress &&
+        <CropperForMultiCrop
+            {...selected}
+            item={selectedItem}
+            setCropForItem={setCropForItem}
+        />}
+    </MultiCropContainer>);
+});
+
+const MultiCropQueue = () => {
+    const [currentBatch, setCurrentBatch] = useState(null);
+    const [inProgress, setInProgress] = useState(false);
+
+    useBatchAddListener((batch) => setCurrentBatch(batch.id));
+
+    useBatchFinalizeListener(() =>{
+        setCurrentBatch(null);
+        setInProgress(false);
+    });
+
+    useBatchProgressListener(() => {
+        if (!inProgress) {
+            setInProgress(true);
+        }
+    });
+
+    return (
+        <div>
+            {inProgress &&
+            <h2>Uploading...</h2>}
+
+            {!currentBatch &&
+            <StyledUploadButton id="upload-btn">
+                Select Files
+            </StyledUploadButton>}
+
+            <BatchCrop
+                id={currentBatch}
+                uploadInProgress={inProgress}
+            />
+        </div>
+    );
+};
+
 export const WithMultiCrop = (): Node => {
     const { enhancer, destination } = useStoryUploadySetup();
-    const previewMethodsRef = useRef();
 
     return <Uploady
-        concurrent
-        maxConcurrent={2}
         debug
         destination={destination}
         enhancer={enhancer}
     >
-        <StyledUploadButton id="upload-btn">
-            Select Files
-        </StyledUploadButton>
-
-        <UploadPreview
-            PreviewComponent={ItemPreviewWithCrop}
-            previewComponentProps={{ previewMethods: previewMethodsRef }}
-            previewMethodsRef={previewMethodsRef}
-            fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
-        />
+        <MultiCropQueue  />
     </Uploady>;
 };
 

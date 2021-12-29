@@ -1,0 +1,199 @@
+import {
+    utils as mockUtils,
+    triggerUpdater
+} from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import getQueueState from "./mocks/getQueueState.mock";
+import { getItemsPrepareUpdater } from "../preSendPrepare";
+
+describe("preSendPrepare tests", () => {
+    const eventType = "test-event",
+        retrieveItems = (items) => items,
+        retrieveSubject = (items, options) => ({ items, options });
+
+    const items = [
+        { id: "u1", batchId: "b1" },
+        { id: "u2", batchId: "b2" },
+    ];
+
+    const batchOptions = {
+        autoUpload: true,
+    };
+
+    const getMockStateData = () => ({
+        items: items.reduce((res, i) => {
+            res[i.id] = i;
+            return res;
+        }, {}),
+        batches: {
+            "b1": {
+                batch: { id: "b1" },
+                batchOptions
+            },
+            "b2": {
+                batch: { id: "b2" },
+                batchOptions
+            }
+        },
+        aborts: {}
+    });
+
+    it("should throw in case event handler update returns different array length", () => {
+        const queueState = getQueueState(getMockStateData());
+
+        triggerUpdater.mockResolvedValueOnce({ items: ["u1", "u2", "u3"] });
+
+        expect(getItemsPrepareUpdater(eventType, retrieveItems)(queueState, items))
+            .rejects
+            .toThrow(`REQUEST_PRE_SEND(${eventType}) event handlers must return same items with same ids`);
+    });
+
+    it("should throw in case event handler returns different item ids", () => {
+        const queueState = getQueueState(getMockStateData());
+
+        mockUtils.isSamePropInArrays.mockReturnValueOnce(false);
+
+        triggerUpdater.mockResolvedValueOnce({ items: [{ id: "u1" }, { id: "u2" }] });
+
+        expect(getItemsPrepareUpdater(eventType, retrieveItems)(queueState, items))
+            .rejects
+            .toThrow(`REQUEST_PRE_SEND(${eventType}) event handlers must return same items with same ids`);
+    });
+
+    it("should handle empty update", async () => {
+        const queueState = getQueueState(getMockStateData());
+        const preparer = getItemsPrepareUpdater(eventType, retrieveItems, retrieveSubject);
+
+        triggerUpdater.mockResolvedValueOnce();
+
+        const result = await preparer(queueState, items);
+
+        expect(result.items).toStrictEqual(items);
+        expect(result.options).toStrictEqual(batchOptions);
+        expect(result.cancelled).toBe(false);
+    });
+
+    it("should handle cancel", async () => {
+        const queueState = getQueueState(getMockStateData());
+        const preparer = getItemsPrepareUpdater(eventType, retrieveItems, retrieveSubject);
+
+        triggerUpdater.mockResolvedValueOnce(false);
+
+        const result = await preparer(queueState, items);
+
+         expect(result.items).toStrictEqual(items);
+        expect(result.options).toStrictEqual(batchOptions);
+        expect(result.cancelled).toBe(true);
+    });
+
+    it("Preparer should update items before sending", async () => {
+        const queueState = getQueueState(getMockStateData());
+        const preparer = getItemsPrepareUpdater(eventType, retrieveItems, retrieveSubject);
+
+        mockUtils.isSamePropInArrays.mockReturnValueOnce(true);
+
+        const newItems = [{ id: "u1", batchId: "b1", newProp: 111 },
+            { id: "u2", batchId: "b2", foo: "bar" }];
+
+        const newOptions = {
+            test: true,
+        };
+
+        triggerUpdater.mockResolvedValueOnce({
+            items: newItems,
+            options: newOptions,
+        });
+
+        const result = await preparer(queueState, items);
+
+        expect(result.items).toStrictEqual(newItems);
+        expect(result.options).toStrictEqual({...batchOptions, ...newOptions});
+        expect(result.cancelled).toBe(false);
+
+        expect(triggerUpdater).toHaveBeenCalledWith(
+            queueState.trigger, eventType, {
+                items: items,
+                options: batchOptions,
+            }, batchOptions);
+
+        expect(Object.values(queueState.getState().items)).toEqual(newItems);
+        expect(queueState.getState().batches["b1"].batchOptions).toStrictEqual({...batchOptions, ...newOptions});
+    });
+
+    it("Preparer should update options without items", async () => {
+        const queueState = getQueueState(getMockStateData());
+        const preparer = getItemsPrepareUpdater(eventType, retrieveItems, retrieveSubject);
+
+        const newOptions = {
+            test: true,
+            autoUpload: false
+        };
+
+        triggerUpdater.mockResolvedValueOnce({
+            options: newOptions,
+        });
+
+        const result = await preparer(queueState, items);
+
+        expect(result.items).toStrictEqual(items);
+        expect(result.options).toStrictEqual({...batchOptions, ...newOptions});
+        expect(result.cancelled).toBe(false);
+
+        expect(triggerUpdater).toHaveBeenCalledWith(
+            queueState.trigger, eventType, {
+                items: Object.values(queueState.state.items),
+                options: batchOptions,
+            }, batchOptions);
+
+        expect(queueState.getState().batches["b1"].batchOptions).toEqual({
+            ...batchOptions,
+            ...newOptions
+        });
+    });
+
+    it("Preparer should update items without options", async () => {
+        const queueState = getQueueState(getMockStateData());
+        const preparer = getItemsPrepareUpdater(eventType, retrieveItems, retrieveSubject);
+
+        mockUtils.isSamePropInArrays.mockReturnValueOnce(true);
+
+        const newItems = [{ id: "u1", batchId: "b1", newProp: 111 },
+            { id: "u2", batchId: "b2", foo: "bar" }];
+
+        triggerUpdater.mockResolvedValueOnce({
+            items: newItems,
+        });
+
+        const result = await preparer(queueState, items);
+
+        expect(result.items).toStrictEqual(newItems);
+        expect(result.options).toStrictEqual(batchOptions);
+        expect(result.cancelled).toBe(false);
+
+        expect(triggerUpdater).toHaveBeenCalledWith(
+            queueState.trigger, eventType, {
+                items: items,
+                options: batchOptions,
+            }, batchOptions);
+
+        expect(Object.values(queueState.getState().items)).toEqual(newItems);
+        expect(queueState.getState().batches["b1"].batchOptions).toStrictEqual(batchOptions);
+    });
+
+    it("should use response validator", () => {
+        const queueState = getQueueState(getMockStateData());
+        const preparer = getItemsPrepareUpdater(
+            eventType,
+            retrieveItems,
+            retrieveSubject,
+            () => {
+                throw new Error("test");
+            }
+        );
+
+        triggerUpdater.mockResolvedValueOnce({});
+
+        return expect(preparer(queueState, items)).rejects.toThrow("test");
+    });
+});
+
+

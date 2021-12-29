@@ -4,7 +4,7 @@ import { logger } from "@rpldy/shared";
 import createUploader from "@rpldy/uploader";
 
 import type { UploaderType, CreateOptions } from "@rpldy/uploader";
-import type { UploaderListeners } from "./types";
+import type { UploaderListeners } from "../types";
 
 const useUploader = (options: CreateOptions, listeners: ?UploaderListeners): UploaderType => {
     //avoid creating new instance of uploader (unless enhancer method changed)

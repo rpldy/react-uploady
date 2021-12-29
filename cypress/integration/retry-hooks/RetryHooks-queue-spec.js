@@ -1,7 +1,7 @@
 import { interceptWithDelay } from "../intercept";
 import uploadFile, { uploadFileTimes } from "../uploadFile";
 import { ITEM_ABORT } from "../storyLogPatterns";
-import { WAIT_MEDIUM, WAIT_SHORT, WAIT_X_LONG, } from "../specWaitTimes";
+import { WAIT_LONG, WAIT_MEDIUM, WAIT_SHORT } from "../specWaitTimes";
 
 describe("RetryHooks - Queue", () => {
     const fileName = "flower.jpg",
@@ -66,7 +66,6 @@ describe("RetryHooks - Queue", () => {
 
                 cy.get("article[data-test='preview-item-container']")
                     .should("have.length", 0);
-
             }, "#upload-button");
         }, "#upload-button");
     });
@@ -88,7 +87,7 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.wait(WAIT_X_LONG);
+            cy.wait(WAIT_LONG);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg");
             cy.storyLog().assertFileItemStartFinish("flower2.jpg");
@@ -106,7 +105,7 @@ describe("RetryHooks - Queue", () => {
                 .click();
 
             //wait until the other two files finished uploading
-            cy.wait(WAIT_X_LONG);
+            cy.wait(WAIT_LONG);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg");
 

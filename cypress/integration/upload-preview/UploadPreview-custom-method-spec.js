@@ -1,12 +1,12 @@
 import { uploadFileTimes } from "../uploadFile";
-import { WAIT_X_LONG, WAIT_X_SHORT } from "../specWaitTimes";
+import { WAIT_MEDIUM, WAIT_X_SHORT } from "../specWaitTimes";
 import { ITEM_START } from "../storyLogPatterns";
 
 describe("UploadPreview - Custom Batch Items Method", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadPreview", "with-different-batch-items-method");
+        cy.visitStory("uploadPreview", "with-different-batch-items-method&knob-mock send delay_Upload Destination=100");
     });
 
     it("should show upload previews for pending batch", () => {
@@ -20,7 +20,7 @@ describe("UploadPreview - Custom Batch Items Method", () => {
 
             cy.get("#upload-pending-btn").click();
 
-            cy.wait(WAIT_X_LONG);
+            cy.wait(WAIT_MEDIUM);
 
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower2.jpg", 3);

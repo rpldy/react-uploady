@@ -1,5 +1,4 @@
 /* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "testSend"] }] */
-
 import { mockTrigger } from "@rpldy/life-events/src/tests/mocks/rpldy-life-events.mock";
 import mockSend from "@rpldy/sender";
 import { SENDER_EVENTS } from "../consts";

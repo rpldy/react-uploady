@@ -97,7 +97,7 @@ describe("withBatchStartUpdate tests", () => {
 
         mockContext.on.mockImplementationOnce((name, handler) => {
 			handlerPromise = handler(requestData);
-			expect(handlerPromise).toBe(false);
+			expect(handlerPromise).toBeUndefined();
 		});
 
 		const MyComp = withRequestPreSendUpdate(MockComp);

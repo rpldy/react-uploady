@@ -17,7 +17,7 @@ This is outsude the scope of this guide.
 
 We use [react-image-crop](https://www.npmjs.com/package/react-image-crop) for the cropping functionality.
 
-### Imports and styled components: 
+### Imports and styled components 
 
 ```javascript
     import React, { useCallback, useState } from "react";
@@ -278,5 +278,4 @@ Finally, our App component just needs to render everything inside an Uploady ins
             <MultiCropQueue  />
         </Uploady>;
     };
-
 ```

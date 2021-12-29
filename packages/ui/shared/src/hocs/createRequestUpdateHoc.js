@@ -39,7 +39,7 @@ const createRequestUpdateHoc = <T>({
             //need layout effect to register to event in time (block)
             useLayoutEffect(() => {
                 const handleEvent = (...params) =>
-                    getIsValidEventData(id, ...params) === true &&
+                    getIsValidEventData(id, ...params) === true ?
                     //returning a promise to event dispatcher so it will await until its resolved by user-land code
                     new Promise((resolve) => {
                         setUpdater({
@@ -50,7 +50,9 @@ const createRequestUpdateHoc = <T>({
                             },
                             requestData: getRequestData(...params),
                         });
-                    });
+                    }) :
+                    //returning false for invalid data will cancel the request so must return undefined!
+                    undefined;
 
                 if (id) {
                     context.on(eventType, handleEvent);

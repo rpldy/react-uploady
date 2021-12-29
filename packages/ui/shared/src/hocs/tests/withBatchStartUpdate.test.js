@@ -99,7 +99,7 @@ describe("withRequestPreSendUpdate tests", () => {
 
         mockContext.on.mockImplementationOnce((name, handler) => {
             const handlerPromise = handler(batch, options);
-            expect(handlerPromise).toBe(false);
+            expect(handlerPromise).toBeUndefined();
         });
 
         const MyComp = withBatchStartUpdate(MockComp);

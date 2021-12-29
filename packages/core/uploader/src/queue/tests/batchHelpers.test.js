@@ -214,8 +214,6 @@ describe("batchHelpers tests", () => {
             expect(queueState.updateState).toHaveBeenCalledTimes(2);
             expect(updatedState.batches.b1).toBeUndefined();
             expect(queueState.trigger).not.toHaveBeenCalled();
-            // expect(updatedState.items.u1).toBeUndefined();
-            // expect(updatedState.items.u2).toBeUndefined();
             expect(updatedState.currentBatch).toBeNull();
             expect(finalizeItem).toHaveBeenCalledTimes(2);
             expect(finalizeItem).toHaveBeenCalledWith(expect.any(Object), "u1", true);
@@ -816,9 +814,6 @@ describe("batchHelpers tests", () => {
             expect(updatedState.batches.b2).toBeDefined();
             expect(finalizeItem).toHaveBeenCalledTimes(3);
             expect(finalizeItem).toHaveBeenCalledWith(expect.any(Object), "u3", true);
-            // expect(updatedState.itemQueue[0]).toEqual("u4");
-            // expect(updatedState.itemQueue).toHaveLength(1);
-            // expect(Object.keys(updatedState.items)).toEqual(["u4"]);
         });
     });
 });

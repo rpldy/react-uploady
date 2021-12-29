@@ -95,6 +95,7 @@ describe("UploadPreview - Multi Crop", () => {
                 cy.wait(WAIT_X_SHORT);
                 cy.get("img.preview-thumb").eq(2).click();
                 cy.get("#save-crop-btn").click();
+                cy.wait(WAIT_X_SHORT);
                 cy.get("#upload-all-btn").click();
 
                 examineCroppedUploadReq(cy.wait("@uploadReq"), "flower.jpg");
@@ -106,7 +107,5 @@ describe("UploadPreview - Multi Crop", () => {
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 4 });
             }, 2, "#upload-btn");
         }, 2, "#upload-btn");
-
-
     });
 });

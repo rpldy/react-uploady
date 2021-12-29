@@ -16,7 +16,7 @@ describe("RetryHooks - Queue", () => {
 
         uploadFile(fileName, () => {
             uploadFile(fileName2, () => {
-                cy.wait(WAIT_MEDIUM);
+                cy.wait(WAIT_SHORT);
 
                 cy.get("button[data-test='abort-button']:last")
                     .click();

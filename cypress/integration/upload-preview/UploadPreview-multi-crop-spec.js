@@ -1,7 +1,7 @@
 import { interceptWithDelay } from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
 import { BATCH_ADD, ITEM_START, ITEM_FINISH } from "../storyLogPatterns";
-import { WAIT_X_SHORT } from "../specWaitTimes";
+import { WAIT_SHORT, WAIT_X_SHORT } from "../specWaitTimes";
 
 describe("UploadPreview - Multi Crop", () => {
     const fileName = "flower.jpg";
@@ -99,6 +99,8 @@ describe("UploadPreview - Multi Crop", () => {
 
                 examineCroppedUploadReq(cy.wait("@uploadReq"), "flower.jpg");
                 examineFullUploadRequest(cy.wait("@uploadReq"), "flower2.jpg");
+
+                cy.wait(WAIT_SHORT);
 
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 4 });
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 4 });

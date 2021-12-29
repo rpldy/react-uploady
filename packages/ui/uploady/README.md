@@ -694,6 +694,7 @@ The id of the batch-item can be obtained from a hook (ex: [useItemStartListener]
     import React, { useState, useCallback } from "react";
     import Cropper from "react-easy-crop";
 	import Uploady, { withRequestPreSendUpdate } from "@rpldy/uploady";
+	import UploadButton from "@rpldy/upload-button";
     import cropImage from "./my-image-crop-code";
 
     const ItemCrop = withRequestPreSendUpdate((props) => {
@@ -730,7 +731,8 @@ The id of the batch-item can be obtained from a hook (ex: [useItemStartListener]
     });
 
     const MyApp = () => {
-        return <Uploady destination={{url: "my-server.com/upload"}}>
+        return <Uploady destination={{ url: "my-server.com/upload" }}>
+            <UploadButton />
             <ItemCrop id="batch-item-1" />
         </Uploady>
     }
@@ -752,11 +754,104 @@ When rendering the HOC's output, the id of the batch must be provided as a prop.
 The id of the batch can be obtained from the [useBatchAddListener](#usebatchaddlistener-event-hook)
 
 ```javascript
+    import React, { useState, useCallback } from "react";
+    import Cropper from "react-easy-crop";
+    import Uploady, { withBatchStartUpdate } from "@rpldy/uploady";
+    import UploadButton from "@rpldy/upload-button";
+    import UploadPreview from "@rpldy/upload-preview";
+    import cropImage from "./my-image-crop-code";
+    
+    const CropperForMultiCrop = ({ item, url, setCropForItem }) => {
+        const [crop, setCrop] = useState({ x: 0, y: 0 });
+        const [cropPixels, setCropPixels] = useState(null);
+		
+        const onSaveCrop = async () => {
+            const cropped = await cropImage(url, item.file, cropPixels);
+            setCropForItem(item.id, cropped);
+        };
 
+        const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+            setCropPixels(croppedAreaPixels);
+        }, []);
+		
+        return (<div>
+            <Cropper
+                image={url}
+                crop={crop}
+                onCropChange={setCrop}
+                onCropComplete={onCropComplete}
+            />
+            {cropPixels && 
+                <Button onClick={onSaveCrop} id="save-crop-btn">Save Crop</Button>}
+        </div>);
+    };
 
+    const BatchCrop = withBatchStartUpdate((props) => {
+	    const { id, updateRequest, requestData } = props;
+        const [cropped, setCropped] = useState({});
+        const hasData = !!(id && requestData);
+		
+        const setCropForItem = (id, data) => {
+            setCropped((cropped) => ({ ...cropped, [id]: data }));
+        };
+		
+        const onUploadAll = () => {
+            if (updateRequest) {
+                const readyItems = requestData.items
+                    .map((item) => {
+                        item.file = cropped[item.id] || item.file;
+                        return item;
+                    });
 
+				//update the items in the batch with the cropped files
+                updateRequest({ items: readyItems });
+            }
+        };
 
+        const getPreviewCompProps = useCallback((item) => {
+            return ({
+                onPreviewSelected: setSelected,
+                isCroppedSet: cropped[item.id],
+            });
+        }, [cropped, setSelected]);
+
+        return (<div>
+            {hasData &&
+                <button onClick={onUploadAll}>Upload All</button>}
+
+            <UploadPreview
+                rememberPreviousBatches
+                PreviewComponent={ItemPreviewThumb}
+                fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+                previewComponentProps={getPreviewCompProps}
+            />
+
+            {selectedItem && hasData &&
+                <CropperForMultiCrop
+                    {...selected}
+                    item={selectedItem}
+                    setCropForItem={setCropForItem}
+                />}
+        </div>);
+    });
+	
+    const MultiCropQueue = () => {
+        const [currentBatch, setCurrentBatch] = useState(null);
+    
+        useBatchAddListener((batch) => setCurrentBatch(batch.id));
+    
+        return <BatchCrop id={currentBatch} />;
+    };
+	
+    export const MyApp = () => {
+        return <Uploady destination={{ url: "my-server.com/upload" }}>
+            <UploadButton />
+            <MultiCropQueue  />
+        </Uploady>;
+    };
 ```
+
+See the [Multi Crop Guide](../../../guides/MultiCrop.md) for a full example.
 
 ## Contribute
 

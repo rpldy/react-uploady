@@ -50,6 +50,8 @@ const EventHooksTest: React.FC = () => {
         console.log(`batch ${batch.id} completed: ${batch.completed}`);
     });
 
+    const { completed: batchCompleted } = useBatchProgressListener("b1");
+
     useBatchFinishListener((batch) => {
         console.log(`batch ${batch.id} finished`);
     });
@@ -74,6 +76,8 @@ const EventHooksTest: React.FC = () => {
     const itemProgress = useItemProgressListener((item) => {
         console.log(`item ${item.id} completed: ${item.completed}`);
     });
+
+    const { completed: itemCompleted } = useItemProgressListener("bi3");
 
     useItemCancelListener((item) => {
         console.log(`item ${item.id} cancelled`);
@@ -138,8 +142,10 @@ const EventHooksTest: React.FC = () => {
 
     return <div>
         <div>test</div>
-        <div>batch progress: ${batchProgress.completed}</div>
-        <div>item progress: ${itemProgress.completed}</div>
+        <div>batch progress: {batchProgress.completed}</div>
+        <div>item progress: {itemProgress.completed}</div>
+        <div>batch progress without callback: {batchCompleted}</div>
+        <div>item progress without callback: {itemCompleted}</div>
     </div>;
 };
 

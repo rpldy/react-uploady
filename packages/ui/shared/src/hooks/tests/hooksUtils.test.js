@@ -97,7 +97,6 @@ describe("hooks utils tests", () => {
 
     describe("generateUploaderEventHookWithState tests", () => {
         it("should set state with stateCalculator", () => {
-
             const stateCalculator = jest.fn();
             const p1 = "a", p2 = "b";
 
@@ -117,7 +116,6 @@ describe("hooks utils tests", () => {
         });
 
         it("should set state with stateCalculator only for scope", () => {
-
             const stateCalculator = jest.fn();
             const item = { id: "f1" };
 
@@ -141,7 +139,6 @@ describe("hooks utils tests", () => {
         });
 
         it("should set state without callback", () => {
-
             const stateCalculator = jest.fn();
             const p1 = "a", p2 = "b";
 
@@ -159,5 +156,25 @@ describe("hooks utils tests", () => {
             wrapper.unmount();
         });
 
+        it("should set state with only scope", () => {
+            const stateCalculator = jest.fn((state) => ({ ...state }));
+            const item = { id: "f1" };
+
+            const eventHook = generateUploaderEventHookWithState(event, stateCalculator);
+
+            context.on.mockImplementationOnce((eventName, internalCallback) => {
+                expect(eventName).toBe(event);
+                internalCallback(item);
+                internalCallback({ id: "f2" });
+            });
+
+            const { wrapper, getHookResult } = testCustomHook(eventHook, () => ["f1"]);
+
+            expect(stateCalculator).toHaveBeenCalledWith(item);
+            expect(stateCalculator).toHaveBeenCalledTimes(1);
+            expect(getHookResult()).toStrictEqual(item);
+
+            wrapper.unmount();
+        });
     });
 });

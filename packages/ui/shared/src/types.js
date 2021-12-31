@@ -8,7 +8,7 @@ export type PreSendData = { items: BatchItem[]; options: CreateOptions };
 
 type EventHook<T> = (cb: (obj: T) => void, id?: string) => void;
 type CancellableHook<T> = (cb: (obj: T) => boolean | void, id?: string) => void;
-type EventHookWithState<T> = (cb?: (obj: T) => void, id?: string) => T;
+type EventHookWithState<T> = (cb?: (obj: T) => void, id?: string) => ?T;
 
 export type ItemEventHook = EventHook<BatchItem>;
 export type ItemCancellableEventHook = CancellableHook<BatchItem>;

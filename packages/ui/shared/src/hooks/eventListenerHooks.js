@@ -31,7 +31,7 @@ const useBatchErrorListener: BatchEventHook = generateUploaderEventHook(UPLOADER
 const useBatchFinalizeListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_FINALIZE);
 const useBatchAbortListener: BatchEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ABORT);
 
-const useBatchProgressListener: BatchEventHookWithState = generateUploaderEventHookWithState(
+const useBatchProgressListener: BatchEventHookWithState = generateUploaderEventHookWithState<Batch>(
     UPLOADER_EVENTS.BATCH_PROGRESS,
     (batch: Batch) => ({ ...batch }));
 
@@ -42,7 +42,7 @@ const useItemErrorListener: ItemEventHook = generateUploaderEventHook(UPLOADER_E
 const useItemAbortListener: ItemEventHook = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_ABORT);
 const useItemFinalizeListener: ItemEventHook = generateUploaderEventHook(UPLOADER_EVENTS.ITEM_FINALIZE);
 
-const useItemProgressListener: ItemEventHookWithState = generateUploaderEventHookWithState(
+const useItemProgressListener: ItemEventHookWithState = generateUploaderEventHookWithState<BatchItem>(
     UPLOADER_EVENTS.ITEM_PROGRESS,
     (item: BatchItem) => ({ ...item }));
 

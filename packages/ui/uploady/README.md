@@ -265,6 +265,14 @@ Called every time progress data is received from the upload request(s)
        //...    
    };
 ``` 
+
+Scoping to an id can be done like so:
+
+```javascript
+    //...
+    const { completed: batchCompleted } = useBatchProgressListener("batch-id") || { completed: 0 };
+    //...
+```
         
 ### useBatchFinishListener (event hook)
 
@@ -414,13 +422,22 @@ Called every time progress data is received for this file upload
         const item = useItemProgressListener((item) => {
         	//callback is optional for this hook
         });
-    
+		
         console.log(`item ${item.id} is ${item.completed}% done and ${item.loaded} bytes uploaded`)
     
        //...    
     };
 ``` 
-    
+
+Scoping to an id can be done like so:
+
+```javascript
+    //...
+    const { completed: itemCompleted } = useItemProgressListener("item-id") || { completed: 0 };
+    //...
+```
+
+
 ### useItemCancelListener (event hook)
 
 Called in case item was cancelled from ITEM_START event handler

@@ -73,16 +73,9 @@ const PreviewImage = styled.img`
     ${({ completed }) => `opacity: ${completed / 100};`}
 `;
 
-const CustomImagePreview = (props) => {
-    const [completed, setCompleted] = useState(0);
-
-    useItemProgressListener((item) => {
-        if (item.id === props.id){
-            setCompleted(item.completed);
-        }
-    });
-
-    return <PreviewImage src={props.url} completed={completed}/>;
+const CustomImagePreview = ({ id, url }) => {
+    const { completed } = useItemProgressListener(id) || { completed: 0};
+    return <PreviewImage src={url} completed={completed} className="preview-img"/>;
 };
 
 export const WithProgress = (): Node => {

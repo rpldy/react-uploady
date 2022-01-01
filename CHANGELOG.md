@@ -1,5 +1,11 @@
 # Changelog
 
+### 0.16.1 (2022-01-01)
+
+## Features
+
+- `[uploady]` - allow stateful event hooks to use scope without callback
+
 ## 0.16.0 (2021-12-29)
 
 ## Features

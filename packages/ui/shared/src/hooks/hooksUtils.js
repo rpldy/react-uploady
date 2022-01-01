@@ -1,5 +1,6 @@
 // @flow
 import { useState, useCallback, useEffect } from "react";
+import { isFunction } from "@rpldy/shared";
 import useUploadyContext from "./useUploadyContext";
 
 type Callback = (...args?: any) => ?any;
@@ -17,15 +18,23 @@ const useEventEffect = (event: string, fn: Callback) => {
     }, [event, fn, on, off]);
 };
 
-const generateUploaderEventHookWithState = (event: string, stateCalculator: (state: any) => any): ((fn?: Callback, id?: string) => any ) =>
-    (fn?: Callback, id?: string) => {
+type WithStateFn = (fn?: Callback, id?: string ) => ?any;
+
+const generateUploaderEventHookWithState =
+    <T>(event: string, stateCalculator: (state: T) => any): WithStateFn =>
+        (fn? : Callback | string , id?: string): ?any  => {
         const [eventState, setEventState] = useState(null);
+
+        if (fn && !isFunction(fn)) {
+            id = fn;
+            fn = undefined;
+        }
 
         const eventCallback = useCallback((eventObj, ...args) => {
             if (!id || eventObj.id === id) {
                 setEventState(stateCalculator(eventObj, ...args));
 
-                if (fn) {
+                if (isFunction(fn)) {
                     fn(eventObj, ...args);
                 }
             }

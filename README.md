@@ -5,6 +5,9 @@
 <p align="center">Modern file-upload components & hooks for React.</p>
 
 <p align="center">
+    <a href="https://badge.fury.io/js/%40rpldy%2Fuploady">
+        <img src="https://badge.fury.io/js/%40rpldy%2Fuploady.svg" alt="npm version" height="20">
+    </a>
     <a href="https://circleci.com/gh/rpldy/react-uploady">
         <img src="https://circleci.com/gh/rpldy/react-uploady.svg?style=svg" alt="circleci status"/>
     </a>  

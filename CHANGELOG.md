@@ -1,14 +1,14 @@
 # Changelog
 
-### 0.16.1 (2022-01-01)
+## 0.16.1 (2022-01-01)
 
-## Features
+### Features
 
 - `[uploady]` - allow stateful event hooks to use scope without callback
 
 ## 0.16.0 (2021-12-29)
 
-## Features
+### Features
 
 - `[uploader]` - new events: BATCH_ERROR, BATCH_FINALIZE
 - `[uploader]` - BATCH_START now accepts changes to items/options (similar to REQUEST_PRE_SEND event)
@@ -16,8 +16,8 @@
 - `[uploady]` - new HOC: withBatchStartUpdate
 - `[upload-preview]` - ability to customize UploadPreview batch items method
 - `[uploader]` - added new prop to Batch: additionalInfo
-- 
-## Bug fixes
+ 
+### Bug fixes
 
 - `[uploader]` - fix concurrent uploads waiting for async event callbacks
 - `[uploader]` - fix: correctly catch pre-req errors and process in queue

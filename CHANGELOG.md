@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.16.2 (2022-01-08)
+
+### Bug fixes
+
+- `[uploader]` - dev-time batch-progress event didn't update completed & loaded values 
+
 ## 0.16.1 (2022-01-01)
 
 ### Features

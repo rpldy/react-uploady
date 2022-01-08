@@ -91,33 +91,36 @@ const createUploaderQueue = (
         }
     };
 
+    const handleBatchProgress = (batch: Batch) => {
+        const batchItems = state
+            .batches[batch.id]?.batch
+            .items;
+
+        if (batchItems) {
+            const [completed, loaded] = batchItems
+                .reduce((res, { id }) => {
+                    //getting data from state.items since in dev the wrapped state.batch.items and state.items aren't the same objects
+                    const { completed, loaded } = state.items[id];
+                    res[0] += completed;
+                    res[1] += loaded;
+                    return res;
+                }, [0, 0]);
+
+            updateState((state: State) => {
+                const stateBatch = state.batches[batch.id].batch;
+                //average of completed percentage for batch items
+                stateBatch.completed = completed / batchItems.length;
+                //sum of loaded bytes for batch items
+                stateBatch.loaded = loaded;
+            });
+
+            trigger(UPLOADER_EVENTS.BATCH_PROGRESS, state.batches[batch.id].batch);
+        }
+    };
+
     sender.on(SENDER_EVENTS.ITEM_PROGRESS, handleItemProgress);
 
-    sender.on(SENDER_EVENTS.BATCH_PROGRESS,
-        (batch: Batch) => {
-            const batchItems = state
-                .batches[batch.id]?.batch
-                .items;
-
-            if (batchItems) {
-                const [completed, loaded] = batchItems
-                    .reduce((res, { completed, loaded }) => {
-                        res[0] += completed;
-                        res[1] += loaded;
-                        return res;
-                    }, [0, 0]);
-
-                updateState((state: State) => {
-                    const stateBatch = state.batches[batch.id].batch;
-                    //average of completed percentage for batch items
-                    stateBatch.completed = completed / batchItems.length;
-                    //sum of loaded bytes for batch items
-                    stateBatch.loaded = loaded;
-                });
-
-                trigger(UPLOADER_EVENTS.BATCH_PROGRESS, state.batches[batch.id].batch);
-            }
-        });
+    sender.on(SENDER_EVENTS.BATCH_PROGRESS, handleBatchProgress);
 
     const runCancellable = (name: string, ...args: mixed[]) => {
         if (!isFunction(cancellable)) {

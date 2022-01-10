@@ -6,7 +6,7 @@ const path = require("path"),
     fs = require("fs-extra"),
     webpack = require("webpack"),
     _ = require("lodash"),
-    VirtualModulePlugin = require("virtual-module-webpack-plugin"),
+    VirtualModulesPlugin = require("webpack-virtual-modules"),
     { getUploadyVersion } = require("./scripts/utils");
 
 const PKGS = {
@@ -90,11 +90,8 @@ module.exports = {
                         entry: "./packages/ui/uploady/all-bundle-entry.js",
 
                         plugins: [
-                            new VirtualModulePlugin({
-                                moduleName: "./packages/ui/uploady/all.generated.js",
-                                contents: `
-                                    ${exports.join(" \r\n")}
-                                `,
+                            new VirtualModulesPlugin({
+                                "./packages/ui/uploady/all.generated.js": `${exports.join(" \r\n")}`
                             })
                         ],
 

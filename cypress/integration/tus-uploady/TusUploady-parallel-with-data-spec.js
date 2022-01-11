@@ -8,7 +8,7 @@ describe("TusUploady - Parallel with Data on Create", () => {
         cy.visitStory("tusUploady", "with-tus-concatenation&knob-destination_Upload Destination=url&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-upload url_Upload Destination=http://test.tus.com/upload&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true&knob-send data on create_Upload Settings=true");
     });
 
-    it("should upload chunks using tus protocol in parallel with data on create", () => {
+    it.skip("should upload chunks using tus protocol in parallel with data on create", () => {
         let reqCount = 0;
         const createUrls = ["123", "456", "final"],
             createOffsets = [200000, 172445];

@@ -38,7 +38,7 @@ const config =  {
     ],
     env: {
         development: {
-            //adding loose = true to remove warnings in SB build
+            //adding loose = true to remove warnings in SB build (only in dev)
             plugins: [
                 ["@babel/plugin-proposal-class-properties", { loose: true }],
                 ["@babel/plugin-proposal-private-methods", { loose: true }],
@@ -67,10 +67,10 @@ const config =  {
         },
     }
 };
-
 module.exports = config;
 
 //     () => {
+// console.log("!!!!!!!!! BABEL ENV ==== ", api.env());
 //     console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$ ", process.env.BUILD_TIME_VERSION)
 //
 //     // api.caller((caller) => {

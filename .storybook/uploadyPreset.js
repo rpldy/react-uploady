@@ -20,6 +20,14 @@ const getCurrentNpmVersion = async () => {
     return result;
 }
 
+const stringify = (obj) =>
+    Object.entries(obj)
+        .reduce((res, [key, value]) => {
+            res[key] = value.indexOf("\"") !== 0 ?
+                JSON.stringify(value) : value;
+            return res;
+        }, {});
+
 const addEnvParams = async (config) => {
     const publishedVersion = config.mode !== "development" ? await getCurrentNpmVersion() : ["DEV"];
     const definePlugin = config.plugins.find((plugin) =>
@@ -30,7 +38,7 @@ const addEnvParams = async (config) => {
         "PUBLISHED_VERSION": JSON.stringify(publishedVersion),
         "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
         "process.env": {
-            ...(definePlugin.definitions["process.env"] || process.env),
+            ...(definePlugin.definitions["process.env"] || stringify(process.env)),
             BUILD_TIME_VERSION: JSON.stringify(getUploadyVersion()),
             CIRCLECI: JSON.stringify(process.env.CIRCLECI),
             CIRCLECI_BRANCH:  JSON.stringify(process.env.CIRCLE_BRANCH),
@@ -63,6 +71,8 @@ module.exports = {
         };
 
         config.optimization.minimize = !!process.env.SB_OPTIMIZE;
+
+        // config.stats.errorDetails = true;
 
         return await addEnvParams(config);
     },

@@ -102,10 +102,10 @@ const runWebpack = (type, name, config) => {
         try {
             webpack(config,
                 (err, stats) => {
-                    const info = stats.toJson();
+                    const info = stats?.toJson();
 
                     if (err || stats.hasErrors()) {
-                        err = err || info.errors;
+                        err = err || info?.errors;
                         logger.error(`!!! failed to compile bundle: ${name} (type: ${type})`, err);
                         reject();
                     } else {

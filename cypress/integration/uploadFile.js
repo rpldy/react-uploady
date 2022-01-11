@@ -4,7 +4,7 @@ const uploadFile = (fixtureName, cb, button = "button", options = {}) => {
         cy.get(options.iframe).find(selector) : cy.get(selector);
 
     if (button !== false) {
-        get(button)
+        get(`#root ${button}`)
             .should("be.visible")
             .click()
             .as("uploadButton");

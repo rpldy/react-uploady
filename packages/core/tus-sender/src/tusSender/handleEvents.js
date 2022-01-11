@@ -20,6 +20,12 @@ const PATCH = "PATCH";
 const getParallelChunkIdentifier = (options: TusOptions, chunkIndex: number) =>
 	`_prlChunk_${+options.chunkSize}_${chunkIndex}`;
 
+const getHeadersWithoutContentRange = (headers) => ({
+    ...headers,
+    //TUS doesnt expect content-range header and may not whitelist for CORS
+    "Content-Range": undefined,
+});
+
 const handleParallelChunk = (tusState: TusState, chunkedSender: ChunkedSender, data: ChunkStartEventData): Promise<boolean> => {
 	const { item: orgItem, chunkItem, url, sendOptions, onProgress, chunk } = data;
 	const { options } = tusState.getState();
@@ -34,6 +40,7 @@ const handleParallelChunk = (tusState: TusState, chunkedSender: ChunkedSender, d
 		url,
 		{
 			...sendOptions,
+            headers: getHeadersWithoutContentRange(sendOptions.headers),
 			//params will be sent as metadata with the finalizing request
 			params: null,
 		},
@@ -55,17 +62,15 @@ const updateChunkStartData = (tusState: TusState, data: ChunkStartEventData, isP
 	const itemInfo = tusState.getState().items[isParallel ? chunkItem.id : orgItem.id];
 	const offset = isParallel ? 0 : (itemInfo.offset || chunk.start);
 
-	const headers = {
-		"tus-resumable": options.version,
-		"Upload-Offset": offset,
-		"Content-Type": "application/offset+octet-stream",
-		//TUS doesnt expect content-range header and may not whitelist for CORS
-		"Content-Range": undefined,
-		"X-HTTP-Method-Override": options.overrideMethod ? PATCH : undefined,
-		//for deferred length, send the file size header with the last chunk
-		"Upload-Length": (options.deferLength && !remainingCount) ? orgItem.file.size : undefined,
-		"Upload-Concat": isParallel ? "partial" : undefined,
-	};
+	const headers = getHeadersWithoutContentRange({
+        "tus-resumable": options.version,
+        "Upload-Offset": offset,
+        "Content-Type": "application/offset+octet-stream",
+        "X-HTTP-Method-Override": options.overrideMethod ? PATCH : undefined,
+        //for deferred length, send the file size header with the last chunk
+        "Upload-Length": (options.deferLength && !remainingCount) ? orgItem.file.size : undefined,
+        "Upload-Concat": isParallel ? "partial" : undefined,
+    });
 
 	logger.debugLog(`tusSender.handleEvents: chunk start handler. offset = ${offset}`, {
 		headers,

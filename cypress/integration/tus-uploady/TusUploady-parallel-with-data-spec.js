@@ -27,15 +27,14 @@ describe("TusUploady - Parallel with Data on Create", () => {
             .as("fInput");
 
         uploadFile(fileName, () => {
-
             cy.wait("@createReq")
                 .then((xhr) => {
-                    expect(xhr.request.headers["content-length"]).to.eq("172445");
+                    expect(xhr.request.headers["content-length"]).to.eq("200000");
                 });
 
             cy.wait("@createReq")
                 .then((xhr) => {
-                    expect(xhr.request.headers["content-length"]).to.eq("200000");
+                    expect(xhr.request.headers["content-length"]).to.eq("172445");
                 });
 
             cy.wait(WAIT_SHORT);

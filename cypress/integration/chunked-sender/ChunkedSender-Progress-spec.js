@@ -28,10 +28,12 @@ describe("ChunkedSender - Progress", () => {
             cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLines) => {
                 let lastValue = 0;
 
+                const loadedChunks = logLines.map(([data]) => data.item.loaded).join(",");
+
                 logLines.forEach(([data], index) =>{
                     const uploaded = data.item.loaded;
                     expect(uploaded,
-                        `chunk ${index} finished. uploaded ${uploaded} should be greater than previous chunk: ${lastValue}`)
+                        `chunk ${index} finished. uploaded ${uploaded} should be greater than previous chunk: ${lastValue}. chunks: ${loadedChunks}`)
                         .to.be.greaterThan(lastValue);
 
                     lastValue = uploaded;

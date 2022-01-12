@@ -212,7 +212,6 @@ describe("handleEvents tests", () => {
 			});
 
 			it("should remove parallel chunk storage url for forgetOnSuccess", () => {
-
 				const tusState = getTusState({
 					items: {
 						"i1": {
@@ -247,7 +246,6 @@ describe("handleEvents tests", () => {
 			});
 
 			it("should do nothing for parallel", () => {
-
 				const tusState = getTusState({
 					items: {
 						"i1": {
@@ -281,9 +279,7 @@ describe("handleEvents tests", () => {
 		});
 
 		describe("chunkedSender CHUNK_START tests", () => {
-
 			it("should update send options for chunk using stored offset", () => {
-
 				const tusState = getTusState({
 					items: {
 						"i1": {
@@ -446,6 +442,11 @@ describe("handleEvents tests", () => {
 						});
 
 						const data = {
+                            sendOptions: {
+                                headers: {
+                                    "Content-Range": 123,
+                                }
+                            },
 							chunk: {
 								id: "i1"
 							},
@@ -462,6 +463,7 @@ describe("handleEvents tests", () => {
 						expect(result.sendOptions.method).toBe("PATCH");
 						expect(result.sendOptions.headers["Upload-Offset"]).toBe(0);
 						expect(result.sendOptions.headers["Upload-Length"]).toBe(undefined);
+						expect(result.sendOptions.headers["Content-Range"]).toBe(undefined);
 						expect(result.sendOptions.headers["Upload-Concat"]).toBe("partial");
 
 						expect(tusState.getState().items["i1"].parallelChunks[0])
@@ -475,7 +477,6 @@ describe("handleEvents tests", () => {
 			});
 
 			it("parallel - should return false when chunk already finished", () => {
-
 				const tusState = getTusState({
 					items: {
 						"i1": {
@@ -492,6 +493,7 @@ describe("handleEvents tests", () => {
 				uploader.on.mockImplementation(async (name, cb) => {
 					if (name === mockChunkEvents.CHUNK_START) {
 						const data = {
+                            sendOptions: {},
 							chunk: {
 								start: 1234,
 							},

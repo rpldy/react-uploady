@@ -73,8 +73,8 @@ const createUpload = (item: BatchItem, url: string, tusState: TusState, sendOpti
     logger.debugLog(`tusSender.create - creating upload for ${item.id} at: ${url}`);
 
     if (options.sendDataOnCreate) {
-        logger.debugLog(`tusSender.create - adding first chunk to create request`);
         const chunkSize = +options.chunkSize;
+        logger.debugLog(`tusSender.create - adding first chunk to create request`, { chunkSize, actualSize: item.file.size });
 
         data = chunkSize < item.file.size ?
             getChunkDataFromFile(item.file, 0, chunkSize) :

@@ -12,7 +12,7 @@ describe("ChunkedSender - Progress", () => {
 
     it("should use chunked sender with progress events", () => {
         //delay response so we dont miss events due to progress event throttling
-        interceptWithDelay(60);
+        interceptWithDelay(100);
 
         uploadFile(fileName, () => {
             cy.get("#form-submit")

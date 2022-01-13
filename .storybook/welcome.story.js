@@ -78,7 +78,11 @@ export const WelcomeReactUploady = () => {
             <h2>Welcome to React-Uploady Storybook</h2>
 
             <h4>Current Version</h4>
-            {PUBLISHED_VERSION.map((v) => <span className="version" key={v}>{v}</span>)}
+            {PUBLISHED_VERSIONS
+                .filter(({ name }) => ["@rpldy/uploady", "@rpldy/uploader"].includes(name))
+                .map(({ name, version }) =>
+                    <span className="version" key={name}>{name} {version}</span>)
+            }
         </Container>
 
         <InfoContainer>
@@ -118,7 +122,7 @@ export const WelcomeReactUploady = () => {
 };
 
 export default {
-    title: "Welcome",
+    title: "! Welcome",
     parameters: {
         options: { showPanel: false, theme: {} }, //needed until storybook-readme fixes their bug - https://github.com/tuchk4/storybook-readme/issues/221
     },

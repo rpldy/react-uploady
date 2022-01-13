@@ -1,18 +1,24 @@
 const webpack = require("webpack"),
     pacote = require("pacote"),
+    { getMatchingPackages } = require("../scripts/lernaUtils"),
     { getUploadyVersion } = require("../scripts/utils");
 
-const getCurrentNpmVersion = async () => {
-    let result = [];
+const getAllPackagesVersions = async () => {
+    const pkgs = await getMatchingPackages({});
+
+    // const publishedVersion = config.mode !== "development" ?
+    //     await getCurrentNpmVersion() : ["DEV"];
+    const pkgVersions = await Promise.all(pkgs.packages.map(getCurrentNpmVersion));
+
+    return JSON.stringify(pkgVersions);
+};
+
+const getCurrentNpmVersion = async (pkg) => {
+    let result = null;
 
     try {
-        const manifest = await pacote.manifest("@rpldy/uploady");
-        const uploader = "@rpldy/uploader";
-
-        result = [
-            `${manifest.name} ${manifest.version}`,
-            `${uploader} ${manifest.dependencies[uploader].replace(/[\^~]/, "")}`
-        ];
+        const manifest = await pacote.manifest(pkg.name);
+        result = { name: manifest.name, version: manifest.version };
     } catch (e) {
         console.error("FAILED TO GET NPM VERSION !!!!!", e);
     }
@@ -28,23 +34,11 @@ const stringify = (obj) =>
             return res;
         }, {});
 
-const addEnvParams = async (config) => {
-    const publishedVersion = config.mode !== "development" ? await getCurrentNpmVersion() : ["DEV"];
+const updateDefinePlugin = (config, withDefinitions) => {
     const definePlugin = config.plugins.find((plugin) =>
         plugin instanceof webpack.DefinePlugin) || { definitions: {} };
 
-    const definitions = {
-        ...definePlugin.definitions,
-        "PUBLISHED_VERSION": JSON.stringify(publishedVersion),
-        "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
-        "process.env": {
-            ...(definePlugin.definitions["process.env"] || stringify(process.env)),
-            BUILD_TIME_VERSION: JSON.stringify(getUploadyVersion()),
-            CIRCLECI: JSON.stringify(process.env.CIRCLECI),
-            CIRCLECI_BRANCH:  JSON.stringify(process.env.CIRCLE_BRANCH),
-            SB_INTERNAL: JSON.stringify(process.env.SB_INTERNAL),
-        }
-    }
+    const definitions = withDefinitions(definePlugin.definitions);
 
     if (definePlugin) {
         definePlugin.definitions = definitions
@@ -54,6 +48,22 @@ const addEnvParams = async (config) => {
 
     return config;
 };
+
+const addEnvParams = (config) =>
+    updateDefinePlugin(config, async (definitions) => {
+        return {
+            ...definitions,
+            "PUBLISHED_VERSIONS": await getAllPackagesVersions(),
+            "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
+            "process.env": {
+                ...(definitions["process.env"] || stringify(process.env)),
+                BUILD_TIME_VERSION: JSON.stringify(getUploadyVersion()),
+                CIRCLECI: JSON.stringify(process.env.CIRCLECI),
+                CIRCLECI_BRANCH: JSON.stringify(process.env.CIRCLE_BRANCH),
+                SB_INTERNAL: JSON.stringify(process.env.SB_INTERNAL),
+            }
+        };
+    });
 
 module.exports = {
     webpack: async (config) => {
@@ -74,6 +84,13 @@ module.exports = {
 
         // config.stats.errorDetails = true;
 
-        return await addEnvParams(config);
+        return addEnvParams(config);
     },
+
+    managerWebpack: async (config) => {
+        return updateDefinePlugin(config, async (definitions) => ({
+            ...definitions,
+            "PUBLISHED_VERSIONS": await getAllPackagesVersions(),
+        }));
+    }
 };

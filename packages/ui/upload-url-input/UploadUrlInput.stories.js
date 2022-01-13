@@ -96,4 +96,4 @@ export const WithButtonAndValidate = (): Node => {
     </Uploady>;
 };
 
-export default (getCsfExport(UploadUrlInput, "Upload Url Input", readme): CsfExport);
+export default (getCsfExport(UploadUrlInput, "Upload Url Input", readme, { pkg: "upload-url-input" }): CsfExport);

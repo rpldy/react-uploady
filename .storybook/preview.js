@@ -8,6 +8,13 @@ addDecorator(cypressDecorator);
 
 export const parameters = {
     actions: { argTypesRegex: "^on[A-Z].*" },
+
+    options: {
+        storySort: {
+            method: "alphabetical",
+        },
+    },
+
     docs: {
         page: () => <>
             <Description/>

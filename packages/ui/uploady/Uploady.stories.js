@@ -514,4 +514,4 @@ export const TEST_InvalidBatchStart = (): Node => {
     </Uploady>;
 };
 
-export default (getCsfExport(Uploady, "Uploady", readme): CsfExport);
+export default (getCsfExport(Uploady, "Uploady", readme, { pkg: "uploady", section: "UI" }): CsfExport);

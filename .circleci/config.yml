@@ -172,7 +172,7 @@ jobs:
                 when: always
                 name: Fix junit reporter XML files attributes
                 command: |
-                    node cypress/fix-junit-report.js
+                    node scripts/fix-junit-report.js
             - store_artifacts:
                   path: cypress/screenshots
             - store_artifacts:

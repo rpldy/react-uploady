@@ -3,22 +3,26 @@ const webpack = require("webpack"),
     { getMatchingPackages } = require("../scripts/lernaUtils"),
     { getUploadyVersion } = require("../scripts/utils");
 
-const getAllPackagesVersions = async () => {
+const getAllPackagesVersions = async (config) => {
     const pkgs = await getMatchingPackages({});
 
-    // const publishedVersion = config.mode !== "development" ?
-    //     await getCurrentNpmVersion() : ["DEV"];
-    const pkgVersions = await Promise.all(pkgs.packages.map(getCurrentNpmVersion));
+    const pkgVersions = await Promise.all(
+        pkgs.packages.map(((pkg) =>
+            getCurrentNpmVersion(pkg, config))));
 
     return JSON.stringify(pkgVersions);
 };
 
-const getCurrentNpmVersion = async (pkg) => {
+const getCurrentNpmVersion = async (pkg, config) => {
     let result = null;
 
     try {
-        const manifest = await pacote.manifest(pkg.name);
-        result = { name: manifest.name, version: manifest.version };
+        if (config.mode !== "development") {
+            const manifest = await pacote.manifest(pkg.name);
+            result = { name: manifest.name, version: manifest.version };
+        } else {
+            result = { name: pkg.name, version: "dev" };
+        }
     } catch (e) {
         console.error("FAILED TO GET NPM VERSION !!!!!", e);
     }
@@ -53,7 +57,7 @@ const addEnvParams = (config) =>
     updateDefinePlugin(config, async (definitions) => {
         return {
             ...definitions,
-            "PUBLISHED_VERSIONS": await getAllPackagesVersions(),
+            "PUBLISHED_VERSIONS": await getAllPackagesVersions(config),
             "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
             "process.env": {
                 ...(definitions["process.env"] || stringify(process.env)),
@@ -90,7 +94,7 @@ module.exports = {
     managerWebpack: async (config) => {
         return updateDefinePlugin(config, async (definitions) => ({
             ...definitions,
-            "PUBLISHED_VERSIONS": await getAllPackagesVersions(),
+            "PUBLISHED_VERSIONS": await getAllPackagesVersions(config),
         }));
     }
 };

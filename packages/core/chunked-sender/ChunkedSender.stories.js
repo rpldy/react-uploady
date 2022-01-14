@@ -75,4 +75,4 @@ export const WithChunkedSender = (): Node => {
     );
 };
 
-export default (getCsfExport(undefined, "Chunked Sender", readme): CsfExport);
+export default (getCsfExport(undefined, "Chunked Sender", readme, { pkg: "chunked-sender", section: "Core" }): CsfExport);

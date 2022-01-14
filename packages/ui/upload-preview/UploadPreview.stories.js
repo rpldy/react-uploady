@@ -602,4 +602,4 @@ export const WithDifferentBatchItemsMethod = (): Node => {
     </Uploady>;
 };
 
-export default (getCsfExport(UploadPreview, "Upload Preview", readme, { pkg: "upload-preview" }): CsfExport);
+export default (getCsfExport(UploadPreview, "Upload Preview", readme, { pkg: "upload-preview", section: "UI" }): CsfExport);

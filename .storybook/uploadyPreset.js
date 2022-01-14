@@ -34,11 +34,11 @@ const stringify = (obj) =>
             return res;
         }, {});
 
-const updateDefinePlugin = (config, withDefinitions) => {
+const updateDefinePlugin = async (config, withDefinitions) => {
     const definePlugin = config.plugins.find((plugin) =>
         plugin instanceof webpack.DefinePlugin) || { definitions: {} };
 
-    const definitions = withDefinitions(definePlugin.definitions);
+    const definitions = await withDefinitions(definePlugin.definitions);
 
     if (definePlugin) {
         definePlugin.definitions = definitions

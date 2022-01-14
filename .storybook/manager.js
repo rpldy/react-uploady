@@ -1,16 +1,7 @@
 import React from "react";
-import styled from "styled-components";
 import { addons } from "@storybook/addons";
 import theme from "./theme";
-
-const Badge = styled.span`
-
-    margin: 0 2px;
-    font-weight: bold;
-    background-color: aqua;
-    border-radius: 6px;
-    padding: 4px;
-`;
+import VersionBadge from "./VersionBadge";
 
 addons.setConfig({
     // isFullscreen: false,
@@ -20,16 +11,12 @@ addons.setConfig({
     theme,
     sidebar: {
         renderLabel: ({ name, isComponent }) => {
+            //storybook doesnt pass all the CSF info for isComponent items :(
             const pkg = isComponent && window._storyToPackage?.[name]
-
-            const info = pkg && PUBLISHED_VERSIONS
-                .find(({ name }) => name === pkg);
-
-            console.log("FOUND PKG FOR STORY: ", pkg, info);
 
             return (<div>
                 {name}
-                {info && <Badge title="current version">{info.version}</Badge>}
+                {pkg && <VersionBadge pkg={pkg} />}
             </div>);
         },
     }

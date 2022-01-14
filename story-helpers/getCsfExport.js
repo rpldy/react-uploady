@@ -8,6 +8,7 @@ export type CsfExport = {
 const getCsfExport = (component: ?React$AbstractComponent<any, any>, title: string, readme: any, options: any = {}): CsfExport => {
 
     if (options.pkg) {
+        //we need this coz storybook doesnt pass all the CSF info the renderLabel function
         window.top._storyToPackage = window.top._storyToPackage || {};
         window.top._storyToPackage[title] = `@rpldy/${options.pkg}`;
     }

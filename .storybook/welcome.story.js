@@ -77,11 +77,11 @@ export const WelcomeReactUploady = () => {
 
             <h2>Welcome to React-Uploady Storybook</h2>
 
-            <h4>Current Version</h4>
+            <h3>Current Version</h3>
             {PUBLISHED_VERSIONS
                 .filter(({ name }) => ["@rpldy/uploady", "@rpldy/uploader"].includes(name))
                 .map(({ name, version }) =>
-                    <span className="version" key={name}>{name} {version}</span>)
+                    <span className="version" key={name}>{name} - <strong>{version}</strong></span>)
             }
         </Container>
 

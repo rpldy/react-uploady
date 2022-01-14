@@ -150,4 +150,4 @@ export const UMD_Core = (): Element<"div"> => {
     </div>;
 };
 
-export default (getCsfExport(undefined, "Uploader", readme): CsfExport);
+export default (getCsfExport(undefined, "Uploader", readme, { pkg: "uploader", section: "Core" }): CsfExport);

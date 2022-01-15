@@ -56,9 +56,7 @@ describe("uploader tests", () => {
     };
 
     describe("getOptions tests", () => {
-
         it("should return combination of passed options with defaults", () => {
-
             const uploader = createUploader({
                 multiple: false,
                 autoUpload: false,
@@ -71,7 +69,6 @@ describe("uploader tests", () => {
         });
 
         it("should get a deep clone", () => {
-
             const uploader = createUploader({
                 multiple: false,
                 autoUpload: false,
@@ -104,9 +101,7 @@ describe("uploader tests", () => {
     });
 
     describe("upload tests", () => {
-
         it("should not process if no pending", () => {
-
             triggerCancellable
                 .mockReturnValueOnce(() => Promise.resolve(true));
 
@@ -116,11 +111,11 @@ describe("uploader tests", () => {
             expect(mockProcess).not.toHaveBeenCalled();
         });
 
-        it("should process with merged upload options", async() => {
+        it("should process with merged upload options", async () => {
             mockRunCancellable.mockResolvedValueOnce(false);
 
             mockAddNewBatch
-                .mockReturnValueOnce({ items: [1, 2] });
+                .mockResolvedValueOnce({ items: [1, 2] });
 
             const uploader = getTestUploader({ autoUpload: false });
 
@@ -130,28 +125,6 @@ describe("uploader tests", () => {
 
             expect(mockProcessPendingBatches).toHaveBeenCalledWith(newOptions);
         });
-
-        // it("should process pending", async () => {
-        //     mockRunCancellable
-        //         .mockResolvedValueOnce(false)
-        //         .mockResolvedValueOnce(false);
-        //
-        //     const batch1 = { items: [1, 2] },
-        //         batch2 = { items: [3] };
-        //
-        //     mockAddNewBatch
-        //         .mockReturnValueOnce(batch1)
-        //         .mockReturnValueOnce(batch2);
-        //
-        //     const uploader = getTestUploader({ autoUpload: false });
-        //
-        //     await uploader.add([], { test: 1 });
-        //     await uploader.add([], { test: 2 });
-        //
-        //     uploader.upload();
-        //     expect(mockProcess).toHaveBeenCalledWith(batch1, expect.objectContaining({ test: 1 }));
-        //     expect(mockProcess).toHaveBeenCalledWith(batch2, expect.objectContaining({ test: 2 }));
-        // });
 
         it("should clear previous pending", async () => {
             mockRunCancellable
@@ -164,8 +137,8 @@ describe("uploader tests", () => {
                 batch2 = { items: [3] };
 
             mockAddNewBatch
-                .mockReturnValueOnce(batch1)
-                .mockReturnValueOnce(batch2);
+                .mockResolvedValueOnce(batch1)
+                .mockResolvedValueOnce(batch2);
 
             await uploader.add([], { test: 1 });
             await uploader.add([], { test: 2 });
@@ -179,7 +152,7 @@ describe("uploader tests", () => {
 
     describe("add uploads tests", () => {
         it("should not add anything in case batch returns empty", async () => {
-            mockAddNewBatch.mockReturnValueOnce({ items: [] });
+            mockAddNewBatch.mockResolvedValueOnce({ items: [] });
             const uploader = getTestUploader({ autoUpload: true });
 
             await uploader.add([], { test: 1 });
@@ -194,7 +167,7 @@ describe("uploader tests", () => {
 
             const batch = { items: [1, 2] };
 
-            mockAddNewBatch.mockReturnValueOnce(batch);
+            mockAddNewBatch.mockResolvedValueOnce(batch);
 
             const uploader = getTestUploader({ autoUpload: true });
 
@@ -213,7 +186,7 @@ describe("uploader tests", () => {
 
             const batch = { items: [1, 2] };
 
-            mockAddNewBatch.mockReturnValueOnce(batch);
+            mockAddNewBatch.mockResolvedValueOnce(batch);
 
             createLifePack.mockReturnValueOnce("lp");
 
@@ -313,7 +286,7 @@ describe("uploader tests", () => {
             .mockResolvedValueOnce(false);
 
         mockAddNewBatch
-            .mockReturnValueOnce({ items: [1, 2] });
+            .mockResolvedValueOnce({ items: [1, 2] });
 
         const uploader = getTestUploader({ autoUpload: false });
         await uploader.add([], { test: 1 });

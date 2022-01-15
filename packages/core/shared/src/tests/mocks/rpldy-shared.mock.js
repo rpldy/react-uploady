@@ -3,6 +3,7 @@ import merge, { getMerge } from "../../utils/merge";
 import clone from "../../utils/clone";
 import pick from "../../utils/pick";
 import isFunction from "../../utils/isFunction";
+import isPromise from "../../utils/isPromise";
 
 const invariant = jest.fn();
 
@@ -27,8 +28,11 @@ utils.getMerge = jest.fn((...args) => getMerge(...args));
 utils.clone = jest.fn((...args) => clone(...args));
 //keep pick working - dont mock it
 utils.pick = jest.fn((...args) => pick(...args));
+//keep isFunction working - dont mock it
 utils.isFunction = jest.fn((...args) => isFunction(...args));
 utils.devFreeze = jest.fn((obj) => obj);
+//keep isPromise working - dont mock it
+utils.isPromise = jest.fn((...args) => isPromise(...args));
 
 const sharedMock = {
     FILE_STATES,

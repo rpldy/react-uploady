@@ -29,9 +29,11 @@ const createProcessor =
             }
         };
 
-        const addNewBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, processOptions: CreateOptions) => {
-            const batch = createBatch(files, uploaderId, processOptions);
-            return queue.addBatch(batch, processOptions);
+        const addNewBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, processOptions: CreateOptions): Promise<Batch> => {
+            return createBatch(files, uploaderId, processOptions)
+                .then((batch) => {
+                    return queue.addBatch(batch, processOptions);
+                });
         };
 
         const clearPendingBatches = () => {

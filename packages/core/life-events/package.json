@@ -23,8 +23,7 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.16.2",
-    "is-promise": "^4.0.0"
+    "@rpldy/shared": "^0.16.2"
   },
   "devDependencies": {
     "flow-bin": "^0.164.0"

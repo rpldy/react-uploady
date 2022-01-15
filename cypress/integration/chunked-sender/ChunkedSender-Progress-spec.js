@@ -19,7 +19,7 @@ describe("ChunkedSender - Progress", () => {
                 .should("be.visible")
                 .click();
 
-            cy.wait(WAIT_X_LONG);
+            cy.wait(WAIT_X_LONG + 500);
 
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertLogPattern(CHUNK_START, { times: 8 });

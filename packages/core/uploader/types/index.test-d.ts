@@ -38,7 +38,26 @@ const testComposeEnhancers = (): UploaderEnhancer => {
     return composed;
 };
 
+const testAsyncFileFilter = (): UploaderType => {
+    const filter = async (file: File) => {
+        const response = await fetch(`https://bogus.url.test/${(file as File).name}`);
+        const json: { result: boolean } | undefined = await response.json();
+
+        return json?.result;
+    };
+
+    return createUploader({
+        autoUpload: false,
+        destination: {
+            url: "test.com",
+            method: "POST"
+        },
+        fileFilter: filter,
+    });
+};
+
 export {
     testCreateUploader,
-    testComposeEnhancers
+    testComposeEnhancers,
+    testAsyncFileFilter,
 };

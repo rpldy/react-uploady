@@ -1,5 +1,5 @@
 // @flow
-import isPromise from "is-promise";
+import { isPromise } from "@rpldy/shared";
 import defaults from "./defaults";
 import { validateFunction, isUndefined } from "./utils";
 import { LESYM, LE_PACK_SYM } from "./consts";

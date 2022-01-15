@@ -77,3 +77,4 @@ export enum UPLOADER_EVENTS {
 export default createUploader;
 
 export { SendOptions } from "@rpldy/sender";
+export { FileFilterMethod, Trigger } from "@rpldy/shared";

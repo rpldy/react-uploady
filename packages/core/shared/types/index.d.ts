@@ -10,7 +10,7 @@ export type FormatParamGroupNameMethod = (index: number, paramName: string) => s
 
 export type FormatServerResponseMethod = (response: string, status: number, headers: Record<string, string> | undefined) => unknown;
 
-export type FileFilterMethod = (file: unknown, index: number, files: unknown[]) => boolean | Promise<boolean | undefined> | undefined;
+export type FileFilterMethod = (file: File | string, index: number, files: File[] | string[]) => boolean | Promise<boolean | undefined> | undefined;
 
 export interface SendOptions  {
     method: string;

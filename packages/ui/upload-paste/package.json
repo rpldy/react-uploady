@@ -33,7 +33,7 @@
     "@rpldy/upload-button": "^0.16.2",
     "@rpldy/upload-drop-zone": "^0.16.2",
     "@rpldy/uploady": "^0.16.2",
-    "flow-bin": "^0.164.0",
+    "flow-bin": "^0.169.0",
     "styled-components": "^5.3.3"
   },
   "peerDependencies": {

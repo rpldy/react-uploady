@@ -40,7 +40,7 @@ module.exports = {
             "core": {
                 pkgs: [PKGS.LIFE_EVENTS, PKGS.SHARED, PKGS.SENDER, PKGS.UPLOADER],
                 target: PKGS.UPLOADER,
-                maxSize: 11000,
+                maxSize: 11500,
                 dontUsePolyfills: true,
             },
 

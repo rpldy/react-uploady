@@ -38,7 +38,8 @@ export {
     clone,
     pick,
     hasWindow,
-    isProduction
+    isProduction,
+    isPromise,
 } from "./utils";
 
 export type * from "./types";

@@ -8,6 +8,7 @@ import pick from "./pick";
 import isPlainObject from "./isPlainObject";
 import hasWindow from "./hasWindow";
 import isProduction from "./isProduction";
+import isPromise from "./isPromise";
 
 export {
     isFunction,
@@ -20,4 +21,5 @@ export {
 	isPlainObject,
     hasWindow,
     isProduction,
+    isPromise,
 };

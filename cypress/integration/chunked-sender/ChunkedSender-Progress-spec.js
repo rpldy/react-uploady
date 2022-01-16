@@ -21,26 +21,36 @@ describe("ChunkedSender - Progress", () => {
 
             cy.wait(WAIT_X_LONG);
 
+        // cy.get("@uploadReq.all")
+        //     .then((requests) => {
+        //         cy.log(`CALL COUNT TO REQUEST !!!`, requests);
+        //     });
+
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
+
+
             cy.storyLog().assertLogPattern(CHUNK_START, { times: 8 });
             cy.storyLog().assertLogPattern(CHUNK_FINISH, { times: 8 });
 
             cy.storyLog().customAssertLogEntry("CHUNK_FINISH", (logLines) => {
-                let lastValue = 0;
-
-                const loadedChunks = logLines.map(([data]) => data.item.loaded).join(",");
+                let lastValue = -1, lastId = "";
+                const loadedChunks = logLines.map(([{ chunk }]) =>`${chunk.id} - ${chunk.start}`).join(",");
 
                 logLines.forEach(([data], index) =>{
-                    const uploaded = data.item.loaded;
-                    expect(uploaded,
-                        `chunk ${index} finished. uploaded ${uploaded} should be greater than previous chunk: ${lastValue}. chunks: ${loadedChunks}`)
+                    const chunkStart = data.chunk.start;
+
+                    expect(data.chunk.id).to.not.be.eq(lastId, `chunk ${index} finished. should have different id than: ${lastId}`);
+
+                    expect(chunkStart,
+                        `chunk ${index} finished. start value ${chunkStart} should be greater than previous chunk: ${lastValue}. chunks: ${loadedChunks}`)
                         .to.be.greaterThan(lastValue);
 
-                    lastValue = uploaded;
+                    lastValue = chunkStart;
+                    lastId = data.chunk.id;
 
                     if (index < (logLines.length - 1)) {
-                        expect(uploaded,
-                            `chunk ${index} finished. uploaded ${uploaded} should be less than total: ${data.item.file.size}`).to.be.lessThan(data.item.file.size);
+                        expect(data.item.loaded,
+                            `chunk ${index} finished. uploaded ${data.item.loaded} should be less than total: ${data.item.file.size}`).to.be.lessThan(data.item.file.size);
                     }
                 });
             }, { all: true });

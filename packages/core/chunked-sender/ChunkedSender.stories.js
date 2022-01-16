@@ -53,10 +53,8 @@ export const WithChunkedSender = (): Node => {
         return uploader;
     }, [url, chunkSize]);
 
-    const onSubmit = () => {
-        console.log("submitting -------------- ", { file } );
-
-        uploader.add([file], {params: { name: "textures" }});
+    const onSubmit = async () => {
+        await uploader.add([file], {params: { name: "textures" }});
         uploader.upload();
     };
 

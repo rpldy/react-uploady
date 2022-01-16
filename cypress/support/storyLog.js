@@ -33,7 +33,7 @@ const serializeLog = (log) => {
 
 const assertStartFinish = (storyLog, startIndex, prop, value) => {
     if (!isNaN(startIndex)) {
-        expect(storyLog[startIndex].args[0]).to.equal("ITEM_START", `expect ITEM_START at: ${startIndex} in log: ${serializeLog(storyLog)}`);
+        expect(storyLog[startIndex]?.args[0]).to.equal("ITEM_START", `expect ITEM_START at: ${startIndex} in log: ${serializeLog(storyLog)}`);
 
         cy.wrap(storyLog[startIndex].args[1])
             .its(prop).should("eq", value);

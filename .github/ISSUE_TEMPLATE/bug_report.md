@@ -4,8 +4,9 @@ about: Create a bug report
 title: ''
 labels: ''
 assignees: ''
-
 ---
+
+> Recommended - Check out the [discussions area](https://github.com/rpldy/react-uploady/discussions) before opening a new issue.
 
 **Describe the bug**
 A clear and concise description of what the bug is.

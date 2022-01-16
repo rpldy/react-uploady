@@ -1,5 +1,4 @@
-import { Trigger } from "@rpldy/shared";
-import { createUploader, UploaderType, composeEnhancers, UploaderEnhancer } from "./index";
+import { createUploader, UploaderType, composeEnhancers, UploaderEnhancer, FileFilterMethod, Trigger } from "./index";
 
 const testCreateUploader = (): void => {
 
@@ -38,7 +37,26 @@ const testComposeEnhancers = (): UploaderEnhancer => {
     return composed;
 };
 
+const testAsyncFileFilter = (): UploaderType => {
+    const filter: FileFilterMethod = async (file: unknown) => {
+        const response = await fetch(`https://bogus.url.test/${(file as File).name}`);
+        const json: { result: boolean } | undefined = await response.json();
+
+        return json?.result;
+    };
+
+    return createUploader({
+        autoUpload: false,
+        destination: {
+            url: "test.com",
+            method: "POST"
+        },
+        fileFilter: filter,
+    });
+};
+
 export {
     testCreateUploader,
-    testComposeEnhancers
+    testComposeEnhancers,
+    testAsyncFileFilter,
 };

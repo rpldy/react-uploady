@@ -37,7 +37,6 @@ describe("processor tests", () => {
 	});
 
 	const testProcessor = () => {
-
 		mockTriggerCancellable.mockReturnValueOnce(cancellable);
 		mockCreateItemsSender.mockReturnValueOnce(sender);
 		mockCreateUploadQueue.mockReturnValueOnce(queue);
@@ -67,14 +66,14 @@ describe("processor tests", () => {
 		expect(queue.abortBatch).toHaveBeenCalledWith("b1");
 	});
 
-    it("should create batch on addNewBatch", () => {
+    it("should create batch on addNewBatch", async () => {
         const processor = testProcessor();
         const files = [1,2];
         const options = { test: true };
 
-        createBatch.mockReturnValueOnce("batch");
+        createBatch.mockResolvedValueOnce("batch");
 
-        processor.addNewBatch(files, "u1", options);
+        await processor.addNewBatch(files, "u1", options);
 
         expect(createBatch).toHaveBeenCalledWith(files, "u1", options);
         expect(queue.addBatch).toHaveBeenCalledWith("batch", options);
@@ -98,5 +97,4 @@ describe("processor tests", () => {
         processor.processPendingBatches();
         expect(queue.uploadPendingBatches).toHaveBeenCalled();
     });
-
 });

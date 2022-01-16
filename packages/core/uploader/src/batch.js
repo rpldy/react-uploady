@@ -1,5 +1,5 @@
 // @flow
-import { BATCH_STATES, createBatchItem } from "@rpldy/shared";
+import { BATCH_STATES, createBatchItem, isPromise, } from "@rpldy/shared";
 import { DEFAULT_FILTER } from "./defaults";
 import { getIsFileList } from "./utils";
 
@@ -14,13 +14,23 @@ import type { CreateOptions } from "./types";
 
 let bCounter = 0;
 
-const processFiles = (batchId, files: UploadInfo, isPending: boolean, fileFilter: ?FileFilterMethod): BatchItem[] =>
-    Array.prototype
-        //$FlowExpectedError[method-unbinding] flow 0.153 !!!
-        .filter.call(files, fileFilter || DEFAULT_FILTER)
-        .map((f) => createBatchItem(f, batchId, isPending));
+const processFiles = (batchId, files: UploadInfo, isPending: boolean, fileFilter: ?FileFilterMethod): Promise<BatchItem[]> => {
+    const filterFn = fileFilter || DEFAULT_FILTER;
 
-const createBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, options: CreateOptions): Batch => {
+    return Promise.all(Array.prototype
+        //$FlowExpectedError[method-unbinding] flow 0.153 !!!
+        .map.call(files, (f) => {
+            const filterResult = filterFn(f);
+            return isPromise(filterResult) ?
+                filterResult.then((result) => !!result && f) :
+                (!!filterResult && f);
+        }))
+        .then((filtered) => filtered
+            .filter(Boolean)
+            .map((f) => createBatchItem(f, batchId, isPending)));
+};
+
+const createBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, options: CreateOptions): Promise<Batch> => {
     bCounter += 1;
     const id = `batch-${bCounter}`;
 
@@ -30,18 +40,19 @@ const createBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, optio
 
     const isPending = !options.autoUpload;
 
-    const items = processFiles(id, files, isPending, options.fileFilter);
-
-    return {
-        id,
-        uploaderId,
-        items,
-        state: isPending ? BATCH_STATES.PENDING : BATCH_STATES.ADDED,
-        completed: 0,
-        loaded: 0,
-        orgItemCount: items.length,
-        additionalInfo: null,
-    };
+    return processFiles(id, files, isPending, options.fileFilter)
+        .then((items) => {
+            return {
+                id,
+                uploaderId,
+                items,
+                state: isPending ? BATCH_STATES.PENDING : BATCH_STATES.ADDED,
+                completed: 0,
+                loaded: 0,
+                orgItemCount: items.length,
+                additionalInfo: null,
+            };
+        });
 };
 
 export default createBatch;

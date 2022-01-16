@@ -23,7 +23,20 @@ module.exports = {
 
     features: {
         postcss: false,
+        babelModeV7: true,
+        // storyStoreV7: true
     },
+
+    core: {
+        builder: "webpack4" //"webpack5"
+    },
+
+    framework: "@storybook/react",
+
+    // babel: async (config) => {
+    //     console.log(">>>>>>> BABEL CONFIG FROM SB: " + process.env.NODE_ENV , config);
+    //     return config;
+    // },
 
     // webpackFinal: async (config) => { return config; },
     // managerWebpack: async (baseConfig, options) =>  { return baseConfig; }

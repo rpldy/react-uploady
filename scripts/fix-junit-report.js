@@ -31,12 +31,12 @@ const fixFileXml = (data, filePath) => {
 
 fs.readdir("./cypress/results", (err, files) => {
     if (err) {
-        console.log(err)
+        console.log(err);
     } else {
         console.log(`- FOUND ${files.length} results files`);
 
         files.forEach((file) => {
-            const filePath = `./cypress/results/${file}`
+            const filePath = `./cypress/results/${file}`;
 
             fs.readFile(filePath, "utf8", (err, data) => {
                 if (err) {

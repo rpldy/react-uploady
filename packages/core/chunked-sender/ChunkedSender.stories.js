@@ -53,10 +53,8 @@ export const WithChunkedSender = (): Node => {
         return uploader;
     }, [url, chunkSize]);
 
-    const onSubmit = () => {
-        console.log("submitting -------------- ", { file } );
-
-        uploader.add([file], {params: { name: "textures" }});
+    const onSubmit = async () => {
+        await uploader.add([file], {params: { name: "textures" }});
         uploader.upload();
     };
 
@@ -75,4 +73,4 @@ export const WithChunkedSender = (): Node => {
     );
 };
 
-export default (getCsfExport(undefined, "Chunked Sender", readme): CsfExport);
+export default (getCsfExport(undefined, "Chunked Sender", readme, { pkg: "chunked-sender", section: "Core" }): CsfExport);

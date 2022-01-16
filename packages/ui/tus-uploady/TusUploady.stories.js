@@ -120,4 +120,4 @@ export const WithTusConcatenation = (): Node => {
 	</TusUploady>;
 };
 
-export default (getCsfExport(TusUploady, "Tus Uploady", readme): CsfExport);
+export default (getCsfExport(TusUploady, "Tus Uploady", readme, { pkg: "tus-uploady", section: "UI" }): CsfExport);

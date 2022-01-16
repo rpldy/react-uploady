@@ -1,5 +1,5 @@
 import uploadFile from "../uploadFile";
-import { WAIT_LONG } from "../specWaitTimes";
+import { WAIT_SHORT } from "../specWaitTimes";
 
 describe("TusUploady - Parallel with Data on Create", () => {
     const fileName = "flower.jpg";
@@ -10,13 +10,12 @@ describe("TusUploady - Parallel with Data on Create", () => {
 
     it("should upload chunks using tus protocol in parallel with data on create", () => {
         let reqCount = 0;
-        const createUrls = ["123", "456", "final"],
-            createOffsets = [200000, 172445];
+        const createUrls = ["123", "456", "final"];
 
         cy.intercept("POST", "http://test.tus.com/upload", (req) => {
             req.reply(200, { success: true }, {
                 "Location": `http://test.tus.com/upload/${createUrls[reqCount]}`,
-                "Upload-Offset": `${createOffsets[reqCount]}`,
+                "Upload-Offset":  req.headers["content-length"],
                 "Tus-Resumable": "1.0.0",
             });
 
@@ -28,33 +27,38 @@ describe("TusUploady - Parallel with Data on Create", () => {
             .as("fInput");
 
         uploadFile(fileName, () => {
-            cy.wait(WAIT_LONG);
+            cy.wait("@createReq")
+                .then((xhr) => {
+                    expect(xhr.request.headers["content-length"]).to.eq("200000");
+                });
 
-            cy.log("ABOUT TO CHECK STORY LOG");
+            cy.wait("@createReq")
+                .then((xhr) => {
+                    expect(xhr.request.headers["content-length"]).to.eq("172445");
+                });
+
+            cy.wait(WAIT_SHORT);
 
             cy.storyLog()
                 .assertFileItemStartFinish(fileName, 1)
                 .then((startFinishEvents) => {
-                    cy.wait("@createReq")
-                        .then((xhr) => {
-                            expect(xhr.request.headers["upload-length"]).to.eq("200000");
-                        });
-
-                    cy.wait("@createReq")
-                        .then((xhr) => {
-                            expect(xhr.request.headers["upload-length"]).to.eq("172445");
-                        });
-
-                    cy.wait("@createReq")
-                        .then((xhr) => {
-                            expect(xhr.request.headers["upload-metadata"])
-                                .to.eq("foo YmFy");
-
-                            expect(xhr.request.headers["upload-concat"])
-                                .to.eq("final;http://test.tus.com/upload/123 http://test.tus.com/upload/456");
-                        });
-
                     expect(startFinishEvents.finish.args[1].uploadResponse.location).to.eq("http://test.tus.com/upload/final");
+                });
+
+            cy.wait("@createReq")
+                .then((xhr) => {
+                    expect(xhr.request.headers["upload-metadata"])
+                        .to.eq("foo YmFy");
+
+                    const concatHeader = xhr.request.headers["upload-concat"];
+                    expect(concatHeader)
+                        .to.contain("final;");
+
+                    expect(concatHeader)
+                        .to.contain("http://test.tus.com/upload/123");
+
+                    expect(concatHeader)
+                        .to.contain("http://test.tus.com/upload/456");
                 });
         });
     });

@@ -1,17 +1,23 @@
 import React from "react";
-import { addDecorator } from "@storybook/react";
-import { Description, } from "@storybook/addon-docs/blocks";
+import { Description, } from "@storybook/addon-docs";
 // import { addReadme } from "storybook-readme";
 import cypressDecorator from "./cypressAddon/cypressDecorator";
-
-// addDecorator(addReadme);
-addDecorator(cypressDecorator);
+import UploadyStoryDecorator from "./UploadyStoryDecorator";
 
 export const parameters = {
     actions: { argTypesRegex: "^on[A-Z].*" },
+
+    options: {
+        storySort: {
+            method: "alphabetical",
+        },
+    },
+
     docs: {
         page: () => <>
             <Description/>
         </>,
     },
 };
+
+export const decorators = [UploadyStoryDecorator, cypressDecorator];

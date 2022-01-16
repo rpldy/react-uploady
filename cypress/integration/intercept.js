@@ -14,10 +14,11 @@ const createResponse = (options = {}) => ({
 export const interceptWithHandler = (handler, alias = "uploadReq", url = DEFAULT_URL, method = DEFAULT_METHOD) =>
     intercept(url, method, handler, alias);
 
-export const interceptWithDelay = (delay = 100, alias = "uploadReq", url = DEFAULT_URL, method = DEFAULT_METHOD) =>
+export const interceptWithDelay = (delay = 100, alias = "uploadReq", url = DEFAULT_URL, method = DEFAULT_METHOD, resOptions = {}) =>
     interceptWithHandler((req) => {
         req.reply({
             ...RESPONSE_DEFAULTS,
+            ...resOptions,
             delay,
         });
     }, alias, url, method);

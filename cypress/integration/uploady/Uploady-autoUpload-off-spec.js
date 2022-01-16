@@ -17,6 +17,7 @@ describe("Uploady - autoUpload off tests", () => {
     it("should not auto upload", () => {
         uploadFile(fileName, () => {
             uploadFile(fileName, () => {
+                cy.wait(WAIT_X_SHORT);
                 cy.storyLog().assertLogPattern(BATCH_ADD, { times: 2 });
                 cy.wait(WAIT_SHORT);
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });

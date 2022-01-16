@@ -136,4 +136,4 @@ export const WithFeatureDetection = (): Element<"div"> => {
 	</div>
 };
 
-export default (getCsfExport(undefined, "TUS Sender", readme): CsfExport);
+export default (getCsfExport(undefined, "TUS Sender", readme, { pkg: "tus-sender", section: "Core" }): CsfExport);

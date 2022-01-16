@@ -204,4 +204,4 @@ export const WithPasteUploadButton = (): Node => {
     </Uploady>
 };
 
-export default (getCsfExport(undefined, "Upload Paste",readme): CsfExport);
+export default (getCsfExport(undefined, "Upload Paste", readme, { pkg: "upload-paste", section: "UI" }): CsfExport);

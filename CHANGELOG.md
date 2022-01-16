@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.17.0 (2022-01-16)
+
+### Features
+
+- `[uploader]` - support async fileFilter
+
+### Bug fixes
+
+- `[tus-sender]` - remove content range header from parallel tus create request
+
+### Docs
+
+- `storybook` - upgrade to SB 6.4.10
+- `storybook` - show released package versions in menu and stories
+
+### Internal
+
+- `all` - upgraded to latest flow (0.169.0)
+- `all` - upgraded to Lerna 4.0.0
+
 ## 0.16.2 (2022-01-08)
 
 ### Bug fixes
@@ -38,28 +58,28 @@
 
 ## 0.15.0 (2021-11-22)
 
-## Features
+### Features
 
 - `[uploady]` - introduce new prop: `formDataAllowUndefined` (default: false) to change new default to send undefined params in formData
 
-## Bug fixes
+### Bug fixes
 
 - `[sender]` - stop sending (by default) undefined params as part of formData. Fix for [#263](https://github.com/rpldy/react-uploady/issues/263)
 
-## Internal
+### Internal
 
 - `all` - upgraded to latest flow (0.164.0), babel, and most other deps
 
 
 ## 0.14.2 (2021-11-04)
 
-## Bug fixes
+### Bug fixes
 
 - `[upload-drop-zone]` - fix drop zone flickering when over child elements. Fix for [#256](https://github.com/rpldy/react-uploady/issues/256)
 
 ## 0.14.1 (2021-10-16)
 
-## Bug fixes
+### Bug fixes
 
 - `[uploader]` - fix batch data potentially not having completed values when finished
 

@@ -13,6 +13,10 @@
     "url": "https://github.com/rpldy/react-uploady.git",
     "directory": "packages/ui/uploady"
   },
+    "funding": {
+        "type": "opencollective",
+        "url": "https://opencollective.com/react-uploady"
+    },
   "keywords": [
     "file",
     "upload",

@@ -463,8 +463,8 @@ export const WithForm = (): Node => {
             destination={destination}
             enhancer={enhancer}
             grouped={grouped}
-            maxGroupSize={groupSize}>
-            >
+            maxGroupSize={groupSize}
+        >
             <div className="App">
                 <h3>Using a Form with file input and additional fields</h3>
 

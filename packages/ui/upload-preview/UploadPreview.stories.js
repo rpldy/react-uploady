@@ -10,6 +10,7 @@ import Uploady, {
     withRequestPreSendUpdate,
     withBatchStartUpdate,
     useBatchAddListener,
+    useBatchStartListener,
     useBatchFinalizeListener,
     useBatchProgressListener,
     useUploady,
@@ -600,6 +601,85 @@ export const WithDifferentBatchItemsMethod = (): Node => {
 
         <UploadPendingButton/>
     </Uploady>;
+};
+
+const TYPES = [
+    "IMAGES",
+    "DOCUMENTS"
+];
+
+const TwoFieldsPreviewContainer = styled.div`
+    img {
+        max-height: 100px;
+        margin-right: 4px;
+    }
+`;
+
+const UploadFieldWrapper = styled.div`
+    margin-bottom: 10px;
+    display: flex;
+    border-bottom: 1px dashed #646464;
+
+    ${TwoFieldsPreviewContainer} {
+        margin-left: 20px;
+    }
+`;
+
+const UploadField = ({ type, Preview, params, index }) => {
+    return <UploadFieldWrapper className={`upload-field-${index}`}>
+        <UploadButton
+            className="upload-button"
+            params={{ ...params, uploadType: type }}>Upload {type}</UploadButton>
+
+        <TwoFieldsPreviewContainer>
+        <h3>Previews for {type}</h3>
+        <Preview
+            rememberPreviousBatches
+        />
+        </TwoFieldsPreviewContainer>
+    </UploadFieldWrapper>
+};
+
+const createUploadFieldForType = (type) => {
+    const useTypedBatchMethod = (cb) => {
+        useBatchStartListener((batch, options) =>{
+            if (options.params?.uploadType === type) {
+                cb(batch, options);
+            }
+        });
+    };
+
+    const TypedUploadPreview = getUploadPreviewForBatchItemsMethod(useTypedBatchMethod);
+
+    const TypedUploadField = (props) =>
+        <UploadField {...props} type={type} Preview={TypedUploadPreview}/>;
+
+    return TypedUploadField;
+};
+
+const UploadFields = TYPES.map(createUploadFieldForType);
+
+export const WithTwoFields = (): Node  => {
+    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+
+    return (
+        <Uploady
+            debug
+            destination={destination}
+            enhancer={enhancer}
+            grouped={grouped}
+            maxGroupSize={groupSize}
+        >
+            <div className="App">
+                <h3>Two Upload Fields with single Uploady</h3>
+
+                {TYPES.map((type, index) => {
+                    const Field = UploadFields[index];
+                    return <Field key={type} index={index} params={{}}/>
+                })}
+            </div>
+        </Uploady>
+    );
 };
 
 export default (getCsfExport(UploadPreview, "Upload Preview", readme, { pkg: "upload-preview", section: "UI" }): CsfExport);

@@ -20,7 +20,7 @@ import type {
 type RequestPreSendHook = (cb: (data: PreSendData) =>
     { items?: BatchItem[], options?: CreateOptions } | boolean | void) => void;
 
-type BatchStartHook = (cb: (Batch, BatchItem[], CreateOptions) =>
+type BatchStartHook = (cb: (Batch, CreateOptions) =>
     { items?: BatchItem[], options?: CreateOptions } | boolean | void) => void;
 
 const useBatchAddListener: BatchCancellableEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ADD, false);

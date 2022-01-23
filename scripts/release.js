@@ -3,7 +3,6 @@ const { execSync } = require("child_process"),
     fs = require("fs"),
     yargs = require("yargs"),
     chalk = require("chalk"),
-    lernaJson = require("../lerna.json"),
     MarkDownIt = require("markdown-it"),
     asyncReduce = require("async/reduce"),
     { parseGitRepo } = require("@lerna/github-client"),
@@ -84,6 +83,7 @@ const TASKS = [
         id: "changelog",
         title: "Extract ChangeLog",
         task: () => {
+            const lernaJson = require("../lerna.json");
             const version = lernaJson.version;
             log(chalk.green, `Going to extract changes from log for version ${version}`);
 

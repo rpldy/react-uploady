@@ -183,7 +183,7 @@ const TASKS = [
                 repo: repo.name,
                 title: `chore: release v${version}`,
                 base: "master",
-                head: `release-${version.replaceAll(".", "_")}`,
+                head: `release-${version.replace(/\./g, "_")}`,
                 changes: [{
                     files: {},
                     commit: "commit new version"

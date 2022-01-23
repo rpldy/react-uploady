@@ -31,7 +31,7 @@ export type PreviewMethods = {
 	clear: () => void,
 };
 
-export type PreviewBatchItemsMethod = (cb: (batch: Batch) => void) => void;
+export type PreviewBatchItemsMethod = (cb: (batch: Batch, ...params: any[]) => void) => void;
 
 export type PreviewOptions = {|
 	//whether to show previous batches' previews as opposed to just the last (default: false)

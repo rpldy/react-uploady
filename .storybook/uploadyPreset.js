@@ -17,12 +17,13 @@ const getCurrentNpmVersion = async (pkg, config) => {
     let result = null;
 
     try {
-        if (config.mode !== "development") {
-            const manifest = await pacote.manifest(pkg.name);
-            result = { name: manifest.name, version: manifest.version };
-        } else {
-            result = { name: pkg.name, version: "dev" };
-        }
+        result = { name: pkg.name, version: pkg.version};
+        // if (config.mode !== "development") {
+        //     const manifest = await pacote.manifest(pkg.name);
+        //     result = { name: manifest.name, version: manifest.version };
+        // } else {
+        //     result = { name: pkg.name, version: "dev" };
+        // }
     } catch (e) {
         console.error("FAILED TO GET NPM VERSION !!!!!", e);
     }

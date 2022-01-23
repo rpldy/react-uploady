@@ -61,7 +61,7 @@ type BatchEventHook = EventHook<Batch>;
 type BatchCancellableEventHook = CancellableHook<Batch>;
 type BatchEventHookWithState = EventHookWithState<Batch>;
 
-type BatchStartHook = (cb: (batch: Batch, items: BatchItem[], options: CreateOptions) =>
+type BatchStartHook = (cb: (batch: Batch, options: CreateOptions) =>
     { items?: BatchItem[]; options?: CreateOptions } | boolean | void) => void;
 
 export const useBatchAddListener: BatchCancellableEventHook;

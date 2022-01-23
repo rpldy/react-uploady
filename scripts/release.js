@@ -1,11 +1,23 @@
 #!/usr/bin/env node
 const { execSync } = require("child_process"),
+    fs = require("fs"),
     yargs = require("yargs"),
     chalk = require("chalk"),
-    shell = require("shelljs");
+    lernaJson = require("../lerna.json"),
+    MarkDownIt = require("markdown-it"),
+    asyncReduce = require("async/reduce"),
+    { parseGitRepo } = require("@lerna/github-client"),
+    { createPullRequest } = require("octokit-plugin-create-pull-request"),
+    createGitHubClient = require("./githubClient");
+
+require("dotenv").config();
+
+const { publishArgs = "", versionArgs = "", dry = false } = yargs.argv;
+
+const getSuccessResult = () => ({ code: 0 });
 
 const shellCommand = (command) => {
-    const result = { code: 0 };
+    const result = getSuccessResult();
 
     try {
         execSync(command, { stdio: "inherit" });
@@ -17,36 +29,194 @@ const shellCommand = (command) => {
     return result;
 };
 
+const run = (command) =>
+    !dry ? shellCommand(command) : getSuccessResult();
+
+const log = (color, msg) =>
+    console.log(color(`${msg} ${dry ? "\t--dry-run--" : ""}`));
+
+const getLastCode = (results) => results.slice(-1)[0]?.code;
+
+const getResult = (results, taskId) => results.find(({ id }) => id === taskId);
+
+const runTask = async (results, { id, title, task }) => {
+    let result;
+
+    if (!results.length || !getLastCode(results)) {
+        log(chalk.gray, `** Running *${title}*`);
+
+        try {
+            result = await task(results);
+        } catch (ex) {
+            result = { code: ex.message };
+        }
+
+        if (result.code) {
+            log(chalk.red, `*${title}* failed !!! (${result.code})`);
+        } else {
+            log(chalk.green, `*${title}* finished successfully`);
+        }
+    } else {
+        log(chalk.yellow, `-- skipping *${title}* due to previous failures`);
+        result = { code: "skipped!" };
+    }
+
+    return results.concat({ id, ...result });
+};
+
+const TASKS = [
+    {
+        id: "version",
+        title: "Lerna Version",
+        task: () => run(`lerna version ${versionArgs}`),
+    },
+    {
+        id: "build",
+        title: "Build & Bundle",
+        task: () => run("yarn build; yarn bundle:prod;"),
+    },
+    {
+        id: "publish",
+        title: "Lerna Publish",
+        task: () => run(`lerna publish from-package ${publishArgs}`),
+    },
+    {
+        id: "changelog",
+        title: "Extract ChangeLog",
+        task: () => {
+            const version = lernaJson.version;
+            log(chalk.green, `Going to extract changes from log for version ${version}`);
+
+            let versionLog;
+
+            return new Promise((resolve) => {
+                fs.readFile("./CHANGELOG.md", { encoding: "UTF-8" }, (err, data) => {
+                    const md = new MarkDownIt();
+                    const tokens = md.parse(data);
+
+                    let startIndex = -1,
+                        endIndex = undefined;
+
+                    for (let i = 0; i < tokens.length; i++) {
+                        if (!~startIndex && tokens[i].tag === "h2"
+                            && tokens[i + 1]?.content.startsWith(version)) {
+                            startIndex = i
+                        } else if (!!~startIndex && tokens[i].tag === "h2" && tokens[i].type === "heading_open") {
+                            endIndex = i - 1;
+                            break;
+                        }
+                    }
+
+                    if (!!~startIndex) {
+                        const relevantTokens = tokens.slice(startIndex, (endIndex));
+
+                        versionLog = relevantTokens.map((t) =>
+                            (t.type === "heading_open" ? "\n" : "") +
+                            (!["list_item_close", "heading_close", "bullet_list_open", "bullet_list_close"].includes(t.type) ? t.markup : "") +
+                            (t.content && ` ${t.content}\n`) +
+                            (t.type === "heading_close" ? "\n" : "")
+                        ).join("");
+
+                        log(chalk.gray, "___ Version Changelog ___\n\n" + versionLog + "\n\n");
+                    }
+
+                    resolve({ code: versionLog ? 0 : 1, versionLog, version });
+                });
+            });
+        },
+    },
+    {
+        id: "gh-release",
+        title: "Create Github Release",
+        task: async (results) => {
+            const { versionLog, version } = getResult(results, "changelog");
+            const repo = parseGitRepo();
+            const tag = `v${version}`
+
+            log(chalk.gray, `Creating GH Release for ${tag} on ${repo.full_name}`);
+
+            const ghClient = createGitHubClient();
+
+            const createRes = dry ?
+                {
+                    status: 201,
+                    data: { url: "dry-run/release" }
+                } :
+                await ghClient.repos.createRelease({
+                    owner: repo.owner,
+                    repo: repo.name,
+                    tag_name: tag,
+                    name: tag,
+                    body: versionLog,
+                    draft: false,
+                });
+
+            const success = createRes?.status === 201;
+
+            if (success) {
+                log(chalk.green, `Successfully created new release at: \n ${createRes.data.url}`);
+            }
+
+            return { code: success ? 0 : createRes, repo };
+        },
+    },
+    {
+        id: "pr",
+        title: "Create Release+Version PR",
+        task: async (results) => {
+            const { version } = getResult(results, "changelog");
+            const { repo } = getResult(results, "gh-release");
+
+            const ghClient = createGitHubClient({}, [
+                createPullRequest
+            ]);
+
+            log(chalk.gray, `Creating Release PR for v${version}`);
+
+            const prRes = dry ?
+                {
+                    status: 201,
+                    data: { url: "dry-run/pr" }
+                } :
+                await ghClient.createPullRequest({
+                owner: repo.owner,
+                repo: repo.name,
+                title: `chore: release v${version}`,
+                base: "master",
+                head: `release-${version.replaceAll(".", "_")}`,
+                changes: [{
+                    files: {},
+                    commit: "commit new version"
+                }]
+            });
+
+            const success = prRes?.status === 201;
+
+            if (success) {
+                log(chalk.green, `Successfully created pull-request at: \n ${prRes.data.url}`);
+            }
+
+            return { code: success ? 0 : prRes };
+        }
+    }
+];
+
 /**
  * release script separates lerna version and lerna publish
  * This way, versioning happens before build&bundle so these processes
  * can work with the packages' bumped version
  */
-const release = () => {
-    const { publishArgs = "", versionArgs = "" } = yargs.argv;
+const release = async () => {
+    log(chalk.white, `Running release flow with ${TASKS.length} tasks`);
 
-    console.log(chalk.gray(`___ Running *Lerna Version*`));
-    let result = shellCommand(`lerna version ${versionArgs}`);
+    const results = await asyncReduce(TASKS, [], runTask);
 
-    if (!result.code) {
-        console.log(chalk.green(`___ *Lerna Version* finished successfully`));
-        console.log(chalk.gray(`___ Running *Build & Bundle*`));
-        result = shell.exec("yarn build; yarn bundle:prod;")
+    const lastCode = getLastCode(results);
 
-        if (!result.code) {
-            console.log(chalk.green(`___ *Build & Bundle* finished successfully`));
-            console.log(chalk.gray(`___ Running *Lerna Publish* with args: ${publishArgs}`));
+    log(chalk.white, `Finished release flow with code: ${lastCode}`);
 
-            result = shellCommand(`lerna publish from-package ${publishArgs}`);
-        } else {
-            console.log(chalk.red(`*Build & Bundle* failed !!! (${result.code})`));
-        }
-
-    } else {
-        console.log(chalk.red(`*Lerna Version* failed !!! (${result.code})`));
-    }
-
-    return process.exit(result.code);
+    return process.exit(lastCode);
 };
 
 release();
+

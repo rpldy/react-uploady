@@ -1,5 +1,5 @@
 {
-  "version": "0.17.0",
+  "version": "0.17.1",
   "name": "@rpldy/chunked-uploady",
   "description": "wrapper&context component to expose and provide react-uploady functionality with chunked upload support",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -21,10 +21,10 @@
     "url": "https://github.com/rpldy/react-uploady.git",
     "directory": "packages/ui/chunked-uploady"
   },
-    "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/react-uploady"
-    },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/react-uploady"
+  },
   "scripts": {
     "build": "node ../../../scripts/build.js",
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
@@ -33,15 +33,15 @@
     "access": "public"
   },
   "dependencies": {
-    "@rpldy/chunked-sender": "^0.17.0",
-    "@rpldy/sender": "^0.17.0",
-    "@rpldy/shared": "^0.17.0",
-    "@rpldy/shared-ui": "^0.17.0",
-    "@rpldy/uploader": "^0.17.0",
-    "@rpldy/uploady": "^0.17.0"
+    "@rpldy/chunked-sender": "^0.17.1",
+    "@rpldy/sender": "^0.17.1",
+    "@rpldy/shared": "^0.17.1",
+    "@rpldy/shared-ui": "^0.17.1",
+    "@rpldy/uploader": "^0.17.1",
+    "@rpldy/uploady": "^0.17.1"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^0.17.0",
+    "@rpldy/upload-button": "^0.17.1",
     "@storybook/addon-knobs": "^6.4.0",
     "flow-bin": "^0.169.0"
   },

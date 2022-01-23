@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.17.1 (2022-01-23)
+
+### Bug fixes
+
+- `[uploady]` - fix useBatchStartListener TS type signature
+
+### Docs
+
+- `storybook` - added two fields story to @rpldy/upload-preview
+
+### Internal
+
+- `all` - added funding info to package.json(s)  
+- `scripts` - reworked release script and added more tasks (GH release, PR branch)
+
+
 ## 0.17.0 (2022-01-16)
 
 ### Features

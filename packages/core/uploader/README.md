@@ -32,6 +32,8 @@ Some of these events also allow to cancel uploads dynamically.
 
 _If you're looking to integrate file upload with your React app, you'd probably want to head over to the [@rpldy/uploady README](../ui/uploady).
 
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+
 ## Installation
 
 ```shell

@@ -25,6 +25,9 @@ These will be handed over to the default [@rpldy/sender](../../core/sender).
 
 In case the browser doesn't support chunking (blob slicing), the default sender will be used as well.
 
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+
+
 ## Installation
 
 ```shell

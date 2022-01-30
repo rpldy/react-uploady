@@ -22,6 +22,8 @@ Drop Zones can use different configuration overrides that supersede the options 
 
 > Note: Some options cannot be overriden by the button. For example, any prop that influences the file input directly (such as '_multiple_')
 
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+
 ## Installation
 
 ```shell

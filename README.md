@@ -75,20 +75,7 @@ React-Uploady has a small footprint (by design) with very few (and small) depend
 
 **The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
 
-Another great place to learn about is React-Uploady our [video series on Youtube](https://youtube.com/playlist?list=PLigk9hpU4jsqZM7Fr3DxThJ--hsFWG8xk).
-
-We recommend checking out the [Uploady](packages/ui/uploady) README first to understand how to configure your uploads
-and how to access upload data (using the provided hooks or events).
-
-It's also worth reading the  [Important Concepts](#important-concepts) section below for some key concepts.
-
-In case you need UI components (like an upload button), check out the [UI packages](#ui-packages).
-
-### Additional Resources
-
-Our __[Storybook](https://react-uploady-storybook.netlify.com/)__ has many examples, both simple and advanced.
-
-Check out our __[Guides](guides)__ section for additional examples & information.
+Another great place to learn about React-Uploady is our [video series on Youtube](https://youtube.com/playlist?list=PLigk9hpU4jsqZM7Fr3DxThJ--hsFWG8xk).
 
 ### Changelog
 

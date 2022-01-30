@@ -50,17 +50,17 @@
 
 <p align="center">
     React-Uploady is a lightweight library - enabling you to build (client-side) file-upload features with just a few lines of code.
-    RU provides the foundations needed to upload files from the browser - The rest is up to you.
+    Uploady provides the foundations needed to upload files from the browser - The rest is up to you.
 </p>
 
 ![React-Uploady Demo](guides/rpldy-demo.gif)
 
 The philosophy behind this library is that it should be as simple as possible to use, yet customizable at every point.
 You can start simple, or you can can configure just about every aspect of the upload flow. 
-For this purpose, RU provides components, hooks, and plenty of features. 
+For this purpose, there are components, hooks, and plenty of features. 
 You get to choose which ones you need and only install the dependencies required (See [Packages](#packages) details below)
 
-RU has a small footprint (by design) with very few (and small) dependencies.
+React-Uploady has a small footprint (by design) with very few (and small) dependencies.
 
 | Bundle         | Minified size | GZipped size
 | -------------- | ------------- | -------------
@@ -75,7 +75,7 @@ RU has a small footprint (by design) with very few (and small) dependencies.
 
 **The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
 
-A great place to start is our [React-Uploady video series on Youtube](https://youtube.com/playlist?list=PLigk9hpU4jsqZM7Fr3DxThJ--hsFWG8xk).
+Another great place to learn about is React-Uploady our [video series on Youtube](https://youtube.com/playlist?list=PLigk9hpU4jsqZM7Fr3DxThJ--hsFWG8xk).
 
 We recommend checking out the [Uploady](packages/ui/uploady) README first to understand how to configure your uploads
 and how to access upload data (using the provided hooks or events).
@@ -314,7 +314,7 @@ A BatchItem has its own lifetime [events](packages/ui/uploady#events).
 
 ## Resumable Uploads
 
-RU supports resumable uploads through the [tus](https://tus.io/) [protocol](https://tus.io/protocols/resumable-upload.html).
+Uploady supports resumable uploads through the [tus](https://tus.io/) [protocol](https://tus.io/protocols/resumable-upload.html).
 Instead of using <Uploady> from @rpldy/uploady, use <TusUploady> from @rpldy/tus-uploady and you will have resumable upload support on the client side.
 Your server will also have to support the same protocol for this to work of course.
 

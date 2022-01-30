@@ -75,6 +75,8 @@ export type UploadyProps = {|
     webkitdirectory?: boolean,
     //the value to use for the internal file input element
     fileInputId?: string,
+    //name (attribute) of the file input field (default: "file")
+    inputFieldName?: string,
 
     //Dont render Uploady's file input in a portal. (default: false) For SSR, noPortal = false causes a React warning in DEV.
     noPortal?: boolean,

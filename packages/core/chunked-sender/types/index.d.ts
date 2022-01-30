@@ -1,4 +1,4 @@
-import { BatchItem, UploadData } from "@rpldy/shared";
+import { BatchItem, FileLike, UploadData } from "@rpldy/shared";
 import { OnProgress, SendMethod, SendOptions } from "@rpldy/sender";
 import { UploaderEnhancer } from "@rpldy/uploader";
 
@@ -50,5 +50,7 @@ export const createChunkedSender: (options: ChunkedOptions) => ChunkedSender;
 export const CHUNKING_SUPPORT: boolean;
 
 export const hasWindow: boolean;
+
+export const getChunkDataFromFile: (file: FileLike, start: number, end: number) => Blob | undefined;
 
 export default getChunkedEnhancer;

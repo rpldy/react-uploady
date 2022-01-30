@@ -16,6 +16,11 @@ export {
 
 export * from "@rpldy/sender";
 
+export {
+    FILE_STATES,
+    BATCH_STATES,
+} from "@rpldy/shared";
+
 export type {
     TriggerMethod
 } from "@rpldy/life-events";

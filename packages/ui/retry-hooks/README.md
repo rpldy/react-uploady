@@ -15,6 +15,8 @@ This package exposes useful hooks for the [@rpldy/retry](../../core/retry) packa
  
 It makes it easy to use retry from a React UI application.
 
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+
 ## Installation
 
 ```shell
@@ -75,19 +77,18 @@ When called without a parameter, will attempt retry all failed uploads.
 When called with a (id) parameter, will attempt retry for the failed batch-item identified by the id.
 
 ```javascript
-import React, { useCallback } from "react";
+import React from "react";
 import { useRetry } from "@rpldy/retry-hooks";
 
 const MyComponent = ( ) => {
     const retry = useRetry();
 
-    const onClick = useCallback(() => {
+    const onClick = () => {
         retry("i-123");
-    }, [retry]);
+    };
 
     return <button onClick={onClick}>retry item</button>;
 };
-
 ```
 
 ### useBatchRetry 
@@ -97,19 +98,18 @@ Returns a batch retry function.
 When called with a batch id, will attempt retry for all failed items in that batch.
 
 ```javascript
-import React, { useCallback } from "react";
+import React from "react";
 import { useBatchRetry } from "@rpldy/retry-hooks";
 
 const MyComponent = ( ) => {
     const retryBatch = useBatchRetry();
 
-    const onClick = useCallback(() => {
+    const onClick = () => {
         retryBatch("b-123");
-    }, [retryBatch]);
+    };
 
     return <button onClick={onClick}>retry batch</button>;
 };
-
 ```
 
 ### useRetryListener

@@ -16,8 +16,10 @@ Exposes an UploaderEnhancer that replaces the default send method the [uploader]
 
 For usage with your React app, see [@rpldy/chunked-uploady](../ui/chunked-uploady).
 
-Doesnt support grouped uploads (in single XHR equest) or URL uploading. 
-These will be handed over to the default [@rpldy/sender]()
+Chunked uploading doesn't support grouped uploads (in single XHR request) or URL uploading. 
+These will be handed over to the default [@rpldy/sender](../sender)
+
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
 
 ## Installation
 
@@ -31,12 +33,12 @@ These will be handed over to the default [@rpldy/sender]()
 
 ## Options
 
-| Name (* = mandatory) | Type          | Default       | Description  
-| --------------       | ------------- | ------------- | ------------
-| chunked               | boolean       | true          | chunk uploads. setting to false will return to default sending behavior
-| chunkSize             | number        | 5242880      | the chunk size. relevant when uploaded file is larger than the value
-| retries               | number        | 0             | how many times to retry sending a failed chunk
-| parallel              | number        | 0             | how many (chunk) requests to send simultaneously
+| Name (* = mandatory) | Type          | Default       | Description  |
+| --------------       | ------------- | ------------- | ------------|
+| chunked               | boolean       | true          | chunk uploads. setting to false will return to default sending behavior|
+| chunkSize             | number        | 5242880      | the chunk size. relevant when uploaded file is larger than the value|
+| retries               | number        | 0             | how many times to retry sending a failed chunk|
+| parallel              | number        | 0             | how many (chunk) requests to send simultaneously|
 
 ## Events
 

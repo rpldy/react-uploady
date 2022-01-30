@@ -43,38 +43,38 @@ It provides multiple hooks that enable more advanced features and data for clien
 
 ## Props
 
-| Name (* = mandatory) | Type          | Default       | Description  
-| --------------       | ------------- | ------------- | -------------
-| **Uploader Options**
-| autoUpload           | boolean       | true          | automatically upload files when they are added 
-| destination          | [Destination](../../core/shared/src/types.js#L7)   | undefined     | configure the end-point to upload to
-| inputFieldName       | string        | "file"        | name (attribute) of the file input field (requires sendWithFormData = true)
-| grouped              | boolean       | false         | group multiple files in a single request 
-| maxGroupSize         | number        | 5             | maximum of files to group together in a single request 
-| formatGroupParamName | (number, string) => string | undefined | determine the upload request field name when more than file is grouped in a single upload
-| fileFilter           | (File &#124; string, index: number, File[] &#124; string[]) => boolean | undefined | return false to exclude from batch
-| method               | string        | "POST"        | HTTP method in upload request
-| params               | Object        | undefined     | collection of params to pass along with the upload (requires sendWithFormData = true)
-| forceJsonResponse    | boolean       | false         | parse server response as JSON even if no JSON content-type header received            
-| withCredentials      | boolean       | false         | set XHR withCredentials to true
-| enhancer             | [UploaderEnhancer](../../core/uploader/src/types.js#L37) | undefined    | uploader [enhancer](../../../README.md#enhancer) function
-| concurrent           | boolean       | false          | issue multiple upload requests simultaneously
-| maxConcurrent        | number        | 2              | maximum allowed simultaneous requests
-| send                 | [SendMethod](../../core/sender/src/types.js#L38) | @rpldy/sender | how to send files to the server
-| sendWithFormData     | boolean       | true           | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data
-| formatServerResponse | [FormatServerResponseMethod](../../core/shared/src/types.js#L40) | undefined | function to create the batch item's uploadResponse from the raw xhr response
-| **Uploady Options**
-| debug                | boolean        | false | enable console logs from uploady packages
-| listeners            | Object        | undefined | map of [event](../../core/uploader/README.md#events) name and event handler
-| customInput          | boolean       | false | whether to use a custom file input (see: [useFileInput](#useFileInput)
-| inputFieldContainer  | HTMLElement   | document.body | html element to place the file input element inside
-| children             | React.Node    | undefined     | any part of your React app that will require access to the upload flow  (components, hooks, etc.)
-| capture              | string        | null          | [input/file#capture](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting 
-| multiple             | boolean       | true          | [input/file#multiple](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#multiple) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting
-| accept               | string        | null          | [input/file#accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting
-| webkitdirectory      | boolean       | false         | [webkitdirectory](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting
-| fileInputId          | string        | undefined     | the value to use for the internal file input element
-| noPortal             | boolean       | false         | Dont render Uploady's file input in a portal. (default: false) For SSR, noPortal = false causes a React warning in DEV.
+| Name (* = mandatory) | Type          | Default       | Description |
+| --------------       | ------------- | ------------- | ------------- |
+| **Uploader Options** |
+| autoUpload           | boolean       | true          | automatically upload files when they are added |
+| destination          | [Destination](../../core/shared/src/types.js#L7)   | undefined     | configure the end-point to upload to |
+| inputFieldName       | string        | "file"        | name (attribute) of the file input field (requires sendWithFormData = true) |
+| grouped              | boolean       | false         | group multiple files in a single request |
+| maxGroupSize         | number        | 5             | maximum of files to group together in a single request |
+| formatGroupParamName | (number, string) => string | undefined | determine the upload request field name when more than file is grouped in a single upload |
+| fileFilter           | (File &#124; string, index: number, File[] &#124; string[]) => boolean | undefined | return false to exclude from batch |
+| method               | string        | "POST"        | HTTP method in upload request |
+| params               | Object        | undefined     | collection of params to pass along with the upload (requires sendWithFormData = true) |
+| forceJsonResponse    | boolean       | false         | parse server response as JSON even if no JSON content-type header received |
+| withCredentials      | boolean       | false         | set XHR withCredentials to true |
+| enhancer             | [UploaderEnhancer](../../core/uploader/src/types.js#L37) | undefined    | uploader [enhancer](../../../README.md#enhancer) function |
+| concurrent           | boolean       | false          | issue multiple upload requests simultaneously |
+| maxConcurrent        | number        | 2              | maximum allowed simultaneous requests |
+| send                 | [SendMethod](../../core/sender/src/types.js#L38) | @rpldy/sender | how to send files to the server |
+| sendWithFormData     | boolean       | true           | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data |
+| formatServerResponse | [FormatServerResponseMethod](../../core/shared/src/types.js#L40) | undefined | function to create the batch item's uploadResponse from the raw xhr response |
+| **Uploady Options** |
+| debug                | boolean        | false | enable console logs from uploady packages |
+| listeners            | Object        | undefined | map of [event](../../core/uploader/README.md#events) name and event handler |
+| customInput          | boolean       | false | whether to use a custom file input (see: [useFileInput](#useFileInput) |
+| inputFieldContainer  | HTMLElement   | document.body | html element to place the file input element inside |
+| children             | React.Node    | undefined     | any part of your React app that will require access to the upload flow  (components, hooks, etc.) |
+| capture              | string        | null          | [input/file#capture](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting |
+| multiple             | boolean       | true          | [input/file#multiple](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#multiple) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting |
+| accept               | string        | null          | [input/file#accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting |
+| webkitdirectory      | boolean       | false         | [webkitdirectory](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting |
+| fileInputId          | string        | undefined     | the value to use for the internal file input element |
+| noPortal             | boolean       | false         | Dont render Uploady's file input in a portal. (default: false) For SSR, noPortal = false causes a React warning in DEV. |
 
 ## Example
 
@@ -103,18 +103,19 @@ When working in React, The UploadyContext is the API provider for the uploader m
 It wraps the uploader and exposes everything the app using it needs.
 
 ```javascript
-import React, { useContext, useCallback } from "react";
-import Uploady, { useUploady } from "@rpldy/uploady";
+import React from "react";
+import Uploady, { useUpload
+    y } from "@rpldy/uploady";
 
 const MyComponent = () => { 
     const uploady = useUploady();
 
-    const onClick = useCallback(()=> {
+    const onClick = ()=> {
             uploady.showFileUpload();
-        });
+        };
 
     return <button onClick={onClick}>Custom Upload Button</button>
-}
+};
 
 const App = () => (<Uploady>
     <MyComponent/>
@@ -196,7 +197,7 @@ register once for an [event](../../core/uploader/README.md#events)
 
 _(name: any, cb?: EventCallback) => void_
 
-unregister from an events
+unregister an event handler
 
 ## Hooks
 

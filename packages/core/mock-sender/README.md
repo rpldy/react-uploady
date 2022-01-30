@@ -15,7 +15,7 @@ Provides a mock sender that can be used to replace a real sender for testing pur
 
 It provides the same interface and events so the Uploader is unaware of its use.
 
-On progress events and abort functionality are supported
+On-progress events and abort functionality are supported
 
 ## Installation
 
@@ -29,13 +29,13 @@ On progress events and abort functionality are supported
 
 ## Options
 
-| Name (* = mandatory) | Type    | Default       | Description  
-| -------------- | ------------- | ------------- | -------------
-| delay          | number        | 500           | time in ms for mocked upload to take
-| fileSize       | number        | 1e+6          | file size of the mocked upload, used for progress calculation 
-| progressIntervals | number[]   | [10, 25, 50, 75, 100] | mock intervals (percentages) to emit progress events at
-| response       | any           |  {"mock": true, "success": true} | mock response for upload request
-| responseStatus | number        | 200           | upload request status code
+| Name (* = mandatory) | Type    | Default       | Description  |
+| -------------- | ------------- | ------------- | -------------|
+| delay          | number        | 500           | time in ms for mocked upload to take|
+| fileSize       | number        | 1e+6          | file size of the mocked upload, used for progress calculation| 
+| progressIntervals | number[]   | [10, 25, 50, 75, 100] | mock intervals (percentages) to emit progress events at|
+| response       | any           |  {"mock": true, "success": true} | mock response for upload request|
+| responseStatus | number        | 200           | upload request status code|
 
 ## Usage
 

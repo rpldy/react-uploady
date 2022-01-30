@@ -16,7 +16,7 @@ It contains the Provider that all other UI packages rely on.
 
 It provides multiple hooks that enable more advanced features and data for client apps.
 
-> The difference between this package and the main [Uploady](../../uploady) is that this one doesn't use react-dom (for obvious reasons) and does't create a file input element.
+> The difference between this package and the main [Uploady](../../uploady) is that this one doesn't use react-dom (for obvious reasons) and doesn't create a file input element.
 
 ## Installation
 
@@ -41,7 +41,7 @@ To be able to use one of the [UI Components](../../../README.md#ui-packages) or 
 This will give them access to the UploadyContext.
 
 ```javascript
-import React, { useCallback, useContext } from "react";
+import React, { useCallback } from "react";
 import { View, Button } from "react-native";
 import DocumentPicker from "react-native-document-picker/index";
 import NativeUploady from "@rpldy/native-uploady";

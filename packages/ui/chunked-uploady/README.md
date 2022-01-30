@@ -39,12 +39,12 @@ In case the browser doesn't support chunking (blob slicing), the default sender 
 
 ## Props
 
-| Name (* = mandatory) | Type          | Default       | Description  
-| --------------       | ------------- | ------------- | ------------
-| chunked               | boolean       | true          | chunk uploads. setting to false will return to default sending behavior
-| chunkSize             | number        | 5242880      | the chunk size. relevant when uploaded file is larger than the value
-| retries               | number        | 0             | how many times to retry sending a failed chunk
-| parallel              | number        | 0             | how many (chunk) requests to send simultaneously
+| Name (* = mandatory) | Type          | Default       | Description | 
+| --------------       | ------------- | ------------- | ------------|
+| chunked               | boolean       | true          | chunk uploads. setting to false will return to default sending behavior|
+| chunkSize             | number        | 5242880      | the chunk size. relevant when uploaded file is larger than the value|
+| retries               | number        | 0             | how many times to retry sending a failed chunk|
+| parallel              | number        | 0             | how many (chunk) requests to send simultaneously|
 
 In addition, all [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to ChunkedUploady.
 In order to override configuration passed to the parent Uploady component. 
@@ -61,15 +61,15 @@ Called when a chunk is about to be sent to the server
 > This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
 
 ```javascript
-    import { useChunkStartListener } from "@rpldy/chunked-uploady";
+import { useChunkStartListener } from "@rpldy/chunked-uploady";
 
-    const MyComponent = () => {
-        useChunkStartListener((data) => {
-            return {
-                url: `${data.url}/${data.chunk.index}`
-            };  
-        });   
-    };
+const MyComponent = () => {
+    useChunkStartListener((data) => {
+        return {
+            url: `${data.url}/${data.chunk.index}`
+        };  
+    });   
+};
 ```
 
 ### useChunkFinishListener
@@ -79,16 +79,12 @@ Called when a chunk has finished uploading
 ## Example
 
 ```javascript
- import React from "react";
- import ChunkedUploady from "@rpldy/chunked-uploady";
- import UploadButton from "@rpldy/upload-button";
- 
- const App = () => (<ChunkedUploady
-     destination={{ url: "https://my-server/upload" }}
-     chunkSize={2142880}>
-        
-     <UploadButton/>
- </ChunkedUploady>);
- 
+import { useChunkFinishListener } from "@rpldy/chunked-uploady";
+
+const MyComponent = () => {
+    useChunkFinishListener(({ chunk }) => {
+        console.log(`Chunk Finished - ${chunk.id} - attempt: ${chunk.attempt}`);
+    });
+};
  ```
 

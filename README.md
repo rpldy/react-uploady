@@ -71,7 +71,9 @@ RU has a small footprint (by design) with very few (and small) dependencies.
 
 ## Documentation
 
-**Getting Started**
+### Getting Started
+
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
 
 A great place to start is our [React-Uploady video series on Youtube](https://youtube.com/playlist?list=PLigk9hpU4jsqZM7Fr3DxThJ--hsFWG8xk).
 

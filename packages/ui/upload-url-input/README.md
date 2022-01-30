@@ -28,14 +28,14 @@ This can be useful for services that accept a URL and do server-side fetch. [Clo
 ## Props
 
 
-| Name (* = mandatory) | Type          | Default       | Description  
-| --------------       | ------------- | ------------- | -------------
-| id             | string   | undefined | id attribute to pass to the button element
-| className      | string   | undefined | the class attribute to pass to the button element
-| placeholder    | string    | undefined | input's placeholder text
-| validate       | [ValidateMethod](src/types.js#L6) | undefined | function to validate input's value before its sent
-| uploadRef     | React Ref   | undefined | ref will be set to the upload callback so it can be triggered from the outside (see [example](#example))
-| ignoreKeyPress   | boolean | false | by default pressing Enter will initiate the upload, set to true in order to disable this behavior
+| Name (* = mandatory) | Type          | Default       | Description                                                                                                |
+| --------------       | ------------- | ------------- |------------------------------------------------------------------------------------------------------------|
+| id             | string   | undefined | id attribute to pass to the button element                                                                 |
+| className      | string   | undefined | the class attribute to pass to the button element                                                          |
+| placeholder    | string    | undefined | input's placeholder text                                                                                   |
+| validate       | [ValidateMethod](src/types.js#L6) | undefined | function to validate input's value before its sent                                                         |
+| uploadRef     | React Ref   | undefined | ref will be set to the upload callback so it can be triggered from the outs ide (see [example](#example))  |
+| ignoreKeyPress   | boolean | false | by default pressing Enter will initiate the upload, set to true in order to disable this behavior          |
 
 In addition, most [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to UploadButton.
 In order to override configuration passed to the parent Uploady component. 
@@ -44,18 +44,18 @@ See [Uploady documentation](../uploady#props) for detailed list of upload option
 ## Example
 
 ```javascript
-import React, { useRef, useCallback } from "react";
+import React, { useRef } from "react";
 import Uploady from "@rpldy/uploady";
 import UploadUrlInput from "@rpldy/upload-url-input";
 
 const MyUrlUpload = () => {
     const uploadRef = useRef(null);
 
-    const onClick = useCallback(() => {
+    const onClick = () => {
         if (uploadRef && uploadRef.current) {
             uploadRef.current(); //initiate upload
         }
-    }, []);
+    };
     
     return <Uploady>
         <UploadUrlInput placeholder="URL to upload"
@@ -64,5 +64,4 @@ const MyUrlUpload = () => {
         <button onClick={onClick}>Upload</button>
     </Uploady>;
 };
-
 ```

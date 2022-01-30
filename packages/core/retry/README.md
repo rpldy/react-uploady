@@ -30,5 +30,5 @@ Retry exposes an UploaderEnhancer that adds the retry extension.
 
 For usage with your React app, see [@rpldy/retry-hooks](../ui/retry-hooks).
 
-manual usage (outside React) is less practical as it requires familiarity with the internals of this package
+Manual usage (outside React) is less practical as it requires familiarity with the internals of this package
 which is unadvisable at the moment.

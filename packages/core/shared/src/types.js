@@ -10,7 +10,7 @@ export type Destination = {
 	filesParamName?: ?string,
 	//collection of params to pass along with the upload
 	params?: Object,
-	//collection of headers to send with
+	//collection of headers to add to the request
 	headers?: Object,
     //HTTP method to use when uploading
     method?: ?string,

@@ -22,6 +22,8 @@ Drop Zones can use different configuration overrides that supersede the options 
 
 > Note: Some options cannot be overriden by the button. For example, any prop that influences the file input directly (such as '_multiple_')
 
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+
 ## Installation
 
 ```shell
@@ -34,15 +36,15 @@ Drop Zones can use different configuration overrides that supersede the options 
 
 ## Props
 
-| Name (* = mandatory) | Type          | Default       | Description  
-| --------------       | ------------- | ------------- | -------------
-| id                  | string   | undefined | id attribute to pass to the container element
-| className           | string   | undefined | the class attribute to pass to the container element
-| onDragOverClassName | string   | undefined | class name to add to the container when dragged over
-| dropHandler         | [DropHandlerMethod](src/types.js#L4) | undefined | override default handler that returns the drop result (ex: files). May return a promise 
-| htmlDirContentParams | Object | undefined | will be passed as is to html-dir-content. See [docs](https://www.npmjs.com/package/html-dir-content#api)
-| children             | React.Node | undefined | child element(s) to render inside the container 
-| extraProps          | Object   | undefined | any other props to pass to the div component (with spread)
+| Name (* = mandatory) | Type          | Default       | Description  |
+| --------------       | ------------- | ------------- | -------------|
+| id                  | string   | undefined | id attribute to pass to the container element|
+| className           | string   | undefined | the class attribute to pass to the container element|
+| onDragOverClassName | string   | undefined | class name to add to the container when dragged over|
+| dropHandler         | [DropHandlerMethod](src/types.js#L4) | undefined | override default handler that returns the drop result (ex: files). May return a promise| 
+| htmlDirContentParams | Object | undefined | will be passed as is to html-dir-content. See [docs](https://www.npmjs.com/package/html-dir-content#api)|
+| children             | React.Node | undefined | child element(s) to render inside the container |
+| extraProps          | Object   | undefined | any other props to pass to the div component (with spread)|
 
 In addition, most [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to UploadDropZone.
 In order to override configuration passed to the parent Uploady component. 
@@ -60,8 +62,9 @@ import UploadDropZone from "@rpldy/upload-drop-zone";
 const App = () => (
     <Uploady destination={destination}>
         <UploadDropZone onDragOverClassName="drag-over"
-                        grouped={grouped}
-                        maxGroupSize={groupSize}>
+                        grouped
+                        maxGroupSize={3}
+        >
             <span>Drag&Drop File(s) Here</span>            
         </UploadDropZone>
     </Uploady>);

@@ -16,6 +16,8 @@ Retry monitors items that have failed due to error or abort.
 
 Retry exposes an UploaderEnhancer that adds the retry extension.
 
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+
 ## Installation
 
 ```shell
@@ -30,5 +32,5 @@ Retry exposes an UploaderEnhancer that adds the retry extension.
 
 For usage with your React app, see [@rpldy/retry-hooks](../ui/retry-hooks).
 
-manual usage (outside React) is less practical as it requires familiarity with the internals of this package
+Manual usage (outside React) is less practical as it requires familiarity with the internals of this package
 which is unadvisable at the moment.

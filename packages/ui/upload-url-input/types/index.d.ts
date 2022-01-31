@@ -1,7 +1,7 @@
 import { UploadOptions } from "@rpldy/shared";
 import * as React from "react";
 
-export type ValidateMethod = (value: string | void, input: HTMLInputElement | void) => boolean;
+export type ValidateMethod = (value: string | undefined, input: HTMLInputElement | undefined) => boolean;
 
 export type UploadMethod = () => void;
 

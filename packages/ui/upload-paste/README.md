@@ -14,6 +14,7 @@
 The main feature is the `withPasteUpload` HOC, which allows any component to become a trigger of paste-to-upload.
 A user pasting (ctrl/cmd+v) a file or files while focused on the element will trigger an upload 
 
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
 
 ## Installation
 
@@ -31,14 +32,14 @@ _withPasteUpload(ComponentType<any>) => React.FC<PasteProps>_
 
 ### PasteProps
 
-| Name (* = mandatory) | Type          | Default       | Description
-| --------------       | ------------- | ------------- | -------------
-| id             | string            | undefined | id attribute to pass to the button element
-| className      | string            | undefined | the class attribute to pass to the button element
-| children       | React.Node        | undefined | child element(s) to render inside the button (replaces text)
-| extraProps     | Object            | undefined | any other props to pass to the wrapped component (with spread)
-| ref            | React ref         | undefined | will be passed to the button element to acquire a ref
-| onPasteUpload  | [PasteUploadHandler](src/types.js#L8) | undefined | function called when paste to upload occurs
+| Name (* = mandatory) | Type          | Default       | Description|
+| --------------       | ------------- | ------------- | -------------|
+| id             | string            | undefined | id attribute to pass to the button element|
+| className      | string            | undefined | the class attribute to pass to the button element|
+| children       | React.Node        | undefined | child element(s) to render inside the button (replaces text)|
+| extraProps     | Object            | undefined | any other props to pass to the wrapped component (with spread)|
+| ref            | React ref         | undefined | will be passed to the button element to acquire a ref|
+| onPasteUpload  | [PasteUploadHandler](src/types.js#L8) | undefined | function called when paste to upload occurs|
 
 In addition, most [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to the component returned from calling withPasteUpload.
 In order to override configuration passed to the parent Uploady component.
@@ -70,7 +71,6 @@ const MyApp = () => {
         </PasteArea>
     </Uploady>;
 };
-
 ```
 
 ## Hooks

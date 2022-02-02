@@ -224,7 +224,7 @@ const TASKS = [
 
                 if (!result.code) {
                     log(chalk.gray, `merging release to ${branch}`);
-                    result = run(`git merge release`);
+                    result = run(`git merge release -m "merge content of release ${version}" --log`);
 
                     if (!result.code) {
                         log(chalk.gray, `pushing branch ${branch} to origin`);
@@ -237,31 +237,6 @@ const TASKS = [
                     }
                 }
             }
-
-
-            // const isBranchAlreadyExists = !!result.code &&
-            //     result.shellError.includes(`A branch named '${branch}' already exists`);
-            //
-            // if (!result.code || isBranchAlreadyExists) {
-            //     if (isBranchAlreadyExists) {
-            //         log(chalk.gray, `branch ${branch} already exists`);
-            //         result = run(`git checkout ${branch}`);
-            //
-            //         if (!result.code) {
-            //             result = run(`git fetch origin`);
-            //         }
-            //     }
-            //
-            //     if (!result.code) {
-            //         log(chalk.gray, `pushing branch ${branch} to origin`);
-            //         result = run(`git push -u origin ${branch}`);
-            //
-            //         if (!result.code) {
-            //             log(chalk.gray, `returning to release branch`);
-            //             result = run(`git checkout release`);
-            //         }
-            //     }
-            // }
 
             return { code: result.code };
         },

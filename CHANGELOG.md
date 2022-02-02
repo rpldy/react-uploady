@@ -1,6 +1,19 @@
 # Changelog
 
-## 0.17.1 (2022-01-23)
+## 0.17.2 (2022-02-01)
+
+### Bug fixes
+
+- `[upload-url-input]` - fix ValidateMethod types
+- `[uploader]` - expose FILE_STATES & BATCH_STATES constants
+- `[uploady]` - expose FILE_STATES & BATCH_STATES constants
+
+### Docs
+
+- `all` - added link to new docs site: https://react-uploady.netlify.app
+- `guides` - removed - point to docs site section: https://react-uploady.netlify.app/docs/category/guides
+
+# 0.17.1 (2022-01-23)
 
 ### Bug fixes
 

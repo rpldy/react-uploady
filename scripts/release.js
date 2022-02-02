@@ -222,7 +222,7 @@ const TASKS = [
 
                 if (!result.code) {
                     log(chalk.gray, `merging release to ${branch}`);
-                    result = run(`git merge release -m "merge content of release: ${version}" --log`);
+                    result = run(`git merge release -m "chore: merge content for release ${version}\n" --log`);
 
                     if (!result.code) {
                         log(chalk.gray, `pushing branch ${branch} to origin`);

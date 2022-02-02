@@ -220,7 +220,7 @@ const TASKS = [
             let result = run(`git fetch origin`);
 
             if (!result.code) {
-                result = run(`git checkout -b origin/${branch}`);
+                result = run(`git checkout -b ${branch} origin/${branch}`);
 
                 if (!result.code) {
                     log(chalk.gray, `merging release to ${branch}`);
@@ -228,7 +228,7 @@ const TASKS = [
 
                     if (!result.code) {
                         log(chalk.gray, `pushing branch ${branch} to origin`);
-                        result = run(`git push origin ${branch}`);
+                        result = run(`git push origin`);
 
                         if (!result.code) {
                             log(chalk.gray, `returning to release branch`);

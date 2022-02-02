@@ -74,21 +74,21 @@ const runTask = async (results, { id, title, task }) => {
 };
 
 const TASKS = [
-    {
-        id: "version",
-        title: "Lerna Version",
-        task: () => run(`lerna version ${versionArgs}`),
-    },
-    {
-        id: "build",
-        title: "Build & Bundle",
-        task: () => run("yarn build; yarn bundle:prod;"),
-    },
-    {
-        id: "publish",
-        title: "Lerna Publish",
-        task: () => run(`lerna publish from-package ${publishArgs}`),
-    },
+    // {
+    //     id: "version",
+    //     title: "Lerna Version",
+    //     task: () => run(`lerna version ${versionArgs}`),
+    // },
+    // {
+    //     id: "build",
+    //     title: "Build & Bundle",
+    //     task: () => run("yarn build; yarn bundle:prod;"),
+    // },
+    // {
+    //     id: "publish",
+    //     title: "Lerna Publish",
+    //     task: () => run(`lerna publish from-package ${publishArgs}`),
+    // },
     {
         id: "changelog",
         title: "Extract ChangeLog",
@@ -147,7 +147,7 @@ const TASKS = [
 
             const ghClient = createGitHubClient();
 
-            const createRes = dry ?
+            const createRes = true ?
                 {
                     status: 201,
                     data: { url: "dry-run/release" }
@@ -228,7 +228,7 @@ const TASKS = [
 
                     if (!result.code) {
                         log(chalk.gray, `pushing branch ${branch} to origin`);
-                        result = run(`git push -u origin ${branch}`);
+                        result = run(`git push origin ${branch}`);
 
                         if (!result.code) {
                             log(chalk.gray, `returning to release branch`);

@@ -38,14 +38,12 @@ const log = (color, msg) =>
 
 const getLastCode = (results) => results.slice(-1)[0]?.code;
 
-const getResult = (results, taskId) => {
-    const isArray = Array.isArray(taskId);
-
+const getResult = (results, ...taskId) => {
     const find = (t) => results.find(({ id }) => id === t);
 
     const outputs = [].concat(taskId).map(find);
 
-    return isArray ? outputs : outputs[0];
+    return taskId.length > 1 ? outputs : outputs[0];
 }
 
 const runTask = async (results, { id, title, task }) => {
@@ -175,7 +173,7 @@ const TASKS = [
         title: "Create Release+Version PR",
         task: async (results) => {
             const [{ version }, { repo }] =
-                getResult(results, ["changelog",  "gh-release"]);
+                getResult(results, "changelog",  "gh-release");
 
             const branch =`release-${version.replace(/\./g, "_")}`;
 
@@ -215,7 +213,7 @@ const TASKS = [
         id: "branch",
         title: "Push changes to Release+Version Branch",
         task: async (results) => {
-            const { branch } = getResult(results, "pr");
+            const [{ version }, { branch }] = getResult(results, "changelog", "pr");
 
             let result = run(`git fetch origin`);
 
@@ -224,7 +222,7 @@ const TASKS = [
 
                 if (!result.code) {
                     log(chalk.gray, `merging release to ${branch}`);
-                    result = run(`git merge release -m "merge content of release ${version}" --log`);
+                    result = run(`git merge release -m "merge content of release: ${version}" --log`);
 
                     if (!result.code) {
                         log(chalk.gray, `pushing branch ${branch} to origin`);

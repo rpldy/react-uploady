@@ -13,7 +13,7 @@
 - `all` - added link to new docs site: https://react-uploady.netlify.app
 - `guides` - removed - point to docs site section: https://react-uploady.netlify.app/docs/category/guides
 
-# 0.17.1 (2022-01-23)
+## 0.17.1 (2022-01-23)
 
 ### Bug fixes
 

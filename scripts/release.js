@@ -171,47 +171,13 @@ const TASKS = [
         },
     },
     {
-      id: "branch",
-      title: "Create Release+Version Branch",
-      task: async (results) => {
-          const { version } = getResult(results, "changelog");
-          const branch =`release-${version.replace(/\./g, "_")}`;
-
-          let result = run(`git checkout -b ${branch}`);
-
-          const isBranchAlreadyExists = !!result.code &&
-              result.shellError.includes(`A branch named '${branch}' already exists`);
-
-          if (!result.code || isBranchAlreadyExists) {
-              if (isBranchAlreadyExists) {
-                  log(chalk.gray, `branch ${branch} already exists`);
-                  result = run(`git checkout ${branch}`);
-
-                  if (!result.code) {
-                      result = run(`git fetch origin`);
-                  }
-              }
-
-              if (!result.code) {
-                  log(chalk.gray, `pushing branch ${branch} to origin`);
-                  result = run(`git push -u origin ${branch}`);
-
-                  if (!result.code) {
-                      log(chalk.gray, `returning to release branch`);
-                      result = run(`git checkout release`);
-                  }
-              }
-          }
-
-          return { code: result.code, branch };
-      },
-    },
-    {
         id: "pr",
         title: "Create Release+Version PR",
         task: async (results) => {
-            const [{ version }, { repo }, { branch }] =
-                getResult(results, ["changelog",  "gh-release", "branch"]);
+            const [{ version }, { repo }] =
+                getResult(results, ["changelog",  "gh-release"]);
+
+            const branch =`release-${version.replace(/\./g, "_")}`;
 
             const ghClient = createGitHubClient({}, [
                 createPullRequest
@@ -242,9 +208,64 @@ const TASKS = [
                 log(chalk.green, `Successfully created pull-request at: \n ${prRes.data.url}`);
             }
 
-            return { code: success ? 0 : prRes };
+            return { code: success ? 0 : prRes, branch, };
         }
-    }
+    },
+    {
+        id: "branch",
+        title: "Push changes to Release+Version Branch",
+        task: async (results) => {
+            const { branch } = getResult(results, "pr");
+
+            let result = run(`git fetch origin`);
+
+            if (!result.code) {
+                result = run(`git checkout -b origin/${branch}`);
+
+                if (!result.code) {
+                    log(chalk.gray, `merging release to ${branch}`);
+                    result = run(`git merge release`);
+
+                    if (!result.code) {
+                        log(chalk.gray, `pushing branch ${branch} to origin`);
+                        result = run(`git push -u origin ${branch}`);
+
+                        if (!result.code) {
+                            log(chalk.gray, `returning to release branch`);
+                            result = run(`git checkout release`);
+                        }
+                    }
+                }
+            }
+
+
+            // const isBranchAlreadyExists = !!result.code &&
+            //     result.shellError.includes(`A branch named '${branch}' already exists`);
+            //
+            // if (!result.code || isBranchAlreadyExists) {
+            //     if (isBranchAlreadyExists) {
+            //         log(chalk.gray, `branch ${branch} already exists`);
+            //         result = run(`git checkout ${branch}`);
+            //
+            //         if (!result.code) {
+            //             result = run(`git fetch origin`);
+            //         }
+            //     }
+            //
+            //     if (!result.code) {
+            //         log(chalk.gray, `pushing branch ${branch} to origin`);
+            //         result = run(`git push -u origin ${branch}`);
+            //
+            //         if (!result.code) {
+            //             log(chalk.gray, `returning to release branch`);
+            //             result = run(`git checkout release`);
+            //         }
+            //     }
+            // }
+
+            return { code: result.code };
+        },
+    },
 ];
 
 /**

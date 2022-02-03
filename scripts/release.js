@@ -19,10 +19,12 @@ const shellCommand = (command) => {
     const result = getSuccessResult();
 
     try {
-        execSync(command, { stdio: "inherit" });
+        execSync(command, { stdio: [0, 1, "pipe"] }); //"inherit" });
     } catch (ex) {
         console.log(ex);
-        result.code = 1;
+        console.log("status = ", ex.status)
+        result.code = ex.status || 1;
+        result.shellError = ex.stderr.toString();
     }
 
     return result;
@@ -36,7 +38,13 @@ const log = (color, msg) =>
 
 const getLastCode = (results) => results.slice(-1)[0]?.code;
 
-const getResult = (results, taskId) => results.find(({ id }) => id === taskId);
+const getResult = (results, ...taskId) => {
+    const find = (t) => results.find(({ id }) => id === t);
+
+    const outputs = [].concat(taskId).map(find);
+
+    return taskId.length > 1 ? outputs : outputs[0];
+}
 
 const runTask = async (results, { id, title, task }) => {
     let result;
@@ -164,8 +172,10 @@ const TASKS = [
         id: "pr",
         title: "Create Release+Version PR",
         task: async (results) => {
-            const { version } = getResult(results, "changelog");
-            const { repo } = getResult(results, "gh-release");
+            const [{ version }, { repo }] =
+                getResult(results, "changelog",  "gh-release");
+
+            const branch =`release-${version.replace(/\./g, "_")}`;
 
             const ghClient = createGitHubClient({}, [
                 createPullRequest
@@ -183,7 +193,7 @@ const TASKS = [
                 repo: repo.name,
                 title: `chore: release v${version}`,
                 base: "master",
-                head: `release-${version.replace(/\./g, "_")}`,
+                head:  branch,
                 changes: [{
                     files: {},
                     commit: "commit new version"
@@ -196,9 +206,37 @@ const TASKS = [
                 log(chalk.green, `Successfully created pull-request at: \n ${prRes.data.url}`);
             }
 
-            return { code: success ? 0 : prRes };
+            return { code: success ? 0 : prRes, branch, };
         }
-    }
+    },
+    {
+        id: "branch",
+        title: "Push changes to Release+Version Branch",
+        task: async (results) => {
+            const [{ version }, { branch }] = getResult(results, "changelog", "pr");
+
+            let result = run(`git fetch origin`);
+
+            if (!result.code) {
+                result = run(`git checkout -b ${branch} origin/${branch}`);
+
+                if (!result.code) { //now in release-version branch
+                    log(chalk.gray, `merging release to ${branch}`);
+                    result = run(`git merge release -m "chore: merge content for release ${version}\n" --log`);
+
+                    if (!result.code) {
+                        log(chalk.gray, `pushing branch ${branch} to origin`);
+                        result = run(`git push origin`);
+                    }
+
+                    log(chalk.gray, `returning to release branch`);
+                    result = run(`git checkout release`);
+                }
+            }
+
+            return { code: result.code };
+        },
+    },
 ];
 
 /**
@@ -219,4 +257,3 @@ const release = async () => {
 };
 
 release();
-

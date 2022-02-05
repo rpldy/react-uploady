@@ -73,13 +73,6 @@ module.exports = {
             }],
             enforce: "pre",
         });
-        //
-        // config.module.rules.push({
-        //     test: /\.m?js/,
-        //     resolve: {
-        //         fullySpecified: false
-        //     }
-        // });
 
         config.resolve = {
             ...config.resolve,

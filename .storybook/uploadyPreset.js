@@ -1,29 +1,22 @@
 const webpack = require("webpack"),
-    pacote = require("pacote"),
     { getMatchingPackages } = require("../scripts/lernaUtils"),
     { getUploadyVersion } = require("../scripts/utils");
 
-const getAllPackagesVersions = async (config) => {
+const getAllPackagesVersions = async () => {
     const pkgs = await getMatchingPackages({});
 
     const pkgVersions = await Promise.all(
         pkgs.packages.map(((pkg) =>
-            getCurrentNpmVersion(pkg, config))));
+            getCurrentNpmVersion(pkg))));
 
     return JSON.stringify(pkgVersions);
 };
 
-const getCurrentNpmVersion = async (pkg, config) => {
+const getCurrentNpmVersion = async (pkg) => {
     let result = null;
 
     try {
         result = { name: pkg.name, version: pkg.version};
-        // if (config.mode !== "development") {
-        //     const manifest = await pacote.manifest(pkg.name);
-        //     result = { name: manifest.name, version: manifest.version };
-        // } else {
-        //     result = { name: pkg.name, version: "dev" };
-        // }
     } catch (e) {
         console.error("FAILED TO GET NPM VERSION !!!!!", e);
     }
@@ -54,8 +47,8 @@ const updateDefinePlugin = async (config, withDefinitions) => {
     return config;
 };
 
-const addEnvParams = (config) =>
-    updateDefinePlugin(config, async (definitions) => {
+const addEnvParams = async (config) =>
+    await updateDefinePlugin(config, async (definitions) => {
         return {
             ...definitions,
             "PUBLISHED_VERSIONS": await getAllPackagesVersions(config),
@@ -74,25 +67,41 @@ module.exports = {
     webpack: async (config) => {
         config.module.rules.push({
             test: /\.stor(y|ies)\.jsx?$/,
-            loaders: [{
+            use: [{
                 loader: require.resolve("@storybook/source-loader"),
                 options: { parser: "flow" },
             }],
             enforce: "pre",
         });
+        //
+        // config.module.rules.push({
+        //     test: /\.m?js/,
+        //     resolve: {
+        //         fullySpecified: false
+        //     }
+        // });
 
         config.resolve = {
-            mainFields: ["main:dev", "module", "main"],
+            ...config.resolve,
+            mainFields: ["main:dev"].concat(config.resolve.mainFields),
         };
 
         config.optimization.minimize = !!process.env.SB_OPTIMIZE;
 
-        // config.stats.errorDetails = true;
+        config.stats.errorDetails = true;
 
         return addEnvParams(config);
     },
 
     managerWebpack: async (config) => {
+        //fixing issue with module imports not using extensions: https://github.com/webpack/webpack/issues/11467#issuecomment-691873586
+        config.module.rules.push({
+            test: /\.m?js/,
+            resolve: {
+                fullySpecified: false
+            }
+        });
+
         return updateDefinePlugin(config, async (definitions) => ({
             ...definitions,
             "PUBLISHED_VERSIONS": await getAllPackagesVersions(config),

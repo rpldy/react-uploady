@@ -4,6 +4,7 @@
 .*/node_modules/eslint-plugin-react/.*
 .*/node_modules/enzyme-matchers/.*
 .*/node_modules/jest-enzyme/.*
+.*/node_modules/webpack-cli/node_modules/.*
 .*/lib/.*
 
 [include]

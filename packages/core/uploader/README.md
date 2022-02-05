@@ -88,6 +88,7 @@ uploader.add(myFile);
 | sendWithFormData     | boolean                                                                                              | true           | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data |
 | formatServerResponse | [FormatServerResponseMethod](../shared/src/types.js#L40)                                             | undefined | function to create the batch item's uploadResponse from the raw xhr response |
 | formDataAllowUndefined | boolean                                                                                              | false          | //whether to include params with undefined value |
+| clearPendingOnAdd     | boolean                                                                                              | false          | whether to clear pending batch(es) when a new one is added |
 
 ## Uploader API
 

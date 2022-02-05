@@ -15,15 +15,23 @@ const Badge = styled.span`
 
 const VERSIONS = PUBLISHED_VERSIONS;
 
-const VersionBadge = ({ pkg , preText = "", className }) => {
-    const info = pkg &&
+const VersionBadge = ({ pkg, preText = "", className, withUrl }) => {
+    const info = !!pkg &&
         VERSIONS.find(({ name }) => name === pkg);
 
-    return info ? <Badge
+    const badge = info ? <Badge
         className={`version-badge ${className}`}
         title="released version">
         {preText}{info.version}
     </Badge> : null;
+
+    return info &&
+        (withUrl ?
+            <a
+                target="_blank"
+                rel="noreferrer noopener"
+                href={`https://www.npmjs.com/package/${pkg}`}>{badge}</a> :
+            badge);
 };
 
 export default VersionBadge;

@@ -11,7 +11,7 @@ module.exports = {
                 cwd: path.join(process.cwd(), ".storybook")
             });
 
-        return ["./welcome.story.js"].concat(paths);
+        return ["./welcome.stories.mdx"].concat(paths);
     },
     addons: [
         "@storybook/addon-essentials",

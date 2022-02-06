@@ -1,5 +1,5 @@
 {
-  "version": "0.17.2",
+  "version": "0.17.3",
   "name": "@rpldy/upload-paste",
   "description": "easily add paste-to-upload to React components",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -8,7 +8,7 @@
   "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
-    "homepage": "https://react-uploady.netlify.app",
+  "homepage": "https://react-uploady.netlify.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/rpldy/react-uploady.git",
@@ -18,26 +18,26 @@
     "type": "opencollective",
     "url": "https://opencollective.com/react-uploady"
   },
-    "keywords": [
-        "file",
-        "upload",
-        "file upload",
-        "react",
-        "hooks",
-        "paste",
-        "copy&paste"
-    ],
+  "keywords": [
+    "file",
+    "upload",
+    "file upload",
+    "react",
+    "hooks",
+    "paste",
+    "copy&paste"
+  ],
   "scripts": {
     "build": "node ../../../scripts/build.js",
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared-ui": "^0.17.2"
+    "@rpldy/shared-ui": "^0.17.3"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^0.17.2",
-    "@rpldy/upload-drop-zone": "^0.17.2",
-    "@rpldy/uploady": "^0.17.2",
+    "@rpldy/upload-button": "^0.17.3",
+    "@rpldy/upload-drop-zone": "^0.17.3",
+    "@rpldy/uploady": "^0.17.3",
     "flow-bin": "^0.169.0",
     "styled-components": "^5.3.3"
   },

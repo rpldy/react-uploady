@@ -1,5 +1,5 @@
 {
-  "version": "0.17.2",
+  "version": "0.17.3",
   "name": "@rpldy/uploader",
   "description": "the processing and queuing engine for react-uploady",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -8,7 +8,7 @@
   "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
-    "homepage": "https://react-uploady.netlify.app",
+  "homepage": "https://react-uploady.netlify.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/rpldy/react-uploady.git",
@@ -18,22 +18,22 @@
     "type": "opencollective",
     "url": "https://opencollective.com/react-uploady"
   },
-    "keywords": [
-        "file",
-        "upload",
-        "file upload",
-        "react",
-        "hooks"
-    ],
+  "keywords": [
+    "file",
+    "upload",
+    "file upload",
+    "react",
+    "hooks"
+  ],
   "scripts": {
     "build": "node ../../../scripts/build.js",
     "flow:copy": "flow-copy-source ./src ./lib/flow --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/life-events": "^0.17.2",
-    "@rpldy/sender": "^0.17.2",
-    "@rpldy/shared": "^0.17.2",
-    "@rpldy/simple-state": "^0.17.2"
+    "@rpldy/life-events": "^0.17.3",
+    "@rpldy/sender": "^0.17.3",
+    "@rpldy/shared": "^0.17.3",
+    "@rpldy/simple-state": "^0.17.3"
   },
   "devDependencies": {
     "flow-bin": "^0.169.0"

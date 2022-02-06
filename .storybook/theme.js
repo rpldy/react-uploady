@@ -17,6 +17,6 @@ export default create({
     // inputTextColor: 'black',
     // inputBorderRadius: 4,
 
-    // brandUrl: 'https://example.com',
+    brandUrl: "https://react-uploady.netlify.app",
     brandImage: "https://res.cloudinary.com/yoav-cloud/image/upload/w_300/v22212321/rpldy/logo/react-uploady-text-logo.png",
 });

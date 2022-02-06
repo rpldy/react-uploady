@@ -1,5 +1,5 @@
 {
-  "version": "0.17.2",
+  "version": "0.17.3",
   "name": "@rpldy/tus-uploady",
   "description": "wrapper&context component to expose and provide react-uploady functionality with TUS protocol support",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -8,7 +8,7 @@
   "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
-    "homepage": "https://react-uploady.netlify.app",
+  "homepage": "https://react-uploady.netlify.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/yoavniran/react-uploady.git",
@@ -18,16 +18,16 @@
     "type": "opencollective",
     "url": "https://opencollective.com/react-uploady"
   },
-    "keywords": [
-        "file",
-        "upload",
-        "file upload",
-        "react",
-        "hooks",
-        "chunked uploads",
-        "tus",
-        "resumable"
-    ],
+  "keywords": [
+    "file",
+    "upload",
+    "file upload",
+    "react",
+    "hooks",
+    "chunked uploads",
+    "tus",
+    "resumable"
+  ],
   "scripts": {
     "build": "node ../../../scripts/build.js",
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
@@ -36,13 +36,13 @@
     "access": "public"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.17.2",
-    "@rpldy/shared-ui": "^0.17.2",
-    "@rpldy/tus-sender": "^0.17.2"
+    "@rpldy/shared": "^0.17.3",
+    "@rpldy/shared-ui": "^0.17.3",
+    "@rpldy/tus-sender": "^0.17.3"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^0.17.2",
-    "@rpldy/uploady": "^0.17.2",
+    "@rpldy/upload-button": "^0.17.3",
+    "@rpldy/uploady": "^0.17.3",
     "@storybook/addon-knobs": "^6.4.0",
     "flow-bin": "^0.169.0"
   },

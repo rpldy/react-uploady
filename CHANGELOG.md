@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.17.3 (2022-02-06)
+
+### Docs
+
+- `[uploader]` - add info about clearPendingOnAdd
+- `storybook` - upgrade to latest SB 6.4.18
+- `storybook` - turn welcome story into a doc page
+- `storybook` - add brand link to docs site
+- `storybook` - make version badge inside story link to npm
+
+### Internal
+
+- `all` - upgrade to webpack 5 (bundle + storybook)
+- `all` - add docs site as homepage in all package.jsons
+
 ## 0.17.2 (2022-02-01)
 
 ### Bug fixes

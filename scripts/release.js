@@ -73,6 +73,20 @@ const runTask = async (results, { id, title, task }) => {
 
 const TASKS = [
     {
+      id: "merge master",
+      title: "Merge changes from master branch",
+      task: () => {
+          let result = run(`git fetch origin`);
+
+          if (!result.code) {
+              log(chalk.gray, `merging master to release branch`);
+              result = run(`git merge master`);
+          }
+
+          return { code: result.code };
+      },
+    },
+    {
         id: "version",
         title: "Lerna Version",
         task: () => run(`lerna version ${versionArgs}`),

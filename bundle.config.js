@@ -207,9 +207,11 @@ module.exports = {
             devtool: "cheap-module-source-map",
             optimization: {
                 //needed for production build to work with single/shared polyfills bundle
-                namedChunks: true,
+                chunkIds: "deterministic",
                 //needed for production build to work with single/shared polyfills bundle
-                namedModules: true,
+                // namedChunks: true,
+                // //needed for production build to work with single/shared polyfills bundle
+                // namedModules: true,
                 //"total-size" is slightly smaller but requires that each bundle relies on its own polyfill bundle and cannot share
                 moduleIds: "hashed",
             },

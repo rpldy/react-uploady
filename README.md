@@ -62,12 +62,12 @@ You get to choose which ones you need and only install the dependencies required
 
 React-Uploady has a small footprint (by design) with very few (and small) dependencies.
 
-| Bundle         | Minified size | GZipped size
-| -------------- | ------------- | -------------
-| core                         | 28.6KB          | 9.9KB
-| core + ui                    | 39.8KB          | 12.6KB
-| core + ui + chunked support  | 49.1KB          | 14.8KB
-| everything                   | 75.7KB          | 22.1KB
+| Bundle                      | Minified size | GZipped size |
+|-----------------------------|---------------|--------------|
+| core                        | 28.6KB        | 10.0KB       |        
+| core + ui                   | 39.8KB        | 13.0KB       |      
+| core + ui + chunked support | 49.1KB        | 15.3KB       |    
+| everything                  | 75.7KB        | 22.1KB       |    
 
 ## Documentation
 

@@ -31,7 +31,7 @@ const UploadyStoryDecorator = (Story, context) => {
         <Container>
             <InfoContainer>
                 {pkg &&
-                    <StoryVersionBadge pkg={fullPkgName} preText={fullPkgName + " "}/>}
+                    <StoryVersionBadge pkg={fullPkgName} preText={fullPkgName + " "} withUrl/>}
             </InfoContainer>
 
             <Story/>

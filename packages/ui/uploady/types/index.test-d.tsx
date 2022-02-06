@@ -25,6 +25,7 @@ const testWithSendProps = (): JSX.Element => (
     <Uploady
         formDataAllowUndefined
         forceJsonResponse
+        clearPendingOnAdd
         autoUpload={false}
         destination={{
             url: "https://somewhere.over/the/rainbow",

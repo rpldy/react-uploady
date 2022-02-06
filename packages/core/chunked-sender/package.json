@@ -8,7 +8,8 @@
   "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
-  "repository": {
+    "homepage": "https://react-uploady.netlify.app",
+    "repository": {
     "type": "git",
     "url": "https://github.com/rpldy/react-uploady.git",
     "directory": "packages/chunked-sender"
@@ -17,6 +18,7 @@
     "type": "opencollective",
     "url": "https://opencollective.com/react-uploady"
   },
+    "keywords": ["chunked", "upload", "send", "file upload"],
   "scripts": {
     "build": "node ../../../scripts/build.js",
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"

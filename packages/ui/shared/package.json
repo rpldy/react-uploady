@@ -8,6 +8,7 @@
     "main:dev": "src/index.js",
     "types": "types/index.d.ts",
     "license": "MIT",
+    "homepage": "https://react-uploady.netlify.app",
     "repository": {
         "type": "git",
         "url": "https://github.com/rpldy/react-uploady.git",

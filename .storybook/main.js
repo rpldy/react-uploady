@@ -7,37 +7,34 @@ module.exports = {
             [
                 "../packages/**/*.stories.js",
                 "!../packages/**/node_modules"
-            ],
-           { cwd: path.join(process.cwd(), ".storybook") });
+            ], {
+                cwd: path.join(process.cwd(), ".storybook")
+            });
 
-        return ["./welcome.story.js"].concat(paths);
+        return ["./welcome.stories.mdx"].concat(paths);
     },
-
     addons: [
         "@storybook/addon-essentials",
         "@storybook/addon-knobs",
         "@storybook/addon-storysource",
-        path.resolve("./.storybook/uploadyPreset"),
+        path.resolve("./.storybook/uploadyPreset")
         // "./.storybook/cypressAddon/register",
     ],
-
     features: {
         postcss: false,
         babelModeV7: true,
         // storyStoreV7: true
     },
-
     core: {
-        builder: "webpack4" //"webpack5"
-    },
+        builder: "webpack5" //"webpack4"
 
-    framework: "@storybook/react",
+    },
+    framework: "@storybook/react"
 
     // babel: async (config) => {
     //     console.log(">>>>>>> BABEL CONFIG FROM SB: " + process.env.NODE_ENV , config);
     //     return config;
     // },
-
     // webpackFinal: async (config) => { return config; },
     // managerWebpack: async (baseConfig, options) =>  { return baseConfig; }
 };

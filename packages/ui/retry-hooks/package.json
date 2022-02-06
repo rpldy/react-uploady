@@ -1,5 +1,5 @@
 {
-  "version": "0.17.2",
+  "version": "0.17.3",
   "name": "@rpldy/retry-hooks",
   "description": "useful hooks for the retry functionality from @rpldy/retry",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -8,41 +8,41 @@
   "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
-    "homepage": "https://react-uploady.netlify.app",
+  "homepage": "https://react-uploady.netlify.app",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/rpldy/react-uploady.git",
-      "directory": "packages/ui/retry-hooks"
+    "type": "git",
+    "url": "https://github.com/rpldy/react-uploady.git",
+    "directory": "packages/ui/retry-hooks"
   },
-    "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/react-uploady"
-    },
-    "keywords": [
-        "file",
-        "upload",
-        "file upload",
-        "react",
-        "hooks",
-        "retry uploads"
-    ],
-    "scripts": {
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/react-uploady"
+  },
+  "keywords": [
+    "file",
+    "upload",
+    "file upload",
+    "react",
+    "hooks",
+    "retry uploads"
+  ],
+  "scripts": {
     "build": "node ../../../scripts/build.js",
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js"
   },
   "dependencies": {
-    "@rpldy/retry": "^0.17.2",
-    "@rpldy/shared": "^0.17.2",
-    "@rpldy/shared-ui": "^0.17.2",
-    "@rpldy/uploader": "^0.17.2"
+    "@rpldy/retry": "^0.17.3",
+    "@rpldy/shared": "^0.17.3",
+    "@rpldy/shared-ui": "^0.17.3",
+    "@rpldy/uploader": "^0.17.3"
   },
   "peerDependencies": {
     "react": ">=16.8",
     "react-dom": ">=16.8"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^0.17.2",
-    "@rpldy/upload-preview": "^0.17.2",
+    "@rpldy/upload-button": "^0.17.3",
+    "@rpldy/upload-preview": "^0.17.3",
     "flow-bin": "^0.169.0",
     "rc-progress": "^3.1.4"
   },

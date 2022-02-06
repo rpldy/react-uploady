@@ -55,6 +55,7 @@
     "packages/ui/*",
     "packages/native/*"
   ],
+    "homepage": "https://react-uploady.netlify.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/rpldy/react-uploady"

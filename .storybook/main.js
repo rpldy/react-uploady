@@ -29,8 +29,9 @@ module.exports = {
         builder: "webpack5" //"webpack4"
 
     },
-    framework: "@storybook/react"
+    framework: "@storybook/react",
 
+    // previewHead: (head) => { return head; },
     // babel: async (config) => {
     //     console.log(">>>>>>> BABEL CONFIG FROM SB: " + process.env.NODE_ENV , config);
     //     return config;

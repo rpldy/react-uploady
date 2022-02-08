@@ -1,4 +1,5 @@
 const webpack = require("webpack"),
+    HtmlWebpackPlugin = require("html-webpack-plugin"),
     { getMatchingPackages } = require("../scripts/lernaUtils"),
     { getUploadyVersion } = require("../scripts/utils");
 
@@ -63,6 +64,15 @@ const addEnvParams = async (config) =>
         };
     });
 
+const updateHtmlTitle = (config) => {
+    const htmlPlugin = config.plugins.find((plugin) =>
+        plugin instanceof HtmlWebpackPlugin);
+
+    htmlPlugin.userOptions.title = "React-Uploady Official Storybook";
+
+    return config;
+}
+
 module.exports = {
     webpack: async (config) => {
         config.module.rules.push({
@@ -82,6 +92,8 @@ module.exports = {
         config.optimization.minimize = !!process.env.SB_OPTIMIZE;
 
         config.stats.errorDetails = true;
+
+        config = updateHtmlTitle(config);
 
         return addEnvParams(config);
     },

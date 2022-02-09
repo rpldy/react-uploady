@@ -1,6 +1,6 @@
 import send from "@rpldy/sender";
 import processChunks from "../processChunks";
-import createChunkedSender from "../";
+import createChunkedSender from "../createChunkedSender";
 
 jest.mock("@rpldy/sender", () => jest.fn());
 

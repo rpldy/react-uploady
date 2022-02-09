@@ -4,15 +4,17 @@ import getChunks from "./getChunks";
 import sendChunks from "./sendChunks";
 import { CHUNKED_SENDER_TYPE } from "../consts";
 import processChunkProgressData from "./processChunkProgressData";
+import getChunkedState from "./getChunkedState";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { OnProgress, SendResult } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { MandatoryChunkedOptions, ChunkedSendOptions } from "../types";
-import type { State, ChunksSendResponse, Chunk } from "./types";
+import type { ChunksSendResponse, Chunk, ChunkedState } from "./types";
 
-export const abortChunkedRequest = (state: State, item: BatchItem): boolean => {
+export const abortChunkedRequest = (chunkedState: ChunkedState, item: BatchItem): boolean => {
     logger.debugLog(`chunkedSender: aborting chunked upload for item: ${item.id}`);
+    const state = chunkedState.getState();
 
     if (!state.finished && !state.aborted) {
         Object.keys(state.requests)
@@ -21,31 +23,33 @@ export const abortChunkedRequest = (state: State, item: BatchItem): boolean => {
                 state.requests[chunkId].abort();
             });
 
-        state.aborted = true;
+        chunkedState.updateState((state) => {
+            state.aborted = true;
+        });
     }
 
     return state.aborted;
 };
 
 export const process = (
-    state: State,
+    chunkedState: ChunkedState,
     item: BatchItem,
     onProgress: OnProgress,
     trigger: TriggerMethod,
 ): ChunksSendResponse => {
     const onChunkProgress = (e, chunks: Chunk[]) => {
         //we only ever send one chunk per request
-        const progressData = processChunkProgressData(state, item, chunks[0].id, e.loaded);
+        const progressData = processChunkProgressData(chunkedState, item, chunks[0].id, e.loaded);
         onProgress(progressData, [item]);
     };
 
     const sendPromise = new Promise((resolve) => {
-        sendChunks(state, item, onChunkProgress, resolve, trigger);
+        sendChunks(chunkedState, item, onChunkProgress, resolve, trigger);
     });
 
     return {
         sendPromise,
-        abort: () => abortChunkedRequest(state, item),
+        abort: () => abortChunkedRequest(chunkedState, item),
     };
 };
 
@@ -58,24 +62,11 @@ const processChunks = (
     trigger: TriggerMethod
 ): SendResult => {
     const chunks = getChunks(item, chunkedOptions, sendOptions.startByte);
+    const chunkedState = getChunkedState(chunks, url, sendOptions, chunkedOptions);
+
     logger.debugLog(`chunkedSender: created ${chunks.length} chunks for: ${item.file.name}`);
 
-    const state = {
-        finished: false,
-        aborted: false,
-        error: false,
-        uploaded: {},
-        requests: {},
-        responses: [],
-        chunkCount: chunks.length,
-        startByte: sendOptions.startByte || 0,
-        chunks,
-        url,
-        sendOptions,
-        ...chunkedOptions,
-    };
-
-    const { sendPromise, abort } = process(state, item, onProgress, trigger);
+    const { sendPromise, abort } = process(chunkedState, item, onProgress, trigger);
 
     return {
         request: sendPromise,

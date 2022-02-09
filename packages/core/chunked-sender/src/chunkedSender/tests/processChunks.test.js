@@ -1,12 +1,22 @@
+import createState from "@rpldy/simple-state";
+import getChunkedState from "./mocks/getChunkedState.mock";
 import getChunks from "../getChunks";
 import sendChunks from "../sendChunks";
 import processChunks, { process, abortChunkedRequest } from "../processChunks";
 
+jest.mock("@rpldy/simple-state");
 jest.mock("lodash", () => ({ throttle: (fn) => fn })); //doesnt work :(
 jest.mock("../getChunks", () => jest.fn());
 jest.mock("../sendChunks", () => jest.fn());
 
 describe("processChunks tests", () => {
+
+    beforeAll(()=>{
+        createState.mockImplementation((state) => ({
+            state,
+            update: jest.fn((updater) => updater(state)),
+        }));
+    });
 
 	beforeEach(() => {
 	    jest.useRealTimers();
@@ -33,27 +43,29 @@ describe("processChunks tests", () => {
 		expect(result.abort).toBeInstanceOf(Function);
 		expect(result.request).toBeInstanceOf(Promise);
 
-		expect(sendChunks).toHaveBeenCalledWith({
-			finished: false,
-			aborted: false,
+		expect(sendChunks).toHaveBeenCalledWith(expect.any(Object), item, expect.any(Function), expect.any(Function), expect.any(Function));
+
+        expect(sendChunks.mock.calls[0][0].getState()).toStrictEqual({
+            finished: false,
+            aborted: false,
             error: false,
-			uploaded: {},
-			requests: {},
-			responses: [],
+            uploaded: {},
+            requests: {},
+            responses: [],
             chunkCount: chunks.length,
-			chunks,
-			url,
-			sendOptions,
+            chunks,
+            url,
+            sendOptions,
             startByte: 0,
-			...chunkedOptions,
-		}, item, expect.any(Function), expect.any(Function), expect.any(Function));
+            ...chunkedOptions,
+        });
 	});
 
 	describe("process tests", () => {
 		it("should send chunks and handle progress", () => {
 		    jest.useFakeTimers(); //using fake timers coz for some reason lodash isnt mocked... :(
 
-			const state = {
+			const state = getChunkedState({
 				uploaded: {},
 				chunks: [
                     {
@@ -61,7 +73,7 @@ describe("processChunks tests", () => {
                     }
 				],
                 startByte: 4,
-			};
+			});
 
 			const item = { file: { size: 1000 }};
 			const onProgress = jest.fn();
@@ -102,12 +114,12 @@ describe("processChunks tests", () => {
 		it("should call abort on chunks", () => {
 			const abort = jest.fn();
 
-			const state = {
+			const state = getChunkedState({
 				requests: {
 					c1: { abort, },
 					c2: { abort, },
 				},
-			};
+			});
 
 			const result = process(state, {}, );
 
@@ -115,7 +127,7 @@ describe("processChunks tests", () => {
 
 			expect(abort).toHaveBeenCalledTimes(2);
 
-			expect(state.aborted).toBe(true);
+			expect(state.getState().aborted).toBe(true);
 		});
 	});
 
@@ -123,28 +135,28 @@ describe("processChunks tests", () => {
 		it("should do nothing for finished request", () => {
 			const abort = jest.fn();
 
-			const state = {
+			const state = getChunkedState({
 				finished: true,
 				requests: {
 					c1: { abort, }
 				}
-			};
+			});
 
 			abortChunkedRequest(state, {});
 
 			expect(abort).not.toHaveBeenCalled();
-			expect(state.aborted).toBeFalsy();
+			expect(state.getState().aborted).toBeFalsy();
 		});
 
 		it("should do nothing for aborted request", () => {
 			const abort = jest.fn();
 
-			const state = {
+			const state = getChunkedState({
 				finished: true,
 				requests: {
 					c1: { abort, }
 				}
-			};
+			});
 
 			abortChunkedRequest(state, {});
 
@@ -152,22 +164,21 @@ describe("processChunks tests", () => {
 		});
 
 		it("should abort requests for in progress request", () => {
-
 			const abort = jest.fn();
 
-			const state = {
+			const state = getChunkedState({
 				requests: {
 					c1: { abort, },
 					c2: { abort, },
 					c3: { abort, },
 				}
-			};
+			});
 
 			abortChunkedRequest(state, {});
 
 			expect(abort).toHaveBeenCalledTimes(3);
 
-			expect(state.aborted).toBe(true);
+			expect(state.getState().aborted).toBe(true);
 		});
 	});
 });

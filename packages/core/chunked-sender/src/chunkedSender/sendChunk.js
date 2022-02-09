@@ -15,7 +15,7 @@ import type { BatchItem } from "@rpldy/shared";
 import type { OnProgress, SendResult } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { ChunkStartEventData } from "../types";
-import type { Chunk, State } from "./types";
+import type { Chunk, ChunkedState } from "./types";
 import ChunkedSendError from "./ChunkedSendError";
 
 const getContentRangeValue = (chunk, data, item) =>
@@ -36,11 +36,13 @@ const getSkippedResult = (): SendResult => ({
 
 const uploadChunkWithUpdatedData = (
     chunk: Chunk,
-    state: State,
+    chunkedState: ChunkedState,
     item: BatchItem,
     onProgress: OnProgress,
     trigger: TriggerMethod,
 ): Promise<SendResult> => {
+    const state = chunkedState.getState();
+
     const sendOptions = {
         ...unwrap(state.sendOptions),
         headers: {
@@ -88,7 +90,7 @@ const uploadChunkWithUpdatedData = (
 
 const sendChunk = (
     chunk: Chunk,
-    state: State,
+    chunkedState: ChunkedState,
     item: BatchItem,
     onProgress: OnProgress,
     trigger: TriggerMethod,
@@ -102,9 +104,11 @@ const sendChunk = (
         throw new ChunkedSendError("chunk failure - failed to slice");
     }
 
-    logger.debugLog(`chunkedSender.sendChunk: about to send chunk ${chunk.id} [${chunk.start}-${chunk.end}] to: ${state.url || ""}`);
+    const url = chunkedState.getState().url;
 
-    const chunkXhrRequest = uploadChunkWithUpdatedData(chunk, state, item, onProgress, trigger);
+    logger.debugLog(`chunkedSender.sendChunk: about to send chunk ${chunk.id} [${chunk.start}-${chunk.end}] to: ${url || ""}`);
+
+    const chunkXhrRequest = uploadChunkWithUpdatedData(chunk, chunkedState, item, onProgress, trigger);
 
     const abort = () => {
         chunkXhrRequest.then(({ abort }) => abort());

@@ -4,6 +4,7 @@ import handleChunkRequest from "../handleChunkRequest";
 import getChunksToSend from "../getChunksToSend";
 import sendChunk from "../sendChunk";
 import sendChunks, { handleChunk } from "../sendChunks";
+import getChunkedState from "./mocks/getChunkedState.mock";
 
 jest.mock("../handleChunkRequest", () => jest.fn());
 jest.mock("../getChunksToSend", () => jest.fn());
@@ -20,29 +21,28 @@ describe("sendChunks tests", () => {
     });
 
     it("should do nothing if finished", () => {
-        sendChunks({ finished: true });
+        sendChunks(getChunkedState({ finished: true }));
         expect(getChunksToSend).not.toHaveBeenCalled();
     });
 
     it("should do nothing if aborted", () => {
-        sendChunks({ aborted: true });
+        sendChunks(getChunkedState({ aborted: true }));
         expect(getChunksToSend).not.toHaveBeenCalled();
     });
 
     it("should do nothing if parallel not allowed", () => {
-        sendChunks({ requests: { c1: {} }, parallel: 1 });
+        sendChunks(getChunkedState({ requests: { c1: {} }, parallel: 1 }));
         expect(getChunksToSend).not.toHaveBeenCalled();
     });
 
     it("should resolve with chunk failed error", () => {
-
         getChunksToSend.mockImplementationOnce(() => {
             throw new ChunkedSendError();
         });
 
         const resolve = jest.fn();
 
-        sendChunks({ requests: {} }, null, null, resolve);
+        sendChunks(getChunkedState({ requests: {} }), null, null, resolve);
 
         expect(resolve).toHaveBeenCalledWith({
             state: FILE_STATES.ERROR,
@@ -57,7 +57,7 @@ describe("sendChunks tests", () => {
 
         const resolve = jest.fn();
 
-        sendChunks({ requests: {} }, null, null, resolve);
+        sendChunks(getChunkedState({ requests: {} }), null, null, resolve);
 
         expect(resolve).toHaveBeenCalledWith({
             state: FILE_STATES.ERROR,
@@ -87,13 +87,13 @@ describe("sendChunks tests", () => {
             const noop = () => {};
             resolve = resolve || noop;
 
-            state = {
+            state = getChunkedState({
                 chunks: [],
                 requests: {},
                 url: "test.com",
                 sendOptions,
                 ...state,
-            };
+            });
 
             const trigger = noop();
 
@@ -146,16 +146,15 @@ describe("sendChunks tests", () => {
     });
 
     describe("handleChunk tests", () => {
-
         it("should handle chunk and finish", async () => {
             const result = {};
             sendChunk.mockReturnValueOnce(result);
             handleChunkRequest.mockResolvedValueOnce();
 
-            const state = {
+            const state = getChunkedState({
                 chunks: [],
                 responses: [],
-            };
+            });
 
             const chunkId = "c1";
 
@@ -169,11 +168,11 @@ describe("sendChunks tests", () => {
 
             expect(handleChunkRequest).toHaveBeenCalledWith(state, item, chunkId, result, trigger, onProgress);
 
-            expect(state.finished).toBe(true);
+            expect(state.getState().finished).toBe(true);
 
             expect(resolve).toHaveBeenCalledWith({
                 state: FILE_STATES.FINISHED,
-                response: { results: state.responses },
+                response: { results: state.getState().responses },
             });
 
             expect(getChunksToSend).not.toHaveBeenCalled();
@@ -186,34 +185,33 @@ describe("sendChunks tests", () => {
 
             const chunkId = "c1";
 
-            const state = {
+            const state = getChunkedState({
                 aborted: true,
                 chunks: [],
                 responses: ["aborted"],
-            };
+            });
 
             const resolve = jest.fn();
 
             await handleChunk(state, {}, {}, resolve, { id: chunkId }, { });
 
-            expect(state.finished).toBe(true);
+            expect(state.getState().finished).toBe(true);
 
             expect(resolve).toHaveBeenCalledWith({
                 state: FILE_STATES.ABORTED,
-                response: { results: state.responses },
+                response: { results: state.getState().responses },
             });
 
             expect(getChunksToSend).not.toHaveBeenCalled();
         });
 
         it("should handle chunk and send more", async () => {
-
             handleChunkRequest.mockResolvedValueOnce();
 
-            const state = {
+            const state = getChunkedState({
                 requests: {},
                 chunks: [1, 2],
-            };
+            });
 
             const trigger = jest.fn();
             const resolve = jest.fn();
@@ -222,7 +220,7 @@ describe("sendChunks tests", () => {
 
             await handleChunk(state, {}, {}, resolve, chunk, trigger);
 
-            expect(state.finished).toBeFalsy();
+            expect(state.getState().finished).toBeFalsy();
             expect(resolve).not.toHaveBeenCalled();
             expect(getChunksToSend).toHaveBeenCalledWith(state);
             expect(sendChunk).toHaveBeenCalledTimes(1);

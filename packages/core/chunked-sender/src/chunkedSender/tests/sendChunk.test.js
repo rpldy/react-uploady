@@ -66,10 +66,11 @@ describe("sendChunk tests", () => {
 
         expect(createBatchItem).toHaveBeenCalledWith(fileData, "c1");
 
+        expect(unwrap).toHaveBeenCalledWith(sendOptions);
+
         const updatedSendOptions = {
             unwrapped: true,
             headers: {
-                ...sendOptions.headers,
                 "Content-Range": `bytes 1-${fileData.size}/400`,
             }
         };

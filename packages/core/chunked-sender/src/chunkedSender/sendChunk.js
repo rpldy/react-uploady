@@ -42,11 +42,11 @@ const uploadChunkWithUpdatedData = (
     trigger: TriggerMethod,
 ): Promise<SendResult> => {
     const state = chunkedState.getState();
-
+    const unwrappedOptions = unwrap(state.sendOptions);
     const sendOptions = {
-        ...unwrap(state.sendOptions),
+        ...unwrappedOptions,
         headers: {
-            ...state.sendOptions.headers,
+            ...unwrappedOptions.headers,
             "Content-Range": getContentRangeValue(chunk, chunk.data, item),
         }
     };
@@ -62,12 +62,13 @@ const uploadChunkWithUpdatedData = (
     return triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, {
         item: unwrap(item),
         chunk: pick(chunk, ["id", "start", "end", "index", "attempt"]),
-        chunkItem: chunkItem,
+        chunkItem: { ...chunkItem },
         sendOptions,
         url: state.url,
         chunkIndex,
         remainingCount: state.chunks.length,
         totalCount: state.chunkCount,
+        //TODO: should expose chunk_progress event instead of passing callback like this
         onProgress,
     })
         // $FlowFixMe - https://github.com/facebook/flow/issues/8215
@@ -83,7 +84,7 @@ const uploadChunkWithUpdatedData = (
                 getSkippedResult() :
                 xhrSend([chunkItem],
                     updatedData?.url || state.url,
-                    mergeWithUndefined({}, sendOptions, updatedData && updatedData.sendOptions),
+                    mergeWithUndefined({}, sendOptions, updatedData?.sendOptions),
                     onChunkProgress);
         });
 };

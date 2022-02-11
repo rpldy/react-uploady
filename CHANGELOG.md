@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.17.4 (2022-02-11)
+
+### Docs
+
+- `storybook` - set canvas HTML title
+
+### Internal 
+
+- `[chunked-sender]` - use @rpldy/simple-state for internal state
+- `scripts` - upgrade typescript to latest
+
 ## 0.17.3 (2022-02-06)
 
 ### Docs

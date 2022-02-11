@@ -2,9 +2,7 @@ import getChunks from "../getChunks";
 import ChunkedSendError from "../ChunkedSendError";
 
 describe("getChunks tests", () => {
-
     it("should return chunks for file", () => {
-
         const chunks = getChunks(
             { id: "bi1", file: { size: 999 } },
             { chunkSize: 201 });
@@ -30,7 +28,6 @@ describe("getChunks tests", () => {
     });
 
     it("should return one chunk if file smaller than chunk size", () => {
-
         const chunks = getChunks(
             { id: "bi1", file: { size: 499 } },
             { chunkSize: 500 });

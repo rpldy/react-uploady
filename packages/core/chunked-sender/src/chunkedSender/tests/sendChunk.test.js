@@ -10,13 +10,13 @@ import ChunkedSendError from "../ChunkedSendError";
 import { getChunkDataFromFile } from "../../utils";
 import { CHUNK_EVENTS } from "../../consts";
 import sendChunk from "../sendChunk";
+import getChunkedState from "./mocks/getChunkedState.mock";
 
 jest.mock("@rpldy/sender", () => jest.fn());
 jest.mock("../../utils", () => ({ getChunkDataFromFile: jest.fn() }));
-jest.mock("@rpldy/simple-state"); //, () =>({unwrap: jest.fn()}));
+jest.mock("@rpldy/simple-state");
 
 describe("sendChunk tests", () => {
-
     const xhrSendResult = { request: Promise.resolve({ xhrSend: true }), abort: jest.fn() };
 
     const onProgress = jest.fn();
@@ -54,7 +54,9 @@ describe("sendChunk tests", () => {
         createBatchItem.mockReturnValueOnce(chunkItem);
         xhrSend.mockResolvedValueOnce(xhrSendResult);
 
-		const sendResult = sendChunk(chunk, { url, sendOptions, chunks, chunkCount: 4 }, { file }, onProgress, trigger);
+        const state = getChunkedState({ url, sendOptions, chunks, chunkCount: 4 });
+
+		const sendResult = sendChunk(chunk, state, { file }, onProgress, trigger);
 
         const result = await sendResult.request;
 
@@ -64,10 +66,11 @@ describe("sendChunk tests", () => {
 
         expect(createBatchItem).toHaveBeenCalledWith(fileData, "c1");
 
+        expect(unwrap).toHaveBeenCalledWith(sendOptions);
+
         const updatedSendOptions = {
             unwrapped: true,
             headers: {
-                ...sendOptions.headers,
                 "Content-Range": `bytes 1-${fileData.size}/400`,
             }
         };
@@ -146,7 +149,6 @@ describe("sendChunk tests", () => {
 	});
 
 	it("should throw if failed to slice chunk", () => {
-
         getChunkDataFromFile.mockReturnValueOnce(null);
         const chunk = { id: "c1", start: 1, end: 10, data: null };
 
@@ -163,13 +165,14 @@ describe("sendChunk tests", () => {
             sendOptions = { method: "POST", headers: { "x-test": 123 } };
 
         it("should call abort successfully - before request is used", async () => {
-
             xhrSend.mockResolvedValueOnce(xhrSendResult);
 
             triggerUpdater
                 .mockResolvedValueOnce({ });
 
-            const sendResult = sendChunk(chunk, { url, sendOptions, chunks: [chunk] }, { file }, onProgress);
+            const state = getChunkedState({ url, sendOptions, chunks: [chunk] });
+
+            const sendResult = sendChunk(chunk, state, { file }, onProgress);
 
             await sendResult.abort();
 
@@ -180,13 +183,14 @@ describe("sendChunk tests", () => {
         });
 
         it("should call abort successfully - after request is used", async() => {
-
             xhrSend.mockResolvedValueOnce(xhrSendResult);
 
             triggerUpdater
                 .mockResolvedValueOnce({ });
 
-			const sendResult = sendChunk(chunk, { url, sendOptions, chunks: [chunk] }, { file }, onProgress);
+            const state = getChunkedState({ url, sendOptions, chunks: [chunk] });
+
+			const sendResult = sendChunk(chunk, state, { file }, onProgress);
 
             await sendResult.request;
             await sendResult.abort();

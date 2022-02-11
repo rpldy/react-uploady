@@ -15,7 +15,7 @@ import type { BatchItem } from "@rpldy/shared";
 import type { OnProgress, SendResult } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { ChunkStartEventData } from "../types";
-import type { Chunk, State } from "./types";
+import type { Chunk, ChunkedState } from "./types";
 import ChunkedSendError from "./ChunkedSendError";
 
 const getContentRangeValue = (chunk, data, item) =>
@@ -36,15 +36,17 @@ const getSkippedResult = (): SendResult => ({
 
 const uploadChunkWithUpdatedData = (
     chunk: Chunk,
-    state: State,
+    chunkedState: ChunkedState,
     item: BatchItem,
     onProgress: OnProgress,
     trigger: TriggerMethod,
 ): Promise<SendResult> => {
+    const state = chunkedState.getState();
+    const unwrappedOptions = unwrap(state.sendOptions);
     const sendOptions = {
-        ...unwrap(state.sendOptions),
+        ...unwrappedOptions,
         headers: {
-            ...state.sendOptions.headers,
+            ...unwrappedOptions.headers,
             "Content-Range": getContentRangeValue(chunk, chunk.data, item),
         }
     };
@@ -60,12 +62,13 @@ const uploadChunkWithUpdatedData = (
     return triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, {
         item: unwrap(item),
         chunk: pick(chunk, ["id", "start", "end", "index", "attempt"]),
-        chunkItem: chunkItem,
+        chunkItem: { ...chunkItem },
         sendOptions,
         url: state.url,
         chunkIndex,
         remainingCount: state.chunks.length,
         totalCount: state.chunkCount,
+        //TODO: should expose chunk_progress event instead of passing callback like this
         onProgress,
     })
         // $FlowFixMe - https://github.com/facebook/flow/issues/8215
@@ -81,14 +84,14 @@ const uploadChunkWithUpdatedData = (
                 getSkippedResult() :
                 xhrSend([chunkItem],
                     updatedData?.url || state.url,
-                    mergeWithUndefined({}, sendOptions, updatedData && updatedData.sendOptions),
+                    mergeWithUndefined({}, sendOptions, updatedData?.sendOptions),
                     onChunkProgress);
         });
 };
 
 const sendChunk = (
     chunk: Chunk,
-    state: State,
+    chunkedState: ChunkedState,
     item: BatchItem,
     onProgress: OnProgress,
     trigger: TriggerMethod,
@@ -102,9 +105,11 @@ const sendChunk = (
         throw new ChunkedSendError("chunk failure - failed to slice");
     }
 
-    logger.debugLog(`chunkedSender.sendChunk: about to send chunk ${chunk.id} [${chunk.start}-${chunk.end}] to: ${state.url || ""}`);
+    const url = chunkedState.getState().url;
 
-    const chunkXhrRequest = uploadChunkWithUpdatedData(chunk, state, item, onProgress, trigger);
+    logger.debugLog(`chunkedSender.sendChunk: about to send chunk ${chunk.id} [${chunk.start}-${chunk.end}] to: ${url || ""}`);
+
+    const chunkXhrRequest = uploadChunkWithUpdatedData(chunk, chunkedState, item, onProgress, trigger);
 
     const abort = () => {
         chunkXhrRequest.then(({ abort }) => abort());

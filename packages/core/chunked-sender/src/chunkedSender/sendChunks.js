@@ -8,7 +8,7 @@ import sendChunk from "./sendChunk";
 import type { BatchItem, FileState } from "@rpldy/shared";
 import type { OnProgress } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
-import type { Chunk, State } from "./types";
+import type { Chunk, ChunkedState } from "./types";
 
 const resolveOnError = (resolve, ex) => {
     if (ex instanceof ChunkedSendError) {
@@ -24,31 +24,34 @@ const resolveOnError = (resolve, ex) => {
     }
 };
 
-const finalizeOnFinish = (state: State, item: BatchItem, resolve, status: FileState) => {
-    state.finished = true;
+const finalizeOnFinish = (chunkedState: ChunkedState, item: BatchItem, resolve, status: FileState) => {
+    chunkedState.updateState((state) => {
+        state.finished = true;
+    });
 
     resolve({
         state: status,
-        response: { results: state.responses },
+        response: { results: chunkedState.getState().responses },
     });
 };
 
-const resolveOnAllChunksFinished = (state: State, item: BatchItem, resolve): boolean => {
+const resolveOnAllChunksFinished = (chunkedState: ChunkedState, item: BatchItem, resolve): boolean => {
+    const state = chunkedState.getState();
     const finished = !state.chunks.length;
 
     if (state.aborted) {
         logger.debugLog(`chunkedSender: chunked upload aborted for item: ${item.id}`);
-        finalizeOnFinish(state, item, resolve, FILE_STATES.ABORTED);
+        finalizeOnFinish(chunkedState, item, resolve, FILE_STATES.ABORTED);
     } else if (finished && !state.error) {
         logger.debugLog(`chunkedSender: chunked upload finished for item: ${item.id}`, state.responses);
-        finalizeOnFinish(state, item, resolve, FILE_STATES.FINISHED);
+        finalizeOnFinish(chunkedState, item, resolve, FILE_STATES.FINISHED);
     }
 
     return finished || state.error;
 };
 
 export const handleChunk = (
-    state: State,
+    chunkedState: ChunkedState,
     item: BatchItem,
     onProgress: OnProgress,
     chunkResolve: (any) => void,
@@ -57,15 +60,15 @@ export const handleChunk = (
 ): Promise<void> =>
     new Promise((resolve, reject) => {
         try {
-            const chunkSendResult = sendChunk(chunk, state, item, onProgress, trigger);
+            const chunkSendResult = sendChunk(chunk, chunkedState, item, onProgress, trigger);
 
-            handleChunkRequest(state, item, chunk.id, chunkSendResult, trigger, onProgress)
+            handleChunkRequest(chunkedState, item, chunk.id, chunkSendResult, trigger, onProgress)
                 .then(() => {
                     resolve();
 
-                    if (!resolveOnAllChunksFinished(state, item, chunkResolve)) {
+                    if (!resolveOnAllChunksFinished(chunkedState, item, chunkResolve)) {
                         //not finished - continue sending remaining chunks
-                        sendChunks(state, item, onProgress, chunkResolve, trigger);
+                        sendChunks(chunkedState, item, onProgress, chunkResolve, trigger);
                     }
                 });
         } catch (ex) {
@@ -74,12 +77,14 @@ export const handleChunk = (
     });
 
 const sendChunks = (
-    state: State,
+    chunkedState: ChunkedState,
     item: BatchItem,
     onProgress: OnProgress,
     resolve: (any) => void,
     trigger: TriggerMethod,
 ) => {
+    const state = chunkedState.getState();
+
     if (!state.finished && !state.aborted) {
         const inProgress = Object.keys(state.requests).length;
 
@@ -89,16 +94,19 @@ const sendChunks = (
             let chunks;
 
             try {
-                chunks = getChunksToSend(state);
+                chunks = getChunksToSend(chunkedState);
             } catch (ex) {
                 resolveOnError(resolve, ex);
             }
 
             if (chunks) {
                 chunks.forEach((chunk) => {
-                    handleChunk(state, item, onProgress, resolve, chunk, trigger)
+                    handleChunk(chunkedState, item, onProgress, resolve, chunk, trigger)
                         .catch((ex) => {
-                            state.error = true;
+                            chunkedState.updateState((state) => {
+                                state.error = true;
+                            });
+
                             resolveOnError(resolve, ex);
                         });
                 });

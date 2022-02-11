@@ -1,6 +1,7 @@
 import { FILE_STATES } from "@rpldy/shared";
 import handleChunkRequest from "../handleChunkRequest";
 import { CHUNK_EVENTS } from "../../consts";
+import getChunkedState from "./mocks/getChunkedState.mock";
 
 describe("handleChunkRequest tests", () => {
 
@@ -17,14 +18,14 @@ describe("handleChunkRequest tests", () => {
             file: { size: 2000 }
         };
 
-		const state = {
+		const state = getChunkedState({
 			requests: {
 				"c1": {},
 				"c2": {}
 			},
 			chunks: chunks.slice(),
 			responses: []
-		};
+		});
 
 		const sendResult = {
 			request: new Promise((resolve) => {
@@ -38,14 +39,14 @@ describe("handleChunkRequest tests", () => {
 
 		const test = handleChunkRequest(state, item, "c1", sendResult, trigger, onProgress);
 
-		expect(state.requests.c1.id).toBe("c1");
-		expect(state.requests.c1.abort).toBeInstanceOf(Function);
+		expect(state.getState().requests.c1.id).toBe("c1");
+		expect(state.getState().requests.c1.abort).toBeInstanceOf(Function);
 
 		jest.runAllTimers();
 
 		await test;
 
-		return { state, item, onProgress, chunks };
+		return { state: state.getState(), item, onProgress, chunks };
 	};
 
     it("should handle send success", async () => {

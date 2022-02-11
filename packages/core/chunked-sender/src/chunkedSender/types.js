@@ -1,5 +1,4 @@
 // @flow
-
 import type { UploadData } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
 import type { MandatoryChunkedOptions } from "../types";
@@ -27,6 +26,14 @@ export type State = {|
     sendOptions: SendOptions,
     chunkCount: number,
     startByte: number,
+|};
+
+type UpdateStateMethod = ((State) => void) => void;
+type GetStateMethod = () => State;
+
+export type ChunkedState = {|
+    getState: GetStateMethod,
+    updateState: UpdateStateMethod,
 |};
 
 export type ChunksSendResponse = {

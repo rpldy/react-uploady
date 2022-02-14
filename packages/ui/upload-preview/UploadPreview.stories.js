@@ -1,5 +1,6 @@
 // @flow
-import React, { useCallback, useState, useRef } from "react";
+import React, { useCallback, useState, useRef, useEffect } from "react";
+import type { Node } from "React";
 import styled,  { css } from "styled-components";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
@@ -13,10 +14,12 @@ import Uploady, {
     useBatchStartListener,
     useBatchFinalizeListener,
     useBatchProgressListener,
+    useRequestPreSend,
     useUploady,
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
+import type { FileLike } from "@rpldy/shared";
 import {
     KNOB_GROUPS,
     useStoryUploadySetup,
@@ -33,7 +36,7 @@ import UploadPreview, {
 
 // $FlowIssue - doesnt understand loading readme
 import readme from "./README.md";
-import type { Node } from "React";
+
 
 const StyledUploadButton = styled(UploadButton)`
 	${uploadButtonCss}
@@ -262,7 +265,7 @@ export const WithPreviewMethods = (): Node => {
 const StyledReactCrop = styled(ReactCrop)`
   width: 100%;
   max-width: 900px;
-  max-height: 400px;
+  height: 400px;
 `;
 
 const ButtonsWrapper = styled.div`
@@ -295,14 +298,20 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 	const { id, url, isFallback, type, updateRequest, requestData, previewMethods } = props;
 	const [finished, setFinished] = useState(false);
 	const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
+    const imgRef = useRef(null);
 
 	useItemFinalizeListener(() =>{
 		setFinished(true);
 	}, id);
 
+    const onLoad = useCallback((img) => {
+        imgRef.current = img;
+    }, []);
+
 	const onUploadCrop = useCallback(async() => {
 		if (updateRequest && (crop?.height || crop?.width)) {
-			requestData.items[0].file = await cropImage(url, requestData.items[0].file, crop);
+            const { blob } = await cropImage(imgRef.current, requestData.items[0].file, crop);
+			requestData.items[0].file = blob;
 			updateRequest({ items: requestData.items });
 		}
 	}, [url, requestData, updateRequest, crop]);
@@ -322,6 +331,7 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 			{requestData ? <StyledReactCrop
 				src={url}
 				crop={crop}
+                onImageLoaded={onLoad}
 				onChange={setCrop}
 				onComplete={setCrop}
 			/> : null}
@@ -447,20 +457,26 @@ const CropperContainer = styled.div`
 
 const CropperForMultiCrop = ({ item, url, setCropForItem }) => {
     const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
+    const imgRef = useRef(null);
 
     const onSaveCrop = async () => {
-        const cropped = await cropImage(url, item.file, crop);
-        setCropForItem(item.id, cropped);
+        const { blob } = await cropImage(imgRef.current, item.file, crop);
+        setCropForItem(item.id, blob);
     };
 
     const onUnsetCrop = () => {
         setCropForItem(item.id, null);
     };
 
+    const onLoad = useCallback((img) => {
+        imgRef.current = img;
+    }, []);
+
     return (<CropperContainer>
         <StyledReactCrop
             src={url}
             crop={crop}
+            onImageLoaded={onLoad}
             onChange={setCrop}
             onComplete={setCrop}
         />
@@ -573,7 +589,7 @@ export const WithMultiCrop = (): Node => {
     </Uploady>;
 };
 
-const CustomUploadPreview = getUploadPreviewForBatchItemsMethod(useBatchAddListener);
+const BatchAddUploadPreview = getUploadPreviewForBatchItemsMethod(useBatchAddListener);
 
 const UploadPendingButton = () => {
     const { processPending } = useUploady();
@@ -597,7 +613,7 @@ export const WithDifferentBatchItemsMethod = (): Node => {
             Select Files
         </StyledUploadButton>
 
-        <PreviewsWithClear PreviewComp={CustomUploadPreview}/>
+        <PreviewsWithClear PreviewComp={BatchAddUploadPreview}/>
 
         <UploadPendingButton/>
     </Uploady>;
@@ -677,6 +693,161 @@ export const WithTwoFields = (): Node  => {
                     const Field = UploadFields[index];
                     return <Field key={type} index={index} params={{}}/>
                 })}
+            </div>
+        </Uploady>
+    );
+};
+
+const CropItemPreviewContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+
+    .preview-thumb {
+        max-width: 200px;
+        max-height: 200px;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+`;
+
+const CropPreviewFieldComp = ({  item, name, url, setCropForItem }) => {
+    const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
+    const [croppedUrl, setCroppedUrl] = useState(null);
+    const [isCropping, setCropping] = useState(false);
+    const imgRef = useRef(null);
+
+    const startCropping = () => setCropping(true);
+
+    const onSaveCrop = async () => {
+        croppedUrl?.revokeUrl();
+        const { blob, blobUrl, revokeUrl } = await cropImage(imgRef.current, item.file, crop, true);
+        setCropForItem(item.id, blob);
+        setCroppedUrl({ blobUrl, revokeUrl });
+        setCropping(false);
+    };
+
+    useEffect(() => () => { !isCropping && croppedUrl?.revokeUrl(); }, [isCropping, croppedUrl]);
+
+    const onLoad = useCallback((img) => {
+        imgRef.current = img;
+    }, []);
+
+    return <CropItemPreviewContainer>
+        {!isCropping ?
+            <>
+                <span>{name}</span>
+                <img className="preview-thumb" src={croppedUrl?.blobUrl || url} onClick={startCropping}/>
+            </> :
+            <>
+                <StyledReactCrop
+                    src={url}
+                    crop={crop}
+                    onImageLoaded={onLoad}
+                    onChange={setCrop}
+                    onComplete={setCrop}
+                    style={{ height: "100%" }}
+                />
+                <Button
+                    type="button"
+                    onClick={onSaveCrop}
+                    id="save-crop-btn">
+                    Save Crop
+                </Button>
+            </>
+        }
+    </CropItemPreviewContainer>;
+};
+
+const UploadCropField = ({ setCropForItem }) => {
+    const getPreviewCompProps = useCallback((item) => {
+        return ({
+            item,
+            setCropForItem,
+        });
+    }, [setCropForItem]);
+
+    return (<div>
+        <StyledUploadButton extraProps={{ type: "button" }}>Choose image</StyledUploadButton>
+        <BatchAddUploadPreview
+            previewComponentProps={getPreviewCompProps}
+            PreviewComponent={CropPreviewFieldComp}
+        />
+    </div>);
+};
+
+const SubmitButton = styled.button`
+    ${uploadButtonCss}
+`;
+
+const MyForm = () => {
+    const { processPending } = useUploady();
+    const [fields, setFields] = useState({});
+    const [cropped, setCropped] = useState<?{ data: FileLike, id: string}>(null);
+
+    const setCropForItem = (id, data) => {
+        setCropped(() => ({ id, data }));
+    };
+
+    useRequestPreSend(({ items }) => {
+        return {
+            items: [{
+                ...items[0],
+                file: cropped?.data || items[0].file,
+            }]
+        };
+    });
+
+    const onSubmit = () => processPending({ params: fields });
+
+    const onFieldChange = (e) => {
+        setFields({
+            ...fields,
+            [e.currentTarget.id]: e.currentTarget.value
+        });
+    };
+
+    return (<form>
+        <UploadCropField
+            setCropForItem={setCropForItem}
+        />
+        <input
+            onChange={onFieldChange}
+            id="field-name"
+            type="text"
+            placeholder="your name"
+        />
+        <br/>
+        <input
+            onChange={onFieldChange}
+            id="field-age"
+            type="number"
+            placeholder="your age"
+        />
+        <br/>
+        <SubmitButton
+            onClick={onSubmit}
+            type="button"
+            disabled={!cropped || undefined}>
+            Submit
+        </SubmitButton>
+    </form>);
+};
+
+export const WithCropInForm = (): Node => {
+    const { enhancer, destination } = useStoryUploadySetup();
+
+    return (
+        <Uploady
+            debug
+            clearPendingOnAdd
+            multiple={false}
+            autoUpload={false}
+            destination={destination}
+            enhancer={enhancer}
+        >
+            <div className="App">
+                <h3>Crop Inside Form</h3>
+                <MyForm />
             </div>
         </Uploady>
     );

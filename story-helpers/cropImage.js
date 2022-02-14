@@ -1,46 +1,50 @@
-const getImageFromUrl = (url) =>
-	new Promise((resolve, reject) => {
-		const image = new Image();
-		image.addEventListener("load", () => resolve(image));
-		image.addEventListener("error", reject);
-		// image.setAttribute("crossOrigin", "anonymous") // needed to avoid cross-origin issues on CodeSandbox
-		image.src = url
-	})
-
-const getBlobFromCanvas = (canvas, file) =>
+const getBlobFromCanvas = (canvas, file, withUrl) =>
 	new Promise((resolve, reject) => {
 		canvas.toBlob((blob) => {
 			if (blob) {
 				blob.name = file.name;
 				blob.lastModified = file.lastModified;
-				resolve(blob);
+
+                let blobUrl, revokeUrl;
+
+                if (withUrl) {
+                    blobUrl = URL.createObjectURL(blob);
+                    revokeUrl = () => URL.revokeObjectURL(blobUrl);
+                }
+
+                resolve({ blob, blobUrl, revokeUrl });
 			} else {
 				reject(new Error("Canvas is empty"));
 			}
-		}, file.type); //"image/jpeg");
+		}, file.type);
 	});
 
-export default async (imageUrl, file, crop) => {
-	const image = await getImageFromUrl(imageUrl),
-		canvas = document.createElement("canvas"),
-		scaleX = image.naturalWidth / image.width,
-		scaleY = image.naturalHeight / image.height,
-		ctx = canvas.getContext("2d");
+const cropImage = async (imageElm, file, crop, withUrl = false) => {
+    const canvas = document.createElement("canvas"),
+        scaleX = imageElm.naturalWidth / imageElm.width,
+        scaleY = imageElm.naturalHeight / imageElm.height,
+        pixelRatio = window.devicePixelRatio,
+        ctx = canvas.getContext("2d");
 
-	canvas.width = crop.width;
-	canvas.height = crop.height;
+    canvas.width = crop.width * pixelRatio * scaleX;
+    canvas.height = crop.height * pixelRatio * scaleY;
 
-	ctx.drawImage(
-		image,
-		crop.x * scaleX,
-		crop.y * scaleY,
-		crop.width * scaleX,
-		crop.height * scaleY,
-		0,
-		0,
-		crop.width,
-		crop.height
-	);
+    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    ctx.imageSmoothingQuality = "high";
 
-	return await getBlobFromCanvas(canvas, file);
-}
+    ctx.drawImage(
+        imageElm,
+        crop.x * scaleX,
+        crop.y * scaleY,
+        crop.width * scaleX,
+        crop.height * scaleY,
+        0,
+        0,
+        crop.width * scaleX,
+        crop.height * scaleY
+    );
+
+    return await getBlobFromCanvas(canvas, file, withUrl);
+};
+
+export default cropImage;

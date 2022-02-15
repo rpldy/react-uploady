@@ -1,7 +1,7 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 import { BATCH_ADD, ITEM_START, ITEM_FINISH, ITEM_CANCEL } from "../storyLogPatterns";
-import { WAIT_SHORT } from "../specWaitTimes";
+import { WAIT_MEDIUM, WAIT_SHORT } from "../specWaitTimes";
 
 describe("UploadPreview - Crop", () => {
     const fileName = "flower.jpg";
@@ -31,12 +31,12 @@ describe("UploadPreview - Crop", () => {
 
             cy.wait("@uploadReq")
                 .interceptFormData((formData) => {
-                    expect(formData["file"]).to.eq("flower.jpg");
+                    expect(formData["file"]).to.eq(fileName);
                 })
                 .its("request.headers")
                 .its("content-length")
                 .then((length) => {
-                    expect(parseInt(length)).to.be.lessThan(1500);
+                    expect(parseInt(length)).to.be.lessThan(4000);
 
                     cy.storyLog().assertFileItemStartFinish(fileName, 1);
                 });

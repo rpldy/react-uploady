@@ -37,7 +37,6 @@ import UploadPreview, {
 // $FlowIssue - doesnt understand loading readme
 import readme from "./README.md";
 
-
 const StyledUploadButton = styled(UploadButton)`
 	${uploadButtonCss}
 `;
@@ -767,7 +766,7 @@ const UploadCropField = ({ setCropForItem }) => {
     }, [setCropForItem]);
 
     return (<div>
-        <StyledUploadButton extraProps={{ type: "button" }}>Choose image</StyledUploadButton>
+        <StyledUploadButton id="upload-button" extraProps={{ type: "button" }}>Choose image</StyledUploadButton>
         <BatchAddUploadPreview
             previewComponentProps={getPreviewCompProps}
             PreviewComponent={CropPreviewFieldComp}
@@ -782,7 +781,7 @@ const SubmitButton = styled.button`
 const MyForm = () => {
     const { processPending } = useUploady();
     const [fields, setFields] = useState({});
-    const [cropped, setCropped] = useState<{ data: FileLike, id: string} | null>(null);
+    const [cropped, setCropped] = useState(null);
 
     const setCropForItem = (id, data) => {
         setCropped(() => ({ id, data }));
@@ -826,6 +825,7 @@ const MyForm = () => {
         <br/>
         <SubmitButton
             onClick={onSubmit}
+            id="submit-button"
             type="button"
             disabled={!cropped || undefined}>
             Submit

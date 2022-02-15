@@ -21,7 +21,7 @@ describe("UploadPreview - Multi Crop", () => {
             .its("request.headers")
             .its("content-length")
             .then((length) => {
-                expect(parseInt(length)).to.be.lessThan(1500);
+                expect(parseInt(length)).to.be.lessThan(5000);
             });
 
     const examineFullUploadRequest = (req, name) =>

@@ -7,7 +7,11 @@ describe("UploadButton - Form", () => {
         fileName2 = "sea.jpg";
 
     before(() => {
-        cy.visitStory("uploadButton", "with-form&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
+        cy.visitStory(
+            "uploadButton",
+            "with-form",
+            { useMock: false }
+        )
     });
 
     it("should submit form with upload and other fields", () => {

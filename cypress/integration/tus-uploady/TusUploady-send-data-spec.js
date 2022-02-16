@@ -6,7 +6,11 @@ describe("TusUploady - Send Data", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("tusUploady", "simple&knob-destination_Upload Destination=url&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-upload url_Upload Destination=http://test.tus.com/upload&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true&knob-ignore modifiedDate in resume storage_Upload Settings=true&knob-send data on create_Upload Settings=true");
+        cy.visitStory(
+            "tusUploady",
+            "simple&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true&knob-ignore modifiedDate in resume storage_Upload Settings=true&knob-send data on create_Upload Settings=true",
+            { useMock: false, uploadUrl: "http://test.tus.com/upload" }
+        );
     });
 
     it("should upload chunks using tus protocol with data on create", () => {

@@ -9,7 +9,11 @@ describe("ChunkedUploady - Abort and continue", () => {
         abortedFileName = "aborted.jpg";
 
     before(() => {
-        cy.visitStory("chunkedUploady", "with-abort-button&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url&knob-chunk size (bytes)_Upload Settings=50000");
+        cy.visitStory(
+            "chunkedUploady",
+            "with-abort-button&knob-chunk size (bytes)_Upload Settings=50000",
+            { useMock: false}
+        );
     });
 
     it("should be able to upload again after abort", () => {

@@ -4,7 +4,6 @@
     "chromeWebSecurity": false,
     "video": false,
     "env": {
-        "storybookDomain": "http://localhost",
         "storybookPath": "/?path=/story/",
         "components": {
             "uploader": "core-uploader",

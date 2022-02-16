@@ -1,13 +1,17 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 import { BATCH_ADD, ITEM_START, ITEM_FINISH, ITEM_CANCEL } from "../storyLogPatterns";
-import { WAIT_MEDIUM, WAIT_SHORT } from "../specWaitTimes";
+import { WAIT_SHORT } from "../specWaitTimes";
 
 describe("UploadPreview - Crop", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadPreview", "with-crop&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
+        cy.visitStory(
+            "uploadPreview",
+            "with-crop",
+            { useMock: false }
+        );
     });
 
     beforeEach(() => {

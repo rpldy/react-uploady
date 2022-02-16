@@ -6,7 +6,11 @@ describe("TusUploady - Parallel", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("tusUploady", "with-tus-concatenation&knob-destination_Upload Destination=url&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-upload url_Upload Destination=http://test.tus.com/upload&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true");
+        cy.visitStory(
+            "tusUploady",
+            "with-tus-concatenation&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true",
+            { useMock: false, uploadUrl: "http://test.tus.com/upload" }
+        );
     });
 
     it("should upload chunks using tus protocol in parallel", () => {

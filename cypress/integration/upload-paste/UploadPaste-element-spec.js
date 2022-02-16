@@ -6,7 +6,11 @@ describe("UploadPaste - Element Listener", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadPaste", "with-element-paste&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
+        cy.visitStory(
+            "uploadPaste",
+            "with-element-paste",
+            { useMock: false }
+        );
     });
 
     it("should upload pasted file from element only", () => {

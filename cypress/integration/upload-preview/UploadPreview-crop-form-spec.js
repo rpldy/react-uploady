@@ -1,12 +1,15 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { BATCH_ADD, ITEM_FINISH } from "../storyLogPatterns";
+import { BATCH_ADD } from "../storyLogPatterns";
 
 describe("UploadPreview - Crop in Form", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadPreview", "with-crop-in-form&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
+        cy.visitStory("uploadPreview",
+            "with-crop-in-form",
+            { useMock: false }
+        );
     });
 
     it("should submit cropped image with form", () => {

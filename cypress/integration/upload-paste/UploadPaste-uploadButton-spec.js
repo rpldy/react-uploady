@@ -9,12 +9,12 @@ describe("UploadPaste - Wrap Upload-Button", () => {
         cy.visitStory(
             "uploadPaste",
             "with-paste-upload-button",
-            { useMock: true }
+            { useMock: false }
         );
     });
 
     it("should upload pasted file from upload-button", () => {
-        intercept("http://test.upload/url");
+        intercept();
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq")

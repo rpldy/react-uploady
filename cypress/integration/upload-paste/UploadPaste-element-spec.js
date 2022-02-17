@@ -14,7 +14,7 @@ describe("UploadPaste - Element Listener", () => {
     });
 
     it("should upload pasted file from element only", () => {
-        intercept("http://test.upload/url");
+        intercept();
 
         //shouldnt trigger upload
         cy.get("body")

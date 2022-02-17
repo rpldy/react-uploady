@@ -10,7 +10,7 @@ describe("UploadPreview - Multi Crop", () => {
         cy.visitStory(
             "uploadPreview",
             "with-multi-crop",
-            { useMockk: false }
+            { useMock: false }
         );
     });
 

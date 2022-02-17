@@ -83,6 +83,7 @@ const Main = styled.main`
 
     .docs-link {
         color: #c5c7cc;
+        font-size: 18px;
 
         &:hover {
             color: #FFF;
@@ -118,7 +119,12 @@ const WelcomeReactUploady = () => {
                 .map(({ name, version }) =>
                     <span className="version" key={name}>{name} - <strong>{version}</strong></span>)
             }
+
             <br/>
+            <h3>React-Uploady Documentation</h3>
+            <a className="docs-link" href="https://react-uploady.netlify.app" target="_blank" rel="noreferrer noopener">https://react-uploady.netlify.app</a>
+            <br/>
+
             <ul className="lib-links">
                 <li>
                     <a href="https://github.com/rpldy/react-uploady" target="_blank" rel="noopener" title="rpldy/react-uploady">
@@ -131,8 +137,6 @@ const WelcomeReactUploady = () => {
                     </a>
                 </li>
             </ul>
-            <br/>
-            <a className="docs-link" href="https://react-uploady.netlify.app" target="_blank" rel="noreferrer noopener">React-Uploady Documentation</a>
         </Container>
 
         <InfoContainer>

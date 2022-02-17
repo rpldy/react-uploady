@@ -12,25 +12,25 @@ const dispatchPasteEvent = (element, dataTransfer) => {
 
 Cypress.Commands.add("pasteFile", { prevSubject: true },
     (subject, fixtureName, times = 1, mimeType = "image/jpeg") => {
-        cy.window({ log: false }).then((window) => {
-            cy.fixture(fixtureName, "binary")
-                .then(Cypress.Blob.binaryStringToBlob)
-                .then((fileContent) => {
-                    const dataTransfer = new window.DataTransfer();
+        cy.window({ log: false })
+            .then((window) => {
+                cy.fixture(fixtureName, { encoding: null })
+                    .then((fileContent) => {
+                        const dataTransfer = new window.DataTransfer();
 
-                    new Array(times)
-                        .fill(null)
-                        .forEach((f, i) => {
-                            const fileName = !i ? fixtureName : fixtureName.replace(".", `${i + 1}.`);
-                            const file = new window.File([fileContent], fileName, { type: mimeType });
-                            dataTransfer.items.add(file);
-                        });
+                        new Array(times)
+                            .fill(null)
+                            .forEach((f, i) => {
+                                const fileName = !i ? fixtureName : fixtureName.replace(".", `${i + 1}.`);
+                                const file = new window.File([fileContent], fileName, { type: mimeType });
+                                dataTransfer.items.add(file);
+                            });
 
-                    const element = subject[0];
+                        const element = subject[0];
 
-                    dispatchPasteEvent(element, dataTransfer);
-                });
-        });
+                        dispatchPasteEvent(element, dataTransfer);
+                    });
+            });
 
         return cy.wrap(subject, { log: false });
     });

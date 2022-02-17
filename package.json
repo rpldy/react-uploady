@@ -105,7 +105,6 @@
     "concurrently": "^6.3.0",
     "core-js": "^3.19.1",
     "cypress": "^9.5.0",
-    "cypress-file-upload": "^5.0.8",
     "cypress-intercept-formdata": "^0.3.0",
     "enzyme": "^3.11.0",
     "eslint": "^8.2.0",

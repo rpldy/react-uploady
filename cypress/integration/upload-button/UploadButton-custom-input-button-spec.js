@@ -6,7 +6,11 @@ describe("UploadButton - With Custom File Input And Button", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadButton", "with-custom-file-input-and-custom-button&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
+        cy.visitStory(
+            "uploadButton",
+            "with-custom-file-input-and-custom-button",
+            { useMock: false }
+        );
     });
 
     it("should change file input attribute", () => {

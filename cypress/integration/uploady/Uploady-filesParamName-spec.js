@@ -6,7 +6,11 @@ describe("Uploady - filesParamName", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploady", "with-custom-field-name&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
+        cy.visitStory(
+            "uploady",
+            "with-custom-field-name",
+            { useMock: false }
+        );
     });
 
     it("should set the files param name to custom value", () => {

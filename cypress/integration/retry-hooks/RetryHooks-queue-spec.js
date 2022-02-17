@@ -8,7 +8,11 @@ describe("RetryHooks - Queue", () => {
         fileName2 = "sea.jpg";
 
     before(() => {
-        cy.visitStory("retryHooks", "with-retry-and-preview", { useMock: false, }); //&knob-mock send delay_Upload Destination=500");
+        cy.visitStory(
+            "retryHooks",
+            "with-retry-and-preview",
+            { useMock: false }
+        );
     });
 
     it("should use queue with retry", () => {

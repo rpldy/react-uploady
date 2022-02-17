@@ -6,7 +6,11 @@ describe("UploadPaste - Wrap Upload-DropZone", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadPaste", "with-paste-drop-zone&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
+        cy.visitStory(
+            "uploadPaste",
+            "with-paste-drop-zone",
+            { useMock: false }
+        );
     });
 
     beforeEach(() => {
@@ -14,7 +18,7 @@ describe("UploadPaste - Wrap Upload-DropZone", () => {
     });
 
     it("drop should continue working on wrapped drop-zone", () => {
-        intercept("http://test.upload/url");
+        intercept();
 
         dropFile(fileName, () => {
             cy.wait("@uploadReq")
@@ -28,7 +32,7 @@ describe("UploadPaste - Wrap Upload-DropZone", () => {
     });
 
     it("should upload file pasted to wrapper drop-zone", () => {
-        intercept("http://test.upload/url");
+        intercept();
 
         cy.get("#upload-drop-zone")
             .pasteFile(fileName);

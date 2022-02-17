@@ -98,7 +98,9 @@ const sendChunk = (
 ): SendResult => {
     if (!chunk.data) {
         //slice the chunk based on bit position
-        chunk.data = getChunkDataFromFile(item.file, chunk.start, chunk.end);
+        chunkedState.updateState((state) => {
+            chunk.data = getChunkDataFromFile(item.file, chunk.start, chunk.end);
+        });
     }
 
     if (!chunk.data) {

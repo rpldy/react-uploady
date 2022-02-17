@@ -7,7 +7,11 @@ describe("UploadPreview - Multi Crop", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadPreview", "with-multi-crop&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
+        cy.visitStory(
+            "uploadPreview",
+            "with-multi-crop",
+            { useMock: false }
+        );
     });
 
     beforeEach(() => {

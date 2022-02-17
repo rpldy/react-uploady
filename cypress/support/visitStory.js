@@ -2,15 +2,12 @@ Cypress.Commands.add("visitStory", (component, storyName, {
     canvas = true,
     useMock = true,
     uploadUrl = "http://test.upload/url",
-    mockDelay = 500
 } = {}) => {
     cy.log(`cmd.loadStory: component = ${component}, story = ${storyName}`);
 
-    const sbUrlBase = `${Cypress.env("storybookDomain")}:${Cypress.env("SB_PORT")}`;
-
     const urlBase = canvas ?
-		`${sbUrlBase}/iframe.html?id=` :
-		`${sbUrlBase}${Cypress.env("storybookPath")}`;
+		`iframe.html?id=` :
+		`${Cypress.env("storybookPath")}`;
 
     const urlWithStory = `${urlBase}${Cypress.env("components")[component]}--${storyName}`;
 

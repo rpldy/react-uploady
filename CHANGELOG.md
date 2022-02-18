@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.17.5 (2022-02-18)
+
+### Bug fixes
+
+- `[chunked-sender]` - fix broken chunking in dev time. Fix for [#339](https://github.com/rpldy/react-uploady/issues/339)
+
+### Internal
+
+- `e2e` - upgrade to cypress.io latest (9.5.0) + remove cypress-file-upload
+
+
 ## 0.17.4 (2022-02-11)
 
 ### Docs

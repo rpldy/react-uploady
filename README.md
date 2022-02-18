@@ -1,7 +1,5 @@
-<p align="center">
-    ![React Uploady Logo Light](https://github.com/rpldy/react-uploady-docs/blob/master/static/img/uploady/react-uploady-text-logo-light.png#gh-dark-mode-only)
-    ![React Uploady Logo Light](https://github.com/rpldy/react-uploady-docs/blob/master/static/img/uploady/react-uploady-text-logo.png#gh-light-mode-only)
-</p>
+![React Uploady Logo](https://github.com/rpldy/react-uploady-docs/blob/master/static/img/uploady/react-uploady-text-logo-light.png#gh-dark-mode-only)
+![React Uploady Logo](https://github.com/rpldy/react-uploady-docs/blob/master/static/img/uploady/react-uploady-text-logo.png#gh-light-mode-only)
 
 <p align="center">Modern file-upload components & hooks for React.</p>
 

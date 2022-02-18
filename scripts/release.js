@@ -80,7 +80,7 @@ const TASKS = [
 
           if (!result.code) {
               log(chalk.gray, `merging master to release branch`);
-              result = run(`git merge master`);
+              result = run(`git merge master -m "chore: merge content from master"`);
           }
 
           return { code: result.code };

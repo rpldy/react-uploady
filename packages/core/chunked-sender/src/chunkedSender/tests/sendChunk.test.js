@@ -153,7 +153,7 @@ describe("sendChunk tests", () => {
         const chunk = { id: "c1", start: 1, end: 10, data: null };
 
         expect(() => {
-            sendChunk(chunk, {url: "url"}, { file: {} },  {});
+            sendChunk(chunk, getChunkedState({ url: "url" }), { file: {} },  {});
         }).toThrow(ChunkedSendError);
     });
 

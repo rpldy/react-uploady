@@ -7,7 +7,11 @@ describe("UploadPreview - Crop", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadPreview", "with-crop&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
+        cy.visitStory(
+            "uploadPreview",
+            "with-crop",
+            { useMock: false }
+        );
     });
 
     beforeEach(() => {
@@ -31,12 +35,12 @@ describe("UploadPreview - Crop", () => {
 
             cy.wait("@uploadReq")
                 .interceptFormData((formData) => {
-                    expect(formData["file"]).to.eq("flower.jpg");
+                    expect(formData["file"]).to.eq(fileName);
                 })
                 .its("request.headers")
                 .its("content-length")
                 .then((length) => {
-                    expect(parseInt(length)).to.be.lessThan(1500);
+                    expect(parseInt(length)).to.be.lessThan(4000);
 
                     cy.storyLog().assertFileItemStartFinish(fileName, 1);
                 });

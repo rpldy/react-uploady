@@ -335,7 +335,7 @@ const ExampleRequestPreSend = () => {
     return namesLengths ? <p>{namesLengths}</p> : null;
 };
 
-export const withHeaderFromFileName = (): Node => {
+export const WithHeaderFromFileName = (): Node => {
     const { enhancer, destination, grouped, groupSize, autoUpload, extOptions } = useStoryUploadySetup();
 
     return <Uploady

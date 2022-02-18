@@ -6,11 +6,15 @@ describe("UploadPaste - Wrap Upload-Button", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadPaste", "with-paste-upload-button&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
+        cy.visitStory(
+            "uploadPaste",
+            "with-paste-upload-button",
+            { useMock: false }
+        );
     });
 
     it("should upload pasted file from upload-button", () => {
-        intercept("http://test.upload/url");
+        intercept();
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq")

@@ -7,7 +7,11 @@ describe("ChunkedSender - Progress", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("chunkedSender", "with-chunked-sender&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url&knob-chunk size (bytes)_Upload Settings=50000");
+        cy.visitStory(
+            "chunkedSender",
+            "with-chunked-sender&knob-chunk size (bytes)_Upload Settings=50000",
+            { useMock: false }
+        );
     });
 
     it("should use chunked sender with progress events", () => {
@@ -20,11 +24,6 @@ describe("ChunkedSender - Progress", () => {
                 .click();
 
             cy.wait(WAIT_X_LONG);
-
-        // cy.get("@uploadReq.all")
-        //     .then((requests) => {
-        //         cy.log(`CALL COUNT TO REQUEST !!!`, requests);
-        //     });
 
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 

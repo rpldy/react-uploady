@@ -13,7 +13,7 @@ interface StoryLog {
 declare namespace Cypress {
     interface Chainable {
         storyLog: () => StoryLog,
-        visitStory: (component: string, storyName: string, canvas?: boolean) => void;
+        visitStory: (component: string, storyName: string, options?: { canvas?: boolean, useMock?: boolean, uploadUrl?: boolean }) => void;
         pasteFile: (fixtureName: string, times?: number, mimeType?: string) => Chainable;
         setUploadOptions: (options: Object) => void;
         setPreSendOptions: (options: Object) => void;

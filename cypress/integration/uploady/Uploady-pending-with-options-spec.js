@@ -6,7 +6,11 @@ describe("Uploady - autoUpload off tests", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploady", "with-auto-upload-off&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=http://test.upload/url");
+        cy.visitStory(
+            "uploady",
+            "with-auto-upload-off",
+            { useMock: false }
+        );
     });
 
     it("should process pending with options", () => {

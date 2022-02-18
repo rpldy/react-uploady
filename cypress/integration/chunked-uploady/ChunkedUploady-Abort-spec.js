@@ -30,7 +30,7 @@ describe("ChunkedUploady - Abort and continue", () => {
         }, "canceledReq");
 
         uploadFile(fileName, () => {
-            cy.wait(WAIT_X_SHORT);
+            // cy.wait(WAIT_X_SHORT);
             cy.get("button[data-test='abort-batch-0']")
                 .click();
 

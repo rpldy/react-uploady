@@ -1,5 +1,5 @@
 {
-  "version": "0.17.4",
+  "version": "0.17.5",
   "name": "@rpldy/safe-storage",
   "description": "safe (dont throw) versions of local and session storage",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -23,7 +23,7 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^0.17.4"
+    "@rpldy/shared": "^0.17.5"
   },
   "devDependencies": {
     "flow-bin": "^0.169.0"

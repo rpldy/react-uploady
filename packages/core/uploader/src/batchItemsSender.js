@@ -52,7 +52,8 @@ const createBatchItemsSender = (): ItemsSender => {
             headers: destination?.headers,
             sendWithFormData: batchOptions.sendWithFormData,
             formatServerResponse: batchOptions.formatServerResponse,
-            formDataAllowUndefined: batchOptions.formDataAllowUndefined
+            formDataAllowUndefined: batchOptions.formDataAllowUndefined,
+            isSuccessfulCall: batchOptions.isSuccessfulCall,
         }, throttledProgress);
     };
 

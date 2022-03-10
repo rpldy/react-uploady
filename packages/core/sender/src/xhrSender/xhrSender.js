@@ -103,8 +103,11 @@ const processResponse = (sendRequest: SendRequest, options: SendOptions): Promis
             let state, response, status;
             logger.debugLog("uploady.sender: received upload response ", xhr);
 
-            state = ~SUCCESS_CODES.indexOf(xhr.status) ?
-                FILE_STATES.FINISHED : FILE_STATES.ERROR;
+            const isSuccess = options.isSuccessfulCall ?
+                options.isSuccessfulCall(xhr) :
+                SUCCESS_CODES.includes(xhr.status);
+
+            state = isSuccess ? FILE_STATES.FINISHED : FILE_STATES.ERROR;
 
             status = xhr.status;
 

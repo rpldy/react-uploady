@@ -49,14 +49,18 @@ const UploadButtonWithUniqueIdHeader = () => {
 };
 
 export const Simple = (): Node => {
-    const { enhancer, destination, multiple, chunkSize } = useChunkedStoryHelper();
+    const { enhancer, destination, multiple, chunkSize, extOptions } = useChunkedStoryHelper();
+
+    const { isSuccessfulCall } = extOptions || {};
 
     return <ChunkedUploady
         debug
         multiple={multiple}
         destination={destination}
         enhancer={enhancer}
-        chunkSize={chunkSize}>
+        chunkSize={chunkSize}
+        isSuccessfulCall={isSuccessfulCall}
+    >
         <UploadButtonWithUniqueIdHeader/>
     </ChunkedUploady>;
 };

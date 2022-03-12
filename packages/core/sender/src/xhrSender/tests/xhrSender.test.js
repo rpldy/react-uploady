@@ -421,5 +421,21 @@ describe("xhrSender tests", () => {
 
             expect(result.state).toBe(FILE_STATES.ERROR);
         });
+
+        it("should use async custom isSuccessfulCall callback to get success", async () => {
+            const isSuccess = (xhr) => {
+                expect(xhr.status).toBe(308);
+                return Promise.resolve(true);
+            };
+
+            const test = doTest({ isSuccessfulCall: isSuccess });
+
+            test.xhr.status = 308;
+            test.xhrResolve();
+
+            const result = await test.sendResult.request;
+
+            expect(result.state).toBe(FILE_STATES.FINISHED);
+        });
     });
 });

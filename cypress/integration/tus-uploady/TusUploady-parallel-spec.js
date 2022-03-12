@@ -1,6 +1,6 @@
 import uploadFile from "../uploadFile";
 import intercept from "../intercept";
-import { WAIT_MEDIUM } from "../specWaitTimes";
+import { WAIT_MEDIUM } from "../../constants";
 
 describe("TusUploady - Parallel", () => {
     const fileName = "flower.jpg";

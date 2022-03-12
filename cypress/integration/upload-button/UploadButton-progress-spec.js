@@ -1,5 +1,5 @@
 import { uploadFileTimes } from "../uploadFile";
-import { WAIT_X_LONG } from "../specWaitTimes";
+import { WAIT_X_LONG } from "../../constants";
 
 describe("UploadButton - With Progress", () => {
     const fileName = "flower.jpg";

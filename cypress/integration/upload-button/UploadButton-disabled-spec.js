@@ -1,5 +1,5 @@
 import uploadFile from "../uploadFile";
-import { WAIT_MEDIUM, WAIT_X_SHORT } from "../specWaitTimes";
+import { WAIT_MEDIUM, WAIT_X_SHORT } from "../../constants";
 
 describe("UploadButton - Disabled During Upload", () => {
     const fileName = "flower.jpg";

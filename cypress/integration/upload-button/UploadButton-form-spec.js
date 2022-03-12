@@ -1,6 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { ITEM_FINISH } from "../storyLogPatterns";
+import { ITEM_FINISH } from "../../constants";
 
 describe("UploadButton - Form", () => {
     const fileName = "flower.jpg",

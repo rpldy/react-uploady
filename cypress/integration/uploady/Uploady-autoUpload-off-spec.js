@@ -1,6 +1,6 @@
 import uploadFile, { uploadFileTimes } from "../uploadFile";
-import { BATCH_ADD, ITEM_START, ITEM_FINISH, ITEM_ABORT } from "../storyLogPatterns";
-import { WAIT_LONG, WAIT_SHORT, WAIT_X_SHORT } from "../specWaitTimes";
+import { BATCH_ADD, ITEM_START, ITEM_FINISH, ITEM_ABORT } from "../../constants";
+import { WAIT_LONG, WAIT_SHORT, WAIT_X_SHORT } from "../../constants";
 
 describe("Uploady - autoUpload off tests", () => {
     const fileName = "flower.jpg";

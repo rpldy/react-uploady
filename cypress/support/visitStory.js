@@ -1,7 +1,9 @@
+import { DEFAULT_URL } from "../constants";
+
 Cypress.Commands.add("visitStory", (component, storyName, {
     canvas = true,
     useMock = true,
-    uploadUrl = "http://test.upload/url",
+    uploadUrl = DEFAULT_URL,
 } = {}) => {
     cy.log(`cmd.loadStory: component = ${component}, story = ${storyName}`);
 

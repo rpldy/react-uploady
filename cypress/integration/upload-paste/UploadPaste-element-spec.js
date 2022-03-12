@@ -1,6 +1,6 @@
 import intercept from "../intercept";
-import { ITEM_START } from "../storyLogPatterns";
-import { WAIT_X_SHORT } from "../specWaitTimes";
+import { ITEM_START } from "../../constants";
+import { WAIT_X_SHORT } from "../../constants";
 
 describe("UploadPaste - Element Listener", () => {
     const fileName = "flower.jpg";

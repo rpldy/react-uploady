@@ -1,5 +1,5 @@
 import uploadFile from "../uploadFile";
-import { WAIT_X_SHORT } from "../specWaitTimes";
+import { WAIT_X_SHORT } from "../../constants";
 
 describe("Uploader - Event data test", () => {
     const fileName = "flower.jpg";

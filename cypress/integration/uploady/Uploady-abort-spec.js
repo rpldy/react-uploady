@@ -1,6 +1,6 @@
 import uploadFile from "../uploadFile";
-import { ITEM_ABORT, BATCH_ABORT, ITEM_FINISH } from "../storyLogPatterns";
-import { WAIT_SHORT } from "../specWaitTimes";
+import { ITEM_ABORT, BATCH_ABORT, ITEM_FINISH } from "../../constants";
+import { WAIT_SHORT } from "../../constants";
 
 describe("Uploady - With Abort", () => {
     const fileName = "flower.jpg";

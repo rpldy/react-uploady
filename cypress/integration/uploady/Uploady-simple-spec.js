@@ -6,7 +6,11 @@ describe("Uploady - Simple", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploady", "button-with-context-api&knob-destination_Upload Destination=local&knob-mock send delay_Upload Destination=1000&knob-multiple files_Upload Settings=true&knob-group files in single request_Upload Settings=&knob-max in group_Upload Settings=2&knob-auto upload on add_Upload Settings=true");
+        cy.visitStory(
+            "uploady",
+            "button-with-context-api&knob-multiple files_Upload Settings=true&knob-group files in single request_Upload Settings=&knob-max in group_Upload Settings=2&knob-auto upload on add_Upload Settings=true",
+            { useMock : false }
+        );
     });
 
     it("should expose version from uploady package", () => {
@@ -16,7 +20,7 @@ describe("Uploady - Simple", () => {
     });
 
     it("should use custom button with context", () => {
-        intercept("http://localhost:4000/upload");
+        intercept();
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq")

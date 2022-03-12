@@ -1,7 +1,7 @@
 import intercept from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
-import { WAIT_SHORT } from "../specWaitTimes";
-import { ITEM_ERROR, ITEM_FINISH, ITEM_START } from "../storyLogPatterns";
+import { WAIT_SHORT } from "../../constants";
+import { ITEM_ERROR, ITEM_FINISH, ITEM_START } from "../../constants";
 
 describe("Uploady - invalid requestPreSend", () => {
     const fileName = "flower.jpg";

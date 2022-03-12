@@ -1,9 +1,8 @@
 import { interceptWithHandler } from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_SHORT } from "../specWaitTimes";
+import { WAIT_SHORT } from "../../constants";
 
-
-describe("ChunkedUploady - Custom Success Code", () => {
+describe("ChunkedUploady - Custom Success Callback", () => {
     const fileName = "flower.jpg";
 
     before(() => {

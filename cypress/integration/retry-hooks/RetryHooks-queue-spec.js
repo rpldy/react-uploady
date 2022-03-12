@@ -1,7 +1,7 @@
 import { interceptWithDelay } from "../intercept";
 import uploadFile, { uploadFileTimes } from "../uploadFile";
-import { ITEM_ABORT } from "../storyLogPatterns";
-import { WAIT_LONG, WAIT_MEDIUM, WAIT_SHORT } from "../specWaitTimes";
+import { ITEM_ABORT } from "../../constants";
+import { WAIT_LONG, WAIT_MEDIUM, WAIT_SHORT } from "../../constants";
 
 describe("RetryHooks - Queue", () => {
     const fileName = "flower.jpg",

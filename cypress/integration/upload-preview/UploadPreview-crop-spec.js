@@ -1,7 +1,7 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { BATCH_ADD, ITEM_START, ITEM_FINISH, ITEM_CANCEL } from "../storyLogPatterns";
-import { WAIT_SHORT } from "../specWaitTimes";
+import { BATCH_ADD, ITEM_START, ITEM_FINISH, ITEM_CANCEL } from "../../constants";
+import { WAIT_SHORT } from "../../constants";
 
 describe("UploadPreview - Crop", () => {
     const fileName = "flower.jpg";

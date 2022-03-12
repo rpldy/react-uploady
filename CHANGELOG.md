@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.18.0 (2022-03-12)
+
+### Features
+
+- `[sender]` - new option: isSuccessfulCall to customize logic whether request was successful or not
+
+### Internal
+
+- `all` - upgrade eslint & ts-eslint
+
+
 ## 0.17.5 (2022-02-18)
 
 ### Bug fixes

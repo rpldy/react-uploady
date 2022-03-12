@@ -1,6 +1,6 @@
 import { uploadFileTimes } from "../uploadFile";
-import { WAIT_MEDIUM, WAIT_X_SHORT } from "../specWaitTimes";
-import { ITEM_START } from "../storyLogPatterns";
+import { WAIT_MEDIUM, WAIT_X_SHORT } from "../../constants";
+import { ITEM_START } from "../../constants";
 
 describe("UploadPreview - Custom Batch Items Method", () => {
     const fileName = "flower.jpg";

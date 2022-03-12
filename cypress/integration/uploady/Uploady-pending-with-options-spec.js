@@ -1,6 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { ITEM_FINISH, ITEM_START } from "../storyLogPatterns";
+import { ITEM_FINISH, ITEM_START } from "../../constants";
 
 describe("Uploady - autoUpload off tests", () => {
     const fileName = "flower.jpg";

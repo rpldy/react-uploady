@@ -1,6 +1,5 @@
 import uploadFile from "../uploadFile";
-import { BATCH_ADD, ITEM_ABORT, ITEM_FINISH } from "../storyLogPatterns";
-import { WAIT_SHORT } from "../specWaitTimes";
+import { BATCH_ADD, ITEM_ABORT, ITEM_FINISH, WAIT_SHORT } from "../../constants";
 
 describe("RetryHooks - Retry Upload", () => {
     const fileName = "flower.jpg",

@@ -1,6 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { BATCH_ADD, ITEM_START } from "../storyLogPatterns";
+import { BATCH_ADD, ITEM_START } from "../../constants";
 
 describe("UMD ALL - Bundle", () => {
     const fileName = "flower.jpg";

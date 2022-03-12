@@ -4,6 +4,7 @@ import type {
     UploadData,
     FormatParamGroupNameMethod,
     FormatServerResponseMethod,
+    IsSuccessfulCall,
 } from "@rpldy/shared";
 
 export type SendOptions = {
@@ -17,6 +18,7 @@ export type SendOptions = {
     sendWithFormData?: boolean,
     formDataAllowUndefined?: boolean,
     formatServerResponse?: FormatServerResponseMethod,
+    isSuccessfulCall?: IsSuccessfulCall,
 };
 
 export type SenderProgressEvent = { total: number, loaded: number };

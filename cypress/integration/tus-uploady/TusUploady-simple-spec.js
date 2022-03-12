@@ -1,6 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_LONG, WAIT_SHORT } from "../specWaitTimes";
+import { WAIT_LONG, WAIT_SHORT } from "../../constants";
 
 describe("TusUploady - Simple", () => {
 	const fileName = "flower.jpg";

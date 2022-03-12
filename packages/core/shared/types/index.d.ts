@@ -12,6 +12,8 @@ export type FormatServerResponseMethod = (response: string, status: number, head
 
 export type FileFilterMethod = (file: File | string, index: number, files: File[] | string[]) => boolean | Promise<boolean | undefined> | undefined;
 
+export type IsSuccessfulCall = (xhr: XMLHttpRequest) => boolean;
+
 export interface SendOptions  {
     method: string;
     paramName: string;
@@ -23,9 +25,10 @@ export interface SendOptions  {
     sendWithFormData?: boolean;
     formDataAllowUndefined?: boolean;
     formatServerResponse?: FormatServerResponseMethod;
+    isSuccessfulCall?: IsSuccessfulCall;
 }
 
-export interface UploadOptions extends Partial<SendOptions>{
+export interface UploadOptions extends Partial<SendOptions> {
     autoUpload?: boolean;
     clearPendingOnAdd?: boolean;
     formatGroupParamName?: FormatParamGroupNameMethod;

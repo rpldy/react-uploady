@@ -1,6 +1,6 @@
 import { uploadFileTimes } from "../uploadFile";
-import { WAIT_SHORT } from "../specWaitTimes";
-import { BATCH_ADD, BATCH_ERROR, BATCH_FINALIZE, ITEM_FINISH, ITEM_START } from "../storyLogPatterns";
+import { WAIT_SHORT } from "../../constants";
+import { BATCH_ADD, BATCH_ERROR, BATCH_FINALIZE, ITEM_FINISH, ITEM_START } from "../../constants";
 
 describe("Uploady - invalid BATCH_START", () => {
     const fileName = "flower.jpg";

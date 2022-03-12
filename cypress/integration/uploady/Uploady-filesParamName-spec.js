@@ -1,6 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_SHORT } from "../specWaitTimes";
+import { WAIT_SHORT } from "../../constants";
 
 describe("Uploady - filesParamName", () => {
     const fileName = "flower.jpg";

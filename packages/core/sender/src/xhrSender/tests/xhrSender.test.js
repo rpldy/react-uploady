@@ -11,7 +11,6 @@ import prepareFormData from "../prepareFormData";
 jest.mock("../prepareFormData", () => jest.fn());
 
 describe("xhrSender tests", () => {
-
     beforeEach(() => {
         clearJestMocks(
             request,
@@ -386,8 +385,57 @@ describe("xhrSender tests", () => {
             const result = await test.sendResult.request;
 
             expect(result.response.data).toBe("parsed");
-
             expect(formatServerResponse).toHaveBeenCalledWith("test", 200, {});
+        });
+    });
+
+    describe("with custom is success callback", () => {
+        it("should use custom isSuccessfulCall callback to get success", async () => {
+            const isSuccess = (xhr) => {
+                expect(xhr.status).toBe(308);
+                return true;
+            };
+
+            const test = doTest({ isSuccessfulCall: isSuccess });
+
+            test.xhr.status = 308;
+            test.xhrResolve();
+
+            const result = await test.sendResult.request;
+
+            expect(result.state).toBe(FILE_STATES.FINISHED);
+        });
+
+        it("should use custom isSuccessfulCall callback to get failed", async () => {
+            const isSuccess = (xhr) => {
+                expect(xhr.status).toBe(200);
+                return false;
+            };
+
+            const test = doTest({ isSuccessfulCall: isSuccess });
+
+            test.xhr.status = 200;
+            test.xhrResolve();
+
+            const result = await test.sendResult.request;
+
+            expect(result.state).toBe(FILE_STATES.ERROR);
+        });
+
+        it("should use async custom isSuccessfulCall callback to get success", async () => {
+            const isSuccess = (xhr) => {
+                expect(xhr.status).toBe(308);
+                return Promise.resolve(true);
+            };
+
+            const test = doTest({ isSuccessfulCall: isSuccess });
+
+            test.xhr.status = 308;
+            test.xhrResolve();
+
+            const result = await test.sendResult.request;
+
+            expect(result.state).toBe(FILE_STATES.FINISHED);
         });
     });
 });

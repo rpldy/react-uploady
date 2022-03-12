@@ -1,6 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_LONG } from "../specWaitTimes";
+import { WAIT_LONG } from "../../constants";
 
 describe("ChunkedUploady - WithChunkEventHooks", () => {
     const fileName = "flower.jpg";

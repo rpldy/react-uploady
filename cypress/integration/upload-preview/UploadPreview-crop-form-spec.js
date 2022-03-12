@@ -1,6 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { BATCH_ADD } from "../storyLogPatterns";
+import { BATCH_ADD } from "../../constants";
 
 describe("UploadPreview - Crop in Form", () => {
     const fileName = "flower.jpg";

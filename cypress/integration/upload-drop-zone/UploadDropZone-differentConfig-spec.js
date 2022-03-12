@@ -1,5 +1,5 @@
 import dropFile from "../dropFile";
-import { WAIT_X_SHORT } from "../specWaitTimes";
+import { WAIT_X_SHORT } from "../../constants";
 
 describe("UploadDropZone - Different Config", () => {
     const fileName = "flower.jpg";

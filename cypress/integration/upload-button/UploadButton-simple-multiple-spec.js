@@ -1,5 +1,5 @@
 import { uploadFileTimes } from "../uploadFile";
-import { WAIT_MEDIUM } from "../specWaitTimes";
+import { WAIT_MEDIUM } from "../../constants";
 
 describe("UploadButton - Simple - Multiple files", () => {
     const fileName = "flower.jpg";

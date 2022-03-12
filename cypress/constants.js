@@ -1,3 +1,16 @@
+export const DEFAULT_URL = "http://test.upload/url";
+
+export const DEFAULT_METHOD = "POST";
+
+export const WAIT_X_SHORT = 200;
+
+export const WAIT_SHORT = 800;
+
+export const WAIT_MEDIUM = 1500;
+
+export const WAIT_LONG = 2500;
+
+export const WAIT_X_LONG = 3000;
 
 export const BATCH_ADD = /BATCH_ADD/;
 
@@ -20,3 +33,4 @@ export const ITEM_CANCEL = /ITEM_CANCEL/;
 export const CHUNK_START = /CHUNK_START/;
 
 export const CHUNK_FINISH = /CHUNK_FINISH/;
+

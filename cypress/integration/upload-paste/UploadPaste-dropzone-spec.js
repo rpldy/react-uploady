@@ -1,6 +1,6 @@
 import intercept from "../intercept";
 import dropFile from "../dropFile";
-import { WAIT_X_SHORT } from "../specWaitTimes";
+import { WAIT_X_SHORT } from "../../constants";
 
 describe("UploadPaste - Wrap Upload-DropZone", () => {
     const fileName = "flower.jpg";

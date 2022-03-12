@@ -39,6 +39,8 @@ export type Headers = { [string]: string };
 
 export type FormatServerResponseMethod = (string, number, ?Headers) => any;
 
+export type IsSuccessfulCall = (xhr: XMLHttpRequest) => boolean;
+
 type BatchItemBase = {|
 	id: string,
 	batchId: string,
@@ -121,6 +123,8 @@ export type UploadOptions = {|
     formDataAllowUndefined?: boolean,
     //optional function to create the batch item's uploadResponse from the raw xhr response
     formatServerResponse?: FormatServerResponseMethod,
+    //callback to use to decide whether upload response is succssful or not
+    isSuccessfulCall?: IsSuccessfulCall
 |};
 
 export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];

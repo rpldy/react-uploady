@@ -1,7 +1,7 @@
 import { interceptWithDelay } from "../intercept";
 import uploadFile from "../uploadFile";
-import { CHUNK_START, CHUNK_FINISH } from "../storyLogPatterns";
-import { WAIT_X_LONG } from "../specWaitTimes";
+import { CHUNK_START, CHUNK_FINISH } from "../../constants";
+import { WAIT_X_LONG } from "../../constants";
 
 describe("ChunkedSender - Progress", () => {
     const fileName = "flower.jpg";

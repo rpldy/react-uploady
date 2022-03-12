@@ -1,7 +1,7 @@
 import intercept from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
-import { ITEM_START, ITEM_FINISH } from "../storyLogPatterns";
-import { WAIT_MEDIUM } from "../specWaitTimes";
+import { ITEM_START, ITEM_FINISH } from "../../constants";
+import { WAIT_MEDIUM } from "../../constants";
 
 describe("UploadButton - Simple - Multiple files", () => {
     const fileName = "flower.jpg";

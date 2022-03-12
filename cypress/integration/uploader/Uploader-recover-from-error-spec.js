@@ -1,6 +1,6 @@
 import uploadFile from "../uploadFile";
-import { ITEM_START, ITEM_ERROR } from "../storyLogPatterns";
-import { WAIT_MEDIUM } from "../specWaitTimes";
+import { ITEM_START, ITEM_ERROR } from "../../constants";
+import { WAIT_MEDIUM } from "../../constants";
 
 describe("Uploader - recover from sender error test", () => {
     const fileName = "flower.jpg";

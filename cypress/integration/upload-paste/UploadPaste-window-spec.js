@@ -1,4 +1,4 @@
-import { WAIT_X_SHORT } from "../specWaitTimes";
+import { WAIT_X_SHORT } from "../../constants";
 
 describe("UploadPaste - Window Listener", () => {
     const fileName = "flower.jpg";

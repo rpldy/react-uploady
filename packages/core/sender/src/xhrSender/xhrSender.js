@@ -1,5 +1,5 @@
 // @flow
-import { logger, FILE_STATES, request, parseResponseHeaders, pick, merge } from "@rpldy/shared";
+import { logger, FILE_STATES, request, parseResponseHeaders, pick, merge, isPromise } from "@rpldy/shared";
 import { XHR_SENDER_TYPE } from "../consts";
 import MissingUrlError from "../MissingUrlError";
 import prepareFormData from "./prepareFormData";
@@ -96,32 +96,41 @@ const parseResponseJson = (response: string, headers: ?Headers, options: SendOpt
 	return parsed;
 };
 
+const checkIsResponseSuccessful = (xhr, options) => {
+    const isSuccess = options.isSuccessfulCall ?
+        options.isSuccessfulCall(xhr) :
+        SUCCESS_CODES.includes(xhr.status);
+
+    return isPromise(isSuccess) ?
+        isSuccess :
+        Promise.resolve(isSuccess);
+};
+
 const processResponse = (sendRequest: SendRequest, options: SendOptions): Promise<UploadData> =>
     sendRequest
         .pXhr
         .then((xhr) => {
-            let state, response, status;
             logger.debugLog("uploady.sender: received upload response ", xhr);
 
-            state = ~SUCCESS_CODES.indexOf(xhr.status) ?
-                FILE_STATES.FINISHED : FILE_STATES.ERROR;
+            return checkIsResponseSuccessful(xhr, options)
+                .then((isSuccess) => {
+                    const state = isSuccess ? FILE_STATES.FINISHED : FILE_STATES.ERROR;
+                    const status = xhr.status;
+                    const resHeaders = parseResponseHeaders(xhr);
 
-            status = xhr.status;
+                    const response = {
+                        data:
+                            options.formatServerResponse?.(xhr.response, status, resHeaders) ??
+                            parseResponseJson(xhr.response, resHeaders, options),
+                        headers: resHeaders,
+                    };
 
-            const resHeaders = parseResponseHeaders(xhr);
-
-            response = {
-                data:
-                    options.formatServerResponse?.(xhr.response, status, resHeaders) ??
-                    parseResponseJson(xhr.response, resHeaders, options),
-                headers: resHeaders,
-            };
-
-            return {
-                status,
-                state,
-                response,
-            };
+                    return {
+                        status,
+                        state,
+                        response,
+                    };
+                });
         })
         .catch((error) => {
             let state, response;

@@ -1,5 +1,4 @@
-const DEFAULT_URL = "http://test.upload/url",
-DEFAULT_METHOD = "POST";
+import { DEFAULT_METHOD, DEFAULT_URL } from "../constants";
 
 export const RESPONSE_DEFAULTS = {
     statusCode: 200,

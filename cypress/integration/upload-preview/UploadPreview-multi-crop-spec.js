@@ -1,7 +1,7 @@
 import { interceptWithDelay } from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
-import { BATCH_ADD, ITEM_START, ITEM_FINISH } from "../storyLogPatterns";
-import { WAIT_SHORT, WAIT_X_SHORT } from "../specWaitTimes";
+import { BATCH_ADD, ITEM_START, ITEM_FINISH } from "../../constants";
+import { WAIT_SHORT, WAIT_X_SHORT } from "../../constants";
 
 describe("UploadPreview - Multi Crop", () => {
     const fileName = "flower.jpg";

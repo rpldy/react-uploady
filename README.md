@@ -1,6 +1,5 @@
-<p align="center">
-    <img src="https://res.cloudinary.com/yoav-cloud/image/upload/w_400/v22212321/rpldy/logo/react-uploady-text-logo.png" width="300" alt='react-uploady Logo' aria-label='react-uploady' />   
-</p>
+![React Uploady Logo](https://github.com/rpldy/react-uploady-docs/blob/master/static/img/uploady/react-uploady-text-logo-light.png#gh-dark-mode-only)
+![React Uploady Logo](https://github.com/rpldy/react-uploady-docs/blob/master/static/img/uploady/react-uploady-text-logo.png#gh-light-mode-only)
 
 <p align="center">Modern file-upload components & hooks for React.</p>
 

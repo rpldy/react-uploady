@@ -1,5 +1,5 @@
 import uploadFile from "../uploadFile";
-import { ITEM_ERROR, ITEM_START, WAIT_LONG } from "../../constants";
+import { ITEM_ERROR, ITEM_START, WAIT_SHORT } from "../../constants";
 
 describe("Uploady - Failed Mock Send", () => {
     const fileName = "flower.jpg";
@@ -13,8 +13,9 @@ describe("Uploady - Failed Mock Send", () => {
 
     it("failed mock send should trigger item error", () => {
         uploadFile(fileName, () => {
+            cy.wait(WAIT_SHORT);
             cy.storyLog().assertLogPattern(ITEM_START);
-            cy.wait(WAIT_LONG);
+            cy.wait(WAIT_SHORT);
 
             cy.storyLog().assertLogPattern(ITEM_ERROR)
                 .then((matches) => {

@@ -1,16 +1,18 @@
 import { Interception } from "cypress/types/net-stubbing";
 
-interface StoryLog {
-    assertFileItemStartFinish: (fileName: string, startIndex?: number) => void;
-    assertUrlItemStartFinish: (fileName: string, startIndex?: number) => void;
-    assertLogEntryCount: (count: number, obj: any) => void;
-    assertLogEntryContains: (index: number) => void;
-    customAssertLogEntry: (event: string, asserter: (logLine: any[], env: string) => void, options?: { index?: number, all?: boolean }) => void;
-    assertLogPattern: (pattern: RegExp, options: { times?: number, index?: number, different?: boolean }) => void;
-    resetStoryLog: () => void;
-}
+type PATTERN_MATCH = { index: number };
 
 declare namespace Cypress {
+    interface StoryLog {
+        assertFileItemStartFinish: (fileName: string, startIndex?: number) => void;
+        assertUrlItemStartFinish: (fileName: string, startIndex?: number) => void;
+        assertLogEntryCount: (count: number, obj: any) => void;
+        assertLogEntryContains: (index: number, obj: any) => void;
+        customAssertLogEntry: (event: string, asserter: (logLine: any[], env: string) => void, options?: { index?: number, all?: boolean }) => void;
+        assertLogPattern: (pattern: RegExp, options: { times?: number, index?: number, different?: boolean }) => Promise<PATTERN_MATCH[]>;
+        resetStoryLog: () => void;
+    }
+
     interface Chainable {
         storyLog: () => StoryLog,
         visitStory: (component: string, storyName: string, options?: { canvas?: boolean, useMock?: boolean, uploadUrl?: boolean }) => void;

@@ -9,7 +9,10 @@ import {
     useStoryUploadySetup,
     getCsfExport,
     StoryAbortButton,
-    type CsfExport, logToCypress,
+    logToCypress,
+    mockDestination,
+
+    type CsfExport,
 } from "../../../story-helpers";
 import { getUploadyVersion, useBatchErrorListener, useBatchFinalizeListener } from "@rpldy/shared-ui";
 import Uploady, {
@@ -352,6 +355,26 @@ export const WithHeaderFromFileName = (): Node => {
         <ExampleRequestPreSend/>
         <ContextUploadButton/>
     </Uploady>;
+};
+
+const isSuccessfulMockRequest = (xhr) => {
+    console.log("CHECKING MOCK REQUEST - ", xhr);
+    return false;
+};
+
+export const WithFailingMockSender = (): Node => {
+    const { extOptions } = useStoryUploadySetup();
+    const { destination, enhancer } = mockDestination();
+
+    return <Uploady
+        debug
+        destination={destination}
+        enhancer={addActionLogEnhancer(enhancer)}
+        isSuccessfulCall={isSuccessfulMockRequest}
+        {...extOptions}
+    >
+        <ContextUploadButton/>
+    </Uploady>
 };
 
 //expose react and react-dom for Uploady bundle

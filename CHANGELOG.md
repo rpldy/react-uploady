@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.18.1 (2022-04-02)
+
+### Features
+
+- `[mock-sender]` - new option: isSuccessfulCall to customize logic whether request was successful or not
+
+
 ## 0.18.0 (2022-03-12)
 
 ### Features

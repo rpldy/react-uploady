@@ -123,7 +123,7 @@ export type UploadOptions = {|
     formDataAllowUndefined?: boolean,
     //optional function to create the batch item's uploadResponse from the raw xhr response
     formatServerResponse?: FormatServerResponseMethod,
-    //callback to use to decide whether upload response is succssful or not
+    //callback to use to decide whether upload response is successful or not
     isSuccessfulCall?: IsSuccessfulCall
 |};
 

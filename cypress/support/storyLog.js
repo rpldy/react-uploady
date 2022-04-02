@@ -138,6 +138,8 @@ Cypress.Commands.add("assertLogPattern", { prevSubject: true }, (storyLog, patte
             expect(found, "expect pattern matches to all be different").to.be.undefined
         }
     }
+
+    return cy.wrap(matches);
 });
 
 Cypress.Commands.add("resetStoryLog", {prevSubject: true}, (storyLog) => {

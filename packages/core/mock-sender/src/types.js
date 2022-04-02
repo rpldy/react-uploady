@@ -1,6 +1,6 @@
 // @flow
 
-import type { NonMaybeTypeFunc } from "@rpldy/shared";
+import type { NonMaybeTypeFunc, IsSuccessfulCall } from "@rpldy/shared";
 
 export type MockOptions = {|
 	//the time in ms it should take to "upload" (default: 500ms)
@@ -13,6 +13,8 @@ export type MockOptions = {|
 	response?: any,
 	//the upload request status code (default: 200)
 	responseStatus?: number,
+    //callback to use to decide whether upload response is successful or not
+    isSuccessfulCall?: IsSuccessfulCall
 |};
 
 export type MandatoryMockOptions = $ObjMap<MockOptions, NonMaybeTypeFunc>;

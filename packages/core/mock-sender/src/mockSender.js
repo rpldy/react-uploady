@@ -45,6 +45,7 @@ const createRequest = (options: MandatoryMockOptions, items: BatchItem[]) => {
 		isDone = true;
 
 		if (cancelRequest) {
+            //rejects the request promise
 			cancelRequest();
 		}
 
@@ -99,23 +100,37 @@ const createRequest = (options: MandatoryMockOptions, items: BatchItem[]) => {
 	};
 };
 
+const getIsSuccessfulMockRequest = (options, sendOptions, mockStatus, mockResponse, mockHeaders) => {
+    const getIsSuccessfulCall = options.isSuccessfulCall || sendOptions.isSuccessfulCall;
+
+    return getIsSuccessfulCall ?
+        //$FlowExpectedError[incompatible-call]
+        getIsSuccessfulCall({
+            //mimic xhr for mock sender
+            readyState: 4,
+            status: mockStatus,
+            response: mockResponse,
+            getAllResponseHeaders: () => mockHeaders,
+        }) : true;
+} ;
+
 const processResponse = (request, options: MandatoryMockOptions, sendOptions: SendOptions): Promise<UploadData> => {
 	return request.then(({ items, ...mockResponse }: MockResponse) => {
 		logger.debugLog("uploady.mockSender: mock request finished successfully", items);
-
-		const mockResponseData =  {
-            sendOptions,
-            mock: true,
-            success: true,
-        };
 
 		const mockHeaders = { "x-request-type": "react-uploady.mockSender" };
 
 		const mockStatus = options.responseStatus || 200;
 
-		return {
+        const mockResponseData = {
+            sendOptions,
+            mock: true,
+            success: getIsSuccessfulMockRequest(options, sendOptions, mockStatus, mockResponse, mockHeaders),
+        };
+
+        return {
             status: mockStatus,
-			state: FILE_STATES.FINISHED,
+			state: mockResponseData.success ? FILE_STATES.FINISHED : FILE_STATES.ERROR,
 			response: {
 				...mockResponse,
 				headers: mockHeaders,

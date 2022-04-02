@@ -89,7 +89,6 @@ describe("mockSender tests", () => {
     });
 
     it("should emit progress events with options.fileSize = 0", async () => {
-
         const result = await doMockSend({
             fileSize: 0,
         }).request;
@@ -109,7 +108,6 @@ describe("mockSender tests", () => {
     });
 
     it("should send mock request with custom options", async () => {
-
         const result = await doMockSend(customOptions).request;
 
         const response = result.response;
@@ -189,8 +187,49 @@ describe("mockSender tests", () => {
         const formatServerResponse = jest.fn(() => "test");
         const sendOptions = { formatServerResponse };
 
-        const result = await doMockSend(null, null, false, false, sendOptions ).request;
+        const result = await doMockSend(null, null, false, false, sendOptions).request;
 
         expect(result.response.data).toBe("test");
+    });
+
+    describe("isSuccessfulCall", () => {
+        it("should use sendOptions.isSuccessfulCall to fail request", async () => {
+            let mockXhr;
+
+            const isSuccessfulCall = jest.fn((xhr) => {
+               mockXhr = xhr;
+                return false;
+            });
+
+            const sendOptions = { isSuccessfulCall };
+
+            const result = await doMockSend(null, null, false, false, sendOptions).request;
+
+            expect(result.state).toBe(FILE_STATES.ERROR);
+            expect(result.response.data.success).toBe(false);
+
+            expect(mockXhr.readyState).toBe(4);
+            const mockHeaders = expect(mockXhr.getAllResponseHeaders());
+            expect(mockHeaders).toBeDefined();
+        });
+
+        it("should use sendOptions.isSuccessfulCall for success", async () => {
+            const isSuccessfulCall = jest.fn(() => true);
+            const sendOptions = { isSuccessfulCall };
+
+            const result = await doMockSend(null, null, false, false, sendOptions).request;
+
+            expect(result.state).toBe(FILE_STATES.FINISHED);
+            expect(result.response.data.success).toBe(true);
+        });
+
+        it("should use mock sender init isSuccessfulCall", async () => {
+            const isSuccessfulCall = jest.fn(() => false);
+
+            const result = await doMockSend({ isSuccessfulCall }).request;
+
+            expect(result.state).toBe(FILE_STATES.ERROR);
+            expect(result.response.data.success).toBe(false);
+        });
     });
 });

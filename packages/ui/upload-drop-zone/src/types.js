@@ -3,7 +3,7 @@ import type { UploadOptions } from "@rpldy/shared";
 
 export type DropHandlerMethod = (e: SyntheticDragEvent<HTMLDivElement>) => FileList | mixed[]
 
-export type ShouldRemoveDragOverMethod = (target: HTMLElement) => boolean;
+export type ShouldRemoveDragOverMethod = (e: SyntheticDragEvent<HTMLElement>) => boolean;
 
 export type UploadDropZoneProps =  {|
 	...UploadOptions,

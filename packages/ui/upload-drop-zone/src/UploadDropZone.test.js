@@ -165,7 +165,7 @@ describe("UploadDropZone tests", () => {
 
         const { div, span, mockRef } = testDropZone({
             onDragOverClassName,
-            shouldRemoveDragOver: (target) => target === span.getDOMNode(),
+            shouldRemoveDragOver: ({ target }) => target === span.getDOMNode(),
         });
 
         const refElm = mockRef.mock.calls[0][0];

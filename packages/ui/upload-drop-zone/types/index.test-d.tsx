@@ -6,13 +6,14 @@ const TestDropZone: React.FC = () => {
     const overlayRef = React.useRef<HTMLSpanElement | null>(null);
 
     const checkRemoveDragOver = React.useCallback(
-        (target) => target === overlayRef.current, []);
+        ({ target }) => target === overlayRef.current, []);
 
-    return <UploadDropZone autoUpload
-                           destination={{ url: "test.com" }}
-                           onDragOverClassName="drag-over"
-                           dropHandler={onDrop}
-                           shouldRemoveDragOver={checkRemoveDragOver}
+    return <UploadDropZone
+        autoUpload
+        destination={{ url: "test.com" }}
+        onDragOverClassName="drag-over"
+        dropHandler={onDrop}
+        shouldRemoveDragOver={checkRemoveDragOver}
     >
         <span ref={overlayRef}>upload</span>
     </UploadDropZone>;

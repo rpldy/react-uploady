@@ -243,7 +243,7 @@ export const WithFullScreen = (): Node => {
                     {...extOptions}
     >
         <StyledFullScreenDropZone id="upload-drop-zone" onDragOverClassName="drag-over"
-                                  shouldRemoveDragOver={(target) => target === indicatorRef.current}>
+                                  shouldRemoveDragOver={({ target }) => target === indicatorRef.current}>
             <div className="content">
                 <h1>Drop files here</h1>
             </div>

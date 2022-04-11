@@ -38,6 +38,7 @@ On-progress events and abort functionality are supported
 | progressIntervals | number[]   | [10, 25, 50, 75, 100] | mock intervals (percentages) to emit progress events at|
 | response       | any           |  {"mock": true, "success": true} | mock response for upload request|
 | responseStatus | number        | 200           | upload request status code|
+| isSuccessfulCall       | [IsSuccessfulCall](../shared/src/types.js#L42)  | undefined  | callback to use to decide whether upload response is succssful or not |
 
 ## Usage
 
@@ -51,11 +52,12 @@ const mockSenderEnhancer = getMockSenderEnhancer({
    progressIntervals: [20, 40, 75, 80, 90, 99]               
 });
 
-const App = () => <Uploady 
-         destination={{ url: "mock-url"}}            
-         enhancer={mockSenderEnhancer}
-        >
-            <UploadButton />
-        </Uploady>;
+const App = () => (
+    <Uploady
+        enhancer={mockSenderEnhancer}
+    >
+        <UploadButton />
+    </Uploady>
+);
 ```
 

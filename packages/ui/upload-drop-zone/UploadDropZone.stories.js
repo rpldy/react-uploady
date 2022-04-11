@@ -1,5 +1,5 @@
 // @flow
-import React, { forwardRef, useCallback, useContext, useMemo } from "react";
+import React, { forwardRef, useCallback, useContext, useMemo, useRef } from "react";
 import styled, { css } from "styled-components";
 import { DndProvider, useDrop } from "react-dnd";
 import Backend, { NativeTypes } from "react-dnd-html5-backend";
@@ -29,15 +29,16 @@ const SmallDropZone = styled(StyledDropZone)`
 `;
 
 export const Simple = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+    const { enhancer, destination, multiple, grouped, groupSize, extOptions } = useStoryUploadySetup();
 
     return <Uploady debug
                     multiple={multiple}
                     destination={destination}
                     enhancer={enhancer}
                     grouped={grouped}
-                    maxGroupSize={groupSize}>
-
+                    maxGroupSize={groupSize}
+                    {...extOptions}
+    >
         <StyledDropZone id="upload-drop-zone" onDragOverClassName="drag-over">
             <div id="drag-text">Drag File(s) Here</div>
             <div id="drop-text">Drop File(s) Here</div>
@@ -206,6 +207,49 @@ export const WithAsUploadButton = (): Node => {
 
 		<DropZoneButton/>
 	</Uploady>
+};
+
+const StyledFullScreenDropZone = styled(UploadDropZone)`
+    width: 100%;
+    height: 100vh;
+
+   .content {
+       width: 100%;
+       height: 100vh;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+   }
+
+    &.drag-over .dropIndicator {
+        position: absolute;
+        z-index: 2;
+        background: rgba(0, 0, 0, 0.5);
+        border: 8px solid green;
+        inset: 0;
+    }
+`;
+
+export const WithFullScreen = (): Node => {
+    const { enhancer, destination, multiple, grouped, groupSize, extOptions } = useStoryUploadySetup();
+    const indicatorRef = useRef(null);
+
+    return <Uploady debug
+                    multiple={multiple}
+                    destination={destination}
+                    enhancer={enhancer}
+                    grouped={grouped}
+                    maxGroupSize={groupSize}
+                    {...extOptions}
+    >
+        <StyledFullScreenDropZone id="upload-drop-zone" onDragOverClassName="drag-over"
+                                  shouldRemoveDragOver={(target) => target === indicatorRef.current}>
+            <div className="content">
+                <h1>Drop files here</h1>
+            </div>
+            <div className="dropIndicator" aria-hidden ref={indicatorRef} />
+        </StyledFullScreenDropZone>
+    </Uploady>;
 };
 
 export default (getCsfExport(UploadDropZone, "Upload Drop Zone", readme, { pkg: "upload-drop-zone", section: "UI" }): CsfExport);

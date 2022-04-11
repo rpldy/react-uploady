@@ -137,6 +137,53 @@ describe("UploadDropZone tests", () => {
         expect(refElm.classList.contains("drag-over")).toBe(false);
     });
 
+    it("should not remove drag className if different element", () => {
+        const onDragOverClassName = "drag-over";
+
+        const { div, span, mockRef } = testDropZone({
+            onDragOverClassName,
+        });
+
+        const refElm = mockRef.mock.calls[0][0];
+
+        div.simulate("dragenter");
+        div.simulate("dragover");
+        expect(refElm.classList.contains("drag-over")).toBe(true);
+        div.simulate("dragend");
+        expect(refElm.classList.contains("drag-over")).toBe(false);
+
+        div.simulate("dragenter");
+
+        //simulate drag is over child element
+        span.simulate("dragenter");
+        span.simulate("dragLeave");
+        expect(refElm.classList.contains("drag-over")).toBe(true);
+    });
+
+    it("should add & remove drag className with shouldRemoveDragOver callback", () => {
+        const onDragOverClassName = "drag-over";
+
+        const { div, span, mockRef } = testDropZone({
+            onDragOverClassName,
+            shouldRemoveDragOver: (target) => target === span.getDOMNode(),
+        });
+
+        const refElm = mockRef.mock.calls[0][0];
+
+        div.simulate("dragenter");
+        div.simulate("dragover");
+        expect(refElm.classList.contains("drag-over")).toBe(true);
+        div.simulate("dragend");
+        expect(refElm.classList.contains("drag-over")).toBe(false);
+
+        div.simulate("dragenter");
+
+        //simulate drag is over child element
+        span.simulate("dragenter");
+        span.simulate("dragLeave");
+        expect(refElm.classList.contains("drag-over")).toBe(false);
+    });
+
     it("should not add className if non provided", () => {
         const { div, mockRef } = testDropZone();
 

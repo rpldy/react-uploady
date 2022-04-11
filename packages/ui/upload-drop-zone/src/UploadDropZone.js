@@ -14,6 +14,7 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
          onDragOverClassName,
          dropHandler,
          htmlDirContentParams,
+         shouldRemoveDragOver,
          extraProps,
          ...uploadOptions
      }, ref) => {
@@ -71,11 +72,11 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
         }, [handleEnd, handleDropUpload]);
 
         const onDragLeave = useCallback((e) => {
-            if (dragLeaveTrackerRef.current &&
-                e.target === containerRef.current) {
+            if ((dragLeaveTrackerRef.current &&
+                e.target === containerRef.current) || shouldRemoveDragOver?.(e)) {
                 handleEnd();
             }
-        }, [handleEnd, containerRef]);
+        }, [handleEnd, containerRef, shouldRemoveDragOver]);
 
         const onDragEnd = useCallback((e) => {
             e.preventDefault();

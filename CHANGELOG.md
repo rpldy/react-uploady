@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.18.2 (2022-04-11)
+
+### Features
+
+- `[upload-drop-zone]` - new prop: shouldRemoveDragOver. Fix for [#354](https://github.com/rpldy/react-uploady/issues/354)
+
+### Docs
+
+- `storybook` - set canvas (preview) fav icon
+
+
 ## 0.18.1 (2022-04-02)
 
 ### Features

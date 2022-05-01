@@ -6,6 +6,8 @@ const webpack = require("webpack"),
 const getAllPackagesVersions = async () => {
     const pkgs = await getMatchingPackages({});
 
+    console.log("...Retrieving package versions for stories");
+
     const pkgVersions = await Promise.all(
         pkgs.packages.map(((pkg) =>
             getCurrentNpmVersion(pkg))));

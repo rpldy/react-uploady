@@ -65,4 +65,18 @@ describe("test composeEnhancers", () => {
 
         expect(enhancedUploader.test).toBe("vaoy");
     });
+
+    it("should work with one enhancer", () => {
+        const e1 = (uploader) => {
+            uploader.test += "y";
+        };
+
+        const uploader = {test: ""};
+
+        const enhancer = composeEnhancers(e1);
+
+        const enhancedUploader = enhancer(uploader);
+
+        expect(enhancedUploader.test).toBe("y");
+    });
 });

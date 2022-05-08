@@ -23,12 +23,20 @@ interface DivUploadButtonExtraProps {
     foo: string;
 }
 
-const DivUploadButton: React.ComponentType<React.PropsWithRef<UploadButtonProps>> =
-    asUploadButton<DivUploadButtonExtraProps>(React.forwardRef((props: DivUploadButtonExtraProps, ref: React.Ref<HTMLDivElement>) => {
-        return <div ref={ref}
-                    style={{ border: "1px solid red", width: "200px", cursor: "pointer" }}
-                    className={props.className}
-                    id={props.id}>
+const DivUploadButton: React.ComponentType<React.PropsWithRef<UploadButtonProps<HTMLDivElement>>> =
+    asUploadButton<DivUploadButtonExtraProps, HTMLDivElement>(React.forwardRef((props: DivUploadButtonExtraProps, ref: React.Ref<HTMLDivElement>) => {
+
+        const clickHandler: React.MouseEventHandler<HTMLDivElement> = React.useCallback((e) => {
+            console.log(e.target);
+        }, []);
+
+        return <div
+            ref={ref}
+            style={{ border: "1px solid red", width: "200px", cursor: "pointer" }}
+            className={props.className}
+            id={props.id}
+            onClick={clickHandler}
+        >
             {props.children}
         </div>;
     }));
@@ -41,8 +49,8 @@ const TestDivButton: React.FC = () => {
     </DivUploadButton>;
 };
 
-const DivUploadButtonWithoutRef: React.ComponentType<UploadButtonProps> =
-    asUploadButton<DivUploadButtonExtraProps>((props: DivUploadButtonExtraProps) => {
+const DivUploadButtonWithoutRef: React.ComponentType<UploadButtonProps<HTMLDivElement>> =
+    asUploadButton<DivUploadButtonExtraProps, HTMLDivElement>((props: DivUploadButtonExtraProps) => {
         return <div
             style={{ border: "1px solid red", width: "200px", cursor: "pointer" }}
             className={props.className}
@@ -57,12 +65,32 @@ const TestDivButtonWithoutRef: React.FC = () => {
     </DivUploadButtonWithoutRef>;
 };
 
+interface LiUploadButtonExtraProps {
+    id: string
+}
+
+const LiUploadButton =
+    asUploadButton<LiUploadButtonExtraProps, HTMLLIElement>((props: LiUploadButtonExtraProps) => {
+        return <li data-id={props.id}>
+            Upload Files
+        </li>;
+    });
+
+const TestLiButtonWithoutRef: React.FC = () => {
+    return <LiUploadButton autoUpload={false} extraProps={{ id: "i123" }}>
+        This is a LI Button without Ref
+    </LiUploadButton>;
+};
+
 const testAsButton = (): JSX.Element => {
     return <TestDivButton/>;
 };
 
 const testAsButtonWithoutRef = (): JSX.Element => {
-    return <TestDivButtonWithoutRef/>;
+    return <>
+        <TestDivButtonWithoutRef/>
+        <TestLiButtonWithoutRef/>
+        </>;
 };
 
 export {

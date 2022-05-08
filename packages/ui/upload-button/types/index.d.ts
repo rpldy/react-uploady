@@ -1,20 +1,21 @@
 import * as React from "react";
 import { UploadOptions } from "@rpldy/shared";
 
-export interface ButtonProps {
+export interface ButtonProps<E> {
     className?: string;
     id?: string;
     children?: JSX.Element[] | JSX.Element | string;
     text?: string;
     extraProps?: Record<string, unknown>;
     ref?: React.RefObject<any>;
+    onClick?: React.MouseEventHandler<E>
 }
 
-export interface UploadButtonProps extends ButtonProps, UploadOptions {}
+export interface UploadButtonProps<E> extends ButtonProps<E>, UploadOptions {}
 
-export const UploadButton: React.ComponentType<React.PropsWithRef<UploadButtonProps>>;
+export const UploadButton: React.ComponentType<React.PropsWithRef<UploadButtonProps<HTMLButtonElement>>>;
 
 export const asUploadButton:
-    <T>(component: React.ForwardRefExoticComponent<T> | React.ComponentType<T>) => React.FC<UploadButtonProps>;
+    <T, E>(component: React.ForwardRefExoticComponent<T> | React.ComponentType<T>) => React.FC<UploadButtonProps<E>>;
 
 export default UploadButton;

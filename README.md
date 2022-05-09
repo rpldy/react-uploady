@@ -355,6 +355,19 @@ Already using Uploady in Production? Let us know how & where in this open [discu
 
 ### Financial Contributors
 
+Companies that have contributed to the project:
+
+<ul>
+    <li style="margin-right: 20px;">
+<a href="https://www.smugmug.com/">
+    <img width="100" src="https://assets-global.website-files.com/5f7a5e204f25f20dc72567dc/5f7a64b9952b4ad1b9bebef2_logo.svg" />
+</a>
+</li>
+</ul>
+
+
+#### Support us
+
 Want to help sustain and grow Uploday? You can become a financial backer on OpenCollective.
 
 Become a financial contributor and help us sustain our community.

@@ -23,8 +23,8 @@ interface DivUploadButtonExtraProps {
     foo: string;
 }
 
-const DivUploadButton: React.ComponentType<React.PropsWithRef<UploadButtonProps<HTMLDivElement>>> =
-    asUploadButton<DivUploadButtonExtraProps, HTMLDivElement>(React.forwardRef((props: DivUploadButtonExtraProps, ref: React.Ref<HTMLDivElement>) => {
+const DivUploadButton: React.ComponentType<React.PropsWithRef<UploadButtonProps>> =
+    asUploadButton<DivUploadButtonExtraProps>(React.forwardRef((props: DivUploadButtonExtraProps, ref: React.Ref<HTMLDivElement>) => {
 
         const clickHandler: React.MouseEventHandler<HTMLDivElement> = React.useCallback((e) => {
             console.log(e.target);

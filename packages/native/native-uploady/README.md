@@ -18,7 +18,7 @@ It provides multiple hooks that enable more advanced features and data for clien
 
 > The difference between this package and the main [Uploady](../../uploady) is that this one doesn't use react-dom (for obvious reasons) and doesn't create a file input element.
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 ## Installation
 

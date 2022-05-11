@@ -19,7 +19,7 @@ For usage with your React app, see [@rpldy/chunked-uploady](../ui/chunked-upload
 Chunked uploading doesn't support grouped uploads (in single XHR request) or URL uploading. 
 These will be handed over to the default [@rpldy/sender](../sender)
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 ## Installation
 

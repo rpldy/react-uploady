@@ -15,7 +15,7 @@ Input component to enter a URL (or any string for that matter) that will be sent
 
 This can be useful for services that accept a URL and do server-side fetch. [Cloudinary](https://cloudinary.com) is such a service.
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 ## Installation
 

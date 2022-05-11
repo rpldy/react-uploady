@@ -122,7 +122,7 @@ const WelcomeReactUploady = () => {
 
             <br/>
             <h3>React-Uploady Documentation</h3>
-            <a className="docs-link" href="https://react-uploady.netlify.app" target="_blank" rel="noreferrer noopener">https://react-uploady.netlify.app</a>
+            <a className="docs-link" href="https://react-uploady.org" target="_blank" rel="noreferrer noopener">https://react-uploady.org</a>
             <br/>
 
             <ul className="lib-links">

@@ -72,7 +72,7 @@ React-Uploady has a small footprint (by design) with very few (and small) depend
 
 ### Getting Started
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 Another great place to learn about React-Uploady is our [video series on Youtube](https://youtube.com/playlist?list=PLigk9hpU4jsqZM7Fr3DxThJ--hsFWG8xk).
 

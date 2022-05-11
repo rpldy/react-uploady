@@ -14,7 +14,7 @@
 The main feature is the `withPasteUpload` HOC, which allows any component to become a trigger of paste-to-upload.
 A user pasting (ctrl/cmd+v) a file or files while focused on the element will trigger an upload 
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 ## Installation
 

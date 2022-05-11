@@ -64,7 +64,7 @@ export const Simple = (): Node => {
         <UploadPreview
             maxPreviewImageSize={maxImageSize}
             previewComponentProps={{"data-test": "upload-preview"}}
-            fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"/>
+            fallbackUrl="https://picsum.photos/50"/>
     </Uploady>;
 };
 
@@ -99,7 +99,7 @@ export const WithProgress = (): Node => {
         </StyledUploadButton>
 
         <UploadPreview
-            fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}
+            fallbackUrl={"https://picsum.photos/50"}
             previewComponentProps={getPreviewProps}
             PreviewComponent={CustomImagePreview}/>
     </Uploady>;
@@ -128,7 +128,7 @@ export const WithCustomProps = (): Node => {
         </StyledUploadButton>
 
         <UploadPreview
-            fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}
+            fallbackUrl={"https://picsum.photos/50"}
             previewComponentProps={getPreviewProps}/>
     </Uploady>;
 };
@@ -164,7 +164,7 @@ export const WithUrls = (): Node => {
         <Button onClick={onButtonClick}>Upload</Button>
 
         <UploadPreview
-                fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
+                fallbackUrl={"https://picsum.photos/50"}/>
     </Uploady>;
 };
 
@@ -198,7 +198,7 @@ export const WithRememberPrevious = (): Node => {
 		<PreviewContainer>
 			<UploadPreview
 				rememberPreviousBatches
-				fallbackUrl={"https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"}/>
+				fallbackUrl={"https://picsum.photos/50"}/>
 		</PreviewContainer>
 	</Uploady>;
 };
@@ -237,7 +237,7 @@ const PreviewsWithClear = ({PreviewComp = UploadPreview}) => {
 				previewComponentProps={getPreviewProps}
 				previewMethodsRef={previewMethodsRef}
 				onPreviewsChanged={onPreviewsChanged}
-				fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+				fallbackUrl="https://picsum.photos/50"
             />
 		</PreviewContainer>
 	</>;
@@ -365,7 +365,7 @@ export const WithCrop = (): Node => {
 			PreviewComponent={ItemPreviewWithCrop}
 			previewComponentProps={{ previewMethods: previewMethodsRef }}
 			previewMethodsRef={previewMethodsRef}
-			fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+			fallbackUrl="https://picsum.photos/50"
 		/>
 	</Uploady>;
 };
@@ -528,7 +528,7 @@ const BatchCrop = withBatchStartUpdate((props) => {
             <UploadPreview
                 rememberPreviousBatches
                 PreviewComponent={ItemPreviewThumb}
-                fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
+                fallbackUrl="https://picsum.photos/50"
                 previewComponentProps={getPreviewCompProps}
             />
         </PreviewsContainer>

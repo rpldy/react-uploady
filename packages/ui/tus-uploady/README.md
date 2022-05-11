@@ -18,7 +18,7 @@ The package wraps the [tus-sender](../../core/tus-sender)
 
 Additional information about tus functionality can be found the [tus-sender README](../../core/tus-sender).
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 ## Props
 

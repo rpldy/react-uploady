@@ -17,7 +17,7 @@ It provides the same interface and events so the Uploader is unaware of its use.
 
 On-progress events and abort functionality are supported
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 ## Installation
 

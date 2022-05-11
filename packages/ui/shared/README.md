@@ -15,7 +15,7 @@
 
 Internal set of utils+types that all UI packages require and use.
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 ```shell
 #Yarn:

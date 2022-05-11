@@ -15,7 +15,7 @@ Preview component to show image or video being uploaded.
 
 By default, will present a preview of the file being uploaded in case its an image or video.
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 ## Installation
 

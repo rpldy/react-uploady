@@ -22,7 +22,7 @@ It doesnt create new references and doesnt copy over anything
  
 Original object is changed!
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 ## Installation
 

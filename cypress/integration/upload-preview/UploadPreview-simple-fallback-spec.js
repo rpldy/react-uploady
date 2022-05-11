@@ -12,7 +12,7 @@ describe("UploadPreview - Simple", () => {
 			cy.get("img[data-test='upload-preview']")
 				.should("be.visible")
 				.invoke("attr", "src")
-				.should("match", /https:\/\/icon-library.net\/images/);
+				.should("match", /https:\/\/picsum.photos\/50/);
 		});
 	});
 });

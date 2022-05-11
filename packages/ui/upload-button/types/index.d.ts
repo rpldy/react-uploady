@@ -11,7 +11,7 @@ export interface ButtonProps<E = Element> {
     onClick?: React.MouseEventHandler<E>
 }
 
-export interface UploadButtonProps<E> extends ButtonProps<E>, UploadOptions {}
+export interface UploadButtonProps<E = Element> extends ButtonProps<E>, UploadOptions {}
 
 export const UploadButton: React.ComponentType<React.PropsWithRef<UploadButtonProps<HTMLButtonElement>>>;
 

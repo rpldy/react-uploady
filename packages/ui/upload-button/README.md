@@ -19,7 +19,7 @@ Buttons can use different configuration overrides that supersede the options pas
 
 > Note: Some options cannot be overridden by the button. For example, any prop that influences the file input directly (such as '_multiple_')
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 ## Installation
 
@@ -41,7 +41,7 @@ Buttons can use different configuration overrides that supersede the options pas
 | children       | React.Node        | undefined | child element(s) to render inside the button (replaces text)                              |
 | extraProps     | Object            | undefined | any other props to pass to the button component (with spread)                             |
 | ref            | React ref         | undefined | will be passed to the button element to acquire a ref                                     |
-| onClick        | EventHandler      | undefined | function to handle button click (called after showing the system's file selection dialog) |
+| onClick        | MouseEventHandler | undefined | function to handle button click (called after showing the system's file selection dialog) |
 
 In addition, most [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to UploadButton.
 In order to override configuration passed to the parent Uploady component. 

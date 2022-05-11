@@ -8,7 +8,7 @@
   "main:dev": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
-  "homepage": "https://react-uploady.netlify.app",
+  "homepage": "https://react-uploady.org",
   "repository": {
     "type": "git",
     "url": "https://github.com/rpldy/react-uploady.git",
@@ -36,7 +36,7 @@
     "@rpldy/simple-state": "^0.18.2"
   },
   "devDependencies": {
-    "flow-bin": "^0.169.0"
+    "flow-bin": "^0.176.3"
   },
   "publishConfig": {
     "access": "public"

@@ -1,5 +1,5 @@
 import * as React from "react";
-import withPasteUpload, { usePasteUpload } from "./index";
+import withPasteUpload, { PasteUploadData, usePasteUpload } from "./index";
 
 const MyDiv = () => {
     return <div>Paste to Upload</div>;
@@ -14,7 +14,7 @@ const TestWithPasteUpload: React.FC = () => {
 const TestPasteUpload: React.FC = () => {
     const containerRef = React.useRef(null);
 
-    const onPasteUpload = React.useCallback(({ count }) => {
+    const onPasteUpload = React.useCallback(({ count } : PasteUploadData) => {
         console.log("ELEMENT PASTE-TO-UPLOAD files: ", count);
     }, []);
 

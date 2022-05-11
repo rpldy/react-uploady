@@ -20,7 +20,7 @@ Supports version 1.0.0 of the [TUS protocol](https://tus.io/protocols/resumable-
 
 Under the hood, the tus-sender uses the [@rpldy/chunked-sender](../chunked-sender) to upload the files as chunks 
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 ## Installation
 

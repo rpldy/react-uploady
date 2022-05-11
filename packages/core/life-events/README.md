@@ -17,7 +17,7 @@ Events pub/sub management with return values
 
 Makes it possible for the registered handlers to return a response to the emitting code.
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 ## Installation
  

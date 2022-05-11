@@ -72,7 +72,7 @@ React-Uploady has a small footprint (by design) with very few (and small) depend
 
 ### Getting Started
 
-**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.netlify.app)**
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 Another great place to learn about React-Uploady is our [video series on Youtube](https://youtube.com/playlist?list=PLigk9hpU4jsqZM7Fr3DxThJ--hsFWG8xk).
 
@@ -314,12 +314,12 @@ See this [guide](guides/UMD.md) for more information on how to use.
 
 ### jsDelivr
 
-| Bundle                        | URL
-| ---------------------------- | ------------- 
-| core                         | https://cdn.jsdelivr.net/npm/@rpldy/uploader/umd/rpldy-core.umd.min.js
-| core + ui                    | https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/rpldy-ui-core.umd.min.js
-| core + ui + chunked support  | https://cdn.jsdelivr.net/npm/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js  
-| everything                   | https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/rpldy-all.umd.min.js
+| Bundle                       | URL                                                                                      |
+| ---------------------------- |------------------------------------------------------------------------------------------| 
+| core                         | https://cdn.jsdelivr.net/npm/@rpldy/uploader/umd/rpldy-core.umd.min.js                   |
+| core + ui                    | https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/rpldy-ui-core.umd.min.js                 |
+| core + ui + chunked support  | https://cdn.jsdelivr.net/npm/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js |  
+| everything                   | https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/rpldy-all.umd.min.js                     |
 
 You will most likely need the polyfill (core js) bundle as well (load it first):
 
@@ -328,12 +328,12 @@ You will most likely need the polyfill (core js) bundle as well (load it first):
 
 ### unpkg
 
-| Bundle                        | URL
-| ---------------------------- | ------------- 
-| core                         | https://unpkg.com/@rpldy/uploader/umd/rpldy-core.umd.min.js
-| core + ui                    | https://unpkg.com/@rpldy/uploady/umd/rpldy-ui-core.umd.min.js
-| core + ui + chunked support  | https://unpkg.com/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js  
-| everything                   | https://unpkg.com/@rpldy/uploady/umd/rpldy-all.umd.min.js
+| Bundle                        | URL                                                                           |
+| ---------------------------- |-------------------------------------------------------------------------------|
+| core                         | https://unpkg.com/@rpldy/uploader/umd/rpldy-core.umd.min.js                   |
+| core + ui                    | https://unpkg.com/@rpldy/uploady/umd/rpldy-ui-core.umd.min.js                 |
+| core + ui + chunked support  | https://unpkg.com/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js |  
+| everything                   | https://unpkg.com/@rpldy/uploady/umd/rpldy-all.umd.min.js                     |
 
 You will most likely need the polyfill (core js) bundle as well (load it first):
 
@@ -354,6 +354,14 @@ The [Discussions](https://github.com/rpldy/react-uploady/discussions) page is a 
 Already using Uploady in Production? Let us know how & where in this open [discussion](https://github.com/rpldy/react-uploady/discussions/131).
 
 ### Financial Contributors
+
+Companies/Organizations that have contributed to the project:
+
+<a href="https://opencollective.com/react-uploady/organization/0/website"><img src="https://opencollective.com/react-uploady/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/react-uploady/organization/1/website"><img src="https://opencollective.com/react-uploady/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/react-uploady/organization/2/website"><img src="https://opencollective.com/react-uploady/organization/2/avatar.svg"></a>
+
+#### Support us
 
 Want to help sustain and grow Uploday? You can become a financial backer on OpenCollective.
 

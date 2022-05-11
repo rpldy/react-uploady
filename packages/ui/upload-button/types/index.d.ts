@@ -1,7 +1,7 @@
 import * as React from "react";
 import { UploadOptions } from "@rpldy/shared";
 
-export interface ButtonProps<E> {
+export interface ButtonProps<E = Element> {
     className?: string;
     id?: string;
     children?: JSX.Element[] | JSX.Element | string;

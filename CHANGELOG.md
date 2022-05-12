@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.18.3 (2022-05-11)
+
+### Bug fixes
+
+- `[upload-button]` - added missing onClick prop TS definition
+
+### Docs
+ 
+- `root` - add financial contributors to main readme
+- `storybook` - upgrade to SB 6.4.22
+
+### Internal
+
+- `all` - upgraded to latest flow (0.176.3)
+- `all` - updated website URL in all package.json files 
+
+
 ## 0.18.2 (2022-04-11)
 
 ### Features

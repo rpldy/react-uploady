@@ -4,6 +4,10 @@
 
 **YAY!**
 
+React-Uploady is finally 1.0.0 
+
+> No changes from previous version
+
 ## 0.18.3 (2022-05-11)
 
 ### Bug fixes

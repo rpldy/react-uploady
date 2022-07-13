@@ -107,8 +107,7 @@ It wraps the uploader and exposes everything the app using it needs.
 
 ```javascript
 import React from "react";
-import Uploady, { useUpload
-    y } from "@rpldy/uploady";
+import Uploady, { useUploady } from "@rpldy/uploady";
 
 const MyComponent = () => { 
     const uploady = useUploady();

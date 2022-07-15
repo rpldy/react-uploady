@@ -29,40 +29,43 @@ const updateUploadingState = (queue: QueueState, items: BatchItem[], sendResult:
 
 const sendAllowedItems = (queue: QueueState, itemsSendData: ItemsSendData, next: ProcessNextMethod) => {
     const { items, options } = itemsSendData;
-    const batch = queue.getState().batches[items[0].batchId].batch;
+    const batch = queue.getState().batches[items[0].batchId]?.batch;
 
-    let sendResult: ?SendResult;
+    if (batch) {
+        //batch can be removed when using async pre-send/batch-start returning after user abort
+        let sendResult: ?SendResult;
 
-    try {
-        sendResult = queue.sender.send(items, batch, options);
-    } catch (ex) {
-        logger.debugLog(`uploader.queue: sender failed with unexpected error`, ex);
-        //provide error result so file(s) are marked as failed
-        sendResult = {
-            request: Promise.resolve({
-                status: 0,
-                state: FILE_STATES.ERROR,
-                response: ex.message,
-            }),
-            abort: () => false,
-            senderType: "exception-handler",
-        };
+        try {
+            sendResult = queue.sender.send(items, batch, options);
+        } catch (ex) {
+            logger.debugLog(`uploader.queue: sender failed with unexpected error`, ex);
+            //provide error result so file(s) are marked as failed
+            sendResult = {
+                request: Promise.resolve({
+                    status: 0,
+                    state: FILE_STATES.ERROR,
+                    response: ex.message,
+                }),
+                abort: () => false,
+                senderType: "exception-handler",
+            };
+        }
+
+        const { request } = sendResult;
+
+        updateUploadingState(queue, items, sendResult);
+
+        request
+            //wait for server request to return
+            .then((requestInfo: UploadData) => {
+                const finishedData = items.map((item) => ({
+                    id: item.id,
+                    info: requestInfo,
+                }));
+
+                processFinishedRequest(queue, finishedData, next);
+            });
     }
-
-    const { request } = sendResult;
-
-    updateUploadingState(queue, items, sendResult);
-
-    return request
-        //wait for server request to return
-        .then((requestInfo: UploadData) => {
-            const finishedData = items.map((item) => ({
-                id: item.id,
-                info: requestInfo,
-            }));
-
-            processFinishedRequest(queue, finishedData, next);
-        });
 };
 
 const reportCancelledItems = (queue: QueueState, items: BatchItem[], cancelledResults: boolean[], next: ProcessNextMethod): boolean => {
@@ -113,15 +116,22 @@ const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids
                 if (itemsSendData.cancelled) {
                     cancelledResults = ids.map(() => true);
                 } else {
-                    //we dont need to wait for the response here
-                    sendAllowedItems(queue, {
-                        items: itemsSendData.items,
-                        options: itemsSendData.options,
-                    }, next);
+                    //make sure files aren't aborted while async prepare was waiting
+                    const hasAborted = itemsSendData.items.some((item) => ITEM_FINALIZE_STATES.includes(item.state));
+
+                    if (!hasAborted) {
+                        //we dont need to wait for the response here
+                        sendAllowedItems(queue, {
+                            items: itemsSendData.items,
+                            options: itemsSendData.options,
+                        }, next);
+                    } else {
+                        logger.debugLog("uploader.queue: send data contains aborted items - not sending");
+                    }
                 }
             }
 
-            //if no cancelled we can go to process more items immediately (and not wait for upload responses)
+            //if not cancelled we can go to process more items immediately (and not wait for upload responses)
             if (!reportCancelledItems(queue, items, cancelledResults, next)) {
                 nextP = next(queue); //when concurrent is allowed, we can go ahead and process more
             }

@@ -55,19 +55,22 @@ const triggerItemsPrepareEvent = (
         });
 
 const persistPrepareResponse = (queue, prepared) => {
-    //update potentially changed data back into queue state
-    queue.updateState((state) => {
-        prepared.items.forEach((i) => {
-            state.items[i.id] = i;
+    //for async prepare, items could already be cancelled before we reach here
+    if (prepared.items[0] && queue.getState().batches[prepared.items[0].batchId]) {
+        queue.updateState((state) => {
+            //update potentially changed data back into queue state
+            prepared.items.forEach((i) => {
+                state.items[i.id] = i;
+            });
+
+            state.batches[prepared.items[0].batchId].batchOptions = prepared.options;
         });
 
-        state.batches[prepared.items[0].batchId].batchOptions = prepared.options;
-    });
-
-    //use objects from internal state(proxies) - not objects from user-land!
-    const updatedState = queue.getState();
-    prepared.items = prepared.items.map((item) => updatedState.items[item.id]);
-    prepared.options = updatedState.batches[prepared.items[0].batchId].batchOptions;
+        //use objects from internal state(proxies) - not objects from user-land!
+        const updatedState = queue.getState();
+        prepared.items = prepared.items.map((item) => updatedState.items[item.id]);
+        prepared.options = updatedState.batches[prepared.items[0].batchId].batchOptions;
+    }
 };
 
 const prepareItems = <T>(

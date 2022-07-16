@@ -39,14 +39,28 @@ import readme from "./README.md";
 
 import type { Node, Element } from "React";
 
-const ContextUploadButton = () => {
+const ContextUploadButton = (props) => {
     const uploadyContext = useUploady();
 
     const onClick = useCallback(() => {
         uploadyContext?.showFileUpload();
     }, [uploadyContext]);
 
-    return <button id="upload-button" onClick={onClick}>Custom Upload Button</button>
+    useRequestPreSend(() => {
+        return props?.delayPreSend ?
+            new Promise((resolve) =>
+                setTimeout(() => resolve(props.preSendData || {}), props.delayPreSend)) :
+            true;
+    });
+
+    useBatchStartListener(() => {
+        return props?.delayBatchStart ?
+            new Promise((resolve) =>
+                setTimeout(() => resolve(props.preSendData || {}), props.delayBatchStart)) :
+            true;
+    });
+
+    return <button id="upload-button" onClick={onClick}>Custom Upload Button</button>;
 };
 
 export const ButtonWithContextApi = (): Node => {
@@ -64,7 +78,7 @@ export const ButtonWithContextApi = (): Node => {
 
         version <span id="uploady-version">{getUploadyVersion()}</span>
         <br/>
-        <ContextUploadButton/>
+        <ContextUploadButton {...extOptions}/>
     </Uploady>
 };
 
@@ -221,7 +235,7 @@ export const WithAutoUploadOff = (): Node => {
 };
 
 export const WithAbort = (): Element<"div"> => {
-    const { enhancer, destination, multiple } = useStoryUploadySetup();
+    const { enhancer, destination, multiple, extOptions } = useStoryUploadySetup();
 
     return <div>
         <p>Be prepared to click the abort button as soon as it appears once upload begins</p>
@@ -229,10 +243,11 @@ export const WithAbort = (): Element<"div"> => {
             debug
             multiple={multiple}
             destination={destination}
-            enhancer={enhancer}>
+            enhancer={enhancer}
+        >
 
-            <ContextUploadButton />
-            <StoryAbortButton/>
+            <ContextUploadButton {...extOptions}/>
+            <StoryAbortButton />
         </Uploady>
     </div>
 };

@@ -72,7 +72,7 @@ const ContextUploadButton = () => {
 export const ButtonWithContextApi = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize, extOptions } = useStoryUploadySetup();
 
-    const usePrepareEvents = !!extOptions.withPrepareEvents;
+    const usePrepareEvents = !!extOptions?.withPrepareEvents;
 
     return (<Uploady
         debug

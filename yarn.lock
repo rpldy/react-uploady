@@ -7397,10 +7397,10 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
-cypress-intercept-formdata@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/cypress-intercept-formdata/-/cypress-intercept-formdata-0.3.0.tgz#f1bf64eca99f57e100290474958efef83672c724"
-  integrity sha512-2K8sbCtLYuK5w9mFk+1NAYoUjhUEpknP/xmCpLMgu011y3I6zlnRIceb3fHG0V/5Ru+b6RARdPfUAsjHEV0bpw==
+cypress-intercept-formdata@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/cypress-intercept-formdata/-/cypress-intercept-formdata-0.5.1.tgz#97cfd5d2db46ddbce22402ef153ccdf86fe3a6c1"
+  integrity sha512-eGUxV8eN+OvFo9n9qrvnshygvpSHuVyI62T2FrAfxcy+4cMUkIKBLEhxTjUxG2AIf+//R3NqW/Ih9vVAGLS0HA==
 
 cypress@^9.5.0:
   version "9.5.0"

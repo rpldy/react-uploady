@@ -120,6 +120,24 @@ describe("processBatchItems tests", () => {
         expect(queueState.sender.send).not.toHaveBeenCalled();
     });
 
+    it("should handle batch no longer available after prepare", async () => {
+        const data = getMockStateData();
+        delete data.batches["b1"];
+        const queueState = getQueueState(data);
+
+        queueState.runCancellable.mockResolvedValueOnce(false);
+
+        mockPreparePreRequestItems.mockResolvedValueOnce({
+            items: [queueState.getState().items.u1],
+            options: batchOptions,
+        });
+
+        await processBatchItems(queueState, ["u1"], mockNext);
+        await waitForTest();
+
+        expect(queueState.sender.send).not.toHaveBeenCalled();
+    });
+
     describe("items with finalized state test", () => {
         it.each([
             [FILE_STATES.ABORTED],

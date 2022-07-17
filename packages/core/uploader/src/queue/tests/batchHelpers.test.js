@@ -399,6 +399,42 @@ describe("batchHelpers tests", () => {
 			expect(updatedState.batches.b2).toBeDefined();
             expect(finalizeItem).toHaveBeenCalledTimes(3);
 		});
+
+        it("should handle batch that no longer exists", () => {
+            const queueState = getQueueState({
+                items: {
+                    "u1": { id: "u1", batchId: "b1" },
+                },
+                batches: {
+                    "b2": {}
+                },
+                itemQueue: ["u1"],
+            });
+
+            getIsItemExists.mockReturnValueOnce(true);
+
+            batchHelpers.cancelBatchForItem(queueState, "u1");
+
+            expect(queueState.updateState).not.toHaveBeenCalled();
+        });
+
+        it("should handle item no longer exists", () => {
+            const queueState = getQueueState({
+                items: {
+                    "u1": { id: "u1", batchId: "b1" },
+                },
+                batches: {
+                    "b2": {}
+                },
+                itemQueue: ["u1"],
+            });
+
+            getIsItemExists.mockReturnValueOnce(false);
+
+            batchHelpers.cancelBatchForItem(queueState, "u1");
+
+            expect(queueState.updateState).not.toHaveBeenCalled();
+        });
     });
 
 	describe("getBatchFromItemId tests", () => {

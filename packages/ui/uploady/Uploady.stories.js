@@ -39,6 +39,26 @@ import readme from "./README.md";
 
 import type { Node, Element } from "React";
 
+const ContextUploadButtonWithPrepareHooks = (props) => {
+    console.log("Rendering Context Upload Button with Prepare Hooks (pre-send & batch-start)");
+
+    useRequestPreSend(() => {
+        return props?.delayPreSend ?
+            new Promise((resolve) =>
+                setTimeout(() => resolve(props.preSendData || {}), props.delayPreSend)) :
+            true;
+    });
+
+    useBatchStartListener(() => {
+        return props?.delayBatchStart ?
+            new Promise((resolve) =>
+                setTimeout(() => resolve(props.preSendData || {}), props.delayBatchStart)) :
+            true;
+    });
+
+    return <ContextUploadButton {...props} />;
+};
+
 const ContextUploadButton = () => {
     const uploadyContext = useUploady();
 
@@ -46,13 +66,15 @@ const ContextUploadButton = () => {
         uploadyContext?.showFileUpload();
     }, [uploadyContext]);
 
-    return <button id="upload-button" onClick={onClick}>Custom Upload Button</button>
+    return <button id="upload-button" onClick={onClick}>Custom Upload Button</button>;
 };
 
 export const ButtonWithContextApi = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize, extOptions } = useStoryUploadySetup();
 
-    return <Uploady
+    const usePrepareEvents = !!extOptions?.withPrepareEvents;
+
+    return (<Uploady
         debug
         multiple={multiple}
         destination={destination}
@@ -61,11 +83,12 @@ export const ButtonWithContextApi = (): Node => {
         maxGroupSize={groupSize}
         {...extOptions}
     >
-
         version <span id="uploady-version">{getUploadyVersion()}</span>
         <br/>
-        <ContextUploadButton/>
-    </Uploady>
+        {usePrepareEvents ?
+            <ContextUploadButtonWithPrepareHooks {...extOptions} /> :
+            <ContextUploadButton {...extOptions}/>}
+    </Uploady>);
 };
 
 const UrlUploadButton = () => {
@@ -221,7 +244,7 @@ export const WithAutoUploadOff = (): Node => {
 };
 
 export const WithAbort = (): Element<"div"> => {
-    const { enhancer, destination, multiple } = useStoryUploadySetup();
+    const { enhancer, destination, multiple, extOptions } = useStoryUploadySetup();
 
     return <div>
         <p>Be prepared to click the abort button as soon as it appears once upload begins</p>
@@ -229,10 +252,11 @@ export const WithAbort = (): Element<"div"> => {
             debug
             multiple={multiple}
             destination={destination}
-            enhancer={enhancer}>
+            enhancer={enhancer}
+        >
 
-            <ContextUploadButton />
-            <StoryAbortButton/>
+            <ContextUploadButtonWithPrepareHooks {...extOptions}/>
+            <StoryAbortButton />
         </Uploady>
     </div>
 };

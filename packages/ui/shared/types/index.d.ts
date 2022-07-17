@@ -61,8 +61,10 @@ type BatchEventHook = EventHook<Batch>;
 type BatchCancellableEventHook = CancellableHook<Batch>;
 type BatchEventHookWithState = EventHookWithState<Batch>;
 
+export type PreSendResponse = { items?: BatchItem[]; options?: CreateOptions } | boolean | void;
+
 type BatchStartHook = (cb: (batch: Batch, options: CreateOptions) =>
-    { items?: BatchItem[]; options?: CreateOptions } | boolean | void) => void;
+    PreSendResponse | Promise<PreSendResponse>) => void;
 
 export const useBatchAddListener: BatchCancellableEventHook;
 export const useBatchStartListener: BatchStartHook;
@@ -87,8 +89,6 @@ export interface PreSendData {
     items: BatchItem[];
     options: CreateOptions;
 }
-
-export type PreSendResponse = { items?: BatchItem[]; options?: CreateOptions };
 
 export const useRequestPreSend: (cb: (data: PreSendData) =>
     PreSendResponse | boolean | Promise<PreSendResponse | boolean> | Promise<boolean>) => void;

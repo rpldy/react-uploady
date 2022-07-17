@@ -100,6 +100,44 @@ describe("processBatchItems tests", () => {
         expect(mockNext).toHaveBeenCalledWith(queueState);
     });
 
+    it("should handle item that's already aborted when returned from pre-send", async () => {
+        const queueState = getQueueState(getMockStateData());
+
+        queueState.runCancellable.mockResolvedValueOnce(false);
+
+        mockPreparePreRequestItems.mockResolvedValueOnce({
+            items: [
+                queueState.getState().items.u1,
+                {
+                    ...queueState.getState().items.u2,
+                    state: FILE_STATES.ABORTED,
+                }],
+        });
+
+        await processBatchItems(queueState, ["u1"], mockNext);
+        await waitForTest();
+
+        expect(queueState.sender.send).not.toHaveBeenCalled();
+    });
+
+    it("should handle batch no longer available after prepare", async () => {
+        const data = getMockStateData();
+        delete data.batches["b1"];
+        const queueState = getQueueState(data);
+
+        queueState.runCancellable.mockResolvedValueOnce(false);
+
+        mockPreparePreRequestItems.mockResolvedValueOnce({
+            items: [queueState.getState().items.u1],
+            options: batchOptions,
+        });
+
+        await processBatchItems(queueState, ["u1"], mockNext);
+        await waitForTest();
+
+        expect(queueState.sender.send).not.toHaveBeenCalled();
+    });
+
     describe("items with finalized state test", () => {
         it.each([
             [FILE_STATES.ABORTED],

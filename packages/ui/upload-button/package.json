@@ -36,8 +36,8 @@
   "devDependencies": {
     "@rpldy/retry": "^1.0.0",
     "@rpldy/uploady": "^1.0.0",
-    "flow-bin": "^0.176.3",
-    "styled-components": "^5.3.3"
+    "flow-bin": "^0.182.0",
+    "styled-components": "^5.3.5"
   },
   "peerDependencies": {
     "react": ">=16.8",

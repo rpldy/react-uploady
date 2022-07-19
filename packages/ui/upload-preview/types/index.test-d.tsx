@@ -72,21 +72,21 @@ const PreviewButtons = (props: {
         <div>
             <button
                 style={{
-                    display: !finished && updateRequest && crop ? "block" : "none"
+                    display: !finished && crop ? "block" : "none"
                 }}
                 onClick={onUploadCrop}
             >
                 Upload Cropped
             </button>
             <button
-                style={{ display: !finished && updateRequest ? "block" : "none" }}
+                style={{ display: !finished ? "block" : "none" }}
                 onClick={updateRequest}
             >
                 Upload without Crop
             </button>
             <button
                 style={{
-                    display: !finished && updateRequest && crop ? "block" : "none"
+                    display: !finished && crop ? "block" : "none"
                 }}
                 onClick={onUploadCancel}
             >

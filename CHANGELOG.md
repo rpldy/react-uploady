@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.1 (2022-07-19)
+
+### Bug fixes
+
+- `[uploader]` - fix abort with async prepare. fix for [#379](https://github.com/rpldy/react-uploady/issues/379)
+
+### Docs
+
+- `[uploady]` - fix Uploady package README typo
+
+### Internal
+
+- `all` - upgrade dev deps (eslint, jest, babel, webpack, flow, and more)
+
+
 ## 1.0.0 (2022-05-23)
 
 **YAY!**

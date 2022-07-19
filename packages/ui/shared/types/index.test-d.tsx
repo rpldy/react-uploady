@@ -46,6 +46,10 @@ const EventHooksTest: React.FC = () => {
         return batch.id !== "b1";
     });
 
+    useBatchStartListener((batch) => {
+        return Promise.resolve({ options:  { method: "PUT", destination: { headers: { "x-count": batch.items.length } } } });
+    });
+
     const batchProgress = useBatchProgressListener((batch) => {
         console.log(`batch ${batch.id} completed: ${batch.completed}`);
     });

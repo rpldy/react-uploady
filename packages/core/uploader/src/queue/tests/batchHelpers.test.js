@@ -2,7 +2,7 @@ import { UPLOADER_EVENTS } from "../../consts";
 import getQueueState from "./mocks/getQueueState.mock";
 import { BATCH_STATES, FILE_STATES } from "@rpldy/shared";
 import { getItemsPrepareUpdater } from "../preSendPrepare";
-import { finalizeItem } from "../itemHelpers";
+import { finalizeItem, getIsItemExists } from "../itemHelpers";
 
 jest.mock("../preSendPrepare");
 jest.mock("../itemHelpers");
@@ -246,12 +246,32 @@ describe("batchHelpers tests", () => {
             });
 
             mockPrepareBatchStartItems.mockResolvedValueOnce({});
+            getIsItemExists.mockReturnValueOnce(true);
 
             const allowed = await batchHelpers.loadNewBatchForItem(queueState, "u1");
 
             expect(allowed).toBe(true);
 
             expect(queueState.getState().currentBatch).toBe("b1");
+        });
+
+        it("should return not allowed if item doesnt exist", async () => {
+            const queueState = getQueueState({
+                currentBatch: null,
+                batches: {
+                    "b1": { batch: { id: "b1" }, batchOptions: {} },
+                },
+                items: {
+                    "u1": { batchId: "b1" }
+                }
+            });
+
+            mockPrepareBatchStartItems.mockResolvedValueOnce({});
+            getIsItemExists.mockReturnValueOnce(false);
+
+            const allowed = await batchHelpers.loadNewBatchForItem(queueState, "u1");
+
+            expect(allowed).toBe(false);
         });
 
         it("should cancel batch", async () => {
@@ -352,6 +372,8 @@ describe("batchHelpers tests", () => {
 			const eventBatch = queueState.getState().batches.b1.batch,
 				 eventItems = Object.values(queueState.getState().items).filter((i) => ~ids.indexOf(i.id));
 
+            getIsItemExists.mockReturnValueOnce(true);
+
 			batchHelpers.cancelBatchForItem(queueState, "u1");
 
 			expect(queueState.trigger).toHaveBeenCalledWith(
@@ -377,6 +399,42 @@ describe("batchHelpers tests", () => {
 			expect(updatedState.batches.b2).toBeDefined();
             expect(finalizeItem).toHaveBeenCalledTimes(3);
 		});
+
+        it("should handle batch that no longer exists", () => {
+            const queueState = getQueueState({
+                items: {
+                    "u1": { id: "u1", batchId: "b1" },
+                },
+                batches: {
+                    "b2": {}
+                },
+                itemQueue: ["u1"],
+            });
+
+            getIsItemExists.mockReturnValueOnce(true);
+
+            batchHelpers.cancelBatchForItem(queueState, "u1");
+
+            expect(queueState.updateState).not.toHaveBeenCalled();
+        });
+
+        it("should handle item no longer exists", () => {
+            const queueState = getQueueState({
+                items: {
+                    "u1": { id: "u1", batchId: "b1" },
+                },
+                batches: {
+                    "b2": {}
+                },
+                itemQueue: ["u1"],
+            });
+
+            getIsItemExists.mockReturnValueOnce(false);
+
+            batchHelpers.cancelBatchForItem(queueState, "u1");
+
+            expect(queueState.updateState).not.toHaveBeenCalled();
+        });
     });
 
 	describe("getBatchFromItemId tests", () => {

@@ -3,7 +3,7 @@ import { BATCH_STATES, logger, merge, FILE_STATES } from "@rpldy/shared";
 import { unwrap } from "@rpldy/simple-state";
 import { UPLOADER_EVENTS } from "../consts";
 import { getItemsPrepareUpdater } from "./preSendPrepare";
-import { finalizeItem } from "./itemHelpers";
+import { finalizeItem, getIsItemExists } from "./itemHelpers";
 
 import type { BatchData, QueueState, State } from "./types";
 import type { Batch, BatchItem, UploadOptions } from "@rpldy/shared";
@@ -69,19 +69,26 @@ const finalizeBatch = (queue, batchId, eventType) => {
 };
 
 const cancelBatchForItem = (queue: QueueState, itemId: string) => {
-    const batch = getBatchFromItemId(queue, itemId),
-        batchId = batch.id;
+    if (getIsItemExists(queue, itemId)) {
+        const data = getBatchDataFromItemId(queue, itemId),
+            batchId = data?.batch.id;
 
-    logger.debugLog("uploady.uploader.batchHelpers: cancelling batch: ", { batch });
+        //in case batch is aborted while async batch-start is pending we can reach here after batch was already removed
+        if (batchId) {
+            logger.debugLog("uploady.uploader.batchHelpers: cancelling batch: ", batchId);
 
-    queue.updateState((state: State) => {
-        const batch = getBatchFromState(state, batchId);
-        batch.state = BATCH_STATES.CANCELLED;
-    });
+            queue.updateState((state: State) => {
+                const batch = getBatchFromState(state, batchId);
+                batch.state = BATCH_STATES.CANCELLED;
+            });
 
-    finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_CANCEL);
-    removeBatchItems(queue, batchId);
-    removeBatch(queue, batchId);
+            finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_CANCEL);
+            removeBatchItems(queue, batchId);
+            removeBatch(queue, batchId);
+        } else {
+            logger.debugLog(`uploady.uploader.batchHelpers: cancel batch called for batch already removed (item id = ${itemId})`);
+        }
+    }
 };
 
 const failBatchForItem = (queue: QueueState, itemId: string, err: Error) => {
@@ -111,13 +118,20 @@ const loadNewBatchForItem = (queue: QueueState, itemId: string): Promise<boolean
 
     return prepareBatchStartItems(queue, batch)
         .then(({ cancelled }: ItemsSendData) => {
+            let alreadyFinished = false;
+
             if (!cancelled) {
-                queue.updateState((state) => {
-                    state.currentBatch = batch.id;
-                });
+                //in case of async batch start, its possible that when batch is aborted, items are already removed from queue
+                alreadyFinished = !getIsItemExists(queue, itemId);
+
+                if (!alreadyFinished) {
+                    queue.updateState((state) => {
+                        state.currentBatch = batch.id;
+                    });
+                }
             }
 
-            return !cancelled;
+            return !cancelled && !alreadyFinished;
         });
 };
 

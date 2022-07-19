@@ -39,10 +39,10 @@
     "@rpldy/shared": "^1.0.0",
     "@rpldy/upload-button": "^1.0.0",
     "@rpldy/uploady": "^1.0.0",
-    "flow-bin": "^0.176.3",
+    "flow-bin": "^0.182.0",
     "react-dnd": "^14.0.4",
     "react-dnd-html5-backend": "^14.0.2",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.5"
   },
   "peerDependencies": {
     "react": ">=16.8",

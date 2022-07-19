@@ -42,6 +42,26 @@ describe("itemHelpers tests", () => {
             expect(state.items["f1"]).toBeDefined();
             expect(state.items["f2"]).toBeDefined();
         });
+
+        it("should cope with item not in itemQueue", () => {
+            const queueState = getQueueState({
+                items: {
+                    f1: { id: "f1" },
+                    f2: { id: "f2" }
+                },
+                activeIds: ["f1", "f2"],
+                itemQueue: ["f2"],
+            });
+
+            itemHelpers.finalizeItem(queueState, "f1", true);
+
+            const state = queueState.getState();
+            expect(state.itemQueue).not.toContain("f1");
+            expect(state.activeIds).not.toContain("f1");
+
+            expect(state.items["f1"]).toBeUndefined();
+            expect(state.items["f2"]).toBeDefined();
+        });
     });
 
     describe("isItemBelongsToBatch tests", () => {
@@ -57,6 +77,22 @@ describe("itemHelpers tests", () => {
             ["b1", false]
         ])("for %s should return %s", (bId, expected) => {
             const result = itemHelpers.isItemBelongsToBatch(queueState, "u2", bId);
+            expect(result).toBe(expected);
+        });
+    });
+
+    describe("getIsItemExists tests", () => {
+        const queueState = getQueueState({
+            items: {
+                u1: {}
+            }
+        });
+
+        it.each([
+            ["u1", true],
+            ["u2", false],
+        ])("for %s should return %s", (id, expected) => {
+            const result = itemHelpers.getIsItemExists(queueState, id);
             expect(result).toBe(expected);
         });
     });

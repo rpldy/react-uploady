@@ -80,7 +80,7 @@ describe("preSendPrepare tests", () => {
 
         const result = await preparer(queueState, items);
 
-         expect(result.items).toStrictEqual(items);
+        expect(result.items).toStrictEqual(items);
         expect(result.options).toStrictEqual(batchOptions);
         expect(result.cancelled).toBe(true);
     });
@@ -193,6 +193,34 @@ describe("preSendPrepare tests", () => {
         triggerUpdater.mockResolvedValueOnce({});
 
         return expect(preparer(queueState, items)).rejects.toThrow("test");
+    });
+
+    it("should handle batch no longer exists", async () => {
+        const items = [{ id: "u1", batchId: "b1" }];
+        const queueState = getQueueState({
+            items,
+            batches: {
+                "b1": {}
+            },
+        });
+
+        const preparer = getItemsPrepareUpdater(eventType, retrieveItems, retrieveSubject);
+
+        let r;
+        const updaterPromise = new Promise((resolve) => {
+            r = resolve;
+        });
+        triggerUpdater.mockReturnValueOnce(updaterPromise);
+
+        const p = preparer(queueState, items);
+
+        delete queueState.getState().batches["b1"];
+
+        r();
+        const result = await p;
+
+        expect(queueState.updateState).not.toHaveBeenCalled();
+        expect(result.items).toStrictEqual(items);
     });
 });
 

@@ -92,7 +92,7 @@ const createRetryState = (): RetryState => {
 
 const registerEvents = (uploader: UploaderType, retryState: RetryState) => {
     const onItemFinalized = (item: BatchItem) => {
-        if (~FAILED_STATES.indexOf(item.state)) {
+        if (FAILED_STATES.includes(item.state)) {
             retryState.updateState((state: State) => {
                 state.failed[item.id] = item;
                 const biMap = state.batchIdsMap[item.batchId] = state.batchIdsMap[item.batchId] || [];

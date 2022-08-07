@@ -1,6 +1,8 @@
 // @flow
 import { isFunction, logger, throttle } from "@rpldy/shared";
 import addLife from "@rpldy/life-events";
+
+//TODO (v2): Load using enhancer to allow using uploader (tree-shake) that doesnt import the defualt sender if not needed
 import defaultSend from "@rpldy/sender";
 import { PROGRESS_DELAY, SENDER_EVENTS } from "./consts";
 import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "./defaults";

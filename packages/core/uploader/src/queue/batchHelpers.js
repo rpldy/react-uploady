@@ -60,6 +60,13 @@ const removeBatchItems = (queue: QueueState, batchId: string) => {
 const removeBatch = (queue, batchId: string) => {
     queue.updateState((state) => {
         delete state.batches[batchId];
+        delete state.itemQueue[batchId];
+
+        const batchQueueIndex = state.batchQueue.indexOf(batchId);
+
+        if (~batchQueueIndex) {
+            state.batchQueue.splice(batchQueueIndex, 1);
+        }
     });
 };
 
@@ -196,8 +203,13 @@ const triggerUploaderBatchEvent = (queue: QueueState, batchId: string, event: st
     queue.trigger(event, eventBatch);
 };
 
-const getIsItemBatchReady = (queue: QueueState, itemId: string): boolean => {
-    const batch = getBatchFromItemId(queue, itemId);
+// const getIsItemBatchReady = (queue: QueueState, itemId: string): boolean => {
+//     const batch = getBatchFromItemId(queue, itemId);
+//     return BATCH_READY_STATES.includes(batch.state);
+// };
+
+const getIsBatchReady = (queue: QueueState, batchId: string): boolean => {
+    const batch = getBatchFromState(queue.getState(), batchId);
     return BATCH_READY_STATES.includes(batch.state);
 };
 
@@ -271,7 +283,7 @@ export {
     getBatchDataFromItemId,
     cleanUpFinishedBatches,
     triggerUploaderBatchEvent,
-    getIsItemBatchReady,
+    getIsBatchReady,
     getBatchFromState,
     detachRecycledFromPreviousBatch,
     preparePendingForUpload,

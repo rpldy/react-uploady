@@ -1,0 +1,30 @@
+<a href="https://badge.fury.io/js/%40rpldy%2Fabort">
+    <img src="https://badge.fury.io/js/%40rpldy%2Fabort.svg" alt="npm version" height="20"></a>
+<a href="https://circleci.com/gh/rpldy/react-uploady">
+    <img src="https://circleci.com/gh/rpldy/react-uploady.svg?style=svg" alt="circleci status"/></a>  
+<a href="https://codecov.io/gh/rpldy/react-uploady">
+    <img src="https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg" alt="codecov status"/></a> 
+<a href="https://bundlephobia.com/result?p=@rpldy/abort">
+    <img src="https://badgen.net/bundlephobia/minzip/@rpldy/abort" alt="bundlephobia badge"/></a>
+<a href="https://react-uploady-storybook.netlify.com">
+   <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/></a> 
+
+# Abort
+
+Adds the capability to abort/cancel running & pending uploads
+
+This is an internal package the uploader consumes.
+
+Abort exposes an UploaderEnhancer that adds the abort extension.
+
+**The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
+
+## Installation
+
+```shell
+#Yarn:
+  $ yarn add @rpldy/abort
+
+#NPM:
+  $ npm i @rpldy/abort
+```

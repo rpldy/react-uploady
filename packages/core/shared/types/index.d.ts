@@ -37,6 +37,7 @@ export interface UploadOptions extends Partial<SendOptions> {
     fileFilter?: FileFilterMethod;
     destination?: Destination;
     inputFieldName?: string;
+    fastAbortThreshold?: number;
 }
 
 export enum BATCH_STATES {
@@ -124,6 +125,8 @@ export const isPlainObject: (obj: unknown) => boolean;
 export const isFunction: (val: unknown) => boolean;
 
 export const isPromise: (val: unknown) => boolean;
+
+export const scheduleIdleWork: (fn: TimerHandler, timeout?: number) => () => void;
 
 export const isProduction: boolean;
 

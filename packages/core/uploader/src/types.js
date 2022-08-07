@@ -11,6 +11,7 @@ import type {
 import type { OnAndOnceMethod, OffMethod } from "@rpldy/life-events";
 
 import type { SendResult, SendMethod } from "@rpldy/sender";
+import type { AbortAllMethod, AbortBatchMethod, AbortItemMethod } from "@rpldy/abort";
 
 // eslint-disable-next-line no-use-before-define
 export type UploaderEnhancer = (uploader: UploaderType, trigger: Trigger<mixed>) => UploaderType;
@@ -25,6 +26,12 @@ export type CreateOptions =  {|
     maxConcurrent?: number,
     //the send method to use. Allows overriding the method used to send files to the server for example using a mock (default: @rpldy/sender)
     send?: ?SendMethod<any>,
+    //
+    abortAll?: AbortAllMethod,
+    //
+    abortBatch?: AbortBatchMethod,
+    //
+    abortItem?: AbortItemMethod,
 |};
 
 export type UploaderType = {

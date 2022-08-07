@@ -9,9 +9,11 @@ import {
     merge,
     clone,
 } from "@rpldy/shared";
+import getAbortEnhancer  from "@rpldy/abort";
 import getProcessor from "./processor";
 import { UPLOADER_EVENTS } from "./consts";
 import { getMandatoryOptions, deepProxyUnwrap } from "./utils";
+import composeEnhancers from "./composeEnhancers";
 
 import type {
     UploadInfo,
@@ -152,13 +154,17 @@ const createUploader = (options?: CreateOptions): UploaderType => {
 
     const cancellable = triggerCancellable(triggerWithUnwrap);
 
-    if (uploaderOptions.enhancer) {
-        enhancerTime = true;
-        const enhanced = uploaderOptions.enhancer(uploader, triggerWithUnwrap);
-        enhancerTime = false;
-        //graceful handling for enhancer forgetting to return uploader
-        uploader = enhanced || uploader;
-    }
+    //TODO: create base-uploader without internal enhancers (while default-uploader will use abort & xhr-sender enhancers)
+
+    //TODO need new mechanism for registering and using internal methods (abort, send)
+    //that will use enhancers but also allow overrides without having to expose the method in the options (ie: send)
+    const enhancer = uploaderOptions.enhancer ? composeEnhancers(getAbortEnhancer(), uploaderOptions.enhancer) : getAbortEnhancer();
+
+    enhancerTime = true;
+    const enhanced = enhancer(uploader, triggerWithUnwrap);
+    enhancerTime = false;
+    //graceful handling for enhancer forgetting to return uploader
+    uploader = enhanced || uploader;
 
     const processor = getProcessor(triggerWithUnwrap, cancellable, uploaderOptions, uploader.id);
 

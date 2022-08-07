@@ -2,11 +2,11 @@
 import createTusSender from "./tusSender";
 import { TUS_EXT } from "./consts";
 
-import type { UploaderType } from "@rpldy/uploader";
+import type { UploaderType, UploaderEnhancer } from "@rpldy/uploader";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { TusOptions } from "./types";
 
-const getTusEnhancer = (options?: TusOptions): ((uploader: UploaderType, trigger: TriggerMethod) => UploaderType) => {
+const getTusEnhancer = (options?: TusOptions): UploaderEnhancer => {
     //return uploader enhancer
     return (uploader: UploaderType, trigger: TriggerMethod): UploaderType => {
         const sender = createTusSender(uploader, options, trigger);

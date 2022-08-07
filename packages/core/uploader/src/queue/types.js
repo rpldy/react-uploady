@@ -1,17 +1,19 @@
 // @flow
 import type { Batch, BatchItem, Cancellable, UploadOptions } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
+import type { SenderAbortMethod } from "@rpldy/abort";
 import type { ItemsSender, CreateOptions } from "../types";
 
 export type BatchData = { batch: Batch, batchOptions: CreateOptions, finishedCounter: number };
 
 export type State = {|
-	itemQueue: string[],
+	itemQueue: { [string]: string[] },
+    batchQueue: string[],
 	currentBatch: ?string,
 	batches: { [string]: BatchData },
 	items: { [string]: BatchItem },
 	activeIds: Array<string | string[]>,
-	aborts: { [string]: () => boolean },
+	aborts: { [string]: SenderAbortMethod },
 |};
 
 type UpdateStateMethod = ((State) => void) => void;
@@ -27,6 +29,8 @@ export type QueueState = {|
     runCancellable: Cancellable,
 	sender: ItemsSender,
     handleItemProgress: (BatchItem, number, number) => void,
+    clearAllUploads: () => void,
+    clearBatchUploads: (string) => void,
 |};
 
 export type UploaderQueue = {|

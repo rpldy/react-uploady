@@ -4,7 +4,8 @@ jest.doMock("@rpldy/simple-state", () => createState);
 
 export default (testState, options) => {
 	const { state, update } = createState({
-		itemQueue: [],
+		itemQueue: {},
+        batchQueue: [],
 		currentBatch: null,
 		batches: {},
 		items: {},

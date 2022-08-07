@@ -1,25 +1,14 @@
 // @flow
 import { abortAll, abortBatch, abortItem } from "./abort";
-import type { UploaderType } from "@rpldy/uploader";
-// import type { UploaderEnhancer } from "@rpldy/shared";
-// import type { TriggerMethod } from "@rpldy/life-events";
+import type { UploaderEnhancer, UploaderType } from "@rpldy/raw-uploader";
 
-
-//TODO: CREATE uploader-base package with UploaderEnhancer & CreateOptions types
-
-const getAbortEnhancer = () => {
+const getAbortEnhancer = <T>(): UploaderEnhancer<T> => {
     /**
      * an uploader enhancer function to add abort functionality
      */
-    return (uploader: UploaderType): UploaderType => {
-
+    return (uploader: UploaderType<T>): UploaderType<T> => {
+        //$FlowIssue[incompatible-call]: no way of telling flow this is ok...
         uploader.update({ abortAll, abortBatch, abortItem });
-        //     uploader.registerExtension(ABORT_EXT, {
-        //     abortAll,
-        //     abortBatch,
-        //     abortItem,
-        // });
-
         return uploader;
     };
 };

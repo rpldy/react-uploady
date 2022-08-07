@@ -50,6 +50,7 @@ const callAbortOnItem = (
     const itemState = item?.state;
 
     return !!itemState &&
+    //$FlowIssue[prop-missing]
     ITEM_STATE_ABORTS[itemState] ?
         //$FlowExpectedError[extra-arg]
         //$FlowIssue[prop-missing]

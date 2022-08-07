@@ -21,8 +21,8 @@ import type {
 } from "@rpldy/shared";
 
 import type  {
-    UploaderType,
-    CreateOptions,
+    UploaderCreateOptions,
+    UploadyUploaderType
 } from "./types";
 
 const EVENT_NAMES = Object.values(UPLOADER_EVENTS);
@@ -32,7 +32,7 @@ const EXT_OUTSIDE_ENHANCER_TIME = "Uploady - uploader extensions can only be reg
 
 let counter = 0;
 
-const createUploader = (options?: CreateOptions): UploaderType => {
+const createUploader = (options?: UploaderCreateOptions): UploadyUploaderType => {
     counter += 1;
     const uploaderId = `uploader-${counter}`;
     let enhancerTime = false;
@@ -41,16 +41,16 @@ const createUploader = (options?: CreateOptions): UploaderType => {
 
     logger.debugLog(`uploady.uploader: creating new instance (${uploaderId})`, { options, counter });
 
-    let uploaderOptions: CreateOptions = getMandatoryOptions(options);
+    let uploaderOptions: UploaderCreateOptions = getMandatoryOptions(options);
 
-    const update = (updateOptions: CreateOptions) => {
+    const update = (updateOptions: UploaderCreateOptions) => {
         //TODO: updating concurrent and maxConcurrent means we need to update the processor - not supported yet!
         uploaderOptions = merge({}, uploaderOptions, updateOptions); //need deep merge for destination
         return uploader;
     };
 
     const add = (files: UploadInfo | UploadInfo[], addOptions?: ?UploadOptions): Promise<void> => {
-        const processOptions: CreateOptions = merge({}, uploaderOptions, addOptions);
+        const processOptions: UploaderCreateOptions = merge({}, uploaderOptions, addOptions);
 
         if (processOptions.clearPendingOnAdd) {
             clearPending();
@@ -102,7 +102,7 @@ const createUploader = (options?: CreateOptions): UploaderType => {
         processor.processPendingBatches(uploadOptions);
     };
 
-    const getOptions = (): CreateOptions => {
+    const getOptions = (): UploaderCreateOptions => {
         return clone(uploaderOptions);
     };
 
@@ -158,7 +158,10 @@ const createUploader = (options?: CreateOptions): UploaderType => {
 
     //TODO need new mechanism for registering and using internal methods (abort, send)
     //that will use enhancers but also allow overrides without having to expose the method in the options (ie: send)
-    const enhancer = uploaderOptions.enhancer ? composeEnhancers(getAbortEnhancer(), uploaderOptions.enhancer) : getAbortEnhancer();
+    const enhancer = uploaderOptions.enhancer ?
+        //$FlowIssue[incompatible-call] - flow doesnt understand we already checked for enhancer existence... :(
+        composeEnhancers(getAbortEnhancer<UploaderCreateOptions>(), uploaderOptions.enhancer) :
+        getAbortEnhancer();
 
     enhancerTime = true;
     const enhanced = enhancer(uploader, triggerWithUnwrap);

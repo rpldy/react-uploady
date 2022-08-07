@@ -13,11 +13,11 @@ import {
 
 import type { TriggerCancellableOutcome, Batch, BatchItem, UploadOptions } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
-import type { ItemsSender, CreateOptions } from "../types";
+import type { ItemsSender, UploaderCreateOptions } from "../types";
 import type { State, UploaderQueue } from "./types";
 
 const createUploaderQueue = (
-    options: CreateOptions,
+    options: UploaderCreateOptions,
     trigger: TriggerMethod,
     cancellable: TriggerCancellableOutcome,
     sender: ItemsSender,
@@ -54,7 +54,7 @@ const createUploaderQueue = (
         });
     };
 
-    const uploadBatch = (batch: Batch, batchOptions: ?CreateOptions) => {
+    const uploadBatch = (batch: Batch, batchOptions: ?UploaderCreateOptions) => {
         if (batchOptions) {
             updateState((state) => {
                 state.batches[batch.id].batchOptions = batchOptions;
@@ -69,7 +69,7 @@ const createUploaderQueue = (
         processQueueNext(queueState);
     };
 
-    const addBatch = (batch: Batch, batchOptions: CreateOptions) => {
+    const addBatch = (batch: Batch, batchOptions: UploaderCreateOptions) => {
         updateState((state) => {
             state.batches[batch.id] = { batch, batchOptions, finishedCounter: 0 };
             state.batchQueue.push(batch.id);

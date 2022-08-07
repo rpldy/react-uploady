@@ -4,7 +4,7 @@ import createState from "@rpldy/simple-state";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { RETRY_EXT, RETRY_EVENT } from "./consts";
 
-import type { UploaderType, TriggerMethod } from "@rpldy/uploader";
+import type { UploaderType, UploaderCreateOptions, TriggerMethod } from "@rpldy/uploader";
 import type { BatchItem, UploadOptions } from "@rpldy/shared";
 import type { State, RetryState } from "./types";
 
@@ -25,7 +25,13 @@ const removeItemFromState = (retryState: RetryState, id: string) => {
     });
 };
 
-const uploadFailedIds = (uploader: UploaderType, retryState: RetryState, trigger: TriggerMethod, ids: ?string[], options: ?UploadOptions) => {
+const uploadFailedIds = (
+    uploader: UploaderType<UploaderCreateOptions>,
+    retryState: RetryState,
+    trigger: TriggerMethod,
+    ids: ?string[],
+    options: ?UploadOptions
+) => {
     const failed = retryState.getState().failed;
 
     ids = ids || Object.keys(failed);
@@ -47,12 +53,24 @@ const uploadFailedIds = (uploader: UploaderType, retryState: RetryState, trigger
     return !!uploads.length;
 };
 
-const retryItem = (uploader: UploaderType, retryState: RetryState, trigger: TriggerMethod, itemId: string, options: ?UploadOptions) : boolean => {
+const retryItem = (
+    uploader: UploaderType<UploaderCreateOptions>,
+    retryState: RetryState,
+    trigger: TriggerMethod,
+    itemId: string,
+    options: ?UploadOptions
+) : boolean => {
     logger.debugLog(`uploady.retry: about to retry item: ${itemId}`);
     return uploadFailedIds(uploader, retryState, trigger, [itemId], options);
 };
 
-const retry = (uploader: UploaderType, retryState: RetryState, trigger: TriggerMethod, itemId: ?string, options: ?UploadOptions) : boolean => {
+const retry = (
+    uploader: UploaderType<UploaderCreateOptions>,
+    retryState: RetryState,
+    trigger: TriggerMethod,
+    itemId: ?string,
+    options: ?UploadOptions
+) : boolean => {
     let result;
 
     if (itemId) {
@@ -65,7 +83,13 @@ const retry = (uploader: UploaderType, retryState: RetryState, trigger: TriggerM
     return result;
 };
 
-const retryBatch = (uploader: UploaderType, retryState: RetryState, trigger: TriggerMethod, batchId: string, options: ?UploadOptions) : boolean => {
+const retryBatch = (
+    uploader: UploaderType<UploaderCreateOptions>,
+    retryState: RetryState,
+    trigger: TriggerMethod,
+    batchId: string,
+    options: ?UploadOptions
+) : boolean => {
     logger.debugLog(`uploady.retry: about to retry batch: ${batchId}`);
 
     //we make a copy of the ids because later on we use splice on this array
@@ -90,7 +114,7 @@ const createRetryState = (): RetryState => {
     };
 };
 
-const registerEvents = (uploader: UploaderType, retryState: RetryState) => {
+const registerEvents = (uploader: UploaderType<UploaderCreateOptions>, retryState: RetryState) => {
     const onItemFinalized = (item: BatchItem) => {
         if (FAILED_STATES.includes(item.state)) {
             retryState.updateState((state: State) => {
@@ -107,7 +131,7 @@ const registerEvents = (uploader: UploaderType, retryState: RetryState) => {
 /**
  * an uploader enhancer function to add retry functionality
  */
-const retryEnhancer = (uploader: UploaderType, trigger: TriggerMethod): UploaderType => {
+const retryEnhancer = (uploader: UploaderType<UploaderCreateOptions>, trigger: TriggerMethod): UploaderType<UploaderCreateOptions> => {
     const retryState = createRetryState();
 
     registerEvents(uploader, retryState);

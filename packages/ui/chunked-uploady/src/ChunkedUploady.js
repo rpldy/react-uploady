@@ -6,11 +6,11 @@ import Uploady, { composeEnhancers } from "@rpldy/uploady";
 import getChunkedEnhancer, { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
 
 import type { Node } from "React";
-import type { UploaderEnhancer } from "@rpldy/uploader";
+import type { UploaderEnhancer, UploaderCreateOptions } from "@rpldy/uploader";
 import type { ChunkedOptions } from "@rpldy/chunked-sender";
 import type { ChunkedUploadyProps } from "./types";
 
-const getEnhancer = (options: ChunkedOptions, enhancer: ?UploaderEnhancer) => {
+const getEnhancer = (options: ChunkedOptions, enhancer: ?UploaderEnhancer<UploaderCreateOptions>) => {
     const chunkedEnhancer = getChunkedEnhancer(options);
     return enhancer ? composeEnhancers(chunkedEnhancer, enhancer) : chunkedEnhancer;
 };

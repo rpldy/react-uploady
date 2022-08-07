@@ -1,5 +1,5 @@
 // @flow
-import { BATCH_STATES, invariant, type BatchItem } from "@rpldy/shared";
+import { BATCH_STATES, invariant } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 import processQueueNext from "./processQueueNext";
@@ -11,7 +11,7 @@ import type { QueueState } from "./types";
 const getFinalizeAbortedItem = (queue) =>  (id: string, data: UploadData ) =>
     processFinishedRequest(queue, [{ id, info: data }], processQueueNext);
 
-const processAbortItem = (queue: QueueState, id: string) => {
+const processAbortItem = (queue: QueueState, id: string) : boolean => {
     const abortItemMethod = queue.getOptions().abortItem;
 
     invariant(
@@ -24,7 +24,7 @@ const processAbortItem = (queue: QueueState, id: string) => {
     return abortItemMethod(id, state.items, state.aborts, getFinalizeAbortedItem(queue));
 };
 
-const processAbortBatch = (queue: QueueState, id: string) => {
+const processAbortBatch = (queue: QueueState, id: string) :  void => {
     const abortBatchMethod = queue.getOptions().abortBatch;
 
     invariant(
@@ -73,7 +73,7 @@ const processAbortBatch = (queue: QueueState, id: string) => {
 // 	}
 // };
 
-const processAbortAll = (queue: QueueState) => {
+const processAbortAll = (queue: QueueState) : void => {
     const abortAllMethod = queue.getOptions().abortAll;
 
     invariant(
@@ -83,12 +83,10 @@ const processAbortAll = (queue: QueueState) => {
 
     queue.trigger(UPLOADER_EVENTS.ALL_ABORT);
 
-    const state = queue.getState(),
-        //$FlowIssue[incompatible-type] flow still doesnt understand Object.values :(
-        items: BatchItem[] = Object.values(state.items);
+    const state = queue.getState();
 
     const { isFast } = abortAllMethod(
-        items,
+        state.items,
         state.aborts,
         getFinalizeAbortedItem(queue),
         queue.getOptions()

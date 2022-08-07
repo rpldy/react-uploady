@@ -4,7 +4,7 @@ import { unwrap, isProxiable, isProxy } from "@rpldy/simple-state";
 import { DEFAULT_OPTIONS } from "./defaults";
 
 import type { Destination } from "@rpldy/shared";
-import type { CreateOptions } from "./types";
+import type { UploaderCreateOptions } from "./types";
 
 const FILE_LIST_SUPPORT = hasWindow() && "FileList" in window;
 
@@ -15,7 +15,7 @@ const getMandatoryDestination = (dest: Destination): Destination => {
     };
 };
 
-const getMandatoryOptions = (options?: CreateOptions): CreateOptions => {
+const getMandatoryOptions = (options?: UploaderCreateOptions): UploaderCreateOptions => {
     return {
         ...DEFAULT_OPTIONS,
         ...options,

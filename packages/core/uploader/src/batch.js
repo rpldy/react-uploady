@@ -10,7 +10,7 @@ import type {
     FileFilterMethod,
 } from "@rpldy/shared";
 
-import type { CreateOptions } from "./types";
+import type { UploaderCreateOptions } from "./types";
 
 let bCounter = 0;
 
@@ -30,7 +30,7 @@ const processFiles = (batchId, files: UploadInfo, isPending: boolean, fileFilter
             .map((f) => createBatchItem(f, batchId, isPending)));
 };
 
-const createBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, options: CreateOptions): Promise<Batch> => {
+const createBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, options: UploaderCreateOptions): Promise<Batch> => {
     bCounter += 1;
     const id = `batch-${bCounter}`;
 

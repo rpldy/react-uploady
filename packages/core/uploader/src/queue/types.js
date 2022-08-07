@@ -1,10 +1,10 @@
 // @flow
 import type { Batch, BatchItem, Cancellable, UploadOptions } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
-import type { SenderAbortMethod } from "@rpldy/abort";
-import type { ItemsSender, CreateOptions } from "../types";
+import type { AbortsMap } from "@rpldy/abort";
+import type { ItemsSender, UploaderCreateOptions } from "../types";
 
-export type BatchData = { batch: Batch, batchOptions: CreateOptions, finishedCounter: number };
+export type BatchData = { batch: Batch, batchOptions: UploaderCreateOptions, finishedCounter: number };
 
 export type State = {|
 	itemQueue: { [string]: string[] },
@@ -13,7 +13,7 @@ export type State = {|
 	batches: { [string]: BatchData },
 	items: { [string]: BatchItem },
 	activeIds: Array<string | string[]>,
-	aborts: { [string]: SenderAbortMethod },
+	aborts: AbortsMap,
 |};
 
 type UpdateStateMethod = ((State) => void) => void;
@@ -21,7 +21,7 @@ type GetStateMethod = () => State;
 
 export type QueueState = {|
     uploaderId: string,
-	getOptions: () => CreateOptions,
+	getOptions: () => UploaderCreateOptions,
 	getState: GetStateMethod,
 	getCurrentActiveCount: () => number,
 	updateState: UpdateStateMethod,
@@ -37,8 +37,8 @@ export type UploaderQueue = {|
     updateState: UpdateStateMethod,
     getState: GetStateMethod,
     runCancellable: Cancellable,
-    uploadBatch: (batch: Batch, batchOptions: ?CreateOptions) => void,
-    addBatch: (batch: Batch, batchOptions: CreateOptions) => Batch,
+    uploadBatch: (batch: Batch, batchOptions: ?UploaderCreateOptions) => void,
+    addBatch: (batch: Batch, batchOptions: UploaderCreateOptions) => Batch,
     abortItem: (id: string) => boolean,
     abortBatch: (id: string) => void,
     abortAll: () => void,

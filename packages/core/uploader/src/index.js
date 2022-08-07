@@ -28,5 +28,10 @@ export type {
 export type {
     UploaderType,
     UploaderEnhancer,
-    CreateOptions,
+    RawCreateOptions,
+} from "@rpldy/raw-uploader";
+
+export type {
+    UploaderCreateOptions,
+    UploadyUploaderType
 } from "./types";

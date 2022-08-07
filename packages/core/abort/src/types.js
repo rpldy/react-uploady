@@ -1,6 +1,6 @@
 // @flow
-
-import type { Batch, BatchItem, UploadData, UploadOptions } from "@rpldy/shared";
+import type { RawCreateOptions } from "@rpldy/raw-uploader";
+import type { Batch, BatchItem, UploadData,  } from "@rpldy/shared";
 
 export type FinalizeRequestMethod = (id: string, data: UploadData) => void;
 
@@ -10,8 +10,24 @@ export type AbortsMap = { [string]: AbortMethod };
 
 export type AbortResult = { isFast: boolean };
 
-export type AbortBatchMethod = (Batch, UploadOptions, AbortsMap, FinalizeRequestMethod, UploadOptions) => AbortResult;
+type InExactRawCreateOptions = { ...RawCreateOptions };
 
-export type AbortAllMethod = (BatchItem[], AbortsMap, FinalizeRequestMethod, UploadOptions) => AbortResult;
+export type AbortBatchMethod = (Batch, InExactRawCreateOptions, AbortsMap, FinalizeRequestMethod, InExactRawCreateOptions) => AbortResult;
 
-export type AbortItemMethod = (string,  { [string]: BatchItem }, AbortsMap, FinalizeRequestMethod) => boolean;
+export type AbortAllMethod = ({ [string]: BatchItem }, AbortsMap, FinalizeRequestMethod, InExactRawCreateOptions) => AbortResult;
+
+export type AbortItemMethod = (string, { [string]: BatchItem }, AbortsMap, FinalizeRequestMethod) => boolean;
+
+export type AbortMethodsOptions = {|
+    //
+    abortAll?: AbortAllMethod,
+    //
+    abortBatch?: AbortBatchMethod,
+    //
+    abortItem?: AbortItemMethod,
+|};
+
+export type CreateOptionsWithAbort = {|
+    ...RawCreateOptions,
+    ...AbortMethodsOptions,
+|};

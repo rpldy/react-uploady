@@ -1,17 +1,19 @@
 // @flow
-import type { QueueState } from "./types";
-import type { BatchItem } from "@rpldy/shared";
-import type { CreateOptions } from "../types";
 import { getMerge, isSamePropInArrays, logger, triggerUpdater } from "@rpldy/shared";
+
+import type { BatchItem } from "@rpldy/shared";
+// import type { Uploader } from "@rpldy/uploader";
+import type { QueueState } from "./types";
+import type { UploaderCreateOptions } from "../types";
 
 export type ItemsSendData = {
     items: BatchItem[],
-    options: CreateOptions,
+    options: UploaderCreateOptions,
     cancelled?: boolean,
 };
 
 type ItemsRetriever<T> = (subject: T) => BatchItem[];
-type SubjectRetriever<T> = (subject: T, CreateOptions) => Object;
+type SubjectRetriever<T> = (subject: T, UploaderCreateOptions) => Object;
 type ItemsPreparer<T> = (queue: QueueState, subject: T) => Promise<ItemsSendData>;
 type ResponseValidator = (updated: any) => void;
 
@@ -42,14 +44,14 @@ const triggerItemsPrepareEvent = (
     queue: QueueState,
     eventSubject,
     items: BatchItem[],
-    options: CreateOptions,
+    options: UploaderCreateOptions,
     eventType: string,
     validateResponse: ?ResponseValidator
 ): Promise<ItemsSendData> =>
-    triggerUpdater<{ subject: Object, options: CreateOptions }>(
+    triggerUpdater<{ subject: Object, options: UploaderCreateOptions }>(
         queue.trigger, eventType, eventSubject, options)
         // $FlowIssue - https://github.com/facebook/flow/issues/8215
-        .then((updated: ?{ items: BatchItem[], options: CreateOptions }) => {
+        .then((updated: ?{ items: BatchItem[], options: UploaderCreateOptions }) => {
             validateResponse?.(updated);
             return processPrepareResponse(eventType, items, options, updated);
         });

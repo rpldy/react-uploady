@@ -9,10 +9,13 @@ export {
 } from "./consts";
 
 export type {
+    AbortMethod,
+    AbortsMap,
     AbortAllMethod,
     AbortBatchMethod,
     AbortResult,
     AbortItemMethod,
+    CreateOptionsWithAbort,
 } from "./types";
 
 

@@ -39,6 +39,16 @@ import readme from "./README.md";
 
 import type { Node, Element } from "React";
 
+const ContextUploadButton = () => {
+    const uploadyContext = useUploady();
+
+    const onClick = useCallback(() => {
+        uploadyContext?.showFileUpload();
+    }, [uploadyContext]);
+
+    return <button id="upload-button" onClick={onClick}>Custom Upload Button</button>;
+};
+
 const ContextUploadButtonWithPrepareHooks = (props) => {
     console.log("Rendering Context Upload Button with Prepare Hooks (pre-send & batch-start)");
 
@@ -57,16 +67,6 @@ const ContextUploadButtonWithPrepareHooks = (props) => {
     });
 
     return <ContextUploadButton {...props} />;
-};
-
-const ContextUploadButton = () => {
-    const uploadyContext = useUploady();
-
-    const onClick = useCallback(() => {
-        uploadyContext?.showFileUpload();
-    }, [uploadyContext]);
-
-    return <button id="upload-button" onClick={onClick}>Custom Upload Button</button>;
 };
 
 export const ButtonWithContextApi = (): Node => {
@@ -210,7 +210,7 @@ const QueueList = () => {
 };
 
 export const WithAutoUploadOff = (): Node => {
-    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+    const { enhancer, destination, grouped, groupSize, extOptions } = useStoryUploadySetup();
 
     return <Uploady
         debug
@@ -221,6 +221,7 @@ export const WithAutoUploadOff = (): Node => {
         autoUpload={false}
         concurrent
         maxConcurrent={10}
+        {...extOptions}
     >
         <ContextUploadButton />
         <br/>

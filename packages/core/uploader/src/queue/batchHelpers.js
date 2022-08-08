@@ -57,7 +57,7 @@ const removeBatchItems = (queue: QueueState, batchId: string) => {
         finalizeItem(queue, id, true));
 };
 
-const removeBatch = (queue, batchId: string) => {
+const removeBatch = (queue: QueueState, batchId: string) => {
     queue.updateState((state) => {
         delete state.batches[batchId];
         delete state.itemQueue[batchId];
@@ -70,7 +70,7 @@ const removeBatch = (queue, batchId: string) => {
     });
 };
 
-const finalizeBatch = (queue, batchId, eventType) => {
+const finalizeBatch = (queue: QueueState, batchId: string, eventType: string) => {
     triggerUploaderBatchEvent(queue, batchId, eventType);
     triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_FINALIZE);
 };
@@ -275,6 +275,35 @@ const incrementBatchFinishedCounter = (queue: QueueState, batchId: string): void
 const getIsBatchFinalized = (batch: Batch): boolean =>
     BATCH_FINISHED_STATES.includes(batch.state);
 
+const clearBatchData = (queue: QueueState, batchId: string) => {
+    queue.updateState((state: State) => {
+        const { items } = getBatchFromState(state, batchId);
+
+        delete state.batches[batchId];
+        delete state.itemQueue[batchId];
+
+        const indx = state.batchQueue.indexOf(batchId);
+
+        if (~indx) {
+            state.batchQueue.splice(indx, 1);
+        }
+
+        if (state.currentBatch === batchId) {
+            state.currentBatch = null;
+        }
+
+        items.forEach(({ id }) => {
+            delete state.items[id];
+
+            const activeIndex = state.activeIds.indexOf(id);
+
+            if (~activeIndex) {
+                state.activeIds.splice(activeIndex, 1);
+            }
+        });
+    });
+};
+
 export {
     loadNewBatchForItem,
     isNewBatchStarting,
@@ -291,4 +320,7 @@ export {
     incrementBatchFinishedCounter,
     getIsBatchFinalized,
     failBatchForItem,
+    finalizeBatch,
+    removeBatchItems,
+    clearBatchData,
 };

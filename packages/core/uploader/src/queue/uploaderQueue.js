@@ -9,6 +9,7 @@ import {
     getBatchFromState,
     preparePendingForUpload,
     removePendingBatches,
+    clearBatchData,
 } from "./batchHelpers";
 
 import type { TriggerCancellableOutcome, Batch, BatchItem, UploadOptions } from "@rpldy/shared";
@@ -155,14 +156,11 @@ const createUploaderQueue = (
      */
     const clearBatchUploads = (batchId: string) => {
         scheduleIdleWork(() => {
-            queueState.updateState((state: State) => {
-                const batch = getBatchFromState(state, batchId);
-                delete state.batches[batchId];
+            logger.debugLog(`uploader.queue: started scheduled work to clear batch uploads (${batchId})`);
 
-                batch.items.forEach(({ id }) => {
-
-                });
-            });
+            if (getState().batches[batchId]) {
+                clearBatchData(queueState, batchId);
+            }
         });
     };
 

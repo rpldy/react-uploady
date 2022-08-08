@@ -3,15 +3,15 @@ import { BATCH_STATES, invariant } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 import processQueueNext from "./processQueueNext";
-import { getBatchFromState, getIsBatchFinalized, triggerUploaderBatchEvent } from "./batchHelpers";
+import { getBatchFromState, getIsBatchFinalized, finalizeBatch } from "./batchHelpers";
 
 import type { UploadData } from "@rpldy/shared";
 import type { QueueState } from "./types";
 
-const getFinalizeAbortedItem = (queue) =>  (id: string, data: UploadData ) =>
+const getFinalizeAbortedItem = (queue) =>  (id: string, data: UploadData) =>
     processFinishedRequest(queue, [{ id, info: data }], processQueueNext);
 
-const processAbortItem = (queue: QueueState, id: string) : boolean => {
+const processAbortItem = (queue: QueueState, id: string): boolean => {
     const abortItemMethod = queue.getOptions().abortItem;
 
     invariant(
@@ -24,7 +24,7 @@ const processAbortItem = (queue: QueueState, id: string) : boolean => {
     return abortItemMethod(id, state.items, state.aborts, getFinalizeAbortedItem(queue));
 };
 
-const processAbortBatch = (queue: QueueState, id: string) :  void => {
+const processAbortBatch = (queue: QueueState, id: string): void => {
     const abortBatchMethod = queue.getOptions().abortBatch;
 
     invariant(
@@ -41,7 +41,7 @@ const processAbortBatch = (queue: QueueState, id: string) :  void => {
             getBatchFromState(state, id).state = BATCH_STATES.ABORTED;
         });
 
-        triggerUploaderBatchEvent(queue, id, UPLOADER_EVENTS.BATCH_ABORT);
+        finalizeBatch(queue, id, UPLOADER_EVENTS.BATCH_ABORT);
 
         const { isFast } = abortBatchMethod(
             batch,
@@ -73,7 +73,7 @@ const processAbortBatch = (queue: QueueState, id: string) :  void => {
 // 	}
 // };
 
-const processAbortAll = (queue: QueueState) : void => {
+const processAbortAll = (queue: QueueState): void => {
     const abortAllMethod = queue.getOptions().abortAll;
 
     invariant(
@@ -96,18 +96,6 @@ const processAbortAll = (queue: QueueState) : void => {
         queue.clearAllUploads();
     }
 };
-// const abortAll = (queue: QueueState, next: ProcessNextMethod) => {
-// 	const items = queue.getState().items;
-//
-//     if (isFastAbortNeeded(queue, items)) {
-//
-//     } else {
-//         Object.keys(items)
-//             .forEach((id) => callAbortOnItem(queue, id, next));
-//     }
-//
-// 	queue.trigger(UPLOADER_EVENTS.ALL_ABORT);
-// };
 
 export {
     processAbortItem,

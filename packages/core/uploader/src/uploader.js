@@ -9,7 +9,7 @@ import {
     merge,
     clone,
 } from "@rpldy/shared";
-import getAbortEnhancer  from "@rpldy/abort";
+import getAbortEnhancer from "@rpldy/abort";
 import getProcessor from "./processor";
 import { UPLOADER_EVENTS } from "./consts";
 import { getMandatoryOptions, deepProxyUnwrap } from "./utils";
@@ -32,6 +32,26 @@ const EXT_OUTSIDE_ENHANCER_TIME = "Uploady - uploader extensions can only be reg
 
 let counter = 0;
 
+const getComposedEnhancer = (extEnhancer) =>
+    composeEnhancers(getAbortEnhancer<UploaderCreateOptions>(), extEnhancer);
+
+const getEnhancedUploader = (uploader, options, triggerWithUnwrap, setEnhancerTime) => {
+    //TODO: create base-uploader without internal enhancers (while default-uploader will use abort & xhr-sender enhancers)
+
+    //TODO need new mechanism for registering and using internal methods (abort, send)
+    //that will use enhancers but also allow overrides without having to expose the method in the options (ie: send)
+    const enhancer = options.enhancer ?
+        getComposedEnhancer(options.enhancer) :
+        getAbortEnhancer();
+
+    setEnhancerTime( true);
+    const enhanced = enhancer(uploader, triggerWithUnwrap);
+    setEnhancerTime( false);
+
+    //graceful handling for enhancer forgetting to return uploader
+    return enhanced || uploader;
+};
+
 const createUploader = (options?: UploaderCreateOptions): UploadyUploaderType => {
     counter += 1;
     const uploaderId = `uploader-${counter}`;
@@ -42,6 +62,10 @@ const createUploader = (options?: UploaderCreateOptions): UploadyUploaderType =>
     logger.debugLog(`uploady.uploader: creating new instance (${uploaderId})`, { options, counter });
 
     let uploaderOptions: UploaderCreateOptions = getMandatoryOptions(options);
+
+    const setEnhancerTime = (state: boolean) => {
+        enhancerTime = state;
+    };
 
     const update = (updateOptions: UploaderCreateOptions) => {
         //TODO: updating concurrent and maxConcurrent means we need to update the processor - not supported yet!
@@ -154,24 +178,11 @@ const createUploader = (options?: UploaderCreateOptions): UploadyUploaderType =>
 
     const cancellable = triggerCancellable(triggerWithUnwrap);
 
-    //TODO: create base-uploader without internal enhancers (while default-uploader will use abort & xhr-sender enhancers)
+    const enhancedUploader = getEnhancedUploader(uploader, uploaderOptions, triggerWithUnwrap, setEnhancerTime);
 
-    //TODO need new mechanism for registering and using internal methods (abort, send)
-    //that will use enhancers but also allow overrides without having to expose the method in the options (ie: send)
-    const enhancer = uploaderOptions.enhancer ?
-        //$FlowIssue[incompatible-call] - flow doesnt understand we already checked for enhancer existence... :(
-        composeEnhancers(getAbortEnhancer<UploaderCreateOptions>(), uploaderOptions.enhancer) :
-        getAbortEnhancer();
+    const processor = getProcessor(triggerWithUnwrap, cancellable, uploaderOptions, enhancedUploader.id);
 
-    enhancerTime = true;
-    const enhanced = enhancer(uploader, triggerWithUnwrap);
-    enhancerTime = false;
-    //graceful handling for enhancer forgetting to return uploader
-    uploader = enhanced || uploader;
-
-    const processor = getProcessor(triggerWithUnwrap, cancellable, uploaderOptions, uploader.id);
-
-    return devFreeze(uploader);
+    return devFreeze(enhancedUploader);
 };
 
 export default createUploader;

@@ -8,7 +8,7 @@ const fastAbortBatch = (batch: Batch, aborts: AbortsMap) => {
 
 const fastAbortAll = (aborts: AbortsMap) => {
     //$FlowIssue[not-a-function]: flow doesnt understand Object.values :(
-    const runFn = (fn) => fn?.();
+    const runFn = (fn) => fn();
 
     Object.values(aborts)
         .forEach(runFn);

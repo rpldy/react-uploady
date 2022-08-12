@@ -7,7 +7,7 @@ describe("Uploady - Custom Success", () => {
     before(() => {
         cy.visitStory(
             "uploady",
-            "button-with-context-api",
+            "with-context-api-button",
             { useMock : false }
         );
     });
@@ -51,5 +51,4 @@ describe("Uploady - Custom Success", () => {
             });
         });
     });
-
 });

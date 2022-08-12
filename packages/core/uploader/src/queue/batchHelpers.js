@@ -203,11 +203,6 @@ const triggerUploaderBatchEvent = (queue: QueueState, batchId: string, event: st
     queue.trigger(event, eventBatch);
 };
 
-// const getIsItemBatchReady = (queue: QueueState, itemId: string): boolean => {
-//     const batch = getBatchFromItemId(queue, itemId);
-//     return BATCH_READY_STATES.includes(batch.state);
-// };
-
 const getIsBatchReady = (queue: QueueState, batchId: string): boolean => {
     const batch = getBatchFromState(queue.getState(), batchId);
     return BATCH_READY_STATES.includes(batch.state);
@@ -275,6 +270,10 @@ const incrementBatchFinishedCounter = (queue: QueueState, batchId: string): void
 const getIsBatchFinalized = (batch: Batch): boolean =>
     BATCH_FINISHED_STATES.includes(batch.state);
 
+/**
+ * As this is a data-destructive method it is meant
+ * to be used with fast-abort ONLY. Not for any regular operation
+ */
 const clearBatchData = (queue: QueueState, batchId: string) => {
     queue.updateState((state: State) => {
         const { items } = getBatchFromState(state, batchId);

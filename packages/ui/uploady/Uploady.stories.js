@@ -69,7 +69,7 @@ const ContextUploadButtonWithPrepareHooks = (props) => {
     return <ContextUploadButton {...props} />;
 };
 
-export const ButtonWithContextApi = (): Node => {
+export const WithContextApiButton = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize, extOptions } = useStoryUploadySetup();
 
     const usePrepareEvents = !!extOptions?.withPrepareEvents;
@@ -254,6 +254,7 @@ export const WithAbort = (): Element<"div"> => {
             multiple={multiple}
             destination={destination}
             enhancer={enhancer}
+            {...extOptions}
         >
 
             <ContextUploadButtonWithPrepareHooks {...extOptions}/>

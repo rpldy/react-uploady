@@ -7,7 +7,7 @@ const getAbortEnhancer = <T>(): UploaderEnhancer<T> => {
      * an uploader enhancer function to add abort functionality
      */
     return (uploader: UploaderType<T>): UploaderType<T> => {
-        //$FlowIssue[incompatible-call]: no way of telling flow this is ok...
+        //$FlowIssue[incompatible-call]: unsure how to tell Flow this is ok...
         uploader.update({ abortAll, abortBatch, abortItem });
         return uploader;
     };

@@ -70,7 +70,11 @@ const removeBatch = (queue: QueueState, batchId: string) => {
     });
 };
 
-const finalizeBatch = (queue: QueueState, batchId: string, eventType: string) => {
+const finalizeBatch = (queue: QueueState, batchId: string, eventType: string, finalState: string = BATCH_STATES.FINISHED): void => {
+    queue.updateState((state) => {
+        getBatchFromState(state, batchId).state = finalState;
+    });
+
     triggerUploaderBatchEvent(queue, batchId, eventType);
     triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_FINALIZE);
 };
@@ -84,12 +88,12 @@ const cancelBatchForItem = (queue: QueueState, itemId: string) => {
         if (batchId) {
             logger.debugLog("uploady.uploader.batchHelpers: cancelling batch: ", batchId);
 
-            queue.updateState((state: State) => {
-                const batch = getBatchFromState(state, batchId);
-                batch.state = BATCH_STATES.CANCELLED;
-            });
+            // queue.updateState((state: State) => {
+            //     const batch = getBatchFromState(state, batchId);
+            //     batch.state = BATCH_STATES.CANCELLED;
+            // });
 
-            finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_CANCEL);
+            finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_CANCEL, BATCH_STATES.CANCELLED);
             removeBatchItems(queue, batchId);
             removeBatch(queue, batchId);
         } else {
@@ -169,9 +173,9 @@ const cleanUpFinishedBatches = (queue: QueueState) => {
                 }
 
                 queue.updateState((state: State) => {
-                    const batch: Batch = getBatchFromState(state, batchId);
+                    // const batch: Batch = getBatchFromState(state, batchId);
                     //set batch state to FINISHED before triggering event and removing it from queue
-                    batch.state = alreadyFinalized ? batch.state : BATCH_STATES.FINISHED;
+                    // batch.state = alreadyFinalized ? batch.state : BATCH_STATES.FINISHED;
 
                     if (state.currentBatch === batchId) {
                         state.currentBatch = null;

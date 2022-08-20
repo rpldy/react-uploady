@@ -543,10 +543,6 @@ const UploadButtonWithInvalidBatchStart = () => {
         logToCypress("BATCH_ERROR", batch);
     });
 
-    useBatchFinalizeListener((batch) => {
-       logToCypress("BATCH_FINALIZE", batch);
-    });
-
     return <ContextUploadButton/>;
 };
 

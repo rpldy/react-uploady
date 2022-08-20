@@ -5,33 +5,28 @@ import "./mocks/batchHelpers.mock";
 import getQueueState from "./mocks/getQueueState.mock";
 import mockProcessBatchItems from "../processBatchItems";
 import {
-	getBatchDataFromItemId,
-	isItemBelongsToBatch,
 	isNewBatchStarting,
 	loadNewBatchForItem,
 	cancelBatchForItem,
-	getIsItemBatchReady,
     failBatchForItem,
+    getIsBatchReady,
 } from "../batchHelpers";
 import processQueueNext, { getNextIdGroup, findNextItemIndex } from "../processQueueNext";
 
 describe("processQueueNext tests", () => {
 	beforeAll(()=>{
-		getIsItemBatchReady.mockReturnValue(true);
+        getIsBatchReady.mockReturnValue(true);
 	});
 
 	beforeEach(() => {
 		clearJestMocks(
 			mockProcessBatchItems,
-			isItemBelongsToBatch,
 			isNewBatchStarting,
 			loadNewBatchForItem,
 			cancelBatchForItem,
-			getIsItemBatchReady,
             failBatchForItem,
+            getIsBatchReady
 		);
-
-        getBatchDataFromItemId.mockReset();
 	});
 
 	describe("getNextIdGroup tests", () => {
@@ -53,11 +48,9 @@ describe("processQueueNext tests", () => {
 					},
 				},
 				activeIds: ["u1"],
-				itemQueue: ["u1", "u2", "u3", "u4"],
+				itemQueue: { "b1": ["u1", "u2", "u3", "u4"] },
+				batchQueue: ["b1"],
 			});
-
-			getBatchDataFromItemId
-				.mockReturnValueOnce(queueState.state.batches.b1);
 
 			const ids = getNextIdGroup(queueState);
 
@@ -84,11 +77,9 @@ describe("processQueueNext tests", () => {
 					}
 				},
 				activeIds: ["u1"],
-				itemQueue: ["u1", "u2", "u3", "u4"],
+                itemQueue: { "b1": ["u1"], "b2": [ "u2", "u3", "u4"] },
+                batchQueue: ["b1", "b2"],
 			});
-
-			getBatchDataFromItemId
-				.mockReturnValueOnce(queueState.state.batches.b2);
 
 			const ids = getNextIdGroup(queueState);
 
@@ -114,23 +105,18 @@ describe("processQueueNext tests", () => {
 							maxGroupSize: 2,
 						}
 					},
-				},
-				activeIds: ["u1"],
-				itemQueue: ["u1", "u2", "u3", "u4"],
-			});
+                },
+                activeIds: ["u1"],
+                itemQueue: { "b1": ["u1", "u2", "u3", "u4"] },
+                batchQueue: ["b1"],
+            });
 
-			getBatchDataFromItemId
-				.mockReturnValueOnce(queueState.state.batches.b1);
+            const ids = getNextIdGroup(queueState);
 
-			isItemBelongsToBatch
-				.mockReturnValueOnce(true);
+            expect(ids).toEqual(["u2", "u3"]);
+        });
 
-			const ids = getNextIdGroup(queueState);
-
-			expect(ids).toEqual(["u2", "u3"]);
-		});
-
-		it("should group files only from same batch", () => {
+        it("should group files only from same batch", () => {
 			const queueState = getQueueState({
 				currentBatch: "b1",
 				items: {
@@ -150,15 +136,9 @@ describe("processQueueNext tests", () => {
 					},
 				},
 				activeIds: ["u1"],
-				itemQueue: ["u1", "u2", "u3", "u4", "u5"],
+				itemQueue: { "b1": ["u1", "u2", "u3", "u4"], "b2": ["u5"] },
+                batchQueue: ["b1", "b2"],
 			});
-
-			getBatchDataFromItemId
-				.mockReturnValueOnce(queueState.state.batches.b1);
-
-			isItemBelongsToBatch
-				.mockReturnValueOnce(true)
-				.mockReturnValueOnce(true);
 
 			const ids = getNextIdGroup(queueState);
 
@@ -188,15 +168,9 @@ describe("processQueueNext tests", () => {
 					}
 				},
 				activeIds: ["u1"],
-				itemQueue: ["u1", "u2", "u3", "u4", "u5"],
+                itemQueue: { "b1": ["u1", ], "b2": ["u2", "u3", "u4"], "b3": ["u5"] },
+                batchQueue: ["b1", "b2", "b3"],
 			});
-
-			getBatchDataFromItemId
-				.mockReturnValueOnce(queueState.state.batches.b2);
-
-			isItemBelongsToBatch
-				.mockReturnValueOnce(true)
-				.mockReturnValueOnce(true);
 
 			const ids = getNextIdGroup(queueState);
 
@@ -223,7 +197,8 @@ describe("processQueueNext tests", () => {
 					},
 				},
 				activeIds: ["u1", ["u2", "u3"], "u4", "u5"],
-				itemQueue: ["u1", "u2", "u3", "u4", "u5"],
+				itemQueue: { "b1": ["u1", "u2", "u3", "u4"], "b2":  ["u5"] },
+                batchQueue: ["b1", "b2"],
 			});
 
 			const ids = getNextIdGroup(queueState);
@@ -247,7 +222,8 @@ describe("processQueueNext tests", () => {
 					},
 				},
 				activeIds: ["u1"],
-				itemQueue: ["u1"],
+				itemQueue: { "b1": ["u1"] },
+                batchQueue: ["b1"],
 			});
 
 			const ids = getNextIdGroup(queueState);
@@ -258,12 +234,6 @@ describe("processQueueNext tests", () => {
 
 	describe("findNextNotActiveItemIndex tests", () => {
 		it("should skip non-ready batches", () => {
-			getIsItemBatchReady
-				.mockReturnValueOnce(false)
-				.mockReturnValueOnce(false)
-				.mockReturnValueOnce(false)
-				.mockReturnValueOnce(true);
-
 			const queueState = getQueueState({
 				currentBatch: "b1",
 				batches: {
@@ -272,12 +242,18 @@ describe("processQueueNext tests", () => {
 					"u5": {state: FILE_STATES.ADDED}
 				},
 				activeIds: ["u1"],
-				itemQueue: ["u1", "u2", "u3", "u4", "u5"],
+				itemQueue: { "b1": ["u1"],  "b2": ["u2"], "b3": ["u3"], "b4": ["u5"], "b5": ["u5"] },
+                batchQueue: ["b1", "b2", "b3", "b4", "b5"],
 			});
+
+            getIsBatchReady
+                .mockReturnValueOnce(false)
+                .mockReturnValueOnce(false)
+                .mockReturnValueOnce(false);
 
 			const nextId = findNextItemIndex(queueState);
 
-			expect(nextId).toBe(4);
+			expect(nextId).toEqual(["b4", 0]);
 		});
 
 		it("should skip non FILE_STATES.ADDED", () => {
@@ -288,12 +264,13 @@ describe("processQueueNext tests", () => {
 					"u3": {state: FILE_STATES.ABORTED},
 					"u4": {state: FILE_STATES.ADDED}
 				},
-				itemQueue: ["u1", "u2", "u3", "u4"],
+                itemQueue: { "b1": ["u1", "u2", "u3", "u4"] },
+                batchQueue: ["b1"],
 			});
 
 			const nextId = findNextItemIndex(queueState);
 
-			expect(nextId).toBe(3);
+			expect(nextId).toEqual(["b1", 3]);
 		});
 	});
 
@@ -319,12 +296,9 @@ describe("processQueueNext tests", () => {
 				},
 			},
 			activeIds: ["u1"],
-			itemQueue: ["u1", "u2"],
+            itemQueue: { "b1": ["u1", "u2"] },
+            batchQueue: ["b1"],
 		});
-
-		getBatchDataFromItemId.mockReturnValueOnce(
-			queueState.state.batches.b1
-		);
 
 		await processQueueNext(queueState);
 
@@ -346,12 +320,9 @@ describe("processQueueNext tests", () => {
                 },
             },
             activeIds: [],
-            itemQueue: ["u1", "u2"],
+            itemQueue: { "b1": ["u1", "u2"] },
+            batchQueue: ["b1"],
         }, {});
-
-        getBatchDataFromItemId.mockReturnValueOnce(
-            queueState.state.batches.b1
-        );
 
         await processQueueNext(queueState);
 
@@ -378,15 +349,12 @@ describe("processQueueNext tests", () => {
 				},
 			},
 			activeIds: ["u1"],
-			itemQueue: ["u1", "u2"],
+            itemQueue: { "b1": ["u1", "u2"] },
+            batchQueue: ["b1"],
 		}, {
 			concurrent: true,
 			maxConcurrent: 2,
 		});
-
-		getBatchDataFromItemId.mockReturnValueOnce(
-			queueState.state.batches.b1
-		);
 
 		await processQueueNext(queueState);
 
@@ -416,16 +384,13 @@ describe("processQueueNext tests", () => {
 					},
 				},
 				activeIds: ["u1"],
-				itemQueue: ["u1", "u2"],
+                itemQueue: { "b1": ["u1"], "b2": ["u2"] },
+                batchQueue: ["b1", "b2"],
 			},
 			{
 				concurrent: true,
 				maxConcurrent: 2,
 			});
-
-		getBatchDataFromItemId.mockReturnValueOnce(
-			queueState.state.batches.b2
-		);
 
 		isNewBatchStarting.mockReturnValueOnce(true);
 		loadNewBatchForItem.mockResolvedValueOnce(true);
@@ -455,23 +420,20 @@ describe("processQueueNext tests", () => {
 					},
 				},
 				activeIds: ["u1"],
-				itemQueue: ["u1", "u2"],
+                itemQueue: { "b1": ["u1"], "b2": ["u2"] },
+                batchQueue: ["b2"],
 			},
 			{
 				concurrent: true,
 				maxConcurrent: 2,
 			});
 
-		getBatchDataFromItemId.mockReturnValueOnce(
-			queueState.state.batches.b2
-		);
-
 		isNewBatchStarting.mockReturnValueOnce(true);
 		loadNewBatchForItem.mockResolvedValueOnce(false);
 
 		cancelBatchForItem.mockImplementationOnce(() => {
 		    queueState.updateState((state) => {
-		        state.itemQueue = []; //clear queue process so next doesnt work recursively
+		        state.itemQueue = { "b2": [] }; //clear queue process so next doesnt work recursively
             });
 		});
 
@@ -498,16 +460,13 @@ describe("processQueueNext tests", () => {
                     },
                 },
                 activeIds: [],
-                itemQueue: ["u1", "u2", "u3"],
+                itemQueue: { "b1": ["u1", "u2", "u3"] },
+                batchQueue: ["b1"],
             },
             {
                 concurrent: true,
                 maxConcurrent: 2,
             });
-
-        getBatchDataFromItemId.mockReturnValue(
-            queueState.state.batches.b1
-        );
 
         await processQueueNext(queueState);
 
@@ -530,7 +489,8 @@ describe("processQueueNext tests", () => {
                     },
                 },
                 activeIds: [],
-                itemQueue: ["u1"],
+                itemQueue: { "b1": ["u1"] },
+                batchQueue: ["b1"],
             },
             {
                 concurrent: true,
@@ -541,10 +501,6 @@ describe("processQueueNext tests", () => {
 
         loadNewBatchForItem.mockReturnValueOnce(new Promise(() => {
         }));
-
-        getBatchDataFromItemId.mockReturnValue(
-            queueState.state.batches.b1
-        );
 
         processQueueNext(queueState);
 
@@ -565,13 +521,10 @@ describe("processQueueNext tests", () => {
                     },
                 },
                 activeIds: [],
-                itemQueue: ["u1", "u2"],
+                itemQueue: { "b1": ["u1"], "b2": ["u2"] },
+                batchQueue: ["b1", "b2"],
             },
             {});
-
-        getBatchDataFromItemId.mockReturnValueOnce(
-            queueState.state.batches.b2
-        );
 
         const err = { error: true };
         isNewBatchStarting.mockReturnValueOnce(true);

@@ -1,5 +1,6 @@
 import { BATCH_STATES, triggerCancellable, invariant, utils } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { mockTrigger, createLifePack } from "@rpldy/life-events/src/tests/mocks/rpldy-life-events.mock";
+import getAbortEnhancer from "@rpldy/abort";
 import mockCreateProcessor from "../processor";
 import createUploader from "../uploader";
 import { UPLOADER_EVENTS } from "../consts";
@@ -7,6 +8,7 @@ import { deepProxyUnwrap, getMandatoryOptions } from "../utils";
 
 jest.mock("../processor");
 jest.mock("../utils");
+jest.mock("@rpldy/abort");
 
 describe("uploader tests", () => {
     const mockProcess = jest.fn(),
@@ -19,6 +21,8 @@ describe("uploader tests", () => {
 
     beforeAll(()=>{
         getMandatoryOptions.mockImplementation((options) => options);
+
+        getAbortEnhancer.mockReturnValue((uploader) => uploader);
     });
 
     beforeEach(() => {
@@ -204,7 +208,6 @@ describe("uploader tests", () => {
     });
 
     describe("abort tests", () => {
-
         it("should call processor.abort", () => {
             const uploader = getTestUploader();
             uploader.abort("u1");
@@ -219,7 +222,6 @@ describe("uploader tests", () => {
     });
 
     describe("enhancer tests", () => {
-
         it("should create with enhancer", () => {
             const enhancer = jest.fn((uploader, trigger) => {
                 trigger();
@@ -235,18 +237,17 @@ describe("uploader tests", () => {
         });
 
         it("should create with enhancer that doesnt return uploader", () => {
-            const enhancer = jest.fn((uploader) => {
+            getAbortEnhancer.mockReturnValueOnce((uploader) => {
                 uploader.test = true;
             });
 
-            const uploader = getTestUploader({ enhancer });
+            const uploader = getTestUploader({  });
 
             expect(uploader.test).toBe(true);
         });
     });
 
     describe("registerExtension tests", () => {
-
         it("should register extension successfully", () => {
             const methods = { foo: "bar" };
 

@@ -1,5 +1,5 @@
 // @flow
-import { invariant } from "@rpldy/shared";
+import { invariant, BATCH_STATES } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 import processQueueNext from "./processQueueNext";
@@ -42,7 +42,7 @@ const processAbortBatch = (queue: QueueState, id: string): void => {
 		batch = batchData?.batch;
 
     if (batch && !getIsBatchFinalized(batch)) {
-        finalizeBatch(queue, id, UPLOADER_EVENTS.BATCH_ABORT);
+        finalizeBatch(queue, id, UPLOADER_EVENTS.BATCH_ABORT, BATCH_STATES.ABORTED);
 
         const { isFast } = abortBatchMethod(
             batch,

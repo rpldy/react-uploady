@@ -1,6 +1,5 @@
 // @flow
 import type { UploaderType, UploaderEnhancer } from "@rpldy/raw-uploader";
-// import type { UploaderCreateOptions } from "./types";
 
 const composeEnhancers =  (...enhancers: UploaderEnhancer<any>[]):
     ((uploader: UploaderType<any>, ...args: Array<any>) => UploaderType<any>) =>

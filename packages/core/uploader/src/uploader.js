@@ -36,7 +36,7 @@ const getComposedEnhancer = (extEnhancer) =>
     composeEnhancers(getAbortEnhancer<UploaderCreateOptions>(), extEnhancer);
 
 const getEnhancedUploader = (uploader, options, triggerWithUnwrap, setEnhancerTime) => {
-    //TODO: create base-uploader without internal enhancers (while default-uploader will use abort & xhr-sender enhancers)
+    //TODO: create raw-uploader without internal enhancers (while default-uploader will use abort & xhr-sender enhancers)
 
     //TODO need new mechanism for registering and using internal methods (abort, send)
     //that will use enhancers but also allow overrides without having to expose the method in the options (ie: send)

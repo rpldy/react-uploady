@@ -2,7 +2,6 @@
 import { getMerge, isSamePropInArrays, logger, triggerUpdater } from "@rpldy/shared";
 
 import type { BatchItem } from "@rpldy/shared";
-// import type { Uploader } from "@rpldy/uploader";
 import type { QueueState } from "./types";
 import type { UploaderCreateOptions } from "../types";
 

@@ -2,14 +2,12 @@
 import { FILE_STATES, logger } from "@rpldy/shared";
 import processBatchItems from "./processBatchItems";
 import {
-    // getBatchDataFromItemId,
     getIsBatchReady,
     isNewBatchStarting,
     cancelBatchForItem,
     loadNewBatchForItem,
     failBatchForItem,
 } from "./batchHelpers";
-// import { isItemBelongsToBatch } from "./itemHelpers";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { QueueState } from "./types";
@@ -33,8 +31,6 @@ export const findNextItemIndex = (queue: QueueState): ?[string, number] => {
         batchIndex = 0,
         itemIndex = 0,
         batchId = state.batchQueue[batchIndex];
-        // nextItemId = nextBatchId && itemQueue[nextBatchId][itemIndex];
-        // nextId = itemQueue[index];
 
     while (batchId && !nextItemId) {
         if (getIsBatchReady(queue, batchId)) {
@@ -56,15 +52,6 @@ export const findNextItemIndex = (queue: QueueState): ?[string, number] => {
     }
 
     return nextItemId ? [batchId, itemIndex] : null;
-    // //find item that isnt already in an active request and belongs to a "ready" batch
-    // while (nextItemId && (getIsItemInActiveRequest(queue, nextItemId) ||
-    //     !getIsBatchReady(queue, nextBatchId) ||
-    //     !getIsItemReady(items[nextItemId]))) {
-    //     itemIndex += 1;
-    //     nextId = itemQueue[index];
-    // }
-    //
-    // return nextId ? index : -1;
 };
 
 export const getNextIdGroup = (queue: QueueState): ?string[] => {
@@ -77,24 +64,12 @@ export const getNextIdGroup = (queue: QueueState): ?string[] => {
 
     if (nextId) {
         const { batchOptions } = state.batches[nextBatchId],
-            //getBatchDataFromItemId(queue, nextId);
-            //batchId = batchData.batch.id,
-            // batchOptions = batchOptions.batchOptions,
             groupMax = batchOptions.maxGroupSize || 0;
 
         if (batchOptions.grouped && groupMax > 1) {
             const batchItems = state.itemQueue[nextBatchId];
             //get ids for the batch with max of configured group size (never mix items from different batches)
             nextGroup = batchItems.slice(nextItemIndex, nextItemIndex + groupMax);
-
-            // let nextBelongsToSameBatch = true;
-            //dont group files from different batches
-            // while (nextGroup.length < groupMax && nextBelongsToSameBatch) {
-            //     nextGroup.push(nextId);
-            //     nextId = itemQueue[nextItemIndex + nextGroup.length];
-            //     nextBelongsToSameBatch = nextId &&
-            //         isItemBelongsToBatch(queue, nextId, nextBatchId);
-            // }
         } else {
             nextGroup = [nextId];
         }

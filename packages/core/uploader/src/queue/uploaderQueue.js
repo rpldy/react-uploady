@@ -51,7 +51,6 @@ const createUploaderQueue = (
 
         updateState((state) => {
             state.items[item.id] = item;
-            // state.itemQueue.push(item.id);
         });
     };
 

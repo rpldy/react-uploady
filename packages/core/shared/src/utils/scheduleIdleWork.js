@@ -2,7 +2,7 @@
 import hasWindow from "./hasWindow";
 
 const supportsIdle = (hasWindow() && window.requestIdleCallback);
-const scheduler =  supportsIdle ? window.requestIdleCallback : setTimeout;
+const scheduler = supportsIdle ? window.requestIdleCallback : setTimeout;
 const clear = supportsIdle ? window.cancelIdleCallback : clearTimeout;
 
 type ClearSchedule = () => void;

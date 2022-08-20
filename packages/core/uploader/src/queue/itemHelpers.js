@@ -23,15 +23,10 @@ const finalizeItem = (queue: QueueState, id: string, delItem: boolean = false) =
     });
 };
 
-// const isItemBelongsToBatch = (queue: QueueState, itemId: string, batchId: string): boolean =>
-//     queue.getState()
-//         .items[itemId].batchId === batchId;
-
 const getIsItemExists = (queue: QueueState, itemId: string): boolean =>
     !!queue.getState().items[itemId];
 
 export {
     finalizeItem,
-    // isItemBelongsToBatch,
     getIsItemExists,
 };

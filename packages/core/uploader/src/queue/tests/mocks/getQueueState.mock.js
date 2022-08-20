@@ -33,5 +33,7 @@ export default (testState, options) => {
 			send: jest.fn(),
 		},
 		handleItemProgress: jest.fn(),
+        clearAllUploads: jest.fn(),
+        clearBatchUploads: jest.fn(),
 	};
 };

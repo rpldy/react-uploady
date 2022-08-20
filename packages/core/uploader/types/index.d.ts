@@ -1,47 +1,21 @@
+import { Trigger } from "@rpldy/shared";
+import { SendMethod } from "@rpldy/sender";
+
 import {
-    UploadOptions,
-    Batch,
-    Trigger,
-    UploadInfo,
-} from "@rpldy/shared";
-import {
-    SendMethod,
-} from "@rpldy/sender";
+    RawUploaderType,
+    RawCreateOptions,
+    UploadAddMethod,
+} from "@rpldy/raw-uploader";
 
-import { OnAndOnceMethod, OffMethod } from "@rpldy/life-events";
-
-export type UploadAddMethod = (files: UploadInfo | UploadInfo[], addOptions?: UploadOptions) => Promise<void>
-
-export type PendingBatch = {
-    batch: Batch;
-    uploadOptions: CreateOptions;
-};
-
-export type RegisterExtensionMethod = (name: unknown, methods: { [key: string]: (...args: any[]) => void | unknown }) => void;
-
-export type UploaderType = {
-    id: string;
+export type UploaderType = RawUploaderType & {
     update: (updateOptions: CreateOptions) => UploaderType;
-    add: UploadAddMethod;
-    upload: (uploadOptions?: UploadOptions) => void;
-    abort: (id?: string) => void;
-    abortBatch: (id: string) => void;
     getOptions: () => CreateOptions;
-    getPending: () => PendingBatch[];
-    clearPending: () => void;
-    on: OnAndOnceMethod;
-    once: OnAndOnceMethod;
-    off: OffMethod;
-    registerExtension: RegisterExtensionMethod;
-    getExtension: (name: unknown) => Record<string, unknown>;
-}
+};
 
 export type UploaderEnhancer = (uploader: UploaderType, trigger: Trigger<any>) => UploaderType;
 
-export interface CreateOptions extends UploadOptions {
+export interface CreateOptions extends RawCreateOptions {
     enhancer?: UploaderEnhancer;
-    concurrent?: boolean;
-    maxConcurrent?: number;
     send?: SendMethod;
 }
 
@@ -78,3 +52,4 @@ export default createUploader;
 
 export { SendOptions } from "@rpldy/sender";
 export { FileFilterMethod, Trigger } from "@rpldy/shared";
+export { UploadAddMethod };

@@ -3,12 +3,12 @@ import { useEffect, useMemo } from "react";
 import { logger } from "@rpldy/shared";
 import createUploader from "@rpldy/uploader";
 
-import type { UploaderType, CreateOptions } from "@rpldy/uploader";
+import type { UploadyUploaderType, UploaderCreateOptions } from "@rpldy/uploader";
 import type { UploaderListeners } from "../types";
 
-const useUploader = (options: CreateOptions, listeners: ?UploaderListeners): UploaderType => {
+const useUploader = (options: UploaderCreateOptions, listeners: ?UploaderListeners): UploadyUploaderType => {
     //avoid creating new instance of uploader (unless enhancer method changed)
-    const uploader = useMemo<UploaderType>(
+    const uploader = useMemo<UploadyUploaderType>(
         () => {
             logger.debugLog("Uploady creating a new uploader instance", options);
             return createUploader(options);

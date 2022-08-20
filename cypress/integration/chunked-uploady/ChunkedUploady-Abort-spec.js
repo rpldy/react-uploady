@@ -68,7 +68,7 @@ describe("ChunkedUploady - Abort and continue", () => {
                         expect(xhr.request.headers["content-range"])
                             .to.match(/bytes 50000-\d+\//);
 
-                        cy.storyLog().assertFileItemStartFinish(fileName, 5);
+                        cy.storyLog().assertFileItemStartFinish(fileName, 6);
                     });
             }, "#upload-button");
         }, "#upload-button", { fileName: abortedFileName });

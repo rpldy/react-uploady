@@ -1,5 +1,5 @@
 // @flow
-import { BATCH_STATES, logger, merge, FILE_STATES } from "@rpldy/shared";
+import { BATCH_STATES, logger, merge, FILE_STATES, scheduleIdleWork } from "@rpldy/shared";
 import { unwrap } from "@rpldy/simple-state";
 import { UPLOADER_EVENTS } from "../consts";
 import { getItemsPrepareUpdater } from "./preSendPrepare";
@@ -57,13 +57,35 @@ const removeBatchItems = (queue: QueueState, batchId: string) => {
         finalizeItem(queue, id, true));
 };
 
-const removeBatch = (queue, batchId: string) => {
+const removeBatch = (queue: QueueState, batchId: string) => {
     queue.updateState((state) => {
         delete state.batches[batchId];
+        delete state.itemQueue[batchId];
+
+        const batchQueueIndex = state.batchQueue.indexOf(batchId);
+
+        if (~batchQueueIndex) {
+            state.batchQueue.splice(batchQueueIndex, 1);
+        }
     });
 };
 
-const finalizeBatch = (queue, batchId, eventType) => {
+const finalizeBatch = (
+    queue: QueueState,
+    batchId: string,
+    eventType: string,
+    finalState: string = BATCH_STATES.FINISHED,
+    additionalInfo?: string,
+): void => {
+    queue.updateState((state) => {
+        const batch = getBatchFromState(state, batchId);
+        batch.state = finalState;
+
+        if (additionalInfo) {
+            batch.additionalInfo = additionalInfo;
+        }
+    });
+
     triggerUploaderBatchEvent(queue, batchId, eventType);
     triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_FINALIZE);
 };
@@ -77,12 +99,7 @@ const cancelBatchForItem = (queue: QueueState, itemId: string) => {
         if (batchId) {
             logger.debugLog("uploady.uploader.batchHelpers: cancelling batch: ", batchId);
 
-            queue.updateState((state: State) => {
-                const batch = getBatchFromState(state, batchId);
-                batch.state = BATCH_STATES.CANCELLED;
-            });
-
-            finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_CANCEL);
+            finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_CANCEL, BATCH_STATES.CANCELLED);
             removeBatchItems(queue, batchId);
             removeBatch(queue, batchId);
         } else {
@@ -97,13 +114,7 @@ const failBatchForItem = (queue: QueueState, itemId: string, err: Error) => {
 
     logger.debugLog("uploady.uploader.batchHelpers: failing batch: ", { batch });
 
-    queue.updateState((state: State) => {
-        const batch = getBatchFromState(state, batchId);
-        batch.state = BATCH_STATES.ERROR;
-        batch.additionalInfo = err.message;
-    });
-
-    finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_ERROR);
+    finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_ERROR, BATCH_STATES.ERROR, err.message);
     removeBatchItems(queue, batchId);
     removeBatch(queue, batchId);
 };
@@ -136,51 +147,48 @@ const loadNewBatchForItem = (queue: QueueState, itemId: string): Promise<boolean
 };
 
 const cleanUpFinishedBatches = (queue: QueueState) => {
-    //TODO: schedule clean up on requestIdle
+    scheduleIdleWork(() => {
+        const state = queue.getState();
 
-    const state = queue.getState();
+        Object.keys(state.batches)
+            .forEach((batchId) => {
+                const { batch, finishedCounter } = state.batches[batchId];
+                const { orgItemCount } = batch;
 
-    Object.keys(state.batches)
-        .forEach((batchId) => {
-            const { batch, finishedCounter } = state.batches[batchId];
-            const { orgItemCount } = batch;
+                //shouldnt be the case, but if wasnt cleaned before, it will now
+                const alreadyFinalized = getIsBatchFinalized(batch);
 
-            //shouldnt be the case, but if wasnt cleaned before, it will now
-            const alreadyFinalized = getIsBatchFinalized(batch);
+                if (orgItemCount === finishedCounter) {
+                    //batch may not be updated with completed/loaded with 100% values
+                    if (!alreadyFinalized && batch.completed !== 100) {
+                        queue.updateState((state: State) => {
+                            const batch: Batch = getBatchFromState(state, batchId);
+                            batch.completed = 100;
+                            batch.loaded = batch.items.reduce((res, { loaded }) => res + loaded, 0);
+                        });
 
-            if (orgItemCount === finishedCounter) {
-                //batch may not be updated with completed/loaded with 100% values
-                if (!alreadyFinalized && batch.completed !== 100) {
+                        //ensure we trigger progress event with completed = 100 for all items
+                        triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_PROGRESS);
+                    }
+
                     queue.updateState((state: State) => {
-                        const batch: Batch = getBatchFromState(state, batchId);
-                        batch.completed = 100;
-                        batch.loaded = batch.items.reduce((res, { loaded }) => res + loaded, 0);
+                        if (state.currentBatch === batchId) {
+                            state.currentBatch = null;
+                        }
                     });
 
-                    //ensure we trigger progress event with completed = 100 for all items
-                    triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_PROGRESS);
-                }
+                    logger.debugLog(`uploady.uploader.batchHelpers: cleaning up batch: ${batch.id}`);
 
-                queue.updateState((state: State) => {
-                    const batch: Batch = getBatchFromState(state, batchId);
-                    //set batch state to FINISHED before triggering event and removing it from queue
-                    batch.state = alreadyFinalized ? batch.state : BATCH_STATES.FINISHED;
-
-                    if (state.currentBatch === batchId) {
-                        state.currentBatch = null;
+                    if (!alreadyFinalized) {
+                        finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_FINISH);
                     }
-                });
 
-                logger.debugLog(`uploady.uploader.batchHelpers: cleaning up batch: ${batch.id}`);
-
-                if (!alreadyFinalized) {
-                    finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_FINISH);
+                    removeBatchItems(queue, batchId);
+                    removeBatch(queue, batchId);
                 }
+            });
+    });
 
-                removeBatchItems(queue, batchId);
-                removeBatch(queue, batchId);
-            }
-        });
 };
 
 const triggerUploaderBatchEvent = (queue: QueueState, batchId: string, event: string) => {
@@ -196,8 +204,8 @@ const triggerUploaderBatchEvent = (queue: QueueState, batchId: string, event: st
     queue.trigger(event, eventBatch);
 };
 
-const getIsItemBatchReady = (queue: QueueState, itemId: string): boolean => {
-    const batch = getBatchFromItemId(queue, itemId);
+const getIsBatchReady = (queue: QueueState, batchId: string): boolean => {
+    const batch = getBatchFromState(queue.getState(), batchId);
     return BATCH_READY_STATES.includes(batch.state);
 };
 
@@ -263,6 +271,39 @@ const incrementBatchFinishedCounter = (queue: QueueState, batchId: string): void
 const getIsBatchFinalized = (batch: Batch): boolean =>
     BATCH_FINISHED_STATES.includes(batch.state);
 
+/**
+ * As this is a data-destructive method it is meant
+ * to be used with fast-abort ONLY. Not for any regular operation
+ */
+const clearBatchData = (queue: QueueState, batchId: string) => {
+    queue.updateState((state: State) => {
+        const { items } = getBatchFromState(state, batchId);
+
+        delete state.batches[batchId];
+        delete state.itemQueue[batchId];
+
+        const indx = state.batchQueue.indexOf(batchId);
+
+        if (~indx) {
+            state.batchQueue.splice(indx, 1);
+        }
+
+        if (state.currentBatch === batchId) {
+            state.currentBatch = null;
+        }
+
+        items.forEach(({ id }) => {
+            delete state.items[id];
+
+            const activeIndex = state.activeIds.indexOf(id);
+
+            if (~activeIndex) {
+                state.activeIds.splice(activeIndex, 1);
+            }
+        });
+    });
+};
+
 export {
     loadNewBatchForItem,
     isNewBatchStarting,
@@ -271,7 +312,7 @@ export {
     getBatchDataFromItemId,
     cleanUpFinishedBatches,
     triggerUploaderBatchEvent,
-    getIsItemBatchReady,
+    getIsBatchReady,
     getBatchFromState,
     detachRecycledFromPreviousBatch,
     preparePendingForUpload,
@@ -279,4 +320,7 @@ export {
     incrementBatchFinishedCounter,
     getIsBatchFinalized,
     failBatchForItem,
+    finalizeBatch,
+    removeBatchItems,
+    clearBatchData,
 };

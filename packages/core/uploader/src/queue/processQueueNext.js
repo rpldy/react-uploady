@@ -2,14 +2,12 @@
 import { FILE_STATES, logger } from "@rpldy/shared";
 import processBatchItems from "./processBatchItems";
 import {
-    getBatchDataFromItemId,
-    getIsItemBatchReady,
+    getIsBatchReady,
     isNewBatchStarting,
     cancelBatchForItem,
     loadNewBatchForItem,
     failBatchForItem,
 } from "./batchHelpers";
-import { isItemBelongsToBatch } from "./itemHelpers";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { QueueState } from "./types";
@@ -24,47 +22,54 @@ const getIsItemInActiveRequest = (queue: QueueState, itemId: string): boolean =>
 const getIsItemReady = (item: BatchItem) =>
     item.state === FILE_STATES.ADDED;
 
-export const findNextItemIndex = (queue: QueueState): number => {
+export const findNextItemIndex = (queue: QueueState): ?[string, number] => {
     const state = queue.getState(),
         itemQueue = state.itemQueue,
         items = state.items;
-    let index = 0,
-        nextId = itemQueue[index];
 
-    //find item that isnt already in an active request and belongs to a "ready" batch
-    while (nextId && (getIsItemInActiveRequest(queue, nextId) ||
-        !getIsItemBatchReady(queue, nextId) ||
-        !getIsItemReady(items[nextId]))) {
-        index += 1;
-        nextId = itemQueue[index];
+    let nextItemId = null,
+        batchIndex = 0,
+        itemIndex = 0,
+        batchId = state.batchQueue[batchIndex];
+
+    while (batchId && !nextItemId) {
+        if (getIsBatchReady(queue, batchId)) {
+            nextItemId = itemQueue[batchId][itemIndex];
+
+            while (nextItemId &&
+            (getIsItemInActiveRequest(queue, nextItemId) ||
+                !getIsItemReady(items[nextItemId]))) {
+                itemIndex += 1;
+                nextItemId = itemQueue[batchId][itemIndex];
+            }
+        }
+
+        if (!nextItemId) {
+            batchIndex += 1;
+            batchId = state.batchQueue[batchIndex];
+            itemIndex = 0;
+        }
     }
 
-    return nextId ? index : -1;
+    return nextItemId ? [batchId, itemIndex] : null;
 };
 
 export const getNextIdGroup = (queue: QueueState): ?string[] => {
-    const itemQueue = queue.getState().itemQueue;
-    const nextItemIndex = findNextItemIndex(queue);
-    let nextId = itemQueue[nextItemIndex],
+    const state = queue.getState(),
+        itemQueue = state.itemQueue,
+     [nextBatchId, nextItemIndex] = findNextItemIndex(queue) || [];
+
+    let nextId = (nextBatchId && ~nextItemIndex) ? itemQueue[nextBatchId][nextItemIndex] : null,
         nextGroup;
 
     if (nextId) {
-        const batchData = getBatchDataFromItemId(queue, nextId);
+        const { batchOptions } = state.batches[nextBatchId],
+            groupMax = batchOptions.maxGroupSize || 0;
 
-        const batchId = batchData.batch.id,
-            groupMax = batchData.batchOptions.maxGroupSize || 0;
-
-        if (batchData.batchOptions.grouped && groupMax > 1) {
-            nextGroup = [];
-            let nextBelongsToSameBatch = true;
-
-            //dont group files from different batches
-            while (nextGroup.length < groupMax && nextBelongsToSameBatch) {
-                nextGroup.push(nextId);
-                nextId = itemQueue[nextItemIndex + nextGroup.length];
-                nextBelongsToSameBatch = nextId &&
-                    isItemBelongsToBatch(queue, nextId, batchId);
-            }
+        if (batchOptions.grouped && groupMax > 1) {
+            const batchItems = state.itemQueue[nextBatchId];
+            //get ids for the batch with max of configured group size (never mix items from different batches)
+            nextGroup = batchItems.slice(nextItemIndex, nextItemIndex + groupMax);
         } else {
             nextGroup = [nextId];
         }

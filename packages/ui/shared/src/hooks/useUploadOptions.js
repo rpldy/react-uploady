@@ -1,9 +1,9 @@
 // @flow
 import useUploadyContext from "./useUploadyContext";
 
-import type { CreateOptions } from "@rpldy/uploader";
+import type { UploaderCreateOptions } from "@rpldy/uploader";
 
-const useUploadOptions = (options?: CreateOptions): CreateOptions => {
+const useUploadOptions = (options?: UploaderCreateOptions): UploaderCreateOptions => {
     const context = useUploadyContext();
 
     if (options) {

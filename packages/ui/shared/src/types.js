@@ -1,10 +1,10 @@
 // @flow
 import type { Node } from "react";
 import type { UploadInfo, UploadOptions, Batch, BatchItem } from "@rpldy/shared";
-import type { CreateOptions } from "@rpldy/uploader";
+import type { UploaderCreateOptions } from "@rpldy/uploader";
 import type { OnAndOnceMethod, OffMethod, EventCallback } from "@rpldy/life-events";
 
-export type PreSendData = { items: BatchItem[]; options: CreateOptions };
+export type PreSendData = { items: BatchItem[]; options: UploaderCreateOptions };
 
 type EventHook<T> = (cb: (obj: T) => void, id?: string) => void;
 type CancellableHook<T> = (cb: (obj: T) => boolean | void, id?: string) => void;
@@ -33,8 +33,8 @@ export type UploadyContextType = {
 	upload: AddUploadFunction,
 	processPending: (?UploadOptions) => void,
     clearPending: () => void,
-    setOptions: (CreateOptions) => void,
-    getOptions: () => CreateOptions,
+    setOptions: (UploaderCreateOptions) => void,
+    getOptions: () => UploaderCreateOptions,
 	on: OnAndOnceMethod,
 	once: OnAndOnceMethod,
 	off: OffMethod,
@@ -46,7 +46,7 @@ export type UploadyContextType = {
 export type UploaderListeners = { [string]: EventCallback };
 
 export type NoDomUploadyProps = {|
-    ...CreateOptions,
+    ...UploaderCreateOptions,
     //whether to set debug flag for extra console logs
     debug?: boolean,
     //map of event name and event handler

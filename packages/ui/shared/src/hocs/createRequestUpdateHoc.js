@@ -4,9 +4,9 @@ import useUploadyContext from "../hooks/useUploadyContext";
 
 import type { Node } from "React";
 import type { BatchItem } from "@rpldy/shared";
-import type { CreateOptions } from "@rpldy/uploader";
+import type { UploaderCreateOptions } from "@rpldy/uploader";
 
-export type RequestUpdater = ({ items: BatchItem, options: CreateOptions }) => void;
+export type RequestUpdater = ({ items: BatchItem, options: UploaderCreateOptions }) => void;
 type EventDataValidator = (...params: any[]) => boolean;
 type RequestDataRetriever<T> = (...params: any[]) => T;
 export type RequestUpdateHoc =  (Component: React$ComponentType<any>) => React$ComponentType<any>;

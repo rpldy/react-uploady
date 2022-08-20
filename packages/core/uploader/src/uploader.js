@@ -9,9 +9,11 @@ import {
     merge,
     clone,
 } from "@rpldy/shared";
+import getAbortEnhancer from "@rpldy/abort";
 import getProcessor from "./processor";
 import { UPLOADER_EVENTS } from "./consts";
 import { getMandatoryOptions, deepProxyUnwrap } from "./utils";
+import composeEnhancers from "./composeEnhancers";
 
 import type {
     UploadInfo,
@@ -19,8 +21,8 @@ import type {
 } from "@rpldy/shared";
 
 import type  {
-    UploaderType,
-    CreateOptions,
+    UploaderCreateOptions,
+    UploadyUploaderType
 } from "./types";
 
 const EVENT_NAMES = Object.values(UPLOADER_EVENTS);
@@ -30,7 +32,27 @@ const EXT_OUTSIDE_ENHANCER_TIME = "Uploady - uploader extensions can only be reg
 
 let counter = 0;
 
-const createUploader = (options?: CreateOptions): UploaderType => {
+const getComposedEnhancer = (extEnhancer) =>
+    composeEnhancers(getAbortEnhancer<UploaderCreateOptions>(), extEnhancer);
+
+const getEnhancedUploader = (uploader, options, triggerWithUnwrap, setEnhancerTime) => {
+    //TODO: create raw-uploader without internal enhancers (while default-uploader will use abort & xhr-sender enhancers)
+
+    //TODO need new mechanism for registering and using internal methods (abort, send)
+    //that will use enhancers but also allow overrides without having to expose the method in the options (ie: send)
+    const enhancer = options.enhancer ?
+        getComposedEnhancer(options.enhancer) :
+        getAbortEnhancer();
+
+    setEnhancerTime( true);
+    const enhanced = enhancer(uploader, triggerWithUnwrap);
+    setEnhancerTime( false);
+
+    //graceful handling for enhancer forgetting to return uploader
+    return enhanced || uploader;
+};
+
+const createUploader = (options?: UploaderCreateOptions): UploadyUploaderType => {
     counter += 1;
     const uploaderId = `uploader-${counter}`;
     let enhancerTime = false;
@@ -39,16 +61,20 @@ const createUploader = (options?: CreateOptions): UploaderType => {
 
     logger.debugLog(`uploady.uploader: creating new instance (${uploaderId})`, { options, counter });
 
-    let uploaderOptions: CreateOptions = getMandatoryOptions(options);
+    let uploaderOptions: UploaderCreateOptions = getMandatoryOptions(options);
 
-    const update = (updateOptions: CreateOptions) => {
+    const setEnhancerTime = (state: boolean) => {
+        enhancerTime = state;
+    };
+
+    const update = (updateOptions: UploaderCreateOptions) => {
         //TODO: updating concurrent and maxConcurrent means we need to update the processor - not supported yet!
         uploaderOptions = merge({}, uploaderOptions, updateOptions); //need deep merge for destination
         return uploader;
     };
 
     const add = (files: UploadInfo | UploadInfo[], addOptions?: ?UploadOptions): Promise<void> => {
-        const processOptions: CreateOptions = merge({}, uploaderOptions, addOptions);
+        const processOptions: UploaderCreateOptions = merge({}, uploaderOptions, addOptions);
 
         if (processOptions.clearPendingOnAdd) {
             clearPending();
@@ -100,7 +126,7 @@ const createUploader = (options?: CreateOptions): UploaderType => {
         processor.processPendingBatches(uploadOptions);
     };
 
-    const getOptions = (): CreateOptions => {
+    const getOptions = (): UploaderCreateOptions => {
         return clone(uploaderOptions);
     };
 
@@ -152,17 +178,11 @@ const createUploader = (options?: CreateOptions): UploaderType => {
 
     const cancellable = triggerCancellable(triggerWithUnwrap);
 
-    if (uploaderOptions.enhancer) {
-        enhancerTime = true;
-        const enhanced = uploaderOptions.enhancer(uploader, triggerWithUnwrap);
-        enhancerTime = false;
-        //graceful handling for enhancer forgetting to return uploader
-        uploader = enhanced || uploader;
-    }
+    const enhancedUploader = getEnhancedUploader(uploader, uploaderOptions, triggerWithUnwrap, setEnhancerTime);
 
-    const processor = getProcessor(triggerWithUnwrap, cancellable, uploaderOptions, uploader.id);
+    const processor = getProcessor(triggerWithUnwrap, cancellable, uploaderOptions, enhancedUploader.id);
 
-    return devFreeze(uploader);
+    return devFreeze(enhancedUploader);
 };
 
 export default createUploader;

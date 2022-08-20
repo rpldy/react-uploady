@@ -1,6 +1,6 @@
 import { UPLOADER_EVENTS } from "../../consts";
+import { BATCH_STATES, FILE_STATES } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import getQueueState from "./mocks/getQueueState.mock";
-import { BATCH_STATES, FILE_STATES } from "@rpldy/shared";
 import { getItemsPrepareUpdater } from "../preSendPrepare";
 import { finalizeItem, getIsItemExists } from "../itemHelpers";
 
@@ -58,7 +58,6 @@ describe("batchHelpers tests", () => {
 
             const updatedState = queueState.getState();
 
-            expect(queueState.updateState).toHaveBeenCalledTimes(2);
             expect(updatedState.batches.b1).toBeUndefined();
             expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedBatch);
             expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINALIZE, expectedBatch);
@@ -103,7 +102,6 @@ describe("batchHelpers tests", () => {
 
             const updatedState = queueState.getState();
 
-            expect(queueState.updateState).toHaveBeenCalledTimes(2);
             expect(updatedState.batches.b1).toBeUndefined();
             expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedBatch);
             expect(queueState.trigger).not.toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS, expect.any(Object));
@@ -158,7 +156,6 @@ describe("batchHelpers tests", () => {
 
             const updatedState = queueState.getState();
 
-            expect(queueState.updateState).toHaveBeenCalledTimes(3);
             expect(updatedState.batches.b1).toBeUndefined();
             expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS, expectedLastProgressBatch);
             expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedFinishedBatch);
@@ -173,7 +170,7 @@ describe("batchHelpers tests", () => {
                 batches: {
                     b1: { batch, finishedCounter: 1 },
                 },
-                itemQueue: ["u2", "u3"]
+                itemQueue: { "b1": ["u2", "u3"] },
             });
 
             batchHelpers.cleanUpFinishedBatches(queueState);
@@ -211,7 +208,6 @@ describe("batchHelpers tests", () => {
 
             const updatedState = queueState.getState();
 
-            expect(queueState.updateState).toHaveBeenCalledTimes(2);
             expect(updatedState.batches.b1).toBeUndefined();
             expect(queueState.trigger).not.toHaveBeenCalled();
             expect(updatedState.currentBatch).toBeNull();
@@ -366,7 +362,8 @@ describe("batchHelpers tests", () => {
 					"b1": { batch: cancelledBatch, },
 					"b2": {}
 				},
-				itemQueue: [...ids, "u4"],
+                itemQueue: { "b1": [...ids], "b2": ["u4"] },
+                batchQueue: ["b1", "b2"],
 			});
 
 			const eventBatch = queueState.getState().batches.b1.batch,
@@ -398,6 +395,8 @@ describe("batchHelpers tests", () => {
 			expect(updatedState.batches.b1).toBeUndefined();
 			expect(updatedState.batches.b2).toBeDefined();
             expect(finalizeItem).toHaveBeenCalledTimes(3);
+            expect(updatedState.batchQueue.indexOf("b1")).toBe(-1);
+            expect(updatedState.batchQueue.indexOf("b2")).toBe(0);
 		});
 
         it("should handle batch that no longer exists", () => {
@@ -408,7 +407,7 @@ describe("batchHelpers tests", () => {
                 batches: {
                     "b2": {}
                 },
-                itemQueue: ["u1"],
+                itemQueue: { "b1": ["u1"] },
             });
 
             getIsItemExists.mockReturnValueOnce(true);
@@ -426,7 +425,7 @@ describe("batchHelpers tests", () => {
                 batches: {
                     "b2": {}
                 },
-                itemQueue: ["u1"],
+                itemQueue: { "b1": ["u1"] },
             });
 
             getIsItemExists.mockReturnValueOnce(false);
@@ -484,7 +483,6 @@ describe("batchHelpers tests", () => {
 
 	describe("triggerUploaderBatchEvent tests", () => {
 		it("should trigger with state items", () => {
-
 			const batch = { id: "b1", items: [{ id: "u1" }, { id: "u2" }] };
 
 			const queueState = getQueueState({
@@ -508,30 +506,6 @@ describe("batchHelpers tests", () => {
 						queueState.getState().items.u2,
 					]
 				}));
-		});
-	});
-
-	describe("getIsItemBatchReady tests", () => {
-		it.each([
-				[BATCH_STATES.ADDED, true],
-				[BATCH_STATES.PROCESSING, true],
-				[BATCH_STATES.UPLOADING, true],
-				[BATCH_STATES.FINISHED, false],
-				[BATCH_STATES.CANCELLED, false],
-			]
-		)("for batch state: %s should return: %s", (state, result) => {
-			const queueState = getQueueState({
-				batches: {
-					b1: {
-						batch: {
-							state
-						}
-					}
-				},
-				items: { "u1": { batchId: "b1" } }
-			});
-
-			expect(batchHelpers.getIsItemBatchReady(queueState, "u1")).toBe(result);
 		});
 	});
 
@@ -813,7 +787,7 @@ describe("batchHelpers tests", () => {
             [BATCH_STATES.CANCELLED, true],
             [BATCH_STATES.UPLOADING, false],
         ])
-        ("for %s should return %s", (state, result) => {
+        ("for %s getIsBatchFinalized should return %s", (state, result) => {
             expect(batchHelpers.getIsBatchFinalized({ state })).toBe(result);
         });
     });
@@ -838,7 +812,8 @@ describe("batchHelpers tests", () => {
                     "b1": { batch: failedBatch, },
                     "b2": {}
                 },
-                itemQueue: [...ids, "u4"],
+                itemQueue: { "b1": [...ids], "b2": ["u4"] },
+                batchQueue: ["b1", "b2"],
             });
 
             const eventBatch = queueState.getState().batches.b1.batch,
@@ -870,8 +845,109 @@ describe("batchHelpers tests", () => {
             const updatedState = queueState.getState();
             expect(updatedState.batches.b1).toBeUndefined();
             expect(updatedState.batches.b2).toBeDefined();
+            expect(updatedState.batchQueue.indexOf("b1")).toBe(-1);
+            expect(updatedState.batchQueue.indexOf("b2")).toBe(0);
             expect(finalizeItem).toHaveBeenCalledTimes(3);
             expect(finalizeItem).toHaveBeenCalledWith(expect.any(Object), "u3", true);
+        });
+    });
+
+    describe("clearBatchData tests", () => {
+        const batchId = "b1";
+
+        it("should clear active batch data", () => {
+            const batch = {
+                items: [{ id: "i1" }, { id: "i2" }],
+            };
+
+            const queueState = getQueueState({
+                batches: {
+                    [batchId]: { batch },
+                    "b2": {},
+                },
+                items: {
+                    "i1": "aaa",
+                    "i2": "bbb",
+                    "i3": "ccc",
+                },
+                batchQueue: [batchId, "b2"],
+                itemQueue: { [batchId]: [1, 2, 3], "b2": [5, 6] },
+                activeIds: ["i1", "i4"],
+                currentBatch: batchId,
+            });
+
+            batchHelpers.clearBatchData(queueState, "b1");
+
+            const state = queueState.getState();
+
+            expect(state.batches[batchId]).toBeUndefined();
+            expect(state.batches["b2"]).toBeDefined();
+            expect(state.batchQueue[0]).toBe("b2");
+            expect(state.currentBatch).toBe(null);
+            expect(state.items["i1"]).toBeUndefined();
+            expect(state.items["i2"]).toBeUndefined();
+            expect(state.items["i3"]).toBeDefined();
+            expect(state.itemQueue[batchId]).toBeUndefined();
+            expect(state.itemQueue["b2"]).toBeDefined();
+            expect(state.activeIds[0]).toBe("i4");
+        });
+
+        it("should clear non-active batch data", () => {
+            const batch = {
+                items: [{ id: "i1" }, { id: "i2" }],
+            };
+
+            const queueState = getQueueState({
+                batches: {
+                    [batchId]: { batch },
+                    "b2": {},
+                },
+                items: {
+                    "i1": "aaa",
+                    "i2": "bbb",
+                    "i3": "ccc",
+                },
+                batchQueue: ["b2"],
+                itemQueue: { [batchId]: [1, 2, 3], "b2": [5, 6] },
+                activeIds: ["i1", "i4"],
+                currentBatch: "b2",
+            });
+
+            batchHelpers.clearBatchData(queueState, "b1");
+
+            const state = queueState.getState();
+
+            expect(state.batches[batchId]).toBeUndefined();
+            expect(state.batches["b2"]).toBeDefined();
+            expect(state.batchQueue[0]).toBe("b2");
+            expect(state.currentBatch).toBe("b2");
+            expect(state.items["i1"]).toBeUndefined();
+            expect(state.items["i2"]).toBeUndefined();
+            expect(state.items["i3"]).toBeDefined();
+            expect(state.itemQueue[batchId]).toBeUndefined();
+            expect(state.itemQueue["b2"]).toBeDefined();
+            expect(state.activeIds[0]).toBe("i4");
+        });
+    });
+
+    describe("getIsBatchReady tests", () => {
+        it.each([
+            [BATCH_STATES.ABORTED, false],
+            [BATCH_STATES.FINISHED, false],
+            [BATCH_STATES.PROCESSING, true],
+            [BATCH_STATES.ADDED, true],
+            [BATCH_STATES.PENDING, false],
+            [BATCH_STATES.CANCELLED, false],
+            [BATCH_STATES.UPLOADING, true],
+        ])
+        ("for %s getIsBatchReady should return %s", (state, result) => {
+            const batchId = "b1";
+
+            const queueState = getQueueState({
+                batches: { [batchId]: { batch: { state } } },
+            });
+
+            expect(batchHelpers.getIsBatchReady(queueState, batchId)).toBe(result);
         });
     });
 });

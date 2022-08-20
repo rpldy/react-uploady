@@ -3,10 +3,10 @@ import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { createRequestUpdateHoc } from "./createRequestUpdateHoc";
 
 import type { BatchItem } from "@rpldy/shared";
-import type { CreateOptions } from "@rpldy/uploader";
+import type { UploaderCreateOptions } from "@rpldy/uploader";
 import type { RequestUpdateHoc } from "./createRequestUpdateHoc";
 
-type PreSendRequestData = { items: BatchItem[], options: CreateOptions };
+type PreSendRequestData = { items: BatchItem[], options: UploaderCreateOptions };
 
 const withRequestPreSendUpdate: RequestUpdateHoc = createRequestUpdateHoc<PreSendRequestData>({
     eventType: UPLOADER_EVENTS.REQUEST_PRE_SEND,

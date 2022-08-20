@@ -1,0 +1,36 @@
+{
+  "version": "1.0.1",
+  "name": "@rpldy/abort",
+  "description": "adds the capability to abort/cancel running & pending uploads",
+  "author": "yoav niran (https://github.com/yoavniran)",
+  "main": "lib/cjs/index.js",
+  "module": "lib/esm/index.js",
+  "main:dev": "src/index.js",
+  "types": "types/index.d.ts",
+  "license": "MIT",
+  "homepage": "https://react-uploady.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rpldy/react-uploady.git",
+    "directory": "packages/core/abort"
+  },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/react-uploady"
+  },
+  "scripts": {
+    "build": "node ../../../scripts/build.js",
+    "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
+  },
+  "dependencies": {
+    "@rpldy/shared": "^1.0.1",
+    "@rpldy/simple-state": "^1.0.1",
+    "@rpldy/raw-uploader": "^1.0.1"
+  },
+  "devDependencies": {
+    "flow-bin": "^0.182.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

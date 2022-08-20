@@ -8,7 +8,7 @@ describe("Uploady - Simple", () => {
     before(() => {
         cy.visitStory(
             "uploady",
-            "button-with-context-api&knob-multiple files_Upload Settings=true&knob-group files in single request_Upload Settings=&knob-max in group_Upload Settings=2&knob-auto upload on add_Upload Settings=true",
+            "with-context-api-button&knob-multiple files_Upload Settings=true&knob-group files in single request_Upload Settings=&knob-max in group_Upload Settings=2&knob-auto upload on add_Upload Settings=true",
             { useMock : false }
         );
     });

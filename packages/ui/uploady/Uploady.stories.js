@@ -39,6 +39,16 @@ import readme from "./README.md";
 
 import type { Node, Element } from "React";
 
+const ContextUploadButton = () => {
+    const uploadyContext = useUploady();
+
+    const onClick = useCallback(() => {
+        uploadyContext?.showFileUpload();
+    }, [uploadyContext]);
+
+    return <button id="upload-button" onClick={onClick}>Custom Upload Button</button>;
+};
+
 const ContextUploadButtonWithPrepareHooks = (props) => {
     console.log("Rendering Context Upload Button with Prepare Hooks (pre-send & batch-start)");
 
@@ -59,17 +69,7 @@ const ContextUploadButtonWithPrepareHooks = (props) => {
     return <ContextUploadButton {...props} />;
 };
 
-const ContextUploadButton = () => {
-    const uploadyContext = useUploady();
-
-    const onClick = useCallback(() => {
-        uploadyContext?.showFileUpload();
-    }, [uploadyContext]);
-
-    return <button id="upload-button" onClick={onClick}>Custom Upload Button</button>;
-};
-
-export const ButtonWithContextApi = (): Node => {
+export const WithContextApiButton = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize, extOptions } = useStoryUploadySetup();
 
     const usePrepareEvents = !!extOptions?.withPrepareEvents;
@@ -210,7 +210,7 @@ const QueueList = () => {
 };
 
 export const WithAutoUploadOff = (): Node => {
-    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+    const { enhancer, destination, grouped, groupSize, extOptions } = useStoryUploadySetup();
 
     return <Uploady
         debug
@@ -221,6 +221,7 @@ export const WithAutoUploadOff = (): Node => {
         autoUpload={false}
         concurrent
         maxConcurrent={10}
+        {...extOptions}
     >
         <ContextUploadButton />
         <br/>
@@ -253,6 +254,7 @@ export const WithAbort = (): Element<"div"> => {
             multiple={multiple}
             destination={destination}
             enhancer={enhancer}
+            {...extOptions}
         >
 
             <ContextUploadButtonWithPrepareHooks {...extOptions}/>
@@ -539,10 +541,6 @@ const UploadButtonWithInvalidBatchStart = () => {
 
     useBatchErrorListener((batch) => {
         logToCypress("BATCH_ERROR", batch);
-    });
-
-    useBatchFinalizeListener((batch) => {
-       logToCypress("BATCH_FINALIZE", batch);
     });
 
     return <ContextUploadButton/>;

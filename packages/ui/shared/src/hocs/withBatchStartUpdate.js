@@ -3,10 +3,10 @@ import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { createRequestUpdateHoc } from "./createRequestUpdateHoc";
 
 import type { BatchItem, Batch } from "@rpldy/shared";
-import type { CreateOptions } from "@rpldy/uploader";
+import type { UploaderCreateOptions } from "@rpldy/uploader";
 import type { RequestUpdateHoc } from "./createRequestUpdateHoc";
 
-type BatchStartRequestData = { batch: Batch, items: BatchItem[], options: CreateOptions };
+type BatchStartRequestData = { batch: Batch, items: BatchItem[], options: UploaderCreateOptions };
 
 const withBatchStartUpdate: RequestUpdateHoc = createRequestUpdateHoc<BatchStartRequestData>({
     eventType: UPLOADER_EVENTS.BATCH_START,

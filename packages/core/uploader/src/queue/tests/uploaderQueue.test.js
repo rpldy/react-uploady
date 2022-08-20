@@ -3,21 +3,22 @@ import { hasWindow } from "@rpldy/shared";
 import createState from "@rpldy/simple-state";
 import { SENDER_EVENTS, UPLOADER_EVENTS } from "../../consts";
 import processQueueNext from "../processQueueNext";
-import * as abortMethods from "../abort";
+import * as abortMethods from "../processAbort";
 import {
     detachRecycledFromPreviousBatch,
     preparePendingForUpload,
     removePendingBatches,
+    clearBatchData,
 } from "../batchHelpers";
 import createQueue from "../uploaderQueue";
 
 jest.mock("@rpldy/simple-state");
 jest.mock("../batchHelpers");
 jest.mock("../processQueueNext", () => jest.fn());
-jest.mock("../abort", () => ({
-    abortAll: jest.fn(),
-    abortItem: jest.fn(),
-    abortBatch: jest.fn(),
+jest.mock("../processAbort", () => ({
+    processAbortItem: jest.fn(),
+    processAbortBatch: jest.fn(),
+    processAbortAll: jest.fn(),
 }));
 
 describe("queue tests", () => {
@@ -53,7 +54,7 @@ describe("queue tests", () => {
 
         const queue = createQueue({ destination: "foo" }, trigger, cancellable, sender, uploaderId);
 
-        const batch = { items: [{ id: "u1" }, { id: "u2" }] },
+        const batch = { id: "b1", items: [{ id: "u1" }, { id: "u2" }] },
             batchOptions = { concurrent: true };
 
         queue.addBatch(batch, batchOptions);
@@ -76,7 +77,8 @@ describe("queue tests", () => {
 
         const state = queueState.getState();
 
-        expect(state.itemQueue).toEqual(["u1", "u2"]);
+        expect(state.itemQueue).toEqual({ "b1": ["u1", "u2"] });
+        expect(state.batchQueue).toEqual(["b1"]);
 
         expect(state.items["u1"]).toStrictEqual(batch.items[0]);
         expect(state.items["u2"]).toStrictEqual(batch.items[1]);
@@ -107,7 +109,6 @@ describe("queue tests", () => {
 			batchOptions = { concurrent: true };
 
         queue.addBatch(batch, batchOptions);
-		// queue.uploadBatch(batch);
 
 		expect(() => {
 			queue.addBatch(batch, batchOptions);
@@ -119,7 +120,6 @@ describe("queue tests", () => {
 
         const batch = { items: [{ id: "u1" }] };
         queue.addBatch(batch, {});
-        // queue.uploadBatch(batch);
 
         const recycled = { id: "u1", recycled: true };
         queue.uploadBatch({ items: [recycled] });
@@ -144,13 +144,13 @@ describe("queue tests", () => {
         const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
         queue.abortItem("u1");
-        expect(abortMethods.abortItem).toHaveBeenCalledWith(expect.any(Object), "u1", processQueueNext);
+        expect(abortMethods.processAbortItem).toHaveBeenCalledWith(expect.any(Object), "u1");
 
         queue.abortAll();
-        expect(abortMethods.abortAll).toHaveBeenCalledWith(expect.any(Object), processQueueNext);
+        expect(abortMethods.processAbortAll).toHaveBeenCalledWith(expect.any(Object));
 
         queue.abortBatch("b1");
-        expect(abortMethods.abortBatch).toHaveBeenCalledWith(expect.any(Object), "b1", processQueueNext);
+        expect(abortMethods.processAbortBatch).toHaveBeenCalledWith(expect.any(Object), "b1");
     });
 
     it("getCurrentActiveCount should return active count", () => {
@@ -187,6 +187,54 @@ describe("queue tests", () => {
 
         expect(queue.runCancellable)
             .toThrow("Uploader queue - cancellable is of wrong type");
+    });
+
+    it("should clean queue on clearAllUploads", () => {
+        const queue = createQueue({ destination: "foo" }, trigger, cancellable, sender, uploaderId);
+
+        const batch = { id: "b1", items: [{ id: "u1" }, { id: "u2" }] };
+
+        queue.addBatch(batch, {});
+        queue.uploadBatch(batch);
+
+        const queueState = processQueueNext.mock.calls[0][0];
+
+        queueState.clearAllUploads();
+
+        expect(queueState.getState())
+            .toStrictEqual({
+                itemQueue: {},
+                batchQueue: [],
+                currentBatch: null,
+                batches: {},
+                items: {},
+                activeIds: [],
+                aborts: {}
+            });
+    });
+
+    describe("clearBatchUploads tests", () => {
+        afterEach(() => {
+            clearBatchData.mockReset();
+        });
+
+        it.each([
+            ["b1", 1],
+            ["b2", 0],
+        ])("for %s clearBatchUploads should call batch helper %s times", (batchId, times) => {
+            const queue = createQueue({ destination: "foo" }, trigger, cancellable, sender, uploaderId);
+
+            const batch = { id: "b1", items: [{ id: "u1" }, { id: "u2" }] };
+
+            queue.addBatch(batch );
+            queue.uploadBatch(batch);
+
+            const queueState = processQueueNext.mock.calls[0][0];
+
+            queueState.clearBatchUploads(batchId);
+
+            expect(clearBatchData).toHaveBeenCalledTimes(times);
+        });
     });
 
     describe("UPLOADER_EVENTS.ITEM_PROGRESS tests", () => {

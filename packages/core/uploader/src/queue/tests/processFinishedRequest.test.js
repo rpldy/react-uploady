@@ -21,15 +21,16 @@ describe("onRequestFinished tests", () => {
 		const batch = { id: "b1" };
 		const response = { success: true };
 		const queueState = getQueueState({
-			currentBatch: "b1",
+			currentBatch: batch.id,
 			items: {
-				"u1": { batchId: "b1", completed, file: { size: 1234 } },
-				"u2": { batchId: "b1", completed, url: "myfile.com" },
+				"u1": { batchId: batch.id, completed, file: { size: 1234 } },
+				"u2": { batchId: batch.id, completed, url: "myfile.com" },
 			},
 			batches: {
-				b1: { batch, batchOptions: {} },
+				[batch.id]: { batch, batchOptions: {} },
 			},
-			itemQueue: [itemId],
+			itemQueue: { [batch.id]: [itemId] },
+            batchQueue: [batch.id],
 			activeIds,
 			aborts: {
 				[itemId]: "abort",
@@ -73,7 +74,7 @@ describe("onRequestFinished tests", () => {
         expect(queueState.updateState).toHaveBeenCalledTimes(2);
         expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();
 
-		expect(queueState.getState().itemQueue).toHaveLength(0);
+		expect(queueState.getState().itemQueue[batch.id]).toHaveLength(0);
 		expect(queueState.getState().activeIds).toHaveLength(0);
 
 		expect(queueState.getState().aborts[itemId]).toBeUndefined();
@@ -113,15 +114,16 @@ describe("onRequestFinished tests", () => {
 		const batch = { id: "b1" };
 		const response = { success: true };
 		const queueState = getQueueState({
-			currentBatch: "b1",
+			currentBatch: batch.id,
 			items: {
-				"u1": { batchId: "b1" },
-				"u2": { batchId: "b1" },
+				"u1": { batchId: batch.id },
+				"u2": { batchId: batch.id },
 			},
 			batches: {
-				b1: { batch, batchOptions: {} },
+				[batch.id]: { batch, batchOptions: {} },
 			},
-			itemQueue: ["u1", "u2"],
+            itemQueue: { [batch.id]: ["u1", "u2"] },
+            batchQueue: [batch.id],
 			activeIds: ["u1"],
 			aborts: {
 				"u1": "abort",
@@ -143,7 +145,7 @@ describe("onRequestFinished tests", () => {
 		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, expectedItem);
 
 		expect(queueState.updateState).toHaveBeenCalledTimes(2);
-		expect(queueState.getState().itemQueue).toHaveLength(1);
+		expect(queueState.getState().itemQueue[batch.id]).toHaveLength(1);
 		expect(queueState.getState().activeIds).toHaveLength(0);
 		expect(queueState.getState().aborts["u1"]).toBeUndefined();
 	});
@@ -157,14 +159,14 @@ describe("onRequestFinished tests", () => {
 			const response = { success: true };
 
 			const queueState = getQueueState({
-				currentBatch: "b1",
+				currentBatch: batch.id,
 				items: {
-					"u1": { batchId: "b1" },
+					"u1": { batchId: batch.id },
 				},
 				batches: {
-					b1: { batch, batchOptions: {} },
+					[batch.id]: { batch, batchOptions: {} },
 				},
-				itemQueue: ["u1"],
+				itemQueue: { [batch.id] : ["u1"] },
 				activeIds: ["u1"],
 			});
 
@@ -189,14 +191,14 @@ describe("onRequestFinished tests", () => {
         const response = { success: true };
 
         const queueState = getQueueState({
-            currentBatch: "b1",
+            currentBatch: batch.id,
             items: {
-                "u1": { batchId: "b1" },
+                "u1": { batchId: batch.id },
             },
             batches: {
-                b1: { batch, batchOptions: {} },
+                [batch.id]: { batch, batchOptions: {} },
             },
-            itemQueue: ["u1"],
+            itemQueue: { [batch.id] : ["u1"] },
             activeIds: ["u1"],
         });
 
@@ -217,21 +219,20 @@ describe("onRequestFinished tests", () => {
 			FILE_STATES.CANCELLED,
 			FILE_STATES.ERROR,
 		])("for group should trigger and finalize", async (failState) => {
-
 			const batch = { id: "b1" };
 			const response = { success: true };
 			const response2 = { success: false };
 
 			const queueState = getQueueState({
-				currentBatch: "b1",
+				currentBatch: batch.id,
 				items: {
-					"u1": { id: "u1", batchId: "b1" },
-					"u2": { id: "u2", batchId: "b1" },
+					"u1": { id: "u1", batchId: batch.id },
+					"u2": { id: "u2", batchId: batch.id },
 				},
 				batches: {
 					b1: { batch, batchOptions: {} },
 				},
-				itemQueue: ["u1", "u2"],
+				itemQueue: { [batch.id] : ["u1", "u2"] },
 				activeIds: ["u1", "u2"],
 				aborts: {
 					"u1": "abort1",
@@ -274,7 +275,7 @@ describe("onRequestFinished tests", () => {
 			expect(queueState.updateState).toHaveBeenCalledTimes(4);
 			expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();
 
-			expect(queueState.getState().itemQueue).toHaveLength(0);
+			expect(queueState.getState().itemQueue[batch.id]).toHaveLength(0);
 			expect(queueState.getState().activeIds).toHaveLength(0);
 
 			expect(queueState.getState().aborts[item1.id]).toBeUndefined();
@@ -283,13 +284,15 @@ describe("onRequestFinished tests", () => {
 	});
 
 	it("should do not trigger event if id not found in items", async () => {
+        const batch = { id: "b1" };
+
 		const queueState = getQueueState({
-			currentBatch: "b1",
+			currentBatch: batch.id,
 			items: {},
 			batches: {
-				b1: { batch: {}, batchOptions: {} },
+				[batch.id]: { batch, batchOptions: {} },
 			},
-			itemQueue: ["u1"],
+			itemQueue: { [batch.id] : ["u1"] },
 			activeIds: ["u1"],
 		});
 
@@ -303,8 +306,10 @@ describe("onRequestFinished tests", () => {
 
 		expect(queueState.trigger).not.toHaveBeenCalled();
 		expect(queueState.updateState).toHaveBeenCalledTimes(1);
-		expect(queueState.getState().itemQueue).toHaveLength(0);
 		expect(queueState.getState().activeIds).toHaveLength(0);
+
+        //itemHelpers cant remove from itemQueue without item.batchId
+        expect(queueState.getState().itemQueue[batch.id]).toHaveLength(1);
 	});
 
     it("should handle if item no found in itemQueue", async () => {
@@ -314,7 +319,7 @@ describe("onRequestFinished tests", () => {
             batches: {
                 b1: { batch: {}, batchOptions: {} },
             },
-            itemQueue: [],
+            itemQueue: { "b1": [] },
             activeIds: [],
         });
 
@@ -327,7 +332,7 @@ describe("onRequestFinished tests", () => {
         }], mockNext);
 
         expect(queueState.trigger).not.toHaveBeenCalled();
-        expect(queueState.getState().itemQueue).toHaveLength(0);
+        expect(queueState.getState().itemQueue["b1"]).toHaveLength(0);
         expect(queueState.getState().activeIds).toHaveLength(0);
     });
 });

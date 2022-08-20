@@ -15,7 +15,7 @@ Adds the capability to abort/cancel running & pending uploads
 
 This is an internal package the uploader consumes.
 
-Abort exposes an UploaderEnhancer that adds the abort extension.
+Abort exposes an UploaderEnhancer that adds the abort methods to the Uploader Options.
 
 **The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 

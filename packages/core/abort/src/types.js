@@ -19,11 +19,8 @@ export type AbortAllMethod = ({ [string]: BatchItem }, AbortsMap, FinalizeReques
 export type AbortItemMethod = (string, { [string]: BatchItem }, AbortsMap, FinalizeRequestMethod) => boolean;
 
 export type AbortMethodsOptions = {|
-    //
     abortAll?: AbortAllMethod,
-    //
     abortBatch?: AbortBatchMethod,
-    //
     abortItem?: AbortItemMethod,
 |};
 

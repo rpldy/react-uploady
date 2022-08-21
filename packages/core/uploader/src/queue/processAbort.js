@@ -48,6 +48,7 @@ const processAbortBatch = (queue: QueueState, id: string): void => {
             batch,
             batchData.batchOptions,
             state.aborts,
+            state.itemQueue,
             getFinalizeAbortedItem(queue),
             queue.getOptions()
         );
@@ -73,6 +74,7 @@ const processAbortAll = (queue: QueueState): void => {
     const { isFast } = abortAllMethod(
         state.items,
         state.aborts,
+        state.itemQueue,
         getFinalizeAbortedItem(queue),
         queue.getOptions()
     );

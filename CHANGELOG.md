@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.0-rc.0 (2022-08-21)
+
+### Features
+
+- `[uploader]` - support fast abort flow (for many items) using new threshold param: fastAbortThreshold
+
+### Internal
+
+- `[abort]` - new package: adds the capability to abort/cancel running & pending uploads
+- `[raw-uploader]` - new package: placeholder package, containing only types
+
+ 
 ## 1.0.1 (2022-07-19)
 
 ### Bug fixes

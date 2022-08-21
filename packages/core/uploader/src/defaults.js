@@ -22,4 +22,5 @@ export const DEFAULT_OPTIONS: Object = devFreeze({
     send: null,
     sendWithFormData: true,
     formDataAllowUndefined: false,
+    fastAbortThreshold: 100,
 });

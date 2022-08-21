@@ -6,7 +6,7 @@ import {
 } from "./hooksUtils";
 
 import type { Batch, BatchItem } from "@rpldy/shared";
-import type { CreateOptions } from "@rpldy/uploader";
+import type { UploaderCreateOptions } from "@rpldy/uploader";
 import type {
     BatchEventHook,
     BatchCancellableEventHook,
@@ -17,11 +17,11 @@ import type {
     PreSendData,
 } from "../types";
 
-type PreSendResponse = { items?: BatchItem[], options?: CreateOptions } | boolean | void;
+type PreSendResponse = { items?: BatchItem[], options?: UploaderCreateOptions } | boolean | void;
 
 type RequestPreSendHook = (cb: (data: PreSendData) => PreSendResponse | Promise<PreSendResponse>) => void;
 
-type BatchStartHook = (cb: (Batch, CreateOptions) => PreSendResponse | Promise<PreSendResponse>) => void;
+type BatchStartHook = (cb: (Batch, UploaderCreateOptions) => PreSendResponse | Promise<PreSendResponse>) => void;
 
 const useBatchAddListener: BatchCancellableEventHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_ADD, false);
 const useBatchStartListener: BatchStartHook = generateUploaderEventHook(UPLOADER_EVENTS.BATCH_START);

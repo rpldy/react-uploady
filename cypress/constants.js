@@ -34,3 +34,4 @@ export const CHUNK_START = /CHUNK_START/;
 
 export const CHUNK_FINISH = /CHUNK_FINISH/;
 
+export const ALL_ABORT = /ALL_ABORT/;

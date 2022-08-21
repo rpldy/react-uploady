@@ -124,7 +124,9 @@ export type UploadOptions = {|
     //optional function to create the batch item's uploadResponse from the raw xhr response
     formatServerResponse?: FormatServerResponseMethod,
     //callback to use to decide whether upload response is successful or not
-    isSuccessfulCall?: IsSuccessfulCall
+    isSuccessfulCall?: IsSuccessfulCall,
+    //the pending/active item count to use the more performant abort-all mechanism from
+    fastAbortThreshold?: number,
 |};
 
 export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];

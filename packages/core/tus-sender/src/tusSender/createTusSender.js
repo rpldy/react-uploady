@@ -6,11 +6,11 @@ import { getMandatoryOptions } from "../utils";
 import handleEvents from "./handleEvents";
 import getTusSend from "./tusSend";
 
-import type { UploaderType } from "@rpldy/uploader";
+import type { UploaderType, UploaderCreateOptions } from "@rpldy/uploader";
 import type { TusOptions, State, TusState } from "../types";
 import type { TriggerMethod } from "@rpldy/life-events";
 
-const initializeState = (uploader: UploaderType, options: TusOptions): TusState => {
+const initializeState = (uploader: UploaderType<UploaderCreateOptions>, options: TusOptions): TusState => {
     const { state, update } = createState<State>({
         options,
         items: {},
@@ -47,7 +47,11 @@ const getResolvedOptions = (options: ?TusOptions): TusOptions => {
     return options;
 };
 
-const createTusSender = (uploader: UploaderType, options: ?TusOptions, trigger: TriggerMethod): {|getOptions: () => TusOptions, send: any|} => {
+const createTusSender = (
+    uploader: UploaderType<UploaderCreateOptions>,
+    options: ?TusOptions,
+    trigger: TriggerMethod
+): {|getOptions: () => TusOptions, send: any|} => {
     options = getResolvedOptions(options);
     const chunkedSender = createChunkedSender(options, trigger);
 

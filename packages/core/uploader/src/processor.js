@@ -5,15 +5,15 @@ import createBatch from "./batch";
 
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { Batch, TriggerCancellableOutcome, UploadInfo, UploadOptions } from "@rpldy/shared";
-import type { CreateOptions, UploaderProcessor } from "./types";
+import type { UploaderCreateOptions, UploaderProcessor } from "./types";
 
 const createProcessor =
-    (trigger: TriggerMethod, cancellable: TriggerCancellableOutcome, options: CreateOptions, uploaderId: string):
+    (trigger: TriggerMethod, cancellable: TriggerCancellableOutcome, options: UploaderCreateOptions, uploaderId: string):
         UploaderProcessor => {
         const sender = createItemsSender(),
             queue = createUploadQueue(options, trigger, cancellable, sender, uploaderId);
 
-        const process = (batch: Batch, batchOptions?: CreateOptions) => {
+        const process = (batch: Batch, batchOptions?: UploaderCreateOptions) => {
             queue.uploadBatch(batch, batchOptions);
         };
 
@@ -29,7 +29,7 @@ const createProcessor =
             }
         };
 
-        const addNewBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, processOptions: CreateOptions): Promise<Batch> => {
+        const addNewBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, processOptions: UploaderCreateOptions): Promise<Batch> => {
             return createBatch(files, uploaderId, processOptions)
                 .then((batch) => {
                     return queue.addBatch(batch, processOptions);

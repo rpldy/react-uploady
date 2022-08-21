@@ -40,6 +40,7 @@ export {
     hasWindow,
     isProduction,
     isPromise,
+    scheduleIdleWork,
 } from "./utils";
 
 export type * from "./types";

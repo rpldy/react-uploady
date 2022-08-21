@@ -97,7 +97,7 @@ Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, e
     asserter(logLine, storyLog._env);
 });
 
-Cypress.Commands.add("assertLogPattern", { prevSubject: true }, (storyLog, pattern, options = {}) => {
+const assertLogPattern = (storyLog, pattern, options = {}) => {
     options = Object.assign({}, {
         times: 1,
         index: -1,
@@ -140,7 +140,12 @@ Cypress.Commands.add("assertLogPattern", { prevSubject: true }, (storyLog, patte
     }
 
     return cy.wrap(matches);
-});
+}
+
+Cypress.Commands.add("assertLogPattern", { prevSubject: true }, assertLogPattern);
+
+Cypress.Commands.add("assertNoLogPattern", { prevSubject: true }, (storyLog, pattern, options = {}) =>
+    assertLogPattern(storyLog, pattern, { ...options, times: 0 }));
 
 Cypress.Commands.add("resetStoryLog", {prevSubject: true}, (storyLog) => {
 	storyLog.splice(0, storyLog.length);

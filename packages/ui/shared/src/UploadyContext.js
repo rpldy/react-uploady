@@ -3,7 +3,7 @@ import React from "react";
 import { logger, invariant } from "@rpldy/shared";
 import { registerUploadyContextVersion  } from "./uploadyVersion";
 
-import type { UploaderType, CreateOptions } from "@rpldy/uploader";
+import type { UploadyUploaderType, UploaderCreateOptions } from "@rpldy/uploader";
 import type { UploadInfo, UploadOptions, GetExact } from "@rpldy/shared";
 import type { EventCallback } from "@rpldy/life-events";
 import type { UploadyContextType, InputRef } from "./types";
@@ -13,7 +13,7 @@ const UploadyContext: React$Context<?UploadyContextType> = React.createContext<?
 const NO_INPUT_ERROR_MSG = "Uploady - Context. File input isn't available";
 
 export const createContextApi =
-    (uploader: UploaderType, internalInputRef: ?InputRef): UploadyContextType => {
+    (uploader: UploadyUploaderType, internalInputRef: ?InputRef): UploadyContextType => {
         let fileInputRef, showFileUploadOptions;
         let isUsingExternalInput = false;
 
@@ -87,7 +87,7 @@ export const createContextApi =
             uploader.clearPending();
         };
 
-        const setOptions = (options: CreateOptions) => {
+        const setOptions = (options: UploaderCreateOptions) => {
             uploader.update(options);
         };
 

@@ -4,7 +4,8 @@ jest.doMock("@rpldy/simple-state", () => createState);
 
 export default (testState, options) => {
 	const { state, update } = createState({
-		itemQueue: [],
+		itemQueue: {},
+        batchQueue: [],
 		currentBatch: null,
 		batches: {},
 		items: {},
@@ -32,5 +33,7 @@ export default (testState, options) => {
 			send: jest.fn(),
 		},
 		handleItemProgress: jest.fn(),
+        clearAllUploads: jest.fn(),
+        clearBatchUploads: jest.fn(),
 	};
 };

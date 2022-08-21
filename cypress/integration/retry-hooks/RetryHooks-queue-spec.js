@@ -20,7 +20,7 @@ describe("RetryHooks - Queue", () => {
 
         uploadFile(fileName, () => {
             uploadFile(fileName2, () => {
-                cy.wait(WAIT_SHORT);
+                cy.wait(WAIT_MEDIUM);
 
                 cy.get("button[data-test='abort-button']:last")
                     .click();
@@ -63,7 +63,7 @@ describe("RetryHooks - Queue", () => {
                     .should("be.disabled");
 
                 cy.storyLog().assertFileItemStartFinish(fileName, 1);
-                cy.storyLog().assertFileItemStartFinish(fileName2, 7);
+                cy.storyLog().assertFileItemStartFinish(fileName2, 9);
 
                 cy.get("button[data-test='queue-clear-button']")
                     .click();

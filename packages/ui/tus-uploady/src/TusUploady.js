@@ -5,11 +5,11 @@ import Uploady, { composeEnhancers } from "@rpldy/uploady";
 import { CHUNKING_SUPPORT, getTusEnhancer } from "@rpldy/tus-sender";
 
 import type { Node } from "React";
-import type { UploaderEnhancer } from "@rpldy/uploader";
+import type { UploaderEnhancer, UploaderCreateOptions } from "@rpldy/uploader";
 import type { TusUploadyProps } from "./types";
 import type { TusOptions } from "@rpldy/tus-sender";
 
-const getEnhancer = (options: TusOptions, enhancer: ?UploaderEnhancer) => {
+const getEnhancer = (options: TusOptions, enhancer: ?UploaderEnhancer<UploaderCreateOptions>) => {
 	const tusEnhancer = getTusEnhancer(options);
 	return enhancer ? composeEnhancers(tusEnhancer, enhancer) : tusEnhancer;
 };

@@ -12,7 +12,7 @@ import type {
 	ChunkStartEventData,
 	ChunkFinishEventData
 } from "@rpldy/chunked-sender";
-import type { UploaderType } from "@rpldy/uploader";
+import type { UploaderCreateOptions, UploaderType } from "@rpldy/uploader";
 import type { TusOptions, TusState, State } from "../types";
 
 const PATCH = "PATCH";
@@ -87,7 +87,7 @@ const updateChunkStartData = (tusState: TusState, data: ChunkStartEventData, isP
 	};
 };
 
-const handleEvents = (uploader: UploaderType, tusState: TusState, chunkedSender: ChunkedSender) => {
+const handleEvents = (uploader: UploaderType<UploaderCreateOptions>, tusState: TusState, chunkedSender: ChunkedSender) => {
     if (CHUNKING_SUPPORT) {
         uploader.on(UPLOADER_EVENTS.ITEM_FINALIZE, (item) => {
             const { items, options } = tusState.getState(),

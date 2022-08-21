@@ -1,30 +1,32 @@
 // @flow
-import { logger, hasWindow, isFunction } from "@rpldy/shared";
+import { logger, hasWindow, isFunction, scheduleIdleWork } from "@rpldy/shared";
 import createState from "@rpldy/simple-state";
 import { SENDER_EVENTS, UPLOADER_EVENTS } from "../consts";
 import processQueueNext from "./processQueueNext";
-import * as abortMethods from "./abort";
+import { processAbortItem, processAbortBatch, processAbortAll } from "./processAbort";
 import {
     detachRecycledFromPreviousBatch,
     getBatchFromState,
     preparePendingForUpload,
     removePendingBatches,
+    clearBatchData,
 } from "./batchHelpers";
 
 import type { TriggerCancellableOutcome, Batch, BatchItem, UploadOptions } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
-import type { ItemsSender, CreateOptions } from "../types";
+import type { ItemsSender, UploaderCreateOptions } from "../types";
 import type { State, UploaderQueue } from "./types";
 
 const createUploaderQueue = (
-    options: CreateOptions,
+    options: UploaderCreateOptions,
     trigger: TriggerMethod,
     cancellable: TriggerCancellableOutcome,
     sender: ItemsSender,
     uploaderId: string,
 ) : UploaderQueue => {
     const { state, update } = createState<State>({
-        itemQueue: [],
+        itemQueue: { },
+        batchQueue: [],
         currentBatch: null,
         batches: {},
         items: {},
@@ -49,11 +51,10 @@ const createUploaderQueue = (
 
         updateState((state) => {
             state.items[item.id] = item;
-            state.itemQueue.push(item.id);
         });
     };
 
-    const uploadBatch = (batch: Batch, batchOptions: ?CreateOptions) => {
+    const uploadBatch = (batch: Batch, batchOptions: ?UploaderCreateOptions) => {
         if (batchOptions) {
             updateState((state) => {
                 state.batches[batch.id].batchOptions = batchOptions;
@@ -68,9 +69,11 @@ const createUploaderQueue = (
         processQueueNext(queueState);
     };
 
-    const addBatch = (batch: Batch, batchOptions: CreateOptions) => {
+    const addBatch = (batch: Batch, batchOptions: UploaderCreateOptions) => {
         updateState((state) => {
             state.batches[batch.id] = { batch, batchOptions, finishedCounter: 0 };
+            state.batchQueue.push(batch.id);
+            state.itemQueue[batch.id] = batch.items.map(({ id }) => id);
         });
 
         batch.items.forEach(add);
@@ -131,6 +134,35 @@ const createUploaderQueue = (
         return cancellable(name, ...args);
     };
 
+    /**
+     * Force clear all items from queue's state.
+     * Use with caution!
+     */
+    const clearAllUploads = () => {
+        queueState.updateState((state: State) => {
+            state.itemQueue = { };
+            state.batchQueue = [];
+            state.currentBatch = null;
+            state.batches = {};
+            state.items = {};
+            state.activeIds = [];
+        });
+    };
+
+    /**
+     * Force clear all batch items from queue's state.
+     * Use with caution!
+     */
+    const clearBatchUploads = (batchId: string) => {
+        scheduleIdleWork(() => {
+            logger.debugLog(`uploader.queue: started scheduled work to clear batch uploads (${batchId})`);
+
+            if (getState().batches[batchId]) {
+                clearBatchData(queueState, batchId);
+            }
+        });
+    };
+
     const queueState = {
         uploaderId,
         getOptions: () => options,
@@ -141,23 +173,13 @@ const createUploaderQueue = (
         runCancellable,
         sender,
         handleItemProgress,
+        clearAllUploads,
+        clearBatchUploads,
     };
 
     if (hasWindow() && logger.isDebugOn()) {
         window[`__rpldy_${uploaderId}_queue_state`] = queueState;
     }
-
-    const abortItem = (id: string) => {
-        return abortMethods.abortItem(queueState, id, processQueueNext);
-    };
-
-    const abortBatch = (id: string) => {
-        abortMethods.abortBatch(queueState, id, processQueueNext);
-    };
-
-    const abortAll = () => {
-        abortMethods.abortAll(queueState, processQueueNext);
-    };
 
     const clearPendingBatches = () => {
         removePendingBatches(queueState);
@@ -169,9 +191,9 @@ const createUploaderQueue = (
         runCancellable: queueState.runCancellable,
         uploadBatch,
         addBatch,
-        abortItem,
-        abortBatch,
-        abortAll,
+        abortItem: (...args) => processAbortItem(queueState, ...args),
+        abortBatch: (...args) => processAbortBatch(queueState, ...args),
+        abortAll: (...args) => processAbortAll(queueState, ...args),
         clearPendingBatches,
         uploadPendingBatches,
     };

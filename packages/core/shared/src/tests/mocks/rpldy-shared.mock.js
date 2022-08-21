@@ -33,6 +33,8 @@ utils.isFunction = jest.fn((...args) => isFunction(...args));
 utils.devFreeze = jest.fn((obj) => obj);
 //keep isPromise working - dont mock it
 utils.isPromise = jest.fn((...args) => isPromise(...args));
+//keep scheduleIdleWork working
+utils.scheduleIdleWork = jest.fn((fn) => fn());
 
 const sharedMock = {
     FILE_STATES,

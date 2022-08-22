@@ -8,13 +8,15 @@ export type AbortMethod = () => boolean;
 
 export type AbortsMap = { [string]: AbortMethod };
 
+export type ItemsQueue = { [string]: string[] };
+
 export type AbortResult = { isFast: boolean };
 
 type InExactRawCreateOptions = { ...RawCreateOptions };
 
-export type AbortBatchMethod = (Batch, InExactRawCreateOptions, AbortsMap, FinalizeRequestMethod, InExactRawCreateOptions) => AbortResult;
+export type AbortBatchMethod = (Batch, InExactRawCreateOptions, AbortsMap, ItemsQueue, FinalizeRequestMethod, InExactRawCreateOptions) => AbortResult;
 
-export type AbortAllMethod = ({ [string]: BatchItem }, AbortsMap, FinalizeRequestMethod, InExactRawCreateOptions) => AbortResult;
+export type AbortAllMethod = ({ [string]: BatchItem }, AbortsMap, ItemsQueue, FinalizeRequestMethod, InExactRawCreateOptions) => AbortResult;
 
 export type AbortItemMethod = (string, { [string]: BatchItem }, AbortsMap, FinalizeRequestMethod) => boolean;
 

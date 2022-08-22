@@ -39,7 +39,7 @@ describe("processAbort tests", () => {
             expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ALL_ABORT);
             expect(queueState.clearAllUploads).not.toHaveBeenCalled();
 
-            abortAll.mock.calls[0][2](1, "data");
+            abortAll.mock.calls[0][3](1, "data");
 
             expect(processFinishedRequest).toHaveBeenCalledWith(queueState, [{
                 id: 1,
@@ -92,11 +92,12 @@ describe("processAbort tests", () => {
                 expect.objectContaining(batch),
                 expect.objectContaining(batchOptions),
                 expect.any(Object),
+                expect.any(Object),
                 expect.any(Function),
                 { abortBatch }
             );
 
-            abortBatch.mock.calls[0][3](1, "data");
+            abortBatch.mock.calls[0][4](1, "data");
 
             expect(processFinishedRequest).toHaveBeenCalledWith(queueState, [{
                 id: 1,

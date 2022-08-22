@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0-rc.1 (2022-08-22)
+
+### Internal
+
+- `[abort]` - calculate fast mode based on item queue count
+
+
 ## 1.1.0-rc.0 (2022-08-21)
 
 ### Features

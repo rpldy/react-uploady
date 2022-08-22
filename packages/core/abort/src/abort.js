@@ -3,7 +3,7 @@ import { FILE_STATES, logger } from "@rpldy/shared";
 import { fastAbortAll, fastAbortBatch } from "./fastAbort";
 
 import type { Batch, BatchItem, UploadOptions } from "@rpldy/shared";
-import type { AbortResult, AbortsMap, FinalizeRequestMethod } from "./types";
+import type { AbortResult, AbortsMap, ItemsQueue, FinalizeRequestMethod } from "./types";
 
 const abortNonUploadingItem = (item, aborts, finalizeItem) => {
     logger.debugLog(`abort: aborting ${item.state} item  - `, item);
@@ -58,10 +58,15 @@ const getIsFastAbortNeeded = (count, threshold: ?number) => {
 const abortAll = (
     items:  { [string]: BatchItem },
     aborts: AbortsMap,
+    queue: ItemsQueue,
     finalizeItem: FinalizeRequestMethod,
     options: UploadOptions
 ) : AbortResult => {
-    const itemIds = Object.keys(items);
+    //$FlowIssue[incompatible-type] - no flat
+    const itemIds : string[] = Object
+        .values(queue)
+        .flat();
+
     const isFastAbort = getIsFastAbortNeeded(itemIds.length, options.fastAbortThreshold);
 
     logger.debugLog(`abort: doing abort-all (${isFastAbort ? "fast" : "normal"} abort)`);
@@ -80,13 +85,14 @@ const abortBatch = (
     batch: Batch,
     batchOptions: UploadOptions,
     aborts: AbortsMap,
+    queue: ItemsQueue,
     finalizeItem: FinalizeRequestMethod,
     options: UploadOptions,
 ) : AbortResult => {
     const threshold = batchOptions.fastAbortThreshold === 0 ? 0 :
         (batchOptions.fastAbortThreshold || options.fastAbortThreshold);
 
-    const isFastAbort = getIsFastAbortNeeded(batch.items.length, threshold);
+    const isFastAbort = getIsFastAbortNeeded(queue[batch.id].length, threshold);
 
     logger.debugLog(`abort: doing abort-batch on: ${batch.id} (${isFastAbort ? "fast" : "normal"} abort)`);
 

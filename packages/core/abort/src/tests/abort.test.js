@@ -78,7 +78,8 @@ describe("abort tests", () => {
             items: items || [
                 { id: "i1", state: FILE_STATES.ADDED },
                 { id: "i2", state: FILE_STATES.UPLOADING },
-                { id: "i3", state: FILE_STATES.CANCELLED }
+                { id: "i3", state: FILE_STATES.CANCELLED },
+                { id: "i4", state: FILE_STATES.FINISHED }
             ],
         });
 
@@ -86,7 +87,7 @@ describe("abort tests", () => {
             const batch = getBatch();
             const abort = jest.fn();
 
-            abortBatch(batch, {}, { "i2": abort }, finalizeMock, { fastAbortThreshold: 100 });
+            abortBatch(batch, {}, { "i2": abort }, { "b1": ["i1", "i2", "i3"] }, finalizeMock, { fastAbortThreshold: 4 });
 
             expect(finalizeMock).toHaveBeenCalledTimes(1);
             expect(abort).toHaveBeenCalledTimes(1);
@@ -103,7 +104,9 @@ describe("abort tests", () => {
             const { isFast } = abortBatch(batch, { fastAbortThreshold: 3 }, {
                 "i1": abort,
                 "i2": abort
-            }, finalizeMock, { fastAbortThreshold: 100 });
+            },
+                { "b1": ["i1", "i2", "i3"] },
+                finalizeMock, { fastAbortThreshold: 100 });
 
             expect(isFast).toBe(true);
             expect(finalizeMock).not.toHaveBeenCalled();
@@ -117,7 +120,9 @@ describe("abort tests", () => {
             const { isFast } = abortBatch(batch, { fastAbortThreshold: 0 }, {
                 "i1": abort,
                 "i2": abort
-            }, finalizeMock, { fastAbortThreshold: 1 });
+            },
+                { "b1": ["i1", "i2", "i3"] },
+                finalizeMock, { fastAbortThreshold: 1 });
 
             expect(isFast).toBe(false);
             expect(finalizeMock).toHaveBeenCalledTimes(1);
@@ -131,7 +136,7 @@ describe("abort tests", () => {
             const { isFast } = abortBatch(batch, {}, {
                 "i1": abort,
                 "i2": abort
-            }, finalizeMock, { fastAbortThreshold: 0 });
+            },  { "b1": ["i1", "i2", "i3"] }, finalizeMock, { fastAbortThreshold: 0 });
 
             expect(isFast).toBe(false);
             expect(finalizeMock).toHaveBeenCalledTimes(1);
@@ -164,7 +169,17 @@ describe("abort tests", () => {
                     batchId: "b1",
                     state: FILE_STATES.FINISHED,
                 },
-            }, { "u1": abort, "u2": abort, "u5": abort }, finalizeMock, { fastAbortThreshold: 5 });
+                "u7": {
+                        id: "u7",
+                        batchId: "b2",
+                        state: FILE_STATES.FINISHED,
+                    },
+            },
+                { "u1": abort, "u2": abort, "u5": abort },
+                {"b1": ["u1", "u2", "u3"], "b2": ["u4"] },
+                finalizeMock,
+                { fastAbortThreshold: 5 }
+            );
 
             expect(isFast).toBe(false);
             expect(abort).toHaveBeenCalledTimes(2);
@@ -192,10 +207,13 @@ describe("abort tests", () => {
                 },
                 "u4": {
                     id: "u4",
-                    batchId: "b1",
+                    batchId: "b2",
                     state: FILE_STATES.FINISHED,
                 },
-            }, { "u1": abort, "u2": abort }, finalizeMock, { fastAbortThreshold: 4 });
+            },
+                { "u1": abort, "u2": abort },
+                {"b1": ["u1", "u2", "u3"], "b2": ["u4"] },
+                finalizeMock, { fastAbortThreshold: 4 });
 
             expect(isFast).toBe(true);
             expect(fastAbortAll).toHaveBeenCalled();

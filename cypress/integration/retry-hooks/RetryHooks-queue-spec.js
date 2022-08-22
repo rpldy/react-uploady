@@ -15,12 +15,12 @@ describe("RetryHooks - Queue", () => {
         );
     });
 
-    it("should use queue with retry", () => {
-        interceptWithDelay(800);
+    it.only("should use queue with retry", () => {
+        interceptWithDelay(700);
 
         uploadFile(fileName, () => {
             uploadFile(fileName2, () => {
-                cy.wait(WAIT_MEDIUM);
+                cy.wait(WAIT_SHORT);
 
                 cy.get("button[data-test='abort-button']:last")
                     .click();

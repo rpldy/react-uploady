@@ -33,6 +33,10 @@ const shellCommand = (command) => {
 const run = (command) =>
     !dry ? shellCommand(command) : getSuccessResult();
 
+const getIsPre = (argsStr) => argsStr.includes("dist-tag");
+
+const IS_PRE = getIsPre(publishArgs) || getIsPre(versionArgs);
+
 const log = (color, msg) =>
     console.log(color(`${msg} ${dry ? "\t--dry-run--" : ""}`));
 
@@ -171,6 +175,7 @@ const TASKS = [
                     name: tag,
                     body: versionLog,
                     draft: false,
+                    prerelease: IS_PRE,
                 });
 
             const success = createRes?.status === 201;
@@ -259,13 +264,14 @@ const TASKS = [
  * can work with the packages' bumped version
  */
 const release = async () => {
-    log(chalk.white, `Running release flow with ${TASKS.length} tasks`);
+    const preRelease = IS_PRE ? "PRE-" : "";
+
+    log(chalk.white, `Running ${preRelease}release flow with ${TASKS.length} tasks`);
 
     const results = await asyncReduce(TASKS, [], runTask);
-
     const lastCode = getLastCode(results);
 
-    log(chalk.white, `Finished release flow with code: ${lastCode}`);
+    log(chalk.white, `Finished ${preRelease}release flow with code: ${lastCode}`);
 
     return process.exit(lastCode);
 };

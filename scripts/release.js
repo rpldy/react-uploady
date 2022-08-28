@@ -11,7 +11,7 @@ const { execSync } = require("child_process"),
 
 require("dotenv").config();
 
-const { publishArgs = "", versionArgs = "", dry = false } = yargs.argv;
+const { publishArgs = "", versionArgs = "", dry = false, from = null } = yargs.argv;
 
 const getSuccessResult = () => ({ code: 0 });
 
@@ -258,6 +258,12 @@ const TASKS = [
     },
 ];
 
+const getTasksFrom = (tasks, from) => {
+    log(chalk.white, `filtering tasks to start from: '${from}'`);
+    const index = tasks.findIndex(({ id }) => id === from );
+    return tasks.slice(index);
+};
+
 /**
  * release script separates lerna version and lerna publish
  * This way, versioning happens before build&bundle so these processes
@@ -266,9 +272,11 @@ const TASKS = [
 const release = async () => {
     const preRelease = IS_PRE ? "PRE-" : "";
 
-    log(chalk.white, `Running ${preRelease}release flow with ${TASKS.length} tasks`);
+    const tasks = from ? getTasksFrom(TASKS, from) : TASKS;
 
-    const results = await asyncReduce(TASKS, [], runTask);
+    log(chalk.white, `Running ${preRelease}release flow with ${tasks.length} tasks`);
+
+    const results = await asyncReduce(tasks, [], runTask);
     const lastCode = getLastCode(results);
 
     log(chalk.white, `Finished ${preRelease}release flow with code: ${lastCode}`);

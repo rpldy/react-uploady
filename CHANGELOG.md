@@ -14,7 +14,7 @@
 
 ## 1.1.0-rc.1 (2022-08-23) 
 
-_[PRE-RELEASE]_
+_PRE-RELEASE_
 
 ### Internal
 
@@ -23,7 +23,7 @@ _[PRE-RELEASE]_
 
 ## 1.1.0-rc.0 (2022-08-21)
 
-_[PRE-RELEASE]_
+_PRE-RELEASE_
 
 ### Features
 

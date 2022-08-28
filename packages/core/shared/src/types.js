@@ -125,7 +125,7 @@ export type UploadOptions = {|
     formatServerResponse?: FormatServerResponseMethod,
     //callback to use to decide whether upload response is successful or not
     isSuccessfulCall?: IsSuccessfulCall,
-    //the pending/active item count to use the more performant abort-all mechanism from
+    //the pending/active item count threshold from which to start using the performant abort mechanism
     fastAbortThreshold?: number,
 |};
 

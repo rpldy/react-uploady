@@ -28,3 +28,28 @@ Abort exposes an UploaderEnhancer that adds the abort methods to the Uploader Op
 #NPM:
   $ npm i @rpldy/abort
 ```
+
+## Normal vs. Fast Abort
+
+When the number of pending/active uploads is less than the configured threshold (fastAbortThreshold param) or when the threshold is turned off (equals 0), _normal_ abort flow will be used.
+
+In case the threshold is configured and the item count is equal or larger, the _fast_ abort flow will be used.
+
+For All Abort, the threshold is compared against the total number of pending/active items
+For Batch Abort, the threshold is compared against the number of pending/active items in the batch. 
+
+In both cases, finished items are ignored in the comparison.
+
+### Normal
+
+**Normal** flow means that every item whether its already uploading or still pending will be individually aborted and an "ITEM_ABORT" event will be fired. 
+For abort all, "BATCH_ABORT" event will also be fired respectively. 
+
+
+### Fast
+
+**Fast** flow means that only active uploads are cancelled (typically very few as concurrent count is set to 1 by default). 
+
+Pending items are ignored and are simply removed from the queue by the uploader. 
+For abort all, "BATCH_ABORT" events will not be fired and no "ITEM_ABORT" event will be fired for pending items. 
+

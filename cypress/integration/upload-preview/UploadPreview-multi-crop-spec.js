@@ -73,6 +73,9 @@ describe("UploadPreview - Multi Crop", () => {
             examineFullUploadRequest(cy.wait("@uploadReq"), "flower3.jpg");
 
             cy.storyLog().assertLogPattern(ITEM_START, { times: 3 });
+
+            cy.wait(WAIT_SHORT);
+
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 3 });
         }, 3, "#upload-btn");
     });

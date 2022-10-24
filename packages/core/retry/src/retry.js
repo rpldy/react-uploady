@@ -36,7 +36,7 @@ const uploadFailedIds = (
 
     ids = ids || Object.keys(failed);
 
-    const uploads = ids.map((id) => failed[id])
+    const uploads: BatchItem[] = ids.map((id) => failed[id])
         .filter(Boolean);
 
     if (uploads.length) {

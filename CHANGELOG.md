@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0 (2022-10-24)
+
+### Bug fixes
+
+- `[retry-hooks]` - fix TS types for retry hooks and event Fix for [#407](https://github.com/rpldy/react-uploady/issues/407)
+
+
 ## 1.1.0 (2022-08-28)
 
 ### Features

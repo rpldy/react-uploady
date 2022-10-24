@@ -7,6 +7,9 @@ export {
     RETRY_EXT,
 } from "./consts";
 
-
+export type {
+    BatchRetryMethod,
+    RetryMethod
+} from "./types";
 
 

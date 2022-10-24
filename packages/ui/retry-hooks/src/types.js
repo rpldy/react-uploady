@@ -1,8 +1,8 @@
 // @flow
-import type { UploadOptions } from "@rpldy/shared";
+import type { BatchItem, UploadOptions } from "@rpldy/shared";
 
 export type RetryEventData = {
-    items: string[];
+    items: BatchItem[];
     options: UploadOptions | void;
 };
 

@@ -55,7 +55,7 @@
 ![React-Uploady Demo](guides/rpldy-demo.gif)
 
 The philosophy behind this library is that it should be as simple as possible to use, yet customizable at every point.
-You can start simple, or you can can configure just about every aspect of the upload flow. 
+You can start simple, or you can configure just about every aspect of the upload flow. 
 For this purpose, there are components, hooks, and plenty of features. 
 You get to choose which ones you need and only install the dependencies required (See [Packages](#packages) details below)
 
@@ -129,7 +129,7 @@ After that, you can add additional packages as needed. See below for more detail
 ### Providers
 * [@rpldy/chunked-uploady](packages/ui/chunked-uploady) - Wrapper for Uploady with support for chunked uploads
 * [@rpldy/tus-uploady](packages/ui/tus-uploady) - Wrapper for Uploady with support for tus(resumable) uploads  
-* [@rpldy/native-uploady](packages/native/native-uploady) - Uploay for React Native (no react-dom)
+* [@rpldy/native-uploady](packages/native/native-uploady) - Uploady for React Native (no react-dom)
 
 
 ### Senders
@@ -153,7 +153,7 @@ After that, you can add additional packages as needed. See below for more detail
 
 For specific usage, see documentation in the relevant package README file.
 
-For upload options see the [@rpldy/uploady docs](packages/ui/uploady).
+For upload options, see the [@rpldy/uploady docs](packages/ui/uploady).
 
 ### Simple Upload Button
 
@@ -262,7 +262,7 @@ const App = () => (<ChunkedUploady
 These are the options that are passed to the [uploader](packages/uploader) to configure aspects of the upload process.
 For example, whether files can be grouped in a single request (by default, no).
 
-Upload Options are typically passed to the [Uploady](packages/ui/uploady) instance. But these can be overriden. For example, by props passed to the [upload button](packages/ui/upload-button).
+Upload Options are typically passed to the [Uploady](packages/ui/uploady) instance. But these can be overridden. For example, by props passed to the [upload button](packages/ui/upload-button).
 Or even during [upload processing](guides/DynamicParameters.md).  
 
 ### Destination
@@ -295,14 +295,14 @@ With a batch ID, it is possible to cancel all files that are part of it. It can 
 
 ### BatchItem
 
-Each file (or URL) added to the uploader are wrapped by a BatchItem object. They will have a unique ID within the life-time of the uploader instance.
+Each file (or URL) added to the uploader is wrapped by a BatchItem object. They will have a unique ID within the life-time of the uploader instance.
 A BatchItem has its own lifetime [events](packages/ui/uploady#events).
 
 ## Resumable Uploads
 
 Uploady supports resumable uploads through the [tus](https://tus.io/) [protocol](https://tus.io/protocols/resumable-upload.html).
 Instead of using <Uploady> from @rpldy/uploady, use <TusUploady> from @rpldy/tus-uploady and you will have resumable upload support on the client side.
-Your server will also have to support the same protocol for this to work of course.
+Your server will also have to support the same protocol for this to work, of course.
 
 See the [@rpldy/tus-uploady](packages/ui/tus-uploady) documentation for more details.
 
@@ -363,7 +363,7 @@ Companies/Organizations that have contributed to the project:
 
 #### Support us
 
-Want to help sustain and grow Uploday? You can become a financial backer on OpenCollective.
+Want to help sustain and grow Uploady? You can become a financial backer on OpenCollective.
 
 Become a financial contributor and help us sustain our community.
 

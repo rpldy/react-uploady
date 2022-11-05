@@ -28,6 +28,7 @@ const VersionBadge = ({ pkg, preText = "", className, withUrl }) => {
     return info &&
         (withUrl ?
             <a
+                className="version-badge-link"
                 target="_blank"
                 rel="noreferrer noopener"
                 href={`https://www.npmjs.com/package/${pkg}`}>{badge}</a> :

@@ -267,8 +267,18 @@ export const WithFullScreen = (): Node => {
                     maxGroupSize={groupSize}
                     {...extOptions}
     >
-        <StyledFullScreenDropZone id="upload-drop-zone" onDragOverClassName="drag-over"
-                                  shouldRemoveDragOver={({ target }) => target === indicatorRef.current}>
+        <StyledFullScreenDropZone
+            id="upload-drop-zone"
+            onDragOverClassName="drag-over"
+            shouldRemoveDragOver={({ target }) => target === indicatorRef.current}
+            shouldHandleDrag={(e) => {
+                //$FlowExpectedError[method-unbinding]
+                const allFiles = Array.prototype.slice.call(e.dataTransfer.items)
+                    .every((item) => item.kind === "file");
+                console.log("----- shouldHandleDrag -> All Files", allFiles, e);
+                return allFiles;
+            }}
+        >
             <div className="content">
                 <h1>Drop files here</h1>
             </div>

@@ -15,7 +15,7 @@ describe("UploadDropZone tests", () => {
         );
     });
 
-    const testDropZone = (props = {}) => {
+    const testDropZone = (props = {}, doDragEnter = true ) => {
         const mockRef = jest.fn();
 
         const wrapper = mount(
@@ -38,10 +38,17 @@ describe("UploadDropZone tests", () => {
             },
         };
 
+        const dragEvent = { target: div.getDOMNode() };
+
+        if (doDragEnter) {
+            div.props().onDragEnter(dragEvent);
+        }
+
         return {
             wrapper,
             div,
             dropEvent,
+            dragEvent,
             mockRef,
             span,
         };
@@ -93,21 +100,48 @@ describe("UploadDropZone tests", () => {
     });
 
     it("should use provided drop handler", async () => {
-        const dropHandler = jest.fn();
+        const files = [1, 2];
+        const dropHandler = jest.fn(() => files);
 
         const { div, dropEvent } = testDropZone({
+            autoUpload: true,
             dropHandler,
         });
-
-        const files = [1, 2];
-
-        dropHandler.mockReturnValueOnce(files);
 
         await div.props().onDrop(dropEvent);
 
         expect(getFilesFromDragEvent).not.toHaveBeenCalled();
 
-        expect(dropHandler).toHaveBeenCalledWith(dropEvent);
+        expect(dropHandler).toHaveBeenCalledWith(dropEvent, expect.any(Function));
+
+        expect(UploadyContext.upload)
+            .toHaveBeenCalledWith(files, {
+                autoUpload: true
+            });
+    });
+
+    it("should getFiles in drop handler", async () => {
+        const dropHandler = (e, getFiles) => {
+            const files = getFiles();
+            return files.slice(0, 1);
+        };
+
+        const files = [1, 2];
+        getFilesFromDragEvent.mockReturnValueOnce(files);
+
+        const { div, dropEvent } = testDropZone({
+            autoUpload: true,
+            dropHandler,
+        });
+
+        await div.props().onDrop(dropEvent);
+
+        expect(getFilesFromDragEvent).toHaveBeenCalled();
+
+        expect(UploadyContext.upload)
+            .toHaveBeenCalledWith([1], {
+                autoUpload: true
+            });
     });
 
     it("should add & remove drag className", () => {
@@ -115,7 +149,7 @@ describe("UploadDropZone tests", () => {
 
         const { div, span, mockRef } = testDropZone({
             onDragOverClassName
-        });
+        }, false);
 
         const refElm = mockRef.mock.calls[0][0];
 
@@ -142,7 +176,7 @@ describe("UploadDropZone tests", () => {
 
         const { div, span, mockRef } = testDropZone({
             onDragOverClassName,
-        });
+        }, false);
 
         const refElm = mockRef.mock.calls[0][0];
 
@@ -166,7 +200,7 @@ describe("UploadDropZone tests", () => {
         const { div, span, mockRef } = testDropZone({
             onDragOverClassName,
             shouldRemoveDragOver: ({ target }) => target === span.getDOMNode(),
-        });
+        }, false);
 
         const refElm = mockRef.mock.calls[0][0];
 
@@ -192,5 +226,41 @@ describe("UploadDropZone tests", () => {
         div.simulate("dragenter");
         div.simulate("dragover");
         expect(refElm.classList.contains("drag-over")).toBe(false);
+    });
+
+    describe("shouldHandleDrag tests", () => {
+        it("should not handle drop when shouldHandleDrag is false", async () => {
+            const { div, dropEvent } = testDropZone({
+                shouldHandleDrag: false,
+            });
+
+            await div.props().onDrop(dropEvent);
+            expect(getFilesFromDragEvent).not.toHaveBeenCalled();
+            expect(UploadyContext.upload).not.toHaveBeenCalled();
+        });
+
+        it("should not handle drop when shouldHandleDrag is fn returning falsy", async () => {
+            const { div, dropEvent } = testDropZone({
+                shouldHandleDrag: () => null,
+            });
+
+            await div.props().onDrop(dropEvent);
+            expect(getFilesFromDragEvent).not.toHaveBeenCalled();
+            expect(UploadyContext.upload).not.toHaveBeenCalled();
+        });
+
+        it("should handle drop when shouldHandleDrag is fn returning truthy", async () => {
+            const { div, dropEvent } = testDropZone({
+                shouldHandleDrag: () => 1,
+            });
+
+            const files = [1, 2];
+            getFilesFromDragEvent.mockResolvedValueOnce(files);
+
+            await div.props().onDrop(dropEvent);
+
+            expect(getFilesFromDragEvent).toHaveBeenCalled();
+            expect(UploadyContext.upload).toHaveBeenCalled();
+        });
     });
 });

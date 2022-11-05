@@ -41,6 +41,7 @@ export {
     isProduction,
     isPromise,
     scheduleIdleWork,
+    isEmpty,
 } from "./utils";
 
 export type * from "./types";

@@ -1,10 +1,15 @@
 // @flow
 import React, { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
 import { getFilesFromDragEvent } from "html-dir-content";
+import { isEmpty, isFunction } from "@rpldy/shared";
 import { useUploadyContext, markAsUploadOptionsComponent } from "@rpldy/shared-ui";
 
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadDropZoneProps } from "./types";
+
+const getShouldHandleDrag = (e, shouldHandle) => isEmpty(shouldHandle) ||
+    shouldHandle === true ||
+    (isFunction(shouldHandle) && shouldHandle(e));
 
 const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivElement> = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
     ({
@@ -15,6 +20,7 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
          dropHandler,
          htmlDirContentParams,
          shouldRemoveDragOver,
+         shouldHandleDrag,
          extraProps,
          ...uploadOptions
      }, ref) => {
@@ -37,9 +43,11 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
         }, [onDragOverClassName, containerRef]);
 
         const dropFileHandler = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
+            const getFiles = () => getFilesFromDragEvent(e, htmlDirContentParams || {});
+
             return dropHandler ?
-                Promise.resolve(dropHandler(e)) :
-                getFilesFromDragEvent(e, htmlDirContentParams || {});
+                Promise.resolve(dropHandler(e, getFiles)) :
+                getFiles();
         }, [dropHandler, htmlDirContentParams]);
 
         const handleDropUpload = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
@@ -50,25 +58,31 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
         }, [upload, dropFileHandler, uploadOptionsRef]);
 
         const onDragEnter = useCallback((e) => {
-            dragLeaveTrackerRef.current =
-                (!dragLeaveTrackerRef.current && e.target === containerRef.current);
+            if (getShouldHandleDrag(e, shouldHandleDrag)) {
+                dragLeaveTrackerRef.current =
+                    (!dragLeaveTrackerRef.current && e.target === containerRef.current);
 
-            if (containerRef.current && onDragOverClassName) {
-                containerRef.current.classList.add(onDragOverClassName);
+                if (containerRef.current && onDragOverClassName) {
+                    containerRef.current.classList.add(onDragOverClassName);
+                }
             }
-        }, [onDragOverClassName, containerRef]);
+        }, [onDragOverClassName, containerRef, shouldHandleDrag]);
 
         const onDragOver = useCallback((e) => {
-            //must have drag over event handler with preventDefault for drop to work
-            e.preventDefault();
+            if (dragLeaveTrackerRef.current) {
+                //must have drag over event handler with preventDefault for drop to work
+                e.preventDefault();
+            }
         }, []);
 
         const onDrop = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
-            e.preventDefault();
-            e.persist();
+            if (dragLeaveTrackerRef.current) {
+                e.preventDefault();
+                e.persist();
 
-            handleEnd();
-            handleDropUpload(e);
+                handleEnd();
+                handleDropUpload(e);
+            }
         }, [handleEnd, handleDropUpload]);
 
         const onDragLeave = useCallback((e) => {
@@ -79,9 +93,11 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
         }, [handleEnd, containerRef, shouldRemoveDragOver]);
 
         const onDragEnd = useCallback((e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            handleEnd();
+            if (dragLeaveTrackerRef.current) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleEnd();
+            }
         }, [handleEnd]);
 
         return <div

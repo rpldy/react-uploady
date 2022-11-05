@@ -4,13 +4,16 @@ import { NO_EXT } from "../consts";
 import useRetry from "../useRetry";
 
 describe("useRetry tests", () => {
-
     it("should throw if ext not registered", () => {
         const { getError } = testCustomHook(useRetry);
 
         expect(invariant).toHaveBeenCalledWith(undefined, NO_EXT);
 
-        expect(getError().message).toBe("Cannot read property 'retry' of undefined");
+        const msg = getError().message;
+
+        expect(msg).toContain("Cannot read proper");
+        expect(msg).toContain("of undefined");
+        expect(msg).toContain("'retry'");
     });
 
     it("should return retry from context", () => {

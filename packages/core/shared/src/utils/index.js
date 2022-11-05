@@ -10,6 +10,7 @@ import hasWindow from "./hasWindow";
 import isProduction from "./isProduction";
 import isPromise from "./isPromise";
 import scheduleIdleWork from "./scheduleIdleWork";
+import isEmpty from "./isEmpty";
 
 export {
     isFunction,
@@ -24,4 +25,5 @@ export {
     isProduction,
     isPromise,
     scheduleIdleWork,
+    isEmpty,
 };

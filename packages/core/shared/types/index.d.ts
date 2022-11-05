@@ -124,6 +124,8 @@ export const isPlainObject: (obj: unknown) => boolean;
 
 export const isFunction: (val: unknown) => boolean;
 
+export const isEmpty: (val: unknown) => boolean;
+
 export const isPromise: (val: unknown) => boolean;
 
 export const scheduleIdleWork: (fn: TimerHandler, timeout?: number) => () => void;

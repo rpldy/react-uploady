@@ -1,20 +1,16 @@
-const dropFile = (fileName, cb, dropZone = "#upload-drop-zone") => {
-    cy.get(dropZone)
-        .should("be.visible")
-        .click()
-        .as("uploadDropZone");
+import selectFiles from "./selectFiles";
 
-    cy.fixture(fileName, { encoding: null })
-        .then((contents) => {
-            cy.get("@uploadDropZone")
-                .selectFile({
-                        contents,
-                        fileName,
-                        mimeType: "image/jpeg"
-                    },
-                    { action: "drag-drop" })
-                .then(cb);
-        });
+const dropFile = (fixtureName, cb, dropZone = "#upload-drop-zone", options = {}) => {
+    selectFiles(
+        fixtureName,
+        dropZone,
+        "uploadDropZone",
+        cb,
+        { ...options, action: "drag-drop", aliasAsInput: true }
+    );
 };
+
+export const dropFiles = (fixtureName, cb, times, dropZone = "#upload-drop-zone", options = {}) =>
+    dropFile(fixtureName, cb, dropZone, { ...options, times });
 
 export default dropFile;

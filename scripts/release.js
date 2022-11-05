@@ -13,6 +13,9 @@ require("dotenv").config();
 
 const { publishArgs = "", versionArgs = "", dry = false, from = null } = yargs.argv;
 
+const effectiveVersionArgs = Array.isArray(versionArgs) ? versionArgs.join(" ") : versionArgs;
+const effectivePublishArgs = Array.isArray(publishArgs) ? publishArgs.join(" ") : publishArgs;
+
 const getSuccessResult = () => ({ code: 0 });
 
 const shellCommand = (command) => {
@@ -35,7 +38,7 @@ const run = (command) =>
 
 const getIsPre = (argsStr) => argsStr.includes("dist-tag");
 
-const IS_PRE = getIsPre(publishArgs) || getIsPre(versionArgs);
+const IS_PRE = getIsPre(effectivePublishArgs) || getIsPre(effectiveVersionArgs);
 
 const log = (color, msg) =>
     console.log(color(`${msg} ${dry ? "\t--dry-run--" : ""}`));
@@ -93,7 +96,7 @@ const TASKS = [
     {
         id: "version",
         title: "Lerna Version",
-        task: () => run(`lerna version ${versionArgs}`),
+        task: () => run(`lerna version ${effectiveVersionArgs}`),
     },
     {
         id: "build",
@@ -103,7 +106,7 @@ const TASKS = [
     {
         id: "publish",
         title: "Lerna Publish",
-        task: () => run(`lerna publish from-package ${publishArgs}`),
+        task: () => run(`lerna publish from-package ${effectivePublishArgs}`),
     },
     {
         id: "changelog",

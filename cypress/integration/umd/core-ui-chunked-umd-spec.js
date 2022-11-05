@@ -1,5 +1,6 @@
 import intercept  from "../intercept";
 import uploadFile from "../uploadFile";
+import { WAIT_X_SHORT } from "../../constants";
 
 describe("UMD UI CHUNKED - Bundle", () => {
     const fileName = "flower.jpg";
@@ -33,6 +34,8 @@ describe("UMD UI CHUNKED - Bundle", () => {
                     expect(xhr.request.headers["content-range"])
                         .to.match(/bytes 200000-\d+\//);
                 });
+
+            cy.wait(WAIT_X_SHORT);
 
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         }, "#upload-button");

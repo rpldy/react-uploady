@@ -36,20 +36,43 @@ Drop Zones can use different configuration overrides that supersede the options 
 
 ## Props
 
-| Name (* = mandatory) | Type                                           | Default       | Description                                                                                              |
-|----------------------|------------------------------------------------| ------------- |----------------------------------------------------------------------------------------------------------|
-| id                   | string                                         | undefined | id attribute to pass to the container element                                                            |
-| className            | string                                         | undefined | the class attribute to pass to the container element                                                     |
-| onDragOverClassName  | string                                         | undefined | class name to add to the container when dragged over                                                     |
-| dropHandler          | [DropHandlerMethod](src/types.js#L4)           | undefined | override default handler that returns the drop result (ex: files). May return a promise                  | 
-| htmlDirContentParams | Object                                         | undefined | will be passed as is to html-dir-content. See [docs](https://www.npmjs.com/package/html-dir-content#api) |
-| shouldRemoveDragOver | [ShouldRemoveDragOverMethod](src/types.js#L6)  | undefined | callback to help identify when to remove the onDragOverClassName. Receives the dragleave event           |
-| children             | React.Node                                     | undefined | child element(s) to render inside the container                                                          |
-| extraProps           | Object                                         | undefined | any other props to pass to the div component (with spread)                                               |
+| Name (* = mandatory) | Type                                           | Default                                  | Description                                                                                              |
+|----------------------|------------------------------------------------|------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| id                   | string                                         | undefined                                | id attribute to pass to the container element                                                            |
+| className            | string                                         | undefined                                | the class attribute to pass to the container element                                                     |
+| onDragOverClassName  | string                                         | undefined                                | class name to add to the container when dragged over                                                     |
+| dropHandler          | [DropHandlerMethod](src/types.js#L4)           | undefined                                | override default handler that returns the drop result (ex: files). May return a promise                  | 
+| htmlDirContentParams | Object                                         | undefined                                | will be passed as is to html-dir-content. See [docs](https://www.npmjs.com/package/html-dir-content#api) |
+| shouldRemoveDragOver | [ShouldRemoveDragOverMethod](src/types.js#L6)  | undefined                                | callback to help identify when to remove the onDragOverClassName. Receives the dragleave event           |
+| shouldHandleDrag     | boolean                                        | [ShuoldHandleDragMethod](src/types.js#8) | undefined | Whether drag&drop should be handled, either boolean or method returning boolean  |     
+| children             | React.Node                                     | undefined                                | child element(s) to render inside the container                                                          |
+| extraProps           | Object                                         | undefined                                | any other props to pass to the div component (with spread)                                               |
 
 In addition, most [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to UploadDropZone.
 In order to override configuration passed to the parent Uploady component. 
 See [Uploady documentation](../uploady#props) for detailed list of upload options.
+
+### shouldHandleDrag
+
+Can be a boolean or a method returning a boolean. In case of a method, the drag event will be provided as a param.
+
+In case shouldHandleDrag === false, the drag&drop flow will not be handled by this component. 
+In case you want to enable logic to determine whether drag&drop will be enabled, pass a callback for this prop. 
+Returning a _Falsy_ value will disable DnD, returning _Truthy_ will keep it enabled. 
+
+### dropHandler
+
+By default, handles Drop event by calling [getFilesFromDragEvent](https://github.com/yoavniran/html-dir-content/blob/master/README.MD#getfilesfromdragevent) from [html-dir-content](https://www.npmjs.com/package/html-dir-content).
+
+In case you want to provide your own logic that will calculate the items(files) passed to the uploader from the drop event, pass in a custom handler.
+
+You can still get the files as the internal method does, by calling _getFiles_ passed to the custom dropHandler as the second param. 
+
+### shouldRemoveDragOver
+
+Gives more control over when to recognize drag-over is done and indicator should be cleared 
+
+See [further explanation on our doc site](https://react-uploady.org/docs/api/components/uploadDropZone/#shouldRemoveDragOver)
 
 ## Example
 

@@ -6,13 +6,16 @@ import useBatchRetry from "../useBatchRetry";
 jest.mock("invariant", () => jest.fn());
 
 describe("useBatchRetry tests", () => {
-
     it("should throw if ext not registered", () => {
         const { getError } = testCustomHook(useBatchRetry);
 
         expect(invariant).toHaveBeenCalledWith(undefined, NO_EXT);
 
-        expect(getError().message).toBe("Cannot read property 'retryBatch' of undefined");
+        const msg = getError().message;
+
+        expect(msg).toContain("Cannot read proper");
+        expect(msg).toContain("of undefined");
+        expect(msg).toContain("'retryBatch'");
     });
 
     it("should return batchRetry from context", () => {

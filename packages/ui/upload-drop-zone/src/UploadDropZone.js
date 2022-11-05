@@ -44,6 +44,7 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
 
         const dropFileHandler = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             const getFiles = () => getFilesFromDragEvent(e, htmlDirContentParams || {});
+
             return dropHandler ?
                 Promise.resolve(dropHandler(e, getFiles)) :
                 getFiles();

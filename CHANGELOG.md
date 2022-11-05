@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.3.0-rc.0 (2022-11-05)
+
+### Features
+
+- `[upload-drop-zone]` - add getFiles helper to dropHandler callback
+- `[upload-drop-zone]` - add new prop - shouldHandleDrag to control whether DnD is enabled or not
+
+### Docs
+
+- `root` - Fix some spelling problems and typos (by @0x111)
+
+### Internal
+
+- `[shared]` - add isEmpty util
+
+
 ## 1.2.0 (2022-10-24)
 
 ### Bug fixes

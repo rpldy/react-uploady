@@ -273,7 +273,7 @@ export const WithFullScreen = (): Node => {
             shouldRemoveDragOver={({ target }) => target === indicatorRef.current}
             shouldHandleDrag={(e) => {
                 //$FlowExpectedError[method-unbinding]
-                const allFiles = Array.prototype.slice.call(e.dataTransfer.items)
+                const allFiles = e.dataTransfer?.items?.length && Array.prototype.slice.call(e.dataTransfer.items)
                     .every((item) => item.kind === "file");
                 console.log("----- shouldHandleDrag -> All Files", allFiles, e);
                 return allFiles;

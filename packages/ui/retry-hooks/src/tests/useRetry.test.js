@@ -9,7 +9,11 @@ describe("useRetry tests", () => {
 
         expect(invariant).toHaveBeenCalledWith(undefined, NO_EXT);
 
-        expect(getError().message).toBe("Cannot read properties of undefined (reading 'retry')");
+        const msg = getError().message;
+
+        expect(msg).toContain("Cannot read proper");
+        expect(msg).toContain("of undefined");
+        expect(msg).toContain("'retry'");
     });
 
     it("should return retry from context", () => {

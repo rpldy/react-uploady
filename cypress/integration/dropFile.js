@@ -10,7 +10,7 @@ const dropFile = (fixtureName, cb, dropZone = "#upload-drop-zone", options = {})
     );
 };
 
-export const dropFiles = (fixtureName, cb, times, dropZone = "#upload-drop-zone", options = {}) =>
+export const dropFiles = (fixtureName, times, cb, dropZone = "#upload-drop-zone", options = {}) =>
     dropFile(fixtureName, cb, dropZone, { ...options, times });
 
 export default dropFile;

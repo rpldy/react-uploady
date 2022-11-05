@@ -1,6 +1,7 @@
 // @flow
 import React, { forwardRef, useCallback, useContext, useMemo, useRef } from "react";
 import styled, { css } from "styled-components";
+import { number } from "@storybook/addon-knobs";
 import { DndProvider, useDrop } from "react-dnd";
 import Backend, { NativeTypes } from "react-dnd-html5-backend";
 import Uploady, { UploadyContext } from "@rpldy/uploady";
@@ -11,6 +12,7 @@ import {
     StoryUploadProgress,
     dropZoneCss,
     getCsfExport,
+    KNOB_GROUPS,
     type CsfExport,
 } from "../../../story-helpers";
 
@@ -72,6 +74,29 @@ export const WithDropHandler = (): Node => {
         console.log(">>>> DROP EVENT ", e.dataTransfer);
         return "https://i.pinimg.com/originals/51/bf/9c/51bf9c7fdf0d4303140c4949afd1d7b8.jpg";
     }, []);
+
+    return <Uploady debug
+                    multiple={multiple}
+                    destination={destination}
+                    enhancer={enhancer}
+                    grouped={grouped}
+                    maxGroupSize={groupSize}>
+
+        <StyledDropZone id="upload-drop-zone" onDragOverClassName="drag-over" dropHandler={dropHandler}>
+            <div id="drag-text">Drag File(s) Here</div>
+            <div id="drop-text">Drop Files(s) Here</div>
+        </StyledDropZone>
+    </Uploady>;
+};
+
+export const WithDropHandlerAndGetFiles = (): Node => {
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+    const fileCount = number("file count in drop", 1, {}, KNOB_GROUPS.SETTINGS);
+
+    const dropHandler = useCallback(async (e, getFiles) => {
+        const files = await getFiles();
+        return files.slice(0, fileCount);
+    }, [fileCount]);
 
     return <Uploady debug
                     multiple={multiple}
@@ -251,5 +276,24 @@ export const WithFullScreen = (): Node => {
         </StyledFullScreenDropZone>
     </Uploady>;
 };
+
+export const WithDndTurnedOff = (): Node => {
+    const { enhancer, destination, extOptions } = useStoryUploadySetup();
+    return <Uploady debug
+                    destination={destination}
+                    enhancer={enhancer}
+                    {...extOptions}
+    >
+        <StyledDropZone
+            id="upload-drop-zone"
+            onDragOverClassName="drag-over"
+            shouldHandleDrag={false}
+        >
+            <div id="drag-text">Drag File(s) Here</div>
+            <div id="drop-text">Drop File(s) Here</div>
+        </StyledDropZone>
+    </Uploady>;
+};
+
 
 export default (getCsfExport(UploadDropZone, "Upload Drop Zone", readme, { pkg: "upload-drop-zone", section: "UI" }): CsfExport);

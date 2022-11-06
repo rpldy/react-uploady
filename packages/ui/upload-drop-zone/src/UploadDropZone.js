@@ -11,6 +11,10 @@ const getShouldHandleDrag = (e, shouldHandle) => isEmpty(shouldHandle) ||
     shouldHandle === true ||
     (isFunction(shouldHandle) && shouldHandle(e));
 
+const isOnTarget = (e, containerElm, allowContains) => {
+    return e.target === containerElm || (allowContains && containerElm?.contains(e.target));
+};
+
 const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivElement> = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
     ({
          className,
@@ -21,6 +25,7 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
          htmlDirContentParams,
          shouldRemoveDragOver,
          shouldHandleDrag,
+         enableOnContains = true,
          extraProps,
          ...uploadOptions
      }, ref) => {
@@ -58,15 +63,17 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
         }, [upload, dropFileHandler, uploadOptionsRef]);
 
         const onDragEnter = useCallback((e) => {
-            if (getShouldHandleDrag(e, shouldHandleDrag)) {
-                dragLeaveTrackerRef.current =
-                    (!dragLeaveTrackerRef.current && e.target === containerRef.current);
+            const isHandling = getShouldHandleDrag(e, shouldHandleDrag) &&
+                isOnTarget(e, containerRef.current, enableOnContains);
+
+            if (isHandling) {
+                dragLeaveTrackerRef.current = true;
 
                 if (containerRef.current && onDragOverClassName) {
                     containerRef.current.classList.add(onDragOverClassName);
                 }
             }
-        }, [onDragOverClassName, containerRef, shouldHandleDrag]);
+        }, [onDragOverClassName, containerRef, shouldHandleDrag, enableOnContains]);
 
         const onDragOver = useCallback((e) => {
             if (dragLeaveTrackerRef.current) {

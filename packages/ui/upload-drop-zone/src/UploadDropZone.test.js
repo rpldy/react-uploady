@@ -155,9 +155,9 @@ describe("UploadDropZone tests", () => {
 
         div.simulate("dragenter");
         div.simulate("dragover");
-        expect(refElm.classList.contains("drag-over")).toBe(true);
+        expect(refElm.classList.contains(onDragOverClassName)).toBe(true);
         div.simulate("dragend");
-        expect(refElm.classList.contains("drag-over")).toBe(false);
+        expect(refElm.classList.contains(onDragOverClassName)).toBe(false);
 
         div.simulate("dragenter");
 
@@ -165,10 +165,10 @@ describe("UploadDropZone tests", () => {
         span.simulate("dragenter");
         div.simulate("dragleave");
 
-        expect(refElm.classList.contains("drag-over")).toBe(true);
+        expect(refElm.classList.contains(onDragOverClassName)).toBe(false);
         div.simulate("dragenter");
         div.simulate("dragleave");
-        expect(refElm.classList.contains("drag-over")).toBe(false);
+        expect(refElm.classList.contains(onDragOverClassName)).toBe(false);
     });
 
     it("should not remove drag className if different element", () => {
@@ -192,6 +192,30 @@ describe("UploadDropZone tests", () => {
         span.simulate("dragenter");
         span.simulate("dragLeave");
         expect(refElm.classList.contains("drag-over")).toBe(true);
+    });
+
+    it("should not handle drag or add className if child and contains is disabled", () => {
+        const onDragOverClassName = "drag-over";
+
+        const { div, span, mockRef } = testDropZone({
+            enableOnContains: false,
+            onDragOverClassName,
+        }, false);
+
+        const refElm = mockRef.mock.calls[0][0];
+
+        div.simulate("dragenter");
+        div.simulate("dragover");
+        expect(refElm.classList.contains("drag-over")).toBe(true);
+        div.simulate("dragend");
+        expect(refElm.classList.contains("drag-over")).toBe(false);
+
+        span.simulate("dragenter");
+        span.simulate("dragover");
+        expect(refElm.classList.contains("drag-over")).toBe(false);
+
+        div.simulate("dragend");
+        expect(refElm.classList.contains("drag-over")).toBe(false);
     });
 
     it("should add & remove drag className with shouldRemoveDragOver callback", () => {

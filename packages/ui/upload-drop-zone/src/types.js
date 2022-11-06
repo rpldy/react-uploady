@@ -20,6 +20,7 @@ export type UploadDropZoneProps =  {|
     htmlDirContentParams?: Object,
     shouldRemoveDragOver?: ShouldRemoveDragOverMethod,
     shouldHandleDrag?: ShouldHandleDrag,
+    enableOnContains?: boolean,
     extraProps?: Object,
     children?: React$Node,
 |};

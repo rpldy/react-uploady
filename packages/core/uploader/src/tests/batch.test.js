@@ -1,4 +1,4 @@
-import { BATCH_STATES, createBatchItem } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { BATCH_STATES, createBatchItem, getIsBatchItem } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import createBatch from "../batch";
 
 describe("Batch tests", () => {
@@ -6,6 +6,7 @@ describe("Batch tests", () => {
     beforeEach(() => {
         clearJestMocks(
             createBatchItem,
+            getIsBatchItem,
         );
     });
 
@@ -114,5 +115,29 @@ describe("Batch tests", () => {
 
         await expect(createBatch([{}], "u1", { fileFilter: badFilter }))
             .rejects.toThrow("ERROR");
+    });
+
+    it("should create new batch from existing batch items (retry)", async () => {
+        const files = [
+            { file: { name: "test"} },
+            { url: "https://url.test" }
+        ];
+
+        const fileFilter = jest.fn(() => true);
+
+        createBatchItem
+            .mockReturnValueOnce("item1")
+            .mockReturnValueOnce("item2");
+
+        getIsBatchItem
+            .mockReturnValueOnce(true)
+            .mockReturnValueOnce(true);
+
+        const batch = await createBatch(files, "uploader1", { autoUpload: true, fileFilter });
+
+        expect(batch.items).toHaveLength(2);
+
+        expect(fileFilter).toHaveBeenNthCalledWith(1, files[0].file);
+        expect(fileFilter).toHaveBeenNthCalledWith(2, files[1].url);
     });
 });

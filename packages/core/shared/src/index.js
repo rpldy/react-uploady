@@ -5,7 +5,7 @@ import { BATCH_STATES, FILE_STATES } from "./consts";
 import * as logger from "./logger";
 import triggerCancellable from "./triggerCancellable";
 import triggerUpdater from "./triggerUpdater";
-import createBatchItem from "./batchItem";
+import createBatchItem, { getIsBatchItem } from "./batchItem";
 import request, { parseResponseHeaders } from "./request";
 
 export {
@@ -23,6 +23,7 @@ export {
     triggerCancellable,
     triggerUpdater,
     createBatchItem,
+    getIsBatchItem,
     request,
     parseResponseHeaders,
 };

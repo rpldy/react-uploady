@@ -1,5 +1,5 @@
 // @flow
-import { BATCH_STATES, createBatchItem, isPromise, } from "@rpldy/shared";
+import { BATCH_STATES, createBatchItem, isPromise, getIsBatchItem } from "@rpldy/shared";
 import { DEFAULT_FILTER } from "./defaults";
 import { getIsFileList } from "./utils";
 
@@ -20,7 +20,9 @@ const processFiles = (batchId, files: UploadInfo, isPending: boolean, fileFilter
     return Promise.all(Array.prototype
         //$FlowExpectedError[method-unbinding] flow 0.153 !!!
         .map.call(files, (f) => {
-            const filterResult = filterFn(f);
+            const isBatchItem = getIsBatchItem(f);
+            const filterResult = filterFn(isBatchItem ? (f.file || f.url) : f);
+
             return isPromise(filterResult) ?
                 filterResult.then((result) => !!result && f) :
                 (!!filterResult && f);

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0-rc.1 (2022-11-06)
+
+- `[upload-drop-zone]` - fix how drag handling is enabled
+- `[upload-drop-zone]` - add new prop - enableOnContains to opt-out of contained check
+  and only enable on direct drag to container element
+
+
 ## 1.3.0-rc.0 (2022-11-05)
 
 ### Features

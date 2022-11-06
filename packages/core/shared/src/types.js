@@ -52,7 +52,7 @@ type BatchItemBase = {|
 	//bytes uploaded
 	loaded: number,
 	recycled: boolean,
-    previousBatch?: string;
+    previousBatch: ?string;
 |};
 
 export type FileLike = {

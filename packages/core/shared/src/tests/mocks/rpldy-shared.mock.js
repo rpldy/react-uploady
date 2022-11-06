@@ -16,6 +16,7 @@ const logger = {
 const triggerCancellable = jest.fn();
 const triggerUpdater = jest.fn();
 const createBatchItem = jest.fn();
+const getIsBatchItem = jest.fn();
 const request = jest.fn();
 const parseResponseHeaders = jest.fn();
 
@@ -47,6 +48,7 @@ const sharedMock = {
     triggerUpdater,
 
     createBatchItem,
+    getIsBatchItem,
 
     request,
     parseResponseHeaders,
@@ -67,6 +69,7 @@ export {
     triggerUpdater,
 
     createBatchItem,
+    getIsBatchItem,
 
     request,
     parseResponseHeaders,

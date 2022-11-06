@@ -111,16 +111,20 @@ export const WithRetry = (): Node => {
 	enhancer = enhancer ?
 		composeEnhancers(retryEnhancer, enhancer) : retryEnhancer;
 
-	return <Uploady
-		debug
-		multiple={multiple}
-		destination={destination}
-		enhancer={enhancer}
-		grouped={grouped}
-		maxGroupSize={groupSize}>
-
-		<RetryUi/>
-	</Uploady>
+    return (
+        <Uploady
+            debug
+            multiple={multiple}
+            destination={destination}
+            enhancer={enhancer}
+            grouped={grouped}
+            maxGroupSize={groupSize}
+            // $FlowIgnore[prop-missing]
+            fileFilter={(f) => f.type.startsWith("image/") || f.type.includes("pdf")}
+        >
+            <RetryUi/>
+        </Uploady>
+    );
 };
 
 const STATES = {
@@ -339,6 +343,8 @@ export const WithRetryAndPreview = (): Node => {
 			grouped={grouped}
 			maxGroupSize={groupSize}
 			enhancer={enhancer}
+            // $FlowIgnore[prop-missing]
+            fileFilter={(f) => f.type.startsWith("image/") || f.type.includes("pdf")}
 		>
 			<div className="App">
 				<UploadButton id="upload-button">Upload Files</UploadButton>

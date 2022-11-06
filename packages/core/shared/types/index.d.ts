@@ -147,3 +147,5 @@ export const devFreeze: <T>(obj: T) => T;
 export const isSamePropInArrays: (arr1: any[], arr2: any[], prop: string | string[]) => boolean;
 
 export const request: (url: string, data?: unknown, options?: RequestOptions) => Promise<XMLHttpRequest>;
+
+export const getIsBatchItem: (obj: unknown) => boolean;

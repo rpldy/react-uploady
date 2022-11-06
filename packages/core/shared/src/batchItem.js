@@ -18,11 +18,18 @@ const getBatchItemWithFile = (batchItem: Object, file: Object): BatchItem => {
 
 const isLikeFile = (f: UploadInfo) => f && (f instanceof File || f instanceof Blob || (typeof f === "object" && f.name && f.type));
 
+const getIsBatchItem = (obj: any): boolean => {
+    return typeof obj === "object" &&
+        obj.id && obj.batchId &&
+        obj[BISYM] === true;
+};
+
 const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = false): BatchItem => {
-    iCounter += (f.id && f.batchId) ? 0 : 1;
+    const isAlreadyBatchItem = getIsBatchItem(f);
+    iCounter += (isAlreadyBatchItem) ? 0 : 1;
 
     //keep existing id for recycled items
-    const id = (f.id && f.batchId) ? f.id : `${batchId}.item-${iCounter}`,
+    const id = isAlreadyBatchItem && f.id ? f.id : `${batchId}.item-${iCounter}`,
         state = isPending ? FILE_STATES.PENDING : FILE_STATES.ADDED;
 
     let batchItem = {
@@ -32,8 +39,9 @@ const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = fa
         uploadStatus: 0,
         completed: 0,
         loaded: 0,
-        recycled: false,
-        previousBatch: null,
+        recycled: isAlreadyBatchItem,
+        // $FlowIssue[prop-missing] - flow just doesnt understand...
+        previousBatch: isAlreadyBatchItem ? f.batchId : null,
     };
 
     Object.defineProperty(batchItem, BISYM, {
@@ -42,10 +50,8 @@ const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = fa
         writable: true,
     });
 
-    if (typeof f === "object" && f[BISYM] === true) {
-        //recycling existing batch item
-        batchItem.recycled = true;
-        batchItem.previousBatch = f.batchId;
+    if (isAlreadyBatchItem) {
+        // $FlowIssue[prop-missing] - flow just doesnt understand...
         f = f.file || f.url;
     }
 
@@ -61,3 +67,7 @@ const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = fa
 };
 
 export default createBatchItem;
+
+export {
+    getIsBatchItem,
+};

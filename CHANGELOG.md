@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0-rc.2 (2022-11-06)
+
+- `[uploader]` - fix fileFilter called incorrectly for recycled (retry) items
+- `[mock-sender]` - add missing props to MockOptions TS interface
+
+
 ## 1.3.0-rc.1 (2022-11-06)
 
 - `[upload-drop-zone]` - fix how drag handling is enabled

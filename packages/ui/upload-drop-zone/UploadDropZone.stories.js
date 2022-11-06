@@ -244,6 +244,20 @@ const StyledFullScreenDropZone = styled(UploadDropZone)`
        display: flex;
        align-items: center;
        justify-content: center;
+       gap: 10px;
+       position: relative;
+       flex-wrap: wrap;
+
+       h1 {
+           position: absolute;
+           top: 50%;
+           left: 50%;
+           transform: translate(-50%, -50%);
+       }
+       .content-box {
+           flex-grow: 1;
+           height:  100%;
+       }
    }
 
     &.drag-over .dropIndicator {
@@ -268,6 +282,7 @@ export const WithFullScreen = (): Node => {
                     {...extOptions}
     >
         <StyledFullScreenDropZone
+            // enableOnContains={false}
             id="upload-drop-zone"
             onDragOverClassName="drag-over"
             shouldRemoveDragOver={({ target }) => target === indicatorRef.current}
@@ -280,6 +295,18 @@ export const WithFullScreen = (): Node => {
             }}
         >
             <div className="content">
+                {[
+                    { color: "#f19898", title: "A" },
+                    { color: "#143b15", title: "B" },
+                    { color: "#27569b", title: "C" },
+                    { color: "#f1d898", title: "D" },
+                    { color: "#9b1a63", title: "E" },
+                    { color: "#42eee8", title: "F" },
+                ].map(({ color, title }) => <div
+                    key={title}
+                    className="content-box"
+                    style={{ backgroundColor: color }}>{title}</div>)}
+
                 <h1>Drop files here</h1>
             </div>
             <div className="dropIndicator" aria-hidden ref={indicatorRef} />

@@ -152,6 +152,23 @@ export const WithCustomFieldName = (): Node => {
     </Uploady>
 };
 
+export const WithDirectory = (): Node => {
+    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+
+    return <Uploady
+        inputFieldName="customFieldName"
+        debug
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+        webkitdirectory
+    >
+        <p>Upload directory</p>
+        <ContextUploadButton />
+    </Uploady>
+};
+
 const ProcessPending = ({ id = "process-pending", title = "PROCESS PENDING", options = undefined}) => {
     const { processPending } = useUploady();
     return <button id={id}

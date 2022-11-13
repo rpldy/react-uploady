@@ -137,7 +137,21 @@ describe("Batch tests", () => {
 
         expect(batch.items).toHaveLength(2);
 
-        expect(fileFilter).toHaveBeenNthCalledWith(1, files[0].file);
-        expect(fileFilter).toHaveBeenNthCalledWith(2, files[1].url);
+        expect(fileFilter).toHaveBeenNthCalledWith(1, files[0].file, 0, [files[0].file, files[1].url]);
+        expect(fileFilter).toHaveBeenNthCalledWith(2, files[1].url, 1, [files[0].file, files[1].url]);
+    });
+
+    it("should filter to only the first two items", async () => {
+        const files = [ {name: "test"}, "123", "456"];
+
+        createBatchItem
+            .mockReturnValueOnce("item1")
+            .mockReturnValueOnce("item2");
+
+        const batch = await createBatch(files, "u1", {
+            fileFilter: (_, index) => index < 2
+        });
+
+        expect(batch.items).toHaveLength(2);
     });
 });

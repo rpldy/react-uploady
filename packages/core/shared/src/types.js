@@ -90,7 +90,7 @@ export type Batch = {
     additionalInfo: ?string,
 };
 
-export type FileFilterMethod = (File | string) => boolean | Promise<boolean>;
+export type FileFilterMethod = (File | string, number, FileLike[] | string[]) => boolean | Promise<boolean>;
 
 export type UploadOptions = {|
 	//automatically upload files when they are added (default: true)

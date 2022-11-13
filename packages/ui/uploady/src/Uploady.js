@@ -11,7 +11,7 @@ type FileInputPortalProps = {|
     multiple: boolean,
     capture: ?string,
     accept: ?string,
-    webkitdirectory: ?boolean,
+    webkitdirectory: ?string,
     id: ?string,
     style: Object,
     noPortal: boolean,
@@ -73,7 +73,7 @@ const Uploady = (props: UploadyProps): React$Element<typeof NoDomUploady> => {
             multiple={multiple}
             capture={capture}
             accept={accept}
-            webkitdirectory={webkitdirectory}
+            webkitdirectory={webkitdirectory?.toString()}
             style={{ display: "none" }}
             ref={internalInputFieldRef}
             id={fileInputId}

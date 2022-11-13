@@ -1,6 +1,15 @@
 # Changelog
 
+## 1.3.0-rc.3 (2022-11-13)
+
+### Bug fixes
+
+- `[uploader]` - fix missing params for fileFilter callback. Fix for [#425](https://github.com/rpldy/react-uploady/issues/425) 
+
+
 ## 1.3.0-rc.2 (2022-11-06)
+
+### Bug fixes
 
 - `[uploader]` - fix fileFilter called incorrectly for recycled (retry) items
 - `[mock-sender]` - add missing props to MockOptions TS interface
@@ -8,9 +17,14 @@
 
 ## 1.3.0-rc.1 (2022-11-06)
 
-- `[upload-drop-zone]` - fix how drag handling is enabled
+### Features
+
 - `[upload-drop-zone]` - add new prop - enableOnContains to opt-out of contained check
   and only enable on direct drag to container element
+
+### Bug fixes
+
+- `[upload-drop-zone]` - fix how drag handling is enabled
 
 
 ## 1.3.0-rc.0 (2022-11-05)
@@ -33,7 +47,7 @@
 
 ### Bug fixes
 
-- `[retry-hooks]` - fix TS types for retry hooks and event Fix for [#407](https://github.com/rpldy/react-uploady/issues/407)
+- `[retry-hooks]` - fix TS types for retry hooks and event. Fix for [#407](https://github.com/rpldy/react-uploady/issues/407)
 
 
 ## 1.1.0 (2022-08-28)

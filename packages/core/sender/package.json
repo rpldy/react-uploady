@@ -1,5 +1,5 @@
 {
-  "version": "1.3.0-rc.2",
+  "version": "1.3.0-rc.3",
   "name": "@rpldy/sender",
   "description": "react-uploady's default XHR sender",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -23,7 +23,7 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^1.3.0-rc.2"
+    "@rpldy/shared": "^1.3.0-rc.3"
   },
   "devDependencies": {
     "flow-bin": "^0.182.0"

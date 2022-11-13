@@ -17,19 +17,26 @@ let bCounter = 0;
 const processFiles = (batchId, files: UploadInfo, isPending: boolean, fileFilter: ?FileFilterMethod): Promise<BatchItem[]> => {
     const filterFn = fileFilter || DEFAULT_FILTER;
 
+    //we need a simple array of (file, url) to pass to filter fn if its provided (files can be recycled batch items)
+    const all: any[] = fileFilter ? Array.prototype
+        //$FlowExpectedError[method-unbinding] flow 0.153 !!!
+        .map.call(files, (f) => getIsBatchItem(f) ? (f.file || f.url) : f) :
+        //in case no filter fn, no need to map it
+        [];
+
     return Promise.all(Array.prototype
         //$FlowExpectedError[method-unbinding] flow 0.153 !!!
-        .map.call(files, (f) => {
-            const isBatchItem = getIsBatchItem(f);
-            const filterResult = filterFn(isBatchItem ? (f.file || f.url) : f);
+        .map.call(files, (f, index) => {
+            const filterResult = filterFn(all[index], index, all);
 
             return isPromise(filterResult) ?
                 filterResult.then((result) => !!result && f) :
                 (!!filterResult && f);
         }))
-        .then((filtered) => filtered
-            .filter(Boolean)
-            .map((f) => createBatchItem(f, batchId, isPending)));
+        .then((filtered) =>
+            filtered
+                .filter(Boolean)
+                .map((f) => createBatchItem(f, batchId, isPending)));
 };
 
 const createBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, options: UploaderCreateOptions): Promise<Batch> => {

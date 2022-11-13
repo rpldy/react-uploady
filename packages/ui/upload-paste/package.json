@@ -1,5 +1,5 @@
 {
-  "version": "1.3.0-rc.2",
+  "version": "1.3.0-rc.3",
   "name": "@rpldy/upload-paste",
   "description": "easily add paste-to-upload to React components",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -32,12 +32,12 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared-ui": "^1.3.0-rc.2"
+    "@rpldy/shared-ui": "^1.3.0-rc.3"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^1.3.0-rc.2",
-    "@rpldy/upload-drop-zone": "^1.3.0-rc.2",
-    "@rpldy/uploady": "^1.3.0-rc.2",
+    "@rpldy/upload-button": "^1.3.0-rc.3",
+    "@rpldy/upload-drop-zone": "^1.3.0-rc.3",
+    "@rpldy/uploady": "^1.3.0-rc.3",
     "flow-bin": "^0.182.0",
     "styled-components": "^5.3.5"
   },

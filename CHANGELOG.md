@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.3.0 (2022-11-24)
+
+### Features
+
+- `[upload-drop-zone]` - add getFiles helper to dropHandler callback
+- `[upload-drop-zone]` - add new prop - shouldHandleDrag to control whether DnD is enabled or not
+- `[upload-drop-zone]` - add new prop - enableOnContains to opt-out of contained check
+  and only enable on direct drag to container element
+
+### Bug fixes
+
+- `[uploader]` - fix missing params for fileFilter callback. Fix for [#425](https://github.com/rpldy/react-uploady/issues/425)
+- `[uploader]` - fix fileFilter called incorrectly for recycled (retry) items
+- `[uploady]` - fix webkitdirectory prop accepted as boolean (not string)
+- `[upload-drop-zone]` - fix how drag handling is enabled
+- `[mock-sender]` - add missing props to MockOptions TS interface
+
+### Docs
+
+- `root` - Fix some spelling problems and typos (by @0x111)
+
+### Internal
+
+- `[shared]` - add isEmpty util
+
+
 ## 1.3.0-rc.3 (2022-11-13)
 
 ### Bug fixes

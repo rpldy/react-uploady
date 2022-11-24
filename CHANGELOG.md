@@ -13,7 +13,7 @@
 
 - `[uploader]` - fix missing params for fileFilter callback. Fix for [#425](https://github.com/rpldy/react-uploady/issues/425)
 - `[uploader]` - fix fileFilter called incorrectly for recycled (retry) items
-- `[uploady]` - fix webkitdirectory prop accepted as boolean (not string)  
+- `[uploady]` - fix webkitdirectory prop accepted as boolean (not string)
 - `[upload-drop-zone]` - fix how drag handling is enabled
 - `[mock-sender]` - add missing props to MockOptions TS interface
 

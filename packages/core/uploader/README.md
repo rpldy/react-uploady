@@ -178,7 +178,7 @@ Registering to handle events can be done using the uploader's _on()_ and _once()
 Unregistering can be done using _off()_ or by the return value of both _on()_ and _once()_.
 
 ```javascript
-const batchAddHandler = (batch) => {};
+const batchAddHandler = (batch, options) => {};
 
 const unregister = uploader.on(UPLOADER_EVENTS.BATCH_ADD, batchAddHandler);
 

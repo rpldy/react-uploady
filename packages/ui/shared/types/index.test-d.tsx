@@ -27,6 +27,7 @@ import {
     WithRequestPreSendUpdateWrappedProps,
     CreateOptions,
     PreSendResponse,
+    UploadOptions,
 } from "./index";
 
 const makeApiCall = (options: CreateOptions): Promise<{ important: string }> =>
@@ -36,8 +37,8 @@ const makeApiCall = (options: CreateOptions): Promise<{ important: string }> =>
 
 const EventHooksTest: React.FC = () => {
 
-    useBatchAddListener((batch) => {
-        console.log(`batch ${batch.id} added`);
+    useBatchAddListener((batch, options: UploadOptions) => {
+        console.log(`batch ${batch.id} added. auto upload = ${options.autoUpload}`);
         return batch.id !== "b1";
     });
 
@@ -46,8 +47,11 @@ const EventHooksTest: React.FC = () => {
         return batch.id !== "b1";
     });
 
-    useBatchStartListener((batch) => {
-        return Promise.resolve({ options:  { method: "PUT", destination: { headers: { "x-count": batch.items.length } } } });
+    useBatchStartListener((batch, options) => {
+        return Promise.resolve({ options:  {
+            method: options.method === "POST" ? "PUT" : options.method,
+            destination: { headers: { "x-count": batch.items.length } }
+        } });
     });
 
     const batchProgress = useBatchProgressListener((batch) => {

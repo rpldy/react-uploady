@@ -216,7 +216,7 @@ Called when a new batch is added.
     import { useBatchAddListener } from "@rpldy/uploady";
 
     const MyComponent = () => {
-        useBatchAddListener((batch) => {
+        useBatchAddListener((batch, options) => {
             console.log(`batch ${batch.id} was just added with ${batch.items.length} items`);  
         });
 

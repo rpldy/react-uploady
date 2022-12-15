@@ -15,7 +15,7 @@ export type ItemCancellableEventHook = CancellableHook<BatchItem>;
 export type ItemEventHookWithState = EventHookWithState<BatchItem>;
 
 export type BatchEventHook = EventHook<Batch>;
-export type BatchCancellableEventHook = CancellableHook<Batch>;
+export type BatchCancellableEventHook = (cb: (batch: Batch, options: UploaderCreateOptions) => boolean | void, id?: string) => void;
 export type BatchEventHookWithState = EventHookWithState<Batch>;
 
 export type RefObject<T: mixed> = {current: null | void | T};

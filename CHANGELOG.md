@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.1 (2023-01-11)
+
+### Docs
+
+- `[shared]` - TS: add missing options param for batch_add
+
+
 ## 1.3.0 (2022-11-24)
 
 ### Features

@@ -15,6 +15,7 @@ import TusUploady,
     useItemProgressListener,
     useItemStartListener,
     useItemFinishListener,
+    useRequestPreSend,
 } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -85,6 +86,43 @@ export const Simple = (): Node => {
         <AbortButton/>
         <ItemProgress/>
 	</TusUploady>;
+};
+
+const DynamicUploadMeta = () => {
+    useRequestPreSend(({ items }) => {
+        const name = items[0].file.name;
+
+        return {
+            options: {
+                params: {
+                    "md-fileName": name,
+                }
+            }
+        }
+    });
+
+    return null;
+};
+
+export const WithDynamicMetadata = (): Node => {
+    const storySetup = useTusStoryHelper();
+    let { destination } = storySetup;
+    const { enhancer, chunkSize, forgetOnSuccess, resume, ignoreModifiedDateInStorage, sendDataOnCreate, sendWithCustomHeader } = storySetup;
+
+    return <TusUploady
+        debug
+        destination={destination}
+        enhancer={enhancer}
+        chunkSize={chunkSize}
+        forgetOnSuccess={forgetOnSuccess}
+        resume={resume}
+        ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}
+        sendDataOnCreate={sendDataOnCreate}>
+        <UploadButton id="upload-button">Upload with TUS</UploadButton>
+        <br/>
+        <ItemProgress/>
+        <DynamicUploadMeta/>
+    </TusUploady>;
 };
 
 const TusConcatUploadLog = () => {

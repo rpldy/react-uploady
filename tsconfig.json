@@ -10,7 +10,6 @@
         "jsx": "react",
         "strict": true,
         "moduleResolution": "node",
-        "allowJs": true,
         "noImplicitAny": true,
         "strictNullChecks": true,
         "types": [],

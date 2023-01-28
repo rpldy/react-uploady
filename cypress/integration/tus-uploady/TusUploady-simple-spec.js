@@ -3,25 +3,26 @@ import uploadFile from "../uploadFile";
 import { WAIT_LONG, WAIT_SHORT } from "../../constants";
 
 describe("TusUploady - Simple", () => {
-	const fileName = "flower.jpg";
+	const fileName = "flower.jpg",
+        uploadUrl = "http://test.tus.com/upload";
 
 	before(() => {
         cy.visitStory(
             "tusUploady",
             "simple&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true&knob-ignore modifiedDate in resume storage_Upload Settings=true&knob-send custom header_Upload Settings=true",
-            { useMock: false, uploadUrl: "http://test.tus.com/upload" }
+            { useMock: false, uploadUrl}
         );
 	});
 
 	it("should upload chunks using tus protocol", () => {
-        intercept("http://test.tus.com/upload", "POST", {
+        intercept(uploadUrl, "POST", {
             headers: {
-                "Location": "http://test.tus.com/upload/123",
+                "Location": `${uploadUrl}/123`,
                 "Tus-Resumable": "1.0.0"
             }
         }, "createReq");
 
-        intercept("http://test.tus.com/upload/123", "PATCH", {
+        intercept(`${uploadUrl}/123`, "PATCH", {
             headers: {
                 "Tus-Resumable": "1.0.0",
             },
@@ -60,7 +61,7 @@ describe("TusUploady - Simple", () => {
                     expect(headers["content-type"]).to.eq("application/offset+octet-stream");
                 });
 
-            intercept("http://test.tus.com/upload/123", "HEAD", {
+            intercept(`${uploadUrl}/123`, "HEAD", {
                 headers: {
                     "Tus-Resumable": "1.0.0",
                     "Upload-Offset": "1",
@@ -70,12 +71,12 @@ describe("TusUploady - Simple", () => {
 
 			//upload again, should be resumed!
 			uploadFile(fileName, () => {
-				cy.wait(WAIT_LONG);
+				cy.wait(WAIT_SHORT);
 
 				cy.storyLog().assertFileItemStartFinish(fileName, 5)
 					.then((events) => {
 						expect(events.finish.args[1].uploadResponse.message).to.eq("TUS server has file");
-						expect(events.finish.args[1].uploadResponse.location).to.eq("http://test.tus.com/upload/123");
+						expect(events.finish.args[1].uploadResponse.location).to.eq(`${uploadUrl}/123`);
 					});
 			}, "#upload-button");
 		}, "#upload-button");

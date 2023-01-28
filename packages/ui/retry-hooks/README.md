@@ -62,9 +62,9 @@ Unregistering can be done using _off()_ or by the return value of both _on()_ an
 
 Triggered when files are re-added to the queue for retry.
 
-- Parameters: _({ uploads: string[], options?: UploadOptions })_  
+- Parameters: _({ uploads: BatchItem[], options?: UploadOptions })_  
 
-> uploads is an array of batch item ids.
+> uploads is an array of batch items.
 > options are the (optional) upload options that are passed to the retry call
 
 ## Hooks

@@ -1,6 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_LONG, WAIT_SHORT } from "../../constants";
+import { WAIT_LONG } from "../../constants";
 
 describe("TusUploady - Simple", () => {
 	const fileName = "flower.jpg";
@@ -75,7 +75,7 @@ describe("TusUploady - Simple", () => {
 				cy.storyLog().assertFileItemStartFinish(fileName, 5)
 					.then((events) => {
 						expect(events.finish.args[1].uploadResponse.message).to.eq("TUS server has file");
-						expect(events.finish.args[1].uploadResponse.location).to.eq("http://test.tus.com/upload/123");
+						expect(events.finish.args[1].uploadResponse.location).to.eq(`${uploadUrl}/123`);
 					});
 			}, "#upload-button");
 		}, "#upload-button");

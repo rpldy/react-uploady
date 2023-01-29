@@ -31,7 +31,7 @@ const request = (url: string, data?: mixed, options: RequestOptions = {}): Promi
         req.send(data);
     });
 
-    // $FlowFixMe - adding xhr to Promise
+    // $FlowExpectedError
     pXhr.xhr = req;
     return pXhr;
 };

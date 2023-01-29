@@ -1,18 +1,21 @@
 // @flow
-import { logger, request } from "@rpldy/shared";
-import { SUCCESS_CODES } from "../../consts";
+import { logger, request, triggerUpdater, getMerge } from "@rpldy/shared";
+import { unwrap } from "@rpldy/simple-state";
+import { SUCCESS_CODES, TUS_EVENTS } from "../../consts";
 import { removeResumable } from "../../resumableStore";
 
 import type { BatchItem } from "@rpldy/shared";
-import type { InitUploadResult } from "../types";
+import type { TriggerMethod } from "@rpldy/life-events";
+import type { InitUploadResult, ResumeStartEventData, ResumeStartEventResponse } from "../types";
 import type { State, TusState, TusOptions } from "../../types";
 
+const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
+
 const handleSuccessfulResumeResponse = (item: BatchItem, url: string, tusState: TusState, resumeResponse: XMLHttpRequest) => {
-	let canResume = false,
+    logger.debugLog(`tusSender.resume - successfully initiated resume for item: ${item.id} - upload url = ${url}`);
+
+    let canResume = false,
 		isDone = false;
-
-	logger.debugLog(`tusSender.resume - successfully initiated resume for item: ${item.id} - upload url = ${url}`);
-
 	const offset = parseInt(resumeResponse.getResponseHeader("Upload-Offset"));
 
 	if (!isNaN(offset)) {
@@ -39,10 +42,17 @@ const handleSuccessfulResumeResponse = (item: BatchItem, url: string, tusState: 
 	};
 };
 
-const resumeWithDelay = (item: BatchItem, url: string, tusState: TusState, parallelIdentifier: ?string, attempt: number) =>
+const resumeWithDelay = (
+    item: BatchItem,
+    url: string,
+    tusState: TusState,
+    trigger: TriggerMethod,
+    parallelIdentifier: ?string,
+    attempt: number
+) =>
 	new Promise((resolve) => {
 		setTimeout(() => {
-			makeResumeRequest(item, url, tusState, parallelIdentifier, attempt)
+			makeResumeRequest(item, url, tusState, trigger, parallelIdentifier, attempt)
 				.request.then(resolve);
 		}, tusState.getState().options.lockedRetryDelay);
 	});
@@ -56,54 +66,103 @@ const handleResumeFail = (item: BatchItem, options: TusOptions, parallelIdentifi
 	};
 };
 
-const makeResumeRequest = (item: BatchItem, url: string, tusState: TusState, parallelIdentifier: ?string, attempt: number) => {
-	const { options } = tusState.getState();
+const handleResumeResponse = (resumeResponse, item, url, tusState, trigger, parallelIdentifier, attempt) => {
+    let result;
+    const { options } = tusState.getState();
+
+    if (resumeResponse && ~SUCCESS_CODES.indexOf(resumeResponse.status)) {
+        result = handleSuccessfulResumeResponse(item, url, tusState, resumeResponse);
+    } else if (resumeResponse?.status === 423 && attempt === 0) {
+        logger.debugLog(`tusSender.resume: upload is locked for item: ${item.id}. Will retry in ${+options.lockedRetryDelay}`,
+            resumeResponse);
+        //Make one more attempt at resume
+        result = resumeWithDelay(item, url, tusState, trigger, parallelIdentifier, 1);
+    } else {
+        logger.debugLog(`tusSender.resume: failed for item: ${item.id}${parallelIdentifier ? `-${parallelIdentifier}` : ""}`,
+            resumeResponse);
+        result = handleResumeFail(item, options, parallelIdentifier);
+    }
+
+    return result;
+};
+
+const doResumeWithStartEvent = (
+    item: BatchItem,
+    url: string,
+    tusState: TusState,
+    trigger: TriggerMethod
+): Promise<XMLHttpRequest & boolean> => {
+    const { options } = tusState.getState();
+
+    return triggerUpdater<ResumeStartEventData>(trigger, TUS_EVENTS.RESUME_START, {
+        url,
+        item: unwrap(item),
+        resumeHeaders: unwrap(options.resumeHeaders),
+    })
+        // $FlowIssue - https://github.com/facebook/flow/issues/8215
+        .then((updatedData: ResumeStartEventResponse & boolean) => {
+            const cancelResume = updatedData === false;
+
+            if (cancelResume) {
+                logger.debugLog(`tusSender.resume: received false from TUS RESUME_START event - cancelling resume attempt for item: ${item.id}`);
+            }
+
+            return cancelResume ?
+                false :
+                request(
+                    updatedData?.url || url,
+                    null,
+                    {
+                        method: "HEAD",
+                        headers: mergeWithUndefined(
+                            { "tus-resumable": options.version },
+                            options.resumeHeaders,
+                            updatedData?.resumeHeaders)
+                    });
+        });
+};
+
+const makeResumeRequest = (
+    item: BatchItem,
+    url: string,
+    tusState: TusState,
+    trigger: TriggerMethod,
+    parallelIdentifier: ?string,
+    attempt: number
+): InitUploadResult => {
+    const { options } = tusState.getState();
 
 	logger.debugLog(`tusSender.resume - resuming upload for ${item.id}${parallelIdentifier ? `-${parallelIdentifier}` : ""} at: ${url}`);
 
-	const pXhr = request(url, null, {
-		method: "HEAD",
-		headers: {
-			"tus-resumable": options.version,
-		}
-	});
+    let resumeFinished = false;
 
-	let resumeFinished = false;
+    const updatedRequest = doResumeWithStartEvent(item, url, tusState, trigger);
 
-	const resumeRequest = pXhr
-		.then((resumeResponse: ?XMLHttpRequest) => {
-			let result;
+    const resumeRequest = updatedRequest
+        .then((resumeResponse: ?XMLHttpRequest) => {
+            resumeFinished = resumeResponse === false;
 
-			if (resumeResponse && ~SUCCESS_CODES.indexOf(resumeResponse.status)) {
-				result = handleSuccessfulResumeResponse(item, url, tusState, resumeResponse);
-			} else if (resumeResponse?.status === 423 && attempt === 0) {
-				logger.debugLog(`tusSender.resume: upload is locked for item: ${item.id}. Will retry in ${+options.lockedRetryDelay}`, resumeResponse);
-				//Make one more attempt at resume
-				result = resumeWithDelay(item, url, tusState, parallelIdentifier, 1);
-			} else {
-				logger.debugLog(`tusSender.resume: failed for item: ${item.id}${parallelIdentifier ? `-${parallelIdentifier}` : ""}`, resumeResponse);
-				result = handleResumeFail(item, options, parallelIdentifier);
-			}
+            return resumeFinished ?
+                handleResumeFail(item, options, parallelIdentifier) :
+                handleResumeResponse(resumeResponse, item, url, tusState, trigger, parallelIdentifier, attempt);
+        })
+        .catch((error) => {
+            logger.debugLog(`tusSender.resume: resume upload failed unexpectedly`, error);
+            return handleResumeFail(item, options, parallelIdentifier);
+        })
+        .finally(() => {
+            resumeFinished = true;
+        });
 
-			return result;
-		})
-		.catch((error) => {
-			logger.debugLog(`tusSender.resume: resume upload failed unexpectedly`, error);
-			return handleResumeFail(item, options, parallelIdentifier);
-		})
-		.finally(() => {
-			resumeFinished = true;
-		});
+    const abortResume = () => {
+        if (!resumeFinished) {
+            logger.debugLog(`tusSender.resume: aborting resume request for item: ${item.id}`);
+            // $FlowExpectedError[incompatible-use]
+            updatedRequest.then((pXhr) => pXhr?.xhr.abort());
+        }
 
-	const abortResume = () => {
-		if (!resumeFinished) {
-			logger.debugLog(`tusSender.resume: aborting resume request for item: ${item.id}`);
-			// $FlowFixMe
-			pXhr.xhr.abort();
-		}
-
-		return !resumeFinished;
-	};
+        return !resumeFinished;
+    };
 
 	return {
 		request: resumeRequest,
@@ -111,8 +170,13 @@ const makeResumeRequest = (item: BatchItem, url: string, tusState: TusState, par
 	};
 };
 
-const resumeUpload = (item: BatchItem, url: string, tusState: TusState, parallelIdentifier: ?string): InitUploadResult => {
-    return makeResumeRequest(item, url, tusState, parallelIdentifier, 0);
-};
+const resumeUpload = (
+    item: BatchItem,
+    url: string,
+    tusState: TusState,
+    trigger: TriggerMethod,
+    parallelIdentifier: ?string
+): InitUploadResult =>
+    makeResumeRequest(item, url, tusState, trigger, parallelIdentifier, 0);
 
 export default resumeUpload;

@@ -1,15 +1,11 @@
 // @flow
-
 import getTusEnhancer from "./getTusEnhancer";
-import { TUS_SENDER_TYPE } from "./consts";
 
 export {
 	CHUNKING_SUPPORT
 } from "@rpldy/chunked-sender";
 
 export {
-	TUS_SENDER_TYPE,
-
 	getTusEnhancer,
 };
 
@@ -18,11 +14,15 @@ export {
 } from "./resumableStore";
 
 export {
-	TUS_EXT
+    TUS_SENDER_TYPE,
+	TUS_EXT,
+    TUS_EVENTS,
 } from "./consts";
 
 export default getTusEnhancer;
 
 export type {
-	TusOptions
+	TusOptions,
+    ResumeStartEventData,
+    ResumeStartEventResponse,
 } from "./types";

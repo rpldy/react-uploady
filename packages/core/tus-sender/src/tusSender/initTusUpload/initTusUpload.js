@@ -6,6 +6,7 @@ import resumeUpload from "./resumeUpload";
 import handleTusUpload from "../handleTusUpload";
 
 import type { BatchItem, UploadData } from "@rpldy/shared";
+import type { TriggerMethod } from "@rpldy/life-events";
 import type { ChunkedSender, ChunkedSendOptions, OnProgress } from "@rpldy/chunked-sender";
 import type { TusState, State } from "../../types";
 
@@ -27,6 +28,7 @@ const initTusUpload =  (items: BatchItem[],
                         onProgress: OnProgress,
                         tusState: TusState,
                         chunkedSender: ChunkedSender,
+                        trigger: TriggerMethod,
                         parallelIdentifier: ?string = null
 ): {|abort: () => boolean, request: Promise<UploadData>|} => {
     const { options } = tusState.getState(),
@@ -52,7 +54,7 @@ const initTusUpload =  (items: BatchItem[],
     else {
         initCall = persistedUrl ?
             //init resumable upload - this file has already started uploading
-            resumeUpload(item, persistedUrl, tusState, parallelIdentifier) :
+            resumeUpload(item, persistedUrl, tusState, trigger, parallelIdentifier) :
             //init new upload - first time uploading this file
             createUpload(item, url, tusState, sendOptions, parallelIdentifier);
     }

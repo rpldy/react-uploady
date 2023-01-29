@@ -71,6 +71,40 @@ It also supports the __Upload-Metadata__ header and will turn the destination __
 
 ## Hooks
 
+### useTusResumeStartListener
+
+Called before the (HEAD) request is issued on behalf of a potentially resumeable upload.
+
+> This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
+
+Receives an object with:
+
+- url: the URL the resume request will be sent to
+- item: the BatchItem being sent
+- resumeHeaders: an optional object that was passed to the TusUploady props
+
+May return `false` to cancel the resume, nothing, or an [object](../../core/tus-sender/src/tusSender/types.js#L32) with `url` property to overwrite the URL the request will be sent to.
+And/Or a `resumeHeaders` object that will be merged with the optional object passed as a prop to TusUploady.
+
+```javascript
+import React from "react";
+import { useTusResumeStartListener } from "@rpldy/tus-uploady";
+
+const MyComponent = () => {
+    useTusResumeStartListener(({ url, item, resumeHeaders }) => {
+        return cancelResume ? false : {
+            resumeHeaders: {
+                "x-another-header": "foo",
+                "x-test-override": "def"
+            }
+        }
+    });
+
+	//...
+}
+
+```
+
 ### useClearResumableStore
 
 By default, the tus-sender will store the URLs for uploaded files so it can query

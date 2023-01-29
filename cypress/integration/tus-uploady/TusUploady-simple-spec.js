@@ -1,6 +1,6 @@
-import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 import { WAIT_LONG, WAIT_SHORT } from "../../constants";
+import { tusIntercept } from "./tusIntercept";
 
 describe("TusUploady - Simple", () => {
 	const fileName = "flower.jpg",
@@ -15,18 +15,7 @@ describe("TusUploady - Simple", () => {
 	});
 
 	it("should upload chunks using tus protocol", () => {
-        intercept(uploadUrl, "POST", {
-            headers: {
-                "Location": `${uploadUrl}/123`,
-                "Tus-Resumable": "1.0.0"
-            }
-        }, "createReq");
-
-        intercept(`${uploadUrl}/123`, "PATCH", {
-            headers: {
-                "Tus-Resumable": "1.0.0",
-            },
-        }, "patchReq");
+        tusIntercept(uploadUrl);
 
 		cy.get("input")
 			.should("exist")
@@ -61,14 +50,6 @@ describe("TusUploady - Simple", () => {
                     expect(headers["content-type"]).to.eq("application/offset+octet-stream");
                 });
 
-            intercept(`${uploadUrl}/123`, "HEAD", {
-                headers: {
-                    "Tus-Resumable": "1.0.0",
-                    "Upload-Offset": "1",
-                    "Upload-Length": "1",
-                },
-            }, "finishReq");
-
 			//upload again, should be resumed!
 			uploadFile(fileName, () => {
 				cy.wait(WAIT_SHORT);
@@ -78,6 +59,12 @@ describe("TusUploady - Simple", () => {
 						expect(events.finish.args[1].uploadResponse.message).to.eq("TUS server has file");
 						expect(events.finish.args[1].uploadResponse.location).to.eq(`${uploadUrl}/123`);
 					});
+
+                cy.wait("@resumeReq")
+                    .then(({ request }) => {
+                        const { headers } = request;
+                        expect(headers["tus-resumable"]).to.eq("1.0.0");
+                    });
 			}, "#upload-button");
 		}, "#upload-button");
 	});

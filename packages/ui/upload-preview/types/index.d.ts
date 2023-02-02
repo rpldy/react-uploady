@@ -6,21 +6,19 @@ export enum PreviewType {
     VIDEO = "video",
 }
 
+export type RemovePreviewMethod = (id: string) => void;
+
 export type PreviewItem = {
     id: string;
     url: string;
     name: string;
     type: PreviewType;
     isFallback: boolean;
+    removePreview: () => void;
     props: Record<string, unknown>;
 };
 
-export type PreviewData = {
-    previews: PreviewItem[];
-    clearPreviews: () => void;
-};
-
-export type FallbackType = string | PreviewData;
+export type FallbackType = string | PreviewItem;
 
 export type FallbackMethod = (file: FileLike) => FallbackType | void;
 
@@ -30,6 +28,7 @@ export type PreviewComponentPropsOrMethod = Record<string, unknown> | PreviewCom
 
 export type PreviewMethods = {
     clear: () => void;
+    removePreview: RemovePreviewMethod;
 };
 
 export interface PreviewOptions {

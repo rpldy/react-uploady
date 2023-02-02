@@ -16,10 +16,10 @@ import Uploady, {
     useBatchProgressListener,
     useRequestPreSend,
     useUploady,
+    useAbortItem,
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
-import type { FileLike } from "@rpldy/shared";
 import {
     KNOB_GROUPS,
     useStoryUploadySetup,
@@ -397,7 +397,7 @@ const finishedCss = css`
         left: 0;
         right: 0;
         top: 0;
-        bottom: 0;
+        bottom: 20px;
         background-color: rgba(34, 34, 34, 0.6);
     }
 
@@ -430,7 +430,25 @@ const PreviewsContainer = styled.div`
     margin-bottom: 20px;
 `;
 
-const ItemPreviewThumb = ({ id, url, onPreviewSelected, isCroppedSet, isFinished }) => {
+const RemovePreviewButton = ({ id, removePreview }) => {
+    const abortItem = useAbortItem();
+
+    const onRemove = () => {
+        abortItem(id);
+        removePreview();
+    }
+
+    return (
+        <button
+            className={`remove-preview-${id}`}
+            onClick={onRemove}
+        >
+            Remove
+        </button>
+    );
+};
+
+const ItemPreviewThumb = ({ id, url, onPreviewSelected, isCroppedSet, isFinished, removePreview }) => {
     const onPreviewClick = () => {
         if (!isFinished) {
             onPreviewSelected({ id, url });
@@ -446,6 +464,8 @@ const ItemPreviewThumb = ({ id, url, onPreviewSelected, isCroppedSet, isFinished
             onClick={onPreviewClick}
             src={url}
         />
+        <br/>
+        <RemovePreviewButton id={id} removePreview={removePreview}/>
     </ItemPreviewImgWrapper>
 };
 
@@ -454,7 +474,8 @@ const CropperContainer = styled.div`
     flex-direction: column;
 `;
 
-const CropperForMultiCrop = ({ item, url, setCropForItem }) => {
+const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview }) => {
+    const abortItem = useAbortItem();
     const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
     const imgRef = useRef(null);
 
@@ -465,6 +486,11 @@ const CropperForMultiCrop = ({ item, url, setCropForItem }) => {
 
     const onUnsetCrop = () => {
         setCropForItem(item.id, null);
+    };
+
+    const onRemoveSelected = () => {
+        abortItem(item.id);
+        removePreview?.(item.id);
     };
 
     const onLoad = useCallback((img) => {
@@ -481,11 +507,13 @@ const CropperForMultiCrop = ({ item, url, setCropForItem }) => {
         />
         <Button onClick={onSaveCrop} id="save-crop-btn">Save Crop</Button>
         <Button onClick={onUnsetCrop} id="unset-crop-btn">Dont use Crop</Button>
+        <Button onClick={onRemoveSelected} id="remove-selected-btn">Remove Selected</Button>
     </CropperContainer>);
 };
 
 const BatchCrop = withBatchStartUpdate((props) => {
     const { id, updateRequest, requestData, uploadInProgress } = props;
+    const previewMethodsRef = useRef();
     const [selected, setSelected] = useState({ url: null, id: null });
     const [finishedItems, setFinishedItems] = useState([]);
     const [cropped, setCropped] = useState({});
@@ -530,6 +558,7 @@ const BatchCrop = withBatchStartUpdate((props) => {
                 PreviewComponent={ItemPreviewThumb}
                 fallbackUrl="https://picsum.photos/50"
                 previewComponentProps={getPreviewCompProps}
+                previewMethodsRef={previewMethodsRef}
             />
         </PreviewsContainer>
         {selectedItem && hasData && !uploadInProgress &&
@@ -537,6 +566,7 @@ const BatchCrop = withBatchStartUpdate((props) => {
             {...selected}
             item={selectedItem}
             setCropForItem={setCropForItem}
+            removePreview={previewMethodsRef.current?.removePreview}
         />}
     </MultiCropContainer>);
 });

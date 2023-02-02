@@ -29,6 +29,8 @@ export type TusOptions = {
 	forgetOnSuccess?: boolean,
 	//Whether to ignore File's modified date when creating key for storage (default: false)
 	ignoreModifiedDateInStorage?: boolean,
+    //Headers to use for the resume check (HEAD) request
+    resumeHeaders?: Object
 };
 
 export type RequestResult<T> = {
@@ -50,3 +52,5 @@ export type TusState = {
 	getState: () => State,
 	updateState: ((State) => void) => State,
 };
+
+export type { ResumeStartEventData, ResumeStartEventResponse } from "./tusSender/types";

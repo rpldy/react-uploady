@@ -1,4 +1,5 @@
 // @flow
+import XhrPromise from "./XhrPromise";
 import type { RequestOptions } from "../types";
 
 const setHeaders = (req, headers: Object): ?Headers => {
@@ -11,10 +12,11 @@ const setHeaders = (req, headers: Object): ?Headers => {
     }
 };
 
-const request = (url: string, data?: mixed, options: RequestOptions = {}): Promise<XMLHttpRequest> => {
+const request = (url: string, data?: mixed, options: RequestOptions = {}): XhrPromise => {
     const req = new XMLHttpRequest();
 
-    const pXhr = new Promise((resolve, reject) => {
+    return new XhrPromise(
+        (resolve, reject) => {
         req.onerror = () => reject(req);
         req.ontimeout = () => reject(req);
         req.onabort = () => reject(req);
@@ -29,11 +31,7 @@ const request = (url: string, data?: mixed, options: RequestOptions = {}): Promi
         }
 
         req.send(data);
-    });
-
-    // $FlowFixMe - adding xhr to Promise
-    pXhr.xhr = req;
-    return pXhr;
+    }, req);
 };
 
 export default request;

@@ -7,6 +7,7 @@ import initTusUpload from "./initTusUpload";
 import { SUCCESS_CODES } from "../consts";
 
 import type { UploadData } from "@rpldy/shared";
+import type { TriggerMethod } from "@rpldy/life-events";
 import type {
 	ChunkedSender,
 	ChunkStartEventData,
@@ -26,7 +27,7 @@ const getHeadersWithoutContentRange = (headers) => ({
     "Content-Range": undefined,
 });
 
-const handleParallelChunk = (tusState: TusState, chunkedSender: ChunkedSender, data: ChunkStartEventData): Promise<boolean> => {
+const handleParallelChunk = (tusState: TusState, chunkedSender: ChunkedSender, data: ChunkStartEventData, trigger: TriggerMethod): Promise<boolean> => {
 	const { item: orgItem, chunkItem, url, sendOptions, onProgress, chunk } = data;
 	const { options } = tusState.getState();
 
@@ -47,6 +48,7 @@ const handleParallelChunk = (tusState: TusState, chunkedSender: ChunkedSender, d
 		onProgress,
 		tusState,
 		chunkedSender,
+        trigger,
 		getParallelChunkIdentifier(options, chunk.index),
 	);
 
@@ -87,7 +89,7 @@ const updateChunkStartData = (tusState: TusState, data: ChunkStartEventData, isP
 	};
 };
 
-const handleEvents = (uploader: UploaderType<UploaderCreateOptions>, tusState: TusState, chunkedSender: ChunkedSender) => {
+const handleEvents = (uploader: UploaderType<UploaderCreateOptions>, tusState: TusState, chunkedSender: ChunkedSender, trigger: TriggerMethod) => {
     if (CHUNKING_SUPPORT) {
         uploader.on(UPLOADER_EVENTS.ITEM_FINALIZE, (item) => {
             const { items, options } = tusState.getState(),
@@ -120,7 +122,7 @@ const handleEvents = (uploader: UploaderType<UploaderCreateOptions>, tusState: T
                 isParallel = +options.parallel > 1;
 
             const continueP = isParallel ?
-                handleParallelChunk(tusState, chunkedSender, data) :
+                handleParallelChunk(tusState, chunkedSender, data, trigger) :
                 Promise.resolve(true);
 
             return continueP.then((continueHandle: boolean) => continueHandle &&

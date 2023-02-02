@@ -22,20 +22,21 @@ Additional information about tus functionality can be found the [tus-sender READ
 
 ## Props
 
-| Name (* = mandatory) | Type          | Default       | Description  |
-| --------------       | ------------- | ------------- | ------------|
-| version           | string    | "1.0.0" | The tus server version|
-| featureDetection | boolean    | false | whether to query the server for supported extensions|
-| featureDetectionUrl | string | null | URL to query for TUS server feature detection, in case it's different from upload URL|
-| onFeaturesDetected  | (string[]) => ?TusOptions | void | callback to handle the extensions the server broadcasts|
-| resume    |   boolean     | true | whether to store information locally on files being uploaded to support resuming|
-| deferLength | boolean | false | defer sending file length to server ([protocol](https://tus.io/protocols/resumable-upload.html#upload-defer-length))|
-| overrideMethod | boolean | false | whether to use X-HTTP-Method-Override header instead of PATCH|
-| sendDataOnCreate | boolean | false | send first chunk with create request ([protocol](https://tus.io/protocols/resumable-upload.html#creation-with-upload))|
-| storagePrefix | string | "\_\_rpldy-tus\_\_" | the key prefix to use for persisting resumable info about files|
-| lockedRetryDelay | number | 2000 | milliseconds to wait before retrying a locked (423) resumable file|
-| forgetOnSuccess   | boolean | false | whether to remove URL from localStorage when upload finishes successfully|
-| ignoreModifiedDateInStorage   | boolean   | false     | ignore File's modified date when creating key for storage|
+| Name (* = mandatory)        | Type                      | Default             | Description                                                                                                            |
+|-----------------------------|---------------------------|---------------------|------------------------------------------------------------------------------------------------------------------------|
+| version                     | string                    | "1.0.0"             | The tus server version                                                                                                 |
+| featureDetection            | boolean                   | false               | whether to query the server for supported extensions                                                                   |
+| featureDetectionUrl         | string                    | null                | URL to query for TUS server feature detection, in case it's different from upload URL                                  |
+| onFeaturesDetected          | (string[]) => ?TusOptions | void                | callback to handle the extensions the server broadcasts                                                                |
+| resume                      | boolean                   | true                | whether to store information locally on files being uploaded to support resuming                                       |
+| deferLength                 | boolean                   | false               | defer sending file length to server ([protocol](https://tus.io/protocols/resumable-upload.html#upload-defer-length))   |
+| overrideMethod              | boolean                   | false               | whether to use X-HTTP-Method-Override header instead of PATCH                                                          |
+| sendDataOnCreate            | boolean                   | false               | send first chunk with create request ([protocol](https://tus.io/protocols/resumable-upload.html#creation-with-upload)) |
+| storagePrefix               | string                    | "\_\_rpldy-tus\_\_" | the key prefix to use for persisting resumable info about files                                                        |
+| lockedRetryDelay            | number                    | 2000                | milliseconds to wait before retrying a locked (423) resumable file                                                     |
+| forgetOnSuccess             | boolean                   | false               | whether to remove URL from localStorage when upload finishes successfully                                              |
+| ignoreModifiedDateInStorage | boolean                   | false               | ignore File's modified date when creating key for storage                                                              |
+| resumeHeaders               | Record<string, string>    | null                | Headers to use for the resume check (HEAD) request                                                                     |
 
 In addition, all [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to TusUploady.
 In order to override configuration passed to the parent Uploady component. 
@@ -69,6 +70,40 @@ On top of the Core Protocol, Uploady supports the following extensions:
 It also supports the __Upload-Metadata__ header and will turn the destination __params__ prop into the metadata key/value.
 
 ## Hooks
+
+### useTusResumeStartListener
+
+Called before the (HEAD) request is issued on behalf of a potentially resumeable upload.
+
+> This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
+
+Receives an object with:
+
+- url: the URL the resume request will be sent to
+- item: the BatchItem being sent
+- resumeHeaders: an optional object that was passed to the TusUploady props
+
+May return `false` to cancel the resume, nothing, or an [object](../../core/tus-sender/src/tusSender/types.js#L32) with `url` property to overwrite the URL the request will be sent to.
+And/Or a `resumeHeaders` object that will be merged with the optional object passed as a prop to TusUploady.
+
+```javascript
+import React from "react";
+import { useTusResumeStartListener } from "@rpldy/tus-uploady";
+
+const MyComponent = () => {
+    useTusResumeStartListener(({ url, item, resumeHeaders }) => {
+        return cancelResume ? false : {
+            resumeHeaders: {
+                "x-another-header": "foo",
+                "x-test-override": "def"
+            }
+        }
+    });
+
+	//...
+};
+
+```
 
 ### useClearResumableStore
 

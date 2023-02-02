@@ -20,6 +20,7 @@ import TusUploady,
     useItemErrorListener,
     useRequestPreSend,
     composeEnhancers,
+    useTusResumeStartListener,
 } from "./src";
 
 // $FlowFixMe - doesnt understand loading readme
@@ -223,6 +224,51 @@ export const WithRetry = (): Node => {
         <AbortButton/>
         <RetryTus/>
         <ItemProgress/>
+    </TusUploady>;
+};
+
+const ResumeHandler = ({ cancelResume = false }) => {
+    useTusResumeStartListener(() => {
+        return cancelResume ? false : {
+            resumeHeaders: {
+                "x-another-header": "foo",
+                "x-test-override": "def"
+            }
+        }
+    });
+
+    return null;
+};
+
+export const WithResumeStartHandler = (): Node => {
+    const storySetup = useTusStoryHelper();
+    let { destination } = storySetup;
+    const { enhancer, chunkSize, forgetOnSuccess, resume, ignoreModifiedDateInStorage, sendDataOnCreate, sendWithCustomHeader, extOptions } = storySetup;
+
+    if (sendWithCustomHeader) {
+        destination = { ...destination, headers: { "x-test": "abcd" } };
+    }
+
+    return <TusUploady
+        debug
+        destination={destination}
+        enhancer={composeEnhancers(enhancer, retryEnhancer)}
+        chunkSize={chunkSize}
+        forgetOnSuccess={forgetOnSuccess}
+        resume={resume}
+        ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}
+        sendDataOnCreate={sendDataOnCreate}
+        resumeHeaders={{
+            "x-test-resume": "123",
+            "x-test-override": "abc",
+        }}
+    >
+        <UploadButton id="upload-button">Upload with TUS</UploadButton>
+        <br/>
+        <AbortButton/>
+        <RetryTus/>
+        <ItemProgress/>
+        <ResumeHandler cancelResume={extOptions?.tusCancelResume}/>
     </TusUploady>;
 };
 

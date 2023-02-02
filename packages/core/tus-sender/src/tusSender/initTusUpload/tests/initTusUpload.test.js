@@ -60,7 +60,6 @@ describe("initTusUpload tests", () => {
 	});
 
 	it("should init single upload - resume", () => {
-
 		const tusState = createTusState({
 			items: {},
 			options: { parallel: 1 }
@@ -72,12 +71,12 @@ describe("initTusUpload tests", () => {
 
 		retrieveResumable.mockReturnValueOnce("stored.url");
 
-		initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender);
+		initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender, "trigger");
 
 		expect(tusState.getState().items[item.id].id).toBe(item.id);
 		expect(tusState.getState().items[item.id].size).toBe(item.file.size);
 
-		expect(resumeUpload).toHaveBeenCalledWith(item, "stored.url", tusState, null);
+		expect(resumeUpload).toHaveBeenCalledWith(item, "stored.url", tusState, "trigger", null);
 
 		expect(handleTusUpload).toHaveBeenCalledWith(
 			[item],

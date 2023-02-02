@@ -45,20 +45,21 @@ It also supports the __Upload-Metadata__ header and will turn the destination/up
 
 ## Options
 
-| Name (* = mandatory) | Type          | Default       | Description  |
-| --------------       | ------------- | ------------- | ------------|
-| version           | string    | "1.0.0" | The tus server version|
-| featureDetection | boolean    | false | whether to query the server for supported extensions|
-| featureDetectionUrl | string | null | URL to query for TUS server feature detection, in case it's different from upload URL|
-| onFeaturesDetected  | (string[]) => ?TusOptions | void | callback to handle the extensions the server broadcasts|
-| resume    |   boolean     | true | whether to store information locally on files being uploaded to support resuming|
-| deferLength | boolean | false | defer sending file length to server ([protocol](https://tus.io/protocols/resumable-upload.html#upload-defer-length))|
-| overrideMethod | boolean | false | whether to use X-HTTP-Method-Override header instead of PATCH|
-| sendDataOnCreate | boolean | false | send first chunk with create request ([protocol](https://tus.io/protocols/resumable-upload.html#creation-with-upload))|
-| storagePrefix | string | "__rpldy-tus__" | the key prefix to use for persisting resumable info about files|
-| lockedRetryDelay | number | 2000 | milliseconds to wait before retrying a locked (423) resumable file|
-| forgetOnSuccess   | boolean | false | whether to remove URL from localStorage when upload finishes successfully|
-| ignoreModifiedDateInStorage   | boolean   | false     | ignore File's modified date when creating key for storage|
+| Name (* = mandatory)        | Type                      | Default         | Description                                                                                                            |
+|-----------------------------|---------------------------|-----------------|------------------------------------------------------------------------------------------------------------------------|
+| version                     | string                    | "1.0.0"         | The tus server version                                                                                                 |
+| featureDetection            | boolean                   | false           | whether to query the server for supported extensions                                                                   |
+| featureDetectionUrl         | string                    | null            | URL to query for TUS server feature detection, in case it's different from upload URL                                  |
+| onFeaturesDetected          | (string[]) => ?TusOptions | void            | callback to handle the extensions the server broadcasts                                                                |
+| resume                      | boolean                   | true            | whether to store information locally on files being uploaded to support resuming                                       |
+| deferLength                 | boolean                   | false           | defer sending file length to server ([protocol](https://tus.io/protocols/resumable-upload.html#upload-defer-length))   |
+| overrideMethod              | boolean                   | false           | whether to use X-HTTP-Method-Override header instead of PATCH                                                          |
+| sendDataOnCreate            | boolean                   | false           | send first chunk with create request ([protocol](https://tus.io/protocols/resumable-upload.html#creation-with-upload)) |
+| storagePrefix               | string                    | "__rpldy-tus__" | the key prefix to use for persisting resumable info about files                                                        |
+| lockedRetryDelay            | number                    | 2000            | milliseconds to wait before retrying a locked (423) resumable file                                                     |
+| forgetOnSuccess             | boolean                   | false           | whether to remove URL from localStorage when upload finishes successfully                                              |
+| ignoreModifiedDateInStorage | boolean                   | false           | ignore File's modified date when creating key for storage                                                              |
+| resumeHeaders               | Record<string, string>    | null            | Headers to use for the resume check (HEAD) request                                                                     |
 
 > All of the [chunked-sender options](../chunked-sender#options) are supported with this sender
 
@@ -133,3 +134,16 @@ export const App = () => {
 };
 
 ```
+
+## Events
+
+The TUS Sender exposes a RESUME_START event.
+See [uploader events](../uploader/README.md#events) section on more info regarding how to register for events.
+
+### TUS_EVENTS.RESUME_START
+
+Triggered before the (HEAD) request is issued on behalf of a potentially resumeable upload.
+
+> This event is _[cancellable](../uploader/README.md#cancellable-events)_
+
+The event handler receives a [ResumeStartEventData](./src/types.js#L58) object 

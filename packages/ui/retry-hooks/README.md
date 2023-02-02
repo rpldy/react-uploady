@@ -119,8 +119,7 @@ Called when items are sent to be re-uploaded (retry)
 see [RETRY_EVENT](#retry_event)
 
 ```javascript
-
-import React, { useCallback } from "react";
+import React from "react";
 import { useRetryListener } from "@rpldy/retry-hooks";
 
 const MyComponent = ( ) => {
@@ -131,6 +130,5 @@ const MyComponent = ( ) => {
 
     return <div/>;
 };
-
 ```
 

@@ -54,11 +54,11 @@ const createTusSender = (
 ): {|getOptions: () => TusOptions, send: any|} => {
     options = getResolvedOptions(options);
     const chunkedSender = createChunkedSender(options, trigger);
-
     const tusState = initializeState(uploader, options);
-    handleEvents(uploader, tusState, chunkedSender);
 
-    const send = getTusSend(chunkedSender, tusState);
+    handleEvents(uploader, tusState, chunkedSender, trigger);
+
+    const send = getTusSend(chunkedSender, tusState, trigger);
 
     return {
         send,

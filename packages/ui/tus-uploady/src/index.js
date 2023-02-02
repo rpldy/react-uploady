@@ -1,13 +1,14 @@
 // @flow
 import TusUploady from "./TusUploady";
-import useClearResumableStore from "./useClearResumableStore";
 
 export default TusUploady;
 
 export {
 	TusUploady,
-	useClearResumableStore
 };
+
+export { default as useClearResumableStore } from "./useClearResumableStore";
+export { default as useTusResumeStartListener } from "./useTusResumeStartListener";
 
 export * from "@rpldy/uploady";
 

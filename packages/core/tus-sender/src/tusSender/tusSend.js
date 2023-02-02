@@ -7,6 +7,7 @@ import { TUS_SENDER_TYPE } from "../consts";
 import doFeatureDetection from "../featureDetection";
 
 import type { BatchItem } from "@rpldy/shared";
+import type { TriggerMethod } from "@rpldy/life-events";
 import type {
 	ChunkedSender,
 	OnProgress,
@@ -22,12 +23,13 @@ const doUpload = (
 	onProgress,
 	tusState,
 	chunkedSender,
-	fdRequest
+	fdRequest,
+    trigger,
 ) => {
 	let tusAbort;
 
 	const callInit = () => {
-		const tusResult = initTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender);
+		const tusResult = initTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender, trigger);
 		tusAbort = tusResult.abort;
 		return tusResult.request;
 	};
@@ -42,7 +44,11 @@ const doUpload = (
 	};
 };
 
-const tusSend = (chunkedSender: ChunkedSender, tusState: TusState): SendMethod<ChunkedSendOptions> | SendMethod<SendOptions> => {
+const tusSend = (
+    chunkedSender: ChunkedSender,
+    tusState: TusState,
+    trigger: TriggerMethod
+): SendMethod<ChunkedSendOptions> | SendMethod<SendOptions> => {
     const tusSend = (
         items: BatchItem[],
         url: ?string,
@@ -73,7 +79,9 @@ const tusSend = (chunkedSender: ChunkedSender, tusState: TusState): SendMethod<C
                 onProgress,
                 tusState,
                 chunkedSender,
-                fdRequest);
+                fdRequest,
+                trigger
+            );
 
             result = {
                 request,

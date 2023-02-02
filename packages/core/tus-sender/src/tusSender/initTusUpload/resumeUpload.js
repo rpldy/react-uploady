@@ -1,5 +1,5 @@
 // @flow
-import { logger, request, triggerUpdater, getMerge } from "@rpldy/shared";
+import { logger, request, triggerUpdater, getMerge, XhrPromise } from "@rpldy/shared";
 import { unwrap } from "@rpldy/simple-state";
 import { SUCCESS_CODES, TUS_EVENTS } from "../../consts";
 import { removeResumable } from "../../resumableStore";
@@ -86,12 +86,14 @@ const handleResumeResponse = (resumeResponse, item, url, tusState, trigger, para
     return result;
 };
 
-const doResumeWithStartEvent = (
+type UpdatedRequestResult = () => XhrPromise;
+
+const getUpdatedRequest = (
     item: BatchItem,
     url: string,
     tusState: TusState,
     trigger: TriggerMethod
-): Promise<XMLHttpRequest & boolean> => {
+): Promise<UpdatedRequestResult & boolean> => {
     const { options } = tusState.getState();
 
     return triggerUpdater<ResumeStartEventData>(trigger, TUS_EVENTS.RESUME_START, {
@@ -107,7 +109,7 @@ const doResumeWithStartEvent = (
                 logger.debugLog(`tusSender.resume: received false from TUS RESUME_START event - cancelling resume attempt for item: ${item.id}`);
             }
 
-            return cancelResume ?
+            const updatedRequest = cancelResume ?
                 false :
                 request(
                     updatedData?.url || url,
@@ -119,6 +121,8 @@ const doResumeWithStartEvent = (
                             options.resumeHeaders,
                             updatedData?.resumeHeaders)
                     });
+
+            return () => updatedRequest;
         });
 };
 
@@ -136,36 +140,45 @@ const makeResumeRequest = (
 
     let resumeFinished = false;
 
-    const updatedRequest = doResumeWithStartEvent(item, url, tusState, trigger);
+    const updateRequestPromise = getUpdatedRequest(item, url, tusState, trigger);
 
-    const resumeRequest = updatedRequest
-        .then((resumeResponse: ?XMLHttpRequest) => {
-            resumeFinished = resumeResponse === false;
+    const updatedRequest = updateRequestPromise.then((getXhr) => {
+            resumeFinished = !getXhr();
+            const callOnFail = () => handleResumeFail(item, options, parallelIdentifier);
 
-            return resumeFinished ?
-                handleResumeFail(item, options, parallelIdentifier) :
-                handleResumeResponse(resumeResponse, item, url, tusState, trigger, parallelIdentifier, attempt);
-        })
-        .catch((error) => {
-            logger.debugLog(`tusSender.resume: resume upload failed unexpectedly`, error);
-            return handleResumeFail(item, options, parallelIdentifier);
-        })
-        .finally(() => {
-            resumeFinished = true;
+        return !resumeFinished ?
+                getXhr()
+                    .then((resumeResponse: XMLHttpRequest) => {
+                        return resumeFinished ?
+                            callOnFail() :
+                            handleResumeResponse(resumeResponse, item, url, tusState, trigger, parallelIdentifier, attempt);
+                    })
+                    .catch((error) => {
+                        logger.debugLog(`tusSender.resume: resume upload failed unexpectedly`, error);
+                        return callOnFail();
+                    })
+                    .finally(() => {
+                        resumeFinished = true;
+                    }) :
+                Promise.resolve(callOnFail());
         });
 
     const abortResume = () => {
         if (!resumeFinished) {
             logger.debugLog(`tusSender.resume: aborting resume request for item: ${item.id}`);
-            // $FlowExpectedError[incompatible-use]
-            updatedRequest.then((pXhr) => pXhr?.xhr.abort());
+            resumeFinished = true;
+
+            updateRequestPromise.then((getXhr) => {
+                const pXhr = getXhr();
+                pXhr?.xhr?.abort();
+            });
         }
 
         return !resumeFinished;
     };
 
 	return {
-		request: resumeRequest,
+		request: updatedRequest,
 		abort: abortResume,
 	};
 };

@@ -309,7 +309,34 @@ describe("usePreviewLoader tests", () => {
 		expect(afterClearPreviews[1].id).toBe("f6");
 	});
 
-	it("should dedupe recycled items and merge while keeping order", () => {
+    it("removePreview should remove single preview", () => {
+        getFileObjectUrlByType
+            .mockReturnValueOnce({ url: "preview1.test" });
+
+        const { getHookResult, items } = testPreviewsLoader({});
+
+        const { previews } = getHookResult();
+        expect(previews).toHaveLength(2);
+
+        const { removeItemFromPreview } = getHookResult();
+
+        act(() => {
+            removeItemFromPreview(items[0].id);
+        });
+
+        const { previews: previews2 } = getHookResult();
+        expect(previews2).toHaveLength(1);
+        expect(previews2[0].id).toEqual(items[1].id);
+
+        act(() => {
+            previews2[0].removePreview();
+        });
+
+        const { previews: previews3 } = getHookResult();
+        expect(previews3).toHaveLength(0);
+    });
+
+    it("should dedupe recycled items and merge while keeping order", () => {
 		getFileObjectUrlByType
 			.mockReturnValueOnce({ url: "preview1.test" });
 

@@ -47,7 +47,7 @@ const loadPreviewData = (
 
     let data, isFallback = false;
 
-    const removePreview =  () =>  removeItemFromPreview(item.id);
+    const removePreview =  () => removeItemFromPreview(item.id);
 
     if (item.file) {
         const file = item.file;

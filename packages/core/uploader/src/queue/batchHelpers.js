@@ -147,6 +147,11 @@ const loadNewBatchForItem = (queue: QueueState, itemId: string): Promise<boolean
         .then(({ cancelled }: ItemsSendData) => {
             let alreadyFinished = false;
 
+            queue.updateState((state) => {
+                const pendingFlagIndex = state.batchesStartPending.indexOf(batch.id);
+                state.batchesStartPending.splice(pendingFlagIndex, 1);
+            });
+
             if (!cancelled) {
                 //in case of async batch start, its possible that when batch is aborted, items are already removed from queue
                 alreadyFinished = !getIsItemExists(queue, itemId);
@@ -154,12 +159,6 @@ const loadNewBatchForItem = (queue: QueueState, itemId: string): Promise<boolean
                 if (!alreadyFinished) {
                     queue.updateState((state) => {
                         state.currentBatch = batch.id;
-
-                        const pendingFlagIndex = state.batchesStartPending.indexOf(batch.id);
-
-                        if (~pendingFlagIndex) {
-                            state.batchesStartPending.splice(pendingFlagIndex, 1);
-                        }
                     });
                 }
             }

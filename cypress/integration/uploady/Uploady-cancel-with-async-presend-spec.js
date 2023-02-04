@@ -1,6 +1,13 @@
 import { interceptWithHandler } from "../intercept";
 import uploadFile, { uploadFileTimes } from "../uploadFile";
-import { ITEM_ABORT, ITEM_FINISH, ITEM_START, WAIT_X_SHORT, WAIT_MEDIUM, BATCH_ABORT } from "../../constants";
+import {
+    ITEM_ABORT,
+    ITEM_FINISH,
+    ITEM_START,
+    WAIT_X_SHORT,
+    WAIT_MEDIUM,
+    BATCH_ABORT,
+} from "../../constants";
 
 describe("Uploady - Cancel Upload with long running async pre-send", () => {
     const fileName = "flower.jpg";
@@ -96,7 +103,7 @@ describe("Uploady - Cancel Upload with long running async pre-send", () => {
 
             cy.wait(WAIT_MEDIUM);
 
-            cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
+            cy.storyLog().assertLogPattern(ITEM_START, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });
         }, 2);

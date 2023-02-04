@@ -3,9 +3,10 @@ import {
     FILE_STATES,
     logger,
 } from "@rpldy/shared";
-import { ITEM_FINALIZE_STATES, UPLOADER_EVENTS } from "../consts";
+import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 import { getItemsPrepareUpdater } from "./preSendPrepare";
+import { getIsItemFinalized } from "./itemHelpers";
 
 import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { SendResult } from "@rpldy/sender";
@@ -97,7 +98,7 @@ const reportPreparedError = (error, queue: QueueState, items: BatchItem[], next:
 //make sure item is still pending. Something might have changed while waiting for ITEM_START handling. Maybe someone called abort...
 const getAllowedItem = (id: string, queue: QueueState) => {
     const item: BatchItem = queue.getState().items[id];
-    return item && !ITEM_FINALIZE_STATES.includes(item.state) ? item : undefined;
+    return item && !getIsItemFinalized(item) ? item : undefined;
 };
 
 const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids, next }) => {
@@ -117,7 +118,8 @@ const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids
                     cancelledResults = ids.map(() => true);
                 } else {
                     //make sure files aren't aborted while async prepare was waiting
-                    const hasAborted = itemsSendData.items.some((item) => ITEM_FINALIZE_STATES.includes(item.state));
+                    const hasAborted = itemsSendData.items
+                        .some((item) => getIsItemFinalized(item));
 
                     if (!hasAborted) {
                         //we dont need to wait for the response here
@@ -146,7 +148,9 @@ const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMe
     const state = queue.getState();
     //ids will have more than one when grouping is allowed
     let items: any[] = Object.values(state.items);
-    items = items.filter((item: BatchItem) => !!~ids.indexOf(item.id));
+    items = items.filter((item: BatchItem) =>
+        //ensure item was not finalized (ex: aborted) while waiting for async BATCH_START
+        ids.includes(item.id) && !getIsItemFinalized(item));
 
     //allow user code cancel items from start event handler(s)
     //returning promise for testing purposes

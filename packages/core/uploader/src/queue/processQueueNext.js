@@ -7,6 +7,7 @@ import {
     cancelBatchForItem,
     loadNewBatchForItem,
     failBatchForItem,
+    isItemBatchStartPending,
 } from "./batchHelpers";
 
 import type { BatchItem } from "@rpldy/shared";
@@ -88,28 +89,33 @@ const updateItemsAsActive = (queue: QueueState, ids) => {
 const processNextWithBatch = (queue, ids) => {
     let newBatchP;
 
-    updateItemsAsActive(queue, ids);
+    if (!isItemBatchStartPending(queue, ids[0])) {
+        updateItemsAsActive(queue, ids);
 
-    if (isNewBatchStarting(queue, ids[0])) {
-        newBatchP = loadNewBatchForItem(queue, ids[0])
-            .then((allowBatch) => {
-                let cancelled = !allowBatch;
+        if (isNewBatchStarting(queue, ids[0])) {
+            newBatchP = loadNewBatchForItem(queue, ids[0])
+                .then((allowBatch) => {
+                    let cancelled = !allowBatch;
 
-                if (cancelled) {
-                    cancelBatchForItem(queue, ids[0]);
+                    if (cancelled) {
+                        cancelBatchForItem(queue, ids[0]);
+                        processNext(queue);
+                    }
+
+                    return cancelled;
+                })
+                .catch((err) => {
+                    logger.debugLog("uploader.processor: encountered error while preparing batch for request", err);
+                    failBatchForItem(queue, ids[0], err);
                     processNext(queue);
-                }
-
-                return cancelled;
-            })
-            .catch((err) => {
-                logger.debugLog("uploader.processor: encountered error while preparing batch for request", err);
-                failBatchForItem(queue, ids[0], err);
-                processNext(queue);
-                return true;
-            });
+                    return true;
+                });
+        } else {
+            newBatchP = Promise.resolve(false);
+        }
     } else {
-        newBatchP = Promise.resolve(false);
+        //dont continue processing while batch is pending start event handling
+        newBatchP = Promise.resolve(true);
     }
 
     return newBatchP;

@@ -46,6 +46,7 @@ describe("batchHelpers tests", () => {
                 batches: {
                     b1: { batch, finishedCounter: 2 },
                 },
+                batchesStartPending: ["b1"],
             });
 
             const expectedBatch = expect.objectContaining({
@@ -66,6 +67,7 @@ describe("batchHelpers tests", () => {
             expect(finalizeItem).toHaveBeenCalledWith(expect.any(Object), "u1", true);
             expect(finalizeItem).toHaveBeenCalledWith(expect.any(Object), "u2", true);
             expect(updatedState.currentBatch).toBeNull();
+            expect(updatedState.batchesStartPending).toHaveLength(0);
         });
 
         it("should finalize batch if no more uploads in queue for non-current batch", () => {
@@ -90,6 +92,7 @@ describe("batchHelpers tests", () => {
                 batches: {
                     b1: { batch, finishedCounter: 2 },
                 },
+                batchesStartPending: ["b1"],
             });
 
             const expectedBatch = expect.objectContaining({
@@ -106,6 +109,7 @@ describe("batchHelpers tests", () => {
             expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedBatch);
             expect(queueState.trigger).not.toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS, expect.any(Object));
             expect(updatedState.currentBatch).toBe("b0");
+            expect(updatedState.batchesStartPending).toHaveLength(0);
 
             expect(finalizeItem).toHaveBeenCalledTimes(2);
             expect(finalizeItem).toHaveBeenCalledWith(expect.any(Object), "u1", true);
@@ -134,6 +138,7 @@ describe("batchHelpers tests", () => {
                 batches: {
                     b1: { batch, finishedCounter: 2 },
                 },
+                batchesStartPending: [],
             });
 
             const expectedLastProgressBatch = expect.objectContaining({
@@ -202,6 +207,7 @@ describe("batchHelpers tests", () => {
                 batches: {
                     b1: { batch, finishedCounter: 2 },
                 },
+                batchesStartPending: ["b1"],
             });
 
             batchHelpers.cleanUpFinishedBatches(queueState);
@@ -214,6 +220,7 @@ describe("batchHelpers tests", () => {
             expect(finalizeItem).toHaveBeenCalledTimes(2);
             expect(finalizeItem).toHaveBeenCalledWith(expect.any(Object), "u1", true);
             expect(finalizeItem).toHaveBeenCalledWith(expect.any(Object), "u2", true);
+            expect(updatedState.batchesStartPending).toHaveLength(0);
         });
 
         it("shouldn't finalize batch if no longer in state", () => {
@@ -238,7 +245,8 @@ describe("batchHelpers tests", () => {
                 },
                 items: {
                     "u1": { batchId: "b1" }
-                }
+                },
+                batchesStartPending: []
             });
 
             mockPrepareBatchStartItems.mockResolvedValueOnce({});
@@ -249,6 +257,7 @@ describe("batchHelpers tests", () => {
             expect(allowed).toBe(true);
 
             expect(queueState.getState().currentBatch).toBe("b1");
+            expect(queueState.getState().batchesStartPending).toHaveLength(0);
         });
 
         it("should return not allowed if item doesnt exist", async () => {
@@ -259,7 +268,8 @@ describe("batchHelpers tests", () => {
                 },
                 items: {
                     "u1": { batchId: "b1" }
-                }
+                },
+                batchesStartPending: []
             });
 
             mockPrepareBatchStartItems.mockResolvedValueOnce({});
@@ -268,6 +278,7 @@ describe("batchHelpers tests", () => {
             const allowed = await batchHelpers.loadNewBatchForItem(queueState, "u1");
 
             expect(allowed).toBe(false);
+            expect(queueState.getState().batchesStartPending).toHaveLength(0);
         });
 
         it("should cancel batch", async () => {
@@ -278,7 +289,8 @@ describe("batchHelpers tests", () => {
                 },
                 items: {
                     "u2": { batchId: "b2" }
-                }
+                },
+                batchesStartPending: []
             });
 
             mockPrepareBatchStartItems.mockResolvedValueOnce({ cancelled: true });
@@ -287,6 +299,7 @@ describe("batchHelpers tests", () => {
             expect(allowed).toBe(false);
 
             expect(queueState.state.currentBatch).toBe("b1");
+            expect(queueState.getState().batchesStartPending).toHaveLength(0);
         });
     });
 
@@ -364,6 +377,7 @@ describe("batchHelpers tests", () => {
 				},
                 itemQueue: { "b1": [...ids], "b2": ["u4"] },
                 batchQueue: ["b1", "b2"],
+                batchesStartPending: ["b1", "b2"],
 			});
 
 			const eventBatch = queueState.getState().batches.b1.batch,
@@ -397,6 +411,7 @@ describe("batchHelpers tests", () => {
             expect(finalizeItem).toHaveBeenCalledTimes(3);
             expect(updatedState.batchQueue.indexOf("b1")).toBe(-1);
             expect(updatedState.batchQueue.indexOf("b2")).toBe(0);
+            expect(updatedState.batchesStartPending).toEqual(["b2"]);
 		});
 
         it("should handle batch that no longer exists", () => {
@@ -438,7 +453,6 @@ describe("batchHelpers tests", () => {
 
 	describe("getBatchFromItemId tests", () => {
 		it("should return correct batch", () => {
-
 			const batch = { id: "b2" };
 
 			const queueState = getQueueState({
@@ -679,7 +693,8 @@ describe("batchHelpers tests", () => {
                     b3: {
                         batch: { state: BATCH_STATES.ADDED, items: [items[3]], },
                     }
-                }
+                },
+                batchesStartPending: ["b1", "b2", "b3"],
             });
 
             batchHelpers.removePendingBatches(queue);
@@ -687,6 +702,7 @@ describe("batchHelpers tests", () => {
             expect(Object.keys(queue.getState().batches)).toHaveLength(1);
             expect(queue.getState().batches.b3).toBeDefined();
             expect(queue.getState().items.i4).toBeDefined();
+            expect(queue.getState().batchesStartPending).toEqual(["b3"]);
             expect(finalizeItem).toHaveBeenCalledTimes(3);
         });
     });
@@ -814,6 +830,7 @@ describe("batchHelpers tests", () => {
                 },
                 itemQueue: { "b1": [...ids], "b2": ["u4"] },
                 batchQueue: ["b1", "b2"],
+                batchesStartPending: ["b1"],
             });
 
             const eventBatch = queueState.getState().batches.b1.batch,
@@ -847,6 +864,7 @@ describe("batchHelpers tests", () => {
             expect(updatedState.batches.b2).toBeDefined();
             expect(updatedState.batchQueue.indexOf("b1")).toBe(-1);
             expect(updatedState.batchQueue.indexOf("b2")).toBe(0);
+            expect(updatedState.batchesStartPending).toHaveLength(0);
             expect(finalizeItem).toHaveBeenCalledTimes(3);
             expect(finalizeItem).toHaveBeenCalledWith(expect.any(Object), "u3", true);
         });
@@ -948,6 +966,48 @@ describe("batchHelpers tests", () => {
             });
 
             expect(batchHelpers.getIsBatchReady(queueState, batchId)).toBe(result);
+        });
+    });
+
+    describe("isItemBatchStartPending tests", () => {
+        it("should return true if batch start is pending", () => {
+            const batch = {
+                id: "b1",
+                items: [{ id: "i1", batchId: "b1" }, { id: "i2", batchId: "b1" }],
+            };
+
+            const queueState = getQueueState({
+                batches: {
+                    b1: { batch },
+                },
+                items: {
+                    "i1": batch.items[0],
+                    "i2": batch.items[1],
+                },
+                batchesStartPending: [batch.id]
+            });
+
+            expect(batchHelpers.isItemBatchStartPending(queueState, "i2")).toBe(true);
+        });
+
+        it("should return false if batch start isnt pending", () => {
+            const batch = {
+                id: "b1",
+                items: [{ id: "i1", batchId: "b1" }, { id: "i2", batchId: "b1" }],
+            };
+
+            const queueState = getQueueState({
+                batches: {
+                    b1: { batch },
+                },
+                items: {
+                    "i1": batch.items[0],
+                    "i2": batch.items[1],
+                },
+                batchesStartPending: ["b2"]
+            });
+
+            expect(batchHelpers.isItemBatchStartPending(queueState, "i2")).toBe(false);
         });
     });
 });

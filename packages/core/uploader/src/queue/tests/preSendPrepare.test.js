@@ -4,6 +4,7 @@ import {
 } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import getQueueState from "./mocks/getQueueState.mock";
 import { getItemsPrepareUpdater } from "../preSendPrepare";
+import { FILE_STATES } from "@rpldy/shared";
 
 describe("preSendPrepare tests", () => {
     const eventType = "test-event",
@@ -19,11 +20,13 @@ describe("preSendPrepare tests", () => {
         autoUpload: true,
     };
 
-    const getMockStateData = () => ({
-        items: items.reduce((res, i) => {
-            res[i.id] = i;
-            return res;
-        }, {}),
+    const getMockStateData = (testItems) => ({
+        items: testItems ?
+            { ...testItems } :
+            items.reduce((res, i) => {
+                res[i.id] = i;
+                return res;
+            }, {}),
         batches: {
             "b1": {
                 batch: { id: "b1" },
@@ -91,8 +94,10 @@ describe("preSendPrepare tests", () => {
 
         mockUtils.isSamePropInArrays.mockReturnValueOnce(true);
 
-        const newItems = [{ id: "u1", batchId: "b1", newProp: 111 },
-            { id: "u2", batchId: "b2", foo: "bar" }];
+        const newItems = [
+            { id: "u1", batchId: "b1", newProp: 111 },
+            { id: "u2", batchId: "b2", foo: "bar" }
+        ];
 
         const newOptions = {
             test: true,
@@ -116,6 +121,54 @@ describe("preSendPrepare tests", () => {
             }, batchOptions);
 
         expect(Object.values(queueState.getState().items)).toEqual(newItems);
+        expect(queueState.getState().batches["b1"].batchOptions).toStrictEqual({...batchOptions, ...newOptions});
+    });
+
+    it("Preparer should ignore updates for finalized items", async () => {
+        const testItems = {
+            u1: { id: "u1", batchId: "b1", state: FILE_STATES.ADDED },
+            u2: { id: "u2", batchId: "b1", state: FILE_STATES.ABORTED },
+            u3: { id: "u3", batchId: "b1", state: FILE_STATES.CANCELLED },
+        };
+
+        const queueState = getQueueState(getMockStateData(testItems));
+
+        const preparer = getItemsPrepareUpdater(eventType, retrieveItems, retrieveSubject);
+
+        mockUtils.isSamePropInArrays.mockReturnValueOnce(true);
+
+        const newItems = [
+            { id: "u1", batchId: "b1", newProp: 111, state: FILE_STATES.ADDED },
+            { id: "u2", batchId: "b1", foo: "bar", state: FILE_STATES.ADDED },
+            { id: "u3", batchId: "b1", state: FILE_STATES.ADDED },
+        ];
+
+        const newOptions = {
+            test: true,
+        };
+
+        triggerUpdater.mockResolvedValueOnce({
+            items: newItems,
+            options: newOptions,
+        });
+
+        const result = await preparer(queueState, Object.values(testItems));
+
+        expect(result.options).toStrictEqual({...batchOptions, ...newOptions});
+        expect(result.cancelled).toBe(false);
+
+        expect(triggerUpdater).toHaveBeenCalledWith(
+            queueState.trigger, eventType, {
+                items: Object.values(testItems),
+                options: batchOptions,
+            }, batchOptions);
+
+        expect(Object.values(queueState.getState().items)).toEqual([
+            { id: "u1", batchId: "b1", newProp: 111, state: FILE_STATES.ADDED },
+            { id: "u2", batchId: "b1", state: FILE_STATES.ABORTED },
+            { id: "u3", batchId: "b1", state: FILE_STATES.CANCELLED },
+        ]);
+
         expect(queueState.getState().batches["b1"].batchOptions).toStrictEqual({...batchOptions, ...newOptions});
     });
 

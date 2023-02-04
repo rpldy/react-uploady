@@ -72,7 +72,7 @@ const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], n
         finalizeItem(queue, id);
     });
 
-    //ensure finished batches are remove from state
+    //ensure finished batches are removed from state
     cleanUpFinishedBatches(queue);
 
     next(queue);

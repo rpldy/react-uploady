@@ -7,21 +7,29 @@ import type { RefObject } from "@rpldy/shared-ui";
 
 export type PreviewType = $Values<typeof PREVIEW_TYPES>;
 
+export type RemovePreviewMethod = (id: string) => void;
+
+export type BasicPreviewItem = {|
+    id: string,
+    url: string,
+    name: string,
+    type: PreviewType,
+|};
+
 export type PreviewItem = {
-	id: string,
-	url: string,
-	name: string,
-	type: PreviewType,
-	isFallback?: boolean,
+    ...BasicPreviewItem,
+    removePreview: () => void,
+    isFallback?: boolean,
     props?: Object,
 };
 
 export type PreviewData = {
 	previews: PreviewItem[],
 	clearPreviews: () => void,
+    removeItemFromPreview: RemovePreviewMethod,
 };
 
-export type FallbackType = string | PreviewItem;
+export type FallbackType = string | BasicPreviewItem;
 
 export type FallbackMethod = (file: Object) => ?FallbackType;
 
@@ -29,6 +37,7 @@ export type PreviewComponentPropsOrMethod = Object | (item: ?BatchItem, url: str
 
 export type PreviewMethods = {
 	clear: () => void,
+    removePreview: RemovePreviewMethod,
 };
 
 export type PreviewBatchItemsMethod = (cb: (batch: Batch, ...params: any[]) => void) => void;

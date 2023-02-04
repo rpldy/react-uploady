@@ -67,6 +67,12 @@ const removeBatch = (queue: QueueState, batchId: string) => {
         if (~batchQueueIndex) {
             state.batchQueue.splice(batchQueueIndex, 1);
         }
+
+        const pendingFlagIndex = state.batchesStartPending.indexOf(batchId);
+
+        if (~pendingFlagIndex) {
+            state.batchesStartPending.splice(pendingFlagIndex, 1);
+        }
     });
 };
 
@@ -119,6 +125,11 @@ const failBatchForItem = (queue: QueueState, itemId: string, err: Error) => {
     removeBatch(queue, batchId);
 };
 
+const isItemBatchStartPending = (queue: QueueState, itemId: string): boolean => {
+    const batch = getBatchFromItemId(queue, itemId);
+    return queue.getState().batchesStartPending.includes(batch.id);
+};
+
 const isNewBatchStarting = (queue: QueueState, itemId: string): boolean => {
     const batch = getBatchFromItemId(queue, itemId);
     return queue.getState().currentBatch !== batch.id;
@@ -126,6 +137,11 @@ const isNewBatchStarting = (queue: QueueState, itemId: string): boolean => {
 
 const loadNewBatchForItem = (queue: QueueState, itemId: string): Promise<boolean> => {
     const batch = getBatchFromItemId(queue, itemId);
+
+    queue.updateState((state) => {
+        //storing pending flag as for batch with async start handler an item can be aborted and we'll get here AGAIN before start handler returned
+        state.batchesStartPending.push(batch.id);
+    });
 
     return prepareBatchStartItems(queue, batch)
         .then(({ cancelled }: ItemsSendData) => {
@@ -138,6 +154,12 @@ const loadNewBatchForItem = (queue: QueueState, itemId: string): Promise<boolean
                 if (!alreadyFinished) {
                     queue.updateState((state) => {
                         state.currentBatch = batch.id;
+
+                        const pendingFlagIndex = state.batchesStartPending.indexOf(batch.id);
+
+                        if (~pendingFlagIndex) {
+                            state.batchesStartPending.splice(pendingFlagIndex, 1);
+                        }
                     });
                 }
             }
@@ -323,4 +345,5 @@ export {
     finalizeBatch,
     removeBatchItems,
     clearBatchData,
+    isItemBatchStartPending,
 };

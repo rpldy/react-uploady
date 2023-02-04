@@ -1,4 +1,7 @@
 // @flow
+import { ITEM_FINALIZE_STATES } from "../consts";
+
+import type { BatchItem } from "@rpldy/shared";
 import type { QueueState } from "./types";
 
 const finalizeItem = (queue: QueueState, id: string, delItem: boolean = false) => {
@@ -26,7 +29,11 @@ const finalizeItem = (queue: QueueState, id: string, delItem: boolean = false) =
 const getIsItemExists = (queue: QueueState, itemId: string): boolean =>
     !!queue.getState().items[itemId];
 
+const getIsItemFinalized = (item: BatchItem): boolean =>
+    ITEM_FINALIZE_STATES.includes(item.state);
+
 export {
     finalizeItem,
     getIsItemExists,
+    getIsItemFinalized,
 };

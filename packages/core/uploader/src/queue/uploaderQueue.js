@@ -28,6 +28,7 @@ const createUploaderQueue = (
         itemQueue: { },
         batchQueue: [],
         currentBatch: null,
+        batchesStartPending: [],
         batches: {},
         items: {},
         activeIds: [],

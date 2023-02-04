@@ -1,5 +1,6 @@
 // @flow
 import { getMerge, isSamePropInArrays, logger, triggerUpdater } from "@rpldy/shared";
+import { getIsItemFinalized } from "./itemHelpers";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { QueueState } from "./types";
@@ -61,7 +62,10 @@ const persistPrepareResponse = (queue, prepared) => {
         queue.updateState((state) => {
             //update potentially changed data back into queue state
             prepared.items.forEach((i) => {
-                state.items[i.id] = i;
+                //update item if it is NOT finished (ex: aborted)
+                if (!getIsItemFinalized(state.items[i.id])) {
+                    state.items[i.id] = i;
+                }
             });
 
             state.batches[prepared.items[0].batchId].batchOptions = prepared.options;

@@ -2,6 +2,7 @@ import { interceptWithDelay } from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
 import { BATCH_ADD, ITEM_START, ITEM_FINISH } from "../../constants";
 import { WAIT_SHORT, WAIT_X_SHORT } from "../../constants";
+import { examineCroppedUploadReq, examineFullUploadRequest } from "./examineCroppedUploadReq";
 
 describe("UploadPreview - Multi Crop", () => {
     const fileName = "flower.jpg";
@@ -17,26 +18,6 @@ describe("UploadPreview - Multi Crop", () => {
     beforeEach(() => {
         cy.storyLog().resetStoryLog()
     });
-
-    const examineCroppedUploadReq = (req, name) =>
-        req.interceptFormData((formData) => {
-            expect(formData["file"]).to.eq(name);
-        })
-            .its("request.headers")
-            .its("content-length")
-            .then((length) => {
-                expect(parseInt(length)).to.be.lessThan(5000);
-            });
-
-    const examineFullUploadRequest = (req, name) =>
-        req.interceptFormData((formData) => {
-            expect(formData["file"]).to.eq(name);
-        })
-            .its("request.headers")
-            .its("content-length")
-            .then((length) => {
-                expect(parseInt(length)).to.be.least(37200);
-            });
 
     it("should allow cropping for all items in a batch" , () => {
         interceptWithDelay(100);

@@ -123,11 +123,10 @@ const getPreviewsLoaderHook = (batchItemsMethod: PreviewBatchItemsMethod): Previ
         }, []);
 
         const removeItemFromPreview = useCallback((id) => {
-            setPreviews(({ previews, items }) =>
-                ({
-                    previews: previews.filter((prev) => prev.id !== id),
-                    items: items.filter((item) => item.id !== id),
-                }));
+            setPreviews(({ previews, items }) => ({
+                previews: previews.filter((prev) => prev.id !== id),
+                items: items.filter((item) => item.id !== id),
+            }));
         }, []);
 
         batchItemsMethod((batch: Batch) => {

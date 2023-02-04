@@ -408,6 +408,9 @@ const ItemPreviewImgWrapper = styled.div`
     margin-right: 10px;
     position: relative;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     ${({ $isCropped }) => $isCropped ? dotCss : ""}
 
@@ -440,7 +443,7 @@ const RemovePreviewButton = ({ id, removePreview }) => {
 
     return (
         <button
-            className={`remove-preview-${id}`}
+            className={`remove-preview-${id.replace(".", "_")}`}
             onClick={onRemove}
         >
             Remove
@@ -474,7 +477,7 @@ const CropperContainer = styled.div`
     flex-direction: column;
 `;
 
-const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview }) => {
+const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview, onPreviewSelected }) => {
     const abortItem = useAbortItem();
     const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
     const imgRef = useRef(null);
@@ -491,6 +494,7 @@ const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview }) => {
     const onRemoveSelected = () => {
         abortItem(item.id);
         removePreview?.(item.id);
+        onPreviewSelected(null);
     };
 
     const onLoad = useCallback((img) => {
@@ -567,6 +571,7 @@ const BatchCrop = withBatchStartUpdate((props) => {
             item={selectedItem}
             setCropForItem={setCropForItem}
             removePreview={previewMethodsRef.current?.removePreview}
+            onPreviewSelected={setSelected}
         />}
     </MultiCropContainer>);
 });

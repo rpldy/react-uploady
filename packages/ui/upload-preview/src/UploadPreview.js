@@ -19,8 +19,11 @@ const showBasicPreview = (type, url, previewProps, onImgError) =>
 		<video key={url} src={url} controls {...previewProps} /> :
 		<img key={url} onError={onImgError} src={url} {...previewProps} />;
 
-const usePreviewMethods = (previews, clearPreviews, previewMethodsRef, onPreviewsChanged) => {
-    useImperativeHandle<?PreviewMethods>(previewMethodsRef, () => ({ clear: clearPreviews }), [clearPreviews]);
+const usePreviewMethods = (previews, clearPreviews, previewMethodsRef, onPreviewsChanged, removeItemFromPreview) => {
+    useImperativeHandle<?PreviewMethods>(previewMethodsRef,
+        () => ({ clear: clearPreviews, removePreview: removeItemFromPreview }),
+        [clearPreviews, removeItemFromPreview]
+    );
 
 	useEffect(() => {
 		if (onPreviewsChanged) {
@@ -35,7 +38,7 @@ const getUploadPreviewForBatchItemsMethod =
 
     return (props: PreviewProps): Element<"img">[] | Element<ComponentType<any>>[] => {
         const { PreviewComponent, previewMethodsRef, onPreviewsChanged, ...previewOptions } = props;
-        const { previews, clearPreviews }: PreviewData = usePreviewsLoader(previewOptions);
+        const { previews, clearPreviews, removeItemFromPreview }: PreviewData = usePreviewsLoader(previewOptions);
 
         const onImagePreviewLoadError = useCallback((e) => {
             const img = e.target;
@@ -51,10 +54,12 @@ const getUploadPreviewForBatchItemsMethod =
             previews,
             clearPreviews,
             previewMethodsRef,
-            onPreviewsChanged);
+            onPreviewsChanged,
+            removeItemFromPreview
+        );
 
         return previews.map((data: PreviewItem): Element<any> => {
-            const { id, url, type, name, isFallback, props: previewProps } = data;
+            const { id, url, type, name, isFallback, removePreview, props: previewProps } = data;
 
             return PreviewComponent ?
                 <PreviewComponent
@@ -64,6 +69,7 @@ const getUploadPreviewForBatchItemsMethod =
                     type={type}
                     name={name}
                     isFallback={isFallback}
+                    removePreview={removePreview}
                     {...previewProps}
                 /> :
                 showBasicPreview(type, url, previewProps, onImagePreviewLoadError);

@@ -106,6 +106,7 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props: PropsWithChildren<P
         url,
         isFallback,
         type,
+        removePreview,
         updateRequest,
         requestData,
         previewMethods
@@ -129,11 +130,14 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props: PropsWithChildren<P
     }, [url, requestData, updateRequest, crop]);
 
     const onUploadCancel = React.useCallback(() => {
+        removePreview();
+
         updateRequest(false);
         if (previewMethods.current?.clear) {
             previewMethods.current.clear();
+            previewMethods.current.removePreview(id);
         }
-    }, [updateRequest, previewMethods]);
+    }, [updateRequest, previewMethods, removePreview, id]);
 
     return isFallback || type !== PreviewType.IMAGE ? (
         <img src={url} alt="fallback img" />

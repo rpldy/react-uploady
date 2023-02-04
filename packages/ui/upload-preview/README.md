@@ -29,19 +29,19 @@ By default, will present a preview of the file being uploaded in case its an ima
 
 ## Props
 
-| Name (* = mandatory) | Type                                              | Default       | Description | 
-| --------------       |---------------------------------------------------| ------------- | -------------|
-| loadFirstOnly        | boolean                                           | false         | load preview only for the first item in a batch|
-| maxPreviewImageSize  | number                                            | 2e+7          | maximum size of image to preview|
-| maxPreviewVideoSize  | number                                            | 1e+8          | maximum size of video to preview|
-| fallbackUrl          | string &#124; [FallbackMethod](src/types.js#L16)  | undefined | static URL or function that returns fallback in case failed to load preview or when file over max size|
-| imageMimeTypes       | string[]                                          | [see list below](#default-image-types) | image mime types to load preview for|
-| videoMimeTypes       | string[]                                          | [see list below](#default-video-types) | video mime types to load preview for|
-| previewComponentProps | [PreviewComponentPropsOrMethod](src/types.js#L18) | undefined | object or function to generate object as additional props for the preview component|
-| PreviewComponent      | React.ComponentType&lt;any&gt;                    | img &#124; video | The component that will show the preview|
-| rememberPreviousBatches | boolean                                           | false | show previous batches' previews as opposed to just the last |
-| previewMethodsRef     | React Ref                                         | undefined | ref will be set with preview helper [methods](src/types.js#L29)|
-| onPreviewsChanged     | (PreviewItem[]) => void                           | undefined | callback will be called whenever preview items array changes|
+| Name (* = mandatory)    | Type                                              | Default                                | Description                                                                                            | 
+|-------------------------|---------------------------------------------------|----------------------------------------|--------------------------------------------------------------------------------------------------------|
+| loadFirstOnly           | boolean                                           | false                                  | load preview only for the first item in a batch                                                        |
+| maxPreviewImageSize     | number                                            | 2e+7                                   | maximum size of image to preview                                                                       |
+| maxPreviewVideoSize     | number                                            | 1e+8                                   | maximum size of video to preview                                                                       |
+| fallbackUrl             | string &#124; [FallbackMethod](src/types.js#L16)  | undefined                              | static URL or function that returns fallback in case failed to load preview or when file over max size |
+| imageMimeTypes          | string[]                                          | [see list below](#default-image-types) | image mime types to load preview for                                                                   |
+| videoMimeTypes          | string[]                                          | [see list below](#default-video-types) | video mime types to load preview for                                                                   |
+| previewComponentProps   | [PreviewComponentPropsOrMethod](src/types.js#L18) | undefined                              | object or function to generate object as additional props for the preview component                    |
+| PreviewComponent        | React.ComponentType&lt;any&gt;                    | img &#124; video                       | The component that will show the preview                                                               |
+| rememberPreviousBatches | boolean                                           | false                                  | show previous batches' previews as opposed to just the last                                            |
+| previewMethodsRef       | React Ref                                         | undefined                              | ref will be set with preview helper [methods](src/types.js#L29)                                        |
+| onPreviewsChanged       | (PreviewItem[]) => void                           | undefined                              | callback will be called whenever preview items array changes                                           |
 
 ## Usage
 
@@ -69,11 +69,12 @@ The code below shows how to clear the previews with a button click:
 
 ```javascript
 import React from "react";
-import Uploady from "@rpldy/uploady";
+import Uploady, { useAbortItem } from "@rpldy/uploady";
 import UploadPreview from "@rpldy/upload-preview";
 import UploadButton from "@rpldy/upload-button";
 
 const PreviewsWithClear = () => {
+	const abortItem = useAbortItem();
 	const previewMethodsRef = useRef();
 	const [previews, setPreviews] = useState([]);
 
@@ -87,6 +88,13 @@ const PreviewsWithClear = () => {
 		}
 	}, [previewMethodsRef]);
 
+	const onRemoveItem = useCallback(() => {
+		if (previewMethodsRef.current?.removePreview) {
+			abortItem("item-123"); //cancel the upload for the item
+            previewMethodsRef.current.removePreview("item-123") //need the item id to remove the preview
+        }
+    }, [previewMethodsRef]);
+	
 	return <>
 		<button onClick={onClear}>
             Clear {previews.length} previews
@@ -106,11 +114,43 @@ export const App = () => {
 		<PreviewsWithClear />
 	</Uploady>;
 };
-
 ```
 
+### previewMethodsRef
+
+```typescript
+type PreviewMethods = {
+    clear: () => void;
+    removePreview: (id: string) => void;
+};
+```
+
+Provides access to preview related methods:
+
+- `clear` - will reset all items shown in the preview
+- `removePreview` - will remove a single item preview
+
+> These methods do not remove the item from the upload queue. ONLY from the preview.
+
+
 ### Custom Preview Component
- 
+
+The Upload Preview can be customized in several ways. The main method is through the _PreviewComponent_ prop.
+Passing a custom component will make the preview render your own UI per each file being uploaded.
+
+The custom component is called with the following props
+
+```typescript
+type PreviewProps = {
+	id: string;
+	url: string;
+	name: string;
+	type: PreviewType;
+	isFallback: boolean;
+    removePreview: () => void;
+};
+```
+
 For an example of using a custom preview component see [this story](https://react-uploady-storybook.netlify.app/?path=/story/upload-preview--with-progress). 
 
 ### Custom Batch Items Method

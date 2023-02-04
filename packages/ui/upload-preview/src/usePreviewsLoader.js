@@ -18,6 +18,7 @@ import type {
     PreviewBatchItemsMethod,
     PreviewsLoaderHook,
     PreviewType,
+    RemovePreviewMethod,
 } from "./types";
 
 const getFilePreviewUrl = (file, options: MandatoryPreviewOptions) => {
@@ -40,10 +41,13 @@ const getItemProps = (previewComponentProps: PreviewComponentPropsOrMethod, item
 
 const loadPreviewData = (
     item: BatchItem,
-    options: MandatoryPreviewOptions
+    options: MandatoryPreviewOptions,
+    removeItemFromPreview: RemovePreviewMethod,
 ): ?PreviewItem => {
 
     let data, isFallback = false;
+
+    const removePreview =  () => removeItemFromPreview(item.id);
 
     if (item.file) {
         const file = item.file;
@@ -65,6 +69,7 @@ const loadPreviewData = (
         ...data,
         id: item.id,
         isFallback,
+        removePreview,
     };
 };
 
@@ -85,7 +90,11 @@ const mergePreviewData = (prev, next) => {
     return prev.concat(newItems);
 };
 
-const getPreviewsDataWithItemProps = (previewsData, items, previewComponentProps: PreviewComponentPropsOrMethod) => {
+const getPreviewsDataWithItemProps = (
+    previewsData,
+    items,
+    previewComponentProps: PreviewComponentPropsOrMethod,
+) => {
     let newData = previewsData;
 
     if (previewComponentProps) {
@@ -94,7 +103,8 @@ const getPreviewsDataWithItemProps = (previewsData, items, previewComponentProps
             props: getItemProps(
                 previewComponentProps,
                 items.find(({ id }) => id === pd.id),
-                pd.url, pd.type
+                pd.url,
+                pd.type,
             ),
         }));
     }
@@ -102,7 +112,7 @@ const getPreviewsDataWithItemProps = (previewsData, items, previewComponentProps
     return newData;
 };
 
-const getPreviewsLoaderHook = (batchItemsMethod: PreviewBatchItemsMethod): PreviewsLoaderHook  => {
+const getPreviewsLoaderHook = (batchItemsMethod: PreviewBatchItemsMethod): PreviewsLoaderHook => {
     return (props: PreviewOptions): PreviewData => {
         const previewComponentProps = props.previewComponentProps;
         const [previews, setPreviews] = useState<{ previews: PreviewItem[], items: BatchItem[] }>({ previews: [], items: [] });
@@ -112,11 +122,18 @@ const getPreviewsLoaderHook = (batchItemsMethod: PreviewBatchItemsMethod): Previ
             setPreviews({ previews: [], items: [] });
         }, []);
 
+        const removeItemFromPreview = useCallback((id) => {
+            setPreviews(({ previews, items }) => ({
+                previews: previews.filter((prev) => prev.id !== id),
+                items: items.filter((item) => item.id !== id),
+            }));
+        }, []);
+
         batchItemsMethod((batch: Batch) => {
             const items: BatchItem[] = previewOptions.loadFirstOnly ? batch.items.slice(0, 1) : batch.items;
 
             const previewsData = items
-                .map((item) => loadPreviewData(item, previewOptions))
+                .map((item) => loadPreviewData(item, previewOptions, removeItemFromPreview))
                 .filter(Boolean);
 
             setPreviews({
@@ -130,7 +147,7 @@ const getPreviewsLoaderHook = (batchItemsMethod: PreviewBatchItemsMethod): Previ
                 getPreviewsDataWithItemProps(previews.previews, previews.items, previewComponentProps),
             [previews, previewComponentProps]);
 
-        return { previews: previewsWithItemProps, clearPreviews };
+        return { previews: previewsWithItemProps, clearPreviews, removeItemFromPreview };
     };
 };
 

@@ -8,7 +8,7 @@ import type {
     PreviewType,
     MandatoryPreviewOptions,
     PreviewOptions,
-    PreviewItem
+    BasicPreviewItem
 } from "./types";
 
 const getWithMandatoryOptions = (options: ?PreviewOptions): MandatoryPreviewOptions => {
@@ -18,7 +18,7 @@ const getWithMandatoryOptions = (options: ?PreviewOptions): MandatoryPreviewOpti
 	};
 };
 
-const getFallbackUrlData = (fallbackProp: ?string | FallbackMethod, file: Object) : ?PreviewItem => {
+const getFallbackUrlData = (fallbackProp: ?string | FallbackMethod, file: Object) : ?BasicPreviewItem => {
     let data = isFunction(fallbackProp) ?
         fallbackProp(file) :
         fallbackProp;

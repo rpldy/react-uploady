@@ -35,11 +35,11 @@ describe("resumeUpload tests", () => {
 			(config.error ?
 				Promise.reject("boom") :
 				Promise.resolve(xhrResponse)) :
-			new Promise(() => {
+			new Promise((resolve) => {
+                xhr.resolveMockRequest = resolve;
 			});
 
 		p.xhr = xhr;
-
 		return p;
 	};
 
@@ -204,7 +204,7 @@ describe("resumeUpload tests", () => {
 			.toHaveBeenCalledWith(item, tusState.getState().options, "ci1");
 	});
 
-    describe("RESUME_START event handlder tests", () => {
+    describe("RESUME_START event handler tests", () => {
         const overrideUrl = "override.com";
 
         it("should overwrite url and merge resume headers", async () => {
@@ -231,6 +231,18 @@ describe("resumeUpload tests", () => {
 
             expect(response).toStrictEqual({ isNew: false, canResume: false });
             expect(request).toHaveBeenCalledTimes(0);
+        });
+
+        it("should handle abort while waiting resume request response", async () => {
+            const { resumeResult, xhr } = await testResume({ resolveRequest: false });
+
+            await triggerUpdater.mock.results[0].value;
+            resumeResult.abort();
+            xhr.resolveMockRequest();
+
+            const result = await resumeResult.request;
+
+            expect(result).toStrictEqual({ isNew: false, canResume: false });
         });
     });
 

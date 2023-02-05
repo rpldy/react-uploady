@@ -46,7 +46,7 @@ const finalizeParallelUpload = (
     chunkedRequest: Promise<UploadData>,
 ): Promise<UploadData> =>
     chunkedRequest.then((chunkedUploadData: UploadData) => {
-        let finalResult = chunkedUploadData;
+        let finalResult; // = chunkedUploadData;
 
         if (chunkedUploadData.state === FILE_STATES.FINISHED) {
             const { options, items } = tusState.getState(),
@@ -88,7 +88,7 @@ const finalizeParallelUpload = (
             }
         }
 
-        return finalResult;
+        return finalResult || Promise.resolve(chunkedUploadData);
     });
 
 export default finalizeParallelUpload;

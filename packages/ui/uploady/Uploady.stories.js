@@ -524,6 +524,7 @@ const UploadButtonWithInvalidPreSend = () => {
     useRequestPreSend(({ items }) => {
 
         return {
+            // $FlowExpectedError[speculation-ambiguous] :(
             items: items[0].id === "batch-1.item-1" ? [
                 //intentionally cause error for the first upload since changing item id is forbidden
                 { ...items[0], id: "invalid-id" },

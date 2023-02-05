@@ -2,7 +2,7 @@
 import { DEBUG_LOG_KEY } from "./consts";
 import hasWindow from "./utils/hasWindow";
 
-let isDebug;
+let isDebug: ?boolean = null;
 
 const isDebugOn = (): boolean | string => {
 	if (typeof isDebug !== "boolean") {

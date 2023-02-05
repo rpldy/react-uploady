@@ -5,7 +5,7 @@ import {
     generateUploaderEventHookWithState
 } from "./hooksUtils";
 
-import type { Batch, BatchItem } from "@rpldy/shared";
+import type { Batch, BatchFile, BatchItem, BatchUrl } from "@rpldy/shared";
 import type { UploaderCreateOptions } from "@rpldy/uploader";
 import type {
     BatchEventHook,
@@ -17,7 +17,7 @@ import type {
     PreSendData,
 } from "../types";
 
-type PreSendResponse = { items?: BatchItem[], options?: UploaderCreateOptions } | boolean | void;
+type PreSendResponse = { items?: BatchUrl[] | BatchFile[], options?: UploaderCreateOptions } | boolean | void;
 
 type RequestPreSendHook = (cb: (data: PreSendData) => PreSendResponse | Promise<PreSendResponse>) => void;
 

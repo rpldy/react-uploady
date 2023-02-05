@@ -231,10 +231,10 @@ const defineLifeData = (target: Object, options: Options, events: any[] = [], re
 
 const addLife = (target?: Object, events: any[] = [], options?: ?Options): LifeEventsAPI => {
 	target = target || {};
-	options = { ...defaults, ...options };
+	const usedOptions = { ...defaults, ...options };
 
 	if (!isLE(target)) {
-		defineLifeData(target, options, events);
+		defineLifeData(target, usedOptions, events);
 	}
 
 	return createApi(target);

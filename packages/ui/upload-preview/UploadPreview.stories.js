@@ -36,6 +36,7 @@ import UploadPreview, {
 
 // $FlowIssue - doesnt understand loading readme
 import readme from "./README.md";
+import type { BatchFile } from "@rpldy/shared";
 
 const StyledUploadButton = styled(UploadButton)`
 	${uploadButtonCss}
@@ -824,6 +825,7 @@ const MyForm = () => {
 
     useRequestPreSend(({ items }) => {
         return {
+            // $FlowExpectedError[speculation-ambiguous] :(
             items: [{
                 ...items[0],
                 file: cropped?.data || items[0].file,

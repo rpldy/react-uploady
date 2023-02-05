@@ -10,18 +10,18 @@ export type PreviewType = $Values<typeof PREVIEW_TYPES>;
 export type RemovePreviewMethod = (id: string) => void;
 
 export type BasicPreviewItem = {|
-    id: string,
     url: string,
     name: string,
     type: PreviewType,
 |};
 
-export type PreviewItem = {
+export type PreviewItem = {|
     ...BasicPreviewItem,
+    id: string,
     removePreview: () => void,
     isFallback?: boolean,
     props?: Object,
-};
+|};
 
 export type PreviewData = {
 	previews: PreviewItem[],

@@ -78,7 +78,7 @@ const handleTusUpload = (
     initRequest
         .then((initData: ?InitData) => {
             let request,
-                resumeFailed = false;
+                resumeFailed: ?boolean = false;
 
             if (initData) {
                 if (initData.isDone) {

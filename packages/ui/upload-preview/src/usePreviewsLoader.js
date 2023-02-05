@@ -18,7 +18,7 @@ import type {
     PreviewBatchItemsMethod,
     PreviewsLoaderHook,
     PreviewType,
-    RemovePreviewMethod,
+    RemovePreviewMethod, BasicPreviewItem,
 } from "./types";
 
 const getFilePreviewUrl = (file, options: MandatoryPreviewOptions) => {
@@ -44,8 +44,7 @@ const loadPreviewData = (
     options: MandatoryPreviewOptions,
     removeItemFromPreview: RemovePreviewMethod,
 ): ?PreviewItem => {
-
-    let data, isFallback = false;
+    let data: ?BasicPreviewItem, isFallback = false;
 
     const removePreview =  () => removeItemFromPreview(item.id);
 

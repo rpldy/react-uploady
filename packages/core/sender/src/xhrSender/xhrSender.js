@@ -96,7 +96,7 @@ const parseResponseJson = (response: string, headers: ?Headers, options: SendOpt
 	return parsed;
 };
 
-const checkIsResponseSuccessful = (xhr, options) => {
+const checkIsResponseSuccessful = (xhr: XMLHttpRequest, options: SendOptions) => {
     const isSuccess = options.isSuccessfulCall ?
         options.isSuccessfulCall(xhr) :
         SUCCESS_CODES.includes(xhr.status);

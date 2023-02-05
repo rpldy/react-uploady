@@ -1,3 +1,4 @@
+// @flow
 import withPasteUpload from "./withPasteUpload";
 
 export {

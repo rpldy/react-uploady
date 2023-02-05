@@ -22,7 +22,7 @@ type WithStateFn = (fn?: Callback, id?: string ) => ?any;
 
 const generateUploaderEventHookWithState =
     <T>(event: string, stateCalculator: (state: T) => any): WithStateFn =>
-        (fn? : Callback | string , id?: string): ?any  => {
+        (fn? : Callback | string, id?: string): ?any  => {
         const [eventState, setEventState] = useState(null);
 
         if (fn && !isFunction(fn)) {

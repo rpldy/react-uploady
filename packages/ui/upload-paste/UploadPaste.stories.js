@@ -21,6 +21,8 @@ import withPasteUpload, { usePasteUpload } from "./src";
 import readme from "./README.md";
 
 import type { Node } from "React"
+import type { UploadOptions } from "@rpldy/shared";
+import type { PasteUploadHookResult } from "./src";
 
 const SimpleContainer = styled.div`
     top: 200px;
@@ -59,7 +61,7 @@ export const Simple = (): Node => {
     </Uploady>;
 };
 
-const PasteToggle = ({ toggle, getIsEnabled }) => {
+const PasteToggle = ({ toggle, getIsEnabled }: PasteUploadHookResult ) => {
     const [isEnabled, setIsEnabled] = useState(getIsEnabled);
 
     const onToggleClick = useCallback(() => {
@@ -98,7 +100,7 @@ export const WithWindowPaste = (): Node => {
     </Uploady>;
 };
 
-const ElementPaste = (props) => {
+const ElementPaste = (props: UploadOptions) => {
     const containerRef = useRef(null);
 
     const onPasteUpload = useCallback(({ count }) => {

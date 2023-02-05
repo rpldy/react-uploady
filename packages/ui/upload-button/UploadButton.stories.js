@@ -287,7 +287,7 @@ export const WithComponentAsButton = (): Node => {
     </Uploady>;
 };
 
-const ExampleForm = ({ url }) => {
+const ExampleForm = ({ url }: { url: string }) => {
     const inputRef = useRef();
     useFileInput(inputRef);
 
@@ -308,7 +308,7 @@ export const WithCustomFileInputAndForm = (): Element<"section"> => {
     </section>
 };
 
-const ExampleFormWithCustomButton = ({ url }) => {
+const ExampleFormWithCustomButton = ({ url }: { url: string }) => {
     const { showFileUpload } = useUploady();
     const [selectDir, setSelectDir] = useState(false);
     const inputRef = useRef();

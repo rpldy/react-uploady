@@ -7,27 +7,21 @@ const BISYM = Symbol.for("__rpldy-bi__");
 let iCounter = 0;
 
 const getBatchItemWithUrl = (batchItem: Object, url: string): BatchItem => {
-	// batchItem.url = url;
-	return {
-        ...batchItem,
-        url,
-    };
+    batchItem.url = url;
+    return batchItem;
 };
 
 const getBatchItemWithFile = (batchItem: Object, file: Object): BatchItem => {
-	// batchItem.file = file;
-	return {
-        ...batchItem,
-        file,
-    };
+    batchItem.file = file;
+    return batchItem;
 };
 
-const isLikeFile = (f: UploadInfo) => f && (f instanceof File || f instanceof Blob || (typeof f === "object" && f.name && f.type));
+const isLikeFile = (f: UploadInfo) => f && (f instanceof File || f instanceof Blob || !!(typeof f === "object" && f.name && f.type));
 
 const getIsBatchItem = (obj: any): boolean => {
-    return typeof obj === "object" &&
+    return !!(typeof obj === "object" &&
         obj.id && obj.batchId &&
-        obj[BISYM] === true;
+        obj[BISYM] === true);
 };
 
 const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = false): BatchItem => {
@@ -66,7 +60,7 @@ const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = fa
     } else if (isLikeFile(f)) {
         batchItem = getBatchItemWithFile(batchItem, f);
     } else {
-        throw new Error(`Unknown type of file added: ${typeof (f)}`);
+        throw new Error(`Unknown type of file added: ${typeof f}`);
     }
 
     return batchItem;

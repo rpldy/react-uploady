@@ -38,6 +38,7 @@ import Uploady, {
 import readme from "./README.md";
 
 import type { Node, Element } from "React";
+import type { BatchItem } from "@rpldy/shared";
 
 const ContextUploadButton = () => {
     const uploadyContext = useUploady();
@@ -49,7 +50,13 @@ const ContextUploadButton = () => {
     return <button id="upload-button" onClick={onClick}>Custom Upload Button</button>;
 };
 
-const ContextUploadButtonWithPrepareHooks = (props) => {
+type ContextButtonWithHooksProps = {|
+    delayPreSend?: number,
+    delayBatchStart?: number,
+    preSendData?: Object,
+|};
+
+const ContextUploadButtonWithPrepareHooks = (props: ?ContextButtonWithHooksProps) => {
     console.log("Rendering Context Upload Button with Prepare Hooks (pre-send & batch-start)");
 
     useRequestPreSend(() => {
@@ -169,7 +176,13 @@ export const WithDirectory = (): Node => {
     </Uploady>
 };
 
-const ProcessPending = ({ id = "process-pending", title = "PROCESS PENDING", options = undefined}) => {
+type ProcessPendingProps = {|
+    id?: string,
+    title?: string,
+    options?: ?Object,
+|};
+
+const ProcessPending = ({ id = "process-pending", title = "PROCESS PENDING", options = undefined } : ProcessPendingProps) => {
     const { processPending } = useUploady();
     return <button id={id}
                    onClick={() => processPending(options)}>{title}</button>;
@@ -190,7 +203,7 @@ const STATE_COLORS = {
     [FILE_STATES.CANCELLED]: "magenta",
 };
 
-const QueueItem = ({ item }) => {
+const QueueItem = ({ item }: { item: BatchItem }) => {
     const { id } = item;
     const [state, setState] = useState(item.state);
 
@@ -252,7 +265,8 @@ export const WithAutoUploadOff = (): Node => {
         <ProcessPending
             id="process-pending-param"
             title="PROCESS PENDING WITH PARAM"
-            options={{ params: { test: "123" } }}/>
+            options={{ params: { test: "123" } }}
+        />
         <br/>
         <ClearPending/>
         <hr/>
@@ -400,7 +414,7 @@ export const WithHeaderFromFileName = (): Node => {
     </Uploady>;
 };
 
-const isSuccessfulMockRequest = (xhr) => {
+const isSuccessfulMockRequest = (xhr: XMLHttpRequest) => {
     console.log("CHECKING MOCK REQUEST - ", xhr);
     return false;
 };

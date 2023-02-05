@@ -5,14 +5,17 @@ import { isEmpty, isFunction } from "@rpldy/shared";
 import { useUploadyContext, markAsUploadOptionsComponent } from "@rpldy/shared-ui";
 
 import type { UploadOptions } from "@rpldy/shared";
-import type { UploadDropZoneProps } from "./types";
+import type { RefObject } from "@rpldy/shared-ui";
+import type { UploadDropZoneProps, ShouldHandleDrag } from "./types";
 
-const getShouldHandleDrag = (e, shouldHandle) => isEmpty(shouldHandle) ||
+const getShouldHandleDrag = (e: SyntheticDragEvent<HTMLDivElement>, shouldHandle: ?ShouldHandleDrag) => isEmpty(shouldHandle) ||
     shouldHandle === true ||
     (isFunction(shouldHandle) && shouldHandle(e));
 
-const isOnTarget = (e, containerElm, allowContains) => {
-    return e.target === containerElm || (allowContains && containerElm?.contains(e.target));
+const isOnTarget = (e: SyntheticDragEvent<HTMLDivElement>, containerElm: ?Element, allowContains: boolean) => {
+    return e.target === containerElm ||
+        // $FlowIssue[incompatible-call] flow needs to figure it out :(
+        (allowContains && containerElm?.contains(e.target));
 };
 
 const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivElement> = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
@@ -28,9 +31,9 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
          enableOnContains = true,
          extraProps,
          ...uploadOptions
-     }, ref) => {
+     }: UploadDropZoneProps, ref: RefObject<HTMLDivElement> | (?HTMLDivElement) => mixed) => {
         const { upload } = useUploadyContext();
-        const containerRef = useRef(null);
+        const containerRef = useRef<?HTMLDivElement>(null);
         const dragLeaveTrackerRef = useRef(false);
 
         useImperativeHandle<?HTMLDivElement>(ref, () => containerRef.current, []);
@@ -62,7 +65,7 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
                 });
         }, [upload, dropFileHandler, uploadOptionsRef]);
 
-        const onDragEnter = useCallback((e) => {
+        const onDragEnter = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             const isHandling = getShouldHandleDrag(e, shouldHandleDrag) &&
                 isOnTarget(e, containerRef.current, enableOnContains);
 

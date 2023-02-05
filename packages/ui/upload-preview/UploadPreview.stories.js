@@ -36,7 +36,11 @@ import UploadPreview, {
 
 // $FlowIssue - doesnt understand loading readme
 import readme from "./README.md";
-import type { BatchFile } from "@rpldy/shared";
+import type { Batch, BatchFile, BatchItem } from "@rpldy/shared";
+import type { UploaderCreateOptions } from "@rpldy/uploader";
+import type { RemovePreviewMethod, PreviewProps } from "./src/types";
+
+type StateSetter<T> = ((T => ?T) | ?T) => void; //(?T) => void | ((T) => ?T);
 
 const StyledUploadButton = styled(UploadButton)`
 	${uploadButtonCss}
@@ -74,10 +78,10 @@ const PreviewImage = styled.img`
     max-width: 200px;
     height: auto;
 
-    ${({ completed }) => `opacity: ${completed / 100};`}
+    ${({ completed }: { completed: number }) => `opacity: ${completed / 100};`}
 `;
 
-const CustomImagePreview = ({ id, url }) => {
+const CustomImagePreview = ({ id, url }: { id: string, url: string }) => {
     const { completed } = useItemProgressListener(id) || { completed: 0};
     return <PreviewImage src={url} completed={completed} className="preview-img"/>;
 };
@@ -208,7 +212,7 @@ export const WithRememberPrevious = (): Node => {
  * separating into component so previews change dont cause
  * Uploady to re-render
  */
-const PreviewsWithClear = ({PreviewComp = UploadPreview}) => {
+const PreviewsWithClear = ({ PreviewComp = UploadPreview }: { PreviewComp?: React$ComponentType<PreviewProps> }) => {
 	const previewMethodsRef = useRef();
 	const [previews, setPreviews] = useState([]);
 
@@ -275,7 +279,15 @@ const ButtonsWrapper = styled.div`
   margin-top: 10px;
 `;
 
-const PreviewButtons = (props) => {
+type PreviewButtonsProps = {
+    finished: boolean,
+    crop: ?Object,
+    updateRequest: ?(boolean | Object) => void,
+    onUploadCancel: (e: SyntheticEvent<HTMLButtonElement>) => void,
+    onUploadCrop: () => Promise<any>,
+};
+
+const PreviewButtons = (props: PreviewButtonsProps) => {
 	const { finished, crop, updateRequest, onUploadCancel, onUploadCrop } = props;
 
 	return <ButtonsWrapper>
@@ -302,28 +314,28 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 
 	useItemFinalizeListener(() =>{
 		setFinished(true);
-	}, id);
+    }, id);
 
     const onLoad = useCallback((img) => {
         imgRef.current = img;
     }, []);
 
-	const onUploadCrop = useCallback(async() => {
-		if (updateRequest && (crop?.height || crop?.width)) {
+    const onUploadCrop = useCallback(async () => {
+        if (updateRequest && (crop?.height || crop?.width)) {
             const { blob } = await cropImage(imgRef.current, requestData.items[0].file, crop);
-			requestData.items[0].file = blob;
-			updateRequest({ items: requestData.items });
-		}
-	}, [url, requestData, updateRequest, crop]);
+            requestData.items[0].file = blob;
+            updateRequest({ items: requestData.items });
+        }
+    }, [url, requestData, updateRequest, crop]);
 
-	const onUploadCancel = useCallback(() => {
-		updateRequest(false);
-		if (previewMethods.current?.clear) {
-			previewMethods.current.clear();
-		}
-	}, [updateRequest, previewMethods]);
+    const onUploadCancel = useCallback(() => {
+        updateRequest(false);
+        if (previewMethods.current?.clear) {
+            previewMethods.current.clear();
+        }
+    }, [updateRequest, previewMethods]);
 
-	return isFallback || type !== PREVIEW_TYPES.IMAGE ?
+    return isFallback || type !== PREVIEW_TYPES.IMAGE ?
 		<PreviewContainer>
 			<img src={url} alt="fallback img" id="fallback-preview"/>
 		</PreviewContainer> :
@@ -413,9 +425,9 @@ const ItemPreviewImgWrapper = styled.div`
     flex-direction: column;
     justify-content: space-between;
 
-    ${({ $isCropped }) => $isCropped ? dotCss : ""}
+    ${({ $isCropped }: { $isCropped : boolean }) => $isCropped ? dotCss : ""}
 
-    ${({ $isFinished }) => $isFinished ? finishedCss : ""}
+    ${({ $isFinished }: { $isFinished : boolean }) => $isFinished ? finishedCss : ""}
 `;
 
 const ItemPreviewImg = styled.img`
@@ -434,7 +446,7 @@ const PreviewsContainer = styled.div`
     margin-bottom: 20px;
 `;
 
-const RemovePreviewButton = ({ id, removePreview }) => {
+const RemovePreviewButton = ({ id, removePreview }: { id: string, removePreview: () => void }) => {
     const abortItem = useAbortItem();
 
     const onRemove = () => {
@@ -452,7 +464,16 @@ const RemovePreviewButton = ({ id, removePreview }) => {
     );
 };
 
-const ItemPreviewThumb = ({ id, url, onPreviewSelected, isCroppedSet, isFinished, removePreview }) => {
+type ItemPreviewThumbProps = {
+    id: string,
+    url: string,
+    onPreviewSelected: StateSetter<BatchCropSelected>,
+    isCroppedSet: boolean ,
+    isFinished: boolean ,
+    removePreview:  () =>  void,
+};
+
+const ItemPreviewThumb = ({ id, url, onPreviewSelected, isCroppedSet, isFinished, removePreview }: ItemPreviewThumbProps) => {
     const onPreviewClick = () => {
         if (!isFinished) {
             onPreviewSelected({ id, url });
@@ -478,7 +499,24 @@ const CropperContainer = styled.div`
     flex-direction: column;
 `;
 
-const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview, onPreviewSelected }) => {
+type CropPreviewFieldCompProps = {
+    item: BatchItem,
+    name: string,
+    url: string,
+    setCropForItem: (string, Blob) => void,
+};
+
+type BatchCropSelected =  ?{ url: ?string, id: ?string };
+
+type CropperMultiCropProps = {
+    item: BatchItem,
+    url?: ?string,
+    setCropForItem: (string, ?Blob) => void,
+    removePreview: ?RemovePreviewMethod,
+    onPreviewSelected: StateSetter<BatchCropSelected>,
+};
+
+const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview, onPreviewSelected } : CropperMultiCropProps) => {
     const abortItem = useAbortItem();
     const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
     const imgRef = useRef(null);
@@ -519,13 +557,13 @@ const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview, onPrevi
 const BatchCrop = withBatchStartUpdate((props) => {
     const { id, updateRequest, requestData, uploadInProgress } = props;
     const previewMethodsRef = useRef();
-    const [selected, setSelected] = useState({ url: null, id: null });
+    const [selected, setSelected] = useState<BatchCropSelected>({ url: null, id: null });
     const [finishedItems, setFinishedItems] = useState([]);
     const [cropped, setCropped] = useState({});
     const hasData = !!(id && requestData);
     const selectedItem = !!selected && requestData?.items.find(({ id }) => id === selected.id);
 
-    const setCropForItem = (id, data) => {
+    const setCropForItem = (id: string, data: ?Blob) => {
         setCropped((cropped) => ({ ...cropped, [id]: data }));
     };
 
@@ -676,7 +714,14 @@ const UploadFieldWrapper = styled.div`
     }
 `;
 
-const UploadField = ({ type, Preview, params, index }) => {
+type UploadFieldProps = {
+    type: string,
+    Preview: React$ComponentType<PreviewProps>,
+    params: Object,
+    index: number,
+};
+
+const UploadField = ({ type, Preview, params, index }: UploadFieldProps) => {
     return <UploadFieldWrapper className={`upload-field-${index}`}>
         <UploadButton
             className="upload-button"
@@ -691,8 +736,10 @@ const UploadField = ({ type, Preview, params, index }) => {
     </UploadFieldWrapper>
 };
 
-const createUploadFieldForType = (type) => {
-    const useTypedBatchMethod = (cb) => {
+type TypedUploadFieldProps = { params: Object, index: number };
+
+const createUploadFieldForType = (type: string): React$ComponentType<TypedUploadFieldProps> => {
+    const useTypedBatchMethod = (cb: (Batch, UploaderCreateOptions) => void) => {
         useBatchStartListener((batch, options) =>{
             if (options.params?.uploadType === type) {
                 cb(batch, options);
@@ -702,13 +749,13 @@ const createUploadFieldForType = (type) => {
 
     const TypedUploadPreview = getUploadPreviewForBatchItemsMethod(useTypedBatchMethod);
 
-    const TypedUploadField = (props) =>
+    const TypedUploadField = (props: TypedUploadFieldProps) =>
         <UploadField {...props} type={type} Preview={TypedUploadPreview}/>;
 
     return TypedUploadField;
 };
 
-const UploadFields = TYPES.map(createUploadFieldForType);
+const UploadFields:  React$ComponentType<TypedUploadFieldProps>[] = TYPES.map(createUploadFieldForType);
 
 export const WithTwoFields = (): Node  => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
@@ -745,7 +792,7 @@ const CropItemPreviewContainer = styled.div`
     }
 `;
 
-const CropPreviewFieldComp = ({  item, name, url, setCropForItem }) => {
+const CropPreviewFieldComp = ({  item, name, url, setCropForItem }: CropPreviewFieldCompProps) => {
     const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
     const [croppedUrl, setCroppedUrl] = useState(null);
     const [isCropping, setCropping] = useState(false);
@@ -793,7 +840,11 @@ const CropPreviewFieldComp = ({  item, name, url, setCropForItem }) => {
     </CropItemPreviewContainer>;
 };
 
-const UploadCropField = ({ setCropForItem }) => {
+type UploadCropFieldProps = {
+    setCropForItem: (string, Blob) => void,
+};
+
+const UploadCropField = ({ setCropForItem }: UploadCropFieldProps) => {
     const getPreviewCompProps = useCallback((item) => {
         return ({
             item,
@@ -819,7 +870,7 @@ const MyForm = () => {
     const [fields, setFields] = useState({});
     const [cropped, setCropped] = useState(null);
 
-    const setCropForItem = (id, data) => {
+    const setCropForItem = (id: string, data: Blob) => {
         setCropped(() => ({ id, data }));
     };
 
@@ -835,7 +886,7 @@ const MyForm = () => {
 
     const onSubmit = () => processPending({ params: fields });
 
-    const onFieldChange = (e) => {
+    const onFieldChange = (e: SyntheticEvent<HTMLInputElement>) => {
         setFields({
             ...fields,
             [e.currentTarget.id]: e.currentTarget.value

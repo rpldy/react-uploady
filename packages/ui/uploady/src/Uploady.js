@@ -4,35 +4,48 @@ import ReactDOM from "react-dom";
 import { invariant, hasWindow } from "@rpldy/shared";
 import { NoDomUploady, useUploadOptions } from "@rpldy/shared-ui";
 
+import type { UploaderCreateOptions } from "@rpldy/uploader";
 import type { UploadyProps } from "@rpldy/shared-ui";
 
-type FileInputPortalProps = {|
-    container: ?HTMLElement,
+type FileInputProps = {|
     multiple: boolean,
     capture: ?string,
     accept: ?string,
     webkitdirectory: ?string,
     id: ?string,
     style: Object,
+|};
+
+type FileInputPortalProps = {|
+    ...FileInputProps,
+    container: ?HTMLElement,
     noPortal: boolean,
 |};
 
+type InputRef =  { current: null | HTMLInputElement } | ((null | HTMLInputElement) => mixed);
+
 const NO_CONTAINER_ERROR_MSG = "Uploady - Container for file input must be a valid dom element";
 
-const renderInput = (inputProps, instanceOptions, ref) => <input
+const renderInput = (inputProps: FileInputProps, instanceOptions: UploaderCreateOptions, ref: InputRef) => <input
     {...inputProps}
     name={instanceOptions.inputFieldName}
     type="file"
     ref={ref}
 />;
 
-const renderInPortal = (container, isValidContainer, inputProps, instanceOptions, ref) =>
+const renderInPortal = (
+    container: ?HTMLElement,
+    isValidContainer: ?boolean,
+    inputProps: FileInputProps,
+    instanceOptions: UploaderCreateOptions,
+    ref: InputRef
+) =>
     container && isValidContainer ?
         ReactDOM.createPortal(renderInput(inputProps, instanceOptions, ref), container) :
         null;
 
-const FileInputField = memo(forwardRef(({ container, noPortal, ...inputProps }: FileInputPortalProps, ref) => {
-    const instanceOptions = useUploadOptions();
+const FileInputField = memo(forwardRef(({ container, noPortal, ...inputProps }: FileInputPortalProps, ref: InputRef) => {
+    const instanceOptions: UploaderCreateOptions = useUploadOptions();
     const isValidContainer = container && container.nodeType === 1;
 
     invariant(
@@ -67,7 +80,7 @@ const Uploady = (props: UploadyProps): React$Element<typeof NoDomUploady> => {
 
     const internalInputFieldRef = useRef<?HTMLInputElement>();
 
-    return <NoDomUploady {...noDomProps} inputRef={internalInputFieldRef} >
+    return <NoDomUploady {...noDomProps} inputRef={internalInputFieldRef}>
         {!customInput ? <FileInputField
             container={container}
             multiple={multiple}

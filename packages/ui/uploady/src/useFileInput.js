@@ -8,7 +8,7 @@ import type { InputRef } from "@rpldy/shared-ui";
 type DestinationShape = $Shape<Destination>;
 
 //https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#form-submission-algorithm
-const getUrl = (form) => {
+const getUrl = (form: Element) => {
     const loc = window.location;
     let url = form.getAttribute("action") || "";
     url = url.replace(/\s/g, "");

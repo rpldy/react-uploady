@@ -7,6 +7,10 @@ export {
 
 export type {
     PreviewProps,
+    PreviewItem,
+    PreviewMethods,
+    RemovePreviewMethod,
+    ClearPreviewsMethod,
 } from "./types";
 
 export default UploadPreview;

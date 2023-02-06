@@ -38,7 +38,7 @@ const createRequestUpdateHoc = <T>({
 
             //need layout effect to register to event in time (block)
             useLayoutEffect(() => {
-                const handleEvent = (...params) =>
+                const handleEvent = (...params: Object) =>
                     getIsValidEventData(id, ...params) === true ?
                     //returning a promise to event dispatcher so it will await until its resolved by user-land code
                     new Promise((resolve) => {

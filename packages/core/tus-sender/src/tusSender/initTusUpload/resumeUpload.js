@@ -66,7 +66,15 @@ const handleResumeFail = (item: BatchItem, options: TusOptions, parallelIdentifi
 	};
 };
 
-const handleResumeResponse = (resumeResponse, item, url, tusState, trigger, parallelIdentifier, attempt) => {
+const handleResumeResponse = (
+    resumeResponse: XMLHttpRequest,
+    item: BatchItem,
+    url: string,
+    tusState: TusState,
+    trigger: TriggerMethod,
+    parallelIdentifier: ?string,
+    attempt: number
+) => {
     let result;
     const { options } = tusState.getState();
 

@@ -9,10 +9,11 @@ import getTusEnhancer from "./src";
 import readme from "./README.md";
 
 import type { Element } from "React";
+import type { TusOptions } from "./src";
 
 logger.setDebug(true);
 
-const useUploaderWithTus = (tusOptions = {}) => {
+const useUploaderWithTus = (tusOptions: TusOptions = {}) => {
 	const uploaderRef = useRef(null);
 
 	const { enhancer, destination, destinationType } = useStoryUploadySetup({

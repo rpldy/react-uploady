@@ -2,7 +2,7 @@
 import XhrPromise from "./XhrPromise";
 import type { RequestOptions } from "../types";
 
-const setHeaders = (req, headers: Object): ?Headers => {
+const setHeaders = (req: XMLHttpRequest, headers: Object): ?Headers => {
     if (headers) {
         Object.keys(headers).forEach((name) => {
             if (headers[name] !== undefined) {

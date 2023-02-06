@@ -36,7 +36,7 @@ import UploadPreview, {
 
 // $FlowIssue - doesnt understand loading readme
 import readme from "./README.md";
-import type { Batch, BatchFile, BatchItem } from "@rpldy/shared";
+import type { Batch, BatchItem } from "@rpldy/shared";
 import type { UploaderCreateOptions } from "@rpldy/uploader";
 import type { RemovePreviewMethod, PreviewProps } from "./src/types";
 

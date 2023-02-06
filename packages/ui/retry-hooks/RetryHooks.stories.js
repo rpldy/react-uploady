@@ -26,6 +26,8 @@ import retryEnhancer, { useBatchRetry, useRetry, useRetryListener, RETRY_EVENT }
 import readme from "./README.md";
 
 import type {Node} from "React";
+import type { RefObject } from "@rpldy/shared-ui";
+import type { RemovePreviewMethod, PreviewProps, PreviewMethods, PreviewItem } from "@rpldy/upload-preview";
 
 const RetryUi = () => {
 	const [seenItems, setItems] = useState({});
@@ -171,7 +173,7 @@ const PreviewItemContainer = styled.article`
   padding: 10px;
   display: flex;
   flex-direction: column;
-  box-shadow: ${({ state }) => (state ? STATE_COLORS[state] : "#c3d2dd")} 0px
+  box-shadow: ${({ state }: { state : string }) => (state ? STATE_COLORS[state] : "#c3d2dd")} 0px
     8px 5px -2px;
   position: relative;
   align-items: center;
@@ -223,7 +225,7 @@ const QueueBar = styled.div`
 	align-items: center;
 `;
 
-const AbortButton = ({ id, state }) => {
+const AbortButton = ({ id, state }: { id: string, state: string }) => {
 	const abortItem = useAbortItem();
 	const onAbort = useCallback(() => abortItem(id), [id, abortItem]);
 
@@ -236,7 +238,7 @@ const AbortButton = ({ id, state }) => {
 	</Button>;
 };
 
-const RetryButton = ({ id, state }) => {
+const RetryButton = ({ id, state }: { id: string, state: string }) => {
 	const retry = useRetry();
 	const onRetry = useCallback(() => retry(id), [id, retry]);
 
@@ -248,7 +250,7 @@ const RetryButton = ({ id, state }) => {
 	</Button>;
 };
 
-const ClearPreviewsButton = ({ methods, previews }) => {
+const ClearPreviewsButton = ({ methods, previews }: { methods: RefObject<PreviewMethods>, previews: PreviewItem[]  }) => {
 	const disabled = !methods.current?.clear || !previews.length;
 
 	const onClear = useCallback(() => {
@@ -265,9 +267,9 @@ const ClearPreviewsButton = ({ methods, previews }) => {
 	</>;
 };
 
-const QueueItem = memo((props) => {
+const QueueItem = memo((props: { id: string, name: string, url: string }) => {
 	const [progress, setProgress] = useState(0);
-	const [itemState, setItemState] = useState(0);
+	const [itemState, setItemState] = useState("");
 
 	useItemProgressListener((item) => {
 		if (item.completed > progress) {

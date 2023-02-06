@@ -5,7 +5,7 @@ import { fastAbortAll, fastAbortBatch } from "./fastAbort";
 import type { Batch, BatchItem, UploadOptions } from "@rpldy/shared";
 import type { AbortResult, AbortsMap, ItemsQueue, FinalizeRequestMethod } from "./types";
 
-const abortNonUploadingItem = (item, aborts, finalizeItem) => {
+const abortNonUploadingItem = (item: BatchItem, aborts: AbortsMap, finalizeItem: FinalizeRequestMethod) => {
     logger.debugLog(`abort: aborting ${item.state} item  - `, item);
 
     //manually finish request for item that hasnt reached the sender yet
@@ -15,7 +15,7 @@ const abortNonUploadingItem = (item, aborts, finalizeItem) => {
 };
 
 const ITEM_STATE_ABORTS = {
-    [FILE_STATES.UPLOADING]: (item, aborts) => {
+    [FILE_STATES.UPLOADING]: (item: BatchItem, aborts: AbortsMap) => {
         logger.debugLog(`abort: aborting uploading item  - `, item);
         return aborts[item.id]();
     },
@@ -45,7 +45,7 @@ const abortItem = (
     finalizeItem: FinalizeRequestMethod
 ) : boolean => callAbortOnItem(items[id], aborts, finalizeItem);
 
-const getIsFastAbortNeeded = (count, threshold: ?number) => {
+const getIsFastAbortNeeded = (count: number, threshold: ?number) => {
     let result = false;
 
     if (threshold !== 0 && threshold) {

@@ -6,10 +6,12 @@ import type { OnAndOnceMethod, OffMethod, EventCallback } from "@rpldy/life-even
 
 export type PreSendData = { items: BatchItem[]; options: UploaderCreateOptions };
 
+export type Callback = (...args?: any) => ?any;
+export type WithStateFn<T> = ((fn?: Callback, id?: string) => any) & ((id?: string) => T)
+
 type EventHook<T> = (cb: (obj: T) => void, id?: string) => void;
 type CancellableHook<T> = (cb: (obj: T) => boolean | void, id?: string) => void;
-type EventHookWithState<T> =
-    ((cb?: (obj: T) => void, id?: string) => ?T) & ((id?: string) => T);
+type EventHookWithState<T> = WithStateFn<T>;
 
 export type ItemEventHook = EventHook<BatchItem>;
 export type ItemCancellableEventHook = CancellableHook<BatchItem>;

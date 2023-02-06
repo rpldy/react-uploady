@@ -80,7 +80,7 @@ const apiMethods = {
     "assign": assign
 };
 
-const createApi = (target): LifeEventsAPI =>
+const createApi = (target: Object): LifeEventsAPI =>
     Object.keys(apiMethods)
         .reduce((res: LifeEventsAPI, name: string) => {
             res[name] = apiMethods[name].bind(target);
@@ -108,23 +108,23 @@ const removeRegItem = (obj: Object, name: any, cb?: Function) => {
 	}
 };
 
-function register(name: any, cb: EventCallback) {
+function register(this: any, name: any, cb: EventCallback) {
 	return addRegistration(this, name, cb);
 }
 
-function registerOnce(name: any, cb: EventCallback) {
+function registerOnce(this: any, name: any, cb: EventCallback) {
 	return addRegistration(this, name, cb, true);
 }
 
-function unregister(name: any, cb?: EventCallback) {
+function unregister(this: any, name: any, cb?: EventCallback) {
 	removeRegItem(this, name, cb);
 }
 
-function getEvents() {
+function getEvents(this: any) {
 	return getValidLE(this).events.slice();
 }
 
-function trigger(name: any, ...args) {
+function trigger(this: any, name: any, ...args: any[]) {
 	const regs = findRegistrations(this, name);
 	let results;
 
@@ -167,14 +167,14 @@ function trigger(name: any, ...args) {
 }
 
 //registry, events, stats become shared
-function assign(toObj: Object) {
+function assign(this: any, toObj: Object) {
 	const le = getValidLE(this);
 	defineLifeData(toObj, le.options, le.events, le.registry, le.stats);
 
 	return createApi(toObj);
 }
 
-function addEvent(name: any) {
+function addEvent(this: any, name: any) {
 	const le = getValidLE(this);
 
 	if (le.options.canAddEvents) {
@@ -191,7 +191,7 @@ function addEvent(name: any) {
 	}
 }
 
-function removeEvent(name: any) {
+function removeEvent(this: any, name: any) {
 	const le = getValidLE(this);
 
 	if (le.options.canRemoveEvents) {
@@ -202,12 +202,12 @@ function removeEvent(name: any) {
 	}
 }
 
-function hasEvent(name: any) {
+function hasEvent(this: any, name: any) {
 	const le = getValidLE(this);
 	return !!~le.events.indexOf(name);
 }
 
-function hasEventRegistrations(name: any) {
+function hasEventRegistrations(this: any, name: any) {
 	return !!findRegistrations(this, name).length;
 }
 

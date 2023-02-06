@@ -79,14 +79,14 @@ export const getNextIdGroup = (queue: QueueState): ?string[] => {
     return nextGroup;
 };
 
-const updateItemsAsActive = (queue: QueueState, ids) => {
+const updateItemsAsActive = (queue: QueueState, ids: string[]) => {
     queue.updateState((state) => {
         //immediately mark items as active to support concurrent uploads without getting into infinite loops
         state.activeIds = state.activeIds.concat(ids);
     });
 };
 
-const processNextWithBatch = (queue, ids) => {
+const processNextWithBatch = (queue: QueueState, ids: string[]) => {
     let newBatchP;
 
     if (!isItemBatchStartPending(queue, ids[0])) {

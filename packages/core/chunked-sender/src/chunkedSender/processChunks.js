@@ -7,7 +7,7 @@ import processChunkProgressData from "./processChunkProgressData";
 import getChunkedState from "./getChunkedState";
 
 import type { BatchItem } from "@rpldy/shared";
-import type { OnProgress, SendResult } from "@rpldy/sender";
+import type { OnProgress, SendResult, SenderProgressEvent } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { MandatoryChunkedOptions, ChunkedSendOptions } from "../types";
 import type { ChunksSendResponse, Chunk, ChunkedState } from "./types";
@@ -37,7 +37,7 @@ export const process = (
     onProgress: OnProgress,
     trigger: TriggerMethod,
 ): ChunksSendResponse => {
-    const onChunkProgress = (e, chunks: Chunk[]) => {
+    const onChunkProgress = (e: SenderProgressEvent, chunks: Chunk[]) => {
         //we only ever send one chunk per request
         const progressData = processChunkProgressData(chunkedState, item, chunks[0].id, e.loaded);
         onProgress(progressData, [item]);

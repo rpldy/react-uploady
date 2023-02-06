@@ -1,5 +1,5 @@
 // @flow
-import { request, logger, FILE_STATES } from "@rpldy/shared";
+import { request, logger, FILE_STATES, XhrPromise } from "@rpldy/shared";
 import { addLocationToResponse, getUploadMetadata } from "./utils";
 import { SUCCESS_CODES } from "../consts";
 
@@ -7,7 +7,7 @@ import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
 import type { TusState } from "../types";
 
-const handleFinalizeResponse = (pXhr, chunkedUploadData: UploadData) : Promise<UploadData> =>
+const handleFinalizeResponse = (pXhr: XhrPromise, chunkedUploadData: UploadData) : Promise<UploadData> =>
     pXhr
         .catch((xhr: ?XMLHttpRequest) => {
             logger.debugLog(`tusSender.finalizeParallel: finalize request failed unexpectedly!`, xhr);

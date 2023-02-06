@@ -8,9 +8,10 @@ import { PROGRESS_DELAY, SENDER_EVENTS } from "./consts";
 import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "./defaults";
 
 import type { Batch, BatchItem } from "@rpldy/shared";
+import type { TriggerMethod } from "@rpldy/life-events";
 import type { ItemsSender, UploaderCreateOptions } from "./types";
 
-const reportItemsProgress = (items: BatchItem[], completed: number, loaded: number, trigger) => {
+const reportItemsProgress = (items: BatchItem[], completed: number, loaded: number, trigger: TriggerMethod) => {
     items.forEach((item: BatchItem) => {
         logger.debugLog(`uploady.uploader.processor: file: ${item.id} progress event: loaded(${loaded}) - completed(${completed})`);
 
@@ -21,7 +22,7 @@ const reportItemsProgress = (items: BatchItem[], completed: number, loaded: numb
     });
 };
 
-const onItemUploadProgress = (items: BatchItem[], batch: Batch, e: ProgressEvent, trigger) => {
+const onItemUploadProgress = (items: BatchItem[], batch: Batch, e: ProgressEvent, trigger: TriggerMethod) => {
     const completed = Math.min(((e.loaded / e.total) * 100), 100),
         completedPerItem = completed / items.length,
         loadedAverage = e.loaded / items.length;

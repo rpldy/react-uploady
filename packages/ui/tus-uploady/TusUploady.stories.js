@@ -227,7 +227,7 @@ export const WithRetry = (): Node => {
     </TusUploady>;
 };
 
-const ResumeHandler = ({ cancelResume = false }) => {
+const ResumeHandler = ({ cancelResume = false }: { cancelResume: boolean }) => {
     useTusResumeStartListener(() => {
         return cancelResume ? false : {
             resumeHeaders: {

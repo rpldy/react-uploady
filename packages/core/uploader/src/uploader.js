@@ -19,10 +19,11 @@ import type {
     UploadInfo,
     UploadOptions,
 } from "@rpldy/shared";
-
+import type { TriggerMethod } from "@rpldy/life-events";
+import type { UploaderEnhancer } from "@rpldy/raw-uploader";
 import type  {
     UploaderCreateOptions,
-    UploadyUploaderType
+    UploadyUploaderType,
 } from "./types";
 
 const EVENT_NAMES = Object.values(UPLOADER_EVENTS);
@@ -32,10 +33,15 @@ const EXT_OUTSIDE_ENHANCER_TIME = "Uploady - uploader extensions can only be reg
 
 let counter = 0;
 
-const getComposedEnhancer = (extEnhancer) =>
+const getComposedEnhancer = (extEnhancer: UploaderEnhancer<any>) =>
     composeEnhancers(getAbortEnhancer<UploaderCreateOptions>(), extEnhancer);
 
-const getEnhancedUploader = (uploader, options, triggerWithUnwrap, setEnhancerTime) => {
+const getEnhancedUploader = (
+    uploader: UploadyUploaderType,
+    options: UploaderCreateOptions,
+    triggerWithUnwrap: TriggerMethod,
+    setEnhancerTime: (boolean) => void
+) => {
     //TODO: create raw-uploader without internal enhancers (while default-uploader will use abort & xhr-sender enhancers)
 
     //TODO need new mechanism for registering and using internal methods (abort, send)
@@ -44,9 +50,9 @@ const getEnhancedUploader = (uploader, options, triggerWithUnwrap, setEnhancerTi
         getComposedEnhancer(options.enhancer) :
         getAbortEnhancer();
 
-    setEnhancerTime( true);
+    setEnhancerTime(true);
     const enhanced = enhancer(uploader, triggerWithUnwrap);
-    setEnhancerTime( false);
+    setEnhancerTime(false);
 
     //graceful handling for enhancer forgetting to return uploader
     return enhanced || uploader;

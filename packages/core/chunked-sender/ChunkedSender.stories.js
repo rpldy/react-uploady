@@ -58,7 +58,7 @@ export const WithChunkedSender = (): Node => {
         uploader.upload();
     };
 
-    const onFileChange = (event) => {
+    const onFileChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
         setFile(event.target.files[0]);
     };
 

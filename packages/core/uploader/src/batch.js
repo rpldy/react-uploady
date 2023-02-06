@@ -14,7 +14,7 @@ import type { UploaderCreateOptions } from "./types";
 
 let bCounter = 0;
 
-const processFiles = (batchId, files: UploadInfo, isPending: boolean, fileFilter: ?FileFilterMethod): Promise<BatchItem[]> => {
+const processFiles = (batchId: string, files: UploadInfo, isPending: boolean, fileFilter: ?FileFilterMethod): Promise<BatchItem[]> => {
     const filterFn = fileFilter || DEFAULT_FILTER;
 
     //we need a simple array of (file, url) to pass to filter fn if its provided (files can be recycled batch items)

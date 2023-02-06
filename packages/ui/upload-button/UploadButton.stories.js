@@ -34,6 +34,7 @@ import UploadButton, { asUploadButton } from "./src";
 import readme from "./README.md";
 
 import type { Node, Element } from "React"
+import type { UploadyContextType } from "@rpldy/uploady";
 
 export const Simple = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
@@ -68,7 +69,7 @@ export const WithStyledComponent = (): Node => {
     </Uploady>;
 };
 
-const EventsLog = ({ setUpdater }) => {
+const EventsLog = ({ setUpdater }: { setUpdater: (fn: any) => void }) => {
     const [events, setEvents] = useState([]);
 
     const addEvent = useCallback((event) => {
@@ -183,13 +184,13 @@ class ClassUsingCustomButton extends Component<any> {
         }
     }
 
-    static contextType = UploadyContext;
+    static contextType: React$Context<?UploadyContextType> = UploadyContext;
 
     showFileChooser = () => {
         this.context.showFileUpload();
     };
 
-    render() {
+    render(): Node {
         return (
             <button onClick={this.showFileChooser}>Custom Upload Button</button>
         );

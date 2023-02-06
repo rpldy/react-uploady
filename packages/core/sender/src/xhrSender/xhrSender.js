@@ -48,7 +48,7 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
         config.getRequestData(items, options) :
         getRequestData(items, options);
 
-    const issueRequest = (requestUrl = url, requestData = data, requestOptions) => {
+    const issueRequest = (requestUrl: string = url, requestData: Object = data, requestOptions: ?Object) => {
         requestOptions = merge({
             ...pick(options, ["method", "headers", "withCredentials"]),
             preSend: (req) => {

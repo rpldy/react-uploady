@@ -68,7 +68,7 @@ const getPublicMethods = () => Object.entries(publicMethods)
 
 		res[key] = { value: m };
 		return res;
-	}, {});
+	}, ({}: { [string]: any }));
 
 //using string keys here because can't rely on function names to stay after (babel/webpack) build
 const apiMethods = {

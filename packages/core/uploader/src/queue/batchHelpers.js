@@ -13,7 +13,7 @@ const prepareBatchStartItems = getItemsPrepareUpdater<Batch>(
     UPLOADER_EVENTS.BATCH_START,
     (batch: Batch): BatchItem[] => batch.items,
     null,
-    ({ batch } = {}) => {
+    ({ batch } = { batch: false }) => {
         if (batch)  {
             throw new Error(`BATCH_START event handlers cannot update batch data. Only items & options`);
         }

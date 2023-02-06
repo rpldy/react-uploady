@@ -6,7 +6,7 @@ import type { QueueState } from "./types";
 
 const finalizeItem = (queue: QueueState, id: string, delItem: boolean = false) => {
     queue.updateState((state) => {
-        const { batchId } = state.items[id] || {};
+        const { batchId } = state.items[id] || { batchId: null };
 
         if (delItem) {
             delete state.items[id];
@@ -14,7 +14,7 @@ const finalizeItem = (queue: QueueState, id: string, delItem: boolean = false) =
 
         const index = batchId ? state.itemQueue[batchId].indexOf(id) : -1;
 
-        if (~index) {
+        if (~index && batchId) {
             state.itemQueue[batchId].splice(index, 1);
         }
 

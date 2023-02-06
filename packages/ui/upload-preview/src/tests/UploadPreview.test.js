@@ -110,11 +110,11 @@ describe("UploadPreview tests", () => {
         getFallbackUrlData.mockReturnValueOnce({ url: fbUrl });
 
         const img = { src: previewUrl };
-        wrapper.find("img").props().onError({ target: img });
+        wrapper.find("img").props().onError({ currentTarget: img });
         expect(img.src).toBe(fbUrl);
         expect(getFallbackUrlData).toHaveBeenCalledWith(fbUrl, previewUrl);
 
-        wrapper.find("img").props().onError({ target: img });
+        wrapper.find("img").props().onError({ currentTarget: img });
         expect(img.src).toBe(fbUrl);
     });
 

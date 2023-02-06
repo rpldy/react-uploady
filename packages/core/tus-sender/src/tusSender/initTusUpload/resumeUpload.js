@@ -143,10 +143,9 @@ const makeResumeRequest = (
     attempt: number
 ): InitUploadResult => {
     const { options } = tusState.getState();
+    let resumeFinished = false, resumeAborted = false;
 
 	logger.debugLog(`tusSender.resume - resuming upload for ${item.id}${parallelIdentifier ? `-${parallelIdentifier}` : ""} at: ${url}`);
-
-    let resumeFinished = false;
 
     const updateRequestPromise = getUpdatedRequest(item, url, tusState, trigger);
 
@@ -154,10 +153,10 @@ const makeResumeRequest = (
             resumeFinished = !getXhr();
             const callOnFail = () => handleResumeFail(item, options, parallelIdentifier);
 
-        return !resumeFinished ?
+        return !resumeFinished && !resumeAborted ?
                 getXhr()
                     .then((resumeResponse: XMLHttpRequest) => {
-                        return resumeFinished ?
+                        return (resumeFinished || resumeAborted) ?
                             callOnFail() :
                             handleResumeResponse(resumeResponse, item, url, tusState, trigger, parallelIdentifier, attempt);
                     })
@@ -175,6 +174,7 @@ const makeResumeRequest = (
         if (!resumeFinished) {
             logger.debugLog(`tusSender.resume: aborting resume request for item: ${item.id}`);
             resumeFinished = true;
+            resumeAborted = true;
 
             updateRequestPromise.then((getXhr) => {
                 const pXhr = getXhr();

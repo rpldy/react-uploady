@@ -38,9 +38,11 @@ import UploadPreview, {
 import readme from "./README.md";
 import type { Batch, BatchItem } from "@rpldy/shared";
 import type { UploaderCreateOptions } from "@rpldy/uploader";
-import type { RemovePreviewMethod, PreviewProps } from "./src/types";
+import type { PreviewItem, RemovePreviewMethod, PreviewProps, PreviewMethods } from "./src";
 
-type StateSetter<T> = ((T => ?T) | ?T) => void; //(?T) => void | ((T) => ?T);
+type StateSetter<T> = ((T => ?T) | ?T) => void;
+
+type CropData = { height: number, width: number, x: number, y: number };
 
 const StyledUploadButton = styled(UploadButton)`
 	${uploadButtonCss}
@@ -89,7 +91,7 @@ const CustomImagePreview = ({ id, url }: { id: string, url: string }) => {
 export const WithProgress = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
-    const getPreviewProps = useCallback((item) => ({ id: item.id, }), []);
+    const getPreviewProps = useCallback((item: BatchItem) => ({ id: item.id, }), []);
 
     return <Uploady
         debug
@@ -113,7 +115,7 @@ export const WithProgress = (): Node => {
 export const WithCustomProps = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
-    const getPreviewProps = useCallback((item, url, type) => {
+    const getPreviewProps = useCallback((item: BatchItem, url: string, type: string) => {
         return {
             alt: `${type} - ${url}`,
             "data-id": item.id,
@@ -148,12 +150,10 @@ const Button = styled.button`
 
 export const WithUrls = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-    const uploadRef = useRef(null);
+    const uploadRef = useRef<?() => void>(null);
 
     const onButtonClick = () => {
-		if (uploadRef.current) {
-			uploadRef.current();
-		}
+        uploadRef.current?.();
 	};
 
     return <Uploady
@@ -213,10 +213,10 @@ export const WithRememberPrevious = (): Node => {
  * Uploady to re-render
  */
 const PreviewsWithClear = ({ PreviewComp = UploadPreview }: { PreviewComp?: React$ComponentType<PreviewProps> }) => {
-	const previewMethodsRef = useRef();
-	const [previews, setPreviews] = useState([]);
+	const previewMethodsRef = useRef<?PreviewMethods>(null);
+	const [previews, setPreviews] = useState<PreviewItem[]>([]);
 
-	const onPreviewsChanged = useCallback((previews) => {
+	const onPreviewsChanged = useCallback((previews: PreviewItem[]) => {
 		setPreviews(previews);
 	}, []);
 
@@ -226,7 +226,7 @@ const PreviewsWithClear = ({ PreviewComp = UploadPreview }: { PreviewComp?: Reac
 		}
 	}, [previewMethodsRef]);
 
-	const getPreviewProps = useCallback((item, url, type) => {
+	const getPreviewProps = useCallback((item: BatchItem, url: string, type: string) => {
 		return {
 			alt: `${type} - ${url}`,
 			"data-test": "upload-preview",
@@ -308,15 +308,15 @@ const PreviewButtons = (props: PreviewButtonsProps) => {
 
 const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 	const { id, url, isFallback, type, updateRequest, requestData, previewMethods } = props;
-	const [finished, setFinished] = useState(false);
-	const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
-    const imgRef = useRef(null);
+	const [finished, setFinished] = useState<boolean>(false);
+	const [crop, setCrop] = useState<CropData>({ height: 100, width: 100, x: 50, y: 50 });
+    const imgRef = useRef<?HTMLImageElement>(null);
 
 	useItemFinalizeListener(() =>{
 		setFinished(true);
     }, id);
 
-    const onLoad = useCallback((img) => {
+    const onLoad = useCallback((img: HTMLImageElement) => {
         imgRef.current = img;
     }, []);
 
@@ -360,7 +360,7 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 
 export const WithCrop = (): Node => {
 	const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
-	const previewMethodsRef = useRef();
+	const previewMethodsRef = useRef<?PreviewMethods>(null);
 
 	return <Uploady
 		debug
@@ -518,8 +518,8 @@ type CropperMultiCropProps = {
 
 const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview, onPreviewSelected } : CropperMultiCropProps) => {
     const abortItem = useAbortItem();
-    const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
-    const imgRef = useRef(null);
+    const [crop, setCrop] = useState<CropData>({ height: 100, width: 100, x: 50, y: 50 });
+    const imgRef = useRef<?HTMLImageElement>(null);
 
     const onSaveCrop = async () => {
         const { blob } = await cropImage(imgRef.current, item.file, crop);
@@ -536,7 +536,7 @@ const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview, onPrevi
         onPreviewSelected(null);
     };
 
-    const onLoad = useCallback((img) => {
+    const onLoad = useCallback((img: HTMLImageElement) => {
         imgRef.current = img;
     }, []);
 
@@ -556,10 +556,10 @@ const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview, onPrevi
 
 const BatchCrop = withBatchStartUpdate((props) => {
     const { id, updateRequest, requestData, uploadInProgress } = props;
-    const previewMethodsRef = useRef();
-    const [selected, setSelected] = useState({ url: null, id: null });
-    const [finishedItems, setFinishedItems] = useState([]);
-    const [cropped, setCropped] = useState({});
+    const previewMethodsRef = useRef<?PreviewMethods>(null);
+    const [selected, setSelected] = useState<?{url: ?string, id: ?string }>({ url: null, id: null });
+    const [finishedItems, setFinishedItems] = useState<string[]>([]);
+    const [cropped, setCropped] = useState<Object>({});
     const hasData = !!(id && requestData);
     const selectedItem = !!selected && requestData?.items.find(({ id }) => id === selected.id);
 
@@ -580,10 +580,10 @@ const BatchCrop = withBatchStartUpdate((props) => {
     };
 
     useItemFinalizeListener(({ id }) => {
-        setFinishedItems((finished) => finished.concat(id))
+        setFinishedItems((finished: string[]) => finished.concat(id))
     });
 
-    const getPreviewCompProps = useCallback((item) => {
+    const getPreviewCompProps = useCallback((item: BatchItem) => {
         return ({
             onPreviewSelected: setSelected,
             isCroppedSet: cropped[item.id],
@@ -616,8 +616,8 @@ const BatchCrop = withBatchStartUpdate((props) => {
 });
 
 const MultiCropQueue = () => {
-    const [currentBatch, setCurrentBatch] = useState(null);
-    const [inProgress, setInProgress] = useState(false);
+    const [currentBatch, setCurrentBatch] = useState<?string>(null);
+    const [inProgress, setInProgress] = useState<boolean>(false);
 
     useBatchAddListener((batch) => setCurrentBatch(batch.id));
 
@@ -793,10 +793,10 @@ const CropItemPreviewContainer = styled.div`
 `;
 
 const CropPreviewFieldComp = ({  item, name, url, setCropForItem }: CropPreviewFieldCompProps) => {
-    const [crop, setCrop] = useState({ height: 100, width: 100, x: 50, y: 50 });
-    const [croppedUrl, setCroppedUrl] = useState(null);
-    const [isCropping, setCropping] = useState(false);
-    const imgRef = useRef(null);
+    const [crop, setCrop] = useState<CropData>({ height: 100, width: 100, x: 50, y: 50 });
+    const [croppedUrl, setCroppedUrl] = useState<?{ blobUrl: string, revokeUrl: () => void }>(null);
+    const [isCropping, setCropping] = useState<boolean>(false);
+    const imgRef = useRef<?HTMLImageElement>(null);
 
     const startCropping = () => setCropping(true);
 
@@ -810,7 +810,7 @@ const CropPreviewFieldComp = ({  item, name, url, setCropForItem }: CropPreviewF
 
     useEffect(() => () => { !isCropping && croppedUrl?.revokeUrl(); }, [isCropping, croppedUrl]);
 
-    const onLoad = useCallback((img) => {
+    const onLoad = useCallback((img: HTMLImageElement) => {
         imgRef.current = img;
     }, []);
 
@@ -845,7 +845,7 @@ type UploadCropFieldProps = {
 };
 
 const UploadCropField = ({ setCropForItem }: UploadCropFieldProps) => {
-    const getPreviewCompProps = useCallback((item) => {
+    const getPreviewCompProps = useCallback((item: BatchItem) => {
         return ({
             item,
             setCropForItem,
@@ -868,15 +868,15 @@ const SubmitButton = styled.button`
 const MyForm = () => {
     const { processPending } = useUploady();
     const [fields, setFields] = useState({});
-    const [cropped, setCropped] = useState(null);
+    const [cropped, setCropped] = useState<?{id: string, data: Object}>(null);
 
     const setCropForItem = (id: string, data: Blob) => {
         setCropped(() => ({ id, data }));
     };
 
     useRequestPreSend(({ items }) => {
+        // $FlowExpectedError[incompatible-call]
         return {
-            // $FlowExpectedError[speculation-ambiguous] :(
             items: [{
                 ...items[0],
                 file: cropped?.data || items[0].file,

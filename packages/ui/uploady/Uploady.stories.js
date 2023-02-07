@@ -226,7 +226,7 @@ const QueueItem = ({ item }: { item: BatchItem }) => {
 };
 
 const QueueList = () => {
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState<BatchItem[]>([]);
 
     useBatchAddListener((batch) => {
         setItems((prev) => [...prev, ...batch.items]);
@@ -316,7 +316,7 @@ export const WithConcurrent = (): Node => {
 export const WithCustomResponseFormat = (): Node => {
     const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
 
-    const resFormatter = useCallback((res, status, headers) => {
+    const resFormatter = useCallback((res: Object, status: number, headers: Object) => {
         console.log("!!!!!! running custom server response formatter", res, status, headers);
         return `${status} - Yay!`;
     }, []);
@@ -336,8 +336,8 @@ export const WithCustomResponseFormat = (): Node => {
 const UploadFormWithInternalInput = () => {
     const inputRef = useFileInput();
 
-    const onSelectChange = useCallback((e) => {
-        if (e.target.value === "dir") {
+    const onSelectChange = useCallback((e: SyntheticKeyboardEvent<HTMLSelectElement>) => {
+        if (e.currentTarget.value === "dir") {
             inputRef?.current?.setAttribute("webkitdirectory", "true");
         } else {
             inputRef?.current?.removeAttribute("webkitdirectory");
@@ -534,8 +534,8 @@ export const UMD_ALL = (): Element<"div"> => {
 const UploadButtonWithInvalidPreSend = () => {
     useRequestPreSend(({ items }) => {
 
+        // $FlowExpectedError[incompatible-call]]
         return {
-            // $FlowExpectedError[speculation-ambiguous] :(
             items: items[0].id === "batch-1.item-1" ? [
                 //intentionally cause error for the first upload since changing item id is forbidden
                 { ...items[0], id: "invalid-id" },

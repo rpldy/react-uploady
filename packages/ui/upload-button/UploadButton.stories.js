@@ -170,7 +170,7 @@ export const WithProgress = (): Node => {
 
 class ClassUsingCustomButton extends Component<any> {
 
-    unsubscribeBatchStart = null;
+    unsubscribeBatchStart: ?() => void = null;
 
     componentDidMount(): * {
         this.unsubscribeBatchStart = this.context.on(UPLOADER_EVENTS.BATCH_START, (batch) => {

@@ -39,7 +39,7 @@ const getUrl = (form: Element) => {
 const getDestinationFromInput = (input: HTMLInputElement): ?DestinationShape => {
     const form = input.closest("form");
 
-    let destination = {
+    let destination: { filesParamName: ?string, method: ?string, url: ?string } = {
         filesParamName: input.getAttribute("name"),
         method: undefined,
         url: undefined,

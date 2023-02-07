@@ -17,7 +17,7 @@ import type {
     PreSendData,
 } from "../types";
 
-type PreSendResponse = { items?: BatchUrl[] | BatchFile[], options?: UploaderCreateOptions } | boolean | void;
+type PreSendResponse = { items?: BatchItem[], options?: UploaderCreateOptions } | boolean | void;
 
 type RequestPreSendHook = (cb: (data: PreSendData) => PreSendResponse | Promise<PreSendResponse>) => void;
 

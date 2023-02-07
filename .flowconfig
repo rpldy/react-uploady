@@ -15,6 +15,7 @@
 [libs]
 
 [options]
+inference_mode=lti
 autoimports=true
 module.ignore_non_literal_requires=true
 module.system.node.main_field=main:dev

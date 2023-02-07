@@ -121,7 +121,7 @@ const getPreviewsLoaderHook = (batchItemsMethod: PreviewBatchItemsMethod): Previ
             setPreviews({ previews: [], items: [] });
         }, []);
 
-        const removeItemFromPreview = useCallback((id) => {
+        const removeItemFromPreview = useCallback((id: string) => {
             setPreviews(({ previews, items }) => ({
                 previews: previews.filter((prev) => prev.id !== id),
                 items: items.filter((item) => item.id !== id),

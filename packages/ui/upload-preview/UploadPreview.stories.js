@@ -557,7 +557,7 @@ const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview, onPrevi
 const BatchCrop = withBatchStartUpdate((props) => {
     const { id, updateRequest, requestData, uploadInProgress } = props;
     const previewMethodsRef = useRef();
-    const [selected, setSelected] = useState<BatchCropSelected>({ url: null, id: null });
+    const [selected, setSelected] = useState({ url: null, id: null });
     const [finishedItems, setFinishedItems] = useState([]);
     const [cropped, setCropped] = useState({});
     const hasData = !!(id && requestData);

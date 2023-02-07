@@ -52,7 +52,6 @@ const findRegistrations = (obj: Object, name?: any): RegItem[] => {
 
 	return name ?
 		(registry[name] ? registry[name].slice() : []) :
-        //$FlowIssue - flow doesnt know how to work with Array.values() :(
 		Object.values(registry).flat();
 };
 
@@ -80,10 +79,13 @@ const apiMethods = {
     "assign": assign
 };
 
+//placating flow while using reduce to create an object API
+type ApiCreated = { target: Object, [string]: (...args: any[]) => any };
+
 const createApi = (target: Object): LifeEventsAPI =>
     Object.keys(apiMethods)
-        .reduce((res: LifeEventsAPI, name: string) => {
-            // $FlowExpectedError[prop-missing]
+        .reduce<ApiCreated>
+        ((res, name: string) => {
             res[name] = apiMethods[name].bind(target);
             return res;
         }, { target, ...apiMethods });

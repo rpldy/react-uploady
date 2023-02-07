@@ -7,11 +7,9 @@ const fastAbortBatch = (batch: Batch, aborts: AbortsMap) => {
 };
 
 const fastAbortAll = (aborts: AbortsMap) => {
-    //$FlowIssue[not-a-function]: flow doesnt understand Object.values :(
-    const runFn = (fn: () => void) => fn();
+    const runFn = (fn: () => boolean) => fn();
 
     Object.values(aborts)
-        //$FlowIssue[incompatible-call]
         .forEach(runFn);
 };
 

@@ -15,7 +15,6 @@ import type { QueueState } from "./types";
 
 const getIsItemInActiveRequest = (queue: QueueState, itemId: string): boolean => {
     return queue.getState().activeIds
-        // $FlowIssue - no flat
         .flat()
         .includes(itemId);
 };

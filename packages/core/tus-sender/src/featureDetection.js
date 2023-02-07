@@ -123,7 +123,6 @@ export const requestFeaturesFromServer = (url: string, tusState: TusState): {|ab
 	return {
 		request: handleResponse(pXhr, url, tusState),
 		abort: () => {
-			// $FlowFixMe
 			pXhr.xhr.abort();
 			return true;
 		},

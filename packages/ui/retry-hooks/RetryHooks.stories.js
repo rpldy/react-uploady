@@ -121,8 +121,11 @@ export const WithRetry = (): Node => {
             enhancer={enhancer}
             grouped={grouped}
             maxGroupSize={groupSize}
-            // $FlowIgnore[prop-missing]
-            fileFilter={(f) => f.type.startsWith("image/") || f.type.includes("pdf")}
+            fileFilter={
+                (f) =>
+                    f instanceof File &&
+                    (f.type.startsWith("image/") || f.type.includes("pdf"))
+            }
         >
             <RetryUi/>
         </Uploady>
@@ -344,10 +347,13 @@ export const WithRetryAndPreview = (): Node => {
 			multiple={multiple}
 			grouped={grouped}
 			maxGroupSize={groupSize}
-			enhancer={enhancer}
-            // $FlowIgnore[prop-missing]
-            fileFilter={(f) => f.type.startsWith("image/") || f.type.includes("pdf")}
-		>
+            enhancer={enhancer}
+            fileFilter={
+                (f) =>
+                    f instanceof File &&
+                    (f.type.startsWith("image/") || f.type.includes("pdf"))
+            }
+        >
 			<div className="App">
 				<UploadButton id="upload-button">Upload Files</UploadButton>
 				<Queue/>

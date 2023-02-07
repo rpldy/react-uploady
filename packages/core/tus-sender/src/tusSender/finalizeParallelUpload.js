@@ -78,7 +78,6 @@ const finalizeParallelUpload = (
                 tusState.updateState((state) => {
                     state.items[item.id].abort = () => {
                         //override the state item's abort with the finalize request abort
-                        // $FlowFixMe
                         pXhr.xhr.abort();
                         return true;
                     };

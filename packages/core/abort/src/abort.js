@@ -14,7 +14,13 @@ const abortNonUploadingItem = (item: BatchItem, aborts: AbortsMap, finalizeItem:
     return true;
 };
 
-const ITEM_STATE_ABORTS = {
+type StateAbortMethods = {
+    uploading: (item: BatchItem, aborts: AbortsMap) => boolean,
+    added: (item: BatchItem, aborts: AbortsMap, finalizeItem: FinalizeRequestMethod) => boolean,
+    pending: (item: BatchItem, aborts: AbortsMap, finalizeItem: FinalizeRequestMethod) => boolean,
+};
+
+const ITEM_STATE_ABORTS: StateAbortMethods = {
     [FILE_STATES.UPLOADING]: (item: BatchItem, aborts: AbortsMap) => {
         logger.debugLog(`abort: aborting uploading item  - `, item);
         return aborts[item.id]();
@@ -30,12 +36,13 @@ const callAbortOnItem = (
 ) : boolean => {
     const itemState = item?.state;
 
-    return !!itemState &&
-    //$FlowIssue[prop-missing]
-    ITEM_STATE_ABORTS[itemState] ?
-        //$FlowExpectedError[extra-arg]
+    const method =!!itemState &&
         //$FlowIssue[prop-missing]
-        ITEM_STATE_ABORTS[itemState](item, aborts, finalizeItem) : false;
+        ITEM_STATE_ABORTS[itemState];
+
+    return method ?
+        //$FlowExpectedError[extra-arg]
+        method(item, aborts, finalizeItem) : false;
 };
 
 const abortItem = (

@@ -61,7 +61,7 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
         }, requestOptions);
 
 	    const realPXhr = request(requestUrl, requestData, requestOptions);
-        // $FlowFixMe -
+
 	    xhr = realPXhr.xhr;
 
         return realPXhr;

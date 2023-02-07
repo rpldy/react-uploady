@@ -440,11 +440,11 @@ window["react-dom"] = ReactDOM;
 
 //mimic rendering with react and react-uploady loaded through <script> tags
 const renderUploadyFromBundle = () => {
+    const rpldy = window.rpldy, react = window.react;
     let result;
 
     try {
         const MyUploadButton = () => {
-            // $FlowFixMe - react & rpldy
             const uploadyContext = react.useContext(rpldy.UploadyContext);
 
             const onClick = react.useCallback(() => {
@@ -464,16 +464,13 @@ const renderUploadyFromBundle = () => {
             enhancer: addActionLogEnhancer(),
         };
 
-        // $FlowFixMe - react & rpldy
         result = react.createElement(
-            // $FlowFixMe - react & rpldy
             rpldy.Uploady,
             uploadyProps,
             [react.createElement(MyUploadButton)]
         );
     }
     catch (ex){
-        // $FlowFixMe - react
         result = react.createElement("p", { style: {"color": "red"}, children: `ERROR !!! ${ex.message}` });
     }
 
@@ -498,10 +495,10 @@ export const UMD_CoreUI = (): Element<"div"> => {
 
 //mimic rendering with react and react-uploady with UploadButton&UploadPreview loaded through <script> tags
 const renderUploadyAll = () => {
-    // $FlowFixMe - react & rpldy
+    const rpldy = window.rpldy, react = window.react;
+
     const uploadButton = react.createElement(rpldy.uploadButton.UploadButton, { id: "upload-button" });
 
-    // $FlowFixMe - react & rpldy
     const uploadPreview = react.createElement(rpldy.uploadPreview.UploadPreview, {
         id: "upload-preview",
         previewComponentProps: { "data-test": "upload-preview" },

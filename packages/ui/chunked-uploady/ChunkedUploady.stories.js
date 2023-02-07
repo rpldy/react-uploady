@@ -124,9 +124,10 @@ export const WithChunkEventHooks = (): Node => {
 
 //mimic rendering with react and ChunkedUploady loaded through <script> tags
 const renderChunkedUploadyFromBundle = () => {
+    const rpldy = window.rpldy, react = window.react;
+
     const MyUploadButton = () => {
 
-        // $FlowFixMe - rpldy
         rpldy.uploady.useRequestPreSend(() => {
             return {
                 options: {
@@ -139,14 +140,12 @@ const renderChunkedUploadyFromBundle = () => {
             };
         });
 
-        // $FlowFixMe - react & rpldy
         const uploadyContext = react.useContext(rpldy.uploady.UploadyContext);
 
         const onClick = react.useCallback(()=>{
             uploadyContext.showFileUpload();
         });
 
-        // $FlowFixMe - react & rpldy
         return react.createElement("button", {id: "upload-button", onClick: onClick, children: "Upload"});
     };
 
@@ -157,9 +156,7 @@ const renderChunkedUploadyFromBundle = () => {
         chunkSize: 200000,
     };
 
-    // $FlowFixMe - react & rpldy
     return react.createElement(
-        // $FlowFixMe - react & rpldy
         rpldy.chunkedUploady.ChunkedUploady,
         uploadyProps,
         [react.createElement(MyUploadButton)]

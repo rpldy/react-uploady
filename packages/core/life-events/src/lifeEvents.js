@@ -83,6 +83,7 @@ const apiMethods = {
 const createApi = (target: Object): LifeEventsAPI =>
     Object.keys(apiMethods)
         .reduce((res: LifeEventsAPI, name: string) => {
+            // $FlowExpectedError[prop-missing]
             res[name] = apiMethods[name].bind(target);
             return res;
         }, { target, ...apiMethods });

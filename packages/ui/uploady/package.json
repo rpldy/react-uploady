@@ -42,7 +42,7 @@
     "react-dom": ">=16.8"
   },
   "devDependencies": {
-    "flow-bin": "^0.191.0"
+    "flow-bin": "^0.192.0"
   },
   "publishConfig": {
     "access": "public"

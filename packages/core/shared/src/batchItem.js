@@ -50,17 +50,15 @@ const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = fa
         writable: true,
     });
 
-    if (isAlreadyBatchItem) {
-        // $FlowIssue[prop-missing] - flow just doesnt understand...
-        f = f.file || f.url;
-    }
+    //$FlowIssue[prop-missing] - flow just doesnt understand...
+    const fileData = isAlreadyBatchItem ? (f.file || f.url) : f;
 
-    if (typeof f === "string") {
-        batchItem = getBatchItemWithUrl(batchItem, f);
-    } else if (isLikeFile(f)) {
-        batchItem = getBatchItemWithFile(batchItem, f);
+    if (typeof fileData === "string") {
+        batchItem = getBatchItemWithUrl(batchItem, fileData);
+    } else if (isLikeFile(fileData)) {
+        batchItem = getBatchItemWithFile(batchItem, fileData);
     } else {
-        throw new Error(`Unknown type of file added: ${typeof f}`);
+        throw new Error(`Unknown type of file added: ${typeof fileData}`);
     }
 
     return batchItem;

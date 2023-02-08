@@ -49,7 +49,7 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
         getRequestData(items, options);
 
     const issueRequest = (requestUrl: string = url, requestData: Object = data, requestOptions: ?Object) => {
-        requestOptions = merge({
+        const resolvedRequestOptions = merge({
             ...pick(options, ["method", "headers", "withCredentials"]),
             preSend: (req) => {
                 req.upload.onprogress = (e) => {
@@ -60,7 +60,7 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
             },
         }, requestOptions);
 
-	    const realPXhr = request(requestUrl, requestData, requestOptions);
+	    const realPXhr = request(requestUrl, requestData, resolvedRequestOptions);
 
 	    xhr = realPXhr.xhr;
 

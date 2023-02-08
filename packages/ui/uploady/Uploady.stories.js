@@ -531,9 +531,8 @@ export const UMD_ALL = (): Element<"div"> => {
 
 const UploadButtonWithInvalidPreSend = () => {
     useRequestPreSend(({ items }) => {
-
-        // $FlowExpectedError[incompatible-call]]
         return {
+            // $FlowExpectedError[prop-missing]
             items: items[0].id === "batch-1.item-1" ? [
                 //intentionally cause error for the first upload since changing item id is forbidden
                 { ...items[0], id: "invalid-id" },

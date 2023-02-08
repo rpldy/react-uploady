@@ -874,8 +874,8 @@ const MyForm = () => {
     };
 
     useRequestPreSend(({ items }) => {
-        // $FlowExpectedError[incompatible-call]
         return {
+            // $FlowExpectedError[prop-missing]
             items: [{
                 ...items[0],
                 file: cropped?.data || items[0].file,

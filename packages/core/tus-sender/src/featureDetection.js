@@ -158,15 +158,15 @@ const featureDetection = (url: string, tusState: TusState): ?RequestResult<void>
     let result;
     const { options, featureDetection } = tusState.getState();
 
-    url = options.featureDetectionUrl || url;
-    logger.debugLog(`tusSender.featureDetection: about to request server info`, url);
+    const usedUrl = options.featureDetectionUrl || url;
+    logger.debugLog(`tusSender.featureDetection: about to request server info`, usedUrl);
 
-    const storedFd = safeSessionStorage.getItem(getStorageKey(url));
+    const storedFd = safeSessionStorage.getItem(getStorageKey(usedUrl));
 
     if (!featureDetection.processed) {
         result = storedFd ?
-            handleStoredValue(url, tusState, storedFd) :
-            requestFeaturesFromServer(url, tusState);
+            handleStoredValue(usedUrl, tusState, storedFd) :
+            requestFeaturesFromServer(usedUrl, tusState);
     }
 
     return result;

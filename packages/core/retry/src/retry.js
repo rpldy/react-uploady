@@ -33,21 +33,20 @@ const uploadFailedIds = (
     options: ?UploadOptions
 ) => {
     const failed = retryState.getState().failed;
+    const failedIds = ids || Object.keys(failed);
 
-    ids = ids || Object.keys(failed);
-
-    const uploads: BatchItem[] = ids.map((id) => failed[id])
+    const uploads: BatchItem[] = failedIds.map((id) => failed[id])
         .filter(Boolean);
 
     if (uploads.length) {
-		options = {
+		const retryOptions = {
 			...(options || null),
 			autoUpload: typeof options?.autoUpload !== "undefined" ? options.autoUpload : true,
 		};
 
-		trigger(RETRY_EVENT, { items: uploads, options });
-		ids.forEach((id) => removeItemFromState(retryState, id));
-		uploader.add(uploads, options);
+		trigger(RETRY_EVENT, { items: uploads, options: retryOptions });
+        failedIds?.forEach((id) => removeItemFromState(retryState, id));
+		uploader.add(uploads, retryOptions);
 	}
 
     return !!uploads.length;

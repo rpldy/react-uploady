@@ -22,21 +22,23 @@ const generateUploaderEventHookWithState =
     <T>(event: string, stateCalculator: (state: T) => any): WithStateFn<T> =>
         (fn? : Callback | string, id?: string): any  => {
         const [eventState, setEventState] = useState(null);
+        let cbFn = fn;
+        let usedId = id;
 
         if (fn && !isFunction(fn)) {
-            id = fn;
-            fn = undefined;
+            usedId = fn;
+            cbFn = undefined;
         }
 
         const eventCallback = useCallback((eventObj: Object, ...args: mixed[]) => {
-            if (!id || eventObj.id === id) {
+            if (!usedId || eventObj.id === usedId) {
                 setEventState(stateCalculator(eventObj, ...args));
 
-                if (isFunction(fn)) {
-                    fn(eventObj, ...args);
+                if (isFunction(cbFn)) {
+                    cbFn(eventObj, ...args);
                 }
             }
-        }, [fn, id]);
+        }, [cbFn, usedId]);
 
         useEventEffect(event, eventCallback);
 

@@ -21,6 +21,8 @@ type UpdatedResponse = { items: BatchItem[], options: UploaderCreateOptions };
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
 const processPrepareResponse = (eventType: string, items: BatchItem[], options: UploaderCreateOptions, updated: ?UpdatedResponse) => {
+    let usedOptions = options, usedItems = items;
+
     if (updated) {
         logger.debugLog(`uploader.queue: REQUEST_PRE_SEND(${eventType}) event returned updated items/options`, updated);
         if (updated.items) {
@@ -30,15 +32,15 @@ const processPrepareResponse = (eventType: string, items: BatchItem[], options: 
                 throw new Error(`REQUEST_PRE_SEND(${eventType}) event handlers must return same items with same ids`);
             }
 
-            items = updated.items;
+            usedItems = updated.items;
         }
 
         if (updated.options) {
-            options = mergeWithUndefined({}, options, updated.options);
+            usedOptions = mergeWithUndefined({}, options, updated.options);
         }
     }
 
-    return { items, options, cancelled: (updated === false) };
+    return { items: usedItems, options: usedOptions, cancelled: (updated === false) };
 };
 
 const triggerItemsPrepareEvent = (

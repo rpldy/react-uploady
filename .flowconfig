@@ -11,11 +11,14 @@
 [include]
 ./packages/**/*.js.flow
 
-
 [libs]
 
+[strict]
+untyped-type-import
+sketchy-null
+
 [options]
-inference_mode=lti
+experimental.const_params=true
 autoimports=true
 module.ignore_non_literal_requires=true
 module.system.node.main_field=main:dev

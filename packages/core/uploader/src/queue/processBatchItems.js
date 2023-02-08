@@ -115,7 +115,9 @@ const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids
         preparePreRequestItems(queue, allowedItems) :
         Promise.resolve();
 
-   return afterPreparePromise
+    let finalCancelledResults = cancelledResults;
+
+    return afterPreparePromise
         .catch((err) => {
             logger.debugLog("uploader.queue: encountered error while preparing items for request", err);
             reportPreparedError(err, queue, items, next);
@@ -124,7 +126,7 @@ const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids
             let nextP;
             if (itemsSendData) {
                 if (itemsSendData.cancelled) {
-                    cancelledResults = ids.map(() => true);
+                    finalCancelledResults = ids.map(() => true);
                 } else {
                     //make sure files aren't aborted while async prepare was waiting
                     const hasAborted = itemsSendData.items
@@ -143,7 +145,7 @@ const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids
             }
 
             //if not cancelled we can go to process more items immediately (and not wait for upload responses)
-            if (!reportCancelledItems(queue, items, cancelledResults, next)) {
+            if (!reportCancelledItems(queue, items, finalCancelledResults, next)) {
                 nextP = next(queue); //when concurrent is allowed, we can go ahead and process more
             }
 

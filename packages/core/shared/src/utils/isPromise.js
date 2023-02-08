@@ -5,7 +5,7 @@ declare function isPromise(obj: mixed): boolean %checks(
 
 //eslint-disable-next-line no-redeclare
 function isPromise(obj: mixed) {
-    return obj && typeof obj === "object" && typeof obj.then === "function";
+    return !!obj && typeof obj === "object" && typeof obj.then === "function";
 }
 
 export default isPromise;

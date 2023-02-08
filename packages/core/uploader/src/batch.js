@@ -45,11 +45,11 @@ const createBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, optio
 
     const isFileList = getIsFileList(files);
 
-    files = (Array.isArray(files) || isFileList) ? files : [files];
+    const usedFiles = (Array.isArray(files) || isFileList) ? files : [files];
 
     const isPending = !options.autoUpload;
 
-    return processFiles(id, files, isPending, options.fileFilter)
+    return processFiles(id, usedFiles, isPending, options.fileFilter)
         .then((items) => {
             return {
                 id,

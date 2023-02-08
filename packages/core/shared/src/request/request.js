@@ -12,7 +12,7 @@ const setHeaders = (req: XMLHttpRequest, headers: Object): ?Headers => {
     }
 };
 
-const request = (url: string, data?: mixed, options: RequestOptions = {}): XhrPromise => {
+const request = (url: string, data?: mixed, options: ?RequestOptions = {}): XhrPromise => {
     const req = new XMLHttpRequest();
 
     return new XhrPromise(
@@ -22,13 +22,11 @@ const request = (url: string, data?: mixed, options: RequestOptions = {}): XhrPr
         req.onabort = () => reject(req);
         req.onload = () => resolve(req);
 
-        req.open((options.method || "GET"), url);
-        setHeaders(req, options.headers);
-        req.withCredentials = !!options.withCredentials;
+        req.open((options?.method || "GET"), url);
+        setHeaders(req, options?.headers);
+        req.withCredentials = !!options?.withCredentials;
 
-        if (options.preSend) {
-            options.preSend(req);
-        }
+        options?.preSend?.(req);
 
         req.send(data);
     }, req);

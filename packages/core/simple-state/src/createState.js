@@ -18,7 +18,7 @@ const setIsUpdateable = (proxy: Object, value: any) => {
 	}
 };
 
-const deepProxy = (obj: Object, traps: Object) => {
+const deepProxy: (Object, Object) => Object = (obj: Object, traps: Object) => {
 	let proxy;
 
 	if (isProxiable(obj)) {
@@ -55,7 +55,7 @@ const unwrapProxy = (proxy: Object): Object =>
  * @returns {{state, update, unwrap}}
  */
 const createState =  <T>(obj: Object): SimpleState<T> => {
-    const traps = {
+    const traps: Object = {
         set: (obj: Object, key: string, value: any) => {
             if (getIsUpdateable(proxy)) {
                 obj[key] = deepProxy(value, traps);

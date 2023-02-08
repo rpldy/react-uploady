@@ -8,11 +8,9 @@ import {
     type CsfExport,
 } from "../../../story-helpers";
 import UploadUrlInput from "./src";
-
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type { Node } from "React";
+import type { Node } from "react";
 
 export const Simple = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();

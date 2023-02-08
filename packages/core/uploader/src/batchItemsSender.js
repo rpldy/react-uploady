@@ -9,7 +9,7 @@ import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "./defaults";
 
 import type { Batch, BatchItem } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
-import type { ItemsSender, UploaderCreateOptions } from "./types";
+import type { ItemsSender, UploaderCreateOptions, BatchItemSenderSendMethod } from "./types";
 
 const reportItemsProgress = (items: BatchItem[], completed: number, loaded: number, trigger: TriggerMethod) => {
     items.forEach((item: BatchItem) => {
@@ -33,7 +33,7 @@ const onItemUploadProgress = (items: BatchItem[], batch: Batch, e: ProgressEvent
 };
 
 const createBatchItemsSender = (): ItemsSender => {
-    const send = (items: BatchItem[], batch: Batch, batchOptions: UploaderCreateOptions) => {
+    const send: BatchItemSenderSendMethod = (items: BatchItem[], batch: Batch, batchOptions: UploaderCreateOptions) => {
         const destination = batchOptions.destination,
             url = destination?.url;
 

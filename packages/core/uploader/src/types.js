@@ -12,6 +12,7 @@ import type { OnAndOnceMethod } from "@rpldy/life-events";
 import type { UploaderType } from "@rpldy/raw-uploader";
 import type { SendResult, SendMethod } from "@rpldy/sender";
 import type { CreateOptionsWithAbort } from "@rpldy/abort";
+import {  } from "@rpldy/sender/src";
 
 export type UploaderCreateOptions = {|
     ...CreateOptionsWithAbort,
@@ -20,8 +21,10 @@ export type UploaderCreateOptions = {|
     send?: ? SendMethod<any>,
 |};
 
+export type BatchItemSenderSendMethod = (BatchItem[], Batch, UploaderCreateOptions) => SendResult;
+
 export type ItemsSender = {
-	send: (BatchItem[], Batch, UploaderCreateOptions) => SendResult,
+	send: BatchItemSenderSendMethod,
 	on: OnAndOnceMethod,
 };
 

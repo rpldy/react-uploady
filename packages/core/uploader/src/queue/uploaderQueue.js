@@ -192,9 +192,9 @@ const createUploaderQueue = (
         runCancellable: queueState.runCancellable,
         uploadBatch,
         addBatch,
-        abortItem: (...args) => processAbortItem(queueState, ...args),
-        abortBatch: (...args) => processAbortBatch(queueState, ...args),
-        abortAll: (...args) => processAbortAll(queueState, ...args),
+        abortItem: (...args: string[]) => processAbortItem(queueState, ...args),
+        abortBatch: (...args: string[]) => processAbortBatch(queueState, ...args),
+        abortAll: (...args: string[]) => processAbortAll(queueState, ...args),
         clearPendingBatches,
         uploadPendingBatches,
     };

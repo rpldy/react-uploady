@@ -73,7 +73,7 @@ const createUploader = (options?: UploaderCreateOptions): UploadyUploaderType =>
         enhancerTime = state;
     };
 
-    const update = (updateOptions: UploaderCreateOptions) => {
+    const update: (UploaderCreateOptions) => UploadyUploaderType  = (updateOptions: UploaderCreateOptions) => {
         //TODO: updating concurrent and maxConcurrent means we need to update the processor - not supported yet!
         uploaderOptions = merge({}, uploaderOptions, updateOptions); //need deep merge for destination
         return uploader;

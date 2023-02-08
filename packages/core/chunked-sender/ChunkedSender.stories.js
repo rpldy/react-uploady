@@ -10,8 +10,6 @@ import {
     type CsfExport,
 } from "../../../story-helpers";
 import getChunkedEnhancer, { CHUNK_EVENTS } from "./src";
-
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
 const DEFAULT_CHUNK_SIZE = 10 * 1024 * 1024; //10MB
@@ -19,7 +17,7 @@ const DEFAULT_CHUNK_SIZE = 10 * 1024 * 1024; //10MB
 export const WithChunkedSender = (): Node => {
     const { destination, chunkSize } = useChunkedStoryHelper();
     const { url } = destination;
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState<?File>(null);
 
     const uploader = useMemo(() => {
         const chunkedEnhancer = getChunkedEnhancer({
@@ -59,7 +57,7 @@ export const WithChunkedSender = (): Node => {
     };
 
     const onFileChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-        setFile(event.target.files[0]);
+        setFile(event.currentTarget.files[0]);
     };
 
     return (

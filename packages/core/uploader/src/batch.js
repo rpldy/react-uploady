@@ -1,5 +1,5 @@
 // @flow
-import { BATCH_STATES, createBatchItem, isPromise, getIsBatchItem } from "@rpldy/shared";
+import { BATCH_STATES, createBatchItem, getIsBatchItem, isPromise } from "@rpldy/shared";
 import { DEFAULT_FILTER } from "./defaults";
 import { getIsFileList } from "./utils";
 
@@ -30,7 +30,7 @@ const processFiles = (batchId: string, files: UploadInfo, isPending: boolean, fi
             const filterResult = filterFn(all[index], index, all);
 
             return isPromise(filterResult) ?
-                filterResult.then((result) => !!result && f) :
+                filterResult.then((result: boolean) => !!result && f) :
                 (!!filterResult && f);
         }))
         .then((filtered) =>

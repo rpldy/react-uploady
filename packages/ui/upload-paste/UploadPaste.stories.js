@@ -16,11 +16,9 @@ import {
     type CsfExport,
 } from "../../../story-helpers";
 import withPasteUpload, { usePasteUpload } from "./src";
-
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type { Node } from "React"
+import type { Node } from "react"
 import type { UploadOptions } from "@rpldy/shared";
 import type { PasteUploadHookResult } from "./src";
 
@@ -43,7 +41,7 @@ const PasteArea = withPasteUpload(SimpleContainer);
 export const Simple = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
-    const onPasteUpload = useCallback(({ count }) => {
+    const onPasteUpload = useCallback(({ count }: { count: number }) => {
         console.log("PASTE-TO-UPLOAD files: ", count);
     }, []);
 
@@ -62,7 +60,7 @@ export const Simple = (): Node => {
 };
 
 const PasteToggle = ({ toggle, getIsEnabled }: PasteUploadHookResult ) => {
-    const [isEnabled, setIsEnabled] = useState(getIsEnabled);
+    const [isEnabled, setIsEnabled] = useState<boolean>(getIsEnabled);
 
     const onToggleClick = useCallback(() => {
         setIsEnabled(toggle());
@@ -75,7 +73,7 @@ const PasteToggle = ({ toggle, getIsEnabled }: PasteUploadHookResult ) => {
 } ;
 
 const WindowPaste = () => {
-    const onPasteUpload = useCallback(({ count }) => {
+    const onPasteUpload = useCallback(({ count }:  { count: number }) => {
         console.log("WINDOW PASTE-TO-UPLOAD files: ", count);
     }, []);
 
@@ -87,13 +85,14 @@ const WindowPaste = () => {
 export const WithWindowPaste = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
-    return <Uploady debug
-                    multiple={multiple}
-                    destination={destination}
-                    enhancer={enhancer}
-                    grouped={grouped}
-                    maxGroupSize={groupSize}>
-
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+    >
         <h1>paste anywhere to initiate upload (registered on window)</h1>
         <WindowPaste/>
         <StoryUploadProgress/>
@@ -101,9 +100,9 @@ export const WithWindowPaste = (): Node => {
 };
 
 const ElementPaste = (props: UploadOptions) => {
-    const containerRef = useRef(null);
+    const containerRef = useRef<?HTMLElement>(null);
 
-    const onPasteUpload = useCallback(({ count }) => {
+    const onPasteUpload = useCallback(({ count }: { count: number }) => {
         console.log("ELEMENT PASTE-TO-UPLOAD files: ", count);
     }, []);
 

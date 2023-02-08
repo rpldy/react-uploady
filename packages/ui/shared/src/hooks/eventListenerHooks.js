@@ -5,7 +5,7 @@ import {
     generateUploaderEventHookWithState
 } from "./hooksUtils";
 
-import type { Batch, BatchFile, BatchItem, BatchUrl } from "@rpldy/shared";
+import type { Batch, BatchItem } from "@rpldy/shared";
 import type { UploaderCreateOptions } from "@rpldy/uploader";
 import type {
     BatchEventHook,

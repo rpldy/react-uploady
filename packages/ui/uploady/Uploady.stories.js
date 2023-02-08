@@ -33,11 +33,9 @@ import Uploady, {
 
     type PreSendData,
 } from "./src";
-
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type { Node, Element } from "React";
+import type { Node, Element } from "react";
 import type { BatchItem } from "@rpldy/shared";
 
 const ContextUploadButton = () => {

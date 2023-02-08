@@ -30,10 +30,9 @@ import {
 } from "../../../story-helpers";
 import UploadButton, { asUploadButton } from "./src";
 
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type { Node, Element } from "React"
+import type { Node, Element } from "react"
 import type { UploadyContextType } from "@rpldy/uploady";
 
 export const Simple = (): Node => {
@@ -45,8 +44,8 @@ export const Simple = (): Node => {
                     enhancer={enhancer}
                     grouped={grouped}
                     maxGroupSize={groupSize}
-                    fileInputId={"rpldyInput"}>
-
+                    fileInputId={"rpldyInput"}
+    >
         <UploadButton/>
     </Uploady>;
 };
@@ -58,21 +57,22 @@ const StyledUploadButton = styled(UploadButton)`
 export const WithStyledComponent = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
-    return <Uploady debug
+    return <Uploady
+        debug
                     multiple={multiple}
                     destination={destination}
                     enhancer={enhancer}
                     grouped={grouped}
-                    maxGroupSize={groupSize}>
-
+                    maxGroupSize={groupSize}
+    >
         <StyledUploadButton/>
     </Uploady>;
 };
 
 const EventsLog = ({ setUpdater }: { setUpdater: (fn: any) => void }) => {
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState<string[]>([]);
 
-    const addEvent = useCallback((event) => {
+    const addEvent = useCallback((event: string) => {
         setEvents((events) => events.concat(event));
     }, [setEvents]);
 
@@ -109,8 +109,8 @@ export const WithEventListeners = (): Node => {
         enhancer={enhancer}
         listeners={listeners}
         grouped={grouped}
-        maxGroupSize={groupSize}>
-
+        maxGroupSize={groupSize}
+    >
         <UploadButton/>
         <EventsLog setUpdater={setUpdater}/>
     </Uploady>;
@@ -162,7 +162,8 @@ export const WithProgress = (): Node => {
         debug
         multiple={multiple}
         destination={destination}
-        enhancer={enhancer}>
+        enhancer={enhancer}
+    >
         <UploadButton/>
         <StoryUploadProgress batchProgress itemProgress/>
     </Uploady>;
@@ -209,7 +210,7 @@ export const WithClass = (): Node => {
 };
 
 const DisabledDuringUploadButton = () => {
-    const [uploading, setUploading] = useState(false);
+    const [uploading, setUploading] = useState<boolean>(false);
 
     useBatchStartListener(() => {
         setUploading(true);
@@ -231,8 +232,8 @@ export const DisabledDuringUpload = (): Node => {
         destination={destination}
         enhancer={enhancer}
         grouped={grouped}
-        maxGroupSize={groupSize}>
-
+        maxGroupSize={groupSize}
+    >
         <DisabledDuringUploadButton/>
     </Uploady>;
 };
@@ -277,19 +278,20 @@ const DivUploadButton = asUploadButton(forwardRef((props, ref) => {
 export const WithComponentAsButton = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
-    return <Uploady debug
+    return <Uploady
+        debug
                     multiple={multiple}
                     destination={destination}
                     enhancer={enhancer}
                     grouped={grouped}
-                    maxGroupSize={groupSize}>
-
+                    maxGroupSize={groupSize}
+    >
         <DivUploadButton/>
     </Uploady>;
 };
 
 const ExampleForm = ({ url }: { url: string }) => {
-    const inputRef = useRef();
+    const inputRef = useRef<?HTMLInputElement>();
     useFileInput(inputRef);
 
     return <form action={url} method="POST">
@@ -311,11 +313,11 @@ export const WithCustomFileInputAndForm = (): Element<"section"> => {
 
 const ExampleFormWithCustomButton = ({ url }: { url: string }) => {
     const { showFileUpload } = useUploady();
-    const [selectDir, setSelectDir] = useState(false);
-    const inputRef = useRef();
+    const [selectDir, setSelectDir] = useState<boolean>(false);
+    const inputRef = useRef<?HTMLInputElement>();
     useFileInput(inputRef);
 
-    const onSelectChange = useCallback((e) => {
+    const onSelectChange = useCallback((e: SyntheticInputEvent<HTMLSelectElement>) => {
         setSelectDir(e.target.value === "dir");
     }, []);
 
@@ -361,7 +363,7 @@ export const WithCustomFileInputAndCustomButton = (): Element<"section"> => {
 export const WithFileFilter = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
-    const filterBySize = useCallback((file) => {
+    const filterBySize = useCallback((file: mixed) => {
         //filter out files larger than 5MB
         return !(file instanceof File) || file.size < 5242880;
     }, []);
@@ -429,7 +431,7 @@ const MyForm = () => {
         processPending({ params: fields });
     }, [fields, processPending]);
 
-    const onFieldChange = useCallback((e) => {
+    const onFieldChange = useCallback((e: SyntheticInputEvent<HTMLInputElement>) => {
         setFields({
             ...fields,
             [e.currentTarget.id]: e.currentTarget.value,

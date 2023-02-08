@@ -28,7 +28,7 @@ const generateUploaderEventHookWithState =
             fn = undefined;
         }
 
-        const eventCallback = useCallback((eventObj, ...args) => {
+        const eventCallback = useCallback((eventObj: Object, ...args: mixed[]) => {
             if (!id || eventObj.id === id) {
                 setEventState(stateCalculator(eventObj, ...args));
 
@@ -45,7 +45,7 @@ const generateUploaderEventHookWithState =
 
 const generateUploaderEventHook = (event: string, canScope: boolean = true): ((fn: Callback, id?: string) => void) =>
     (fn: Callback, id?: string) => {
-        const eventCallback = useCallback((eventObj, ...args) => {
+        const eventCallback = useCallback((eventObj: Object, ...args: mixed[]) => {
             return (fn && (!canScope || !id || eventObj.id === id)) ?
                 fn(eventObj, ...args) : undefined;
         }, [fn, id]);

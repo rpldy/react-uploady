@@ -21,17 +21,15 @@ import {
     type CsfExport
 } from "../../../story-helpers";
 import retryEnhancer, { useBatchRetry, useRetry, useRetryListener, RETRY_EVENT } from "./src";
-
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type {Node} from "React";
+import type { Node } from "react";
 import type { RefObject } from "@rpldy/shared-ui";
-import type { RemovePreviewMethod, PreviewProps, PreviewMethods, PreviewItem } from "@rpldy/upload-preview";
+import type { PreviewMethods, PreviewItem } from "@rpldy/upload-preview";
 
 const RetryUi = () => {
-	const [seenItems, setItems] = useState({});
-	const [seenBatches, setBatches] = useState([]);
+	const [seenItems, setItems] = useState<{ [string]: string }>({});
+	const [seenBatches, setBatches] = useState<string[]>([]);
 	const abortItem = useAbortItem();
 	const retry = useRetry();
 	const retryBatch = useBatchRetry();
@@ -61,13 +59,13 @@ const RetryUi = () => {
 		retry();
 	}, [retry]);
 
-	const onRetryItem = useCallback((e) => {
-		const itemId = e.target.dataset["id"];
+	const onRetryItem = useCallback((e: SyntheticMouseEvent<HTMLLIElement>) => {
+		const itemId = e.currentTarget.dataset["id"];
 		retry(itemId);
 	}, [retry]);
 
-	const onRetryBatch = useCallback((e) => {
-		const batchId = e.target.dataset["id"];
+	const onRetryBatch = useCallback((e: SyntheticMouseEvent<HTMLLIElement>) => {
+		const batchId = e.currentTarget.dataset["id"];
 		retryBatch(batchId);
 	}, [retryBatch]);
 
@@ -95,7 +93,8 @@ const RetryUi = () => {
 					<li style={{ cursor: "pointer" }}
 						data-id={id} key={id}
 						data-test={`item-retry-${index}`}
-						onClick={onRetryItem}>
+						onClick={onRetryItem}
+                    >
 						cancelled: ({id}) {seenItems[id]}
 					</li>)}
 			</ul>
@@ -271,8 +270,8 @@ const ClearPreviewsButton = ({ methods, previews }: { methods: RefObject<Preview
 };
 
 const QueueItem = memo((props: { id: string, name: string, url: string }) => {
-	const [progress, setProgress] = useState(0);
-	const [itemState, setItemState] = useState("");
+	const [progress, setProgress] = useState<number>(0);
+	const [itemState, setItemState] = useState<string>("");
 
 	useItemProgressListener((item) => {
 		if (item.completed > progress) {
@@ -313,9 +312,9 @@ const QueueItem = memo((props: { id: string, name: string, url: string }) => {
 });
 
 const Queue = () => {
-	const [previews, setPreviews] = useState([]);
-	const previewMethodsRef = useRef();
-	const onPreviewsChanged = useCallback((previews) => {
+	const [previews, setPreviews] = useState<PreviewItem[]>([]);
+	const previewMethodsRef = useRef<?PreviewMethods>();
+	const onPreviewsChanged = useCallback((previews: PreviewItem[]) => {
 		setPreviews(previews);
 	}, []);
 

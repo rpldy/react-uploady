@@ -11,14 +11,13 @@ import {
     type CsfExport
 } from "../../../story-helpers";
 import createUploader, { UPLOADER_EVENTS } from "./src";
-
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
+import type { UploadyUploaderType } from "./src";
 
 export const WithCustomUI = (): Element<"div"> => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
-    const uploaderRef = useRef(null);
-    const inputRef = useRef(null);
+    const uploaderRef = useRef<?UploadyUploaderType>(null);
+    const inputRef = useRef<?HTMLInputElement>(null);
 
     const onClick = useCallback(() => {
         const input = inputRef.current;
@@ -52,8 +51,8 @@ export const WithCustomUI = (): Element<"div"> => {
 
 export const TEST_EventsData = (): Element<"div"> => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
-    const uploaderRef = useRef(null);
-    const inputRef = useRef(null);
+    const uploaderRef = useRef<?UploadyUploaderType>(null);
+    const inputRef = useRef<?HTMLInputElement>(null);
 
     const onClick = useCallback(() => {
         const input = inputRef.current;
@@ -115,8 +114,8 @@ export const TEST_EventsData = (): Element<"div"> => {
 
 export const UMD_Core = (): Element<"div"> => {
     const [uploaderReady, setUploaderReady] = useState(false);
-    const inputRef = useRef(null);
-    const uploaderRef = useRef(null);
+    const inputRef = useRef<?HTMLInputElement>(null);
+    const uploaderRef = useRef<?UploadyUploaderType>(null);
 
     const onBundleLoad = useCallback(() => {
         uploaderRef.current = window.rpldy.createUploader({

@@ -22,11 +22,9 @@ import {
     getCsfExport,
     type CsfExport
 } from "../../../story-helpers";
-
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type { Node, Element } from "React";
+import type { Node, Element } from "react";
 
 //expose react and react-dom for Uploady bundle
 window.react = React;

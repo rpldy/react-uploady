@@ -78,7 +78,7 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
             }
         }, [onDragOverClassName, containerRef, shouldHandleDrag, enableOnContains]);
 
-        const onDragOver = useCallback((e) => {
+        const onDragOver = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             if (dragLeaveTrackerRef.current) {
                 //must have drag over event handler with preventDefault for drop to work
                 e.preventDefault();
@@ -95,14 +95,14 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
             }
         }, [handleEnd, handleDropUpload]);
 
-        const onDragLeave = useCallback((e) => {
+        const onDragLeave = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             if ((dragLeaveTrackerRef.current &&
                 e.target === containerRef.current) || shouldRemoveDragOver?.(e)) {
                 handleEnd();
             }
         }, [handleEnd, containerRef, shouldRemoveDragOver]);
 
-        const onDragEnd = useCallback((e) => {
+        const onDragEnd = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             if (dragLeaveTrackerRef.current) {
                 e.preventDefault();
                 e.stopPropagation();

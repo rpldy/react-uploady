@@ -128,7 +128,7 @@ const processNext = (queue: QueueState): Promise<void> | void => {
 
     if (ids) {
         const currentCount = queue.getCurrentActiveCount(),
-            { concurrent = 0, maxConcurrent = 0 } = queue.getOptions();
+            { concurrent = !!0, maxConcurrent = 0 } = queue.getOptions();
 
         if (!currentCount || (concurrent && currentCount < maxConcurrent)) {
             logger.debugLog("uploader.processor: Processing next upload - ", {

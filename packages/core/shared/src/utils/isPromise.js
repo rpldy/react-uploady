@@ -1,6 +1,12 @@
 // @flow
-const isPromise = (p: ?mixed): boolean %checks =>
-    !!p && typeof p === "object" && typeof p.then === "function";
+declare function isPromise(obj: mixed): boolean %checks(
+    obj instanceof Promise
+)
+
+//eslint-disable-next-line no-redeclare
+function isPromise(obj: mixed) {
+    return obj && typeof obj === "object" && typeof obj.then === "function";
+}
 
 export default isPromise;
 

@@ -19,7 +19,7 @@ const getKeys = (obj: Object, options: MergeOptions) => {
 };
 
 const getMerge = (options: MergeOptions = {}): MergeMethod => {
-   const merge = (target: Object, ...sources: Object[]) => {
+   const merge: (...params: Object[]) => Object = (target: Object, ...sources: Object[]) => {
        if (target && sources.length) {
            sources.forEach((source) => {
                if (source) {

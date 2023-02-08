@@ -6,7 +6,7 @@ import { CHUNKED_SENDER_TYPE } from "../consts";
 import processChunkProgressData from "./processChunkProgressData";
 import getChunkedState from "./getChunkedState";
 
-import type { BatchItem } from "@rpldy/shared";
+import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { OnProgress, SendResult, SenderProgressEvent } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { MandatoryChunkedOptions, ChunkedSendOptions } from "../types";
@@ -43,7 +43,7 @@ export const process = (
         onProgress(progressData, [item]);
     };
 
-    const sendPromise = new Promise((resolve) => {
+    const sendPromise = new Promise<UploadData>((resolve) => {
         sendChunks(chunkedState, item, onChunkProgress, resolve, trigger);
     });
 

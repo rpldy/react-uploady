@@ -16,7 +16,7 @@ const getChunks = (item: BatchItem, options: MandatoryChunkedOptions, startByte:
     const count = size <= chunkSize ? 1 :
         Math.ceil(size / chunkSize);
 
-    return new Array(count).fill(null)
+    return new Array<?Chunk>(count).fill(null)
         .map((n, index) => {
             const start = (chunkSize * index) + (startByte || 0);
 

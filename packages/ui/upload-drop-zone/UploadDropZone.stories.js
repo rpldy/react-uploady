@@ -1,6 +1,6 @@
 // @flow
 import React, { forwardRef, useCallback, useContext, useMemo, useRef } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { number } from "@storybook/addon-knobs";
 import { DndProvider, useDrop } from "react-dnd";
 import Backend, { NativeTypes } from "react-dnd-html5-backend";
@@ -15,11 +15,11 @@ import {
     KNOB_GROUPS,
     type CsfExport,
 } from "../../../story-helpers";
-
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type { Node } from "React";
+import type { Node, Ref } from "react";
+import type { UploadButtonProps } from "@rpldy/upload-button";
+import type { GetFilesMethod } from "./src";
 
 const StyledDropZone = styled(UploadDropZone)`
    ${dropZoneCss}
@@ -70,7 +70,7 @@ export const WithProgress = (): Node => {
 export const WithDropHandler = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
-    const dropHandler = useCallback((e) => {
+    const dropHandler = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
         console.log(">>>> DROP EVENT ", e.dataTransfer);
         return "https://i.pinimg.com/originals/51/bf/9c/51bf9c7fdf0d4303140c4949afd1d7b8.jpg";
     }, []);
@@ -93,19 +93,24 @@ export const WithDropHandlerAndGetFiles = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
     const fileCount = number("file count in drop", 1, {}, KNOB_GROUPS.SETTINGS);
 
-    const dropHandler = useCallback(async (e, getFiles) => {
+    const dropHandler = useCallback(async (e: SyntheticMouseEvent<HTMLElement>, getFiles: GetFilesMethod) => {
         const files = await getFiles();
         return files.slice(0, fileCount);
     }, [fileCount]);
 
-    return <Uploady debug
-                    multiple={multiple}
-                    destination={destination}
-                    enhancer={enhancer}
-                    grouped={grouped}
-                    maxGroupSize={groupSize}>
-
-        <StyledDropZone id="upload-drop-zone" onDragOverClassName="drag-over" dropHandler={dropHandler}>
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+    >
+        <StyledDropZone
+            id="upload-drop-zone"
+            onDragOverClassName="drag-over"
+            dropHandler={dropHandler}
+        >
             <div id="drag-text">Drag File(s) Here</div>
             <div id="drop-text">Drop Files(s) Here</div>
         </StyledDropZone>
@@ -198,10 +203,10 @@ export const WithThirdPartyDropZone = (): Node => {
 	</DndProvider>;
 };
 
-const MyClickableDropZone = forwardRef((props, ref) => {
+const MyClickableDropZone = forwardRef((props: UploadButtonProps, ref: Ref<"div">) => {
 	const { onClick, ...buttonProps } = props;
 
-	const onZoneClick = useCallback((e) => {
+	const onZoneClick = useCallback((e: SyntheticMouseEvent<HTMLElement>) => {
 		if (onClick) {
 			onClick(e);
 		}

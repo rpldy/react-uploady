@@ -19,7 +19,7 @@ const getCurrentNpmVersion = async (pkg) => {
     let result = null;
 
     try {
-        result = { name: pkg.name, version: pkg.version};
+        result = { name: pkg.name, version: pkg.version };
     } catch (e) {
         console.error("FAILED TO GET NPM VERSION !!!!!", e);
     }
@@ -77,15 +77,6 @@ const updateHtmlTitle = (config) => {
 
 module.exports = {
     webpack: async (config) => {
-        config.module.rules.push({
-            test: /\.stor(y|ies)\.jsx?$/,
-            use: [{
-                loader: require.resolve("@storybook/source-loader"),
-                options: { parser: "flow" },
-            }],
-            enforce: "pre",
-        });
-
         config.resolve = {
             ...config.resolve,
             mainFields: ["main:dev"].concat(config.resolve.mainFields),
@@ -113,5 +104,5 @@ module.exports = {
             ...definitions,
             "PUBLISHED_VERSIONS": await getAllPackagesVersions(config),
         }));
-    }
+    },
 };

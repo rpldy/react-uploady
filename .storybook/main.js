@@ -14,11 +14,17 @@ module.exports = {
         return ["./welcome.stories.mdx"].concat(paths);
     },
     addons: [
+        path.resolve("./.storybook/uploadyPreset"),
+        {
+            //have to explicitly specify docs addon to turn off sourceLoader
+            name: "@storybook/addon-docs",
+            options: {
+                //sourceLoader breaks on flow typings...
+                sourceLoaderOptions: null,
+            }
+        },
         "@storybook/addon-essentials",
         "@storybook/addon-knobs",
-        "@storybook/addon-storysource",
-        path.resolve("./.storybook/uploadyPreset")
-        // "./.storybook/cypressAddon/register",
     ],
     features: {
         postcss: false,
@@ -26,16 +32,8 @@ module.exports = {
         // storyStoreV7: true
     },
     core: {
-        builder: "webpack5" //"webpack4"
-
+        builder: "webpack5",
+        disableTelemetry: true,
     },
     framework: "@storybook/react",
-
-    // previewHead: (head) => { return head; },
-    // babel: async (config) => {
-    //     console.log(">>>>>>> BABEL CONFIG FROM SB: " + process.env.NODE_ENV , config);
-    //     return config;
-    // },
-    // webpackFinal: async (config) => { return config; },
-    // managerWebpack: async (baseConfig, options) =>  { return baseConfig; }
 };

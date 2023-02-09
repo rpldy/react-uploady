@@ -14,17 +14,17 @@ import type {
 	ChunkedSendOptions,
 	SendResult,
 } from "@rpldy/chunked-sender";
-import type { TusState } from "../types";
+import type { RequestResult, TusState } from "../types";
 
 const doUpload = (
-	items,
-	url,
-	sendOptions,
-	onProgress,
-	tusState,
-	chunkedSender,
-	fdRequest,
-    trigger,
+	items: BatchItem[],
+	url: string,
+	sendOptions: ChunkedSendOptions,
+	onProgress: OnProgress,
+	tusState: TusState,
+	chunkedSender: ChunkedSender,
+	fdRequest: ?RequestResult<void>,
+    trigger: TriggerMethod,
 ) => {
 	let tusAbort;
 

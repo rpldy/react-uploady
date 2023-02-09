@@ -16,10 +16,13 @@ type ItemsRetriever<T> = (subject: T) => BatchItem[];
 type SubjectRetriever<T> = (subject: T, UploaderCreateOptions) => Object;
 type ItemsPreparer<T> = (queue: QueueState, subject: T) => Promise<ItemsSendData>;
 type ResponseValidator = (updated: any) => void;
+type UpdatedResponse = { items: BatchItem[], options: UploaderCreateOptions };
 
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
-const processPrepareResponse = (eventType, items, options, updated) => {
+const processPrepareResponse = (eventType: string, items: BatchItem[], options: UploaderCreateOptions, updated: ?UpdatedResponse) => {
+    let usedOptions = options, usedItems = items;
+
     if (updated) {
         logger.debugLog(`uploader.queue: REQUEST_PRE_SEND(${eventType}) event returned updated items/options`, updated);
         if (updated.items) {
@@ -29,20 +32,20 @@ const processPrepareResponse = (eventType, items, options, updated) => {
                 throw new Error(`REQUEST_PRE_SEND(${eventType}) event handlers must return same items with same ids`);
             }
 
-            items = updated.items;
+            usedItems = updated.items;
         }
 
         if (updated.options) {
-            options = mergeWithUndefined({}, options, updated.options);
+            usedOptions = mergeWithUndefined({}, options, updated.options);
         }
     }
 
-    return { items, options, cancelled: (updated === false) };
+    return { items: usedItems, options: usedOptions, cancelled: (updated === false) };
 };
 
 const triggerItemsPrepareEvent = (
     queue: QueueState,
-    eventSubject,
+    eventSubject: Object,
     items: BatchItem[],
     options: UploaderCreateOptions,
     eventType: string,
@@ -51,12 +54,12 @@ const triggerItemsPrepareEvent = (
     triggerUpdater<{ subject: Object, options: UploaderCreateOptions }>(
         queue.trigger, eventType, eventSubject, options)
         // $FlowIssue - https://github.com/facebook/flow/issues/8215
-        .then((updated: ?{ items: BatchItem[], options: UploaderCreateOptions }) => {
+        .then((updated: ?UpdatedResponse) => {
             validateResponse?.(updated);
             return processPrepareResponse(eventType, items, options, updated);
         });
 
-const persistPrepareResponse = (queue, prepared) => {
+const persistPrepareResponse = (queue: QueueState, prepared: ItemsSendData) => {
     //for async prepare, items could already be cancelled before we reach here
     if (prepared.items[0] && queue.getState().batches[prepared.items[0].batchId]) {
         queue.updateState((state) => {

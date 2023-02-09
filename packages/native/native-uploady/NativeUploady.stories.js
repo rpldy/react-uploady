@@ -2,15 +2,13 @@
 import React, { useCallback, useContext, useRef } from "react";
 import { useStoryUploadySetup, getCsfExport, type CsfExport } from "../../../story-helpers";
 import NativeUploady, { UploadyContext } from "./src";
-
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type { Node } from "React";
+import type { Node } from "react";
 
 const WithCustomUI = () => {
     const uploadyContext = useContext(UploadyContext);
-    const inputRef = useRef(null);
+    const inputRef = useRef<?HTMLInputElement>(null);
 
     const onClick = useCallback(() => {
         const input = inputRef.current;

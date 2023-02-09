@@ -6,7 +6,7 @@ import { removeResumable } from "../../resumableStore";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
-import type { InitUploadResult, ResumeStartEventData, ResumeStartEventResponse } from "../types";
+import type { InitData, InitUploadResult, ResumeStartEventData, ResumeStartEventResponse } from "../types";
 import type { State, TusState, TusOptions } from "../../types";
 
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
@@ -50,7 +50,7 @@ const resumeWithDelay = (
     parallelIdentifier: ?string,
     attempt: number
 ) =>
-	new Promise((resolve) => {
+	new Promise<?InitData>((resolve) => {
 		setTimeout(() => {
 			makeResumeRequest(item, url, tusState, trigger, parallelIdentifier, attempt)
 				.request.then(resolve);
@@ -66,7 +66,15 @@ const handleResumeFail = (item: BatchItem, options: TusOptions, parallelIdentifi
 	};
 };
 
-const handleResumeResponse = (resumeResponse, item, url, tusState, trigger, parallelIdentifier, attempt) => {
+const handleResumeResponse = (
+    resumeResponse: XMLHttpRequest,
+    item: BatchItem,
+    url: string,
+    tusState: TusState,
+    trigger: TriggerMethod,
+    parallelIdentifier: ?string,
+    attempt: number
+) => {
     let result;
     const { options } = tusState.getState();
 
@@ -141,7 +149,7 @@ const makeResumeRequest = (
 
     const updateRequestPromise = getUpdatedRequest(item, url, tusState, trigger);
 
-    const updatedRequest = updateRequestPromise.then((getXhr) => {
+    const updatedRequest: Promise<?InitData> = updateRequestPromise.then((getXhr) => {
             resumeFinished = !getXhr();
             const callOnFail = () => handleResumeFail(item, options, parallelIdentifier);
 

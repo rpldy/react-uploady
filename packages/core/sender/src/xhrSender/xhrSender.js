@@ -48,8 +48,8 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
         config.getRequestData(items, options) :
         getRequestData(items, options);
 
-    const issueRequest = (requestUrl = url, requestData = data, requestOptions) => {
-        requestOptions = merge({
+    const issueRequest = (requestUrl: string = url, requestData: Object = data, requestOptions: ?Object) => {
+        const resolvedRequestOptions = merge({
             ...pick(options, ["method", "headers", "withCredentials"]),
             preSend: (req) => {
                 req.upload.onprogress = (e) => {
@@ -60,8 +60,8 @@ const makeRequest = (items: BatchItem[], url: string, options: SendOptions, onPr
             },
         }, requestOptions);
 
-	    const realPXhr = request(requestUrl, requestData, requestOptions);
-        // $FlowFixMe -
+	    const realPXhr = request(requestUrl, requestData, resolvedRequestOptions);
+
 	    xhr = realPXhr.xhr;
 
         return realPXhr;
@@ -96,7 +96,7 @@ const parseResponseJson = (response: string, headers: ?Headers, options: SendOpt
 	return parsed;
 };
 
-const checkIsResponseSuccessful = (xhr, options) => {
+const checkIsResponseSuccessful = (xhr: XMLHttpRequest, options: SendOptions) => {
     const isSuccess = options.isSuccessfulCall ?
         options.isSuccessfulCall(xhr) :
         SUCCESS_CODES.includes(xhr.status);

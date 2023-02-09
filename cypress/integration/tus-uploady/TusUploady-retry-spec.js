@@ -60,7 +60,7 @@ describe("TusUploady - With Retry", () => {
                 },
             }, "resumeReq");
 
-            cy.wait(WAIT_X_SHORT);
+            cy.wait(WAIT_SHORT);
 
             //retry aborted
             cy.get("#retry-tus-btn").click();

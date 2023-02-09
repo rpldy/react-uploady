@@ -20,7 +20,13 @@ type MockResponse = {
     items: BatchItem[]
 };
 
-const createRequest = (options: MandatoryMockOptions, items: BatchItem[]) => {
+type MockRequest = {
+    then: ((any) => any) => Promise<any>,
+    abort: () => boolean,
+    onProgress: (OnProgress) => void,
+}
+
+const createRequest = (options: MandatoryMockOptions, items: BatchItem[]): MockRequest => {
 	const start = performance.now();
 	const progressEventsData: SenderProgressEvent[] = [];
 
@@ -53,7 +59,7 @@ const createRequest = (options: MandatoryMockOptions, items: BatchItem[]) => {
 		return true;
 	};
 
-	const onProgress = (cb) => {
+	const onProgress = (cb: OnProgress) => {
 		progressCallback = cb;
 	};
 
@@ -100,7 +106,13 @@ const createRequest = (options: MandatoryMockOptions, items: BatchItem[]) => {
 	};
 };
 
-const getIsSuccessfulMockRequest = (options, sendOptions, mockStatus, mockResponse, mockHeaders) => {
+const getIsSuccessfulMockRequest = (
+    options: MandatoryMockOptions,
+    sendOptions: SendOptions,
+    mockStatus: number,
+    mockResponse: Object,
+    mockHeaders: Object
+) => {
     const getIsSuccessfulCall = options.isSuccessfulCall || sendOptions.isSuccessfulCall;
 
     return getIsSuccessfulCall ?
@@ -112,9 +124,9 @@ const getIsSuccessfulMockRequest = (options, sendOptions, mockStatus, mockRespon
             response: mockResponse,
             getAllResponseHeaders: () => mockHeaders,
         }) : true;
-} ;
+};
 
-const processResponse = (request, options: MandatoryMockOptions, sendOptions: SendOptions): Promise<UploadData> => {
+const processResponse = (request: MockRequest, options: MandatoryMockOptions, sendOptions: SendOptions): Promise<UploadData> => {
 	return request.then(({ items, ...mockResponse }: MockResponse) => {
 		logger.debugLog("uploady.mockSender: mock request finished successfully", items);
 

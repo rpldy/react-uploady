@@ -8,7 +8,7 @@ import {
     getFileObjectUrlByType
 } from "./utils";
 
-import type { Batch, BatchItem } from "@rpldy/shared";
+import type { Batch, BatchItem, FileLike } from "@rpldy/shared";
 import type {
     PreviewComponentPropsOrMethod,
     PreviewItem,
@@ -18,10 +18,10 @@ import type {
     PreviewBatchItemsMethod,
     PreviewsLoaderHook,
     PreviewType,
-    RemovePreviewMethod,
+    RemovePreviewMethod, BasicPreviewItem,
 } from "./types";
 
-const getFilePreviewUrl = (file, options: MandatoryPreviewOptions) => {
+const getFilePreviewUrl = (file: FileLike, options: MandatoryPreviewOptions) => {
     let data;
 
     data = getFileObjectUrlByType(PREVIEW_TYPES.IMAGE, options.imageMimeTypes, options.maxPreviewImageSize || 0, file);
@@ -44,8 +44,7 @@ const loadPreviewData = (
     options: MandatoryPreviewOptions,
     removeItemFromPreview: RemovePreviewMethod,
 ): ?PreviewItem => {
-
-    let data, isFallback = false;
+    let data: ?BasicPreviewItem, isFallback = false;
 
     const removePreview =  () => removeItemFromPreview(item.id);
 
@@ -73,7 +72,7 @@ const loadPreviewData = (
     };
 };
 
-const mergePreviewData = (prev, next) => {
+const mergePreviewData = (prev: PreviewItem[], next: PreviewItem[]) => {
     const newItems = [];
 
     //dedupe and merge new with existing
@@ -91,8 +90,8 @@ const mergePreviewData = (prev, next) => {
 };
 
 const getPreviewsDataWithItemProps = (
-    previewsData,
-    items,
+    previewsData: PreviewItem[],
+    items: BatchItem[],
     previewComponentProps: PreviewComponentPropsOrMethod,
 ) => {
     let newData = previewsData;
@@ -122,7 +121,7 @@ const getPreviewsLoaderHook = (batchItemsMethod: PreviewBatchItemsMethod): Previ
             setPreviews({ previews: [], items: [] });
         }, []);
 
-        const removeItemFromPreview = useCallback((id) => {
+        const removeItemFromPreview = useCallback((id: string) => {
             setPreviews(({ previews, items }) => ({
                 previews: previews.filter((prev) => prev.id !== id),
                 items: items.filter((item) => item.id !== id),

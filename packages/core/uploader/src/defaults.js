@@ -3,7 +3,7 @@ import { devFreeze } from "@rpldy/shared";
 
 export const DEFAULT_PARAM_NAME = "file";
 
-export const DEFAULT_FILTER = (input: any, i: number, arr: any[]): boolean => true;
+export const DEFAULT_FILTER = (input: any, i: number, arr: any[]): Promise<boolean> | boolean => true;
 
 export const DEFAULT_OPTIONS: Object = devFreeze({
     autoUpload: true,

@@ -23,10 +23,9 @@ import TusUploady,
     useTusResumeStartListener,
 } from "./src";
 
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type { Node } from "React";
+import type { Node } from "react";
 
 const useTusStoryHelper = () => {
 	const setup = useStoryUploadySetup({
@@ -60,14 +59,14 @@ const AbortButton = () => {
 };
 
 const ItemProgress = () => {
-    const [progress, setProgress] = useState([]);
+    const [progress, setProgress] = useState<{ id: string, text: string }[]>([]);
 
     useItemProgressListener(({ id, batchId, loaded, completed }) => {
         setProgress((latest) => latest.concat({ id: batchId + id + loaded, text: `${id}: LOADED - ${loaded} - COMPLETED - ${completed}` }));
     });
 
     useItemAbortListener(({ id, batchId }) => {
-        setProgress((latest) => latest.concat({ id: batchId + id  + "_abort", text: `${id}: ABORT !!!!!! ----------` }));
+        setProgress((latest) => latest.concat({ id: batchId + id + "_abort", text: `${id}: ABORT !!!!!! ----------` }));
     });
 
     return (
@@ -76,7 +75,7 @@ const ItemProgress = () => {
             <br/>
             <button onClick={() => setProgress([])}>clear progress</button>
         </>
-)
+    );
 };
 
 export const Simple = (): Node => {
@@ -142,7 +141,7 @@ export const WithDynamicMetadata = (): Node => {
 };
 
 const TusConcatUploadLog = () => {
-    const [log, setLog] = useState([]);
+    const [log, setLog] = useState<string[]>([]);
 
     useItemStartListener(() => {
         setLog((log) => log.concat("ITEM STARTED UPLOADING..."));
@@ -227,7 +226,7 @@ export const WithRetry = (): Node => {
     </TusUploady>;
 };
 
-const ResumeHandler = ({ cancelResume = false }) => {
+const ResumeHandler = ({ cancelResume = false }: { cancelResume: boolean }) => {
     useTusResumeStartListener(() => {
         return cancelResume ? false : {
             resumeHeaders: {

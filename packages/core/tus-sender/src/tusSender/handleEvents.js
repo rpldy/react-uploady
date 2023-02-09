@@ -21,7 +21,7 @@ const PATCH = "PATCH";
 const getParallelChunkIdentifier = (options: TusOptions, chunkIndex: number) =>
 	`_prlChunk_${+options.chunkSize}_${chunkIndex}`;
 
-const getHeadersWithoutContentRange = (headers) => ({
+const getHeadersWithoutContentRange = (headers: ?Object) => ({
     ...headers,
     //TUS doesnt expect content-range header and may not whitelist for CORS
     "Content-Range": undefined,
@@ -58,7 +58,7 @@ const handleParallelChunk = (tusState: TusState, chunkedSender: ChunkedSender, d
         });
 };
 
-const updateChunkStartData = (tusState: TusState, data: ChunkStartEventData, isParallel) => {
+const updateChunkStartData = (tusState: TusState, data: ChunkStartEventData, isParallel: boolean) => {
 	const { item: orgItem, chunk, chunkItem, remainingCount } = data;
 	const { options } = tusState.getState();
 	const itemInfo = tusState.getState().items[isParallel ? chunkItem.id : orgItem.id];

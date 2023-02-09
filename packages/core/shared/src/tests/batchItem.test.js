@@ -46,7 +46,7 @@ describe("create batchItem tests", () => {
     });
 
 	it("should recycle file batch item", () => {
-		const file = { name: "test", type: "image/jpg" };
+		const file = { name: "test", type: "image/jpg"};
 		const fileItem = createItem(file, "b1");
 
 		fileItem.state = "DONE";

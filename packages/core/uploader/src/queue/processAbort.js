@@ -8,7 +8,7 @@ import { getIsBatchFinalized, finalizeBatch } from "./batchHelpers";
 import type { UploadData } from "@rpldy/shared";
 import type { QueueState } from "./types";
 
-const getFinalizeAbortedItem = (queue) => (id: string, data: UploadData) =>
+const getFinalizeAbortedItem = (queue: QueueState) => (id: string, data: UploadData) =>
     processFinishedRequest(queue, [{ id, info: data }], processQueueNext);
 
 const processAbortItem = (queue: QueueState, id: string): boolean => {

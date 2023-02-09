@@ -109,7 +109,6 @@ const createUpload = (item: BatchItem, url: string, tusState: TusState, sendOpti
     const abortCreate = () => {
         if (!createFinished) {
             logger.debugLog(`tusSender.create: aborting create request for item: ${item.id}`);
-            // $FlowFixMe
             pXhr.xhr.abort();
         }
 

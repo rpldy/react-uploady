@@ -1,5 +1,5 @@
 // @flow
-import { BATCH_STATES, createBatchItem, isPromise, getIsBatchItem } from "@rpldy/shared";
+import { BATCH_STATES, createBatchItem, getIsBatchItem, isPromise } from "@rpldy/shared";
 import { DEFAULT_FILTER } from "./defaults";
 import { getIsFileList } from "./utils";
 
@@ -14,7 +14,7 @@ import type { UploaderCreateOptions } from "./types";
 
 let bCounter = 0;
 
-const processFiles = (batchId, files: UploadInfo, isPending: boolean, fileFilter: ?FileFilterMethod): Promise<BatchItem[]> => {
+const processFiles = (batchId: string, files: UploadInfo, isPending: boolean, fileFilter: ?FileFilterMethod): Promise<BatchItem[]> => {
     const filterFn = fileFilter || DEFAULT_FILTER;
 
     //we need a simple array of (file, url) to pass to filter fn if its provided (files can be recycled batch items)
@@ -30,7 +30,7 @@ const processFiles = (batchId, files: UploadInfo, isPending: boolean, fileFilter
             const filterResult = filterFn(all[index], index, all);
 
             return isPromise(filterResult) ?
-                filterResult.then((result) => !!result && f) :
+                filterResult.then((result: boolean) => !!result && f) :
                 (!!filterResult && f);
         }))
         .then((filtered) =>
@@ -45,11 +45,11 @@ const createBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, optio
 
     const isFileList = getIsFileList(files);
 
-    files = (Array.isArray(files) || isFileList) ? files : [files];
+    const usedFiles = (Array.isArray(files) || isFileList) ? files : [files];
 
     const isPending = !options.autoUpload;
 
-    return processFiles(id, files, isPending, options.fileFilter)
+    return processFiles(id, usedFiles, isPending, options.fileFilter)
         .then((items) => {
             return {
                 id,

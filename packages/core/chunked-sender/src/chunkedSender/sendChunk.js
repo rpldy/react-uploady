@@ -11,14 +11,15 @@ import { unwrap } from "@rpldy/simple-state";
 import xhrSend from "@rpldy/sender";
 import { getChunkDataFromFile } from "../utils";
 import { CHUNK_EVENTS } from "../consts";
+import ChunkedSendError from "./ChunkedSendError";
+
 import type { BatchItem } from "@rpldy/shared";
-import type { OnProgress, SendResult } from "@rpldy/sender";
+import type { OnProgress, SendResult, SenderProgressEvent } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { ChunkStartEventData } from "../types";
 import type { Chunk, ChunkedState } from "./types";
-import ChunkedSendError from "./ChunkedSendError";
 
-const getContentRangeValue = (chunk, data, item) =>
+const getContentRangeValue = (chunk: Chunk, data: ?Blob, item: BatchItem) =>
 	data && `bytes ${chunk.start}-${chunk.start + data.size - 1}/${item.file.size}`;
 
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
@@ -53,7 +54,7 @@ const uploadChunkWithUpdatedData = (
 
     const chunkItem = createBatchItem(chunk.data, chunk.id);
 
-    const onChunkProgress = (e) => {
+    const onChunkProgress = (e: SenderProgressEvent) => {
         onProgress(e, [chunk]);
     };
 

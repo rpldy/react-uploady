@@ -23,14 +23,18 @@ const safeStorageCreator = (storageType: string): SafeStorage => {
 
     const methods = ["key", "getItem", "setItem", "removeItem", "clear"];
 
-    const safeStorage = methods.reduce((res, method) => {
-        res[method] = (...args: mixed[]) =>
-            isSupported ? window[storageType][method](...args) : undefined;
+    const base = {
+        isSupported,
+        length: 0,
+    };
 
-        return res;
-    }, {});
+    const safeStorage = methods.reduce<{ length: number, isSupported: boolean, [string]: (...args: mixed[]) => void }>(
+        (res, method) => {
+            res[method] = (...args: mixed[]) =>
+                isSupported ? window[storageType][method](...args) : undefined;
 
-    safeStorage.isSupported = isSupported;
+            return res;
+        }, base);
 
     Object.defineProperty(safeStorage, "length", {
         get(){

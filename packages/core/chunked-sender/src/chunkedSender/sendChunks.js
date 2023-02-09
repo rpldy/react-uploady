@@ -10,7 +10,9 @@ import type { OnProgress } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { Chunk, ChunkedState } from "./types";
 
-const resolveOnError = (resolve, ex) => {
+type PromiseResolve = (Object) => void;
+
+const resolveOnError = (resolve: PromiseResolve, ex: Error) => {
     if (ex instanceof ChunkedSendError) {
         resolve({
             state: FILE_STATES.ERROR,
@@ -24,7 +26,7 @@ const resolveOnError = (resolve, ex) => {
     }
 };
 
-const finalizeOnFinish = (chunkedState: ChunkedState, item: BatchItem, resolve, status: FileState) => {
+const finalizeOnFinish = (chunkedState: ChunkedState, item: BatchItem, resolve: PromiseResolve, status: FileState) => {
     chunkedState.updateState((state) => {
         state.finished = true;
     });
@@ -35,7 +37,7 @@ const finalizeOnFinish = (chunkedState: ChunkedState, item: BatchItem, resolve, 
     });
 };
 
-const resolveOnAllChunksFinished = (chunkedState: ChunkedState, item: BatchItem, resolve): boolean => {
+const resolveOnAllChunksFinished = (chunkedState: ChunkedState, item: BatchItem, resolve: PromiseResolve): boolean => {
     const state = chunkedState.getState();
     const finished = !state.chunks.length;
 

@@ -86,7 +86,7 @@ const reportCancelledItems = (queue: QueueState, items: BatchItem[], cancelledRe
     return !!cancelledItemsIds.length;
 };
 
-const reportPreparedError = (error, queue: QueueState, items: BatchItem[], next: ProcessNextMethod) => {
+const reportPreparedError = (error: any, queue: QueueState, items: BatchItem[], next: ProcessNextMethod) => {
     const finishedData = items.map(({ id }: BatchItem) => ({
         id,
         info: { status: 0, state: FILE_STATES.ERROR, response: error },
@@ -101,12 +101,23 @@ const getAllowedItem = (id: string, queue: QueueState) => {
     return item && !getIsItemFinalized(item) ? item : undefined;
 };
 
-const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids, next }) => {
+type ProcessingParams = {
+    allowedItems: BatchItem[],
+    cancelledResults: boolean[],
+    queue: QueueState,
+    items: BatchItem[],
+    ids: string[],
+    next: ProcessNextMethod,
+};
+
+const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids, next }: ProcessingParams) => {
     const afterPreparePromise = allowedItems.length ?
         preparePreRequestItems(queue, allowedItems) :
         Promise.resolve();
 
-   return afterPreparePromise
+    let finalCancelledResults = cancelledResults;
+
+    return afterPreparePromise
         .catch((err) => {
             logger.debugLog("uploader.queue: encountered error while preparing items for request", err);
             reportPreparedError(err, queue, items, next);
@@ -115,7 +126,7 @@ const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids
             let nextP;
             if (itemsSendData) {
                 if (itemsSendData.cancelled) {
-                    cancelledResults = ids.map(() => true);
+                    finalCancelledResults = ids.map(() => true);
                 } else {
                     //make sure files aren't aborted while async prepare was waiting
                     const hasAborted = itemsSendData.items
@@ -134,7 +145,7 @@ const processAllowedItems = ({ allowedItems, cancelledResults, queue, items, ids
             }
 
             //if not cancelled we can go to process more items immediately (and not wait for upload responses)
-            if (!reportCancelledItems(queue, items, cancelledResults, next)) {
+            if (!reportCancelledItems(queue, items, finalCancelledResults, next)) {
                 nextP = next(queue); //when concurrent is allowed, we can go ahead and process more
             }
 

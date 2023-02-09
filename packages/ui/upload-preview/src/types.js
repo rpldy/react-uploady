@@ -8,24 +8,25 @@ import type { RefObject } from "@rpldy/shared-ui";
 export type PreviewType = $Values<typeof PREVIEW_TYPES>;
 
 export type RemovePreviewMethod = (id: string) => void;
+export type ClearPreviewsMethod = () => void;
 
 export type BasicPreviewItem = {|
-    id: string,
     url: string,
     name: string,
     type: PreviewType,
 |};
 
-export type PreviewItem = {
+export type PreviewItem = {|
     ...BasicPreviewItem,
+    id: string,
     removePreview: () => void,
     isFallback?: boolean,
     props?: Object,
-};
+|};
 
 export type PreviewData = {
 	previews: PreviewItem[],
-	clearPreviews: () => void,
+	clearPreviews: ClearPreviewsMethod,
     removeItemFromPreview: RemovePreviewMethod,
 };
 
@@ -63,6 +64,8 @@ export type PreviewOptions = {|
     previewComponentProps?: PreviewComponentPropsOrMethod,
 |};
 
+export type PreviewsChangedHandler = (PreviewItem[]) => void;
+
 export type PreviewProps =  {|
     ...PreviewOptions,
 	//custom component to render the preview (default: img tag)
@@ -70,7 +73,7 @@ export type PreviewProps =  {|
 	//ref will be set with API methods (PreviewMethods)
 	previewMethodsRef?: RefObject<PreviewMethods>,
 	//callback that will be called when preview items are loaded or changed
-	onPreviewsChanged?: (PreviewItem[]) => void,
+	onPreviewsChanged?: PreviewsChangedHandler,
 |};
 
 export type MandatoryPreviewOptions = {|

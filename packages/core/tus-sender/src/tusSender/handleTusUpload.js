@@ -23,19 +23,21 @@ const doChunkedUploadForItem = (
 	const item = items[0];
 	logger.debugLog(`tusSender.handler: init request finished. sending item ${item.id} as chunked`, initData);
 
+    let usedSendOptions = sendOptions;
+
 	if (initData.isNew && initData.uploadUrl) {
 		persistResumable(item, initData.uploadUrl, options);
 	}
 
 	if (initData.canResume || (options.sendDataOnCreate && initData.offset)) {
-		sendOptions = {
+		usedSendOptions = {
 			...sendOptions,
 			startByte: initData.offset,
 		};
 	}
 
 	//upload the file using the chunked-sender
-	const chunkedResult = chunkedSender.send(items, url, sendOptions, onProgress);
+	const chunkedResult = chunkedSender.send(items, url, usedSendOptions, onProgress);
 
 	tusState.updateState((state) => {
 		//keep the abort from chunked sender
@@ -44,7 +46,7 @@ const doChunkedUploadForItem = (
 
 	return +options.parallel > 1 ?
 		//parallel requires a finalizing request
-		finalizeParallelUpload(item, url, tusState, sendOptions, chunkedResult.request) :
+		finalizeParallelUpload(item, url, tusState, usedSendOptions, chunkedResult.request) :
         addLocationToResponse(chunkedResult.request, initData.uploadUrl);
 };
 
@@ -78,7 +80,7 @@ const handleTusUpload = (
     initRequest
         .then((initData: ?InitData) => {
             let request,
-                resumeFailed = false;
+                resumeFailed: ?boolean = false;
 
             if (initData) {
                 if (initData.isDone) {

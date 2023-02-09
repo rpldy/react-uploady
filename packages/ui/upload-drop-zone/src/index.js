@@ -8,6 +8,7 @@ export {
 };
 
 export type {
+    GetFilesMethod,
     UploadDropZoneProps
 } from "./types";
 

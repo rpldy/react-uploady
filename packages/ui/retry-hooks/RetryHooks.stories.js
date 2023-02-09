@@ -21,15 +21,15 @@ import {
     type CsfExport
 } from "../../../story-helpers";
 import retryEnhancer, { useBatchRetry, useRetry, useRetryListener, RETRY_EVENT } from "./src";
-
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type {Node} from "React";
+import type { Node } from "react";
+import type { RefObject } from "@rpldy/shared-ui";
+import type { PreviewMethods, PreviewItem } from "@rpldy/upload-preview";
 
 const RetryUi = () => {
-	const [seenItems, setItems] = useState({});
-	const [seenBatches, setBatches] = useState([]);
+	const [seenItems, setItems] = useState<{ [string]: string }>({});
+	const [seenBatches, setBatches] = useState<string[]>([]);
 	const abortItem = useAbortItem();
 	const retry = useRetry();
 	const retryBatch = useBatchRetry();
@@ -59,13 +59,13 @@ const RetryUi = () => {
 		retry();
 	}, [retry]);
 
-	const onRetryItem = useCallback((e) => {
-		const itemId = e.target.dataset["id"];
+	const onRetryItem = useCallback((e: SyntheticMouseEvent<HTMLLIElement>) => {
+		const itemId = e.currentTarget.dataset["id"];
 		retry(itemId);
 	}, [retry]);
 
-	const onRetryBatch = useCallback((e) => {
-		const batchId = e.target.dataset["id"];
+	const onRetryBatch = useCallback((e: SyntheticMouseEvent<HTMLLIElement>) => {
+		const batchId = e.currentTarget.dataset["id"];
 		retryBatch(batchId);
 	}, [retryBatch]);
 
@@ -93,7 +93,8 @@ const RetryUi = () => {
 					<li style={{ cursor: "pointer" }}
 						data-id={id} key={id}
 						data-test={`item-retry-${index}`}
-						onClick={onRetryItem}>
+						onClick={onRetryItem}
+                    >
 						cancelled: ({id}) {seenItems[id]}
 					</li>)}
 			</ul>
@@ -119,8 +120,11 @@ export const WithRetry = (): Node => {
             enhancer={enhancer}
             grouped={grouped}
             maxGroupSize={groupSize}
-            // $FlowIgnore[prop-missing]
-            fileFilter={(f) => f.type.startsWith("image/") || f.type.includes("pdf")}
+            fileFilter={
+                (f) =>
+                    f instanceof File &&
+                    (f.type.startsWith("image/") || f.type.includes("pdf"))
+            }
         >
             <RetryUi/>
         </Uploady>
@@ -171,7 +175,7 @@ const PreviewItemContainer = styled.article`
   padding: 10px;
   display: flex;
   flex-direction: column;
-  box-shadow: ${({ state }) => (state ? STATE_COLORS[state] : "#c3d2dd")} 0px
+  box-shadow: ${({ state }: { state : string }) => (state ? STATE_COLORS[state] : "#c3d2dd")} 0px
     8px 5px -2px;
   position: relative;
   align-items: center;
@@ -223,7 +227,7 @@ const QueueBar = styled.div`
 	align-items: center;
 `;
 
-const AbortButton = ({ id, state }) => {
+const AbortButton = ({ id, state }: { id: string, state: string }) => {
 	const abortItem = useAbortItem();
 	const onAbort = useCallback(() => abortItem(id), [id, abortItem]);
 
@@ -236,7 +240,7 @@ const AbortButton = ({ id, state }) => {
 	</Button>;
 };
 
-const RetryButton = ({ id, state }) => {
+const RetryButton = ({ id, state }: { id: string, state: string }) => {
 	const retry = useRetry();
 	const onRetry = useCallback(() => retry(id), [id, retry]);
 
@@ -248,7 +252,7 @@ const RetryButton = ({ id, state }) => {
 	</Button>;
 };
 
-const ClearPreviewsButton = ({ methods, previews }) => {
+const ClearPreviewsButton = ({ methods, previews }: { methods: RefObject<PreviewMethods>, previews: PreviewItem[]  }) => {
 	const disabled = !methods.current?.clear || !previews.length;
 
 	const onClear = useCallback(() => {
@@ -265,9 +269,9 @@ const ClearPreviewsButton = ({ methods, previews }) => {
 	</>;
 };
 
-const QueueItem = memo((props) => {
-	const [progress, setProgress] = useState(0);
-	const [itemState, setItemState] = useState(0);
+const QueueItem = memo((props: { id: string, name: string, url: string }) => {
+	const [progress, setProgress] = useState<number>(0);
+	const [itemState, setItemState] = useState<string>("");
 
 	useItemProgressListener((item) => {
 		if (item.completed > progress) {
@@ -308,9 +312,9 @@ const QueueItem = memo((props) => {
 });
 
 const Queue = () => {
-	const [previews, setPreviews] = useState([]);
-	const previewMethodsRef = useRef();
-	const onPreviewsChanged = useCallback((previews) => {
+	const [previews, setPreviews] = useState<PreviewItem[]>([]);
+	const previewMethodsRef = useRef<?PreviewMethods>();
+	const onPreviewsChanged = useCallback((previews: PreviewItem[]) => {
 		setPreviews(previews);
 	}, []);
 
@@ -342,10 +346,13 @@ export const WithRetryAndPreview = (): Node => {
 			multiple={multiple}
 			grouped={grouped}
 			maxGroupSize={groupSize}
-			enhancer={enhancer}
-            // $FlowIgnore[prop-missing]
-            fileFilter={(f) => f.type.startsWith("image/") || f.type.includes("pdf")}
-		>
+            enhancer={enhancer}
+            fileFilter={
+                (f) =>
+                    f instanceof File &&
+                    (f.type.startsWith("image/") || f.type.includes("pdf"))
+            }
+        >
 			<div className="App">
 				<UploadButton id="upload-button">Upload Files</UploadButton>
 				<Queue/>

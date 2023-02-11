@@ -24,6 +24,7 @@ describe("Uploady - Custom Success", () => {
         uploadFile(fileName, () => {
             cy.wait("@uploadReq")
 
+            cy.wait(WAIT_SHORT);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             cy.storyLog().assertLogEntryContains(2, {
@@ -47,7 +48,6 @@ describe("Uploady - Custom Success", () => {
             cy.wait("@uploadReq")
 
             cy.wait(WAIT_SHORT);
-
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             cy.storyLog().assertLogEntryContains(2, {

@@ -5,19 +5,15 @@ import { WAIT_X_SHORT } from "../../constants";
 describe("UploadPaste - Wrap Upload-DropZone", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    const loadPage = () =>
         cy.visitStory(
             "uploadPaste",
             "with-paste-drop-zone",
             { useMock: false }
         );
-    });
-
-    beforeEach(() => {
-        cy.storyLog().resetStoryLog()
-    });
 
     it("drop should continue working on wrapped drop-zone", () => {
+        loadPage();
         intercept();
 
         dropFile(fileName, () => {
@@ -32,6 +28,7 @@ describe("UploadPaste - Wrap Upload-DropZone", () => {
     });
 
     it("should upload file pasted to wrapper drop-zone", () => {
+        loadPage();
         intercept();
 
         cy.get("#upload-drop-zone")

@@ -6,13 +6,12 @@ describe("TusUploady - Simple", () => {
     const fileName = "flower.jpg",
         uploadUrl = "http://test.tus.com/upload";
 
-    before(() => {
+    const loadPage = () =>
         cy.visitStory(
             "tusUploady",
             "with-resume-start-handler&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true&knob-ignore modifiedDate in resume storage_Upload Settings=true&knob-send custom header_Upload Settings=true",
             { useMock: false, uploadUrl}
         );
-    });
 
     const assertNewFileRequests = () => {
         cy.wait("@createReq")
@@ -42,6 +41,7 @@ describe("TusUploady - Simple", () => {
     } ;
 
     it("should request tus resume with resumeHeaders", () => {
+        loadPage();
         tusIntercept(uploadUrl);
 
         uploadFile(fileName, () => {
@@ -73,6 +73,7 @@ describe("TusUploady - Simple", () => {
     });
 
     it("should cancel tus resume", () => {
+        loadPage();
         cy.setUploadOptions({
             tusCancelResume: true,
         });

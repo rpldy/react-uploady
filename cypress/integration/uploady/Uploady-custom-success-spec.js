@@ -4,15 +4,16 @@ import uploadFile from "../uploadFile";
 describe("Uploady - Custom Success", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    const loadPage = () =>
         cy.visitStory(
             "uploady",
             "with-context-api-button",
             { useMock : false }
         );
-    });
 
     it("should use custom button with sync custom success callback", () => {
+        loadPage();
+
         interceptWithHandler((req) => {
             req.reply(308, { success: true });
         });
@@ -33,6 +34,8 @@ describe("Uploady - Custom Success", () => {
     });
 
     it("should use custom button with async custom success callback", () => {
+        loadPage();
+
         interceptWithHandler((req) => {
             req.reply(308, { success: true });
         });

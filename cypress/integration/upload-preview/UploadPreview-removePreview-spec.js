@@ -7,19 +7,15 @@ import { examineCroppedUploadReq, examineFullUploadRequest } from "./examineCrop
 describe("UploadPreview - Multi Crop", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    const loadPage = () =>
         cy.visitStory(
             "uploadPreview",
             "with-multi-crop",
             { useMock: false }
         );
-    });
-
-    beforeEach(() => {
-        cy.storyLog().resetStoryLog()
-    });
 
     it("should remove file from thumb", () => {
+        loadPage();
         interceptWithDelay(100);
 
         uploadFileTimes(fileName, () => {
@@ -53,7 +49,7 @@ describe("UploadPreview - Multi Crop", () => {
     });
 
     it("should remove file from preview", () => {
-        cy.reload();
+        loadPage();
         interceptWithDelay(100);
 
         uploadFileTimes(fileName, () => {

@@ -5,21 +5,23 @@ import { getUploadyVersion } from "../../../scripts/utils";
 describe("Uploady - Simple", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    const loadPage = () =>
         cy.visitStory(
             "uploady",
             "with-context-api-button&knob-multiple files_Upload Settings=true&knob-group files in single request_Upload Settings=&knob-max in group_Upload Settings=2&knob-auto upload on add_Upload Settings=true",
             { useMock : false }
         );
-    });
 
     it("should expose version from uploady package", () => {
+        loadPage();
+
         cy.get("#uploady-version")
             .invoke("text")
             .should("eq", getUploadyVersion());
     });
 
     it("should use custom button with context", () => {
+        loadPage();
         intercept();
 
         uploadFile(fileName, () => {

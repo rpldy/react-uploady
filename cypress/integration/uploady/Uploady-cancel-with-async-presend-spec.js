@@ -12,20 +12,16 @@ import {
 describe("Uploady - Cancel Upload with long running async pre-send", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    const loadPage = () =>
         cy.visitStory(
             "uploady",
             "with-abort",
             { useMock: false }
         );
-    });
-
-    beforeEach(() => {
-        //refresh UI And cypress log
-        cy.reload();
-    });
 
     it("should handle async pre-send returning after abort batch", () => {
+        loadPage();
+
         cy.setUploadOptions({
             delayPreSend: 1000,
             preSendData: { options: { headers: { dummy: true } } },
@@ -44,6 +40,7 @@ describe("Uploady - Cancel Upload with long running async pre-send", () => {
     });
 
     it("should handle async pre-send returning after abort item", () => {
+        loadPage();
         interceptWithHandler((req) => {
             req.reply(200, { success: true });
         });
@@ -66,6 +63,7 @@ describe("Uploady - Cancel Upload with long running async pre-send", () => {
     });
 
     it("should handle async batch start returning after abort item", () => {
+        loadPage();
         interceptWithHandler((req) => {
             req.reply(200, { success: true });
         });
@@ -88,6 +86,7 @@ describe("Uploady - Cancel Upload with long running async pre-send", () => {
     });
 
     it("should handle async batch start returning after abort item - multiple files", () => {
+        loadPage();
         interceptWithHandler((req) => {
             req.reply(200, { success: true });
         });
@@ -110,6 +109,7 @@ describe("Uploady - Cancel Upload with long running async pre-send", () => {
     });
 
     it("should handle async batch start returning after abort batch", () => {
+        loadPage();
         interceptWithHandler((req) => {
             req.reply(200, { success: true });
         });
@@ -132,6 +132,7 @@ describe("Uploady - Cancel Upload with long running async pre-send", () => {
     });
 
     it("should handle async batch start returning after abort batch with multiple batches", () => {
+        loadPage();
         interceptWithHandler((req) => {
             req.reply(200, { success: true });
         });

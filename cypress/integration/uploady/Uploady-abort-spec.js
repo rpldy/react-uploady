@@ -13,16 +13,11 @@ import { WAIT_SHORT } from "../../constants";
 describe("Uploady - With Abort", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    const loadPage =() =>
         cy.visitStory("uploady", "with-abort");
-    });
-
-    beforeEach(() => {
-        //refresh UI And cypress log
-        cy.reload();
-    });
 
     it("should abort running upload", () => {
+        loadPage();
         const abortSelector = "button[data-test='abort-file-0']";
 
         cy.get(abortSelector)
@@ -41,6 +36,8 @@ describe("Uploady - With Abort", () => {
     });
 
     it("should abort running batch", () => {
+        loadPage();
+
         uploadFileTimes(fileName, () => {
             uploadFileTimes(fileName, () => {
                 cy.wait(WAIT_X_SHORT);
@@ -67,6 +64,8 @@ describe("Uploady - With Abort", () => {
     });
 
     it("should abort all", () => {
+        loadPage();
+
         uploadFileTimes(fileName, () => {
             uploadFileTimes(fileName, () => {
                 cy.wait(WAIT_X_SHORT);

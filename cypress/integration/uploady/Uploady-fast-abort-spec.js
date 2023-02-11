@@ -13,14 +13,8 @@ import { WAIT_SHORT } from "../../constants";
 describe("Uploady - With Fast Abort", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    const loadPage = () =>
         cy.visitStory("uploady", "with-abort");
-    });
-
-    beforeEach(() => {
-        //refresh UI And cypress log
-        cy.reload();
-    });
 
     const addFastAbortThreshold = () => {
         cy.setUploadOptions({
@@ -29,6 +23,7 @@ describe("Uploady - With Fast Abort", () => {
     };
 
     it("should abort uploading file - no effect", () => {
+        loadPage();
         addFastAbortThreshold();
 
         const abortSelector = "button[data-test='abort-file-0']";
@@ -49,6 +44,7 @@ describe("Uploady - With Fast Abort", () => {
     });
 
     it("should abort uploading batch - with fast abort", () => {
+        loadPage();
         addFastAbortThreshold();
 
         uploadFileTimes(fileName, () => {
@@ -77,6 +73,7 @@ describe("Uploady - With Fast Abort", () => {
     });
 
     it("should abort all - with fast abort", () => {
+        loadPage();
         addFastAbortThreshold();
 
         uploadFileTimes(fileName, () => {

@@ -3,16 +3,11 @@ import { WAIT_MEDIUM } from "../../constants";
 describe("UploadPaste - Simple", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    const loadPage = () =>
         cy.visitStory("uploadPaste", "simple&knob-mock send delay_Upload Destination=100");
-    });
-
-    beforeEach(() => {
-        //refresh UI And cypress log
-        cy.reload();
-    });
 
     it("should upload pasted file", () => {
+        loadPage();
         cy.get("#paste-area")
             .should("exist")
             .pasteFile(fileName);
@@ -22,6 +17,7 @@ describe("UploadPaste - Simple", () => {
     });
 
     it("should upload pasted files", () => {
+        loadPage();
         cy.get("#paste-area")
             .should("exist")
             .pasteFile(fileName, 2);

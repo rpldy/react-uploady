@@ -1,5 +1,5 @@
 /* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "testSingleItem"] }] */
-import getQueueState from "./mocks/getQueueState.mock";
+import getQueueState, { realUnwrap } from "./mocks/getQueueState.mock";
 import "./mocks/batchHelpers.mock";
 import { FILE_STATES } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../../consts";
@@ -257,7 +257,8 @@ describe("onRequestFinished tests", () => {
 				}], mockNext);
 
 			expect(queueState.getState().items.u1.state).toBe(FILE_STATES.FINISHED);
-			expect(queueState.getState().items.u1.uploadResponse).toMatchObject(response);
+
+			expect(realUnwrap(queueState.getState().items.u1.uploadResponse)).toMatchObject(realUnwrap(response));
 
 			const item1 = queueState.getState().items.u1;
 			const item2 = queueState.getState().items.u2;

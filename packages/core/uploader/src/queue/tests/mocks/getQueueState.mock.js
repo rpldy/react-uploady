@@ -1,4 +1,6 @@
-const createState = jest.requireActual("@rpldy/simple-state").default;
+const simpleState = jest.requireActual("@rpldy/simple-state");
+const createState = simpleState.default;
+export const realUnwrap = simpleState.unwrap;
 createState.unwrap = jest.fn((obj) => obj);
 jest.doMock("@rpldy/simple-state", () => createState);
 

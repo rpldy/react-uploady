@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.4.0-rc.0 (2023-02-12)
+
+_PRE-RELEASE_
+
+### Features
+
+- `[tus-sender]` - added new event tus RESUME_START to: cancel or update relevant props for resume
+- `[tus-sender]` - accept resume headers in tus options
+- `[tus-uploady]` - added useTusResumeStartListener hook to handle RESUME_START event in React
+- `[upload-preview]` - added removePreview to preview methods to clear a single item preview
+- 
+### Bug fixes
+
+- `[uploader]` - fix bug with item handling after async batch start ([c5ed0dd](c5ed0dd2281d240add02db41aaa1ce10cec90d17))
+
+### Docs
+
+- `root` - Update gzip sizes table in readme
+
+### Internal
+
+- `all` - upgrade dev deps (jest, babel, flow, lerna!, and more)
+
+
 ## 1.3.1 (2023-01-11)
 
 ### Docs

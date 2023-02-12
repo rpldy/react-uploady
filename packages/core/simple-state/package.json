@@ -1,5 +1,5 @@
 {
-  "version": "1.3.1",
+  "version": "1.4.0-rc.0",
   "name": "@rpldy/simple-state",
   "description": "deep proxy object, so it's only updateable through an update method",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -23,7 +23,7 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^1.3.1"
+    "@rpldy/shared": "^1.4.0-rc.0"
   },
   "devDependencies": {
     "flow-bin": "^0.199.1"

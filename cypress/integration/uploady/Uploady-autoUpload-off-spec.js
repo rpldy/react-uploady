@@ -5,13 +5,13 @@ import { WAIT_LONG, WAIT_SHORT, WAIT_X_SHORT } from "../../constants";
 describe("Uploady - autoUpload off tests", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    const reload = () => {
         cy.visitStory("uploady", "with-auto-upload-off&knob-mock send delay_Upload Destination=500");
-    });
+    };
 
     beforeEach(() => {
         //refresh UI And cypress log
-        cy.reload();
+        reload(); //cy.reload seems to have broken between 9.5 and 12.5
     });
 
     it("should not auto upload", () => {

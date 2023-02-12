@@ -62,15 +62,15 @@ export type FileLike = {
 	lastModified: number,
 }
 
-type BatchUrl = {
+export type BatchUrl = {|
 	...BatchItemBase,
 	url: string,
-};
+|};
 
-type BatchFile = {
+export type BatchFile = {|
 	...BatchItemBase,
 	file: FileLike,
-};
+|};
 
 export type BatchItem = BatchUrl & BatchFile;
 

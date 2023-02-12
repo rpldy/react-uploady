@@ -10,7 +10,7 @@ import type { UploaderType, UploaderCreateOptions } from "@rpldy/uploader";
 import type { TusOptions, State, TusState } from "../types";
 import type { TriggerMethod } from "@rpldy/life-events";
 
-const initializeState = (uploader: UploaderType<UploaderCreateOptions>, options: TusOptions): TusState => {
+const initializeState = (uploader: UploaderType<UploaderCreateOptions>, options: ?TusOptions): TusState => {
     const { state, update } = createState<State>({
         options,
         items: {},
@@ -34,17 +34,17 @@ const initializeState = (uploader: UploaderType<UploaderCreateOptions>, options:
 };
 
 const getResolvedOptions = (options: ?TusOptions): TusOptions => {
-    options = getMandatoryOptions(options);
+    const resolvedOptions = getMandatoryOptions(options);
 
-    if ((options.sendDataOnCreate || options.parallel) && options.deferLength) {
+    if ((resolvedOptions.sendDataOnCreate || resolvedOptions.parallel) && resolvedOptions.deferLength) {
         logger.debugLog(`tusSender: turning off deferLength - cannot be used when sendDataOnCreate or parallel is enabled`);
-        options.deferLength = false;
+        resolvedOptions.deferLength = false;
     }
 
     //force chunked for TUS
-    options.chunked = true;
+    resolvedOptions.chunked = true;
 
-    return options;
+    return resolvedOptions;
 };
 
 const createTusSender = (
@@ -52,13 +52,13 @@ const createTusSender = (
     options: ?TusOptions,
     trigger: TriggerMethod
 ): {|getOptions: () => TusOptions, send: any|} => {
-    options = getResolvedOptions(options);
-    const chunkedSender = createChunkedSender(options, trigger);
+    const resolvedOptions = getResolvedOptions(options);
+    const chunkedSender = createChunkedSender(resolvedOptions, trigger);
+    const tusState = initializeState(uploader, resolvedOptions);
 
-    const tusState = initializeState(uploader, options);
-    handleEvents(uploader, tusState, chunkedSender);
+    handleEvents(uploader, tusState, chunkedSender, trigger);
 
-    const send = getTusSend(chunkedSender, tusState);
+    const send = getTusSend(chunkedSender, tusState, trigger);
 
     return {
         send,

@@ -10,6 +10,7 @@ export type State = {|
 	itemQueue: { [string]: string[] },
     batchQueue: string[],
 	currentBatch: ?string,
+    batchesStartPending: string[],
 	batches: { [string]: BatchData },
 	items: { [string]: BatchItem },
 	activeIds: Array<string | string[]>,

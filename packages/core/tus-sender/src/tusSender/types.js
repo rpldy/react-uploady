@@ -1,4 +1,5 @@
 // @flow
+import type { BatchItem } from "@rpldy/shared";
 
 export type ItemInfo = {
 	id: string,
@@ -20,4 +21,15 @@ export type InitData = {|
 export type InitUploadResult = {
 	request: Promise<?InitData>,
 	abort: () => boolean,
+};
+
+export type ResumeStartEventData = {
+    url: string,
+    item: BatchItem,
+    resumeHeaders?: Object,
+};
+
+export type ResumeStartEventResponse = {
+    url?: string,
+    resumeHeaders?: Object,
 };

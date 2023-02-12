@@ -4,16 +4,16 @@ import { logger } from "@rpldy/shared";
 import createUploader, { composeEnhancers } from "@rpldy/uploader";
 import { useStoryUploadySetup, DESTINATION_TYPES, getCsfExport, type CsfExport } from "../../../story-helpers";
 import getTusEnhancer from "./src";
-
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type { Element } from "React";
+import type { Element } from "react";
+import type { UploadyUploaderType } from "@rpldy/uploader";
+import type { TusOptions } from "./src";
 
 logger.setDebug(true);
 
-const useUploaderWithTus = (tusOptions = {}) => {
-	const uploaderRef = useRef(null);
+const useUploaderWithTus = (tusOptions: TusOptions = {}) => {
+	const uploaderRef = useRef<?UploadyUploaderType>(null);
 
 	const { enhancer, destination, destinationType } = useStoryUploadySetup({
 		noGroup: true,
@@ -38,7 +38,7 @@ const useUploaderWithTus = (tusOptions = {}) => {
 };
 
 export const WithTusSender = (): Element<"div"> => {
-	const inputRef = useRef(null);
+	const inputRef = useRef<?HTMLInputElement>(null);
 	const uploaderRef = useUploaderWithTus();
 
 	const onClick = useCallback(() => {
@@ -61,7 +61,7 @@ export const WithTusSender = (): Element<"div"> => {
 };
 
 export const WithTusDataOnCreate = (): Element<"div"> => {
-	const inputRef = useRef(null);
+	const inputRef = useRef<?HTMLInputElement>(null);
 	const uploaderRef = useUploaderWithTus({ sendDataOnCreate: true });
 
 	const onClick = useCallback(() => {
@@ -84,7 +84,7 @@ export const WithTusDataOnCreate = (): Element<"div"> => {
 };
 
 export const WithTusConcatenation = (): Element<"div"> => {
-	const inputRef = useRef(null);
+	const inputRef = useRef<?HTMLInputElement>(null);
 	const uploaderRef = useUploaderWithTus({ parallel: 2 });
 
 	const onClick = useCallback(() => {
@@ -107,7 +107,7 @@ export const WithTusConcatenation = (): Element<"div"> => {
 };
 
 export const WithFeatureDetection = (): Element<"div"> => {
-	const inputRef = useRef(null);
+	const inputRef = useRef<?HTMLInputElement>(null);
 	const uploaderRef = useUploaderWithTus({
 		featureDetection: true,
 		onFeaturesDetected: (extensions) => {

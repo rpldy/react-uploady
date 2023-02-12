@@ -6,19 +6,23 @@ import { WAIT_SHORT } from "../../constants";
 describe("UploadPreview - Crop", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    const loadPage = () =>
         cy.visitStory(
             "uploadPreview",
             "with-crop",
             { useMock: false }
         );
-    });
 
-    beforeEach(() => {
-        cy.storyLog().resetStoryLog()
-    });
+    // before(() => {
+    //
+    // });
+
+    // beforeEach(() => {
+    //     cy.storyLog().resetStoryLog()
+    // });
 
     it("should show upload crop before upload", () => {
+        loadPage();
         intercept();
 
         uploadFile(fileName, () => {
@@ -48,6 +52,9 @@ describe("UploadPreview - Crop", () => {
     });
 
     it("should show crop and allow cancel", () => {
+        loadPage();
+        intercept();
+
         uploadFile(fileName, () => {
             cy.wait(WAIT_SHORT);
 
@@ -65,6 +72,7 @@ describe("UploadPreview - Crop", () => {
     });
 
     it("should show crop and allow upload original", () => {
+        loadPage();
         intercept();
 
         uploadFile(fileName, () => {
@@ -94,6 +102,9 @@ describe("UploadPreview - Crop", () => {
     });
 
     it("should show fallback without crop", () => {
+        loadPage();
+        intercept();
+
         uploadFile(fileName, () => {
             cy.wait(WAIT_SHORT);
 

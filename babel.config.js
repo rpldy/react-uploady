@@ -29,6 +29,9 @@ const config =  {
         "@babel/plugin-proposal-optional-chaining",
         "@babel/plugin-proposal-export-default-from",
         "@babel/plugin-proposal-nullish-coalescing-operator",
+        //adding these here to stop sb build from breaking on loose mode issue :(
+        "@babel/plugin-proposal-private-methods",
+        "@babel/plugin-proposal-private-property-in-object",
         "minify-dead-code-elimination",
         "lodash",
         ["module-resolver", {

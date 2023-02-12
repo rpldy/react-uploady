@@ -61,7 +61,7 @@ describe("tusSender index tests", () => {
 		const { tusSend, uploader, chunkedSender, options } = doTest();
 
 		expect(tusSend).toHaveBeenCalled();
-		expect(handleEvents).toHaveBeenCalledWith(uploader, expect.any(Object), chunkedSender);
+		expect(handleEvents).toHaveBeenCalledWith(uploader, expect.any(Object), chunkedSender, "trigger");
 
 		const tusState = handleEvents.mock.calls[0][1];
 

@@ -136,7 +136,7 @@ const copyBundleToTarget = (assets, outputPath, type, pkgRoot, dontUsePolyfills)
         }
     });
 
-    fs.rmdir(outputPath, { recursive: true });
+    fs.rm(outputPath, { recursive: true });
 };
 
 const findExtraBundles = (wpResult, definition) => {

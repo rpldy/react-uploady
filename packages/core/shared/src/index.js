@@ -6,7 +6,7 @@ import * as logger from "./logger";
 import triggerCancellable from "./triggerCancellable";
 import triggerUpdater from "./triggerUpdater";
 import createBatchItem, { getIsBatchItem } from "./batchItem";
-import request, { parseResponseHeaders } from "./request";
+import request, { parseResponseHeaders, XhrPromise } from "./request";
 
 export {
     BATCH_STATES,
@@ -26,6 +26,7 @@ export {
     getIsBatchItem,
     request,
     parseResponseHeaders,
+    XhrPromise,
 };
 
 export {

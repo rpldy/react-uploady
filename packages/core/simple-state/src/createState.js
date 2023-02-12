@@ -12,13 +12,13 @@ const mergeWithSymbols = getMerge({
 const getIsUpdateable = (proxy: Object) =>
     isProduction() ? true : proxy[STATE_SYM].isUpdateable;
 
-const setIsUpdateable = (proxy: Object, value) => {
+const setIsUpdateable = (proxy: Object, value: any) => {
 	if (!isProduction()) {
 		proxy[STATE_SYM].isUpdateable = value;
 	}
 };
 
-const deepProxy = (obj, traps) => {
+const deepProxy: (Object, Object) => Object = (obj: Object, traps: Object) => {
 	let proxy;
 
 	if (isProxiable(obj)) {
@@ -55,8 +55,8 @@ const unwrapProxy = (proxy: Object): Object =>
  * @returns {{state, update, unwrap}}
  */
 const createState =  <T>(obj: Object): SimpleState<T> => {
-    const traps = {
-        set: (obj, key, value) => {
+    const traps: Object = {
+        set: (obj: Object, key: string, value: any) => {
             if (getIsUpdateable(proxy)) {
                 obj[key] = deepProxy(value, traps);
             }
@@ -64,7 +64,7 @@ const createState =  <T>(obj: Object): SimpleState<T> => {
             return true;
         },
 
-        get: (obj, key) => {
+        get: (obj: Object, key: string) => {
             return key === PROXY_SYM ? unwrapProxy(obj) : obj[key];
         },
 
@@ -76,7 +76,7 @@ const createState =  <T>(obj: Object): SimpleState<T> => {
             throw new Error("Simple State doesnt support setting prototype");
         },
 
-        deleteProperty: (obj, key) => {
+        deleteProperty: (obj: Object, key: string) => {
             if (getIsUpdateable(proxy)) {
                 delete obj[key];
             }
@@ -94,7 +94,7 @@ const createState =  <T>(obj: Object): SimpleState<T> => {
 
     const proxy = !isProduction() ? deepProxy(obj, traps) : obj;
 
-    const update = (fn) => {
+    const update = (fn: (Object) => void ) => {
         if (!isProduction() && getIsUpdateable(proxy)) {
             throw new Error("Can't call update on State already being updated!");
         }

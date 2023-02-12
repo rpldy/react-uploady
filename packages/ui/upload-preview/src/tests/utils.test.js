@@ -24,7 +24,6 @@ describe("utils tests", () => {
     });
 
     describe("getFallbackUrlData tests", () => {
-
         it("should use fallbackProp as function returning object", () => {
             const result = getFallbackUrlData(() => ({ test: true }), {});
 
@@ -35,7 +34,6 @@ describe("utils tests", () => {
             const result = getFallbackUrlData(() => "test.com", {});
 
             expect(result).toEqual({
-                id: "",
                 name: undefined,
                 url: "test.com",
                 type: PREVIEW_TYPES.IMAGE
@@ -46,7 +44,6 @@ describe("utils tests", () => {
             const result = getFallbackUrlData("test.com", {});
 
             expect(result).toEqual({
-                id: "",
                 name: undefined,
                 url: "test.com",
                 type: PREVIEW_TYPES.IMAGE

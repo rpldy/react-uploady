@@ -5,7 +5,7 @@ import { fastAbortAll, fastAbortBatch } from "./fastAbort";
 import type { Batch, BatchItem, UploadOptions } from "@rpldy/shared";
 import type { AbortResult, AbortsMap, ItemsQueue, FinalizeRequestMethod } from "./types";
 
-const abortNonUploadingItem = (item, aborts, finalizeItem) => {
+const abortNonUploadingItem = (item: BatchItem, aborts: AbortsMap, finalizeItem: FinalizeRequestMethod) => {
     logger.debugLog(`abort: aborting ${item.state} item  - `, item);
 
     //manually finish request for item that hasnt reached the sender yet
@@ -14,8 +14,14 @@ const abortNonUploadingItem = (item, aborts, finalizeItem) => {
     return true;
 };
 
-const ITEM_STATE_ABORTS = {
-    [FILE_STATES.UPLOADING]: (item, aborts) => {
+type StateAbortMethods = {
+    uploading: (item: BatchItem, aborts: AbortsMap) => boolean,
+    added: (item: BatchItem, aborts: AbortsMap, finalizeItem: FinalizeRequestMethod) => boolean,
+    pending: (item: BatchItem, aborts: AbortsMap, finalizeItem: FinalizeRequestMethod) => boolean,
+};
+
+const ITEM_STATE_ABORTS: StateAbortMethods = {
+    [FILE_STATES.UPLOADING]: (item: BatchItem, aborts: AbortsMap) => {
         logger.debugLog(`abort: aborting uploading item  - `, item);
         return aborts[item.id]();
     },
@@ -30,12 +36,13 @@ const callAbortOnItem = (
 ) : boolean => {
     const itemState = item?.state;
 
-    return !!itemState &&
-    //$FlowIssue[prop-missing]
-    ITEM_STATE_ABORTS[itemState] ?
-        //$FlowExpectedError[extra-arg]
+    const method =!!itemState &&
         //$FlowIssue[prop-missing]
-        ITEM_STATE_ABORTS[itemState](item, aborts, finalizeItem) : false;
+        ITEM_STATE_ABORTS[itemState];
+
+    return method ?
+        //$FlowExpectedError[extra-arg]
+        method(item, aborts, finalizeItem) : false;
 };
 
 const abortItem = (
@@ -45,7 +52,7 @@ const abortItem = (
     finalizeItem: FinalizeRequestMethod
 ) : boolean => callAbortOnItem(items[id], aborts, finalizeItem);
 
-const getIsFastAbortNeeded = (count, threshold: ?number) => {
+const getIsFastAbortNeeded = (count: number, threshold: ?number) => {
     let result = false;
 
     if (threshold !== 0 && threshold) {

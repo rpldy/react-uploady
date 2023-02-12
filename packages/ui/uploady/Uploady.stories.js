@@ -33,11 +33,10 @@ import Uploady, {
 
     type PreSendData,
 } from "./src";
-
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type { Node, Element } from "React";
+import type { Node, Element } from "react";
+import type { BatchItem } from "@rpldy/shared";
 
 const ContextUploadButton = () => {
     const uploadyContext = useUploady();
@@ -49,7 +48,13 @@ const ContextUploadButton = () => {
     return <button id="upload-button" onClick={onClick}>Custom Upload Button</button>;
 };
 
-const ContextUploadButtonWithPrepareHooks = (props) => {
+type ContextButtonWithHooksProps = {|
+    delayPreSend?: number,
+    delayBatchStart?: number,
+    preSendData?: Object,
+|};
+
+const ContextUploadButtonWithPrepareHooks = (props: ?ContextButtonWithHooksProps) => {
     console.log("Rendering Context Upload Button with Prepare Hooks (pre-send & batch-start)");
 
     useRequestPreSend(() => {
@@ -169,7 +174,13 @@ export const WithDirectory = (): Node => {
     </Uploady>
 };
 
-const ProcessPending = ({ id = "process-pending", title = "PROCESS PENDING", options = undefined}) => {
+type ProcessPendingProps = {|
+    id?: string,
+    title?: string,
+    options?: ?Object,
+|};
+
+const ProcessPending = ({ id = "process-pending", title = "PROCESS PENDING", options = undefined } : ProcessPendingProps) => {
     const { processPending } = useUploady();
     return <button id={id}
                    onClick={() => processPending(options)}>{title}</button>;
@@ -190,7 +201,7 @@ const STATE_COLORS = {
     [FILE_STATES.CANCELLED]: "magenta",
 };
 
-const QueueItem = ({ item }) => {
+const QueueItem = ({ item }: { item: BatchItem }) => {
     const { id } = item;
     const [state, setState] = useState(item.state);
 
@@ -213,7 +224,7 @@ const QueueItem = ({ item }) => {
 };
 
 const QueueList = () => {
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState<BatchItem[]>([]);
 
     useBatchAddListener((batch) => {
         setItems((prev) => [...prev, ...batch.items]);
@@ -252,7 +263,8 @@ export const WithAutoUploadOff = (): Node => {
         <ProcessPending
             id="process-pending-param"
             title="PROCESS PENDING WITH PARAM"
-            options={{ params: { test: "123" } }}/>
+            options={{ params: { test: "123" } }}
+        />
         <br/>
         <ClearPending/>
         <hr/>
@@ -302,7 +314,7 @@ export const WithConcurrent = (): Node => {
 export const WithCustomResponseFormat = (): Node => {
     const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
 
-    const resFormatter = useCallback((res, status, headers) => {
+    const resFormatter = useCallback((res: Object, status: number, headers: Object) => {
         console.log("!!!!!! running custom server response formatter", res, status, headers);
         return `${status} - Yay!`;
     }, []);
@@ -322,8 +334,8 @@ export const WithCustomResponseFormat = (): Node => {
 const UploadFormWithInternalInput = () => {
     const inputRef = useFileInput();
 
-    const onSelectChange = useCallback((e) => {
-        if (e.target.value === "dir") {
+    const onSelectChange = useCallback((e: SyntheticKeyboardEvent<HTMLSelectElement>) => {
+        if (e.currentTarget.value === "dir") {
             inputRef?.current?.setAttribute("webkitdirectory", "true");
         } else {
             inputRef?.current?.removeAttribute("webkitdirectory");
@@ -400,7 +412,7 @@ export const WithHeaderFromFileName = (): Node => {
     </Uploady>;
 };
 
-const isSuccessfulMockRequest = (xhr) => {
+const isSuccessfulMockRequest = (xhr: XMLHttpRequest) => {
     console.log("CHECKING MOCK REQUEST - ", xhr);
     return false;
 };
@@ -426,11 +438,11 @@ window["react-dom"] = ReactDOM;
 
 //mimic rendering with react and react-uploady loaded through <script> tags
 const renderUploadyFromBundle = () => {
+    const rpldy = window.rpldy, react = window.react;
     let result;
 
     try {
         const MyUploadButton = () => {
-            // $FlowFixMe - react & rpldy
             const uploadyContext = react.useContext(rpldy.UploadyContext);
 
             const onClick = react.useCallback(() => {
@@ -450,16 +462,13 @@ const renderUploadyFromBundle = () => {
             enhancer: addActionLogEnhancer(),
         };
 
-        // $FlowFixMe - react & rpldy
         result = react.createElement(
-            // $FlowFixMe - react & rpldy
             rpldy.Uploady,
             uploadyProps,
             [react.createElement(MyUploadButton)]
         );
     }
     catch (ex){
-        // $FlowFixMe - react
         result = react.createElement("p", { style: {"color": "red"}, children: `ERROR !!! ${ex.message}` });
     }
 
@@ -484,10 +493,10 @@ export const UMD_CoreUI = (): Element<"div"> => {
 
 //mimic rendering with react and react-uploady with UploadButton&UploadPreview loaded through <script> tags
 const renderUploadyAll = () => {
-    // $FlowFixMe - react & rpldy
+    const rpldy = window.rpldy, react = window.react;
+
     const uploadButton = react.createElement(rpldy.uploadButton.UploadButton, { id: "upload-button" });
 
-    // $FlowFixMe - react & rpldy
     const uploadPreview = react.createElement(rpldy.uploadPreview.UploadPreview, {
         id: "upload-preview",
         previewComponentProps: { "data-test": "upload-preview" },
@@ -522,8 +531,8 @@ export const UMD_ALL = (): Element<"div"> => {
 
 const UploadButtonWithInvalidPreSend = () => {
     useRequestPreSend(({ items }) => {
-
         return {
+            // $FlowExpectedError[prop-missing]
             items: items[0].id === "batch-1.item-1" ? [
                 //intentionally cause error for the first upload since changing item id is forbidden
                 { ...items[0], id: "invalid-id" },

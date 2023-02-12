@@ -10,11 +10,12 @@ import {
 	cancelBatchForItem,
     failBatchForItem,
     getIsBatchReady,
+    isItemBatchStartPending,
 } from "../batchHelpers";
 import processQueueNext, { getNextIdGroup, findNextItemIndex } from "../processQueueNext";
 
 describe("processQueueNext tests", () => {
-	beforeAll(()=>{
+	beforeAll(() => {
         getIsBatchReady.mockReturnValue(true);
 	});
 
@@ -25,7 +26,8 @@ describe("processQueueNext tests", () => {
 			loadNewBatchForItem,
 			cancelBatchForItem,
             failBatchForItem,
-            getIsBatchReady
+            getIsBatchReady,
+            isItemBatchStartPending,
 		);
 	});
 
@@ -305,6 +307,32 @@ describe("processQueueNext tests", () => {
 		expect(queueState.getCurrentActiveCount).toHaveBeenCalled();
 		expect(queueState.runCancellable).not.toHaveBeenCalled();
 	});
+
+    it("should do nothing if batch is marked as pending start", async () => {
+        const queueState = getQueueState({
+            currentBatch: "b1",
+            items: {
+                "u1": { batchId: "b1", state: FILE_STATES.ADDED },
+                "u2": { batchId: "b1", state: FILE_STATES.ADDED },
+            },
+            batches: {
+                b1: {
+                    batch: { id: "b1" },
+                    batchOptions: {}
+                },
+            },
+            activeIds: [],
+            itemQueue: { "b1": ["u1", "u2"] },
+            batchQueue: ["b1"],
+        }, {});
+
+        isItemBatchStartPending.mockReturnValueOnce(true);
+
+        await processQueueNext(queueState);
+
+        expect(isNewBatchStarting).not.toHaveBeenCalled();
+        expect(queueState.runCancellable).not.toHaveBeenCalled();
+    });
 
     it("should process next item", async () => {
         const queueState = getQueueState({

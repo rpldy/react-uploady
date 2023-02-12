@@ -7,21 +7,30 @@ import type { RefObject } from "@rpldy/shared-ui";
 
 export type PreviewType = $Values<typeof PREVIEW_TYPES>;
 
-export type PreviewItem = {
-	id: string,
-	url: string,
-	name: string,
-	type: PreviewType,
-	isFallback?: boolean,
+export type RemovePreviewMethod = (id: string) => void;
+export type ClearPreviewsMethod = () => void;
+
+export type BasicPreviewItem = {|
+    url: string,
+    name: string,
+    type: PreviewType,
+|};
+
+export type PreviewItem = {|
+    ...BasicPreviewItem,
+    id: string,
+    removePreview: () => void,
+    isFallback?: boolean,
     props?: Object,
-};
+|};
 
 export type PreviewData = {
 	previews: PreviewItem[],
-	clearPreviews: () => void,
+	clearPreviews: ClearPreviewsMethod,
+    removeItemFromPreview: RemovePreviewMethod,
 };
 
-export type FallbackType = string | PreviewItem;
+export type FallbackType = string | BasicPreviewItem;
 
 export type FallbackMethod = (file: Object) => ?FallbackType;
 
@@ -29,6 +38,7 @@ export type PreviewComponentPropsOrMethod = Object | (item: ?BatchItem, url: str
 
 export type PreviewMethods = {
 	clear: () => void,
+    removePreview: RemovePreviewMethod,
 };
 
 export type PreviewBatchItemsMethod = (cb: (batch: Batch, ...params: any[]) => void) => void;
@@ -54,6 +64,8 @@ export type PreviewOptions = {|
     previewComponentProps?: PreviewComponentPropsOrMethod,
 |};
 
+export type PreviewsChangedHandler = (PreviewItem[]) => void;
+
 export type PreviewProps =  {|
     ...PreviewOptions,
 	//custom component to render the preview (default: img tag)
@@ -61,7 +73,7 @@ export type PreviewProps =  {|
 	//ref will be set with API methods (PreviewMethods)
 	previewMethodsRef?: RefObject<PreviewMethods>,
 	//callback that will be called when preview items are loaded or changed
-	onPreviewsChanged?: (PreviewItem[]) => void,
+	onPreviewsChanged?: PreviewsChangedHandler,
 |};
 
 export type MandatoryPreviewOptions = {|

@@ -52,7 +52,6 @@ const findRegistrations = (obj: Object, name?: any): RegItem[] => {
 
 	return name ?
 		(registry[name] ? registry[name].slice() : []) :
-        //$FlowIssue - flow doesnt know how to work with Array.values() :(
 		Object.values(registry).flat();
 };
 
@@ -68,7 +67,7 @@ const getPublicMethods = () => Object.entries(publicMethods)
 
 		res[key] = { value: m };
 		return res;
-	}, {});
+	}, ({}: { [string]: any }));
 
 //using string keys here because can't rely on function names to stay after (babel/webpack) build
 const apiMethods = {
@@ -80,9 +79,13 @@ const apiMethods = {
     "assign": assign
 };
 
-const createApi = (target): LifeEventsAPI =>
+//placating flow while using reduce to create an object API
+type ApiCreated = { target: Object, [string]: (...args: any[]) => any };
+
+const createApi = (target: Object): LifeEventsAPI =>
     Object.keys(apiMethods)
-        .reduce((res: LifeEventsAPI, name: string) => {
+        .reduce<ApiCreated>
+        ((res, name: string) => {
             res[name] = apiMethods[name].bind(target);
             return res;
         }, { target, ...apiMethods });
@@ -108,23 +111,23 @@ const removeRegItem = (obj: Object, name: any, cb?: Function) => {
 	}
 };
 
-function register(name: any, cb: EventCallback) {
+function register(this: any, name: any, cb: EventCallback) {
 	return addRegistration(this, name, cb);
 }
 
-function registerOnce(name: any, cb: EventCallback) {
+function registerOnce(this: any, name: any, cb: EventCallback) {
 	return addRegistration(this, name, cb, true);
 }
 
-function unregister(name: any, cb?: EventCallback) {
+function unregister(this: any, name: any, cb?: EventCallback) {
 	removeRegItem(this, name, cb);
 }
 
-function getEvents() {
+function getEvents(this: any) {
 	return getValidLE(this).events.slice();
 }
 
-function trigger(name: any, ...args) {
+function trigger(this: any, name: any, ...args: any[]) {
 	const regs = findRegistrations(this, name);
 	let results;
 
@@ -167,14 +170,14 @@ function trigger(name: any, ...args) {
 }
 
 //registry, events, stats become shared
-function assign(toObj: Object) {
+function assign(this: any, toObj: Object) {
 	const le = getValidLE(this);
 	defineLifeData(toObj, le.options, le.events, le.registry, le.stats);
 
 	return createApi(toObj);
 }
 
-function addEvent(name: any) {
+function addEvent(this: any, name: any) {
 	const le = getValidLE(this);
 
 	if (le.options.canAddEvents) {
@@ -191,7 +194,7 @@ function addEvent(name: any) {
 	}
 }
 
-function removeEvent(name: any) {
+function removeEvent(this: any, name: any) {
 	const le = getValidLE(this);
 
 	if (le.options.canRemoveEvents) {
@@ -202,12 +205,12 @@ function removeEvent(name: any) {
 	}
 }
 
-function hasEvent(name: any) {
+function hasEvent(this: any, name: any) {
 	const le = getValidLE(this);
 	return !!~le.events.indexOf(name);
 }
 
-function hasEventRegistrations(name: any) {
+function hasEventRegistrations(this: any, name: any) {
 	return !!findRegistrations(this, name).length;
 }
 
@@ -217,6 +220,7 @@ function hasEventRegistrations(name: any) {
 
 const defineLifeData = (target: Object, options: Options, events: any[] = [], registry: Object = {}, stats: Object = {}) => {
 	Object.defineProperties(target, {
+        // $FlowIssue[invalid-computed-prop] - https://github.com/facebook/flow/issues/3258
 		[LESYM]: {
 			value: Object.seal({
 				registry,
@@ -230,14 +234,14 @@ const defineLifeData = (target: Object, options: Options, events: any[] = [], re
 };
 
 const addLife = (target?: Object, events: any[] = [], options?: ?Options): LifeEventsAPI => {
-	target = target || {};
-	options = { ...defaults, ...options };
+	const useTarget = target || {};
+	const usedOptions = { ...defaults, ...options };
 
-	if (!isLE(target)) {
-		defineLifeData(target, options, events);
+	if (!isLE(useTarget)) {
+		defineLifeData(useTarget, usedOptions, events);
 	}
 
-	return createApi(target);
+	return createApi(useTarget);
 };
 
 export default addLife;

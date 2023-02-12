@@ -1,6 +1,10 @@
 import * as React from "react";
+import {
+    TusOptions,
+    TusResumeStartEventData,
+    TusResumeStartEventResponse
+} from "@rpldy/tus-sender";
 import { UploadyProps } from "@rpldy/shared-ui";
-import { TusOptions } from "@rpldy/tus-sender";
 
 export * from "@rpldy/uploady";
 
@@ -13,3 +17,11 @@ export default TusUploady;
 export type ClearResumableStore = () => void;
 
 export const useClearResumableStore: () => ClearResumableStore;
+
+export const useTusResumeStartListener: (cb: (data: TusResumeStartEventData) => TusResumeStartEventResponse) => void;
+
+export {
+    TusOptions,
+    TusResumeStartEventData,
+    TusResumeStartEventResponse,
+};

@@ -8,16 +8,14 @@ import type { SendOptions } from "../types";
  * mimics FormData.set() when its not available (react-native)
  * in case FormData.delete() isnt available, will append only (unlike set)
  */
-const addToFormData = (fd, name, ...rest) => {
+const addToFormData = (fd: FormData, name: string, ...rest: any[]) => {
     //rest = [value, fileName = undefined]
     if ("set" in fd) {
-        //$FlowExpectedError[speculation-ambiguous] - ignore flow for not allowing FileLike here
         fd.set(name, ...rest);
     } else {
         if ("delete" in fd) {
             fd.delete(name);
         }
-        //$FlowExpectedError[speculation-ambiguous] - ignore flow for not allowing FileLike here
         fd.append(name, ...rest);
     }
 };

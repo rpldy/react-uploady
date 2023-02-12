@@ -1,7 +1,6 @@
 import request from "../index";
 
 describe("request tests", () => {
-
     const mockXhr = (fn) => {
         window.XMLHttpRequest = function () {
             const xhr = {
@@ -71,8 +70,8 @@ describe("request tests", () => {
     };
 
     it("should make simple request", async () => {
-
         let testXhr;
+
         mockXhr((xhr) => {
             testXhr = xhr;
         });

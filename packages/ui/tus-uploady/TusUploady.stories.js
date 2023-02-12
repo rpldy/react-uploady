@@ -9,19 +9,23 @@ import {
     useStoryUploadySetup,
     type CsfExport,
 } from "../../../story-helpers";
+import retryEnhancer, { useRetry, useRetryListener } from "@rpldy/retry-hooks";
 import TusUploady,
 {
     useAbortAll,
     useItemProgressListener,
     useItemStartListener,
     useItemFinishListener,
+    useItemAbortListener,
+    useItemErrorListener,
     useRequestPreSend,
+    composeEnhancers,
+    useTusResumeStartListener,
 } from "./src";
 
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type { Node } from "React";
+import type { Node } from "react";
 
 const useTusStoryHelper = () => {
 	const setup = useStoryUploadySetup({
@@ -51,16 +55,27 @@ const useTusStoryHelper = () => {
 const AbortButton = () => {
     const abortAll = useAbortAll();
 
-    return <button onClick={abortAll}>Abort</button>;
+    return <button id="abort-btn" onClick={abortAll}>Abort</button>;
 };
 
 const ItemProgress = () => {
-    const [progress, setProgress] = useState([]);
-    useItemProgressListener(({ id, loaded, completed }) => {
-        setProgress((latest) => latest.concat(`${id}: LOADED - ${loaded} - COMPLETED - ${completed}`));
+    const [progress, setProgress] = useState<{ id: string, text: string }[]>([]);
+
+    useItemProgressListener(({ id, batchId, loaded, completed }) => {
+        setProgress((latest) => latest.concat({ id: batchId + id + loaded, text: `${id}: LOADED - ${loaded} - COMPLETED - ${completed}` }));
     });
 
-    return progress.map((p) => <p key={p}>{p}</p>);
+    useItemAbortListener(({ id, batchId }) => {
+        setProgress((latest) => latest.concat({ id: batchId + id + "_abort", text: `${id}: ABORT !!!!!! ----------` }));
+    });
+
+    return (
+        <>
+            {progress.map((p) => <p key={p.id} data-id={p.id}>{p.text}</p>)}
+            <br/>
+            <button onClick={() => setProgress([])}>clear progress</button>
+        </>
+    );
 };
 
 export const Simple = (): Node => {
@@ -126,7 +141,7 @@ export const WithDynamicMetadata = (): Node => {
 };
 
 const TusConcatUploadLog = () => {
-    const [log, setLog] = useState([]);
+    const [log, setLog] = useState<string[]>([]);
 
     useItemStartListener(() => {
         setLog((log) => log.concat("ITEM STARTED UPLOADING..."));
@@ -156,6 +171,104 @@ export const WithTusConcatenation = (): Node => {
 		<UploadButton>Upload with TUS Concatenation</UploadButton>
         <TusConcatUploadLog/>
 	</TusUploady>;
+};
+
+const RetryTus = () => {
+    const retry = useRetry();
+    const [showRetry, setShowRetry] = useState(false);
+
+    useItemAbortListener(() => {
+        setShowRetry(true);
+    });
+
+    useItemErrorListener(() => {
+       setShowRetry(true);
+    });
+
+    useRetryListener((items) => {
+        console.log("RETRYING ITEMS - ", items);
+    });
+
+    return (
+        showRetry &&
+        <button
+            id="retry-tus-btn"
+            onClick={() => retry()}
+        >
+            Retry TUS
+        </button>
+    );
+};
+
+export const WithRetry = (): Node => {
+    const storySetup = useTusStoryHelper();
+    let { destination } = storySetup;
+    const { enhancer, chunkSize, forgetOnSuccess, resume, ignoreModifiedDateInStorage, sendDataOnCreate, sendWithCustomHeader } = storySetup;
+
+    if (sendWithCustomHeader) {
+        destination = { ...destination, headers: { "x-test": "abcd" } };
+    }
+
+    return <TusUploady
+        debug
+        destination={destination}
+        enhancer={composeEnhancers(enhancer, retryEnhancer)}
+        chunkSize={chunkSize}
+        forgetOnSuccess={forgetOnSuccess}
+        resume={resume}
+        ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}
+        sendDataOnCreate={sendDataOnCreate}>
+        <UploadButton id="upload-button">Upload with TUS</UploadButton>
+        <br/>
+        <AbortButton/>
+        <RetryTus/>
+        <ItemProgress/>
+    </TusUploady>;
+};
+
+const ResumeHandler = ({ cancelResume = false }: { cancelResume: boolean }) => {
+    useTusResumeStartListener(() => {
+        return cancelResume ? false : {
+            resumeHeaders: {
+                "x-another-header": "foo",
+                "x-test-override": "def"
+            }
+        }
+    });
+
+    return null;
+};
+
+export const WithResumeStartHandler = (): Node => {
+    const storySetup = useTusStoryHelper();
+    let { destination } = storySetup;
+    const { enhancer, chunkSize, forgetOnSuccess, resume, ignoreModifiedDateInStorage, sendDataOnCreate, sendWithCustomHeader, extOptions } = storySetup;
+
+    if (sendWithCustomHeader) {
+        destination = { ...destination, headers: { "x-test": "abcd" } };
+    }
+
+    return <TusUploady
+        debug
+        destination={destination}
+        enhancer={composeEnhancers(enhancer, retryEnhancer)}
+        chunkSize={chunkSize}
+        forgetOnSuccess={forgetOnSuccess}
+        resume={resume}
+        ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}
+        sendDataOnCreate={sendDataOnCreate}
+        resumeHeaders={{
+            "x-test-resume": "123",
+            "x-test-override": "abc",
+        }}
+    >
+        <UploadButton id="upload-button">Upload with TUS</UploadButton>
+        <br/>
+        <AbortButton/>
+        <RetryTus/>
+        <ItemProgress/>
+        <ResumeHandler cancelResume={extOptions?.tusCancelResume}/>
+    </TusUploady>;
 };
 
 export default (getCsfExport(TusUploady, "Tus Uploady", readme, { pkg: "tus-uploady", section: "UI" }): CsfExport);

@@ -67,7 +67,7 @@ describe("UploadPreview tests", () => {
     it("should render with PreviewComponent from props", () => {
         const PreviewComp = (props) => {
             // eslint-disable-next-line no-unused-vars
-            const { url, type, isFallback, ...previewProps } = props;
+            const { url, type, isFallback, removePreview, ...previewProps } = props;
             return <article data-preview-type={type} {...previewProps}>
                 {url}
             </article>;
@@ -110,11 +110,11 @@ describe("UploadPreview tests", () => {
         getFallbackUrlData.mockReturnValueOnce({ url: fbUrl });
 
         const img = { src: previewUrl };
-        wrapper.find("img").props().onError({ target: img });
+        wrapper.find("img").props().onError({ currentTarget: img });
         expect(img.src).toBe(fbUrl);
         expect(getFallbackUrlData).toHaveBeenCalledWith(fbUrl, previewUrl);
 
-        wrapper.find("img").props().onError({ target: img });
+        wrapper.find("img").props().onError({ currentTarget: img });
         expect(img.src).toBe(fbUrl);
     });
 
@@ -124,7 +124,11 @@ describe("UploadPreview tests", () => {
             { url: "test2.com", props: { "data-test": "456" } },
         ];
 
-        mockUsePreviewsLoader.mockReturnValueOnce({ previews, clearPreviews: "clear" });
+        mockUsePreviewsLoader.mockReturnValueOnce({
+            previews,
+            clearPreviews: "clear",
+            removeItemFromPreview: "removeP",
+        });
 
         const onPreviewsChanged = jest.fn();
 
@@ -138,14 +142,16 @@ describe("UploadPreview tests", () => {
         expect(onPreviewsChanged).toHaveBeenCalledWith(previews);
 
         expect(methodsRef.current.clear).toBe("clear");
+        expect(methodsRef.current.removePreview).toBe("removeP");
     });
 
     it("should provide isFallback to custom preview component", () => {
         mockUsePreviewsLoader.mockReturnValueOnce({ previews: [{ isFallback: true, url: "fallback.com" }] });
 
         const PreviewComp = (props) => {
-            const { url, isFallback, ...previewProps } = props;
-            return <article data-fallback={isFallback} {...previewProps}>
+            const { url, isFallback, removePreview, ...previewProps } = props;
+
+            return <article data-fallback={isFallback} {...previewProps} onClick={removePreview}>
                 {url}
             </article>;
         };

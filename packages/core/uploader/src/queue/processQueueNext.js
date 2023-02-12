@@ -7,6 +7,7 @@ import {
     cancelBatchForItem,
     loadNewBatchForItem,
     failBatchForItem,
+    isItemBatchStartPending,
 } from "./batchHelpers";
 
 import type { BatchItem } from "@rpldy/shared";
@@ -14,7 +15,6 @@ import type { QueueState } from "./types";
 
 const getIsItemInActiveRequest = (queue: QueueState, itemId: string): boolean => {
     return queue.getState().activeIds
-        // $FlowIssue - no flat
         .flat()
         .includes(itemId);
 };
@@ -78,38 +78,43 @@ export const getNextIdGroup = (queue: QueueState): ?string[] => {
     return nextGroup;
 };
 
-const updateItemsAsActive = (queue: QueueState, ids) => {
+const updateItemsAsActive = (queue: QueueState, ids: string[]) => {
     queue.updateState((state) => {
         //immediately mark items as active to support concurrent uploads without getting into infinite loops
         state.activeIds = state.activeIds.concat(ids);
     });
 };
 
-const processNextWithBatch = (queue, ids) => {
+const processNextWithBatch = (queue: QueueState, ids: string[]) => {
     let newBatchP;
 
-    updateItemsAsActive(queue, ids);
+    if (!isItemBatchStartPending(queue, ids[0])) {
+        updateItemsAsActive(queue, ids);
 
-    if (isNewBatchStarting(queue, ids[0])) {
-        newBatchP = loadNewBatchForItem(queue, ids[0])
-            .then((allowBatch) => {
-                let cancelled = !allowBatch;
+        if (isNewBatchStarting(queue, ids[0])) {
+            newBatchP = loadNewBatchForItem(queue, ids[0])
+                .then((allowBatch) => {
+                    let cancelled = !allowBatch;
 
-                if (cancelled) {
-                    cancelBatchForItem(queue, ids[0]);
+                    if (cancelled) {
+                        cancelBatchForItem(queue, ids[0]);
+                        processNext(queue);
+                    }
+
+                    return cancelled;
+                })
+                .catch((err) => {
+                    logger.debugLog("uploader.processor: encountered error while preparing batch for request", err);
+                    failBatchForItem(queue, ids[0], err);
                     processNext(queue);
-                }
-
-                return cancelled;
-            })
-            .catch((err) => {
-                logger.debugLog("uploader.processor: encountered error while preparing batch for request", err);
-                failBatchForItem(queue, ids[0], err);
-                processNext(queue);
-                return true;
-            });
+                    return true;
+                });
+        } else {
+            newBatchP = Promise.resolve(false);
+        }
     } else {
-        newBatchP = Promise.resolve(false);
+        //dont continue processing while batch is pending start event handling
+        newBatchP = Promise.resolve(true);
     }
 
     return newBatchP;
@@ -123,7 +128,7 @@ const processNext = (queue: QueueState): Promise<void> | void => {
 
     if (ids) {
         const currentCount = queue.getCurrentActiveCount(),
-            { concurrent = 0, maxConcurrent = 0 } = queue.getOptions();
+            { concurrent = !!0, maxConcurrent = 0 } = queue.getOptions();
 
         if (!currentCount || (concurrent && currentCount < maxConcurrent)) {
             logger.debugLog("uploader.processor: Processing next upload - ", {

@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from "react";
 import { isFunction } from "@rpldy/shared";
 import useUploadyContext from "./useUploadyContext";
 
-type Callback = (...args?: any) => ?any;
+import type { WithStateFn, Callback } from "../types";
 
 const useEventEffect = (event: string, fn: Callback) => {
     const context = useUploadyContext();
@@ -18,27 +18,27 @@ const useEventEffect = (event: string, fn: Callback) => {
     }, [event, fn, on, off]);
 };
 
-type WithStateFn = (fn?: Callback, id?: string ) => ?any;
-
 const generateUploaderEventHookWithState =
-    <T>(event: string, stateCalculator: (state: T) => any): WithStateFn =>
-        (fn? : Callback | string , id?: string): ?any  => {
+    <T>(event: string, stateCalculator: (state: T) => any): WithStateFn<T> =>
+        (fn? : Callback | string, id?: string): any  => {
         const [eventState, setEventState] = useState(null);
+        let cbFn = fn;
+        let usedId = id;
 
         if (fn && !isFunction(fn)) {
-            id = fn;
-            fn = undefined;
+            usedId = fn;
+            cbFn = undefined;
         }
 
-        const eventCallback = useCallback((eventObj, ...args) => {
-            if (!id || eventObj.id === id) {
+        const eventCallback = useCallback((eventObj: Object, ...args: mixed[]) => {
+            if (!usedId || eventObj.id === usedId) {
                 setEventState(stateCalculator(eventObj, ...args));
 
-                if (isFunction(fn)) {
-                    fn(eventObj, ...args);
+                if (isFunction(cbFn)) {
+                    cbFn(eventObj, ...args);
                 }
             }
-        }, [fn, id]);
+        }, [cbFn, usedId]);
 
         useEventEffect(event, eventCallback);
 
@@ -47,7 +47,7 @@ const generateUploaderEventHookWithState =
 
 const generateUploaderEventHook = (event: string, canScope: boolean = true): ((fn: Callback, id?: string) => void) =>
     (fn: Callback, id?: string) => {
-        const eventCallback = useCallback((eventObj, ...args) => {
+        const eventCallback = useCallback((eventObj: Object, ...args: mixed[]) => {
             return (fn && (!canScope || !id || eventObj.id === id)) ?
                 fn(eventObj, ...args) : undefined;
         }, [fn, id]);

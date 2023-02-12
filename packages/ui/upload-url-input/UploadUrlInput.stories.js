@@ -8,11 +8,9 @@ import {
     type CsfExport,
 } from "../../../story-helpers";
 import UploadUrlInput from "./src";
-
-// $FlowFixMe - doesnt understand loading readme
 import readme from "./README.md";
 
-import type { Node } from "React";
+import type { Node } from "react";
 
 export const Simple = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
@@ -31,8 +29,7 @@ export const Simple = (): Node => {
 
 export const WithRef = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-
-    const inputRef = useRef();
+    const inputRef = useRef<?HTMLInputElement>(null);
 
     const onInputChange = useCallback(() => {
         console.log("INPUT = ", inputRef.current?.value);
@@ -64,8 +61,8 @@ export const WithRef = (): Node => {
 
 export const WithButtonAndValidate = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-    const [error, setError] = useState(null);
-    const uploadRef = useRef(null);
+    const [error, setError] = useState<?string | void>(null);
+    const uploadRef = useRef<(() => void) | void | null>(null);
 
     return <Uploady
         debug
@@ -86,9 +83,7 @@ export const WithButtonAndValidate = (): Node => {
         {error && <span style={{ color: "red" }}>{error}</span>}
         <br/>
         <button onClick={() => {
-            if (uploadRef && uploadRef.current) {
-                uploadRef.current();
-            }
+                uploadRef.current?.();
         }}>Upload
         </button>
         <br/>

@@ -9,7 +9,7 @@ export type ButtonProps = {|
     children?: Node,
     text?: string,
     extraProps?: Object,
-    onClick?: EventHandler
+    onClick?: (SyntheticMouseEvent<HTMLElement>) => void,
 |};
 
 export type UploadButtonProps = {|

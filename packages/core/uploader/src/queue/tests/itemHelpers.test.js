@@ -1,3 +1,4 @@
+import { FILE_STATES } from "@rpldy/shared";
 import getQueueState from "./mocks/getQueueState.mock";
 import * as itemHelpers from "../itemHelpers";
 
@@ -97,6 +98,21 @@ describe("itemHelpers tests", () => {
         ])("for %s should return %s", (id, expected) => {
             const result = itemHelpers.getIsItemExists(queueState, id);
             expect(result).toBe(expected);
+        });
+    });
+
+    describe("getIsItemFinalized tests", () => {
+        it.each(
+            [
+                [FILE_STATES.CANCELLED, true],
+                [FILE_STATES.FINISHED, true],
+                [FILE_STATES.ABORTED, true],
+                [FILE_STATES.ERROR, true],
+                [FILE_STATES.ADDED, false],
+                [FILE_STATES.PENDING, false],
+                [FILE_STATES.UPLOADING, false],
+            ])("for %s should return %s", (state, result) => {
+            expect(itemHelpers.getIsItemFinalized({ state })).toBe(result);
         });
     });
 });

@@ -11,11 +11,16 @@
 [include]
 ./packages/**/*.js.flow
 
-
 [libs]
 
+[strict]
+untyped-type-import
+sketchy-null
+
 [options]
+experimental.const_params=true
 autoimports=true
+react.runtime=automatic
 module.ignore_non_literal_requires=true
 module.system.node.main_field=main:dev
 module.system.node.resolve_dirname=node_modules
@@ -27,3 +32,5 @@ module.name_mapper='^styled-components$' -> '<PROJECT_ROOT>/node_modules/styled-
 module.name_mapper='^react-dnd$' -> '<PROJECT_ROOT>/node_modules/react-dnd/dist/cjs/index.js'
 module.name_mapper='^react-dnd-html5-backend$' -> '<PROJECT_ROOT>/node_modules/react-dnd-html5-backend/dist/cjs/index.js'
 module.name_mapper='^rc-progress$' -> '<PROJECT_ROOT>/node_modules/rc-progress/es/index.js'
+#tricking flow so it doesnt complain about not able to import README files in storybook
+module.name_mapper='README.md$' -> '<PROJECT_ROOT>/node_modules/react/index.js'

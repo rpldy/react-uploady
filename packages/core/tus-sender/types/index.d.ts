@@ -1,9 +1,14 @@
+import { BatchItem } from "@rpldy/shared";
 import { UploaderEnhancer } from "@rpldy/uploader";
 import { CHUNKING_SUPPORT, ChunkedOptions } from "@rpldy/chunked-sender";
 
 export {
     CHUNKING_SUPPORT
 };
+
+export enum TUS_EVENTS {
+    RESUME_START = "RESUME_START",
+}
 
 export interface TusOptions extends ChunkedOptions {
     version?: string;
@@ -18,7 +23,19 @@ export interface TusOptions extends ChunkedOptions {
     lockedRetryDelay?: number;
     forgetOnSuccess?: boolean;
     ignoreModifiedDateInStorage?: boolean;
+    resumeHeaders?: Record<string, string>;
 }
+
+export interface TusResumeStartEventData {
+    url: string;
+    item: BatchItem;
+    resumeHeaders?: Record<string, string>;
+}
+
+export type TusResumeStartEventResponse = void | boolean | {
+    url?: string;
+    resumeHeaders?: Record<string, string>;
+};
 
 export const clearResumables: () => void;
 

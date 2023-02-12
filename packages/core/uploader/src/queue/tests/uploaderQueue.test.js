@@ -206,6 +206,7 @@ describe("queue tests", () => {
                 itemQueue: {},
                 batchQueue: [],
                 currentBatch: null,
+                batchesStartPending: [],
                 batches: {},
                 items: {},
                 activeIds: [],

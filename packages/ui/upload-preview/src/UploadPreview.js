@@ -6,21 +6,35 @@ import { getFallbackUrlData } from "./utils";
 import { PREVIEW_TYPES } from "./consts";
 
 import type { Element, ComponentType } from "react";
+import type { RefObject } from "@rpldy/shared-ui";
 import type {
 	PreviewProps,
 	PreviewData,
 	PreviewItem,
 	PreviewMethods,
     PreviewBatchItemsMethod,
+    ClearPreviewsMethod,
+    RemovePreviewMethod,
+    PreviewsChangedHandler,
 } from "./types";
 
-const showBasicPreview = (type, url, previewProps, onImgError) =>
+
+const showBasicPreview = (type: string, url: string, previewProps: Object, onImgError: (e: SyntheticEvent<HTMLImageElement>) => void) =>
 	type === PREVIEW_TYPES.VIDEO ?
 		<video key={url} src={url} controls {...previewProps} /> :
 		<img key={url} onError={onImgError} src={url} {...previewProps} />;
 
-const usePreviewMethods = (previews, clearPreviews, previewMethodsRef, onPreviewsChanged) => {
-    useImperativeHandle<?PreviewMethods>(previewMethodsRef, () => ({ clear: clearPreviews }), [clearPreviews]);
+const usePreviewMethods = (
+    previews: PreviewItem[],
+    clearPreviews: ClearPreviewsMethod,
+    previewMethodsRef: ?RefObject<PreviewMethods>,
+    onPreviewsChanged: ?PreviewsChangedHandler,
+    removeItemFromPreview: RemovePreviewMethod
+) => {
+    useImperativeHandle<?PreviewMethods>(previewMethodsRef,
+        () => ({ clear: clearPreviews, removePreview: removeItemFromPreview }),
+        [clearPreviews, removeItemFromPreview]
+    );
 
 	useEffect(() => {
 		if (onPreviewsChanged) {
@@ -35,10 +49,10 @@ const getUploadPreviewForBatchItemsMethod =
 
     return (props: PreviewProps): Element<"img">[] | Element<ComponentType<any>>[] => {
         const { PreviewComponent, previewMethodsRef, onPreviewsChanged, ...previewOptions } = props;
-        const { previews, clearPreviews }: PreviewData = usePreviewsLoader(previewOptions);
+        const { previews, clearPreviews, removeItemFromPreview }: PreviewData = usePreviewsLoader(previewOptions);
 
-        const onImagePreviewLoadError = useCallback((e) => {
-            const img = e.target;
+        const onImagePreviewLoadError = useCallback((e: SyntheticEvent<HTMLImageElement>) => {
+            const img = (e.currentTarget: HTMLImageElement);
 
             const fallback = getFallbackUrlData(props.fallbackUrl, img.src);
 
@@ -51,10 +65,12 @@ const getUploadPreviewForBatchItemsMethod =
             previews,
             clearPreviews,
             previewMethodsRef,
-            onPreviewsChanged);
+            onPreviewsChanged,
+            removeItemFromPreview
+        );
 
         return previews.map((data: PreviewItem): Element<any> => {
-            const { id, url, type, name, isFallback, props: previewProps } = data;
+            const { id, url, type, name, isFallback, removePreview, props: previewProps } = data;
 
             return PreviewComponent ?
                 <PreviewComponent
@@ -64,6 +80,7 @@ const getUploadPreviewForBatchItemsMethod =
                     type={type}
                     name={name}
                     isFallback={isFallback}
+                    removePreview={removePreview}
                     {...previewProps}
                 /> :
                 showBasicPreview(type, url, previewProps, onImagePreviewLoadError);

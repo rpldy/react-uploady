@@ -10,7 +10,7 @@
     "bundle": "rimraf bundle; node scripts/bundle.js --validate",
     "bundle:prod": "UPLOADY_BUNDLE=true NODE_ENV=production yarn bundle",
     "bundle:serve": "http-server ./bundle -p 8009",
-    "build": "NODE_ENV=production lerna run build --stream -- FORCE_COLOR=1 NODE_ENV=production",
+    "build": "NODE_ENV=production lerna run build --stream --concurrency=7 -- FORCE_COLOR=1 NODE_ENV=production",
     "clean": "rimraf bundle; lerna exec --stream -- rimraf lib umd",
     "release:normal": "yarn bootstrap; yarn clean; node scripts/release.js",
     "release": "yarn release:normal --versionArgs=\"--force-publish=*\" ",

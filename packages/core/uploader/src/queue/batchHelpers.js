@@ -96,6 +96,14 @@ const finalizeBatch = (
     triggerUploaderBatchEvent(queue, batchId, UPLOADER_EVENTS.BATCH_FINALIZE);
 };
 
+const cancelBatchWithId = (queue: QueueState, batchId: string) => {
+    logger.debugLog("uploady.uploader.batchHelpers: cancelling batch: ", batchId);
+
+    finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_CANCEL, BATCH_STATES.CANCELLED);
+    removeBatchItems(queue, batchId);
+    removeBatch(queue, batchId);
+};
+
 const cancelBatchForItem = (queue: QueueState, itemId: string) => {
     if (getIsItemExists(queue, itemId)) {
         const data = getBatchDataFromItemId(queue, itemId),
@@ -103,11 +111,7 @@ const cancelBatchForItem = (queue: QueueState, itemId: string) => {
 
         //in case batch is aborted while async batch-start is pending we can reach here after batch was already removed
         if (batchId) {
-            logger.debugLog("uploady.uploader.batchHelpers: cancelling batch: ", batchId);
-
-            finalizeBatch(queue, batchId, UPLOADER_EVENTS.BATCH_CANCEL, BATCH_STATES.CANCELLED);
-            removeBatchItems(queue, batchId);
-            removeBatch(queue, batchId);
+            cancelBatchWithId(queue, batchId);
         } else {
             logger.debugLog(`uploady.uploader.batchHelpers: cancel batch called for batch already removed (item id = ${itemId})`);
         }
@@ -328,6 +332,7 @@ const clearBatchData = (queue: QueueState, batchId: string) => {
 export {
     loadNewBatchForItem,
     isNewBatchStarting,
+    cancelBatchWithId,
     cancelBatchForItem,
     getBatchFromItemId,
     getBatchDataFromItemId,

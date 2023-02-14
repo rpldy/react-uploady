@@ -8655,9 +8655,9 @@ cyclist@^1.0.1:
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
 cypress-intercept-formdata@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/cypress-intercept-formdata/-/cypress-intercept-formdata-0.5.1.tgz#97cfd5d2db46ddbce22402ef153ccdf86fe3a6c1"
-  integrity sha512-eGUxV8eN+OvFo9n9qrvnshygvpSHuVyI62T2FrAfxcy+4cMUkIKBLEhxTjUxG2AIf+//R3NqW/Ih9vVAGLS0HA==
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/cypress-intercept-formdata/-/cypress-intercept-formdata-0.5.2.tgz#95fd9b33af8a6d54c4d9a12ecc076997f2f19d56"
+  integrity sha512-27BA/qg2inD7bGRdPG+24VuZTGd7rQHmiE9hvIrAdqoP1OdkZRfewAxHO8eayLy9YqJmYFJ4GPtsVR17lDCM+w==
 
 cypress@^12.5.1:
   version "12.5.1"
@@ -19457,10 +19457,10 @@ webpack-virtual-modules@^0.4.1:
   resolved "https://registry.yarnpkg.com/webpack-virtual-modules/-/webpack-virtual-modules-0.4.3.tgz#cd597c6d51d5a5ecb473eea1983a58fa8a17ded9"
   integrity sha512-5NUqC2JquIL2pBAAo/VfBP6KuGkHIZQXW/lNKupLPfhViwh8wNsu0BObtl09yuKZszeEUfbXz8xhrHvSG16Nqw==
 
-webpack-virtual-modules@^0.4.3:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/webpack-virtual-modules/-/webpack-virtual-modules-0.4.4.tgz#a19fcf371923c59c4712d63d7d194b1e4d8262cc"
-  integrity sha512-h9atBP/bsZohWpHnr+2sic8Iecb60GxftXsWNLLLSqewgIsGzByd2gcIID4nXcG+3tNe4GQG3dLcff3kXupdRA==
+webpack-virtual-modules@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/webpack-virtual-modules/-/webpack-virtual-modules-0.5.0.tgz#362f14738a56dae107937ab98ea7062e8bdd3b6c"
+  integrity sha512-kyDivFZ7ZM0BVOUteVbDFhlRt7Ah/CSPwJdi8hBpkK7QLumUqdLtVfm/PX/hkcnrvr0i77fO5+TjZ94Pe+C9iw==
 
 webpack@4:
   version "4.46.0"

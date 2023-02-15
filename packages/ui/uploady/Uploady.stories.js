@@ -37,9 +37,9 @@ import Uploady, {
 import readme from "./README.md";
 
 import type { Node, Element } from "react";
-import type { BatchItem } from "@rpldy/shared";
+import type { Batch, BatchItem } from "@rpldy/shared";
 
-const ContextUploadButton = ({ text = "Custom Upload Button" }) => {
+const ContextUploadButton = ({ text = "Custom Upload Button" }: { text?: string }) => {
     const uploadyContext = useUploady();
 
     const onClick = useCallback(() => {
@@ -588,7 +588,7 @@ export const TEST_InvalidBatchStart = (): Node => {
 
 
 const TEST_CancelOnBatchAdd_listeners = {
-    [UPLOADER_EVENTS.BATCH_ADD]: (batch) => {
+    [UPLOADER_EVENTS.BATCH_ADD]: (batch: Batch) => {
         return batch.items.length < 3;
     },
 };
@@ -601,7 +601,7 @@ export const TEST_CancelOnBatchAdd = (): Node => {
             enhancer={enhancer}
             destination={destination}
             grouped={grouped}
-            groupSize={groupSize}
+            maxGroupSize={groupSize}
             autoUpload={autoUpload}
             listeners={TEST_CancelOnBatchAdd_listeners}
             maxConcurrent={3}

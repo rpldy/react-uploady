@@ -1,9 +1,8 @@
-import { BATCH_STATES, triggerCancellable, invariant, utils } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import { triggerCancellable, invariant, utils } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { mockTrigger, createLifePack } from "@rpldy/life-events/src/tests/mocks/rpldy-life-events.mock";
 import getAbortEnhancer from "@rpldy/abort";
 import mockCreateProcessor from "../processor";
 import createUploader from "../uploader";
-import { UPLOADER_EVENTS } from "../consts";
 import { deepProxyUnwrap, getMandatoryOptions } from "../utils";
 
 jest.mock("../processor");
@@ -37,6 +36,9 @@ describe("uploader tests", () => {
             deepProxyUnwrap,
             mockProcessPendingBatches,
             mockClearPendingBatches,
+            mockCreateProcessor,
+            mockTrigger,
+            createLifePack
         );
     });
 
@@ -90,7 +92,6 @@ describe("uploader tests", () => {
 
             expect(options2.multiple).toBe(false);
             expect(options2.destination.url).toBe("test-url");
-
         });
     });
 
@@ -155,55 +156,33 @@ describe("uploader tests", () => {
     });
 
     describe("add uploads tests", () => {
-        it("should not add anything in case batch returns empty", async () => {
+        it("should add new batch", async () => {
+            const uploader = getTestUploader({ autoUpload: true });
+
             mockAddNewBatch.mockResolvedValueOnce({ items: [] });
-            const uploader = getTestUploader({ autoUpload: true });
+            await uploader.add([1, 2], { test: 1 });
 
-            await uploader.add([], { test: 1 });
-
-            expect(mockRunCancellable).not.toHaveBeenCalled();
-            expect(mockProcess).not.toHaveBeenCalled();
-        });
-
-        it("should auto upload", async () => {
-            mockRunCancellable
-                .mockResolvedValueOnce(false);
-
-            const batch = { items: [1, 2] };
-
-            mockAddNewBatch.mockResolvedValueOnce(batch);
-
-            const uploader = getTestUploader({ autoUpload: true });
-
-            await uploader.add([], { test: 1 });
-
-            expect(mockAddNewBatch).toHaveBeenCalledWith([], expect.any(String), expect.objectContaining({
+            expect(mockAddNewBatch).toHaveBeenCalledWith([1, 2], expect.objectContaining({
                 autoUpload: true
             }));
-
-            expect(mockProcess).toHaveBeenCalledWith(batch);
         });
 
-        it("should set batch as cancelled if add is cancelled", async () => {
-            mockRunCancellable
-                .mockResolvedValueOnce(true);
+        it("should clear pending with clearPendingOnAdd in uploader options",async() => {
+            const uploader = getTestUploader({ clearPendingOnAdd: true });
 
-            const batch = { items: [1, 2] };
+            mockAddNewBatch.mockResolvedValueOnce({ items: [] });
+            await uploader.add([1, 2], { test: 1 });
 
-            mockAddNewBatch.mockResolvedValueOnce(batch);
+            expect(mockClearPendingBatches).toHaveBeenCalledTimes(1);
+        });
 
-            createLifePack.mockReturnValueOnce("lp");
+        it("should clear pending with clearPendingOnAdd in addOptions", async() => {
+            const uploader = getTestUploader({  });
 
-            const uploader = getTestUploader({});
+            mockAddNewBatch.mockResolvedValueOnce({ items: [] });
+            await uploader.add([1, 2], { clearPendingOnAdd: true });
 
-            await uploader.add([], { test: 1 });
-
-            expect(batch.state).toBe(BATCH_STATES.CANCELLED);
-            expect(mockTrigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_CANCEL, "lp");
-
-            createLifePack.mock.calls[0][0]();
-            expect(deepProxyUnwrap).toHaveBeenCalledTimes(1);
-            expect(deepProxyUnwrap.mock.calls[0][0]).toEqual({ ...batch, state: BATCH_STATES.CANCELLED });
+            expect(mockClearPendingBatches).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -294,5 +273,19 @@ describe("uploader tests", () => {
 
         uploader.clearPending();
         expect(mockClearPendingBatches).toHaveBeenCalledTimes(1);
+    });
+
+    it("should trigger with unwrap", () => {
+        getTestUploader({});
+
+        const triggerWithUnwrap = mockCreateProcessor.mock.calls[0][0];
+        const data = {};
+
+        triggerWithUnwrap("test", data);
+
+        expect(createLifePack).toHaveBeenCalled();
+
+        createLifePack.mock.calls[0][0]();
+        expect(deepProxyUnwrap).toHaveBeenCalledWith(data, 0, [data]);
     });
 });

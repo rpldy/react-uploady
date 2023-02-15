@@ -1,7 +1,6 @@
 // @flow
 import addLife, { createLifePack } from "@rpldy/life-events";
 import {
-    BATCH_STATES,
     invariant,
     logger,
     triggerCancellable,
@@ -87,7 +86,7 @@ const createUploader = (options?: UploaderCreateOptions): UploadyUploaderType =>
         }
 
         return processor
-            .addNewBatch(files, uploader.id, processOptions)
+            .addNewBatch(files, processOptions)
             .then(() => {
                 logger.debugLog(`uploady.uploader: finished adding file data to be processed`);
             });

@@ -1,8 +1,8 @@
 import { triggerCancellable as mockTriggerCancellable } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import mockCreateUploadQueue from "../queue";
 import mockCreateItemsSender from "../batchItemsSender";
+import mockCreateBatch from "../batch";
 import createProcessor from "../processor";
-import createBatch from "../batch";
 
 jest.mock("../queue", () => jest.fn());
 jest.mock("../batchItemsSender", () => jest.fn());
@@ -25,6 +25,7 @@ describe("processor tests", () => {
         runCancellable: jest.fn(),
         clearPendingBatches: jest.fn(),
         uploadPendingBatches: jest.fn(),
+        cancelBatch: jest.fn(),
 	};
 
 	beforeEach(() => {
@@ -50,9 +51,8 @@ describe("processor tests", () => {
 		expect(mockCreateItemsSender).toHaveBeenCalled();
         expect(mockCreateUploadQueue).toHaveBeenCalledWith(options, trigger, cancellable, sender, uploaderId);
 
-        const batch = {}, batchOptions = {};
-		processor.process(batch, batchOptions);
-		expect(queue.uploadBatch).toHaveBeenCalledWith(batch, batchOptions);
+		processor.clearPendingBatches();
+		expect(queue.clearPendingBatches).toHaveBeenCalled();
 	});
 
 	it("should call abort methods on queue", () => {
@@ -66,26 +66,6 @@ describe("processor tests", () => {
 		expect(queue.abortBatch).toHaveBeenCalledWith("b1");
 	});
 
-    it("should create batch on addNewBatch", async () => {
-        const processor = testProcessor();
-        const files = [1,2];
-        const options = { test: true };
-
-        createBatch.mockResolvedValueOnce("batch");
-
-        await processor.addNewBatch(files, "u1", options);
-
-        expect(createBatch).toHaveBeenCalledWith(files, "u1", options);
-        expect(queue.addBatch).toHaveBeenCalledWith("batch", options);
-    });
-
-    it("should use queue runCancellable", () => {
-        const processor = testProcessor();
-
-        processor.runCancellable();
-        expect(queue.runCancellable).toHaveBeenCalled();
-    });
-
     it("clearPendingBatches should use queue clearPendingBatches", () => {
         const processor = testProcessor();
         processor.clearPendingBatches();
@@ -96,5 +76,70 @@ describe("processor tests", () => {
         const processor = testProcessor();
         processor.processPendingBatches();
         expect(queue.uploadPendingBatches).toHaveBeenCalled();
+    });
+
+    describe("addNewBatch tests", () => {
+       it("should not add anything in case batch returns empty", async () => {
+           const processor = testProcessor();
+           const files = [1, 2];
+           const options = { autoUpload: false };
+           const queueBatch = { items: [] };
+           mockCreateBatch.mockResolvedValueOnce(queueBatch);
+
+           const batch = await processor.addNewBatch(files, options);
+
+           expect(batch).toBe(null);
+           expect(queue.addBatch).not.toHaveBeenCalled();
+           expect(mockCreateBatch).toHaveBeenCalledWith(files, uploaderId, options);
+        });
+
+        it("should auto upload", async () => {
+            const processor = testProcessor();
+            const files = [1, 2];
+            const options = { autoUpload: true };
+            const queueBatch = { items: [1, 2,], };
+
+            mockCreateBatch.mockResolvedValueOnce(queueBatch);
+            queue.addBatch.mockReturnValueOnce(queueBatch);
+            queue.runCancellable.mockResolvedValueOnce(false);
+            const batch = await processor.addNewBatch(files, options);
+
+            expect(queue.addBatch).toHaveBeenCalledWith(queueBatch, options);
+            expect(queue.uploadBatch).toHaveBeenCalledWith(queueBatch);
+            expect(batch).toBe(queueBatch);
+        });
+
+        it("should add batch but not upload with autoUpload = false", async () => {
+            const processor = testProcessor();
+            const files = [1, 2];
+            const options = { autoUpload: false };
+            const queueBatch = { items: [1, 2,], };
+
+            mockCreateBatch.mockResolvedValueOnce(queueBatch);
+            queue.addBatch.mockReturnValueOnce(queueBatch);
+            queue.runCancellable.mockResolvedValueOnce(false);
+            const batch = await processor.addNewBatch(files, options);
+
+            expect(queue.addBatch).toHaveBeenCalledWith(queueBatch, options);
+            expect(queue.uploadBatch).not.toHaveBeenCalledWith(queueBatch);
+            expect(batch).toBe(queueBatch);
+        });
+
+        it("should set batch as cancelled if add is cancelled", async () => {
+            const processor = testProcessor();
+            const files = [1, 2];
+            const options = { autoUpload: true };
+            const queueBatch = { items: [1, 2,], };
+
+            mockCreateBatch.mockResolvedValueOnce(queueBatch);
+            queue.addBatch.mockReturnValueOnce(queueBatch);
+            queue.runCancellable.mockResolvedValueOnce(true);
+            const batch = await processor.addNewBatch(files, options);
+
+            expect(queue.addBatch).toHaveBeenCalledWith(queueBatch, options);
+            expect(queue.cancelBatch).toHaveBeenCalledWith(queueBatch);
+            expect(queue.uploadBatch).not.toHaveBeenCalledWith(queueBatch);
+            expect(batch).toBe(queueBatch);
+        });
     });
 });

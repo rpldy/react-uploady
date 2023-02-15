@@ -4,8 +4,6 @@ import type {
     UploadOptions,
     BatchItem,
     Batch,
-    // Trigger,
-    Cancellable,
 } from "@rpldy/shared";
 
 import type { OnAndOnceMethod } from "@rpldy/life-events";
@@ -32,14 +30,11 @@ export type UploaderProcessor = {|
     abort: (id?: string) => void,
     abortBatch: (batchId: string) => void,
     addNewBatch: (
-        files: UploadInfo | Array<UploadInfo>,
-        uploaderId: string,
+        files: UploadInfo | UploadInfo[],
         processOptions: UploaderCreateOptions
-    ) => any,
+    ) => Promise<?Batch>,
     clearPendingBatches: () => void,
-    process: (batch: Batch, batchOptions?: UploaderCreateOptions) => void,
     processPendingBatches: (uploadOptions: ?UploadOptions) => void,
-    runCancellable: Cancellable,
 |};
 
 export type UploadyUploaderType = UploaderType<UploaderCreateOptions>;

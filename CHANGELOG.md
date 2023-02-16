@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.4.0-rc.1 (2023-02-16)
+
+_PRE-RELEASE_
+
+### Bug fixes
+
+- `[uploader]` - fix bug with cancel from BATCH_ADD doesnt clean batch from state. Fix for [#472](https://github.com/rpldy/react-uploady/issues/472)
+
+### Internal
+
+- `all` - misc upgrade dev deps
+
+
 ## 1.4.0-rc.0 (2023-02-12)
 
 _PRE-RELEASE_

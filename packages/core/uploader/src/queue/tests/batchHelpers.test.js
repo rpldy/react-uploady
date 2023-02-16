@@ -355,7 +355,7 @@ describe("batchHelpers tests", () => {
 		});
 	});
 
-	describe("cancelBatchForItem tests", () => {
+	describe("cancel Batch tests", () => {
 		it("should cancel batch, remove items and batch from state", () => {
 			const ids = ["u1", "u2", "u3"];
 			const items = ids.reduce((res, id) =>
@@ -448,6 +448,39 @@ describe("batchHelpers tests", () => {
             batchHelpers.cancelBatchForItem(queueState, "u1");
 
             expect(queueState.updateState).not.toHaveBeenCalled();
+        });
+
+        it("should cancel batch for id", () => {
+            const ids = ["u1", "u2", "u3"];
+            const items = ids.reduce((res, id) =>
+                ({ ...res, [id]: { id, batchId: "b1" } }), {});
+
+            const cancelledBatch = {
+                id: "b1",
+                items: Object.values(items).map((i) => ({ ...i, changed: true }))
+            };
+
+            const queueState = getQueueState({
+                items: {
+                    ...items,
+                    "u4": { id: "u4", batchId: "b2" },
+                },
+                batches: {
+                    "b1": { batch: cancelledBatch, },
+                    "b2": {}
+                },
+                itemQueue: { "b1": [...ids], "b2": ["u4"] },
+                batchQueue: ["b1", "b2"],
+                batchesStartPending: ["b1", "b2"],
+            });
+
+            getIsItemExists.mockReturnValueOnce(true);
+
+            batchHelpers.cancelBatchWithId(queueState, "b1");
+
+            const updatedState = queueState.getState();
+            expect(updatedState.batches.b1).toBeUndefined();
+            expect(updatedState.batchQueue.indexOf("b1")).toBe(-1);
         });
     });
 

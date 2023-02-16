@@ -6,16 +6,13 @@ import createBatch from "./batch";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { Batch, TriggerCancellableOutcome, UploadInfo, UploadOptions } from "@rpldy/shared";
 import type { UploaderCreateOptions, UploaderProcessor } from "./types";
-
+import { UPLOADER_EVENTS } from "./consts";
+import { logger } from "@rpldy/shared";
 const createProcessor =
     (trigger: TriggerMethod, cancellable: TriggerCancellableOutcome, options: UploaderCreateOptions, uploaderId: string):
         UploaderProcessor => {
         const sender = createItemsSender(),
             queue = createUploadQueue(options, trigger, cancellable, sender, uploaderId);
-
-        const process = (batch: Batch, batchOptions?: UploaderCreateOptions) => {
-            queue.uploadBatch(batch, batchOptions);
-        };
 
         const abortBatch = (batchId: string) => {
             queue.abortBatch(batchId);
@@ -29,12 +26,35 @@ const createProcessor =
             }
         };
 
-        const addNewBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, processOptions: UploaderCreateOptions): Promise<Batch> => {
-            return createBatch(files, uploaderId, processOptions)
+        const addNewBatch = (files: UploadInfo | UploadInfo[], processOptions: UploaderCreateOptions): Promise<?Batch> =>
+            createBatch(files, uploaderId, processOptions)
                 .then((batch) => {
-                    return queue.addBatch(batch, processOptions);
+                    let resultP;
+
+                    if (batch.items.length) {
+                        const addedBatch = queue.addBatch(batch, processOptions);
+
+                        resultP = queue.runCancellable(UPLOADER_EVENTS.BATCH_ADD, addedBatch, processOptions)
+                            .then((isCancelled: boolean) => {
+                                if (!isCancelled) {
+                                    logger.debugLog(`uploady.uploader [${uploaderId}]: new items added - auto upload =
+                       ${String(processOptions.autoUpload)}`, addedBatch.items);
+
+                                    if (processOptions.autoUpload) {
+                                        queue.uploadBatch(addedBatch);
+                                    }
+                                } else {
+                                    queue.cancelBatch(addedBatch);
+                                }
+
+                                return addedBatch;
+                            });
+                    } else {
+                        logger.debugLog(`uploady.uploader: no items to add. batch ${batch.id} is empty. check fileFilter if this isn't intended`);
+                    }
+
+                    return resultP || Promise.resolve(null);
                 });
-        };
 
         const clearPendingBatches = () => {
             queue.clearPendingBatches();
@@ -44,14 +64,10 @@ const createProcessor =
             queue.uploadPendingBatches(uploadOptions);
         };
 
-        const runCancellable = queue.runCancellable;
-
         return {
-            process,
             abortBatch,
             abort,
             addNewBatch,
-            runCancellable,
             clearPendingBatches,
             processPendingBatches,
         };

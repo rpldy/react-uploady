@@ -14,9 +14,10 @@ import {
 
     type CsfExport,
 } from "../../../story-helpers";
-import { getUploadyVersion, useBatchErrorListener, useBatchFinalizeListener } from "@rpldy/shared-ui";
+import { getUploadyVersion, useBatchErrorListener } from "@rpldy/shared-ui";
 import Uploady, {
     FILE_STATES,
+    UPLOADER_EVENTS,
 
     useUploady,
     useFileInput,
@@ -36,16 +37,16 @@ import Uploady, {
 import readme from "./README.md";
 
 import type { Node, Element } from "react";
-import type { BatchItem } from "@rpldy/shared";
+import type { Batch, BatchItem } from "@rpldy/shared";
 
-const ContextUploadButton = () => {
+const ContextUploadButton = ({ text = "Custom Upload Button" }: { text?: string }) => {
     const uploadyContext = useUploady();
 
     const onClick = useCallback(() => {
         uploadyContext?.showFileUpload();
     }, [uploadyContext]);
 
-    return <button id="upload-button" onClick={onClick}>Custom Upload Button</button>;
+    return <button id="upload-button" onClick={onClick}>{text}</button>;
 };
 
 type ContextButtonWithHooksProps = {|
@@ -584,5 +585,32 @@ export const TEST_InvalidBatchStart = (): Node => {
         <UploadButtonWithInvalidBatchStart/>
     </Uploady>;
 };
+
+
+const TEST_CancelOnBatchAdd_listeners = {
+    [UPLOADER_EVENTS.BATCH_ADD]: (batch: Batch) => {
+        return batch.items.length < 3;
+    },
+};
+
+export const TEST_CancelOnBatchAdd = (): Node => {
+    const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
+
+    return (
+        <Uploady
+            enhancer={enhancer}
+            destination={destination}
+            grouped={grouped}
+            maxGroupSize={groupSize}
+            autoUpload={autoUpload}
+            listeners={TEST_CancelOnBatchAdd_listeners}
+            maxConcurrent={3}
+            debug
+        >
+            <ContextUploadButton text="max 2 file upload"/>
+        </Uploady>
+    );
+};
+
 
 export default (getCsfExport(Uploady, "Uploady", readme, { pkg: "uploady", section: "UI" }): CsfExport);

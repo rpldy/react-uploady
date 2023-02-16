@@ -45,6 +45,8 @@ export type UploaderQueue = {|
     abortAll: () => void,
     clearPendingBatches: () => void,
     uploadPendingBatches: (uploadOptions: ?UploadOptions) => void,
+
+    cancelBatch: (batch: Batch) => void,
 |};
 
 export type ProcessNextMethod = (QueueState) => Promise<void> | void;

@@ -9,6 +9,7 @@ import {
     preparePendingForUpload,
     removePendingBatches,
     clearBatchData,
+    cancelBatchWithId,
 } from "../batchHelpers";
 import createQueue from "../uploaderQueue";
 
@@ -212,6 +213,15 @@ describe("queue tests", () => {
                 activeIds: [],
                 aborts: {}
             });
+    });
+
+    it("should cancel batch with id on cancelBatch", () => {
+        const queue = createQueue({  }, trigger, cancellable, sender, uploaderId);
+        const batch = { id: "b1" };
+
+        queue.cancelBatch(batch);
+
+        expect(cancelBatchWithId).toHaveBeenCalledWith(expect.any(Object), batch.id);
     });
 
     describe("clearBatchUploads tests", () => {

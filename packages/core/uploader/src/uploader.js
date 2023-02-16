@@ -1,7 +1,6 @@
 // @flow
 import addLife, { createLifePack } from "@rpldy/life-events";
 import {
-    BATCH_STATES,
     invariant,
     logger,
     triggerCancellable,
@@ -86,30 +85,10 @@ const createUploader = (options?: UploaderCreateOptions): UploadyUploaderType =>
             clearPending();
         }
 
-        return processor.addNewBatch(files, uploader.id, processOptions)
-            .then((batch) => {
-                let resultP;
-
-                if (batch.items.length) {
-                    resultP = processor.runCancellable(UPLOADER_EVENTS.BATCH_ADD, batch, processOptions)
-                        .then((isCancelled: boolean) => {
-                            if (!isCancelled) {
-                                logger.debugLog(`uploady.uploader [${uploader.id}]: new items added - auto upload =
-                        ${String(processOptions.autoUpload)}`, batch.items);
-
-                                if (processOptions.autoUpload) {
-                                    processor.process(batch);
-                                }
-                            } else {
-                                batch.state = BATCH_STATES.CANCELLED;
-                                triggerWithUnwrap(UPLOADER_EVENTS.BATCH_CANCEL, batch);
-                            }
-                        });
-                } else {
-                    logger.debugLog(`uploady.uploader: no items to add. batch ${batch.id} is empty. check fileFilter if this isn't intended`);
-                }
-
-                return resultP;
+        return processor
+            .addNewBatch(files, processOptions)
+            .then(() => {
+                logger.debugLog(`uploady.uploader: finished adding file data to be processed`);
             });
     };
 

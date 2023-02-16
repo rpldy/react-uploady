@@ -10,6 +10,7 @@ import {
     preparePendingForUpload,
     removePendingBatches,
     clearBatchData,
+    cancelBatchWithId,
 } from "./batchHelpers";
 
 import type { TriggerCancellableOutcome, Batch, BatchItem, UploadOptions } from "@rpldy/shared";
@@ -186,6 +187,9 @@ const createUploaderQueue = (
         removePendingBatches(queueState);
     };
 
+    const cancelBatch = (batch: Batch) =>
+        cancelBatchWithId(queueState, batch.id);
+
     return {
         updateState,
         getState: queueState.getState,
@@ -197,6 +201,7 @@ const createUploaderQueue = (
         abortAll: (...args: string[]) => processAbortAll(queueState, ...args),
         clearPendingBatches,
         uploadPendingBatches,
+        cancelBatch,
     };
 };
 

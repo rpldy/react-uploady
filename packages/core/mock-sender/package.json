@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0-rc.1",
+  "version": "1.4.0",
   "name": "@rpldy/mock-sender",
   "description": "mock sender for testing purposes",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -23,9 +23,9 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/sender": "^1.4.0-rc.1",
-    "@rpldy/shared": "^1.4.0-rc.1",
-    "@rpldy/uploader": "^1.4.0-rc.1"
+    "@rpldy/sender": "^1.4.0",
+    "@rpldy/shared": "^1.4.0",
+    "@rpldy/uploader": "^1.4.0"
   },
   "devDependencies": {
     "flow-bin": "^0.199.1"

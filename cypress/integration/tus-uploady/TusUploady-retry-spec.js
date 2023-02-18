@@ -1,6 +1,6 @@
 import intercept, { interceptWithDelay } from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_X_SHORT, WAIT_SHORT, ITEM_ABORT, ITEM_FINISH } from "../../constants";
+import { WAIT_SHORT, ITEM_ABORT, ITEM_FINISH, WAIT_MEDIUM } from "../../constants";
 
 describe("TusUploady - With Retry", () => {
     const fileName = "flower.jpg",
@@ -65,18 +65,18 @@ describe("TusUploady - With Retry", () => {
             //retry aborted
             cy.get("#retry-tus-btn").click();
 
-            cy.wait(WAIT_SHORT);
+            cy.wait(WAIT_MEDIUM);
+
+            cy.storyLog().assertFileItemStartFinish(fileName, 6)
+                .then((events) => {
+                    expect(events.finish.args[1].uploadResponse.location).to.eq(`${uploadUrl}/123`);
+                });
 
             cy.wait("@patchReq")
                 .then(({ request }) => {
                     const { headers } = request;
                     expect(headers["upload-offset"]).to.eq(resumeOffset);
                     expect(headers["content-type"]).to.eq("application/offset+octet-stream");
-                });
-
-            cy.storyLog().assertFileItemStartFinish(fileName, 6)
-                .then((events) => {
-                    expect(events.finish.args[1].uploadResponse.location).to.eq(`${uploadUrl}/123`);
                 });
         }, "#upload-button");
 

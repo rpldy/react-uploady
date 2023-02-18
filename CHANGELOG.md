@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.4.0 (2023-02-18)
+
+### Features
+
+- `[tus-sender]` - added new event tus RESUME_START to: cancel or update relevant props for resume
+- `[tus-sender]` - accept resume headers in tus options
+- `[tus-uploady]` - added useTusResumeStartListener hook to handle RESUME_START event in React
+- `[upload-preview]` - added removePreview to preview methods to clear a single item preview
+
+### Bug fixes
+
+- `[uploader]` - fix bug with cancel from BATCH_ADD doesnt clean batch from state. Fix for [#472](https://github.com/rpldy/react-uploady/issues/472)
+- `[uploader]` - fix bug with item handling after async batch start ([c5ed0dd](c5ed0dd2281d240add02db41aaa1ce10cec90d17))
+
+### Docs
+
+- `root` - Update gzip sizes table in readme
+
+### Internal
+
+- `all` - upgrade dev deps (jest, babel, flow, lerna!, and more)
+- `all` - misc upgrade dev deps
+
+
 ## 1.4.0-rc.1 (2023-02-16)
 
 _PRE-RELEASE_

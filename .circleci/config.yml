@@ -2,7 +2,7 @@ version: 2.1
 
 references:
     docker_image: &docker_image
-        - image: cypress/base:14.17.3
+        - image: cypress/base:16.14.2-slim
           environment:
               TERM: xterm
 

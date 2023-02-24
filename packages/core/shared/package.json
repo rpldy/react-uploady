@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "invariant": "^2.2.4",
-    "just-throttle": "^1.1.0"
+    "just-throttle": "^4.2.0"
   },
   "publishConfig": {
     "access": "public"

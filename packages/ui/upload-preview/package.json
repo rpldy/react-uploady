@@ -39,7 +39,7 @@
     "@rpldy/upload-url-input": "^1.4.0",
     "@storybook/addon-knobs": "^6.4.0",
     "flow-bin": "^0.199.1",
-    "react-image-crop": "^9.0.5",
+    "react-image-crop": "^10.0.9",
     "styled-components": "^5.3.5"
   },
   "peerDependencies": {

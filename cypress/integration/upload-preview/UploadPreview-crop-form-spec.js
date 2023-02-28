@@ -19,7 +19,7 @@ describe("UploadPreview - Crop in Form", () => {
             //click preview to open crop
             cy.get(".preview-thumb").click();
 
-            cy.get("img.ReactCrop__image")
+            cy.get("img.react-crop-img")
                 .should("be.visible");
 
             cy.storyLog().assertLogPattern(BATCH_ADD);

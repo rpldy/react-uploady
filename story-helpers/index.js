@@ -48,3 +48,5 @@ export type { CsfExport } from "./getCsfExport";
 export { default as dropZoneCss } from "./dropZoneCss";
 
 export { useExternalUploadOptionsProvider } from "./useExternalUploadOptionsProvider";
+
+export { default as ReactCropWithImage, CropData } from "./ReactCropWithImage";

@@ -31,7 +31,7 @@ describe("UploadPreview - Multi Crop", () => {
                 .should("have.length", 3)
                 .eq("0").click();
 
-            cy.get("img.ReactCrop__image")
+            cy.get("img.react-crop-img")
                 .should("have.length", 1);
 
             cy.get("#save-crop-btn").click();

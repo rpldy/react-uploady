@@ -2,8 +2,6 @@
 import React, { useCallback, useState, useRef, useEffect } from "react";
 import type { Node } from "React";
 import styled,  { css } from "styled-components";
-import ReactCrop from "react-image-crop";
-import "react-image-crop/dist/ReactCrop.css";
 import { number } from "@storybook/addon-knobs";
 import Uploady, {
     useItemProgressListener,
@@ -27,6 +25,9 @@ import {
     uploadUrlInputCss,
     cropImage,
     getCsfExport,
+    ReactCropWithImage,
+
+    type CropData,
     type CsfExport,
 } from "../../../story-helpers";
 import UploadPreview, {
@@ -41,7 +42,7 @@ import type { PreviewItem, RemovePreviewMethod, PreviewProps, PreviewMethods } f
 
 type StateSetter<T> = ((T => ?T) | ?T) => void;
 
-type CropData = { height: number, width: number, x: number, y: number };
+// type CropData = { height: number, width: number, x: number, y: number };
 
 const StyledUploadButton = styled(UploadButton)`
 	${uploadButtonCss}
@@ -121,22 +122,25 @@ export const WithCustomProps = (): Node => {
         }
     }, []);
 
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}
-        grouped={grouped}
-        maxGroupSize={groupSize}>
+    return (
+        <Uploady
+            debug
+            multiple={multiple}
+            destination={destination}
+            enhancer={enhancer}
+            grouped={grouped}
+            maxGroupSize={groupSize}
+        >
 
-        <StyledUploadButton>
-            Upload
-        </StyledUploadButton>
+            <StyledUploadButton>
+                Upload
+            </StyledUploadButton>
 
-        <UploadPreview
-            fallbackUrl={"https://picsum.photos/50"}
-            previewComponentProps={getPreviewProps}/>
-    </Uploady>;
+            <UploadPreview
+                fallbackUrl={"https://picsum.photos/50"}
+                previewComponentProps={getPreviewProps}/>
+        </Uploady>
+    );
 };
 
 const StyledUploadUrlInput = styled(UploadUrlInput)`
@@ -155,21 +159,24 @@ export const WithUrls = (): Node => {
         uploadRef.current?.();
 	};
 
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}
-        grouped={grouped}
-        maxGroupSize={groupSize}>
+    return (
+        <Uploady
+            debug
+            multiple={multiple}
+            destination={destination}
+            enhancer={enhancer}
+            grouped={grouped}
+            maxGroupSize={groupSize}
+        >
+            <StyledUploadUrlInput uploadRef={uploadRef}/>
 
-        <StyledUploadUrlInput uploadRef={uploadRef}/>
+            <Button onClick={onButtonClick}>Upload</Button>
 
-        <Button onClick={onButtonClick}>Upload</Button>
-
-        <UploadPreview
-                fallbackUrl={"https://picsum.photos/50"}/>
-    </Uploady>;
+            <UploadPreview
+                fallbackUrl={"https://picsum.photos/50"}
+            />
+        </Uploady>
+    );
 };
 
 const PreviewContainer = styled.div`
@@ -185,26 +192,27 @@ const PreviewContainer = styled.div`
 `;
 
 export const WithRememberPrevious = (): Node => {
-	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
-	return <Uploady
-		debug
-		multiple={multiple}
-		destination={destination}
-		enhancer={enhancer}
-		grouped={grouped}
-		maxGroupSize={groupSize}>
+    return (<Uploady
+            debug
+            multiple={multiple}
+            destination={destination}
+            enhancer={enhancer}
+            grouped={grouped}
+            maxGroupSize={groupSize}
+        >
+            <StyledUploadButton>
+                Upload
+            </StyledUploadButton>
 
-		<StyledUploadButton>
-			Upload
-		</StyledUploadButton>
-
-		<PreviewContainer>
-			<UploadPreview
-				rememberPreviousBatches
-				fallbackUrl={"https://picsum.photos/50"}/>
-		</PreviewContainer>
-	</Uploady>;
+            <PreviewContainer>
+                <UploadPreview
+                    rememberPreviousBatches
+                    fallbackUrl={"https://picsum.photos/50"}/>
+            </PreviewContainer>
+        </Uploady>
+    );
 };
 
 /**
@@ -265,12 +273,6 @@ export const WithPreviewMethods = (): Node => {
 	</Uploady>;
 };
 
-const StyledReactCrop = styled(ReactCrop)`
-  width: 100%;
-  max-width: 900px;
-  height: 400px;
-`;
-
 const ButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -308,16 +310,12 @@ const PreviewButtons = (props: PreviewButtonsProps) => {
 const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 	const { id, url, isFallback, type, updateRequest, requestData, previewMethods } = props;
 	const [finished, setFinished] = useState<boolean>(false);
-	const [crop, setCrop] = useState<CropData>({ height: 100, width: 100, x: 50, y: 50 });
+	const [crop, setCrop] = useState<CropData>({ unit: "px", height: 100, width: 100, x: 50, y: 50 });
     const imgRef = useRef<?HTMLImageElement>(null);
 
 	useItemFinalizeListener(() =>{
 		setFinished(true);
     }, id);
-
-    const onLoad = useCallback((img: HTMLImageElement) => {
-        imgRef.current = img;
-    }, []);
 
     const onUploadCrop = useCallback(async () => {
         if (updateRequest && (crop?.height || crop?.width)) {
@@ -339,13 +337,13 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 			<img src={url} alt="fallback img" id="fallback-preview"/>
 		</PreviewContainer> :
 		<>
-			{requestData ? <StyledReactCrop
-				src={url}
-				crop={crop}
-                onImageLoaded={onLoad}
-				onChange={setCrop}
-				onComplete={setCrop}
-			/> : null}
+            {requestData ?
+                <ReactCropWithImage
+                    src={url}
+                    crop={crop}
+                    ref={imgRef}
+                    onCrop={setCrop}
+                /> : null}
 			<PreviewButtons
 				finished={finished}
 				crop={crop}
@@ -517,7 +515,7 @@ type CropperMultiCropProps = {
 
 const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview, onPreviewSelected } : CropperMultiCropProps) => {
     const abortItem = useAbortItem();
-    const [crop, setCrop] = useState<CropData>({ height: 100, width: 100, x: 50, y: 50 });
+    const [crop, setCrop] = useState<CropData>({ unit: "px", height: 100, width: 100, x: 50, y: 50 });
     const imgRef = useRef<?HTMLImageElement>(null);
 
     const onSaveCrop = async () => {
@@ -535,17 +533,12 @@ const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview, onPrevi
         onPreviewSelected(null);
     };
 
-    const onLoad = useCallback((img: HTMLImageElement) => {
-        imgRef.current = img;
-    }, []);
-
     return (<CropperContainer>
-        <StyledReactCrop
+        <ReactCropWithImage
             src={url}
             crop={crop}
-            onImageLoaded={onLoad}
-            onChange={setCrop}
-            onComplete={setCrop}
+            ref={imgRef}
+            onCrop={setCrop}
         />
         <Button onClick={onSaveCrop} id="save-crop-btn">Save Crop</Button>
         <Button onClick={onUnsetCrop} id="unset-crop-btn">Dont use Crop</Button>
@@ -672,23 +665,25 @@ const UploadPendingButton = () => {
 export const WithDifferentBatchItemsMethod = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}
-        grouped={grouped}
-        maxGroupSize={groupSize}
-        autoUpload={false}
-    >
-        <StyledUploadButton id="upload-btn">
-            Select Files
-        </StyledUploadButton>
+    return (
+        <Uploady
+            debug
+            multiple={multiple}
+            destination={destination}
+            enhancer={enhancer}
+            grouped={grouped}
+            maxGroupSize={groupSize}
+            autoUpload={false}
+        >
+            <StyledUploadButton id="upload-btn">
+                Select Files
+            </StyledUploadButton>
 
-        <PreviewsWithClear PreviewComp={BatchAddUploadPreview}/>
+            <PreviewsWithClear PreviewComp={BatchAddUploadPreview}/>
 
-        <UploadPendingButton/>
-    </Uploady>;
+            <UploadPendingButton/>
+        </Uploady>
+    );
 };
 
 const TYPES = [
@@ -792,7 +787,7 @@ const CropItemPreviewContainer = styled.div`
 `;
 
 const CropPreviewFieldComp = ({  item, name, url, setCropForItem }: CropPreviewFieldCompProps) => {
-    const [crop, setCrop] = useState<CropData>({ height: 100, width: 100, x: 50, y: 50 });
+    const [crop, setCrop] = useState<CropData>({ unit: "px", height: 100, width: 100, x: 50, y: 50 });
     const [croppedUrl, setCroppedUrl] = useState<?{ blobUrl: string, revokeUrl: () => void }>(null);
     const [isCropping, setCropping] = useState<boolean>(false);
     const imgRef = useRef<?HTMLImageElement>(null);
@@ -809,10 +804,6 @@ const CropPreviewFieldComp = ({  item, name, url, setCropForItem }: CropPreviewF
 
     useEffect(() => () => { !isCropping && croppedUrl?.revokeUrl(); }, [isCropping, croppedUrl]);
 
-    const onLoad = useCallback((img: HTMLImageElement) => {
-        imgRef.current = img;
-    }, []);
-
     return <CropItemPreviewContainer>
         {!isCropping ?
             <>
@@ -820,13 +811,12 @@ const CropPreviewFieldComp = ({  item, name, url, setCropForItem }: CropPreviewF
                 <img className="preview-thumb" src={croppedUrl?.blobUrl || url} onClick={startCropping}/>
             </> :
             <>
-                <StyledReactCrop
+                <ReactCropWithImage
                     src={url}
                     crop={crop}
-                    onImageLoaded={onLoad}
-                    onChange={setCrop}
-                    onComplete={setCrop}
+                    onCrop={setCrop}
                     style={{ height: "100%" }}
+                    ref={imgRef}
                 />
                 <Button
                     type="button"

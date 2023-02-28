@@ -816,6 +816,7 @@ const CropPreviewFieldComp = ({  item, name, url, setCropForItem }: CropPreviewF
                     crop={crop}
                     onCrop={setCrop}
                     style={{ height: "100%" }}
+                    ref={imgRef}
                 />
                 <Button
                     type="button"

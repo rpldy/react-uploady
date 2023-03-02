@@ -28,7 +28,7 @@ describe("UploadPreview - Crop", () => {
         uploadFile(fileName, () => {
             cy.wait(WAIT_SHORT);
 
-            cy.get("img.ReactCrop__image")
+            cy.get("img.react-crop-img")
                 .should("be.visible");
 
             cy.storyLog().assertLogPattern(BATCH_ADD);
@@ -58,7 +58,7 @@ describe("UploadPreview - Crop", () => {
         uploadFile(fileName, () => {
             cy.wait(WAIT_SHORT);
 
-            cy.get("img.ReactCrop__image")
+            cy.get("img.react-crop-img")
                 .should("be.visible");
 
             cy.storyLog().assertLogPattern(BATCH_ADD);
@@ -78,7 +78,7 @@ describe("UploadPreview - Crop", () => {
         uploadFile(fileName, () => {
             cy.wait(WAIT_SHORT);
 
-            cy.get("img.ReactCrop__image")
+            cy.get("img.react-crop-img")
                 .should("be.visible");
 
             cy.storyLog().assertLogPattern(BATCH_ADD);
@@ -108,7 +108,7 @@ describe("UploadPreview - Crop", () => {
         uploadFile(fileName, () => {
             cy.wait(WAIT_SHORT);
 
-            cy.get("img.ReactCrop__image")
+            cy.get("img.react-crop-img")
                 .should("not.exist");
 
             cy.get("#fallback-preview")

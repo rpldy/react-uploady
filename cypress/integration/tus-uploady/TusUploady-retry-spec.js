@@ -23,7 +23,7 @@ describe("TusUploady - With Retry", () => {
         }, "createReq");
 
         interceptWithDelay(
-            100,
+            160,
             "patchReq",
             `${uploadUrl}/123`,
             "PATCH",
@@ -49,7 +49,7 @@ describe("TusUploady - With Retry", () => {
                     expect(headers["content-type"]).to.eq("application/offset+octet-stream");
                 });
 
-            //made up resume offset so we know resume happened after failure
+            //made-up resume offset so we know resume happened after failure
             const resumeOffset = "200123"
 
             intercept(`${uploadUrl}/123`, "HEAD", {

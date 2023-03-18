@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0",
+  "version": "1.4.1-rc.0",
   "name": "@rpldy/uploader",
   "description": "the processing and queuing engine for react-uploady",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -30,12 +30,12 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/abort": "^1.4.0",
-    "@rpldy/life-events": "^1.4.0",
-    "@rpldy/raw-uploader": "^1.4.0",
-    "@rpldy/sender": "^1.4.0",
-    "@rpldy/shared": "^1.4.0",
-    "@rpldy/simple-state": "^1.4.0"
+    "@rpldy/abort": "^1.4.1-rc.0",
+    "@rpldy/life-events": "^1.4.1-rc.0",
+    "@rpldy/raw-uploader": "^1.4.1-rc.0",
+    "@rpldy/sender": "^1.4.1-rc.0",
+    "@rpldy/shared": "^1.4.1-rc.0",
+    "@rpldy/simple-state": "^1.4.1-rc.0"
   },
   "devDependencies": {
     "flow-bin": "^0.199.1"

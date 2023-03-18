@@ -9,7 +9,8 @@ module.exports = {
     },
     "extends": ["eslint:recommended", "react-app", "plugin:jsx-a11y/recommended", "plugin:storybook/recommended"],
     "globals": {
-        "ENV": true
+        "ENV": true,
+        "globalThis": false,
     },
     "plugins": ["react", "jsx-a11y", "react-hooks", "flowtype", "no-async"],
     "settings": {
@@ -107,51 +108,54 @@ module.exports = {
         "max-len": [2, 155],
         "no-async/no-async": 2
     },
-    "overrides": [{
-        "files": ["*.ts", "*.tsx"],
-        "parser": "@typescript-eslint/parser",
-        "parserOptions": {
-            "ecmaFeatures": {
-                "jsx": true
+    "overrides": [
+        {
+            "files": ["*.ts", "*.tsx"],
+            "parser": "@typescript-eslint/parser",
+            "parserOptions": {
+                "ecmaFeatures": {
+                    "jsx": true
+                },
+                "project": "tsconfig.json",
+                "tsconfigRootDir": "."
             },
-            "project": "tsconfig.json",
-            "tsconfigRootDir": "."
+            "plugins": ["@typescript-eslint"],
+            "extends": ["eslint:recommended", "plugin:@typescript-eslint/eslint-recommended", "plugin:@typescript-eslint/recommended"],
+            rules: {
+                "flowtype/no-types-missing-file-annotation": 0,
+                "import/no-extraneous-dependencies": 0,
+                "@typescript-eslint/no-explicit-any": 0,
+                "no-console": 0,
+                "no-async/no-async": 0
+            }
         },
-        "plugins": ["@typescript-eslint"],
-        "extends": ["eslint:recommended", "plugin:@typescript-eslint/eslint-recommended", "plugin:@typescript-eslint/recommended"],
-        rules: {
-            "flowtype/no-types-missing-file-annotation": 0,
-            "import/no-extraneous-dependencies": 0,
-            "@typescript-eslint/no-explicit-any": 0,
-            "no-console": 0,
-            "no-async/no-async": 0
+        {
+            "files": ["*.test.js"],
+            "plugins": ["jest"],
+            "env": {
+                "jest/globals": true
+            },
+            "globals": {
+                "clearJestMocks": "readonly",
+                "testCustomHook": "readonly",
+                "mount": "readonly",
+                "shallow": "readonly",
+                "jsdom": "readonly"
+            },
+            "extends": ["plugin:jest/recommended"],
+            "rules": {
+                "no-empty": 0,
+                "import/first": 0,
+                "no-new-object": 0,
+                "no-mixed-spaces-and-tabs": 0,
+                "object-curly-spacing": 0,
+                "no-unexpected-multiline": 0,
+                "react/jsx-no-bind": 0,
+                "jest/valid-expect": 0,
+                "jest/expect-expect": 2,
+                "jest/no-commented-out-tests": 0,
+                "no-async/no-async": 0
+            }
         }
-    }, {
-        "files": ["*.test.js"],
-        "plugins": ["jest"],
-        "env": {
-            "jest/globals": true
-        },
-        "globals": {
-            "clearJestMocks": "readonly",
-            "testCustomHook": "readonly",
-            "mount": "readonly",
-            "shallow": "readonly",
-            "jsdom": "readonly"
-        },
-        "extends": ["plugin:jest/recommended"],
-        "rules": {
-            "no-empty": 0,
-            "import/first": 0,
-            "no-new-object": 0,
-            "no-mixed-spaces-and-tabs": 0,
-            "object-curly-spacing": 0,
-            "no-unexpected-multiline": 0,
-            "react/jsx-no-bind": 0,
-            "jest/valid-expect": 0,
-            "jest/expect-expect": 2,
-            "jest/no-commented-out-tests": 0,
-            "no-async/no-async": 0
-        }
-    }]
+    ]
 };

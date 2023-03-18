@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.4.1-rc.0 (2023-03-18)
+
+_PRE-RELEASE_
+
+### Bug fixes
+
+- `[ui-shared]` - add globalThis to avoid error on edge runtime. Fix for [#495](https://github.com/rpldy/react-uploady/issues/495)
+
+### Internal
+
+- `all` - misc upgrade dev deps
+
+
 ## 1.4.0 (2023-02-18)
 
 ### Features

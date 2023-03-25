@@ -54,13 +54,17 @@ jobs:
               run: |
                   if [ '${{ inputs.version }}' = 'rc' ]
                   then
-                    echo "RC IT IS !!!!!!!!!"
-                    echo "VERSION='prerelease --preid rc'" >> $GITHUB_OUTPUT
-                    echo "PUBLISH='--dist-tag next'" >> $GITHUB_OUTPUT
+                    echo "using args for RC release"
+                    echo "VERSION=prerelease --preid rc" >> $GITHUB_OUTPUT
+                    echo "PUBLISH=--dist-tag next" >> $GITHUB_OUTPUT
                   elif [ '${{ inputs.version }}' = 'alpha' ]
                   then
-                    echo "ALPHA IT IS !!!!!!!!!"
-                    echo "PUBLISH='--dist-tag alpha'" >> $GITHUB_OUTPUT
+                    echo "using args for Alpha release"
+                    echo "VERSION=prerelease" >> $GITHUB_OUTPUT
+                    echo "PUBLISH=--dist-tag alpha" >> $GITHUB_OUTPUT
+                  else
+                    echo "using args for ${{ inputs.version }} release"
+                    echo "VERSION=${{ inputs.version }}" >> $GITHUB_OUTPUT
                   fi
                   echo "## Version ARGS: ${{ steps.lerna-args.outputs.VERSION }} :rocket:" >> $GITHUB_STEP_SUMMARY
                   echo "## PUBLISH ARGS: ${{ steps.lerna-args.outputs.PUBLISH }} :rocket:" >> $GITHUB_STEP_SUMMARY

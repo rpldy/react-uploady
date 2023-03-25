@@ -52,10 +52,12 @@ jobs:
             - name: Define Lerna Args
               id: lerna-args
               run: |
-                  if [ '${{ inputs.version }}' = 'rc' ]; then
+                  if [ '${{ inputs.version }}' = 'rc' ]
+                  then
                     echo "VERSION='prerelease --preid rc'" >> $GITHUB_OUTPUT
                     echo "PUBLISH='--dist-tag next'" >> $GITHUB_OUTPUT
-                  elif [ '${{ inputs.version }}' = 'alpha' ] then
+                  elif [ '${{ inputs.version }}' = 'alpha' ]
+                  then
                     echo "PUBLISH='--dist-tag alpha'" >> $GITHUB_OUTPUT
                   fi
                   echo "## Version ARGS: ${{ steps.lerna-args.outputs.VERSION }} :rocket:" >> $GITHUB_STEP_SUMMARY

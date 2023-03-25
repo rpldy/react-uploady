@@ -66,7 +66,7 @@ jobs:
                   echo "## PUBLISH ARGS: ${{ steps.lerna-args.outputs.PUBLISH }} :rocket:" >> $GITHUB_STEP_SUMMARY
 
             - name: Create Version
-              run: lerna version ${{ steps.def-version.outputs.VERSION_ARGS }} --force-publish=* --yes
+              run: lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --yes
 
 #    - name: Authenticate with Registry
 #          run: echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc

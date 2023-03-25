@@ -1,0 +1,58 @@
+name: Uploady Release
+
+on:
+    workflow_dispatch:
+        inputs:
+           version:
+               type: choice
+               description: Which version to release?
+               required: false
+               default: "patch"
+               options:
+                   - "rc"
+                   - "patch"
+                   - "minor"
+                   - "major"
+
+branches:
+    - "release-*"
+
+#permissions:
+#    id-token: write
+#    contents: write
+
+jobs:
+    Release:
+        name: Release Uploady
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                node-version: "16.17"
+                cache: "yarn"
+                #cache-dependency-path: "yarn.lock"
+
+            - name: Install Deps
+              run: yarn --frozen-lockfile
+
+            - name: Prepare
+              run: yarn bootstrap
+
+            - name: Clean
+              run: yarn clean
+
+            - name: Define Version
+              id: def-version
+              run: |
+                  if [ ${{ inputs.version }} = 'refs/heads/main' ]; then
+                  echo "NEW_VERSION= ${{  }}" >> $GITHUB_OUTPUT
+                  echo "## Release Version: ${{ }} :rocket:" >> $GITHUB_STEP_SUMMARY
+
+            - name: Create Version
+              run: lerna version ${{ steps.def-version.outputs. }}
+
+#    - name: Authenticate with Registry
+#          run: echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+#          env:
+#              NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

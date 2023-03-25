@@ -46,11 +46,11 @@ jobs:
               id: def-version
               run: |
                   if [ ${{ inputs.version }} = 'refs/heads/main' ]; then
-                  echo "NEW_VERSION= ${{  }}" >> $GITHUB_OUTPUT
-                  echo "## Release Version: ${{ }} :rocket:" >> $GITHUB_STEP_SUMMARY
+                  echo "VERSION_ARGS= ${{  }}" >> $GITHUB_OUTPUT
+                  echo "## Release Version: ${{ steps.def-version.outputs.VERSION_ARGS }} :rocket:" >> $GITHUB_STEP_SUMMARY
 
             - name: Create Version
-              run: lerna version ${{ steps.def-version.outputs. }}
+              run: lerna version ${{ steps.def-version.outputs.VERSION_ARGS }}
 
 #    - name: Authenticate with Registry
 #          run: echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc

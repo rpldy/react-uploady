@@ -1,5 +1,5 @@
 {
-  "version": "1.4.3",
+  "version": "1.4.1",
   "name": "@rpldy/uploady",
   "description": "wrapper&context component to expose and provide react-uploady functionality",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -32,10 +32,10 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore *.test.js --ignore **/*.test.js --ignore **/*.mock.js;"
   },
   "dependencies": {
-    "@rpldy/life-events": "^1.4.3",
-    "@rpldy/shared": "^1.4.3",
-    "@rpldy/shared-ui": "^1.4.3",
-    "@rpldy/uploader": "^1.4.3"
+    "@rpldy/life-events": "^1.4.1",
+    "@rpldy/shared": "^1.4.1",
+    "@rpldy/shared-ui": "^1.4.1",
+    "@rpldy/uploader": "^1.4.1"
   },
   "peerDependencies": {
     "react": ">=16.8",

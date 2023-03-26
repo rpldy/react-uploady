@@ -1,5 +1,5 @@
 {
-  "version": "1.4.3",
+  "version": "1.4.1",
   "name": "@rpldy/native-uploady",
   "description": "wrapper&context component to expose and provide react-uploady functionality for react-native",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -33,7 +33,7 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore *.test.js --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared-ui": "^1.4.3"
+    "@rpldy/shared-ui": "^1.4.1"
   },
   "peerDependencies": {
     "react": ">=16.8"

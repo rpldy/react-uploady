@@ -1,7 +1,9 @@
 name: "Extract Version Changelog"
 description: "Take the log information from the changelog"
 outputs:
-    versionLog:
+    VERSION:
+        description: "The new semver version to be released"
+    VERSION_LOG:
         description: "The log info for the new release"
 runs:
     using: "node16"

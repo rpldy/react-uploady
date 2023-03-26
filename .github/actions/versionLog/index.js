@@ -7,12 +7,13 @@ const extractVersionLog = async () => {
         const { version, versionLog } = await extractChangelogNotesForCurrentVersion();
 
         if (!versionLog) {
-            throw new Error(`Failed to retrieve log info for ${version}`);
+            core.setFailed(`Failed to retrieve log info for ${version}`);
+        } else {
+            core.setOutput("VERSION", version);
+            core.setOutput("VERSION_LOG", versionLog);
+
+            console.log(`Retrieved version ${version} log = `, versionLog);
         }
-
-        console.log(`Retrieved version ${version} log = `, versionLog);
-
-        core.setOutput("versionLog", versionLog);
     } catch (ex) {
         core.setFailed(ex.message);
     }

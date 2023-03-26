@@ -55,20 +55,27 @@ jobs:
                     echo "using args for RC release"
                     echo "VERSION=prerelease --preid rc" >> $GITHUB_OUTPUT
                     echo "PUBLISH=--dist-tag next" >> $GITHUB_OUTPUT
+                    echo "PRE_RELEASE=true" >> $GITHUB_OUTPUT
                   elif [ '${{ inputs.version }}' = 'alpha' ]
                   then
                     echo "using args for Alpha release"
                     echo "VERSION=prerelease" >> $GITHUB_OUTPUT
                     echo "PUBLISH=--dist-tag alpha" >> $GITHUB_OUTPUT
+                    echo "PRE_RELEASE=true" >> $GITHUB_OUTPUT
                   else
                     echo "using args for ${{ inputs.version }} release"
                     echo "VERSION=${{ inputs.version }}" >> $GITHUB_OUTPUT
+                    echo "PRE_RELEASE=false" >> $GITHUB_OUTPUT
                   fi
 
             - name: Define GIT Author
               run: |
-                  git config user.email "$(git log -n 1 --pretty=format:%an)"
-                  git config user.name "$(git log -n 1 --pretty=format:%ae)"
+                  git config user.email "ci@react-uploady.org"
+                  git config user.name "Uploady CI"
+
+# uses last commit details:
+#"$(git log -n 1 --pretty=format:%an)"
+#"$(git log -n 1 --pretty=format:%ae)"
 
             - name: Create Version
               run: |
@@ -81,24 +88,36 @@ jobs:
             - name: Bundle Source
               run: yarn bundle:prod
 
-            - name: Publish
+            #    - name: Authenticate with Registry
+            #          run: echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+            #          env:
+            #              NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-            -   name: Test Changelog extract
-                id: version-log
-                uses: ./.github/actions/versionLog
+#            - name: Publish
+#              run: lerna publish ${{ steps.lerna-args.outputs.PUBLISH }} --yes
 
+            - name: Extract Version Changelog
+              id: version-log
+              uses: ./.github/actions/versionLog
 
+            - name: Create GH Release
+              uses: ncipollo/release-action@v1
+              with:
+                name: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
+                body: ${{ steps.version-log.outputs.VERSION_LOG }}
+                draft: true
+                prerelease: ${{ fromJSON(steps.lerna-args.outputs.PRE_RELEASE) }}
+                tag: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
 
-
+#            - name: Commit changes to GIT
+#              run: |
+#                git commit -a -m "chore: release v${{ steps.version-log.outputs.VERSION }}"
+#                git push
+#git tag -a ui-${{ steps.version-bump.outputs.NEW_VERSION }} -m "${{ steps.version-bump.outputs.GIT_PUSH_MSG }}"
+#git push origin ui-${{ steps.version-bump.outputs.NEW_VERSION }}
 
 #     echo "## PUBLISH ARGS: ${{ steps.lerna-args.outputs.PUBLISH }} :rocket:" >> $GITHUB_STEP_SUMMARY
 
-#    - name: Authenticate with Registry
-#          run: echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-#          env:
-#              NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 
-
-#    - name: Create GHRelease
 

@@ -43,6 +43,9 @@ jobs:
             - name: Install Deps
               run: yarn --frozen-lockfile
 
+            - name: Test Changelog extract
+              uses: ./.github/actions/versionLog
+
             - name: Prepare
               run: yarn bootstrap
 
@@ -66,8 +69,6 @@ jobs:
                     echo "using args for ${{ inputs.version }} release"
                     echo "VERSION=${{ inputs.version }}" >> $GITHUB_OUTPUT
                   fi
-                  echo "## Version ARGS: ${{ steps.lerna-args.outputs.VERSION }} :rocket:" >> $GITHUB_STEP_SUMMARY
-                  echo "## PUBLISH ARGS: ${{ steps.lerna-args.outputs.PUBLISH }} :rocket:" >> $GITHUB_STEP_SUMMARY
 
             - name: Define GIT Author
               run: |
@@ -75,9 +76,29 @@ jobs:
                   git config user.name "$(git log -n 1 --pretty=format:%ae)"
 
             - name: Create Version
-              run: lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --yes
+              run: |
+                  echo "## Version ARGS: ${{ steps.lerna-args.outputs.VERSION }} :rocket:" >> $GITHUB_STEP_SUMMARY
+                  lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --yes
+
+            - name: Build Source
+              run: yarn build
+
+            - name: Bundle Source
+              run: yarn bundle:prod
+
+
+
+
+
+
+#     echo "## PUBLISH ARGS: ${{ steps.lerna-args.outputs.PUBLISH }} :rocket:" >> $GITHUB_STEP_SUMMARY
 
 #    - name: Authenticate with Registry
 #          run: echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
 #          env:
 #              NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+
+
+#    - name: Create GHRelease
+

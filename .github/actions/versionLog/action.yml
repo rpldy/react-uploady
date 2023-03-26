@@ -1,0 +1,8 @@
+name: "Extract Version Changelog"
+description: "Take the log information from the changelog"
+outputs:
+    versionLog:
+        description: "The log info for the new release"
+runs:
+    using: "node16"
+    main: "index.js"

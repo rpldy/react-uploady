@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.4.2 (2023-03-26)
+
+this is a test 
+
+### more
+
+more test info
+
+
 ## 1.4.1 (2023-03-22)
 
 ### Bug fixes

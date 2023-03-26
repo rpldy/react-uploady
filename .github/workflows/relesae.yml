@@ -32,11 +32,22 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
+
             - uses: actions/setup-node@v3
               with:
                 node-version: "16.17"
                 cache: "yarn"
                 #cache-dependency-path: "yarn.lock"
+
+#    - name: Cache node_modules
+#          id: cache-node-modules
+#          uses: actions/cache@v3
+#          with:
+#          path: node_modules
+#          key: ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-${{ hashFiles('**/yarn.lock') }}
+#          restore-keys: |
+#              ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
+
 
             - name: Install Deps
               run: yarn --frozen-lockfile
@@ -88,13 +99,13 @@ jobs:
             - name: Bundle Source
               run: yarn bundle:prod
 
-            #    - name: Authenticate with Registry
-            #          run: echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-            #          env:
-            #              NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+            - name: Authenticate with NPM Registry
+              run: echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+              env:
+                NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-#            - name: Publish
-#              run: lerna publish ${{ steps.lerna-args.outputs.PUBLISH }} --yes
+            - name: Publish
+              run: lerna publish ${{ steps.lerna-args.outputs.PUBLISH }} --yes
 
             - name: Extract Version Changelog
               id: version-log

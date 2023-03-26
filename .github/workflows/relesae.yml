@@ -27,8 +27,9 @@ defaults:
         #working-directory:
 
 jobs:
-    Release:
+    release:
         name: Release Uploady
+        environment: "Release"
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3

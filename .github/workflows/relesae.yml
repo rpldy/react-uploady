@@ -97,14 +97,14 @@ jobs:
 
             - name: Publish
               echo "## Published: ${{ format('v{0}', steps.version-log.outputs.VERSION) }} :rocket:" >> $GITHUB_STEP_SUMMARY
-              run: lerna publish ${{ steps.lerna-args.outputs.PUBLISH }} --yes
+              run: lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --yes
 
             - name: Create GH Release
               uses: ncipollo/release-action@v1
               with:
                 name: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
                 body: ${{ steps.version-log.outputs.VERSION_LOG }}
-                draft: true
+                #draft: true
                 prerelease: ${{ fromJSON(steps.lerna-args.outputs.PRE_RELEASE) }}
                 tag: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
 

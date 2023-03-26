@@ -1,6 +1,6 @@
-const { logger } = require("./utils");
-const fs = require("fs");
-const MarkDownIt = require("markdown-it");
+const fs = require("fs"),
+    { logger } = require("./utils"),
+    MarkDownIt = require("markdown-it");
 
 const extractChangelogNotesForVersion = (version) => {
     logger.log(`Extracting changes from changelog for version ${version}`);

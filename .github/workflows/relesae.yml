@@ -17,8 +17,6 @@ on:
                    - "minor"
                    - "major"
 
-
-
 #permissions:
 #    id-token: write
 #    contents: write
@@ -42,9 +40,6 @@ jobs:
 
             - name: Install Deps
               run: yarn --frozen-lockfile
-
-            - name: Test Changelog extract
-              uses: ./.github/actions/versionLog
 
             - name: Prepare
               run: yarn bootstrap
@@ -86,6 +81,11 @@ jobs:
             - name: Bundle Source
               run: yarn bundle:prod
 
+            - name: Publish
+
+            -   name: Test Changelog extract
+                id: version-log
+                uses: ./.github/actions/versionLog
 
 
 

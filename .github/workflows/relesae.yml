@@ -96,8 +96,9 @@ jobs:
               uses: ./.github/actions/versionLog
 
             - name: Publish
-              echo "## Published: ${{ format('v{0}', steps.version-log.outputs.VERSION) }} :rocket:" >> $GITHUB_STEP_SUMMARY
-              run: lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --yes
+              run: |
+                lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --yes
+                echo "## Published: ${{ format('v{0}', steps.version-log.outputs.VERSION) }} :rocket:" >> $GITHUB_STEP_SUMMARY
 
             - name: Create GH Release
               uses: ncipollo/release-action@v1

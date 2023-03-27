@@ -43,6 +43,10 @@ jobs:
             - name: Install Deps
               run: yarn --frozen-lockfile
 
+            -   name: Extract Version Changelog
+                id: version-log
+                uses: ./.github/actions/versionLog
+
             - name: Prepare
               run: yarn bootstrap
 
@@ -90,10 +94,6 @@ jobs:
               run: echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
               env:
                 NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-            - name: Extract Version Changelog
-              id: version-log
-              uses: ./.github/actions/versionLog
 
             - name: Publish
               run: |

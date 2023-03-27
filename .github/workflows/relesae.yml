@@ -91,7 +91,7 @@ jobs:
               run: yarn bundle:prod
 
             - name: Authenticate with NPM Registry
-              run: echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+              run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
               env:
                 NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 

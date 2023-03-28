@@ -24,7 +24,6 @@ export type RawUploaderType = {
     abort: (id?: string) => void;
     abortBatch: (id: string) => void;
     getOptions: () => RawCreateOptions;
-    getPending: () => PendingBatch[];
     clearPending: () => void;
     on: OnAndOnceMethod;
     once: OnAndOnceMethod;

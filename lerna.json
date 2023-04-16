@@ -1,9 +1,9 @@
 {
-  "version": "1.4.0",
+  "version": "1.4.1",
   "npmClient": "yarn",
   "command": {
     "version": {
-      "allowBranch": "release"
+      "allowBranch": "release-*"
     },
     "publish": {
       "ignoreChanges": [

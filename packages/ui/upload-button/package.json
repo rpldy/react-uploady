@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0",
+  "version": "1.4.1",
   "name": "@rpldy/upload-button",
   "description": "upload button component and asUploadButton HOC",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -31,11 +31,11 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared-ui": "^1.4.0"
+    "@rpldy/shared-ui": "^1.4.1"
   },
   "devDependencies": {
-    "@rpldy/retry": "^1.4.0",
-    "@rpldy/uploady": "^1.4.0",
+    "@rpldy/retry": "^1.4.1",
+    "@rpldy/uploady": "^1.4.1",
     "flow-bin": "^0.199.1",
     "styled-components": "^5.3.5"
   },

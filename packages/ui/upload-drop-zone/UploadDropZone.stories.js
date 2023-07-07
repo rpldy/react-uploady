@@ -5,7 +5,7 @@ import { number } from "@storybook/addon-knobs";
 import { DndProvider, useDrop } from "react-dnd";
 import Backend, { NativeTypes } from "react-dnd-html5-backend";
 import Uploady, { UploadyContext } from "@rpldy/uploady";
-import { asUploadButton } from "@rpldy/upload-button";
+import UploadButton, { asUploadButton } from "@rpldy/upload-button";
 import UploadDropZone from "./src";
 import {
     useStoryUploadySetup,
@@ -75,12 +75,14 @@ export const WithDropHandler = (): Node => {
         return "https://i.pinimg.com/originals/51/bf/9c/51bf9c7fdf0d4303140c4949afd1d7b8.jpg";
     }, []);
 
-    return <Uploady debug
-                    multiple={multiple}
-                    destination={destination}
-                    enhancer={enhancer}
-                    grouped={grouped}
-                    maxGroupSize={groupSize}>
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+    >
 
         <StyledDropZone id="upload-drop-zone" onDragOverClassName="drag-over" dropHandler={dropHandler}>
             <div id="drag-text">Drag File(s) Here</div>
@@ -226,16 +228,17 @@ const DropZoneButton = asUploadButton(MyClickableDropZone);
 export const WithAsUploadButton = (): Node => {
 	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
-	return <Uploady debug
-					multiple={multiple}
-					destination={destination}
-					enhancer={enhancer}
-					grouped={grouped}
-					maxGroupSize={groupSize}>
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+    >
+        <p>Drop zone and upload button in a single component!</p>
 
-		<p>Drop zone and upload button in a single component!</p>
-
-		<DropZoneButton/>
+        <DropZoneButton/>
 	</Uploady>
 };
 
@@ -278,13 +281,14 @@ export const WithFullScreen = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize, extOptions } = useStoryUploadySetup();
     const indicatorRef = useRef(null);
 
-    return <Uploady debug
-                    multiple={multiple}
-                    destination={destination}
-                    enhancer={enhancer}
-                    grouped={grouped}
-                    maxGroupSize={groupSize}
-                    {...extOptions}
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+        {...extOptions}
     >
         <StyledFullScreenDropZone
             // enableOnContains={false}
@@ -314,17 +318,18 @@ export const WithFullScreen = (): Node => {
 
                 <h1>Drop files here</h1>
             </div>
-            <div className="dropIndicator" aria-hidden ref={indicatorRef} />
+            <div className="dropIndicator" aria-hidden ref={indicatorRef}/>
         </StyledFullScreenDropZone>
     </Uploady>;
 };
 
 export const WithDndTurnedOff = (): Node => {
     const { enhancer, destination, extOptions } = useStoryUploadySetup();
-    return <Uploady debug
-                    destination={destination}
-                    enhancer={enhancer}
-                    {...extOptions}
+    return (<Uploady
+        debug
+        destination={destination}
+        enhancer={enhancer}
+        {...extOptions}
     >
         <StyledDropZone
             id="upload-drop-zone"
@@ -334,8 +339,35 @@ export const WithDndTurnedOff = (): Node => {
             <div id="drag-text">Drag File(s) Here</div>
             <div id="drop-text">Drop File(s) Here</div>
         </StyledDropZone>
-    </Uploady>;
+    </Uploady>);
 };
 
+const StyledDropZoneWithButton = styled(StyledDropZone)`
+    &.drag-over {
+        button {
+            display: none;
+        }
+  }
+`;
+
+export const WithUploadButtonInside = (): Node => {
+    const innerButtonRef = useRef();
+
+    const { enhancer, destination, extOptions } = useStoryUploadySetup();
+    return (
+        <Uploady
+            debug
+            destination={destination}
+            enhancer={enhancer}
+            {...extOptions}
+        >
+            <StyledDropZoneWithButton
+                id="upload-drop-zone"
+                onDragOverClassName="drag-over"
+            >
+                <UploadButton ref={innerButtonRef}/>
+            </StyledDropZoneWithButton>
+        </Uploady>)
+}
 
 export default (getCsfExport(UploadDropZone, "Upload Drop Zone", readme, { pkg: "upload-drop-zone", section: "UI" }): CsfExport);

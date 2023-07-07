@@ -43,9 +43,9 @@ jobs:
             - name: Install Deps
               run: yarn --frozen-lockfile
 
-            -   name: Extract Version Changelog
-                id: version-log
-                uses: ./.github/actions/versionLog
+            - name: Extract Version Changelog
+              id: version-log
+              uses: ./.github/actions/versionLog
 
             - name: Prepare
               run: yarn bootstrap
@@ -110,6 +110,9 @@ jobs:
                 tag: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
 
 
+            - name: Revert changes
+
+              #TODO - lerna version + delte tag
 
 #            - name: Commit changes to GIT
 #              run: |

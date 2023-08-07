@@ -153,7 +153,7 @@
     "wait-on": "^7.0.1",
     "weak-napi": "^2.0.2",
     "webpack": "^5.9.0",
-    "webpack-cli": "^4.9.2",
+    "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.8.0",
     "webpack-virtual-modules": "^0.5.0",
     "xml2js": "^0.5.0",

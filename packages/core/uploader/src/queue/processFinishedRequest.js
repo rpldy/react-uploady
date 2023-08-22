@@ -54,7 +54,7 @@ const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], n
 
             if (info.state === FILE_STATES.FINISHED && item.completed < 100) {
                 //ensure we trigger progress event with completed = 100 for all items
-                queue.handleItemProgress(item, 100, item.file ? item.file.size : 0);
+                queue.handleItemProgress(item, 100, item.file ? item.file.size : 0, item.file ? item.file.size : 0);
             }
 
             if (FILE_STATE_TO_EVENT_MAP[item.state]) {

@@ -11,14 +11,15 @@ import type { Batch, BatchItem } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { ItemsSender, UploaderCreateOptions, BatchItemSenderSendMethod } from "./types";
 
-const reportItemsProgress = (items: BatchItem[], completed: number, loaded: number, trigger: TriggerMethod) => {
+const reportItemsProgress = (items: BatchItem[], completed: number, loaded: number, total: number, trigger: TriggerMethod) => {
     items.forEach((item: BatchItem) => {
         logger.debugLog(`uploady.uploader.processor: file: ${item.id} progress event: loaded(${loaded}) - completed(${completed})`);
 
         trigger(SENDER_EVENTS.ITEM_PROGRESS,
             item,
             completed,
-            loaded);
+            loaded,
+            total);
     });
 };
 
@@ -27,7 +28,7 @@ const onItemUploadProgress = (items: BatchItem[], batch: Batch, e: ProgressEvent
         completedPerItem = completed / items.length,
         loadedAverage = e.loaded / items.length;
 
-    reportItemsProgress(items, completedPerItem, loadedAverage, trigger);
+    reportItemsProgress(items, completedPerItem, loadedAverage, e.total, trigger);
 
     trigger(SENDER_EVENTS.BATCH_PROGRESS, batch);
 };

@@ -29,7 +29,7 @@ export type QueueState = {|
 	trigger: TriggerMethod,
     runCancellable: Cancellable,
 	sender: ItemsSender,
-    handleItemProgress: (BatchItem, number, number) => void,
+    handleItemProgress: (BatchItem, number, number, number) => void,
     clearAllUploads: () => void,
     clearBatchUploads: (string) => void,
 |};

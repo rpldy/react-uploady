@@ -80,6 +80,7 @@ interface BatchItemBase {
     uploadStatus: number;
     completed: number;
     loaded: number;
+    total: number;
     recycled: boolean;
     previousBatch?: string;
 }

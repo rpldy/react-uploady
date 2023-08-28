@@ -95,7 +95,7 @@ describe("onRequestFinished tests", () => {
 
 		const item = test.queueState.getState().items["u1"];
 		expect(test.queueState.handleItemProgress).toHaveBeenCalledWith(
-			item, 100, item.file.size);
+			item, 100, item.file.size, item.file.size);
 	});
 
 	it("should handle url item progress if not complete === 100", async () => {
@@ -103,7 +103,7 @@ describe("onRequestFinished tests", () => {
 
 		const item = test.queueState.getState().items["u2"];
 		expect(test.queueState.handleItemProgress).toHaveBeenCalledWith(
-			item, 100, 0);
+			item, 100, 0, 0);
 	});
 
 	it("for single item should finalize if last file in batch without active id found", async () => {

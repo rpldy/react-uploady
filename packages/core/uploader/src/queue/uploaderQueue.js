@@ -83,12 +83,13 @@ const createUploaderQueue = (
         return getBatchFromState(state, batch.id);
     };
 
-    const handleItemProgress = (item: BatchItem, completed: number, loaded: number) => {
+    const handleItemProgress = (item: BatchItem, completed: number, loaded: number, total: number) => {
         if (state.items[item.id]) {
             updateState((state: State) => {
                 const stateItem = state.items[item.id];
                 stateItem.loaded = loaded;
                 stateItem.completed = completed;
+                stateItem.total = total;
             });
 
             //trigger item progress event for the outside

@@ -51,6 +51,8 @@ type BatchItemBase = {|
 	completed: number,
 	//bytes uploaded
 	loaded: number,
+    //total bytes
+	total: number,
 	recycled: boolean,
     previousBatch: ?string;
 |};

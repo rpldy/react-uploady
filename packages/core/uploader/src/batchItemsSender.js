@@ -26,10 +26,9 @@ const reportItemsProgress = (items: BatchItem[], completed: number, loaded: numb
 const onItemUploadProgress = (items: BatchItem[], batch: Batch, e: ProgressEvent, trigger: TriggerMethod) => {
     const completed = Math.min(((e.loaded / e.total) * 100), 100),
         completedPerItem = completed / items.length,
-        loadedAverage = e.loaded / items.length,
-        total = e.total;
+        loadedAverage = e.loaded / items.length;
 
-    reportItemsProgress(items, completedPerItem, loadedAverage, total, trigger);
+    reportItemsProgress(items, completedPerItem, loadedAverage, e.total, trigger);
 
     trigger(SENDER_EVENTS.BATCH_PROGRESS, batch);
 };

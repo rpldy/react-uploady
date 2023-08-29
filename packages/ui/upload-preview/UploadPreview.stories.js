@@ -930,4 +930,6 @@ export const WithCropInForm = (): Node => {
     );
 };
 
-export default (getCsfExport(UploadPreview, "Upload Preview", readme, { pkg: "upload-preview", section: "UI" }): CsfExport);
+const previewStories: CsfExport = getCsfExport(UploadPreview, "Upload Preview", readme, { pkg: "upload-preview", section: "UI" });
+
+export default { ...previewStories, title: "UI/Upload Preview" }

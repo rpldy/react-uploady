@@ -370,4 +370,6 @@ export const WithUploadButtonInside = (): Node => {
         </Uploady>)
 }
 
-export default (getCsfExport(UploadDropZone, "Upload Drop Zone", readme, { pkg: "upload-drop-zone", section: "UI" }): CsfExport);
+const dropzoneStories: CsfExport = getCsfExport(UploadDropZone, "Upload Drop Zone", readme, { pkg: "upload-drop-zone", section: "UI" });
+
+export default { ...dropzoneStories, title: "UI/Upload Drop Zone" };

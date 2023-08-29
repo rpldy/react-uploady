@@ -612,5 +612,6 @@ export const TEST_CancelOnBatchAdd = (): Node => {
     );
 };
 
+const UploadyStories: CsfExport = getCsfExport(Uploady, "Uploady", readme, { pkg: "uploady", section: "UI" })
 
-export default (getCsfExport(Uploady, "Uploady", readme, { pkg: "uploady", section: "UI" }): CsfExport);
+export default { ...UploadyStories, title : "UI/Uploady" };

@@ -477,4 +477,6 @@ export const WithForm = (): Node => {
     );
 };
 
-export default (getCsfExport(UploadButton, "Upload Button", readme, { pkg: "upload-button", section: "UI" }): CsfExport);
+const UploadButtonStories: CsfExport = getCsfExport(UploadButton, "Upload Button", readme, { pkg: "upload-button", section: "UI" })
+
+export default { ...UploadButtonStories, title: "UI/Upload Button" };

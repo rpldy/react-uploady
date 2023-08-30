@@ -386,7 +386,7 @@ const ExampleRequestPreSend = () => {
                         "x-file-names-lengths": namesLengths,
                     }
                 },
-                ...(window.parent.__extPreSendOptions || {})
+                ...(window.__extPreSendOptions || {})
             }
         };
     });

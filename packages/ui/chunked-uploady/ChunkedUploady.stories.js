@@ -176,4 +176,6 @@ export const UMD_CoreChunkedUI = (): Element<"div"> => {
     </div>;
 };
 
-export default (getCsfExport(ChunkedUploady, "Chunked Uploady", readme, { pkg: "chunked-uploady", section: "UI" }): CsfExport);
+const chunkedUploadyStories: CsfExport = getCsfExport(ChunkedUploady, "Chunked Uploady", readme, { pkg: "chunked-uploady", section: "UI" })
+
+export default { ...chunkedUploadyStories, title: "UI/Chunked Uploady" };

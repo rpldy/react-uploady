@@ -13,11 +13,9 @@ const Badge = styled.span`
     margin-left: 4px;
 `;
 
-const VERSIONS = PUBLISHED_VERSIONS;
-
-const VersionBadge = ({ pkg, preText = "", className, withUrl }) => {
+const VersionBadge = ({ pkg, preText = "", className, withUrl, versions }) => {
     const info = !!pkg &&
-        VERSIONS.find(({ name }) => name === pkg);
+        versions.find(({ name }) => name === pkg);
 
     const badge = info ? <Badge
         className={`version-badge ${className}`}

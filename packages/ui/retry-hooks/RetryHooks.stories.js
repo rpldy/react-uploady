@@ -361,4 +361,6 @@ export const WithRetryAndPreview = (): Node => {
 	);
 };
 
-export default (getCsfExport(undefined, "Retry Hooks", readme, { pkg: "retry-hooks", section: "UI" }): CsfExport);
+const retryHooksStories: CsfExport = getCsfExport(undefined, "Retry Hooks", readme, { pkg: "retry-hooks", section: "UI" })
+
+export default { ...retryHooksStories, title: "UI/Retry Hooks"};

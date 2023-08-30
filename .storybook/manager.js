@@ -12,11 +12,18 @@ addons.setConfig({
     sidebar: {
         renderLabel: ({ name, isComponent }) => {
             //storybook doesnt pass all the CSF info for isComponent items :(
-            const pkg = isComponent && window._storyToPackage?.[name]
+            const pkg = isComponent && window._storyToPackage?.[name];
+
+            //before SB7 it was possible to add the Versions through the manager's webpack build but no longer... :(
+            const versions = document.getElementById("storybook-preview-iframe").contentWindow._getPackageVersions?.();
 
             return (<div>
                 {name}
-                {pkg && <VersionBadge pkg={pkg} />}
+                {pkg && versions &&
+                    <VersionBadge
+                        pkg={pkg}
+                        versions={versions}
+                    />}
             </div>);
         },
     }

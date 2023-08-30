@@ -90,19 +90,4 @@ module.exports = {
 
         return addEnvParams(config);
     },
-
-    managerWebpack: async (config) => {
-        //fixing issue with module imports not using extensions: https://github.com/webpack/webpack/issues/11467#issuecomment-691873586
-        config.module.rules.push({
-            test: /\.m?js/,
-            resolve: {
-                fullySpecified: false
-            }
-        });
-
-        return updateDefinePlugin(config, async (definitions) => ({
-            ...definitions,
-            "PUBLISHED_VERSIONS": await getAllPackagesVersions(config),
-        }));
-    },
 };

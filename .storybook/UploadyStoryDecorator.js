@@ -24,6 +24,10 @@ const StoryVersionBadge = styled(VersionBadge)`
     font-size: 12px;
 `;
 
+const VERSIONS = PUBLISHED_VERSIONS;
+
+window._getPackageVersions = () => VERSIONS;
+
 const UploadyStoryDecorator = (Story, context) => {
     const pkg = context.parameters.pkg;
     const fullPkgName = `@rpldy/${pkg}`;
@@ -32,7 +36,12 @@ const UploadyStoryDecorator = (Story, context) => {
         <Container>
             <InfoContainer>
                 {pkg &&
-                    <StoryVersionBadge pkg={fullPkgName} preText={fullPkgName + " "} withUrl/>}
+                    <StoryVersionBadge
+                        withUrl
+                        pkg={fullPkgName}
+                        preText={fullPkgName + " "}
+                        versions={VERSIONS}
+                    />}
             </InfoContainer>
 
             <Story/>

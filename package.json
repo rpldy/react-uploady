@@ -118,7 +118,7 @@
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-storybook": "^0.6.13",
     "fast-glob": "^3.2.7",
-    "flow-bin": "0.199.1",
+    "flow-bin": "0.215.1",
     "flow-copy-source": "^2.0.9",
     "flow-mono-cli": "^1.5.3",
     "fs-extra": "^11.1.0",

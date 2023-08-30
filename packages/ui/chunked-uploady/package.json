@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@rpldy/upload-button": "^1.4.1",
-    "@storybook/addon-knobs": "^6.4.0",
+    "@storybook/addon-knobs": "^7.0.2",
     "flow-bin": "^0.199.1"
   },
   "peerDependencies": {

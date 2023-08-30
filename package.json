@@ -91,6 +91,7 @@
     "@storybook/react": "^7.3.2",
     "@storybook/react-webpack5": "^7.3.2",
     "@types/react": "^18.0.27",
+    "@typescript-eslint/parser": "^6.5.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.5",
     "async": "^3.2.3",
     "babel-jest": "^29.4.2",

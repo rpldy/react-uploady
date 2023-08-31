@@ -39,7 +39,7 @@
     "react": ">=16.8"
   },
   "devDependencies": {
-    "flow-bin": "^0.199.1"
+    "flow-bin": "^0.215.1"
   },
   "publishConfig": {
     "access": "public"

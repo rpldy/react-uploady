@@ -69,7 +69,7 @@ export type PreviewsChangedHandler = (PreviewItem[]) => void;
 export type PreviewProps =  {|
     ...PreviewOptions,
 	//custom component to render the preview (default: img tag)
-	PreviewComponent?: React.ComponentType<$Shape<PreviewItem & { [key: string]: any; }>>,
+	PreviewComponent?: React.ComponentType<any>,
 	//ref will be set with API methods (PreviewMethods)
 	previewMethodsRef?: RefObject<PreviewMethods>,
 	//callback that will be called when preview items are loaded or changed

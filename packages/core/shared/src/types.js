@@ -139,7 +139,7 @@ export type TriggerCancellableOutcome = Promise<boolean> | Cancellable;
 
 export type Updater<T> = (string, ...args: mixed[]) => Promise<?T>;
 
-export type GetExact<T> = T & $Shape<T>;
+export type GetExact<T> = T & Partial<T>;
 
 export type RequestOptions = {
     method?: string,

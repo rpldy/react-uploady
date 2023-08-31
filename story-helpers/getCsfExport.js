@@ -3,6 +3,7 @@ export type CsfExport = {
     component: ?React$AbstractComponent<any, any>,
     title?: string,
     parameters: Object,
+    excludeStories: RegExp | Array<any>,
 };
 
 // const getCsfTitle = (title, options = {}) => options.section ? `${options.section}/${title}` : title;

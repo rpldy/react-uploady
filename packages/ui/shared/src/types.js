@@ -4,6 +4,11 @@ import type { UploadInfo, UploadOptions, Batch, BatchItem } from "@rpldy/shared"
 import type { UploaderCreateOptions } from "@rpldy/uploader";
 import type { OnAndOnceMethod, OffMethod, EventCallback } from "@rpldy/life-events";
 
+export type {
+    Batch,
+    BatchItem
+};
+
 export type PreSendData = { items: BatchItem[]; options: UploaderCreateOptions };
 
 export type Callback = (...args?: any) => ?any;

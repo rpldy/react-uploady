@@ -1,6 +1,6 @@
 import { interceptWithDelay } from "../intercept";
 import uploadFile, { uploadFileTimes } from "../uploadFile";
-import { ITEM_ABORT } from "../../constants";
+import { ITEM_ABORT, ITEM_FINISH, ITEM_START } from "../../constants";
 import { WAIT_LONG, WAIT_MEDIUM, WAIT_SHORT } from "../../constants";
 
 describe("RetryHooks - Queue", () => {
@@ -63,7 +63,9 @@ describe("RetryHooks - Queue", () => {
                     .should("be.disabled");
 
                 cy.storyLog().assertFileItemStartFinish(fileName, 1);
-                cy.storyLog().assertFileItemStartFinish(fileName2, 9);
+                cy.storyLog().assertLogPattern(ITEM_START, { times: 3 });
+                cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
+                cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 1 });
 
                 cy.get("button[data-test='queue-clear-button']")
                     .click();

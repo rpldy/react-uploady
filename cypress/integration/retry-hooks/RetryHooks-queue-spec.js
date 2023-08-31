@@ -7,15 +7,15 @@ describe("RetryHooks - Queue", () => {
     const fileName = "flower.jpg",
         fileName2 = "sea.jpg";
 
-    before(() => {
+    const loadStory = () =>
         cy.visitStory(
             "retryHooks",
             "with-retry-and-preview",
             { useMock: false }
         );
-    });
 
-    it.only("should use queue with retry", () => {
+    it("should use queue with retry", () => {
+        loadStory();
         interceptWithDelay(700);
 
         uploadFile(fileName, () => {
@@ -75,8 +75,7 @@ describe("RetryHooks - Queue", () => {
     });
 
     it("should abort and retry while batch still in progress", () => {
-        //reload to clear story log from window
-        cy.reload();
+        loadStory();
 
         interceptWithDelay(100);
 
@@ -99,8 +98,7 @@ describe("RetryHooks - Queue", () => {
     });
 
     it("should abort and retry after batch finished", () => {
-        //reload to clear story log from window
-        cy.reload();
+        loadStory();
         interceptWithDelay(200);
 
         uploadFileTimes(fileName, () => {

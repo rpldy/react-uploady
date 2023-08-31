@@ -4,9 +4,9 @@ import { DiGithubBadge, DiNpm } from "react-icons/di";
 import { TiSocialTwitter, TiSocialInstagram } from "react-icons/ti";
 
 const Container = styled.section`
-  background-color: #010916;
+    background-color: #010916;
     border: 1px solid #4b5763;
-    color: #b0b1b3;
+    color: #e2e3e5;
 
     position: relative;
     padding: 40px 10px;
@@ -24,14 +24,18 @@ const Container = styled.section`
     box-shadow: 2px 4px 8px 2px black;
 
     img {
-      width: 80%;
-      max-width: 500px;
+        width: 80%;
+        max-width: 500px;
     }
 
     .version {
-      display: block;
-      margin-bottom: 10px;
-        color: #FFF;
+        display: block;
+        margin-bottom: 10px;
+        color: #b8f3f3;
+    }
+
+    .title-color {
+        color: #cdd0d3;
     }
 `;
 
@@ -82,7 +86,7 @@ const Main = styled.main`
     }
 
     .docs-link {
-        color: #c5c7cc;
+        color: #a9cad0;
         font-size: 18px;
 
         &:hover {
@@ -111,9 +115,9 @@ const WelcomeReactUploady = () => {
                 src="https://res.cloudinary.com/yoav-cloud/image/upload/q_auto,w_1200,f_auto/v1587552934/rpldy/logo/react-uploady-text-logo-light"
                 alt="rpldy text logo light"/>
 
-            <h2>Welcome to React-Uploady's Storybook</h2>
+            <h2 className="title-color">Welcome to React-Uploady's Storybook</h2>
 
-            <h3>Current Version</h3>
+            <h3 className="title-color">Current Version</h3>
             {PUBLISHED_VERSIONS
                 .filter(({ name }) => ["@rpldy/uploady", "@rpldy/uploader"].includes(name))
                 .map(({ name, version }) =>
@@ -121,7 +125,7 @@ const WelcomeReactUploady = () => {
             }
 
             <br/>
-            <h3>React-Uploady Documentation</h3>
+            <h3 className="title-color">React-Uploady Documentation</h3>
             <a className="docs-link" href="https://react-uploady.org" target="_blank" rel="noreferrer noopener">https://react-uploady.org</a>
             <br/>
 

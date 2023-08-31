@@ -38,7 +38,7 @@
     "@rpldy/upload-button": "^1.4.1",
     "@rpldy/upload-url-input": "^1.4.1",
     "@storybook/addon-knobs": "^6.4.0",
-    "flow-bin": "^0.201.0",
+    "flow-bin": "^0.206.0",
     "react-image-crop": "^10.0.9",
     "styled-components": "^5.3.5"
   },

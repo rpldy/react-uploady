@@ -173,13 +173,13 @@ class ClassUsingCustomButton extends Component<any> {
 
     unsubscribeBatchStart: ?() => void = null;
 
-    componentDidMount(): * {
+    componentDidMount() {
         this.unsubscribeBatchStart = this.context.on(UPLOADER_EVENTS.BATCH_START, (batch) => {
             console.log(`>>>>> ClassUsingCustomButton - BATCH START - ${batch.id}`);
         });
     }
 
-    componentWillUnmount(): * {
+    componentWillUnmount() {
         if (this.unsubscribeBatchStart) {
             this.unsubscribeBatchStart();
         }

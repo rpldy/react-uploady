@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@rpldy/uploady": "^1.4.1",
-    "flow-bin": "^0.201.0"
+    "flow-bin": "^0.206.0"
   },
   "peerDependencies": {
     "react": ">=16.8",

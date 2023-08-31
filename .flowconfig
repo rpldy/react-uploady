@@ -18,6 +18,7 @@ untyped-type-import
 sketchy-null
 
 [options]
+exact_by_default=false
 experimental.const_params=true
 autoimports=true
 react.runtime=automatic

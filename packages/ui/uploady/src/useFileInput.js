@@ -5,7 +5,7 @@ import { useUploadyContext } from "@rpldy/shared-ui";
 import type { Destination } from "@rpldy/shared";
 import type { InputRef } from "@rpldy/shared-ui";
 
-type DestinationShape = $Shape<Destination>;
+type DestinationShape = Partial<Destination>;
 
 //https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#form-submission-algorithm
 const getUrl = (form: Element) => {
@@ -39,7 +39,7 @@ const getUrl = (form: Element) => {
 const getDestinationFromInput = (input: HTMLInputElement): ?DestinationShape => {
     const form = input.closest("form");
 
-    let destination: { filesParamName: ?string, method: ?string, url: ?string } = {
+    let destination: DestinationShape = {
         filesParamName: input.getAttribute("name"),
         method: undefined,
         url: undefined,

@@ -54,5 +54,7 @@ export type {
     UploadyProps,
     NoDomUploadyProps,
     PreSendData,
+    Batch,
+    BatchItem,
 } from "./types";
 

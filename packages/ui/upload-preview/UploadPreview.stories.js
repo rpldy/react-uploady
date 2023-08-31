@@ -501,6 +501,7 @@ type CropPreviewFieldCompProps = {
     name: string,
     url: string,
     setCropForItem: (string, Blob) => void,
+    ...
 };
 
 type BatchCropSelected =  ?{ url: ?string, id: ?string };
@@ -511,6 +512,7 @@ type CropperMultiCropProps = {
     setCropForItem: (string, ?Blob) => void,
     removePreview: ?RemovePreviewMethod,
     onPreviewSelected: StateSetter<BatchCropSelected>,
+    ...
 };
 
 const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview, onPreviewSelected } : CropperMultiCropProps) => {
@@ -864,8 +866,8 @@ const MyForm = () => {
     };
 
     useRequestPreSend(({ items }) => {
+        // $FlowExpectedError[incompatible-call]
         return {
-            // $FlowExpectedError[prop-missing]
             items: [{
                 ...items[0],
                 file: cropped?.data || items[0].file,

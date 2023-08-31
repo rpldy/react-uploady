@@ -10,7 +10,6 @@ import type { OnAndOnceMethod } from "@rpldy/life-events";
 import type { UploaderType } from "@rpldy/raw-uploader";
 import type { SendResult, SendMethod } from "@rpldy/sender";
 import type { CreateOptionsWithAbort } from "@rpldy/abort";
-import {  } from "@rpldy/sender/src";
 
 export type UploaderCreateOptions = {|
     ...CreateOptionsWithAbort,

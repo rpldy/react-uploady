@@ -22,7 +22,7 @@ type FileInputPortalProps = {|
     noPortal: boolean,
 |};
 
-type InputRef =  { current: null | HTMLInputElement } | ((null | HTMLInputElement) => mixed);
+type InputRef =  { current: null | HTMLInputElement, ... } | ((null | HTMLInputElement) => mixed);
 
 const NO_CONTAINER_ERROR_MSG = "Uploady - Container for file input must be a valid dom element";
 

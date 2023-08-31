@@ -82,8 +82,7 @@ Cypress.Commands.add("assertLogEntryContains", { prevSubject: true }, (storyLog,
 
 class StoryLogError extends Error{
     constructor(msg, prev) {
-        msg = prev ? msg + " - " + prev.message : msg
-        super(msg);
+        super(prev ? msg + " - " + prev.message : msg);
 
         if (prev) {
             this.stack = `${msg}
@@ -106,7 +105,7 @@ Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, e
             logLine = storyLog.find((item) => item.args[0] === eventName).args.slice(1);
         }
     } catch (ex){
-        throw new StoryLogError(`Failed to custom assert log entry: ${eventName}. log: ${JSON.stringify(storyLog)}`, ex)
+        throw new StoryLogError(`Failed to custom assert log entry: ${eventName}. log[${storyLog.length} items]: ${JSON.stringify(storyLog)}`, ex)
     }
 
     asserter(logLine, storyLog._env);

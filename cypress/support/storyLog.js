@@ -103,7 +103,7 @@ Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, e
             logLine = logLine.args.slice(1);
         } else {
             storyLog.forEach((item, index) => {
-               if (!item || item.args) {
+               if (!item || !item.args) {
                    throw new Error("found empty ITEM !!!! at index = " + index, item);
                }
             });

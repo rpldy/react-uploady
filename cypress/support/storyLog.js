@@ -102,9 +102,15 @@ Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, e
             expect(logLine.args[0], `expect log line ${options.index} with ${logLine.args[0]} to equal = ${eventName}`).to.equal(eventName);
             logLine = logLine.args.slice(1);
         } else {
+            storyLog.forEach((item, index) => {
+               if (!item || item.args) {
+                   throw new Error("found empty ITEM !!!! at index = " + index, item);
+               }
+            });
+
             logLine = storyLog.find((item) => item.args[0] === eventName).args.slice(1);
         }
-    } catch (ex){
+    } catch (ex) {
         throw new StoryLogError(`Failed to custom assert log entry: ${eventName}. log[${storyLog.length} items]: ${JSON.stringify(storyLog)}`, ex)
     }
 

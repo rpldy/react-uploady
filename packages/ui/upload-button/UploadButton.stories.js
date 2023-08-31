@@ -33,7 +33,7 @@ import UploadButton, { asUploadButton } from "./src";
 import readme from "./README.md";
 
 import type { Node, Element } from "react"
-import type { UploadyContextType } from "@rpldy/uploady";
+import type { Batch, BatchItem, UploadyContextType } from "@rpldy/uploady";
 
 export const Simple = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
@@ -88,16 +88,16 @@ export const WithEventListeners = (): Node => {
     const { setUpdater, logEvent } = useEventsLogUpdater();
 
     const listeners = useMemo(() => ({
-        [UPLOADER_EVENTS.BATCH_START]: (batch) => {
+        [UPLOADER_EVENTS.BATCH_START]: (batch: Batch) => {
             logEvent(`Batch Start - ${batch.id} - item count = ${batch.items.length}`);
         },
-        [UPLOADER_EVENTS.BATCH_FINISH]: (batch) => {
+        [UPLOADER_EVENTS.BATCH_FINISH]: (batch: Batch) => {
             logEvent(`Batch Finish - ${batch.id} - item count = ${batch.items.length}`);
         },
-        [UPLOADER_EVENTS.ITEM_START]: (item) => {
+        [UPLOADER_EVENTS.ITEM_START]: (item: BatchItem) => {
             logEvent(`Item Start - ${item.id} : ${item.file.name}`);
         },
-        [UPLOADER_EVENTS.ITEM_FINISH]: (item) => {
+        [UPLOADER_EVENTS.ITEM_FINISH]: (item: BatchItem) => {
             logEvent(`Item Finish - ${item.id} : ${item.file.name}`);
         },
     }), []);
@@ -173,13 +173,13 @@ class ClassUsingCustomButton extends Component<any> {
 
     unsubscribeBatchStart: ?() => void = null;
 
-    componentDidMount(): * {
+    componentDidMount() {
         this.unsubscribeBatchStart = this.context.on(UPLOADER_EVENTS.BATCH_START, (batch) => {
             console.log(`>>>>> ClassUsingCustomButton - BATCH START - ${batch.id}`);
         });
     }
 
-    componentWillUnmount(): * {
+    componentWillUnmount() {
         if (this.unsubscribeBatchStart) {
             this.unsubscribeBatchStart();
         }
@@ -477,4 +477,6 @@ export const WithForm = (): Node => {
     );
 };
 
-export default (getCsfExport(UploadButton, "Upload Button", readme, { pkg: "upload-button", section: "UI" }): CsfExport);
+const UploadButtonStories: CsfExport = getCsfExport(UploadButton, "Upload Button", readme, { pkg: "upload-button", section: "UI" })
+
+export default { ...UploadButtonStories, title: "UI/Upload Button" };

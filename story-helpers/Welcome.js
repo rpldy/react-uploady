@@ -140,7 +140,7 @@ const WelcomeReactUploady = () => {
         </Container>
 
         <InfoContainer>
-            <h3>Created By Yoav Niran</h3>
+            <h3>Created By <a href="https://react-uploady.org/docs/yoav/" target="_blank" rel="noopener">Yoav Niran</a></h3>
             <ul className="personal-links">
                 <li>
                     <a href="https://twitter.com/poeticGeek" target="_blank" rel="noopener" title="@poeticGeek">

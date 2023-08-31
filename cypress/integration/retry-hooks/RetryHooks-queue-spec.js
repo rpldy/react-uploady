@@ -1,21 +1,21 @@
 import { interceptWithDelay } from "../intercept";
 import uploadFile, { uploadFileTimes } from "../uploadFile";
-import { ITEM_ABORT } from "../../constants";
+import { ITEM_ABORT, ITEM_FINISH, ITEM_START } from "../../constants";
 import { WAIT_LONG, WAIT_MEDIUM, WAIT_SHORT } from "../../constants";
 
 describe("RetryHooks - Queue", () => {
     const fileName = "flower.jpg",
         fileName2 = "sea.jpg";
 
-    before(() => {
+    const loadStory = () =>
         cy.visitStory(
             "retryHooks",
             "with-retry-and-preview",
             { useMock: false }
         );
-    });
 
-    it.only("should use queue with retry", () => {
+    it("should use queue with retry", () => {
+        loadStory();
         interceptWithDelay(700);
 
         uploadFile(fileName, () => {
@@ -63,7 +63,9 @@ describe("RetryHooks - Queue", () => {
                     .should("be.disabled");
 
                 cy.storyLog().assertFileItemStartFinish(fileName, 1);
-                cy.storyLog().assertFileItemStartFinish(fileName2, 9);
+                cy.storyLog().assertLogPattern(ITEM_START, { times: 3 });
+                cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
+                cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 1 });
 
                 cy.get("button[data-test='queue-clear-button']")
                     .click();
@@ -75,8 +77,7 @@ describe("RetryHooks - Queue", () => {
     });
 
     it("should abort and retry while batch still in progress", () => {
-        //reload to clear story log from window
-        cy.reload();
+        loadStory();
 
         interceptWithDelay(100);
 
@@ -99,8 +100,7 @@ describe("RetryHooks - Queue", () => {
     });
 
     it("should abort and retry after batch finished", () => {
-        //reload to clear story log from window
-        cy.reload();
+        loadStory();
         interceptWithDelay(200);
 
         uploadFileTimes(fileName, () => {

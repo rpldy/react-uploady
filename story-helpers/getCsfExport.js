@@ -1,9 +1,12 @@
 // @flow
 export type CsfExport = {
     component: ?React$AbstractComponent<any, any>,
-    title: string,
+    title?: string,
     parameters: Object,
+    excludeStories: RegExp | Array<any>,
 };
+
+// const getCsfTitle = (title, options = {}) => options.section ? `${options.section}/${title}` : title;
 
 const getCsfExport = (component: ?React$AbstractComponent<any, any>, title: string, readme: any, options: any = {}): CsfExport => {
 
@@ -15,7 +18,8 @@ const getCsfExport = (component: ?React$AbstractComponent<any, any>, title: stri
 
     return {
         component,
-        title: options.section ? `${options.section}/${title}` : title,
+        //SB7 forces title to be part of the exported object :(
+        // title: options.section ? `${options.section}/${title}` : title,
         parameters: {
             pkg: options.pkg,
             viewMode: "story",

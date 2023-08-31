@@ -1,5 +1,16 @@
 const _get = require("lodash/get");
 
+class StoryLogError extends Error{
+    constructor(msg, prev) {
+        super(prev ? msg + " - " + prev.message : msg);
+
+        if (prev) {
+            this.stack = `${msg}
+        ${prev.stack}`;
+        }
+    }
+}
+
 const isObject = (obj) => obj && typeof obj === "object";
 
 const isContains = (a, b) => {
@@ -83,15 +94,18 @@ Cypress.Commands.add("assertLogEntryContains", { prevSubject: true }, (storyLog,
 Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, eventName, asserter, options = {}) => {
     let logLine;
 
-    if (options.all) {
-        logLine = storyLog.filter((item) => item.args[0] === eventName).map((item) => item.args.slice(1));
-    }
-    else if (options.index) {
-        logLine = storyLog[options.index];
-        expect(logLine.args[0], `expect log line ${options.index} with ${logLine.args[0]} to equal = ${eventName}`).to.equal(eventName);
-        logLine = logLine.args.slice(1);
-    } else {
-        logLine = storyLog.find((item) => item.args[0] === eventName).args.slice(1);
+    try {
+        if (options.all) {
+            logLine = storyLog.filter((item) => item.args[0] === eventName).map((item) => item.args.slice(1));
+        } else if (options.index) {
+            logLine = storyLog[options.index];
+            expect(logLine.args[0], `expect log line ${options.index} with ${logLine.args[0]} to equal = ${eventName}`).to.equal(eventName);
+            logLine = logLine.args.slice(1);
+        } else {
+            logLine = storyLog.find((item) => item.args[0] === eventName).args.slice(1);
+        }
+    } catch (ex) {
+        throw new StoryLogError(`Failed to custom assert log entry: ${eventName}. log[${storyLog.length} items]: ${JSON.stringify(storyLog)}`, ex)
     }
 
     asserter(logLine, storyLog._env);

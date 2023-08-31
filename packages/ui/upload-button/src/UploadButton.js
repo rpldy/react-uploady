@@ -5,7 +5,7 @@ import asUploadButton from "./asUploadButton";
 import type { ComponentType } from "react";
 
 const UploadButton = (asUploadButton(forwardRef(
-    (props, ref) =>
+    (props, ref:  {current: null | HTMLButtonElement} | ((null | HTMLButtonElement) => mixed)) =>
         <button ref={ref} {...props}/>)): ComponentType<any>);
 
 export default UploadButton;

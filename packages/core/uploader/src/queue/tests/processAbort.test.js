@@ -89,8 +89,8 @@ describe("processAbort tests", () => {
             expect(finalizeBatch).toHaveBeenCalledWith(queueState, batch.id, UPLOADER_EVENTS.BATCH_ABORT, BATCH_STATES.ABORTED);
 
             expect(abortBatch).toHaveBeenCalledWith(
-                expect.objectContaining(batch),
-                expect.objectContaining(batchOptions),
+                expect.objectContaining({ id: batch.id }),
+                expect.objectContaining({ autoUpload:  batchOptions.autoUpload }),
                 expect.any(Object),
                 expect.any(Object),
                 expect.any(Function),

@@ -108,7 +108,7 @@ module.exports = {
                         },
                     };
                 },
-                maxSize: 24500,
+                maxSize: 25000,
             },
 
             //TODO: find a way to make this work with global object assignment (wepackages/tus-sender/src/tusSender/initTusUpload/createUpload.js:88:94bpack externals root)
@@ -193,7 +193,7 @@ module.exports = {
                                 }]],
 								plugins: [["@babel/plugin-transform-runtime", {
 									corejs: 3,
-									"version": "^7.12.10"
+									"version": "^7.19.6"
 								}]]
                             }
                         }

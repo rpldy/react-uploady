@@ -37,6 +37,7 @@ const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = fa
         batchId,
         state,
         uploadStatus: 0,
+        total: 0,
         completed: 0,
         loaded: 0,
         recycled: isAlreadyBatchItem,

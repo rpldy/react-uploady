@@ -279,7 +279,7 @@ const StyledFullScreenDropZone = styled(UploadDropZone)`
 
 export const WithFullScreen = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize, extOptions } = useStoryUploadySetup();
-    const indicatorRef = useRef(null);
+    const indicatorRef = useRef<null | HTMLDivElement>(null);
 
     return <Uploady
         debug
@@ -351,9 +351,8 @@ const StyledDropZoneWithButton = styled(StyledDropZone)`
 `;
 
 export const WithUploadButtonInside = (): Node => {
-    const innerButtonRef = useRef();
-
     const { enhancer, destination, extOptions } = useStoryUploadySetup();
+
     return (
         <Uploady
             debug
@@ -365,9 +364,12 @@ export const WithUploadButtonInside = (): Node => {
                 id="upload-drop-zone"
                 onDragOverClassName="drag-over"
             >
-                <UploadButton ref={innerButtonRef}/>
+                <UploadButton />
             </StyledDropZoneWithButton>
-        </Uploady>)
+        </Uploady>
+    );
 }
 
-export default (getCsfExport(UploadDropZone, "Upload Drop Zone", readme, { pkg: "upload-drop-zone", section: "UI" }): CsfExport);
+const dropzoneStories: CsfExport = getCsfExport(UploadDropZone, "Upload Drop Zone", readme, { pkg: "upload-drop-zone", section: "UI" });
+
+export default { ...dropzoneStories, title: "UI/Upload Drop Zone" };

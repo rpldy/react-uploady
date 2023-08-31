@@ -1,5 +1,16 @@
 const _get = require("lodash/get");
 
+class StoryLogError extends Error{
+    constructor(msg, prev) {
+        super(prev ? msg + " - " + prev.message : msg);
+
+        if (prev) {
+            this.stack = `${msg}
+        ${prev.stack}`;
+        }
+    }
+}
+
 const isObject = (obj) => obj && typeof obj === "object";
 
 const isContains = (a, b) => {
@@ -80,17 +91,6 @@ Cypress.Commands.add("assertLogEntryContains", { prevSubject: true }, (storyLog,
     expect(match, `expect log line ${index} to contain obj`).to.exist;
 });
 
-class StoryLogError extends Error{
-    constructor(msg, prev) {
-        super(prev ? msg + " - " + prev.message : msg);
-
-        if (prev) {
-            this.stack = `${msg}
-        ${prev.stack}`;
-        }
-    }
-}
-
 Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, eventName, asserter, options = {}) => {
     let logLine;
 
@@ -102,12 +102,6 @@ Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, e
             expect(logLine.args[0], `expect log line ${options.index} with ${logLine.args[0]} to equal = ${eventName}`).to.equal(eventName);
             logLine = logLine.args.slice(1);
         } else {
-            storyLog.forEach((item, index) => {
-               if (!item || !item.args) {
-                   throw new Error("found empty ITEM !!!! at index = " + index, item);
-               }
-            });
-
             logLine = storyLog.find((item) => item.args[0] === eventName).args.slice(1);
         }
     } catch (ex) {

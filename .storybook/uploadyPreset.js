@@ -4,12 +4,12 @@ const webpack = require("webpack"),
     { getUploadyVersion } = require("../scripts/utils");
 
 const getAllPackagesVersions = async () => {
-    const pkgs = await getMatchingPackages({});
+    const pkgs = getMatchingPackages();
 
     console.log("...Retrieving package versions for stories");
 
     const pkgVersions = await Promise.all(
-        pkgs.packages.map(((pkg) =>
+        pkgs.map(((pkg) =>
             getCurrentNpmVersion(pkg))));
 
     return JSON.stringify(pkgVersions);
@@ -19,7 +19,7 @@ const getCurrentNpmVersion = async (pkg) => {
     let result = null;
 
     try {
-        result = { name: pkg.name, version: pkg.version };
+        result = { name: pkg.name, version: pkg.get("version") };
     } catch (e) {
         console.error("FAILED TO GET NPM VERSION !!!!!", e);
     }

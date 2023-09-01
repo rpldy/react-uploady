@@ -1,11 +1,12 @@
+const path = require("path");
 const { getMatchingPackages } = require("./scripts/lernaUtils");
 
 module.exports = () => {
     const packages = getMatchingPackages();
 
     const packageMapper = packages.reduce((res, p) => {
-        res[`^${p.name}$`] = `${p.location}/src/index.js`;
-        res[`^${p.name}\/(.*)`] = `${p.location}/$1`;
+        res[`^${p.name}$`] = path.resolve(`./${p.location}/src/index.js`);
+        res[`^${p.name}\/(.*)`] = path.resolve(`./${p.location}/$1`);
         return res;
     },{});
 

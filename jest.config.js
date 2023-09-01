@@ -1,7 +1,7 @@
 const { getMatchingPackages } = require("./scripts/lernaUtils");
 
-module.exports = async () => {
-    const { packages } = await getMatchingPackages({});
+module.exports = () => {
+    const packages = getMatchingPackages();
 
     const packageMapper = packages.reduce((res, p) => {
         res[`^${p.name}$`] = `${p.location}/src/index.js`;

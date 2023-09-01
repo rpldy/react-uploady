@@ -78,7 +78,8 @@ const getEntriesFromDefinition = ({ pkgs, exclude }, type, repoPackages) => {
     });
 
     return _.flatten(entries)
-        .filter((p) => !exclude || !isExcluded(p, exclude));
+        .filter((p) => !exclude || !isExcluded(p, exclude))
+        .map((entry) => (!_.isString(entry) || entry.startsWith("./")) ? entry : `./${entry}`);
 };
 
 const validateSize = (type, name, wpResult) => {
@@ -106,7 +107,7 @@ const runWebpack = (type, name, config) => {
 
                     if (err || stats.hasErrors()) {
                         err = err || info?.errors;
-                        logger.error(`!!! failed to compile bundle: ${name} (type: ${type})`, err);
+                        logger.error(`!!! failed to compile bundle: ${name} (type: ${type})`, JSON.stringify(err));
                         reject();
                     } else {
                         resolve({
@@ -235,7 +236,7 @@ const createBundleFromDefinition = async (type, name, definition, repoPackages) 
 const doBundle = async () => {
     logger.info(`>>> bundling packages (mode: production = ${isProduction})`);
 
-    const { packages: repoPackages } = await getMatchingPackages({});
+    const repoPackages = getMatchingPackages();
     const bundlers = [];
 
     if (options.bundle) {

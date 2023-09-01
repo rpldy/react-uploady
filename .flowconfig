@@ -30,7 +30,7 @@ module.name_mapper='^html-dir-content$' -> '<PROJECT_ROOT>/node_modules/html-dir
 module.name_mapper='^@storybook/addon-knobs' -> '<PROJECT_ROOT>/node_modules/@storybook/addon-knobs/dist/index.js'
 module.name_mapper='^react-image-crop$' -> '<PROJECT_ROOT>/node_modules/react-image-crop/dist/index.js'
 module.name_mapper='^styled-components$' -> '<PROJECT_ROOT>/node_modules/styled-components/dist/styled-components.cjs.js'
-module.name_mapper='^react-dnd$' -> '<PROJECT_ROOT>/node_modules/react-dnd/dist/cjs/index.js'
+module.name_mapper='^react-dnd$' -> '<PROJECT_ROOT>/node_modules/react-dnd/dist/index.js'
 module.name_mapper='^react-dnd-html5-backend$' -> '<PROJECT_ROOT>/node_modules/react-dnd-html5-backend/dist/cjs/index.js'
 module.name_mapper='^rc-progress$' -> '<PROJECT_ROOT>/node_modules/rc-progress/es/index.js'
 #tricking flow so it doesnt complain about not able to import README files in storybook

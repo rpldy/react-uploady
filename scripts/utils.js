@@ -1,14 +1,52 @@
 const fs = require("fs"),
     path = require("path"),
+    fsExtra = require("fs-extra"),
     chalk = require("chalk"),
     uploadyPkg = require("../packages/ui/uploady/package.json");
 
-const isDevDep = (pkgJson, depName) => {
-    return !!(pkgJson.devDependencies && pkgJson.devDependencies[depName]);
+const DEP_TYPES = {
+    dependencies: "regular",
+    devDependencies: "dev",
+    peerDependencies: "peer",
 };
 
-const isPeerDep = (pgkJson, depName) => {
-    return !!(pgkJson.peerDependencies && pgkJson.peerDependencies[depName]);
+const savePackageJson = async (pkgJson) => {
+    let result;
+    const file = path.resolve(pkgJson.location, "package.json");
+    try {
+        result = await fsExtra.writeJson(
+            file,
+            pkgJson.json,
+            { spaces: 2 }
+        )
+    } catch (ex){
+        console.log("failed to write to file: " + file)
+        throw ex;
+    }
+
+    return result;
+};
+
+const getDepOfType = (pkgJson, depName, listName) => {
+    const list = pkgJson.get(listName);
+    const depVersion = list?.[depName];
+
+    if (pkgJson.name === "@rpldy/upload-drop-zone") {
+        console.log("!!!!!!! LOOKING AT LIST", { depVersion, listName, list, raw: pkgJson.json })
+    }
+
+    return depVersion ? {
+        name: depName,
+        version: depVersion,
+        type: DEP_TYPES[listName],
+        list,
+    } : null;
+};
+
+const getPkgDependency = (pkgJson, depName) => {
+    return getDepOfType(pkgJson, depName, "dependencies") ||
+        getDepOfType(pkgJson, depName, "devDependencies") ||
+        getDepOfType(pkgJson, depName, "peerDependencies");
 };
 
 const getPackageName = (dir) => {
@@ -46,10 +84,11 @@ const logger = {
 };
 
 module.exports = {
+    DEP_TYPES,
     logger,
     getPackageName,
     copyFilesToPackage,
-    isDevDep,
-    isPeerDep,
+    savePackageJson,
     getUploadyVersion,
+    getPkgDependency,
 };

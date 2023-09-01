@@ -1,29 +1,18 @@
-const { getFilteredPackages } = require("@lerna/filter-options"),
-    { ListCommand } = require("@lerna/list");
+const { getPackages } = require("@monorepo-utils/package-utils");
 
+const getMatchingPackages =  () => {
+    const pkgs = getPackages(".");
 
-class DepListCommand extends ListCommand {
-    initialize() {
-        this.result = new Promise((resolve) => {
-            //replace the underlying List command result with objects (and not a string)
-            getFilteredPackages(this.packageGraph, this.execOpts, this.options)
-                .then((packages) => {
-                    resolve({
-                        packages,
-                        graph: this.packageGraph
-                    });
-                });
-        });
-
-        //stop the underlying List command from executing
-        return Promise.resolve(false);
-    }
-}
-
-const getMatchingPackages = async (argv) => {
-    const cmd = new DepListCommand(argv);
-    await cmd.runner;
-    return await cmd.result;
+    return pkgs.map((pkg) => {
+        return {
+            name: pkg.packageJSON.name,
+            location: pkg.location,
+            json: pkg.packageJSON,
+            get(field){
+                return pkg.packageJSON[field];
+            }
+        };
+    });
 };
 
 module.exports = {

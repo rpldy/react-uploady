@@ -83,6 +83,7 @@
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
     "@commitlint/config-lerna-scopes": "^17.4.2",
+    "@monorepo-utils/package-utils": "^2.10.2",
     "@storybook/addon-actions": "^7.4.0",
     "@storybook/addon-console": "^2.0.0",
     "@storybook/addon-docs": "7.4.0",

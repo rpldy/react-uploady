@@ -1,6 +1,6 @@
 const fs = require("fs"),
     path = require("path"),
-    fsExtra = require("fs-extra"),
+    fsExtra = !process.browser && require("fs-extra"),
     chalk = require("chalk"),
     uploadyPkg = require("../packages/ui/uploady/package.json");
 

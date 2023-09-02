@@ -36,6 +36,10 @@ describe("batchHelpers tests", () => {
                 completed: 100,
             };
 
+            const batchOptions = {
+                autoUpload: false,
+            };
+
             const queueState = getQueueState({
                 currentBatch: "b1",
                 items: {
@@ -44,7 +48,7 @@ describe("batchHelpers tests", () => {
                     "u3": {},
                 },
                 batches: {
-                    b1: { batch, finishedCounter: 2 },
+                    b1: { batch, batchOptions, finishedCounter: 2 },
                 },
                 batchesStartPending: ["b1"],
             });
@@ -60,8 +64,8 @@ describe("batchHelpers tests", () => {
             const updatedState = queueState.getState();
 
             expect(updatedState.batches.b1).toBeUndefined();
-            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedBatch);
-            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINALIZE, expectedBatch);
+            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedBatch, batchOptions);
+            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINALIZE, expectedBatch, batchOptions);
             expect(queueState.trigger).not.toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS, expect.any(Object));
             expect(finalizeItem).toHaveBeenCalledTimes(2);
             expect(finalizeItem).toHaveBeenCalledWith(expect.any(Object), "u1", true);
@@ -82,6 +86,10 @@ describe("batchHelpers tests", () => {
                 completed: 100,
             };
 
+            const batchOptions = {
+                autoUpload: false,
+            };
+
             const queueState = getQueueState({
                 currentBatch: "b0",
                 items: {
@@ -90,7 +98,7 @@ describe("batchHelpers tests", () => {
                     "u3": {},
                 },
                 batches: {
-                    b1: { batch, finishedCounter: 2 },
+                    b1: { batch, batchOptions, finishedCounter: 2 },
                 },
                 batchesStartPending: ["b1"],
             });
@@ -106,7 +114,7 @@ describe("batchHelpers tests", () => {
             const updatedState = queueState.getState();
 
             expect(updatedState.batches.b1).toBeUndefined();
-            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedBatch);
+            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedBatch, batchOptions);
             expect(queueState.trigger).not.toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS, expect.any(Object));
             expect(updatedState.currentBatch).toBe("b0");
             expect(updatedState.batchesStartPending).toHaveLength(0);
@@ -128,6 +136,10 @@ describe("batchHelpers tests", () => {
                 completed: 90
             };
 
+            const batchOptions = {
+                autoUpload: false,
+            };
+
             const queueState = getQueueState({
                 currentBatch: "b1",
                 items: {
@@ -136,7 +148,7 @@ describe("batchHelpers tests", () => {
                     "u3": {},
                 },
                 batches: {
-                    b1: { batch, finishedCounter: 2 },
+                    b1: { batch, batchOptions, finishedCounter: 2 },
                 },
                 batchesStartPending: [],
             });
@@ -162,8 +174,8 @@ describe("batchHelpers tests", () => {
             const updatedState = queueState.getState();
 
             expect(updatedState.batches.b1).toBeUndefined();
-            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS, expectedLastProgressBatch);
-            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedFinishedBatch);
+            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS, expectedLastProgressBatch, batchOptions);
+            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_FINISH, expectedFinishedBatch, batchOptions);
             expect(updatedState.currentBatch).toBeNull();
         });
 
@@ -366,13 +378,17 @@ describe("batchHelpers tests", () => {
 				items: Object.values(items).map((i) => ({ ...i, changed: true }))
 			};
 
+            const batchOptions = {
+                autoUpload: false,
+            };
+
 			const queueState = getQueueState({
 				items: {
 					...items,
 					"u4": { id: "u4", batchId: "b2" },
 				},
 				batches: {
-					"b1": { batch: cancelledBatch, },
+					"b1": { batch: cancelledBatch, batchOptions },
 					"b2": {}
 				},
                 itemQueue: { "b1": [...ids], "b2": ["u4"] },
@@ -394,6 +410,7 @@ describe("batchHelpers tests", () => {
 					state: BATCH_STATES.CANCELLED,
 					items: eventItems,
 				}),
+                batchOptions
 			);
 
             expect(queueState.trigger).toHaveBeenCalledWith(
@@ -403,6 +420,7 @@ describe("batchHelpers tests", () => {
                     state: BATCH_STATES.CANCELLED,
                     items: eventItems,
                 }),
+                batchOptions
             );
 
 			const updatedState = queueState.getState();
@@ -552,7 +570,7 @@ describe("batchHelpers tests", () => {
 						queueState.getState().items.u1,
 						queueState.getState().items.u2,
 					]
-				}));
+				}), {});
 		});
 	});
 
@@ -852,13 +870,15 @@ describe("batchHelpers tests", () => {
                 items: Object.values(items).map((i) => ({ ...i, changed: true }))
             };
 
+            const batchOptions = { userData: { test: "123" } };
+
             const queueState = getQueueState({
                 items: {
                     ...items,
                     "u4": { id: "u4", batchId: "b2" },
                 },
                 batches: {
-                    "b1": { batch: failedBatch, },
+                    "b1": { batch: failedBatch, batchOptions },
                     "b2": {}
                 },
                 itemQueue: { "b1": [...ids], "b2": ["u4"] },
@@ -881,6 +901,7 @@ describe("batchHelpers tests", () => {
                     items: eventItems,
                     additionalInfo: message,
                 }),
+                batchOptions,
             );
 
             expect(queueState.trigger).toHaveBeenCalledWith(
@@ -890,6 +911,7 @@ describe("batchHelpers tests", () => {
                     state: BATCH_STATES.ERROR,
                     items: eventItems,
                 }),
+                batchOptions
             );
 
             const updatedState = queueState.getState();

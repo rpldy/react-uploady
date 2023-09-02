@@ -11,6 +11,7 @@ import {
     removePendingBatches,
     clearBatchData,
     cancelBatchWithId,
+    triggerUploaderBatchEvent,
 } from "./batchHelpers";
 
 import type { TriggerCancellableOutcome, Batch, BatchItem, UploadOptions } from "@rpldy/shared";
@@ -120,7 +121,7 @@ const createUploaderQueue = (
                 stateBatch.loaded = loaded;
             });
 
-            trigger(UPLOADER_EVENTS.BATCH_PROGRESS, state.batches[batch.id].batch);
+            triggerUploaderBatchEvent(queueState, batch.id, UPLOADER_EVENTS.BATCH_PROGRESS);
         }
     };
 

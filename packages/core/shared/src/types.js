@@ -129,6 +129,8 @@ export type UploadOptions = {|
     isSuccessfulCall?: IsSuccessfulCall,
     //the pending/active item count threshold from which to start using the performant abort mechanism
     fastAbortThreshold?: number,
+    //metadata set by the user and isn't used for the upload in any way, a convenience to pass data around
+    userData?: any,
 |};
 
 export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];

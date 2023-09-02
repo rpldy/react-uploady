@@ -352,7 +352,7 @@ const UploadFormWithInternalInput = () => {
     </>;
 };
 
-export const withExposedInternalInput = (): Node => {
+export const WithExposedInternalInput = (): Node => {
     const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
 
     return <Uploady

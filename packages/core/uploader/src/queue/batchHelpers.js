@@ -218,15 +218,15 @@ const cleanUpFinishedBatches = (queue: QueueState) => {
 
 const triggerUploaderBatchEvent = (queue: QueueState, batchId: string, event: string) => {
     const state = queue.getState(),
-        batch = getBatchFromState(state, batchId), //get the most uptodate batch data
+        { batch, batchOptions } = state.batches[batchId], //get the most up-to-date batch data
         stateItems = state.items;
 
     const eventBatch = {
-		...unwrap(batch),
-		items: batch.items.map(({ id }: BatchItem) => unwrap(stateItems[id])),
-	};
+        ...unwrap(batch),
+        items: batch.items.map(({ id }: BatchItem) => unwrap(stateItems[id])),
+    };
 
-    queue.trigger(event, eventBatch);
+    queue.trigger(event, eventBatch, unwrap(batchOptions));
 };
 
 const getIsBatchReady = (queue: QueueState, batchId: string): boolean => {

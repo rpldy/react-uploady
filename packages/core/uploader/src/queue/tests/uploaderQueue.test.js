@@ -10,6 +10,7 @@ import {
     removePendingBatches,
     clearBatchData,
     cancelBatchWithId,
+    triggerUploaderBatchEvent,
 } from "../batchHelpers";
 import createQueue from "../uploaderQueue";
 
@@ -298,7 +299,7 @@ describe("queue tests", () => {
             expect(state2.batches["b1"].batch.completed).toBe(50);
             expect(state2.batches["b1"].batch.loaded).toBe(4000);
 
-            expect(trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS, state2.batches["b1"].batch);
+            expect(triggerUploaderBatchEvent).toHaveBeenCalledWith(expect.any(Object), "b1", UPLOADER_EVENTS.BATCH_PROGRESS);
         });
 
         it("should not trigger event if no batch found", () => {

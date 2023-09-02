@@ -38,6 +38,7 @@ export interface UploadOptions extends Partial<SendOptions> {
     destination?: Destination;
     inputFieldName?: string;
     fastAbortThreshold?: number;
+    userData?: any;
 }
 
 export enum BATCH_STATES {

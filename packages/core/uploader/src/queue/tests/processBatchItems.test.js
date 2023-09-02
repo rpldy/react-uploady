@@ -4,9 +4,11 @@ import {
 import getQueueState from "./mocks/getQueueState.mock";
 import { getItemsPrepareUpdater } from "../preSendPrepare";
 import processFinishedRequest from "../processFinishedRequest";
+import { getBatchDataFromItemId } from "../batchHelpers";
 
 jest.mock("../preSendPrepare");
 jest.mock("../processFinishedRequest");
+jest.mock("../batchHelpers");
 
 describe("processBatchItems tests", () => {
     let processBatchItems;
@@ -82,6 +84,9 @@ describe("processBatchItems tests", () => {
             options: batchOptions,
         });
 
+        getBatchDataFromItemId
+            .mockReturnValueOnce(queueState.getState().batches["b1"]);
+
         await processBatchItems(queueState, ["u1"], mockNext);
         await waitForTest();
 
@@ -114,6 +119,9 @@ describe("processBatchItems tests", () => {
                 }],
         });
 
+        getBatchDataFromItemId
+            .mockReturnValueOnce(queueState.getState().batches["b1"]);
+
         await processBatchItems(queueState, ["u1"], mockNext);
         await waitForTest();
 
@@ -122,10 +130,13 @@ describe("processBatchItems tests", () => {
 
     it("should handle batch no longer available after prepare", async () => {
         const data = getMockStateData();
+        const batchData = data.batches["b1"];
         delete data.batches["b1"];
         const queueState = getQueueState(data);
 
         queueState.runCancellable.mockResolvedValueOnce(false);
+
+        getBatchDataFromItemId.mockReturnValueOnce(batchData);
 
         mockPreparePreRequestItems.mockResolvedValueOnce({
             items: [queueState.getState().items.u1],
@@ -175,6 +186,10 @@ describe("processBatchItems tests", () => {
             options: batchOptions,
         });
 
+        getBatchDataFromItemId
+            .mockReturnValueOnce(queueState.getState().batches["b1"])
+            .mockReturnValueOnce(queueState.getState().batches["b1"]);
+
         await processBatchItems(queueState, ["u1", "u2"], mockNext);
         await waitForTest();
 
@@ -200,6 +215,10 @@ describe("processBatchItems tests", () => {
         queueState.runCancellable
             .mockResolvedValueOnce(true)
             .mockResolvedValueOnce(true);
+
+        getBatchDataFromItemId
+            .mockReturnValueOnce(queueState.getState().batches["b1"])
+            .mockReturnValueOnce(queueState.getState().batches["b1"]);
 
         await processBatchItems(queueState, ["u1", "u2"], mockNext);
 
@@ -232,6 +251,10 @@ describe("processBatchItems tests", () => {
             ],
             options: batchOptions,
         });
+
+        getBatchDataFromItemId
+            .mockReturnValueOnce(queueState.getState().batches["b1"])
+            .mockReturnValueOnce(queueState.getState().batches["b1"]);
 
         queueState.sender.send.mockReturnValueOnce(sendResult);
 
@@ -271,6 +294,10 @@ describe("processBatchItems tests", () => {
 			.mockResolvedValueOnce(false)
 			.mockResolvedValueOnce(false);
 
+        getBatchDataFromItemId
+            .mockReturnValueOnce(queueState.getState().batches["b1"])
+            .mockReturnValueOnce(queueState.getState().batches["b1"]);
+
 		await processBatchItems(queueState, ["u1", "u2"], mockNext);
 
 		expect(Object.values(queueState.getState().items))
@@ -295,6 +322,9 @@ describe("processBatchItems tests", () => {
             options: batchOptions,
         });
 
+        getBatchDataFromItemId
+            .mockReturnValueOnce(queueState.getState().batches["b1"]);
+
         await processBatchItems(queueState, ["u1"], mockNext);
         await waitForTest();
 
@@ -312,6 +342,9 @@ describe("processBatchItems tests", () => {
         mockPreparePreRequestItems.mockRejectedValueOnce(error);
 
         queueState.runCancellable.mockResolvedValueOnce(false);
+
+        getBatchDataFromItemId
+            .mockReturnValueOnce(queueState.getState().batches["b1"]);
 
         await processBatchItems(queueState, ["u1"], mockNext);
         await waitForTest();

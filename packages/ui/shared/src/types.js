@@ -14,8 +14,8 @@ export type PreSendData = { items: BatchItem[]; options: UploaderCreateOptions }
 export type Callback = (...args?: any) => ?any;
 export type WithStateFn<T> = ((fn?: Callback, id?: string) => any) & ((id?: string) => T)
 
-type EventHook<T> = (cb: (obj: T) => void, id?: string) => void;
-type CancellableHook<T> = (cb: (obj: T) => boolean | void, id?: string) => void;
+type EventHook<T> = (cb: (obj: T, options: UploaderCreateOptions) => void, id?: string) => void;
+type CancellableHook<T> = (cb: (obj: T, options: UploaderCreateOptions) => boolean | void, id?: string) => void;
 type EventHookWithState<T> = WithStateFn<T>;
 
 export type ItemEventHook = EventHook<BatchItem>;

@@ -30,9 +30,9 @@ const ensurePackageTypeDefinitions = (pkg) => {
 const ensureTypes = async () => {
     logger.info(`>>> ensuring packages type definitions`);
 
-    const { packages: repoPackages } = await getMatchingPackages({});
+    const pkgs = getMatchingPackages();
 
-    repoPackages.forEach(ensurePackageTypeDefinitions)
+    pkgs.forEach(ensurePackageTypeDefinitions);
 };
 
 ensureTypes();

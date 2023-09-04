@@ -147,7 +147,7 @@
     "react-dom": "^17",
     "react-icons": "^4.3.1",
     "react-load-script": "^0.0.6",
-    "rimraf": "^4.1.2",
+    "rimraf": "^5.0.1",
     "semver-utils": "^1.1.4",
     "shelljs": "^0.8.4",
     "storybook": "^7.4.0",

@@ -147,7 +147,7 @@
     "react-dom": "^17",
     "react-icons": "^4.3.1",
     "react-load-script": "^0.0.6",
-    "rimraf": "^4.1.2",
+    "rimraf": "^5.0.1",
     "semver-utils": "^1.1.4",
     "shelljs": "^0.8.4",
     "storybook": "^7.4.0",
@@ -159,7 +159,7 @@
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.8.0",
     "webpack-virtual-modules": "^0.5.0",
-    "xml2js": "^0.5.0",
+    "xml2js": "^0.6.2",
     "yargs": "^17.2.1"
   },
   "optionalDependencies": {

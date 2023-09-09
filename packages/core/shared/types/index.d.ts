@@ -59,6 +59,7 @@ export type Batch = {
     state: BATCH_STATES;
     completed: number;
     loaded: number;
+    total: number;
     orgItemCount: number;
     additionalInfo: string | null;
 };

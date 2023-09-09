@@ -19,7 +19,16 @@ module.exports = {
 
     addons: [
         path.resolve("./.storybook/uploadyPreset"),
-        getAbsolutePath("@storybook/addon-essentials"),
+        // getAbsolutePath("@storybook/addon-essentials"),
+        {
+            name: "@storybook/addon-essentials",
+            options: {
+                docs: true,
+                actions: true,
+                backgrounds: true,
+                controls: true
+            }
+        },
         getAbsolutePath("@storybook/addon-knobs"),
     ],
 

@@ -104,21 +104,26 @@ const createUploaderQueue = (
             .items;
 
         if (batchItems) {
-            const [completed, loaded] = batchItems
+            const [loaded, total] = batchItems
                 .reduce((res, { id }) => {
                     //getting data from state.items since in dev the wrapped state.batch.items and state.items aren't the same objects
-                    const { completed, loaded } = state.items[id];
-                    res[0] += completed;
-                    res[1] += loaded;
+                    const { loaded, file } = state.items[id];
+                    const size = file?.size || loaded || 1;
+                    //loaded = uploaded bytes
+                    res[0] += loaded;
+                    //total = file byte size
+                    res[1] += size;
                     return res;
                 }, [0, 0]);
 
             updateState((state: State) => {
                 const stateBatch = state.batches[batch.id].batch;
-                //average of completed percentage for batch items
-                stateBatch.completed = completed / batchItems.length;
+                //sum of bytes in batch items
+                stateBatch.total = total;
                 //sum of loaded bytes for batch items
                 stateBatch.loaded = loaded;
+                //completed percentage for batch items
+                stateBatch.completed = loaded / total;
             });
 
             triggerUploaderBatchEvent(queueState, batch.id, UPLOADER_EVENTS.BATCH_PROGRESS);

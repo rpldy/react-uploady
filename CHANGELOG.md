@@ -11,7 +11,7 @@ _PRE-RELEASE_
 
 ### Bug fixes
 
-- `[uploader]` - fix: improve batch upload progress data for smoother progress
+- `[uploader]` - fix: improve batch upload progress data for smoother progress. Fix for [#546](https://github.com/rpldy/react-uploady/issues/546)
 
 ### Docs
 

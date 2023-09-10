@@ -4,8 +4,6 @@
   "author": "yoav niran (https://github.com/yoavniran)",
   "scripts": {
     "upgradep": "node scripts/upgradeDep.js",
-    "bootstrap": "lerna bootstrap --use-workspaces",
-    "bootstrap:pure": "lerna bootstrap --use-workspaces -- --pure-lockfile",
     "coverage": "codecov",
     "bundle": "rimraf bundle; node scripts/bundle.js --validate",
     "bundle:prod": "UPLOADY_BUNDLE=true NODE_ENV=production yarn bundle",
@@ -67,6 +65,8 @@
     "url": "https://opencollective.com/react-uploady"
   },
   "devDependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
     "@babel/cli": "^7.20.7",
     "@babel/core": "^7.20.12",
     "@babel/eslint-parser": "^7.19.1",

@@ -1,0 +1,10 @@
+name: "Extract Version Changelog"
+description: "Take the log information from the changelog"
+outputs:
+    VERSION:
+        description: "The new semver version to be released"
+    VERSION_LOG:
+        description: "The log info for the new release"
+runs:
+    using: "node16"
+    main: "index.js"

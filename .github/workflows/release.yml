@@ -130,34 +130,40 @@ jobs:
                 id: version-log
                 uses: ./.github/actions/versionLog
 
-#            -   name: Publish
-#                id: publish
-#                run: |
-#                    lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --no-push --yes
-#                    echo "## Published: ${{ format('v{0}', steps.version-log.outputs.VERSION) }} :rocket:" >> $GITHUB_STEP_SUMMARY
-#
-#            -   name: Create GH Release
-#                uses: ncipollo/release-action@v1
-#                with:
-#                    name: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
-#                    body: ${{ steps.version-log.outputs.VERSION_LOG }}
-#                    #draft: true
-#                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) }}
-#                    tag: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
-#
-#            -   name: Push changes
-#                if: ${{ always() && steps.version.outcome == 'success' && steps.publish.outcome == 'success' }}
-#                run: |
-#                    git push --tags
-#
-#            -   name: Create PR for Release
-#                id: pr
-#                uses: peter-evans/create-pull-request@v5
-#                with:
-#                    title: "chore: release ${{ format('v{0}', steps.version-log.outputs.VERSION) }}"
-#                    body: "Automatic PR for release: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}"
-#                    branch: ${{ github.ref }}
-#                    commit-message: "commit new version"
+            -   name: Publish
+                id: publish
+                run: |
+                    lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --no-push --yes
+                    echo "## Published: ${{ format('v{0}', steps.version-log.outputs.VERSION) }} :rocket:" >> $GITHUB_STEP_SUMMARY
+                    changelog="${{ steps.version-log.outputs.VERSION_LOG }}"
+                    echo "### Changelog 📒" >> $GITHUB_STEP_SUMMARY
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    while IFS= read -r line; do
+                    echo $line >> $GITHUB_STEP_SUMMARY
+                    done <<< "$changelog"
+
+            -   name: Create GH Release
+                uses: ncipollo/release-action@v1
+                with:
+                    name: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
+                    body: ${{ steps.version-log.outputs.VERSION_LOG }}
+                    #draft: true
+                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) }}
+                    tag: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
+
+            -   name: Push changes
+                if: ${{ always() && steps.version.outcome == 'success' && steps.publish.outcome == 'success' }}
+                run: |
+                    git push --tags
+
+            -   name: Create PR for Release
+                id: pr
+                uses: peter-evans/create-pull-request@v5
+                with:
+                    title: "chore: release ${{ format('v{0}', steps.version-log.outputs.VERSION) }}"
+                    body: "Automatic PR for release: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}"
+                    branch: ${{ github.ref }}
+                    commit-message: "commit new version"
 
 
 

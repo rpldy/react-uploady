@@ -35,7 +35,7 @@ on:
                 default: true
 
 permissions:
-    #    id-token: write
+    pull-requests: write
     contents: write
 
 defaults:

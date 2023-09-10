@@ -58,7 +58,7 @@ jobs:
             -   name: Validate version with pre-id
                 if: ${{ steps.is-pre.outputs.PRE_RELEASE == 'true' && inputs.preid == '' }}
                 run: |
-                    echo "🔴 Failing Job - Cant use (premajor, preminor, prepatch) without selecting PreId too! >> $GITHUB_STEP_SUMMARY
+                    echo "🔴 Failing Job - Cant use version: (premajor, preminor, prepatch, prerelease) without selecting PreId too! >> $GITHUB_STEP_SUMMARY
                     exit 1
 
             -   uses: actions/checkout@v3
@@ -75,13 +75,10 @@ jobs:
                 run: |
                     git merge origin/master -m "chore: merge content from master"
 
-                #git fetch origin
-
             -   uses: actions/setup-node@v3
                 with:
                     node-version: "16.17"
                     cache: "yarn"
-                    #cache-dependency-path: "yarn.lock"
 
             -   name: Install Deps
                 run: yarn --frozen-lockfile
@@ -114,7 +111,7 @@ jobs:
                 id: version
                 run: |
                     echo "### Using version args: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
-                    lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --yes
+                    lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --no-git-tag-version --yes
 
             -   name: Build Source
                 run: yarn build
@@ -131,39 +128,40 @@ jobs:
                 id: version-log
                 uses: ./.github/actions/versionLog
 
+            -   name: Create Version Name
+                id: version-name
+                run: |
+                    echo "NEW_VERSION=${{ format('v{0}', steps.version-log.outputs.VERSION) }}" >> $GITHUB_OUTPUT
+
             -   name: Publish
                 id: publish
                 run: |
                     lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --no-push --yes
-                    echo "## Published: ${{ format('v{0}', steps.version-log.outputs.VERSION) }} :rocket:" >> $GITHUB_STEP_SUMMARY
+                    echo "## Published: ${{ steps.version-name.outputs.NEW_VERSION }} :rocket:" >> $GITHUB_STEP_SUMMARY
                     echo "${{ steps.version-log.outputs.VERSION_LOG }}" >> $GITHUB_STEP_SUMMARY
-#                    changelog="${{ steps.version-log.outputs.VERSION_LOG }}"
-#                    echo "### Changelog 📒" >> $GITHUB_STEP_SUMMARY
-#                    echo "" >> $GITHUB_STEP_SUMMARY
-#                    while IFS= read -r line; do
-#                    echo $line >> $GITHUB_STEP_SUMMARY
-#                    done <<< "$changelog"
-
-            -   name: Create GH Release
-                uses: ncipollo/release-action@v1
-                with:
-                    name: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
-                    body: ${{ steps.version-log.outputs.VERSION_LOG }}
-                    #draft: true
-                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) }}
-                    tag: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
 
             -   name: Push changes
                 if: ${{ always() && steps.version.outcome == 'success' && steps.publish.outcome == 'success' }}
                 run: |
-                    git push --tags
+                    git push
+                    git tag -a ${{ steps.version-name.outputs.NEW_VERSION }} -m "tag for version: ${{ steps.version-name.outputs.NEW_VERSION }}"
+                    git push origin ${{ steps.version-name.outputs.NEW_VERSION }}
+
+            -   name: Create GH Release
+                uses: ncipollo/release-action@v1
+                with:
+                    name: ${{ steps.version-name.outputs.NEW_VERSION }}
+                    body: ${{ steps.version-log.outputs.VERSION_LOG }}
+                    #draft: true
+                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) }}
+                    tag: ${{ steps.version-name.outputs.NEW_VERSION }}
 
             -   name: Create PR for Release
                 id: pr
                 uses: peter-evans/create-pull-request@v5
                 with:
-                    title: "chore: release ${{ format('v{0}', steps.version-log.outputs.VERSION) }}"
-                    body: "Automatic PR for release: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}"
+                    title: "chore: release ${{ steps.version-name.outputs.NEW_VERSION }}"
+                    body: "Automatic PR for version release: ${{ steps.version-name.outputs.NEW_VERSION }}"
                     branch: ${{ github.ref }}
                     commit-message: "commit new version"
 

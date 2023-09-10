@@ -82,17 +82,13 @@ jobs:
             -   name: Install Deps
                 run: yarn --frozen-lockfile
 
-            -   name: Extract Version Changelog
-                id: version-log
-                uses: ./.github/actions/versionLog
-
             -   name: Clean
                 run: yarn clean
 
             -   name: Define Lerna Args
                 id: lerna-args
                 run: |
-                    if [ '${{ steps.is-pre.outputs.PRE_RELEASE }} = 'true' }}']
+                    if [ '${{ steps.is-pre.outputs.PRE_RELEASE }}' = 'true' }}']
                     then
                         if [ '${{ inputs.preid }}' = 'rc' ]
                         then
@@ -110,27 +106,31 @@ jobs:
                       echo "VERSION=${{ inputs.version }}" >> $GITHUB_OUTPUT
                     fi
 
-#            -   name: Create Version
-#                id: version
-#                run: |
-#                    echo "### Version ARGS: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
-#                    lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --yes
-#
-#            -   name: Build Source
-#                run: yarn build
-#
-#            -   name: Bundle Source
-#                run: yarn bundle:prod
-#
-#            -   name: Authenticate with NPM Registry
-#                run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-#                env:
-#                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-#
+            -   name: Create Version
+                id: version
+                run: |
+                    echo "### Version ARGS: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
+                    lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --yes
+
+            -   name: Build Source
+                run: yarn build
+
+            -   name: Bundle Source
+                run: yarn bundle:prod
+
+            -   name: Authenticate with NPM Registry
+                run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+                env:
+                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            -   name: Extract Version Changelog
+                id: version-log
+                uses: ./.github/actions/versionLog
+
 #            -   name: Publish
 #                id: publish
 #                run: |
-#                    lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --no-push  --yes
+#                    lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --no-push --yes
 #                    echo "## Published: ${{ format('v{0}', steps.version-log.outputs.VERSION) }} :rocket:" >> $GITHUB_STEP_SUMMARY
 #
 #            -   name: Create GH Release

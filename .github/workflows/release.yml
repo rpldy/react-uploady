@@ -55,9 +55,9 @@ jobs:
                     echo "PRE_RELEASE=true" >> $GITHUB_OUTPUT
 
             -   name: Validate version with pre-id
-                if: ${{ steps.is-pre.outputs.PRE_RELEASE == true && inputs.preid == '' }}
+                if: ${{ steps.is-pre.outputs.PRE_RELEASE == 'true' && inputs.preid == '' }}
                 run: |
-                    echo "🔴 Failing Job - Cant use 'premajor' or 'preminor' without selecting PreId too! >> $GITHUB_STEP_SUMMARY
+                    echo "🔴 Failing Job - Cant use (premajor, preminor, prepatch) without selecting PreId too! >> $GITHUB_STEP_SUMMARY
                     exit 1
 
             -   uses: actions/checkout@v3
@@ -66,7 +66,7 @@ jobs:
                 if: ${{ inputs.mergeMaster == true }}
                 run: |
                     git fetch origin
-                    git merge master -m "chore: merge content from master"
+                    git merge origin/master -m "chore: merge content from master"
 
             -   uses: actions/setup-node@v3
                 with:

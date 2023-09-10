@@ -91,7 +91,7 @@ jobs:
             -   name: Define Lerna Args
                 id: lerna-args
                 run: |
-                    if [ '${{ steps.is-pre.outputs.PRE_RELEASE }}' = 'true' }}']
+                    if [ '${{ steps.is-pre.outputs.PRE_RELEASE }}' = 'true']
                     then
                         if [ '${{ inputs.preid }}' = 'rc' ]
                         then

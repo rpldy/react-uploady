@@ -8,7 +8,7 @@ on:
             version:
                 type: choice
                 description: Which version to release?
-                required: true
+                required: false
                 default: "patch"
                 options:
                     - "patch"
@@ -17,6 +17,7 @@ on:
                     - "prepatch"
                     - "preminor"
                     - "premajor"
+                    - "prerelease"
 
             preid:
                 type: choice
@@ -50,7 +51,7 @@ jobs:
         steps:
             -   name: Check is Pre Release
                 id: is-pre
-                if: ${{ inputs.version == 'premajor' || inputs.version == 'preminor' || inputs.version == 'prepatch' }}
+                if: ${{ inputs.version == 'premajor' || inputs.version == 'preminor' || inputs.version == 'prepatch' || inputs.version == 'prerelease' }}
                 run: |
                     echo "PRE_RELEASE=true" >> $GITHUB_OUTPUT
 

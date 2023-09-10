@@ -1,5 +1,5 @@
 {
-  "version": "1.4.1",
+  "version": "1.5.0-rc.5",
   "npmClient": "yarn",
   "command": {
     "version": {
@@ -13,7 +13,6 @@
       "message": "chore: publish new version: %v"
     }
   },
-  "useWorkspaces": true,
   "packages": [
     "packages/core/*",
     "packages/ui/*",

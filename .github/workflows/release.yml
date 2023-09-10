@@ -8,7 +8,7 @@ on:
             version:
                 type: choice
                 description: Which version to release?
-                required: true
+                required: false
                 default: "patch"
                 options:
                     - "patch"
@@ -17,6 +17,7 @@ on:
                     - "prepatch"
                     - "preminor"
                     - "premajor"
+                    - "prerelease"
 
             preid:
                 type: choice
@@ -34,13 +35,12 @@ on:
                 default: true
 
 permissions:
-    #    id-token: write
+    pull-requests: write
     contents: write
 
 defaults:
     run:
         shell: bash
-        #working-directory:
 
 jobs:
     release:
@@ -48,51 +48,47 @@ jobs:
         environment: "Release"
         runs-on: ubuntu-latest
         steps:
-            -   name: Check is Pre Release
+            -   name: Check is pre-release
                 id: is-pre
-                if: ${{ inputs.version == 'premajor' || inputs.version == 'preminor' || inputs.version == 'prepatch' }}
+                if: ${{ inputs.version == 'premajor' || inputs.version == 'preminor' || inputs.version == 'prepatch' || inputs.version == 'prerelease' }}
                 run: |
                     echo "PRE_RELEASE=true" >> $GITHUB_OUTPUT
 
             -   name: Validate version with pre-id
                 if: ${{ steps.is-pre.outputs.PRE_RELEASE == 'true' && inputs.preid == '' }}
                 run: |
-                    echo "🔴 Failing Job - Cant use (premajor, preminor, prepatch) without selecting PreId too! >> $GITHUB_STEP_SUMMARY
+                    echo "🔴 Failing Job - Cant use version: (premajor, preminor, prepatch, prerelease) without selecting PreId too! >> $GITHUB_STEP_SUMMARY
                     exit 1
 
             -   uses: actions/checkout@v3
+                with:
+                    fetch-depth: 0
 
-            -   name: Define GIT Author
+            -   name: Define GIT author
                 run: |
                     git config user.email "ci@react-uploady.org"
                     git config user.name "Uploady CI"
 
-            -   name: Merge Latest Master
+            -   name: Merge latest master
                 if: ${{ inputs.mergeMaster == true }}
                 run: |
-                    git fetch origin
                     git merge origin/master -m "chore: merge content from master"
 
             -   uses: actions/setup-node@v3
                 with:
                     node-version: "16.17"
                     cache: "yarn"
-                    #cache-dependency-path: "yarn.lock"
 
-            -   name: Install Deps
+            -   name: Install deps
                 run: yarn --frozen-lockfile
-
-            -   name: Extract Version Changelog
-                id: version-log
-                uses: ./.github/actions/versionLog
 
             -   name: Clean
                 run: yarn clean
 
-            -   name: Define Lerna Args
+            -   name: Define Lerna args
                 id: lerna-args
                 run: |
-                    if [ '${{ steps.is-pre.outputs.PRE_RELEASE }} = 'true' }}']
+                    if [ '${{ steps.is-pre.outputs.PRE_RELEASE }}' = 'true' ]
                     then
                         if [ '${{ inputs.preid }}' = 'rc' ]
                         then
@@ -110,82 +106,69 @@ jobs:
                       echo "VERSION=${{ inputs.version }}" >> $GITHUB_OUTPUT
                     fi
 
-#            -   name: Create Version
-#                id: version
-#                run: |
-#                    echo "### Version ARGS: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
-#                    lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --yes
-#
-#            -   name: Build Source
-#                run: yarn build
-#
-#            -   name: Bundle Source
-#                run: yarn bundle:prod
-#
-#            -   name: Authenticate with NPM Registry
-#                run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-#                env:
-#                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-#
-#            -   name: Publish
-#                id: publish
-#                run: |
-#                    lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --no-push  --yes
-#                    echo "## Published: ${{ format('v{0}', steps.version-log.outputs.VERSION) }} :rocket:" >> $GITHUB_STEP_SUMMARY
-#
-#            -   name: Create GH Release
-#                uses: ncipollo/release-action@v1
-#                with:
-#                    name: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
-#                    body: ${{ steps.version-log.outputs.VERSION_LOG }}
-#                    #draft: true
-#                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) }}
-#                    tag: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
-#
-#            -   name: Push changes
-#                if: ${{ always() && steps.version.outcome == 'success' && steps.publish.outcome == 'success' }}
-#                run: |
-#                    git push --tags
-#
-#            -   name: Create PR for Release
-#                id: pr
-#                uses: peter-evans/create-pull-request@v5
-#                with:
-#                    title: "chore: release ${{ format('v{0}', steps.version-log.outputs.VERSION) }}"
-#                    body: "Automatic PR for release: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}"
-#                    branch: ${{ github.ref }}
-#                    commit-message: "commit new version"
+            -   name: Create version
+                id: version
+                run: |
+                    echo "### Using version args: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
+                    lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --no-git-tag-version --yes
 
+            -   name: Build source
+                run: yarn build
 
+            -   name: Bundle source
+                run: yarn bundle:prod
 
+            -   name: Authenticate with NPM registry
+                run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+                env:
+                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+            -   name: Extract version changelog
+                id: version-log
+                uses: ./.github/actions/versionLog
 
+            -   name: Create version name
+                id: version-name
+                run: |
+                    echo "NEW_VERSION=${{ format('v{0}', steps.version-log.outputs.VERSION) }}" >> $GITHUB_OUTPUT
 
+            -   name: Commit version update
+                run: |
+                    git commit -a -m "chore: updated version to: ${{ steps.version-name.outputs.NEW_VERSION }}"
 
+            -   name: Publish
+                id: publish
+                run: |
+                    lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --no-push --yes
+                    echo "## Published: ${{ steps.version-name.outputs.NEW_VERSION }} :rocket:" >> $GITHUB_STEP_SUMMARY
+                    echo "${{ steps.version-log.outputs.VERSION_LOG }}" >> $GITHUB_STEP_SUMMARY
 
+            -   name: Push changes
+                if: ${{ always() && steps.version.outcome == 'success' && steps.publish.outcome == 'success' }}
+                run: |
+                    git push
+                    git tag -a ${{ steps.version-name.outputs.NEW_VERSION }} -m "tag for version: ${{ steps.version-name.outputs.NEW_VERSION }}"
+                    git push origin ${{ steps.version-name.outputs.NEW_VERSION }}
 
+            -   name: Create GH Release
+                uses: ncipollo/release-action@v1
+                with:
+                    name: ${{ steps.version-name.outputs.NEW_VERSION }}
+                    body: ${{ steps.version-log.outputs.VERSION_LOG }}
+                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) }}
+                    tag: ${{ steps.version-name.outputs.NEW_VERSION }}
 
+            -   name: Create PR for Release
+                id: pr
+                uses: peter-evans/create-pull-request@v5
+                with:
+                    title: "chore: release ${{ steps.version-name.outputs.NEW_VERSION }}"
+                    body: "Automatic PR for version release: ${{ steps.version-name.outputs.NEW_VERSION }}"
+                    branch: ${{ github.ref }}
+                    base: "refs/heads/master"
+                    commit-message: "commit new version"
 
-#            - name: Commit changes to GIT
-#              run: |
-#                git commit -a -m "chore: release v${{ steps.version-log.outputs.VERSION }}"
-#                git push
-#git tag -a ui-${{ steps.version-bump.outputs.NEW_VERSION }} -m "${{ steps.version-bump.outputs.GIT_PUSH_MSG }}"
-#git push origin ui-${{ steps.version-bump.outputs.NEW_VERSION }}
-
-#     echo "## PUBLISH ARGS: ${{ steps.lerna-args.outputs.PUBLISH }} :rocket:" >> $GITHUB_STEP_SUMMARY
-
-
-# uses last commit details:
-#"$(git log -n 1 --pretty=format:%an)"
-#"$(git log -n 1 --pretty=format:%ae)"
-
-#    - name: Cache node_modules
-#          id: cache-node-modules
-#          uses: actions/cache@v3
-#          with:
-#          path: node_modules
-#          key: ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-${{ hashFiles('**/yarn.lock') }}
-#          restore-keys: |
-#              ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
-
+            -   name: Report PR URL
+                if: ${{ steps.pr.outputs.pull-request-number != '' }}
+                run: |
+                   echo "Created PR: ${{ steps.pr.outputs.pull-request-url }}" >> $GITHUB_STEP_SUMMARY

@@ -61,6 +61,8 @@ jobs:
                     exit 1
 
             -   uses: actions/checkout@v3
+                with:
+                    fetch-depth: 0
 
             -   name: Define GIT Author
                 run: |
@@ -70,8 +72,9 @@ jobs:
             -   name: Merge Latest Master
                 if: ${{ inputs.mergeMaster == true }}
                 run: |
-                    git fetch origin
                     git merge origin/master -m "chore: merge content from master"
+
+                #git fetch origin
 
             -   uses: actions/setup-node@v3
                 with:

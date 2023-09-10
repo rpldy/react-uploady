@@ -25,6 +25,7 @@ import Uploady, {
     useUploadOptions,
     useBatchStartListener,
     useBatchAddListener,
+    useBatchProgressListener,
     useItemStartListener,
     useItemFinishListener,
     useItemErrorListener,
@@ -45,6 +46,10 @@ const ContextUploadButton = ({ text = "Custom Upload Button" }: { text?: string,
     const onClick = useCallback(() => {
         uploadyContext?.showFileUpload();
     }, [uploadyContext]);
+
+    // useBatchProgressListener(({ completed, loaded, total}) => {
+    //     console.log("------- BATCH PROGRESS --------------", { completed, loaded, total })
+    // });
 
     return <button id="upload-button" onClick={onClick}>{text}</button>;
 };

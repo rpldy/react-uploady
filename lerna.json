@@ -13,7 +13,6 @@
       "message": "chore: publish new version: %v"
     }
   },
-  "useWorkspaces": true,
   "packages": [
     "packages/core/*",
     "packages/ui/*",

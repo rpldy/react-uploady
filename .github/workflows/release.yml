@@ -112,7 +112,7 @@ jobs:
             -   name: Create Version
                 id: version
                 run: |
-                    echo "### Version ARGS: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
+                    echo "### Using version args: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
                     lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --yes
 
             -   name: Build Source
@@ -135,12 +135,13 @@ jobs:
                 run: |
                     lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --no-push --yes
                     echo "## Published: ${{ format('v{0}', steps.version-log.outputs.VERSION) }} :rocket:" >> $GITHUB_STEP_SUMMARY
-                    changelog="${{ steps.version-log.outputs.VERSION_LOG }}"
-                    echo "### Changelog 📒" >> $GITHUB_STEP_SUMMARY
-                    echo "" >> $GITHUB_STEP_SUMMARY
-                    while IFS= read -r line; do
-                    echo $line >> $GITHUB_STEP_SUMMARY
-                    done <<< "$changelog"
+                    echo "${{ steps.version-log.outputs.VERSION_LOG }}" >> $GITHUB_STEP_SUMMARY
+#                    changelog="${{ steps.version-log.outputs.VERSION_LOG }}"
+#                    echo "### Changelog 📒" >> $GITHUB_STEP_SUMMARY
+#                    echo "" >> $GITHUB_STEP_SUMMARY
+#                    while IFS= read -r line; do
+#                    echo $line >> $GITHUB_STEP_SUMMARY
+#                    done <<< "$changelog"
 
             -   name: Create GH Release
                 uses: ncipollo/release-action@v1

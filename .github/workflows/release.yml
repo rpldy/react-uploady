@@ -41,7 +41,6 @@ permissions:
 defaults:
     run:
         shell: bash
-        #working-directory:
 
 jobs:
     release:
@@ -166,4 +165,10 @@ jobs:
                     title: "chore: release ${{ steps.version-name.outputs.NEW_VERSION }}"
                     body: "Automatic PR for version release: ${{ steps.version-name.outputs.NEW_VERSION }}"
                     branch: ${{ github.ref }}
+                    base: "origin/master"
                     commit-message: "commit new version"
+
+            -   name: Report PR URL
+                if: ${{ steps.pr.outputs.pull-request-number != '' }}
+                run: |
+                   echo "Created PR: ${{ steps.pr.outputs.pull-request-url }}"

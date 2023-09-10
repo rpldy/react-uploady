@@ -50,7 +50,7 @@ jobs:
         steps:
             -   name: Check is Pre Release
                 id: is-pre
-                if: ${{ contains(join( ['premajor', 'preminor', 'prepatch'], ',' ), inputs.version) }}
+                if: ${{ contains(join( fromJSON("['premajor', 'preminor', 'prepatch']"), ',' ), inputs.version) }}
                 run: |
                     echo "PRE_RELEASE=true" >> $GITHUB_OUTPUT
 

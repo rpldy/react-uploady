@@ -5,21 +5,37 @@ on:
         branches:
             - "release-**"
         inputs:
-           version:
-               type: choice
-               description: Which version to release?
-               required: false
-               default: "patch"
-               options:
-                   - "rc"
-                   - "alpha"
-                   - "patch"
-                   - "minor"
-                   - "major"
+            version:
+                type: choice
+                description: Which version to release?
+                required: true
+                default: "patch"
+                options:
+                    - "patch"
+                    - "minor"
+                    - "major"
+                    - "prepatch"
+                    - "preminor"
+                    - "premajor"
 
-#permissions:
-#    id-token: write
-#    contents: write
+            preid:
+                type: choice
+                description: Which pre-release ID to use?
+                required: false
+                default: ""
+                options:
+                    - ""
+                    - "rc"
+                    - "alpha"
+            mergeMaster:
+                type: boolean
+                description: Merge latest master?
+                required: true
+                default: true
+
+permissions:
+    #    id-token: write
+    contents: write
 
 defaults:
     run:
@@ -32,87 +48,123 @@ jobs:
         environment: "Release"
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-
-            - uses: actions/setup-node@v3
-              with:
-                node-version: "16.17"
-                cache: "yarn"
-                #cache-dependency-path: "yarn.lock"
-
-            - name: Install Deps
-              run: yarn --frozen-lockfile
-
-            - name: Extract Version Changelog
-              id: version-log
-              uses: ./.github/actions/versionLog
-
-            - name: Prepare
-              run: yarn bootstrap
-
-            - name: Clean
-              run: yarn clean
-
-            - name: Define Lerna Args
-              id: lerna-args
-              run: |
-                  if [ '${{ inputs.version }}' = 'rc' ]
-                  then
-                    echo "using args for RC release"
-                    echo "VERSION=prerelease --preid rc" >> $GITHUB_OUTPUT
-                    echo "PUBLISH=--dist-tag next" >> $GITHUB_OUTPUT
+            -   name: Check is Pre Release
+                id: is-pre
+                if: ${{ contains(join( ['premajor', 'preminor', 'prepatch'], ',' ), inputs.version) }}
+                run: |
                     echo "PRE_RELEASE=true" >> $GITHUB_OUTPUT
-                  elif [ '${{ inputs.version }}' = 'alpha' ]
-                  then
-                    echo "using args for Alpha release"
-                    echo "VERSION=prerelease" >> $GITHUB_OUTPUT
-                    echo "PUBLISH=--dist-tag alpha" >> $GITHUB_OUTPUT
-                    echo "PRE_RELEASE=true" >> $GITHUB_OUTPUT
-                  else
-                    echo "using args for ${{ inputs.version }} release"
-                    echo "VERSION=${{ inputs.version }}" >> $GITHUB_OUTPUT
-                    echo "PRE_RELEASE=false" >> $GITHUB_OUTPUT
-                  fi
 
-            - name: Define GIT Author
-              run: |
-                  git config user.email "ci@react-uploady.org"
-                  git config user.name "Uploady CI"
+            -   name: Validate version with pre-id
+                if: ${{ steps.is-pre.outputs.PRE_RELEASE == true && inputs.preid == '' }}
+                run: |
+                    echo "🔴 Failing Job - Cant use 'premajor' or 'preminor' without selecting PreId too! >> $GITHUB_STEP_SUMMARY
+                    exit 1
 
-            - name: Create Version
-              run: |
-                  echo "### Version ARGS: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
-                  lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --yes
+            -   uses: actions/checkout@v3
 
-            - name: Build Source
-              run: yarn build
+            -   name: Merge Latest Master
+                if: ${{ inputs.mergeMaster == true }}
+                run: |
+                    git fetch origin
+                    git merge master -m "chore: merge content from master"
 
-            - name: Bundle Source
-              run: yarn bundle:prod
+            -   uses: actions/setup-node@v3
+                with:
+                    node-version: "16.17"
+                    cache: "yarn"
+                    #cache-dependency-path: "yarn.lock"
 
-            - name: Authenticate with NPM Registry
-              run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-              env:
-                NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+            -   name: Install Deps
+                run: yarn --frozen-lockfile
 
-            - name: Publish
-              run: |
-                lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --yes
-                echo "## Published: ${{ format('v{0}', steps.version-log.outputs.VERSION) }} :rocket:" >> $GITHUB_STEP_SUMMARY
+            -   name: Extract Version Changelog
+                id: version-log
+                uses: ./.github/actions/versionLog
 
-            - name: Create GH Release
-              uses: ncipollo/release-action@v1
-              with:
-                name: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
-                body: ${{ steps.version-log.outputs.VERSION_LOG }}
-                #draft: true
-                prerelease: ${{ fromJSON(steps.lerna-args.outputs.PRE_RELEASE) }}
-                tag: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
+            -   name: Clean
+                run: yarn clean
+
+            -   name: Define Lerna Args
+                id: lerna-args
+                run: |
+                    if [ '${{ steps.is-pre.outputs.PRE_RELEASE }} = 'true' }}']
+                    then
+                        if [ '${{ inputs.preid }}' = 'rc' ]
+                        then
+                          echo "using args for RC release"
+                          echo "VERSION=${{ inputs.version }} --preid rc" >> $GITHUB_OUTPUT
+                          echo "PUBLISH=--dist-tag next" >> $GITHUB_OUTPUT
+                        elif [ '${{ inputs.preid }}' = 'alpha' ]
+                        then
+                          echo "using args for Alpha release"
+                          echo "VERSION=${{ inputs.version }}" >> $GITHUB_OUTPUT
+                          echo "PUBLISH=--dist-tag alpha" >> $GITHUB_OUTPUT
+                        fi
+                    else
+                      echo "using args for ${{ inputs.version }} release"
+                      echo "VERSION=${{ inputs.version }}" >> $GITHUB_OUTPUT
+                    fi
+
+            -   name: Define GIT Author
+                run: |
+                    git config user.email "ci@react-uploady.org"
+                    git config user.name "Uploady CI"
+
+#            -   name: Create Version
+#                id: version
+#                run: |
+#                    echo "### Version ARGS: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
+#                    lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --yes
+#
+#            -   name: Build Source
+#                run: yarn build
+#
+#            -   name: Bundle Source
+#                run: yarn bundle:prod
+#
+#            -   name: Authenticate with NPM Registry
+#                run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+#                env:
+#                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+#
+#            -   name: Publish
+#                id: publish
+#                run: |
+#                    lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --no-push  --yes
+#                    echo "## Published: ${{ format('v{0}', steps.version-log.outputs.VERSION) }} :rocket:" >> $GITHUB_STEP_SUMMARY
+#
+#            -   name: Create GH Release
+#                uses: ncipollo/release-action@v1
+#                with:
+#                    name: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
+#                    body: ${{ steps.version-log.outputs.VERSION_LOG }}
+#                    #draft: true
+#                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) }}
+#                    tag: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}
+#
+#            -   name: Push changes
+#                if: ${{ always() && steps.version.outcome == 'success' && steps.publish.outcome == 'success' }}
+#                run: |
+#                    git push --tags
+#
+#            -   name: Create PR for Release
+#                id: pr
+#                uses: peter-evans/create-pull-request@v5
+#                with:
+#                    title: "chore: release ${{ format('v{0}', steps.version-log.outputs.VERSION) }}"
+#                    body: "Automatic PR for release: ${{ format('v{0}', steps.version-log.outputs.VERSION) }}"
+#                    branch: ${{ github.ref }}
+#                    commit-message: "commit new version"
 
 
-            - name: Revert changes
 
-              #TODO - lerna version + delte tag
+
+
+
+
+
+
+
 
 #            - name: Commit changes to GIT
 #              run: |

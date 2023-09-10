@@ -50,7 +50,7 @@ jobs:
         steps:
             -   name: Check is Pre Release
                 id: is-pre
-                if: ${{ inputs.version == 'premajor' || inputs.version == 'preminor' || inputs.version == 'prepatch') }}
+                if: ${{ inputs.version == 'premajor' || inputs.version == 'preminor' || inputs.version == 'prepatch' }}
                 run: |
                     echo "PRE_RELEASE=true" >> $GITHUB_OUTPUT
 

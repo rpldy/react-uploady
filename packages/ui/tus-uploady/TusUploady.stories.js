@@ -271,4 +271,6 @@ export const WithResumeStartHandler = (): Node => {
     </TusUploady>;
 };
 
-export default (getCsfExport(TusUploady, "Tus Uploady", readme, { pkg: "tus-uploady", section: "UI" }): CsfExport);
+const tusUploadyStories: CsfExport = getCsfExport(TusUploady, "Tus Uploady", readme, { pkg: "tus-uploady", section: "UI" });
+
+export default { ...tusUploadyStories, title: "UI/Tus Uploady" };

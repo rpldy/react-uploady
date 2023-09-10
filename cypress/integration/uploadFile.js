@@ -3,7 +3,7 @@ import selectFiles from "./selectFiles";
 const uploadFile = (fixtureName, cb, button = "button", options = {}) => {
     selectFiles(
         fixtureName,
-        (button === false ? button : `#root ${button}`),
+        (button === false ? button : `#storybook-root ${button}`),
         "uploadButton",
         cb,
         { ...options, force: true }

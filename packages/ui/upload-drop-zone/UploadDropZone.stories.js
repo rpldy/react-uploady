@@ -1,11 +1,19 @@
 // @flow
-import React, { forwardRef, useCallback, useContext, useMemo, useRef } from "react";
+import React, { forwardRef, useCallback, useContext, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { number } from "@storybook/addon-knobs";
 import { DndProvider, useDrop } from "react-dnd";
-import Backend, { NativeTypes } from "react-dnd-html5-backend";
-import Uploady, { UploadyContext } from "@rpldy/uploady";
-import { asUploadButton } from "@rpldy/upload-button";
+import { NativeTypes, HTML5Backend } from "react-dnd-html5-backend";
+import Uploady, {
+    UploadyContext,
+    useBatchAddListener,
+    useBatchProgressListener,
+    useBatchStartListener,
+    useBatchFinishListener,
+    useItemFinishListener,
+    useItemStartListener
+} from "@rpldy/uploady";
+import UploadButton, { asUploadButton } from "@rpldy/upload-button";
 import UploadDropZone from "./src";
 import {
     useStoryUploadySetup,
@@ -75,12 +83,14 @@ export const WithDropHandler = (): Node => {
         return "https://i.pinimg.com/originals/51/bf/9c/51bf9c7fdf0d4303140c4949afd1d7b8.jpg";
     }, []);
 
-    return <Uploady debug
-                    multiple={multiple}
-                    destination={destination}
-                    enhancer={enhancer}
-                    grouped={grouped}
-                    maxGroupSize={groupSize}>
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+    >
 
         <StyledDropZone id="upload-drop-zone" onDragOverClassName="drag-over" dropHandler={dropHandler}>
             <div id="drag-text">Drag File(s) Here</div>
@@ -130,13 +140,14 @@ export const DifferentConfiguration = (): Node => {
         headers: { ...destination.headers, "x-test": "1234" }
     }), [destination]);
 
-    return <Uploady debug
-                    multiple={multiple}
-                    destination={destination}
-                    enhancer={enhancer}
-                    grouped={grouped}
-                    maxGroupSize={groupSize}>
-
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+    >
         <p>
             DropZones can use different configuration overrides.
             However, Some options cannot be overriden.<br/>
@@ -165,7 +176,7 @@ const ThirdPartyDropZone = styled.div`
   ${dropZoneCss}
 `;
 
-const ThirdPartyDropZoneContainer = () => {
+const ThirdPartyDropZoneContainer = ({ userData }: { userData: any }) => {
     const uploadyContext = useContext(UploadyContext);
 
     const [{ isDragging }, dropRef] = useDrop({
@@ -175,32 +186,82 @@ const ThirdPartyDropZoneContainer = () => {
         })),
         drop: (item, monitor) => {
             if (uploadyContext) {
-                uploadyContext.upload(item.files);
+                uploadyContext.upload(item.files, { userData });
             }
         },
     });
 
-    return <ThirdPartyDropZone ref={dropRef} className={isDragging ? "drag-over" : ""}>
+    return <ThirdPartyDropZone id="upload-drop-zone" ref={dropRef} className={isDragging ? "drag-over" : ""}>
         <h2>Using React DnD</h2>
         <div id="drag-text">Drag File(s) Here</div>
         <div id="drop-text">Drop Files(s) Here</div>
     </ThirdPartyDropZone>;
 };
 
+type UserDataState = {
+    itemStart: ?{ test: string },
+    itemFinish: ?{ test: string },
+    batchAdd: ?{ test: string },
+    batchStart: ?{ test: string },
+    batchProgress: ?{ test: string },
+    batchFinish: ?{ test: string },
+}
+
+const UserDataRenderer = () => {
+    const [userData, setUserData] = useState<UserDataState>({ itemStart: null, itemFinish: null, batchAdd: null, batchStart: null, batchProgress: null, batchFinish: null });
+
+    useItemStartListener((item, options) => {
+        setUserData((data: UserDataState) => ({ ...data, itemStart: options.userData }));
+    });
+
+    useItemFinishListener((item, options) => {
+        setUserData((data: UserDataState) => ({ ...data, itemFinish: options.userData }))
+    });
+
+    useBatchAddListener((batch, options) => {
+        setUserData((data: UserDataState) => ({ ...data, batchAdd: options.userData }))
+    });
+
+    useBatchStartListener((batch, options) => {
+        setUserData((data) => ({ ...data, batchStart: options.userData }))
+    });
+
+    useBatchProgressListener((batch, options) => {
+        setUserData((data) => ({ ...data, batchProgress: options.userData }))
+    });
+
+    useBatchFinishListener((batch, options) => {
+        setUserData((data) => ({ ...data, batchFinish: options.userData }))
+    });
+
+    return (
+        <ul id="user-data-results">
+            {Object.entries(userData).map(([key, val]) => {
+                //$FlowExpectedError[incompatible-use] flow and entries...
+                return val ? <li key={key} data-id={key}>{key}: {val.test}</li> : null;
+            })}
+        </ul>
+    );
+};
+
 export const WithThirdPartyDropZone = (): Node => {
-	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+	const { enhancer, destination, multiple, grouped, groupSize, extOptions } = useStoryUploadySetup();
 
-	return <DndProvider backend={Backend}>
-		<Uploady debug
-				 multiple={multiple}
-				 destination={destination}
-				 enhancer={enhancer}
-				 grouped={grouped}
-				 maxGroupSize={groupSize}>
+    const overrideUserData = extOptions?.userData;
 
-			<ThirdPartyDropZoneContainer/>
-		</Uploady>
-	</DndProvider>;
+	return <DndProvider backend={HTML5Backend}>
+		<Uploady
+            debug
+            multiple={multiple}
+            destination={destination}
+            enhancer={enhancer}
+            grouped={grouped}
+            maxGroupSize={groupSize}
+        >
+            <ThirdPartyDropZoneContainer userData={overrideUserData}/>
+            {overrideUserData && <UserDataRenderer />}
+        </Uploady>
+    </DndProvider>;
 };
 
 const MyClickableDropZone = forwardRef((props: UploadButtonProps, ref: Ref<"div">) => {
@@ -226,16 +287,17 @@ const DropZoneButton = asUploadButton(MyClickableDropZone);
 export const WithAsUploadButton = (): Node => {
 	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
-	return <Uploady debug
-					multiple={multiple}
-					destination={destination}
-					enhancer={enhancer}
-					grouped={grouped}
-					maxGroupSize={groupSize}>
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+    >
+        <p>Drop zone and upload button in a single component!</p>
 
-		<p>Drop zone and upload button in a single component!</p>
-
-		<DropZoneButton/>
+        <DropZoneButton/>
 	</Uploady>
 };
 
@@ -276,15 +338,16 @@ const StyledFullScreenDropZone = styled(UploadDropZone)`
 
 export const WithFullScreen = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize, extOptions } = useStoryUploadySetup();
-    const indicatorRef = useRef(null);
+    const indicatorRef = useRef<null | HTMLDivElement>(null);
 
-    return <Uploady debug
-                    multiple={multiple}
-                    destination={destination}
-                    enhancer={enhancer}
-                    grouped={grouped}
-                    maxGroupSize={groupSize}
-                    {...extOptions}
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+        {...extOptions}
     >
         <StyledFullScreenDropZone
             // enableOnContains={false}
@@ -314,17 +377,18 @@ export const WithFullScreen = (): Node => {
 
                 <h1>Drop files here</h1>
             </div>
-            <div className="dropIndicator" aria-hidden ref={indicatorRef} />
+            <div className="dropIndicator" aria-hidden ref={indicatorRef}/>
         </StyledFullScreenDropZone>
     </Uploady>;
 };
 
 export const WithDndTurnedOff = (): Node => {
     const { enhancer, destination, extOptions } = useStoryUploadySetup();
-    return <Uploady debug
-                    destination={destination}
-                    enhancer={enhancer}
-                    {...extOptions}
+    return (<Uploady
+        debug
+        destination={destination}
+        enhancer={enhancer}
+        {...extOptions}
     >
         <StyledDropZone
             id="upload-drop-zone"
@@ -334,8 +398,37 @@ export const WithDndTurnedOff = (): Node => {
             <div id="drag-text">Drag File(s) Here</div>
             <div id="drop-text">Drop File(s) Here</div>
         </StyledDropZone>
-    </Uploady>;
+    </Uploady>);
 };
 
+const StyledDropZoneWithButton = styled(StyledDropZone)`
+    &.drag-over {
+        button {
+            display: none;
+        }
+  }
+`;
 
-export default (getCsfExport(UploadDropZone, "Upload Drop Zone", readme, { pkg: "upload-drop-zone", section: "UI" }): CsfExport);
+export const WithUploadButtonInside = (): Node => {
+    const { enhancer, destination, extOptions } = useStoryUploadySetup();
+
+    return (
+        <Uploady
+            debug
+            destination={destination}
+            enhancer={enhancer}
+            {...extOptions}
+        >
+            <StyledDropZoneWithButton
+                id="upload-drop-zone"
+                onDragOverClassName="drag-over"
+            >
+                <UploadButton />
+            </StyledDropZoneWithButton>
+        </Uploady>
+    );
+}
+
+const dropzoneStories: CsfExport = getCsfExport(UploadDropZone, "Upload Drop Zone", readme, { pkg: "upload-drop-zone", section: "UI" });
+
+export default { ...dropzoneStories, title: "UI/Upload Drop Zone" };

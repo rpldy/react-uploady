@@ -114,7 +114,8 @@ describe("batchItemsSender tests", () => {
             expect(mockTrigger).toHaveBeenNthCalledWith(i + 1, SENDER_EVENTS.ITEM_PROGRESS,
                 item,
                 (completed / test.items.length),
-                (progressEvent.loaded / test.items.length)
+                (progressEvent.loaded / test.items.length),
+                progressEvent.total
             );
         });
 

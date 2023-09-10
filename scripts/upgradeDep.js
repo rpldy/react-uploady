@@ -4,7 +4,7 @@ const yargs = require("yargs"),
     semverUtils = require("semver-utils"),
     shell = require("shelljs"),
     { getMatchingPackages } = require("./lernaUtils"),
-    { logger, isDevDep, isPeerDep } = require("./utils");
+    { logger, savePackageJson, getPkgDependency } = require("./utils");
 
 const argv = yargs.argv;
 
@@ -50,26 +50,16 @@ const getDependencyWithVersion = () => {
     };
 };
 
-const doPackageUpgrade = (pkg, exactDep, graph) => {
-    const graphEntry = graph.get(pkg.name),
-        pkgDep = graphEntry.externalDependencies.get(exactDep.name),
-        pkgJson = graphEntry.pkg,
-        //lerna package graph doesnt include peer deps
-        isPeer = isPeerDep(pkgJson, exactDep.name);
+const doPackageUpgrade = (pkg, exactDep) => {
+    const dep = getPkgDependency(pkg, exactDep.name)
 
     let result;
 
-    if (pkgDep || isPeer) {
-        logger.verbose(`>>>> found package [${pkg.name}] with dependency: ${isPeer ? pkgJson.peerDependencies[exactDep.name] : pkgDep.raw} - setting version to: ${exactDep.upgradeVersion}`);
+    if (dep) {
+        logger.verbose(`>>>> found package [${pkg.name}] with dependency: ${dep.name}(type:${dep.type}) - setting version to: ${exactDep.upgradeVersion}`);
 
-        const depsList = isDevDep(pkgJson, exactDep.name) ?
-            pkgJson.devDependencies :
-            isPeer ?
-                pkgJson.peerDependencies :
-                pkgJson.dependencies;
-
-        depsList[exactDep.name] = exactDep.upgradeVersion;
-        result = pkg.serialize(); //returns a promise
+        dep.list[dep.name] = exactDep.upgradeVersion;
+        result = savePackageJson(pkg);
     }
 
     return result;
@@ -90,12 +80,11 @@ const getValidUpgradeVersion = async (exactDep) => {
 };
 
 const upgradeDep = async () => {
-    const { packages, graph } = await getMatchingPackages(argv);
+    const packages = getMatchingPackages();
     const exactDep = getDependencyWithVersion();
 
     if (packages.length) {
         const upgradeVersion = await getValidUpgradeVersion(exactDep);
-
         // console.log("!!!!! ", {exactDep, upgradeVersion, semver: exactDep.semver});
 
         if (upgradeVersion) {
@@ -106,7 +95,7 @@ const upgradeDep = async () => {
             const writes = [];
 
             packages.forEach((pkg) => {
-                const writePromise = doPackageUpgrade(pkg, exactDep, graph);
+                const writePromise = doPackageUpgrade(pkg, exactDep);
 
                 if (writePromise) {
                     writes.push(writePromise);
@@ -127,50 +116,3 @@ const upgradeDep = async () => {
 };
 
 upgradeDep();
-
-
-// const scopes = getPackagesScopes(packages, exactDep, graph);
-//
-// if (scopes.length) {
-//     runUpgradeCommand(scopes, exactDep);
-// } else {
-//     console.log(chalk.red(`!!! no packages found that use ${exactDep.name}`));
-// }
-// const scopesFlag = scopes.map((s) => `--scope ${s}`).join(" ");
-//
-//
-// const command = `lerna exec --concurrency 1 ${scopesFlag} yarn upgrade ${upgradeArgs.join(" ")}`;
-//
-// const cmdArgs = [
-//     `--scope=${pkg.name}`,
-//     `${exactDep.name}@${exactDep.version}`,
-//     `${options.exact ? "--exact" : ""}`,
-//     `${isDevDep(graphEntry.pkg, exactDep.name) ? "--dev" : ""}`,
-//     `${isPeerDep(graphEntry.pkg, exactDep.name) ? "--peer" : ""}`,
-// ];
-//
-// const command = `lerna add ${cmdArgs.join(" ")}`;
-//
-// if (options.dryrun) {
-//     console.log("[dryrun]: shell command: ", command);
-// } else {
-//     const result = shell.exec(command);
-//
-//     if (result.code) {
-//         console.log(chalk.red(`upgrade failed ! (${result.code})`));
-//     }
-// }
-//         const command = `lerna exec yarn upgrade ${addArgs.join(" ")}`;
-// const getPackagesScopes = (packages, exactDep, graph) => {
-//     return packages.reduce((res, pkg) => {
-//         const graphEntry = graph.get(pkg.name),
-//             pkgDep = graphEntry.externalDependencies.get(exactDep.name);
-//
-//         if (pkgDep) {
-//             console.log(chalk.cyan(`>>>> found package [${pkg.name}] with dependency: ${pkgDep.raw}`));
-//             res.push(pkg.name);
-//         }
-//
-//         return res;
-//     }, []);
-// };

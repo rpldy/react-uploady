@@ -62,7 +62,7 @@ export const TEST_EventsData = (): Element<"div"> => {
     }, []);
 
     const onInputChange = useCallback(() => {
-        uploaderRef.current?.add(inputRef.current?.files);
+        uploaderRef.current?.add(inputRef.current?.files, { userData: { test: "!23" } });
     }, []);
 
     useEffect(() => {
@@ -85,21 +85,21 @@ export const TEST_EventsData = (): Element<"div"> => {
             logToCypress(`###${UPLOADER_EVENTS.REQUEST_PRE_SEND}`, items, options);
         });
 
-        uploader.on(UPLOADER_EVENTS.ITEM_START, (item) => {
-            logToCypress(`###${UPLOADER_EVENTS.ITEM_START}`, item);
+        uploader.on(UPLOADER_EVENTS.ITEM_START, (item, options) => {
+            logToCypress(`###${UPLOADER_EVENTS.ITEM_START}`, item, options);
         });
 
-        uploader.on(UPLOADER_EVENTS.ITEM_PROGRESS, (item) => {
-            logToCypress(`###${UPLOADER_EVENTS.ITEM_PROGRESS}`, item);
+        uploader.on(UPLOADER_EVENTS.ITEM_PROGRESS, (item, options) => {
+            logToCypress(`###${UPLOADER_EVENTS.ITEM_PROGRESS}`, item, options);
             item._test = "TEST!";
         });
 
-        uploader.on(UPLOADER_EVENTS.ITEM_FINISH, (item) => {
-            logToCypress(`###${UPLOADER_EVENTS.ITEM_FINISH}`, item);
+        uploader.on(UPLOADER_EVENTS.ITEM_FINISH, (item, options) => {
+            logToCypress(`###${UPLOADER_EVENTS.ITEM_FINISH}`, item, options);
         });
 
-        uploader.on(UPLOADER_EVENTS.BATCH_FINISH, (batch) => {
-            logToCypress(`###${UPLOADER_EVENTS.BATCH_FINISH}`, batch);
+        uploader.on(UPLOADER_EVENTS.BATCH_FINISH, (batch, options) => {
+            logToCypress(`###${UPLOADER_EVENTS.BATCH_FINISH}`, batch, options);
         });
 
         uploaderRef.current = uploader;
@@ -149,4 +149,6 @@ export const UMD_Core = (): Element<"div"> => {
     </div>;
 };
 
-export default (getCsfExport(undefined, "Uploader", readme, { pkg: "uploader", section: "Core" }): CsfExport);
+const uploaderStories: CsfExport = getCsfExport(undefined, "Uploader", readme, { pkg: "uploader", section: "Core" });
+
+export default { ...uploaderStories, title: "Core/Uploader" };

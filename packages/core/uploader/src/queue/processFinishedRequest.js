@@ -1,7 +1,7 @@
 // @flow
 import { FILE_STATES, logger } from "@rpldy/shared";
 import { UPLOADER_EVENTS, ITEM_FINALIZE_STATES } from "../consts";
-import { cleanUpFinishedBatches, incrementBatchFinishedCounter } from "./batchHelpers";
+import { cleanUpFinishedBatches, incrementBatchFinishedCounter, getBatchDataFromItemId } from "./batchHelpers";
 import { finalizeItem } from "./itemHelpers";
 
 import type { UploadData, BatchItem } from "@rpldy/shared";
@@ -54,18 +54,21 @@ const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], n
 
             if (info.state === FILE_STATES.FINISHED && item.completed < 100) {
                 //ensure we trigger progress event with completed = 100 for all items
-                queue.handleItemProgress(item, 100, item.file ? item.file.size : 0);
+                const size = item.file?.size || 0;
+                queue.handleItemProgress(item, 100, size , size);
             }
+
+            const { batchOptions } = getBatchDataFromItemId(queue, id);
 
             if (FILE_STATE_TO_EVENT_MAP[item.state]) {
                 //trigger UPLOADER EVENT for item based on its state
-                queue.trigger(FILE_STATE_TO_EVENT_MAP[item.state], item);
+                queue.trigger(FILE_STATE_TO_EVENT_MAP[item.state], item, batchOptions);
             }
 
             if (getIsFinalized(item)) {
                 incrementBatchFinishedCounter(queue, item.batchId);
                 //trigger FINALIZE event
-                queue.trigger(UPLOADER_EVENTS.ITEM_FINALIZE, item);
+                queue.trigger(UPLOADER_EVENTS.ITEM_FINALIZE, item, batchOptions);
             }
         }
 

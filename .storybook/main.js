@@ -1,6 +1,9 @@
 const glob = require("fast-glob"),
     path = require("path");
 
+const getAbsolutePath = (value) =>
+    path.dirname(require.resolve(path.join(value, "package.json")));
+
 module.exports = {
     stories: async () => {
         const paths = await glob(
@@ -13,27 +16,38 @@ module.exports = {
 
         return ["./welcome.stories.mdx"].concat(paths);
     },
+
     addons: [
         path.resolve("./.storybook/uploadyPreset"),
+        // getAbsolutePath("@storybook/addon-essentials"),
         {
-            //have to explicitly specify docs addon to turn off sourceLoader
-            name: "@storybook/addon-docs",
+            name: "@storybook/addon-essentials",
             options: {
-                //sourceLoader breaks on flow typings...
-                sourceLoaderOptions: null,
+                docs: true,
+                actions: true,
+                backgrounds: true,
+                controls: true
             }
         },
-        "@storybook/addon-essentials",
-        "@storybook/addon-knobs",
+        getAbsolutePath("@storybook/addon-knobs"),
     ],
+
     features: {
         postcss: false,
         babelModeV7: true,
         // storyStoreV7: true
     },
+
     core: {
-        builder: "webpack5",
-        disableTelemetry: true,
+        disableTelemetry: true
     },
-    framework: "@storybook/react",
+
+    framework: {
+        name: getAbsolutePath("@storybook/react-webpack5"),
+        options: {}
+    },
+
+    docs: {
+        autodocs: true
+    }
 };

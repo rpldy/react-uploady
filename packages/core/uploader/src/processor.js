@@ -1,4 +1,6 @@
 // @flow
+import { logger } from "@rpldy/shared";
+import { UPLOADER_EVENTS } from "./consts";
 import createUploadQueue from "./queue";
 import createItemsSender from "./batchItemsSender";
 import createBatch from "./batch";
@@ -6,8 +8,7 @@ import createBatch from "./batch";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { Batch, TriggerCancellableOutcome, UploadInfo, UploadOptions } from "@rpldy/shared";
 import type { UploaderCreateOptions, UploaderProcessor } from "./types";
-import { UPLOADER_EVENTS } from "./consts";
-import { logger } from "@rpldy/shared";
+
 const createProcessor =
     (trigger: TriggerMethod, cancellable: TriggerCancellableOutcome, options: UploaderCreateOptions, uploaderId: string):
         UploaderProcessor => {

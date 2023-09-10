@@ -51,6 +51,8 @@ type BatchItemBase = {|
 	completed: number,
 	//bytes uploaded
 	loaded: number,
+    //total bytes
+	total: number,
 	recycled: boolean,
     previousBatch: ?string;
 |};
@@ -81,10 +83,12 @@ export type Batch = {
 	uploaderId: string,
 	items: BatchItem[],
 	state: BatchState,
-    //average of percentage of upload completed for batch items
+    //percentage of upload completed for batch items
     completed: number,
     //sum of bytes uploaded for batch items
     loaded: number,
+    //sum of bytes of all items in the batch
+    total: number,
     //number of items originally added to batch when its created
     orgItemCount: number,
     additionalInfo: ?string,
@@ -127,6 +131,8 @@ export type UploadOptions = {|
     isSuccessfulCall?: IsSuccessfulCall,
     //the pending/active item count threshold from which to start using the performant abort mechanism
     fastAbortThreshold?: number,
+    //metadata set by the user and isn't used for the upload in any way, a convenience to pass data around
+    userData?: any,
 |};
 
 export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];
@@ -137,7 +143,7 @@ export type TriggerCancellableOutcome = Promise<boolean> | Cancellable;
 
 export type Updater<T> = (string, ...args: mixed[]) => Promise<?T>;
 
-export type GetExact<T> = T & $Shape<T>;
+export type GetExact<T> = T & Partial<T>;
 
 export type RequestOptions = {
     method?: string,

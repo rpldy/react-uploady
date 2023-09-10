@@ -71,4 +71,6 @@ export const WithChunkedSender = (): Node => {
     );
 };
 
-export default (getCsfExport(undefined, "Chunked Sender", readme, { pkg: "chunked-sender", section: "Core" }): CsfExport);
+const chunkedSenderStories: CsfExport = getCsfExport(undefined, "Chunked Sender", readme, { pkg: "chunked-sender", section: "Core" });
+
+export default { ...chunkedSenderStories, title: "Core/Chunked Sender" };

@@ -38,6 +38,7 @@ export interface UploadOptions extends Partial<SendOptions> {
     destination?: Destination;
     inputFieldName?: string;
     fastAbortThreshold?: number;
+    userData?: any;
 }
 
 export enum BATCH_STATES {
@@ -58,6 +59,7 @@ export type Batch = {
     state: BATCH_STATES;
     completed: number;
     loaded: number;
+    total: number;
     orgItemCount: number;
     additionalInfo: string | null;
 };
@@ -80,6 +82,7 @@ interface BatchItemBase {
     uploadStatus: number;
     completed: number;
     loaded: number;
+    total: number;
     recycled: boolean;
     previousBatch?: string;
 }

@@ -10,6 +10,7 @@ import {
     removePendingBatches,
     clearBatchData,
     cancelBatchWithId,
+    triggerUploaderBatchEvent,
 } from "../batchHelpers";
 import createQueue from "../uploaderQueue";
 
@@ -283,8 +284,10 @@ describe("queue tests", () => {
             const batch = {
                     id: "b1",
                     items: [
-                        { id: "u1", completed: 20, loaded: 1000 },
-                        { id: "u2", completed: 80, loaded: 3000 }
+                        { id: "u1", completed: 20, loaded: 1000, file: { size: 5000 } },
+                        { id: "u2", completed: 75, loaded: 3200, file: { size: 4000 }  },
+                        { id: "u3", completed: 40, loaded: 8000, file: { size: 20000 } },
+                        { id: "u4", completed: 100, loaded: 1, file: undefined, url: "test" },
                     ]
                 },
                 batchOptions = {};
@@ -295,10 +298,12 @@ describe("queue tests", () => {
             senderOnHandlers[SENDER_EVENTS.BATCH_PROGRESS](batch);
 
             const state2 = queue.getState();
-            expect(state2.batches["b1"].batch.completed).toBe(50);
-            expect(state2.batches["b1"].batch.loaded).toBe(4000);
 
-            expect(trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_PROGRESS, state2.batches["b1"].batch);
+            expect(state2.batches["b1"].batch.loaded).toBe(12201);
+            expect(state2.batches["b1"].batch.total).toBe(29001);
+            expect( state2.batches["b1"].batch.completed).toBeCloseTo(0.42, 2);
+
+            expect(triggerUploaderBatchEvent).toHaveBeenCalledWith(expect.any(Object), "b1", UPLOADER_EVENTS.BATCH_PROGRESS);
         });
 
         it("should not trigger event if no batch found", () => {

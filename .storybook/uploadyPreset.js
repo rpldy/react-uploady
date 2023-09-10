@@ -4,12 +4,12 @@ const webpack = require("webpack"),
     { getUploadyVersion } = require("../scripts/utils");
 
 const getAllPackagesVersions = async () => {
-    const pkgs = await getMatchingPackages({});
+    const pkgs = getMatchingPackages();
 
     console.log("...Retrieving package versions for stories");
 
     const pkgVersions = await Promise.all(
-        pkgs.packages.map(((pkg) =>
+        pkgs.map(((pkg) =>
             getCurrentNpmVersion(pkg))));
 
     return JSON.stringify(pkgVersions);
@@ -19,7 +19,7 @@ const getCurrentNpmVersion = async (pkg) => {
     let result = null;
 
     try {
-        result = { name: pkg.name, version: pkg.version };
+        result = { name: pkg.name, version: pkg.get("version") };
     } catch (e) {
         console.error("FAILED TO GET NPM VERSION !!!!!", e);
     }
@@ -89,20 +89,5 @@ module.exports = {
         config = updateHtmlTitle(config);
 
         return addEnvParams(config);
-    },
-
-    managerWebpack: async (config) => {
-        //fixing issue with module imports not using extensions: https://github.com/webpack/webpack/issues/11467#issuecomment-691873586
-        config.module.rules.push({
-            test: /\.m?js/,
-            resolve: {
-                fullySpecified: false
-            }
-        });
-
-        return updateDefinePlugin(config, async (definitions) => ({
-            ...definitions,
-            "PUBLISHED_VERSIONS": await getAllPackagesVersions(config),
-        }));
     },
 };

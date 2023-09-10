@@ -7,6 +7,7 @@ import { UPLOADER_EVENTS } from "../consts";
 import processFinishedRequest from "./processFinishedRequest";
 import { getItemsPrepareUpdater } from "./preSendPrepare";
 import { getIsItemFinalized } from "./itemHelpers";
+import { getBatchDataFromItemId } from "./batchHelpers";
 
 import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { SendResult } from "@rpldy/sender";
@@ -165,8 +166,10 @@ const processBatchItems = (queue: QueueState, ids: string[], next: ProcessNextMe
 
     //allow user code cancel items from start event handler(s)
     //returning promise for testing purposes
-    return Promise.all(items.map((i: BatchItem) =>
-        queue.runCancellable(UPLOADER_EVENTS.ITEM_START, i)))
+    return Promise.all(items.map((i: BatchItem) => {
+        const { batchOptions } = getBatchDataFromItemId(queue, i.id);
+        return queue.runCancellable(UPLOADER_EVENTS.ITEM_START, i, batchOptions);
+    }))
         .then((cancelledResults) => {
             let allowedItems: BatchItem[] = cancelledResults
                 .map((isCancelled: boolean, index: number): ?BatchItem =>

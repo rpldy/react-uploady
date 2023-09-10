@@ -11,6 +11,7 @@ import {
     removePendingBatches,
     clearBatchData,
     cancelBatchWithId,
+    triggerUploaderBatchEvent,
 } from "./batchHelpers";
 
 import type { TriggerCancellableOutcome, Batch, BatchItem, UploadOptions } from "@rpldy/shared";
@@ -83,12 +84,13 @@ const createUploaderQueue = (
         return getBatchFromState(state, batch.id);
     };
 
-    const handleItemProgress = (item: BatchItem, completed: number, loaded: number) => {
+    const handleItemProgress = (item: BatchItem, completed: number, loaded: number, total: number) => {
         if (state.items[item.id]) {
             updateState((state: State) => {
                 const stateItem = state.items[item.id];
                 stateItem.loaded = loaded;
                 stateItem.completed = completed;
+                stateItem.total = total;
             });
 
             //trigger item progress event for the outside
@@ -102,24 +104,29 @@ const createUploaderQueue = (
             .items;
 
         if (batchItems) {
-            const [completed, loaded] = batchItems
+            const [loaded, total] = batchItems
                 .reduce((res, { id }) => {
                     //getting data from state.items since in dev the wrapped state.batch.items and state.items aren't the same objects
-                    const { completed, loaded } = state.items[id];
-                    res[0] += completed;
-                    res[1] += loaded;
+                    const { loaded, file } = state.items[id];
+                    const size = file?.size || loaded || 1;
+                    //loaded = uploaded bytes
+                    res[0] += loaded;
+                    //total = file byte size
+                    res[1] += size;
                     return res;
                 }, [0, 0]);
 
             updateState((state: State) => {
                 const stateBatch = state.batches[batch.id].batch;
-                //average of completed percentage for batch items
-                stateBatch.completed = completed / batchItems.length;
+                //sum of bytes in batch items
+                stateBatch.total = total;
                 //sum of loaded bytes for batch items
                 stateBatch.loaded = loaded;
+                //completed percentage for batch items
+                stateBatch.completed = loaded / total;
             });
 
-            trigger(UPLOADER_EVENTS.BATCH_PROGRESS, state.batches[batch.id].batch);
+            triggerUploaderBatchEvent(queueState, batch.id, UPLOADER_EVENTS.BATCH_PROGRESS);
         }
     };
 

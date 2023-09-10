@@ -1,0 +1,23 @@
+name: 'Close stale issues'
+on:
+    schedule:
+        - cron: '30 1 * * *'
+    workflow_dispatch:
+
+permissions:
+    issues: write
+
+jobs:
+    stale:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/stale@v8
+              with:
+                  days-before-stale: 10
+                  days-before-close: 5
+                  stale-issue-message: "It's been a while. Waiting for an update... 🧐"
+                  close-issue-message: "It's been too long. Closing issue for now. 😿"
+                  stale-issue-label: 'stale'
+                  exempt-issue-labels: 'in-progress, no-stale'
+                  remove-issue-stale-when-updated: true
+                  remove-stale-when-updated: true

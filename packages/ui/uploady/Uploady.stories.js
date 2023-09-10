@@ -25,6 +25,7 @@ import Uploady, {
     useUploadOptions,
     useBatchStartListener,
     useBatchAddListener,
+    useBatchProgressListener,
     useItemStartListener,
     useItemFinishListener,
     useItemErrorListener,
@@ -39,12 +40,16 @@ import readme from "./README.md";
 import type { Node, Element } from "react";
 import type { Batch, BatchItem } from "@rpldy/shared";
 
-const ContextUploadButton = ({ text = "Custom Upload Button" }: { text?: string }) => {
+const ContextUploadButton = ({ text = "Custom Upload Button" }: { text?: string, ... }) => {
     const uploadyContext = useUploady();
 
     const onClick = useCallback(() => {
         uploadyContext?.showFileUpload();
     }, [uploadyContext]);
+
+    // useBatchProgressListener(({ completed, loaded, total}) => {
+    //     console.log("------- BATCH PROGRESS --------------", { completed, loaded, total })
+    // });
 
     return <button id="upload-button" onClick={onClick}>{text}</button>;
 };
@@ -352,7 +357,7 @@ const UploadFormWithInternalInput = () => {
     </>;
 };
 
-export const withExposedInternalInput = (): Node => {
+export const WithExposedInternalInput = (): Node => {
     const { enhancer, destination, grouped, groupSize, autoUpload } = useStoryUploadySetup();
 
     return <Uploady
@@ -386,7 +391,7 @@ const ExampleRequestPreSend = () => {
                         "x-file-names-lengths": namesLengths,
                     }
                 },
-                ...(window.parent.__extPreSendOptions || {})
+                ...(window.__extPreSendOptions || {})
             }
         };
     });
@@ -532,8 +537,8 @@ export const UMD_ALL = (): Element<"div"> => {
 
 const UploadButtonWithInvalidPreSend = () => {
     useRequestPreSend(({ items }) => {
+        // $FlowExpectedError[incompatible-call]
         return {
-            // $FlowExpectedError[prop-missing]
             items: items[0].id === "batch-1.item-1" ? [
                 //intentionally cause error for the first upload since changing item id is forbidden
                 { ...items[0], id: "invalid-id" },
@@ -612,5 +617,6 @@ export const TEST_CancelOnBatchAdd = (): Node => {
     );
 };
 
+const UploadyStories: CsfExport = getCsfExport(Uploady, "Uploady", readme, { pkg: "uploady", section: "UI" })
 
-export default (getCsfExport(Uploady, "Uploady", readme, { pkg: "uploady", section: "UI" }): CsfExport);
+export default { ...UploadyStories, title : "UI/Uploady" };

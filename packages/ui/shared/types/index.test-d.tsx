@@ -60,25 +60,25 @@ const EventHooksTest: React.FC = () => {
 
     const { completed: batchCompleted } = useBatchProgressListener("b1");
 
-    useBatchFinishListener((batch) => {
-        console.log(`batch ${batch.id} finished`);
+    useBatchFinishListener((batch, options) => {
+        console.log(`batch ${batch.id} finished - options.autoUpload: ${options.autoUpload}`);
     });
 
-    useBatchCancelledListener((batch) => {
-        console.log(`batch ${batch.id} cancelled`);
+    useBatchCancelledListener((batch, options) => {
+        console.log(`batch ${batch.id} cancelled - options.autoUpload: ${options.autoUpload}`);
     });
 
-    useBatchAbortListener((batch) => {
-        console.log(`batch ${batch.id} aborted`);
+    useBatchAbortListener((batch, options) => {
+        console.log(`batch ${batch.id} aborted - options.autoUpload: ${options.autoUpload}`);
     });
 
-    useItemStartListener((item) => {
-        console.log(`item ${item.id} started`);
+    useItemStartListener((item,options) => {
+        console.log(`item ${item.id} started - options.autoUpload: ${options.autoUpload}`);
         return !item.url;
     });
 
-    useItemFinishListener((item) => {
-        console.log(`item ${item.id} finished`);
+    useItemFinishListener((item, options) => {
+        console.log(`item ${item.id} finished - options.autoUpload: ${options.autoUpload}`);
     });
 
     const itemProgress = useItemProgressListener((item) => {
@@ -87,8 +87,8 @@ const EventHooksTest: React.FC = () => {
 
     const { completed: itemCompleted } = useItemProgressListener("bi3");
 
-    useItemCancelListener((item) => {
-        console.log(`item ${item.id} cancelled`);
+    useItemCancelListener((item, options) => {
+        console.log(`item ${item.id} cancelled - options.autoUpload: ${options.autoUpload}`);
     });
 
     useItemCancelListener((item) => {

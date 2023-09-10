@@ -3,7 +3,7 @@ import getQueueState, { realUnwrap } from "./mocks/getQueueState.mock";
 import "./mocks/batchHelpers.mock";
 import { FILE_STATES } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../../consts";
-import { cleanUpFinishedBatches, incrementBatchFinishedCounter } from "../batchHelpers";
+import { cleanUpFinishedBatches, incrementBatchFinishedCounter, getBatchDataFromItemId } from "../batchHelpers";
 import processFinishedRequest, { FILE_STATE_TO_EVENT_MAP } from "../processFinishedRequest";
 
 describe("onRequestFinished tests", () => {
@@ -37,6 +37,8 @@ describe("onRequestFinished tests", () => {
 			}
 		});
 
+        getBatchDataFromItemId.mockReturnValueOnce(queueState.getState().batches[batch.id]);
+
 		await processFinishedRequest(queueState, [{
 			id: itemId,
 			info: {
@@ -64,11 +66,13 @@ describe("onRequestFinished tests", () => {
 			...queueState.getState().items[itemId]
 		});
 
+        const stateBatchOptions =  queueState.getState().batches[batch.id].batchOptions;
+
         if (state === UPLOADER_EVENTS.ITEM_FINISH) {
-            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, finishedItem);
+            expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, finishedItem, stateBatchOptions);
         }
 
-		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, finishedItem);
+		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, finishedItem,stateBatchOptions);
         expect(incrementBatchFinishedCounter).toHaveBeenCalledWith(expect.any(Object), batch.id);
 
         expect(queueState.updateState).toHaveBeenCalledTimes(2);
@@ -95,7 +99,7 @@ describe("onRequestFinished tests", () => {
 
 		const item = test.queueState.getState().items["u1"];
 		expect(test.queueState.handleItemProgress).toHaveBeenCalledWith(
-			item, 100, item.file.size);
+			item, 100, item.file.size, item.file.size);
 	});
 
 	it("should handle url item progress if not complete === 100", async () => {
@@ -103,7 +107,7 @@ describe("onRequestFinished tests", () => {
 
 		const item = test.queueState.getState().items["u2"];
 		expect(test.queueState.handleItemProgress).toHaveBeenCalledWith(
-			item, 100, 0);
+			item, 100, 0, 0);
 	});
 
 	it("for single item should finalize if last file in batch without active id found", async () => {
@@ -132,6 +136,8 @@ describe("onRequestFinished tests", () => {
 
 		const expectedItem = queueState.getState().items.u1;
 
+        getBatchDataFromItemId.mockReturnValueOnce(queueState.getState().batches[batch.id]);
+
 		await processFinishedRequest(queueState, [{
 			id: "u1",
 			info: {
@@ -142,7 +148,7 @@ describe("onRequestFinished tests", () => {
 
 		expect(cleanUpFinishedBatches).toHaveBeenCalledTimes(1);
 		expect(mockNext).toHaveBeenCalledTimes(1);
-		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, expectedItem);
+		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, expectedItem, queueState.getState().batches[batch.id].batchOptions);
 
 		expect(queueState.updateState).toHaveBeenCalledTimes(2);
 		expect(queueState.getState().itemQueue[batch.id]).toHaveLength(1);
@@ -170,6 +176,8 @@ describe("onRequestFinished tests", () => {
 				activeIds: ["u1"],
 			});
 
+            getBatchDataFromItemId.mockReturnValueOnce(queueState.getState().batches[batch.id]);
+
 			await processFinishedRequest(queueState, [{
 				id: "u1",
 				info: {
@@ -180,9 +188,10 @@ describe("onRequestFinished tests", () => {
 			}], mockNext);
 
 			const item = queueState.getState().items.u1;
+            const batchOptions = queueState.getState().batches[batch.id].batchOptions;
 
-            expect(queueState.trigger).toHaveBeenNthCalledWith(1, FILE_STATE_TO_EVENT_MAP[state], item);
-			expect(queueState.trigger).not.toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, item);
+            expect(queueState.trigger).toHaveBeenNthCalledWith(1, FILE_STATE_TO_EVENT_MAP[state], item, batchOptions);
+			expect(queueState.trigger).not.toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, item, batchOptions);
 		});
 	});
 
@@ -201,6 +210,8 @@ describe("onRequestFinished tests", () => {
             itemQueue: { [batch.id] : ["u1"] },
             activeIds: ["u1"],
         });
+
+        getBatchDataFromItemId.mockReturnValueOnce(queueState.getState().batches[batch.id]);
 
         await processFinishedRequest(queueState, [{
             id: "u1",
@@ -240,6 +251,10 @@ describe("onRequestFinished tests", () => {
 				}
 			});
 
+            getBatchDataFromItemId
+                .mockReturnValueOnce(queueState.getState().batches[batch.id])
+                .mockReturnValueOnce(queueState.getState().batches[batch.id]);
+
 			await processFinishedRequest(queueState, [{
 				id: "u1",
 				info: {
@@ -262,16 +277,17 @@ describe("onRequestFinished tests", () => {
 
 			const item1 = queueState.getState().items.u1;
 			const item2 = queueState.getState().items.u2;
+            const batchOptions = queueState.getState().batches[batch.id].batchOptions;
 
             expect(queueState.getState().items.u2.uploadStatus).toBe(400);
 			expect(queueState.getState().items.u2).toEqual(item2);
 
 			expect(cleanUpFinishedBatches).toHaveBeenCalledTimes(1);
 			expect(mockNext).toHaveBeenCalledTimes(1);
-			expect(queueState.trigger).toHaveBeenNthCalledWith(1, UPLOADER_EVENTS.ITEM_FINISH, item1);
-			expect(queueState.trigger).toHaveBeenNthCalledWith(2, UPLOADER_EVENTS.ITEM_FINALIZE, item1);
-			expect(queueState.trigger).toHaveBeenNthCalledWith(3, FILE_STATE_TO_EVENT_MAP[failState], item2);
-			expect(queueState.trigger).toHaveBeenNthCalledWith(4, UPLOADER_EVENTS.ITEM_FINALIZE, item2);
+			expect(queueState.trigger).toHaveBeenNthCalledWith(1, UPLOADER_EVENTS.ITEM_FINISH, item1, batchOptions);
+			expect(queueState.trigger).toHaveBeenNthCalledWith(2, UPLOADER_EVENTS.ITEM_FINALIZE, item1, batchOptions);
+			expect(queueState.trigger).toHaveBeenNthCalledWith(3, FILE_STATE_TO_EVENT_MAP[failState], item2, batchOptions);
+			expect(queueState.trigger).toHaveBeenNthCalledWith(4, UPLOADER_EVENTS.ITEM_FINALIZE, item2, batchOptions);
 
 			expect(queueState.updateState).toHaveBeenCalledTimes(4);
 			expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();

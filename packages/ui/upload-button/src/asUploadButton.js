@@ -32,7 +32,7 @@ const asUploadButton = (Component: ComponentType<any>): React$AbstractComponent<
 
     markAsUploadOptionsComponent(AsUploadButton);
 
-    return forwardRef<UploadButtonProps, mixed | React$ElementType>(AsUploadButton);
+    return forwardRef<UploadButtonProps, {current: null | React$ElementType} | ((null | React$ElementType) => mixed)>(AsUploadButton);
 };
 
 export default asUploadButton;

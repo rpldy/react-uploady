@@ -171,4 +171,4 @@ jobs:
             -   name: Report PR URL
                 if: ${{ steps.pr.outputs.pull-request-number != '' }}
                 run: |
-                   echo "Created PR: ${{ steps.pr.outputs.pull-request-url }}"
+                   echo "Created PR: ${{ steps.pr.outputs.pull-request-url }}" >> $GITHUB_STEP_SUMMARY

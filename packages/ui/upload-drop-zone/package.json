@@ -42,7 +42,7 @@
     "flow-bin": "^0.215.1",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "styled-components": "^5.3.5"
+    "styled-components": "^6.0.7"
   },
   "peerDependencies": {
     "react": ">=16.8",

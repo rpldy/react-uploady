@@ -94,6 +94,11 @@ Cypress.Commands.add("assertLogEntryContains", { prevSubject: true }, (storyLog,
 Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, eventName, asserter, options = {}) => {
     let logLine;
 
+    const invalid = storyLog.find((item) => !item);
+    if (invalid) {
+        throw new StoryLogError(`customAssertLogEntry: found issue with log: ${JSON.stringify(storyLog)}`);
+    }
+
     try {
         if (options.all) {
             logLine = storyLog.filter((item) => item.args[0] === eventName).map((item) => item.args.slice(1));

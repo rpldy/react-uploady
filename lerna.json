@@ -1,21 +1,15 @@
 {
-  "version": "1.5.0-rc.5",
-  "npmClient": "yarn",
-  "command": {
-    "version": {
-      "allowBranch": "release-*"
+    "version": "1.5.0-rc.5",
+    "npmClient": "yarn",
+    "command": {
+        "version": {
+            "allowBranch": "release-*"
+        },
+        "publish": {
+            "ignoreChanges": ["**/tests/**", "**/*.test.js"],
+            "message": "chore: publish new version: %v"
+        }
     },
-    "publish": {
-      "ignoreChanges": [
-        "**/tests/**",
-        "**/*.test.js"
-      ],
-      "message": "chore: publish new version: %v"
-    }
-  },
-  "packages": [
-    "packages/core/*",
-    "packages/ui/*",
-    "packages/native/*"
-  ]
+    "packages": ["packages/core/*", "packages/ui/*", "packages/native/*"],
+    "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }

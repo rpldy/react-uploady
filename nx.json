@@ -1,26 +1,37 @@
 {
-    "tasksRunnerOptions": {
-        "default": {
-            "runner": "nx/tasks-runners/default",
-            "options": {
-                "cacheableOperations": [
-                    "build",
-                    "flow:copy",
-                    "jest"
-                ]
-            }
-        }
-    },
-    "targetDefaults": {
-        "build": {
-            "outputs": [
-                "{projectRoot}/lib"
-            ]
-        },
-        "flow:copy": {
-            "outputs": [
-                "{projectRoot}/lib/**/*.js.flow"
-            ]
-        }
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": [
+          "build",
+          "flow:copy",
+          "jest"
+        ]
+      }
     }
+  },
+  "targetDefaults": {
+    "build": {
+      "outputs": [
+        "{projectRoot}/lib"
+      ]
+    },
+    "flow:copy": {
+      "outputs": [
+        "{projectRoot}/lib/**/*.js.flow"
+      ]
+    }
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "namedInputs": {
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
+    "sharedGlobals": [],
+    "production": [
+      "default"
+    ]
+  }
 }

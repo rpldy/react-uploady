@@ -2,11 +2,7 @@
     "compilerOptions": {
         "target": "esnext",
         "module": "CommonJS",
-        "lib": [
-            "dom",
-            "es2017",
-            "esnext"
-        ],
+        "lib": ["dom", "es2017", "esnext"],
         "jsx": "react",
         "strict": true,
         "moduleResolution": "node",
@@ -22,10 +18,6 @@
             "~/*": ["packages/*"]
         }
     },
-    "include": [
-        "packages/**/types/*.ts",
-        "packages/**/types/*.tsx"
-    ],
-    "exclude": [
-    ]
+    "include": ["packages/**/types/*.ts", "packages/**/types/*.tsx"],
+    "exclude": []
 }

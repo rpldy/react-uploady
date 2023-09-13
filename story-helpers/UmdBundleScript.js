@@ -1,5 +1,5 @@
-import React, { useCallback, useState, memo } from "react";
-import Script from "react-load-script";
+import React, { useState, memo } from "react";
+import useScript from "./useScript"
 import { UMD_NAMES } from "./consts";
 
 const BASE = "http://localhost:8009/",
@@ -24,17 +24,12 @@ export default memo(({ bundle, onLoad }) => {
     const [polyfillReady, setPolyfillReady] = useState(false);
     const [scriptReady, setScriptReady] = useState(false);
 
-    const onPolyfillLoaded = useCallback(() => {
-        setPolyfillReady(true);
-    }, []);
+    useScript(POLYFILLS_MAP[bundle], setPolyfillReady);
 
-    const onScriptLoaded = useCallback(() => {
+    useScript(polyfillReady ? UMD_BUNDLES[bundle]: null, () => {
         setScriptReady(true);
-
-        setTimeout(() => {
-            onLoad();
-        }, 2000);
-    }, [onLoad]);
+        setTimeout(onLoad, 2000);
+    });
 
     return <>
         <p>
@@ -44,8 +39,5 @@ export default memo(({ bundle, onLoad }) => {
 
         {polyfillReady && <p>polyfill ready. Fetching UMD bundle from: {UMD_BUNDLES[bundle]}</p>}
         {scriptReady && <p>script ready!!! Let's go</p>}
-
-        <Script url={POLYFILLS_MAP[bundle]} onLoad={onPolyfillLoaded}/>
-        {polyfillReady && <Script key="secondScript" url={UMD_BUNDLES[bundle]} onLoad={onScriptLoaded}/>}
     </>;
 });

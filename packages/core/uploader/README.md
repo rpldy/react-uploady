@@ -199,7 +199,7 @@ Triggered when a new batch is added.
 
 Triggered when batch items start uploading
 
-- Parameters: _(batch)_
+- Parameters: _(batch, uploadOptions)_
 
 > This event is _[cancellable](#cancellable-events)_
 
@@ -207,25 +207,25 @@ Triggered when batch items start uploading
 
 Triggered every time progress data is received from the upload request(s)
 
-- Parameters: _(batch)_
+- Parameters: _(batch, uploadOptions)_
 
 ### UPLOADER_EVENTS.BATCH_FINISH
 
 Triggered when batch items finished uploading
 
-- Parameters: _(batch)_
+- Parameters: _(batch, uploadOptions)_
  
 ### UPLOADER_EVENTS.BATCH_CANCEL
 
 Triggered in case batch was cancelled from BATCH_START event handler
 
-- Parameters: _(batch)_
+- Parameters: _(batch, uploadOptions)_
 
 ### UPLOADER_EVENTS.BATCH_ABORT
 
 Triggered in case the batch was [aborted](#abortBatch)
 
-- Parameters: _(batch)_
+- Parameters: _(batch, uploadOptions)_
 
 ### UPLOADER_EVENTS.BATCH_ERROR
 
@@ -233,20 +233,20 @@ Triggered in case the batch was failed with an error.
 These errors will most likely occur due to invalid event handling.
 For instance, by a handler (ex: BATCH_START) throwing an error.
 
-- Parameters: _(batch)_
+- Parameters: _(batch, uploadOptions)_
 
 ### UPLOADER_EVENTS.BATCH_FINALIZE
 
 Triggered when all batch items have finished uploading or in case the batch was cancelled(abort) or had an error
 
-- Parameters: _(batch)_
+- Parameters: _(batch, uploadOptions)_
 
 ### UPLOADER_EVENTS.ITEM_START
 
 Triggered when item starts uploading (just before)
 For grouped uploads (multiple files in same xhr request) ITEM_START is triggered for each item separately 
 
-- Parameters: _(item)_
+- Parameters: _(item, uploadOptions)_
 
 > This event is _[cancellable](#cancellable-events)_
 
@@ -254,7 +254,7 @@ For grouped uploads (multiple files in same xhr request) ITEM_START is triggered
 
 Triggered when item finished uploading successfully
 
-- Parameters: _(item)_
+- Parameters: _(item, uploadOptions)_
 
 > The server response can be accessed through the item's _uploadResponse_ property and status code through _uploadStatus_ 
 
@@ -270,13 +270,13 @@ Triggered every time progress data is received for this file upload
 
 Triggered in case item was cancelled from [ITEM_START](#UPLOADER_EVENTS.ITEM_START) event handler
 
-- Parameters: _(item)_
+- Parameters: _(item, uploadOptions)_
 
 ### UPLOADER_EVENTS.ITEM_ERROR
 
 Triggered in case item upload failed
 
-- Parameters: _(item)_
+- Parameters: _(item, uploadOptions)_
 
 > The server response can be accessed through the item's uploadResponse property.
 
@@ -284,14 +284,14 @@ Triggered in case item upload failed
     
 Triggered in case [abort](#abort) was called
 
-- Parameters: _(item)_
+- Parameters: _(item, uploadOptions)_
 
 ### UPLOADER_EVENTS.ITEM_FINALIZE
 
 Triggered for item when uploading is done due to: finished, error, cancel or abort
 Use this event if you want to handle the state of the item being done for any reason.
 
-- Parameters: _(item)_
+- Parameters: _(item, uploadOptions)_
 
 ### UPLOADER_EVENTS.REQUEST_PRE_SEND
 

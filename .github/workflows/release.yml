@@ -162,7 +162,7 @@ jobs:
                 with:
                     name: ${{ steps.version-name.outputs.NEW_VERSION }}
                     body: ${{ steps.version-log.outputs.VERSION_LOG }}
-                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) }}
+                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) || false }}
                     tag: ${{ steps.version-name.outputs.NEW_VERSION }}
 
             -   name: Create PR for Release

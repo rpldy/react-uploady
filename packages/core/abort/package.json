@@ -1,5 +1,5 @@
 {
-  "version": "1.5.0-rc.5",
+  "version": "1.5.0",
   "name": "@rpldy/abort",
   "description": "adds the capability to abort/cancel running & pending uploads",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -23,9 +23,9 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/raw-uploader": "^1.5.0-rc.5",
-    "@rpldy/shared": "^1.5.0-rc.5",
-    "@rpldy/simple-state": "^1.5.0-rc.5"
+    "@rpldy/raw-uploader": "^1.5.0",
+    "@rpldy/shared": "^1.5.0",
+    "@rpldy/simple-state": "^1.5.0"
   },
   "devDependencies": {
     "flow-bin": "^0.215.1"

@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.5.0 (2023-09-14)
+
+### Features
+
+- `[uploader]` - feat: support optional user data (client-side only). Fix for [#547](https://github.com/rpldy/react-uploady/issues/547)
+- `[uploader]` - feat: expose upload total size for progress event, by @rickythink
+
+### Bug fixes
+
+- `[uploader]` - fix: improve batch upload progress data for smoother progress. Fix for [#546](https://github.com/rpldy/react-uploady/issues/546)
+
+### Docs
+
+- `storybook` - upgrade to SB 7.4
+- `root` - created Security.MD guideline
+
+### Internal
+
+- `all` - upgrade dev deps (jest, babel, flow, lerna!, and more)
+- `all` - release from GH workflow
+- `story-helpers` - removed unmaintained react-load-script dep
+
+
 ## 1.5.0-rc.5 (2023-09-10)
 
 _PRE-RELEASE_

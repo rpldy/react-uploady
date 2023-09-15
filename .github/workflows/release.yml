@@ -28,11 +28,18 @@ on:
                     - ""
                     - "rc"
                     - "alpha"
+
             mergeMaster:
                 type: boolean
                 description: Merge latest master?
                 required: true
                 default: true
+
+            dry:
+                type: boolean
+                description: dont publish, fail after version
+                required: false
+                default: false
 
 permissions:
     pull-requests: write
@@ -110,7 +117,7 @@ jobs:
                 id: version
                 run: |
                     echo "### Using version args: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
-                    lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --no-git-tag-version --yes
+                    lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --no-git-tag-version ${{ inputs.dry == false && '--yes' || ''  }}
 
             -   name: Build source
                 run: yarn build
@@ -155,7 +162,7 @@ jobs:
                 with:
                     name: ${{ steps.version-name.outputs.NEW_VERSION }}
                     body: ${{ steps.version-log.outputs.VERSION_LOG }}
-                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) }}
+                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) || false }}
                     tag: ${{ steps.version-name.outputs.NEW_VERSION }}
 
             -   name: Create PR for Release

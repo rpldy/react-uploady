@@ -117,7 +117,7 @@ jobs:
                 id: version
                 run: |
                     echo "### Using version args: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
-                    lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --no-git-tag-version ${{ inputs.dry &&  '' || '--yes'  }}
+                    lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --no-git-tag-version ${{ inputs.dry == false && '--yes' || ''  }}
 
             -   name: Build source
                 run: yarn build

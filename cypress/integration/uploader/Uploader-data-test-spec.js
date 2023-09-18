@@ -47,6 +47,8 @@ describe("Uploader - Event data test", () => {
                 }
             });
 
+            cy.wait(WAIT_X_SHORT);
+
             cy.storyLog().customAssertLogEntry("###BATCH-FINISH", (logLine, env) => {
                 expect(Object.getOwnPropertySymbols(logLine[0])).to.have.lengthOf(0, "BATCH-FINISH batch - shouldnt have proxy symbols");
                 expect(logLine[1].userData.test).to.eq("!23", "BATCH-FINISH options to contain user data passed from uploader.add");

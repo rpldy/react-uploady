@@ -106,7 +106,7 @@
     "bytes": "^3.1.0",
     "chalk": "^4.1.2",
     "codecov": "^3.8.3",
-    "concurrently": "^6.3.0",
+    "concurrently": "^8.2.1",
     "core-js": "^3.19.1",
     "cypress": "^13.2.0",
     "cypress-intercept-formdata": "^0.5.1",

@@ -7192,10 +7192,10 @@ csstype@^3.0.2, csstype@^3.1.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.2.tgz#1d4bf9d572f11c14031f0436e1c10bc1f571f50b"
   integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
 
-cypress-intercept-formdata@^0.5.1:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/cypress-intercept-formdata/-/cypress-intercept-formdata-0.5.2.tgz#95fd9b33af8a6d54c4d9a12ecc076997f2f19d56"
-  integrity sha512-27BA/qg2inD7bGRdPG+24VuZTGd7rQHmiE9hvIrAdqoP1OdkZRfewAxHO8eayLy9YqJmYFJ4GPtsVR17lDCM+w==
+cypress-intercept-formdata@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/cypress-intercept-formdata/-/cypress-intercept-formdata-0.6.0.tgz#6bf607c7bd874ffd9b3bf699b865c1a551a1921f"
+  integrity sha512-r3v+Gb7tGGNiHyzcoDPzqk6Z3lJe2t+8ZEo6VPNA/XvfrG6DF3nXjR4KeQq0/rt3h8ve4FL14CUDtacSGNMv5Q==
 
 cypress@^13.2.0:
   version "13.2.0"

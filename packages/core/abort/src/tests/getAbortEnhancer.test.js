@@ -1,12 +1,12 @@
 import getAbortEnhancer from "../getAbortEnhancer";
 import { abortItem, abortBatch, abortAll } from "../abort";
 
-jest.mock("../abort");
+vi.mock("../abort");
 
 describe("getAbortEnhancer tests", () => {
     it("should enhance uploader with abort fns", () => {
        const enhancer = getAbortEnhancer();
-       const uploader = { update: jest.fn() };
+       const uploader = { update: vi.fn() };
 
        const enhanced = enhancer(uploader);
 

@@ -3,7 +3,7 @@ describe("scheduleIdleWork tests", () => {
     const orgRIC = window.requestIdleCallback;
 
     const init = (preReq = null) => {
-        jest.mock("../hasWindow");
+        vi.mock("../hasWindow");
         hasWindow = require("../hasWindow").default;
 
         preReq?.();
@@ -12,7 +12,7 @@ describe("scheduleIdleWork tests", () => {
     };
 
     afterEach(() => {
-        jest.resetModules();
+        vi.resetModules();
         window.requestIdleCallback = orgRIC;
     });
 
@@ -21,7 +21,7 @@ describe("scheduleIdleWork tests", () => {
 
         beforeEach(() => {
             init(() => {
-                mockRIC = jest.fn((fn) => fn());
+                mockRIC = vi.fn((fn) => fn());
                 window.requestIdleCallback = mockRIC;
                 hasWindow.mockReturnValueOnce(true);
             });
@@ -51,13 +51,13 @@ describe("scheduleIdleWork tests", () => {
     describe("should fallback on setTimeout when no RIC", () => {
         beforeEach(() => {
             init(() => {
-                jest.useFakeTimers();
+                vi.useFakeTimers();
                 hasWindow.mockReturnValueOnce(true);
             });
         });
 
         afterEach(() => {
-            jest.useRealTimers();
+            vi.useRealTimers();
         });
 
         it("should schedule using setTimeout", async () => {
@@ -70,7 +70,7 @@ describe("scheduleIdleWork tests", () => {
                 }, 100);
 
                 expect(a).toBe(0);
-                jest.advanceTimersByTime(100);
+                vi.advanceTimersByTime(100);
             })).resolves.toBeUndefined();
 
             expect(a).toBe(1);
@@ -84,7 +84,7 @@ describe("scheduleIdleWork tests", () => {
                 }, 100);
 
                 cancel();
-                jest.advanceTimersByTime(100);
+                vi.advanceTimersByTime(100);
                 resolve();
             })).resolves.toBeUndefined();
 
@@ -95,7 +95,7 @@ describe("scheduleIdleWork tests", () => {
     describe("no window tests", () => {
         beforeEach(() => {
             init(() => {
-                jest.useFakeTimers();
+                vi.useFakeTimers();
                 hasWindow.mockReturnValueOnce(false);
             });
         });
@@ -110,7 +110,7 @@ describe("scheduleIdleWork tests", () => {
                 }, 100);
 
                 expect(a).toBe(0);
-                jest.advanceTimersByTime(100);
+                vi.advanceTimersByTime(100);
             })).resolves.toBeUndefined();
 
             expect(a).toBe(1);

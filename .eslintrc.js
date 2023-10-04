@@ -140,7 +140,8 @@ module.exports = {
                 "testCustomHook": "readonly",
                 "mount": "readonly",
                 "shallow": "readonly",
-                "jsdom": "readonly"
+                "jsdom": "readonly",
+                "vi": "readonly"
             },
             "extends": ["plugin:jest/recommended"],
             "rules": {

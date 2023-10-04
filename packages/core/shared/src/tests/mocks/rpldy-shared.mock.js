@@ -4,38 +4,39 @@ import clone from "../../utils/clone";
 import pick from "../../utils/pick";
 import isFunction from "../../utils/isFunction";
 import isPromise from "../../utils/isPromise";
+import * as utils from "../../utils";
 
-const invariant = jest.fn();
+vi.mock("../../utils");
+
+const invariant = vi.fn();
 
 const logger = {
-    isDebugOn: jest.fn(),
-    debugLog: jest.fn(),
-    setDebug: jest.fn(),
+    isDebugOn: vi.fn(),
+    debugLog: vi.fn(),
+    setDebug: vi.fn(),
 };
 
-const triggerCancellable = jest.fn();
-const triggerUpdater = jest.fn();
-const createBatchItem = jest.fn();
-const getIsBatchItem = jest.fn();
-const request = jest.fn();
-const parseResponseHeaders = jest.fn();
-
-const utils = jest.genMockFromModule("../../utils");
+const triggerCancellable = vi.fn();
+const triggerUpdater = vi.fn();
+const createBatchItem = vi.fn();
+const getIsBatchItem = vi.fn();
+const request = vi.fn();
+const parseResponseHeaders = vi.fn();
 
 //keep merge working - dont mock it
-utils.merge = jest.fn((...args) => merge(...args));
-utils.getMerge = jest.fn((...args) => getMerge(...args));
+utils.merge = vi.fn((...args) => merge(...args));
+utils.getMerge = vi.fn((...args) => getMerge(...args));
 //keep clone working - dont mock it
-utils.clone = jest.fn((...args) => clone(...args));
+utils.clone = vi.fn((...args) => clone(...args));
 //keep pick working - dont mock it
-utils.pick = jest.fn((...args) => pick(...args));
+utils.pick = vi.fn((...args) => pick(...args));
 //keep isFunction working - dont mock it
-utils.isFunction = jest.fn((...args) => isFunction(...args));
-utils.devFreeze = jest.fn((obj) => obj);
+utils.isFunction = vi.fn((...args) => isFunction(...args));
+utils.devFreeze = vi.fn((obj) => obj);
 //keep isPromise working - dont mock it
-utils.isPromise = jest.fn((...args) => isPromise(...args));
+utils.isPromise = vi.fn((...args) => isPromise(...args));
 //keep scheduleIdleWork working
-utils.scheduleIdleWork = jest.fn((fn) => fn());
+utils.scheduleIdleWork = vi.fn((fn) => fn());
 
 const sharedMock = {
     FILE_STATES,
@@ -56,7 +57,7 @@ const sharedMock = {
     ...utils,
 };
 
-jest.doMock("@rpldy/shared", () => sharedMock);
+vi.doMock("@rpldy/shared", () => sharedMock);
 
 export {
     FILE_STATES,

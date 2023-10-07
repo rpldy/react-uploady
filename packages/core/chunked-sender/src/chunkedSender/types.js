@@ -26,6 +26,7 @@ export type State = {|
     sendOptions: SendOptions,
     chunkCount: number,
     startByte: number,
+    lastChunkErrorData: ?{ status: number, response: any },
 |};
 
 type UpdateStateMethod = ((State) => void) => void;

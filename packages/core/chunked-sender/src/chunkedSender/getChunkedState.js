@@ -19,6 +19,7 @@ const getChunkedState = (
         responses: [],
         chunkCount: chunks.length,
         startByte: sendOptions.startByte || 0,
+        lastChunkErrorData: null,
         chunks,
         url,
         sendOptions,

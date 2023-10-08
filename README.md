@@ -153,7 +153,7 @@ After that, you can add additional packages as needed. See below for more detail
 
 For specific usage, see documentation in the relevant package README file.
 
-For upload options, see the [@rpldy/uploady docs](packages/ui/uploady).
+For upload options, see the [@rpldy/uploady docs](https://react-uploady.org/docs/api/#props).
 
 ### Simple Upload Button
 
@@ -253,7 +253,7 @@ const App = () => (<ChunkedUploady
 
 ```
 
-> See more (advanced) examples in our [guides](guides) and [storybook](https://react-uploady-storybook.netlify.com/).
+> Find more (advanced) examples in our [guides](https://react-uploady.org/docs/guides/) and [storybook](https://react-uploady-storybook.netlify.com/).
 
 ## Important Concepts
 

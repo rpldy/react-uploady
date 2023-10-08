@@ -31,10 +31,6 @@ const getDepOfType = (pkgJson, depName, listName) => {
     const list = pkgJson.get(listName);
     const depVersion = list?.[depName];
 
-    if (pkgJson.name === "@rpldy/upload-drop-zone") {
-        console.log("!!!!!!! LOOKING AT LIST", { depVersion, listName, list, raw: pkgJson.json })
-    }
-
     return depVersion ? {
         name: depName,
         version: depVersion,

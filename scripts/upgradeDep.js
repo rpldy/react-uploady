@@ -105,7 +105,7 @@ const upgradeDep = async () => {
             if (writes.length) {
                 await Promise.all(writes);
                 logger.info(`>>>> finished updating ${writes.length} packages`);
-                shell.exec("yarn");
+                shell.exec("lerna exec --stream -- yarn");
             } else {
                 logger.error(`!!! no packages found that use ${exactDep.name}`);
             }

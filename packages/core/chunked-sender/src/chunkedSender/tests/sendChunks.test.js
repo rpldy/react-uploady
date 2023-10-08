@@ -11,7 +11,6 @@ jest.mock("../getChunksToSend", () => jest.fn());
 jest.mock("../sendChunk", () => jest.fn());
 
 describe("sendChunks tests", () => {
-
     beforeEach(() => {
         clearJestMocks(
             handleChunkRequest,
@@ -42,11 +41,20 @@ describe("sendChunks tests", () => {
 
         const resolve = jest.fn();
 
-        sendChunks(getChunkedState({ requests: {} }), null, null, resolve);
+        sendChunks(getChunkedState({
+            requests: {},
+            lastChunkErrorData: {
+                status: 401,
+                response: "nope",
+            }
+        }), null, null, resolve);
 
         expect(resolve).toHaveBeenCalledWith({
             state: FILE_STATES.ERROR,
-            response: "At least one chunk failed"
+            response: {
+                reason: "At least one chunk failed",
+                chunkUploadResponse: { status: 401, response: "nope" }
+            }
         });
     });
 
@@ -138,7 +146,10 @@ describe("sendChunks tests", () => {
 
             expect(resolve).toHaveBeenCalledWith({
                 state: FILE_STATES.ERROR,
-                response: "At least one chunk failed"
+                response: {
+                    reason: "At least one chunk failed",
+                    chunkUploadResponse: undefined,
+                }
             });
 
             expect(resolve).toHaveBeenCalledTimes(1);

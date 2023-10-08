@@ -10,7 +10,6 @@ jest.mock("../getChunks", () => jest.fn());
 jest.mock("../sendChunks", () => jest.fn());
 
 describe("processChunks tests", () => {
-
     beforeAll(()=>{
         createState.mockImplementation((state) => ({
             state,
@@ -53,6 +52,7 @@ describe("processChunks tests", () => {
             requests: {},
             responses: [],
             chunkCount: chunks.length,
+            lastChunkErrorData: null,
             chunks,
             url,
             sendOptions,

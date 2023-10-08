@@ -3,3 +3,4 @@ import "./storyLog";
 import "./visitStory";
 import "./pasteFile";
 import "./setUploadOptions";
+import "./wait";

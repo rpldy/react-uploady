@@ -12,11 +12,13 @@ import type { Chunk, ChunkedState } from "./types";
 
 type PromiseResolve = (Object) => void;
 
-const resolveOnError = (resolve: PromiseResolve, ex: Error) => {
+const resolveOnError = (chunkedState: ChunkedState, resolve: PromiseResolve, ex: Error) => {
     if (ex instanceof ChunkedSendError) {
+        const chunkError = chunkedState.getState().lastChunkErrorData;
+
         resolve({
             state: FILE_STATES.ERROR,
-            response: "At least one chunk failed",
+            response: { reason: "At least one chunk failed", chunkUploadResponse: chunkError },
         });
     } else {
         resolve({
@@ -98,7 +100,7 @@ const sendChunks = (
             try {
                 chunks = getChunksToSend(chunkedState);
             } catch (ex) {
-                resolveOnError(resolve, ex);
+                resolveOnError(chunkedState,resolve, ex);
             }
 
             if (chunks) {
@@ -109,7 +111,7 @@ const sendChunks = (
                                 state.error = true;
                             });
 
-                            resolveOnError(resolve, ex);
+                            resolveOnError(chunkedState, resolve, ex, );
                         });
                 });
             }

@@ -1,12 +1,28 @@
 # Changelog
 
-## 1.6.0-rc.0 (2023-10-08)
+## 1.6.0 (2023-10-09)
 
 ### Features
 
 - `[chunked-sender]` - feat: expose chunk error to item response data. fix for [#597](https://github.com/rpldy/react-uploady/issues/597) -
 
-  > **Technically breaking change as item's responseData for failed chunked upload will now be different than it was.**
+  > Technically **breaking change** (only for ChunkedUploady / Chunked-Sender users) as item's responseData for failed chunked upload will now be different than it was.
+
+### Internal
+
+- `all` - upgrade dev deps (ex: flow, eslint, storybook, and more)
+- `all` - removed flow-mono-cli
+
+
+## 1.6.0-rc.0 (2023-10-08)
+
+_PRE-RELEASE_
+
+### Features
+
+- `[chunked-sender]` - feat: expose chunk error to item response data. fix for [#597](https://github.com/rpldy/react-uploady/issues/597) -
+
+  > Technically **breaking change** (only for ChunkedUploady / Chunked-Sender users) as item's responseData for failed chunked upload will now be different than it was.
 
 ### Internal
 

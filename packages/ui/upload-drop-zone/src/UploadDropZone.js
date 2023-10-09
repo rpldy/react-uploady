@@ -5,7 +5,6 @@ import { isEmpty, isFunction } from "@rpldy/shared";
 import { useUploadyContext, markAsUploadOptionsComponent } from "@rpldy/shared-ui";
 
 import type { UploadOptions } from "@rpldy/shared";
-import type { RefObject } from "@rpldy/shared-ui";
 import type { UploadDropZoneProps, ShouldHandleDrag } from "./types";
 
 const getShouldHandleDrag = (e: SyntheticDragEvent<HTMLDivElement>, shouldHandle: ?ShouldHandleDrag) => isEmpty(shouldHandle) ||
@@ -31,7 +30,7 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
          enableOnContains = true,
          extraProps,
          ...uploadOptions
-     }: UploadDropZoneProps, ref: RefObject<HTMLDivElement> | (?HTMLDivElement) => mixed) => {
+     }: UploadDropZoneProps, ref: React$RefSetter<?HTMLDivElement>) => {
         const { upload } = useUploadyContext();
         const containerRef = useRef<?HTMLDivElement>(null);
         const dragLeaveTrackerRef = useRef(false);

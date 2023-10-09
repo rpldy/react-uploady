@@ -1,5 +1,5 @@
 {
-  "version": "1.5.0",
+  "version": "1.6.0-rc.0",
   "name": "@rpldy/raw-uploader",
   "description": "placeholder package for now",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -30,11 +30,11 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/life-events": "^1.5.0",
-    "@rpldy/shared": "^1.5.0"
+    "@rpldy/life-events": "^1.6.0-rc.0",
+    "@rpldy/shared": "^1.6.0-rc.0"
   },
   "devDependencies": {
-    "flow-bin": "^0.215.1"
+    "flow-bin": "^0.218.0"
   },
   "publishConfig": {
     "access": "public"

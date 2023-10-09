@@ -1,20 +1,21 @@
-import { interceptWithDelay } from "../intercept";
+import { interceptWithDelay, interceptWithHandler } from "../intercept";
 import uploadFile from "../uploadFile";
 import { CHUNK_START, CHUNK_FINISH } from "../../constants";
 import { WAIT_X_LONG } from "../../constants";
+import { interceptFormData } from "cypress-intercept-formdata";
 
 describe("ChunkedSender - Progress", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    const loadStory = () =>
         cy.visitStory(
             "chunkedSender",
             "with-chunked-sender&knob-chunk size (bytes)_Upload Settings=50000",
             { useMock: false }
         );
-    });
 
     it("should use chunked sender with progress events", () => {
+        loadStory();
         //delay response so we dont miss events due to progress event throttling
         interceptWithDelay(200);
 
@@ -23,10 +24,9 @@ describe("ChunkedSender - Progress", () => {
                 .should("be.visible")
                 .click();
 
-            cy.wait(WAIT_X_LONG);
+            cy.waitExtraLong();
 
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
-
 
             cy.storyLog().assertLogPattern(CHUNK_START, { times: 8 });
             cy.storyLog().assertLogPattern(CHUNK_FINISH, { times: 8 });
@@ -61,4 +61,5 @@ describe("ChunkedSender - Progress", () => {
             });
         }, false);
     });
+
 });

@@ -45,7 +45,7 @@ These will be handed over to the default [@rpldy/sender](../sender)
 Chunked Sender makes it possible to handle chunk life-time events.
 See [uploader events](../uploader/README.md#events) section on more info regarding how to register for events.
 
-## CHUNK_EVENTS.CHUNK_START
+### CHUNK_EVENTS.CHUNK_START
 
 Triggered when a chunk is about to be sent to the server
 
@@ -62,7 +62,26 @@ type StartEventResponse = {
 
 > * [ChunkedSendOptions](src/types.js#L16)
 
-## CHUNK_EVENTS.CHUNK_FINISH
+### CHUNK_EVENTS.CHUNK_FINISH
 
 Triggered when a chunk has finished uploading
+
+### Item Error
+
+In case of chunk upload error in conjunction of using the [ITEM_ERROR](https://react-uploady.org/docs/api/events/#itemError) or the
+[useItemErrorListener](https://react-uploady.org/docs/api/hooks/useItemErrorListener/) hook, it is possible to access the error information returned from the server like so:
+
+```jsx
+
+import { useItemErrorListener } from "@rpldy/uploady";
+
+const MyComponent = () => {
+    useItemErrorListener((item) => {
+        console.log(`item ${item.id} failed -  status code:`, item.uploadResponse.chunkUploadResponse.status); //the status code returned by the server on the failed chunk
+        console.log(`item ${item.id} failed -  msg:`, item.uploadResponse.chunkUploadResponse.response); //the response data (if) sent by the server on the failed chunk
+    });
+
+    //...
+};
+```
 

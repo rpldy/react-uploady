@@ -3,7 +3,7 @@ import { FILE_STATES, logger, pick } from "@rpldy/shared";
 import { unwrap } from "@rpldy/simple-state";
 import { CHUNK_EVENTS } from "../consts";
 
-import type { BatchItem } from "@rpldy/shared";
+import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { OnProgress, SendResult } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { ChunkedState } from "./types";
@@ -24,7 +24,7 @@ const handleChunkRequest = (
     });
 
     return chunkSendResult.request
-        .then((result) => {
+        .then((result: UploadData) => {
             logger.debugLog(`chunkedSender: request finished for chunk: ${chunkId} - `, result);
 
             chunkedState.updateState((state) => {
@@ -58,6 +58,11 @@ const handleChunkRequest = (
                     //increment attempt in case chunk failed (and not aborted)
                     chunkedState.updateState((state) => {
                         state.chunks[index].attempt += 1;
+
+                        state.lastChunkErrorData = {
+                            status: result.status,
+                            response: result.response,
+                        };
                     });
                 }
 

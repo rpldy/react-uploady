@@ -1,5 +1,4 @@
 import uploadFile from "../uploadFile";
-import { WAIT_X_SHORT } from "../../constants";
 
 describe("Uploader - Event data test", () => {
     const fileName = "flower.jpg";
@@ -11,7 +10,7 @@ describe("Uploader - Event data test", () => {
         loadStory();
 
         uploadFile(fileName, () =>{
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 2);
 
             cy.storyLog().customAssertLogEntry("###BATCH-ADD", (logLine) => {
@@ -47,7 +46,7 @@ describe("Uploader - Event data test", () => {
                 }
             });
 
-            cy.wait(WAIT_X_SHORT);
+            cy.waitMedium();
 
             cy.storyLog().customAssertLogEntry("###BATCH-FINISH", (logLine, env) => {
                 expect(Object.getOwnPropertySymbols(logLine[0])).to.have.lengthOf(0, "BATCH-FINISH batch - shouldnt have proxy symbols");

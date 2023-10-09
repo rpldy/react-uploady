@@ -20,6 +20,11 @@ declare namespace Cypress {
         pasteFile: (fixtureName: string, times?: number, mimeType?: string) => Chainable;
         setUploadOptions: (options: Object) => void;
         setPreSendOptions: (options: Object) => void;
+        waitExtraShort: () => void;
+        waitShort: () => void;
+        waitMedium: () => void;
+        waitLong: () => void;
+        waitExtraLong: () => void;
     }
 
     interface Chainable<Subject = Interception> {

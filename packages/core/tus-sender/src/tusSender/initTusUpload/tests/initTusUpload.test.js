@@ -5,18 +5,17 @@ import createUpload from "../createUpload";
 import resumeUpload from "../resumeUpload";
 import initTusUpload from "../initTusUpload";
 
-jest.mock("../../../resumableStore", () => ({
-	retrieveResumable: jest.fn(),
+vi.mock("../../../resumableStore", () => ({
+	retrieveResumable: vi.fn(),
 }));
 
-jest.mock("../../handleTusUpload", () => jest.fn());
-jest.mock("../createUpload", () => jest.fn());
-jest.mock("../resumeUpload", () => jest.fn());
+vi.mock("../../handleTusUpload");
+vi.mock("../createUpload");
+vi.mock("../resumeUpload");
 
 describe("initTusUpload tests", () => {
-
 	beforeEach(() => {
-		clearJestMocks(
+		clearViMocks(
 			retrieveResumable,
 			handleTusUpload,
 			createUpload,
@@ -125,8 +124,8 @@ describe("initTusUpload tests", () => {
 	});
 
 	it("should abort init call and chunked call", async() => {
-		const initAbort = jest.fn(),
-			chunkedAbort = jest.fn();
+		const initAbort = vi.fn(),
+			chunkedAbort = vi.fn();
 
 		const tusState = createTusState({
 			items: {},
@@ -153,7 +152,7 @@ describe("initTusUpload tests", () => {
 	});
 
 	it("should abort and handle no chunked abort", async() => {
-		const initAbort = jest.fn();
+		const initAbort = vi.fn();
 
 		const tusState = createTusState({
 			items: {},
@@ -173,7 +172,7 @@ describe("initTusUpload tests", () => {
 	});
 
 	it("should abort and handle no init data", async() => {
-		const initAbort = jest.fn();
+		const initAbort = vi.fn();
 
 		const tusState = createTusState({
 			items: {},

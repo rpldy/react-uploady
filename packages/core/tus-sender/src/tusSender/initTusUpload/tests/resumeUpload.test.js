@@ -3,14 +3,14 @@ import createMockState from "../../../tests/tusState.mock";
 import { removeResumable } from "../../../resumableStore";
 import resumeUpload from "../resumeUpload";
 
-jest.mock("../../../resumableStore", () => ({
-	removeResumable: jest.fn(),
+vi.mock("../../../resumableStore", () => ({
+	removeResumable: vi.fn(),
 }));
-jest.mock("@rpldy/simple-state");
+vi.mock("@rpldy/simple-state");
 
 describe("resumeUpload tests", () => {
 	beforeEach(() => {
-		clearJestMocks(
+		clearViMocks(
 			request,
 			removeResumable,
             triggerUpdater,
@@ -20,7 +20,7 @@ describe("resumeUpload tests", () => {
 	const getMockRequestResponse = (config) => {
 		const xhrResponse = {
 			status: config.status,
-			getResponseHeader: jest.fn(),
+			getResponseHeader: vi.fn(),
 		};
 
 		xhrResponse.getResponseHeader
@@ -28,7 +28,7 @@ describe("resumeUpload tests", () => {
 			.mockReturnValueOnce(config.length);
 
 		const xhr = {
-			abort: jest.fn(),
+			abort: vi.fn(),
 		};
 
 		const p = config.resolveRequest ?

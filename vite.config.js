@@ -30,6 +30,7 @@ export default defineConfig({
                 babelrc: false,
                 configFile: false,
                 plugins: ["@babel/plugin-proposal-export-default-from"],
+                presets: ["@babel/react"]
             },
         }),
         react()

@@ -59,7 +59,6 @@ describe("clone (deep) tests", () => {
 
     it("should use merge fn", () => {
         const merge = vi.fn();
-        // const merge = jest.fn();
         const obj = { test: true };
         clone(obj, merge);
 

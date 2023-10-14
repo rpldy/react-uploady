@@ -1,11 +1,10 @@
 import parseResponseHeaders from "../parseResponseHeaders";
 
 describe("parseResponseHeaders tests", () => {
-    const getAllResponseHeaders = jest.fn(() =>  `content-type: application/json
+    const getAllResponseHeaders = vi.fn(() =>  `content-type: application/json
 x-header: test`);
 
     it("should parse headers", () => {
-
         const headers = parseResponseHeaders({
             getAllResponseHeaders
         });
@@ -17,7 +16,6 @@ x-header: test`);
     });
 
     it("should fail silently", () => {
-
         getAllResponseHeaders.mockImplementationOnce(() => {
             throw new Error("bla");
         });

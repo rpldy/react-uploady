@@ -1,25 +1,55 @@
-import React  from "react";
+import React from "react";
+import { fireEvent, createEvent, waitFor } from "@testing-library/react";
 import { getFilesFromDragEvent } from "html-dir-content";
 import { UploadyContext } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import UploadDropZone from "./UploadDropZone";
 
-jest.mock("html-dir-content", () => ({
-    getFilesFromDragEvent: jest.fn()
-}));
+vi.mock("html-dir-content");
+// , () => ({
+//     getFilesFromDragEvent: vi.fn()
+// }));
 
 describe("UploadDropZone tests", () => {
+    const dropEvent = {
+        clipboardData: {
+            getData: () => "123456",
+        },
+    };
+
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             UploadyContext.upload,
             getFilesFromDragEvent,
         );
     });
 
-    const testDropZone = (props = {}, doDragEnter = true ) => {
-        const mockRef = jest.fn();
+    const getDropEvent = (elm) =>
+        () =>
+            fireEvent(elm, createEvent.drop(elm, dropEvent));
 
-        const wrapper = mount(
+    const getDragEnterEvent = (elm) =>
+        () =>
+            fireEvent(elm, createEvent.dragEnter(elm, {}));
+
+    const getDragOverEvent = (elm) =>
+        () =>
+            fireEvent(elm, createEvent.dragOver(elm, {}));
+
+    const getDragEndEvent = (elm) =>
+        () =>
+            fireEvent(elm, createEvent.dragEnd(elm, {}));
+
+    const getDragLeaveEvent = (elm) =>
+        () =>
+            fireEvent(elm, createEvent.dragLeave(elm, {}));
+
+    const testDropZone = (props = {}, doDragEnter = true) => {
+        const mockRef = vi.fn();
+        const id = props.id || "drop-zone";
+
+        render(
             <UploadDropZone
+                id={id}
                 {...props}
                 ref={mockRef}
             >
@@ -27,97 +57,96 @@ describe("UploadDropZone tests", () => {
             </UploadDropZone>
         );
 
-        const div = wrapper.find("div");
-        const span = wrapper.find("span");
+        const div = document.getElementById("drop-zone");
+        const span = div.querySelector("span");
 
-        const dropEvent = {
-            dataTransfer: {},
-            preventDefault: () => {
-            },
-            persist: () => {
-            },
-        };
-
-        const dragEvent = { target: div.getDOMNode() };
-
+        const fireDragEnter = getDragEnterEvent(div);
         if (doDragEnter) {
-            div.props().onDragEnter(dragEvent);
+            fireDragEnter();
         }
 
         return {
-            wrapper,
             div,
-            dropEvent,
-            dragEvent,
+            fireDrop: getDropEvent(div),
+            fireDragEnter,
+            fireDragOver: getDragOverEvent(div),
+            fireDragEnd: getDragEndEvent(div),
+            fireDragLeave: getDragLeaveEvent(div),
             mockRef,
             span,
+            id,
         };
     };
 
     it("should render drop zone & handle drop", async () => {
-        const { div, dropEvent } = testDropZone({
-            id: "testZone",
+        const { div, id, span, fireDrop } = testDropZone({
             className: "test-zone",
             autoUpload: true,
         });
 
-        expect(div).toHaveProp("id", "testZone");
-        expect(div).toHaveProp("className", "test-zone");
-
-        expect(div.find("span")).toHaveText("test");
+        expect(div).to.have.attr("id", id);
+        expect(div).to.have.attr("class", "test-zone");
+        expect(span).to.have.text("test");
 
         const files = [1, 2];
         getFilesFromDragEvent.mockResolvedValueOnce(files);
 
-        await div.props().onDrop(dropEvent);
+        fireDrop();
 
         expect(getFilesFromDragEvent).toHaveBeenCalledWith(
-            dropEvent,
+            expect.objectContaining({ type: "drop" }),
             {}
         );
 
-        expect(UploadyContext.upload)
-            .toHaveBeenCalledWith(files, {
-                autoUpload: true
-            });
+        await waitFor(() => {
+            expect(UploadyContext.upload)
+                .toHaveBeenCalledWith(files, {
+                    autoUpload: true
+                });
+        });
     });
 
     it("should pass htmlDirContentParams", async () => {
         const htmlDirParams = { recursive: true };
 
-        const { div, dropEvent } = testDropZone({
+        const { fireDrop } = testDropZone({
             htmlDirContentParams: htmlDirParams
         });
 
         getFilesFromDragEvent.mockResolvedValueOnce([1, 2]);
 
-        await div.props().onDrop(dropEvent);
+        fireDrop();
 
         expect(getFilesFromDragEvent).toHaveBeenCalledWith(
-            dropEvent,
+            expect.objectContaining({ type: "drop" }),
             htmlDirParams
         );
     });
 
     it("should use provided drop handler", async () => {
         const files = [1, 2];
-        const dropHandler = jest.fn(() => files);
+        const dropHandler = vi.fn(() => files);
 
-        const { div, dropEvent } = testDropZone({
+        const { fireDrop } = testDropZone({
             autoUpload: true,
             dropHandler,
         });
 
-        await div.props().onDrop(dropEvent);
+        fireDrop();
 
-        expect(getFilesFromDragEvent).not.toHaveBeenCalled();
+        await waitFor(() => {
+            expect(getFilesFromDragEvent).not.toHaveBeenCalled();
 
-        expect(dropHandler).toHaveBeenCalledWith(dropEvent, expect.any(Function));
+            expect(dropHandler).toHaveBeenCalledWith(
+                expect.objectContaining({ type: "drop" }),
+                expect.any(Function)
+            );
 
-        expect(UploadyContext.upload)
-            .toHaveBeenCalledWith(files, {
-                autoUpload: true
-            });
+            expect(UploadyContext.upload)
+                .toHaveBeenCalledWith(files, {
+                    autoUpload: true
+                });
+        })
     });
 
     it("should getFiles in drop handler", async () => {
@@ -129,162 +158,177 @@ describe("UploadDropZone tests", () => {
         const files = [1, 2];
         getFilesFromDragEvent.mockReturnValueOnce(files);
 
-        const { div, dropEvent } = testDropZone({
+        const { fireDrop } = testDropZone({
             autoUpload: true,
             dropHandler,
         });
 
-        await div.props().onDrop(dropEvent);
+        fireDrop();
 
         expect(getFilesFromDragEvent).toHaveBeenCalled();
 
-        expect(UploadyContext.upload)
-            .toHaveBeenCalledWith([1], {
-                autoUpload: true
-            });
+        await waitFor(() => {
+            expect(UploadyContext.upload)
+                .toHaveBeenCalledWith([1], {
+                    autoUpload: true
+                });
+        });
     });
 
     it("should add & remove drag className", () => {
         const onDragOverClassName = "drag-over";
 
-        const { div, span, mockRef } = testDropZone({
+        const { div, span, mockRef, fireDragEnter, fireDragEnd, fireDragOver, fireDragLeave } = testDropZone({
             onDragOverClassName
         }, false);
 
         const refElm = mockRef.mock.calls[0][0];
 
-        div.simulate("dragenter");
-        div.simulate("dragover");
+        fireDragEnter();
+        fireDragOver();
         expect(refElm.classList.contains(onDragOverClassName)).toBe(true);
-        div.simulate("dragend");
+        fireDragEnd();
         expect(refElm.classList.contains(onDragOverClassName)).toBe(false);
 
-        div.simulate("dragenter");
+        fireDragEnter();
 
         //simulate drag is over child element
-        span.simulate("dragenter");
-        div.simulate("dragleave");
+        const fireDragEnterOnSpan = getDragEnterEvent(span);
+        fireDragEnterOnSpan();
+        fireDragLeave();
 
         expect(refElm.classList.contains(onDragOverClassName)).toBe(false);
-        div.simulate("dragenter");
-        div.simulate("dragleave");
+        fireDragEnter();
+        fireDragLeave();
         expect(refElm.classList.contains(onDragOverClassName)).toBe(false);
     });
 
     it("should not remove drag className if different element", () => {
         const onDragOverClassName = "drag-over";
 
-        const { div, span, mockRef } = testDropZone({
+        const { span, mockRef, fireDragEnter, fireDragEnd, fireDragOver } = testDropZone({
             onDragOverClassName,
         }, false);
 
         const refElm = mockRef.mock.calls[0][0];
 
-        div.simulate("dragenter");
-        div.simulate("dragover");
+        fireDragEnter();
+        fireDragOver();
         expect(refElm.classList.contains("drag-over")).toBe(true);
-        div.simulate("dragend");
+        fireDragEnd();
         expect(refElm.classList.contains("drag-over")).toBe(false);
 
-        div.simulate("dragenter");
+        fireDragEnter();
 
         //simulate drag is over child element
-        span.simulate("dragenter");
-        span.simulate("dragLeave");
+        const fireDragEnterOnSpan = getDragEnterEvent(span);
+        fireDragEnterOnSpan();
+        const fireDragLeaveOnSpan = getDragLeaveEvent(span);
+        fireDragLeaveOnSpan();
         expect(refElm.classList.contains("drag-over")).toBe(true);
     });
 
     it("should not handle drag or add className if child and contains is disabled", () => {
         const onDragOverClassName = "drag-over";
 
-        const { div, span, mockRef } = testDropZone({
+        const { div, span, mockRef, fireDragEnter, fireDragEnd, fireDragOver } = testDropZone({
             enableOnContains: false,
             onDragOverClassName,
         }, false);
 
         const refElm = mockRef.mock.calls[0][0];
 
-        div.simulate("dragenter");
-        div.simulate("dragover");
+        fireDragEnter();
+        fireDragOver();
         expect(refElm.classList.contains("drag-over")).toBe(true);
-        div.simulate("dragend");
+        fireDragEnd();
         expect(refElm.classList.contains("drag-over")).toBe(false);
 
-        span.simulate("dragenter");
-        span.simulate("dragover");
+        const fireDragEnterOnSpan = getDragEnterEvent(span);
+        fireDragEnterOnSpan();
+        const fireDragOverOnSpan = getDragOverEvent(span);
+        fireDragOverOnSpan();
         expect(refElm.classList.contains("drag-over")).toBe(false);
 
-        div.simulate("dragend");
+        fireDragEnd();
         expect(refElm.classList.contains("drag-over")).toBe(false);
     });
 
     it("should add & remove drag className with shouldRemoveDragOver callback", () => {
         const onDragOverClassName = "drag-over";
 
-        const { div, span, mockRef } = testDropZone({
+        const { span, mockRef, fireDragEnter, fireDragEnd, fireDragOver } = testDropZone({
             onDragOverClassName,
-            shouldRemoveDragOver: ({ target }) => target === span.getDOMNode(),
+            shouldRemoveDragOver: ({ target }) => target === span,
         }, false);
 
         const refElm = mockRef.mock.calls[0][0];
 
-        div.simulate("dragenter");
-        div.simulate("dragover");
+        fireDragEnter();
+        fireDragOver();
         expect(refElm.classList.contains("drag-over")).toBe(true);
-        div.simulate("dragend");
+        fireDragEnd();
         expect(refElm.classList.contains("drag-over")).toBe(false);
 
-        div.simulate("dragenter");
+        fireDragEnter();
 
         //simulate drag is over child element
-        span.simulate("dragenter");
-        span.simulate("dragLeave");
+        const fireDragEnterOnSpan = getDragEnterEvent(span);
+        fireDragEnterOnSpan();
+        const fireDragLeaveOnSpan = getDragLeaveEvent(span);
+        fireDragLeaveOnSpan();
         expect(refElm.classList.contains("drag-over")).toBe(false);
     });
 
     it("should not add className if non provided", () => {
-        const { div, mockRef } = testDropZone();
+        const { mockRef, fireDragEnter, fireDragOver } = testDropZone();
 
         const refElm = mockRef.mock.calls[0][0];
 
-        div.simulate("dragenter");
-        div.simulate("dragover");
+        fireDragEnter();
+        fireDragOver();
         expect(refElm.classList.contains("drag-over")).toBe(false);
     });
 
     describe("shouldHandleDrag tests", () => {
         it("should not handle drop when shouldHandleDrag is false", async () => {
-            const { div, dropEvent } = testDropZone({
+            const { fireDrop } = testDropZone({
                 shouldHandleDrag: false,
             });
 
-            await div.props().onDrop(dropEvent);
+            fireDrop();
             expect(getFilesFromDragEvent).not.toHaveBeenCalled();
             expect(UploadyContext.upload).not.toHaveBeenCalled();
         });
 
         it("should not handle drop when shouldHandleDrag is fn returning falsy", async () => {
-            const { div, dropEvent } = testDropZone({
+            const { fireDrop } = testDropZone({
                 shouldHandleDrag: () => null,
             });
 
-            await div.props().onDrop(dropEvent);
+            fireDrop();
             expect(getFilesFromDragEvent).not.toHaveBeenCalled();
-            expect(UploadyContext.upload).not.toHaveBeenCalled();
+
+            await waitFor(() => {
+                expect(UploadyContext.upload).not.toHaveBeenCalled();
+            });
         });
 
         it("should handle drop when shouldHandleDrag is fn returning truthy", async () => {
-            const { div, dropEvent } = testDropZone({
+            const { fireDrop } = testDropZone({
                 shouldHandleDrag: () => 1,
             });
 
             const files = [1, 2];
             getFilesFromDragEvent.mockResolvedValueOnce(files);
 
-            await div.props().onDrop(dropEvent);
+            fireDrop();
 
             expect(getFilesFromDragEvent).toHaveBeenCalled();
-            expect(UploadyContext.upload).toHaveBeenCalled();
+
+            await waitFor(() => {
+                expect(UploadyContext.upload).toHaveBeenCalled();
+            });
         });
     });
 });

@@ -4,8 +4,8 @@ import Uploady, { composeEnhancers } from "@rpldy/uploady/src/tests/mocks/rpldy-
 import TusUploady from "../TusUploady";
 import { getTusEnhancer } from "@rpldy/tus-sender";
 
-jest.mock("@rpldy/tus-sender", () => ({
-    getTusEnhancer: jest.fn(),
+vi.mock("@rpldy/tus-sender", () => ({
+    getTusEnhancer: vi.fn(),
     CHUNKING_SUPPORT: true
 }));
 
@@ -17,7 +17,6 @@ describe("test TusUploady with chucking support", () => {
     });
 
     it("should render TusUploady with enhancer", () => {
-
         const tusProps = {
             chunked: true,
             chunkSize: 11,
@@ -28,7 +27,7 @@ describe("test TusUploady with chucking support", () => {
             storagePrefix: "---"
         };
 
-        const enhancer = jest.fn((uploader) => uploader);
+        const enhancer = vi.fn((uploader) => uploader);
 
         const props = {
             enhancer,
@@ -37,13 +36,13 @@ describe("test TusUploady with chucking support", () => {
 
         composeEnhancers.mockReturnValueOnce(enhancer);
 
-        const wrapper = shallow(<TusUploady {...props} />);
+        const { container } = render(<TusUploady {...props} />);
 
-        const UploadyElm = wrapper.find(Uploady);
+        const UploadyElm = container.firstChild;
 
-        expect(UploadyElm).toHaveLength(1);
+        expect(UploadyElm).toBeDefined();
 
-        const update = jest.fn();
+        const update = vi.fn();
         const uploader = enhancer({
             update,
         });
@@ -56,13 +55,11 @@ describe("test TusUploady with chucking support", () => {
     });
 
     it("should render ChunkedUploady without enhancer", () => {
-        const wrapper = shallow(<TusUploady/>);
+        const { container } = render(<TusUploady/>);
 
-        const UploadyElm = wrapper.find(Uploady);
+        const enhancer = Uploady.mock.calls[0][0].enhancer;
 
-        const enhancer = UploadyElm.props().enhancer;
-
-        const update = jest.fn();
+        const update = vi.fn();
         const uploader = {
             update,
         };

@@ -3,10 +3,10 @@ import { DEFAULT_OPTIONS } from "../defaults";
 describe("utils tests", () => {
     let utils, mockBlobSlice;
 
-    beforeAll(()=>{
-        mockBlobSlice = jest.spyOn(Blob.prototype, "slice");
+    beforeAll(async () => {
+        mockBlobSlice = vi.spyOn(Blob.prototype, "slice");
 
-        utils = require("../utils");
+        utils = await import("../utils");
     });
 
     describe("isChunkingSupported tests", () => {

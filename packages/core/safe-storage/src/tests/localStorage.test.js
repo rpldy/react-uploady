@@ -2,13 +2,13 @@ import "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { hasWindow } from "@rpldy/shared";
 
 describe("localStorage tests", () => {
-
     describe("supported tests", () => {
         let safeLocalStorage;
 
-        beforeAll(() => {
+        beforeAll(async () => {
             hasWindow.mockReturnValueOnce(true);
-            safeLocalStorage = require("../localStorage").default;
+            const ls = await import("../localStorage");
+            safeLocalStorage = ls.default;
         });
 
         it("should be supported", () => {
@@ -45,13 +45,14 @@ describe("localStorage tests", () => {
 		const orgStorage = window.localStorage;
 		let safeLocalStorage;
 
-		beforeAll(() => {
+		beforeAll(async () => {
 			delete window.localStorage;
 			delete global._localStorage;
 
-			jest.resetModules();
+			vi.resetModules();
             hasWindow.mockReturnValueOnce(true);
-			safeLocalStorage = require("../localStorage").default;
+            const ls = await import("../localStorage");
+            safeLocalStorage = ls.default;
 		});
 
 		afterAll(() => {
@@ -79,16 +80,17 @@ describe("localStorage tests", () => {
         const orgStorage = window.localStorage;
         let safeLocalStorage;
 
-        beforeAll(() => {
+        beforeAll(async () => {
             window.localStorage = global._localStorage = {
                 setItem: () => {
                     throw new Error("test");
                 }
             };
 
-            jest.resetModules();
+            vi.resetModules();
             hasWindow.mockReturnValueOnce(true);
-            safeLocalStorage = require("../localStorage").default;
+            const ls = await import("../localStorage");
+            safeLocalStorage = ls.default;
         });
 
         afterAll(() => {

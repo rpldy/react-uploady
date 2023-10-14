@@ -1,5 +1,5 @@
 import { afterEach } from "vitest";
-import { render, renderIntoDocument, cleanup } from "@testing-library/react";
+import { render, renderIntoDocument, renderHook, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import chai from "chai";
 import chaiDom from "chai-dom";
@@ -7,6 +7,7 @@ import userEvent from "@testing-library/user-event";
 
 global.render = render;
 global.renderIntoDocument = renderIntoDocument;
+global.renderHook = renderHook;
 global.userEvent = userEvent;
 
 chai.use(chaiDom);

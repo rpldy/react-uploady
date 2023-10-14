@@ -3,8 +3,8 @@ import { getChunkDataFromFile } from "@rpldy/chunked-sender";
 import createMockState from "../../../tests/tusState.mock";
 import createUpload, { resolveUploadUrl } from "../createUpload";
 
-jest.mock("@rpldy/chunked-sender", () => ({
-	getChunkDataFromFile: jest.fn(),
+vi.mock("@rpldy/chunked-sender", () => ({
+	getChunkDataFromFile: vi.fn(),
 }));
 
 describe("createUpload tests", () => {
@@ -45,7 +45,7 @@ describe("createUpload tests", () => {
 
 	describe("createUpload tests", () => {
 		beforeEach(() => {
-			clearJestMocks(
+			clearViMocks(
 				request
 			);
 		});
@@ -67,11 +67,11 @@ describe("createUpload tests", () => {
 
 			const xhrResponse = {
 				status: config.status,
-				getResponseHeader: jest.fn(),
+				getResponseHeader: vi.fn(),
 			};
 
 			const xhr = {
-				abort: jest.fn(),
+				abort: vi.fn(),
 			};
 
 			if (config.error) {

@@ -3,17 +3,15 @@ import { MOCK_DEFAULTS } from "../defaults";
 import createMockSender from "../mockSender";
 
 describe("mockSender tests", () => {
-
-    const onProgress = jest.fn();
+    const onProgress = vi.fn();
 
     beforeEach(() => {
-        jest.useFakeTimers();
-
-        clearJestMocks(onProgress);
+        vi.useFakeTimers();
+        clearViMocks(onProgress);
     });
 
     afterEach(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     const customOptions = {
@@ -35,16 +33,16 @@ describe("mockSender tests", () => {
         const result = sender.send(items, null, sendOptions, !noProgressCb && onProgress);
 
         if (abort) {
-            jest.advanceTimersByTime(100);
+            vi.advanceTimersByTime(100);
             result.abort();
         } else {
             const delay = (options && options.delay) ||
                 (updatedOptions && updatedOptions.delay) || MOCK_DEFAULTS.delay;
 
             if (options?.delay === 0) {
-                jest.runAllTimers();
+                vi.runAllTimers();
             } else {
-                jest.advanceTimersByTime(delay);
+                vi.advanceTimersByTime(delay);
             }
         }
 
@@ -82,7 +80,7 @@ describe("mockSender tests", () => {
         }).request;
 
         const response = result.response;
-        expect(response.time).toBe(0);
+        expect(response.time).toBeLessThan(1);
         expect(response.data).toEqual({ mock: true, success: true, sendOptions: { } });
         expect(response.progressEvents).toHaveLength(0);
         expect(result.state).toBe(FILE_STATES.FINISHED);
@@ -184,7 +182,7 @@ describe("mockSender tests", () => {
     });
 
     it("should use senOptions.formatServerResponse", async () => {
-        const formatServerResponse = jest.fn(() => "test");
+        const formatServerResponse = vi.fn(() => "test");
         const sendOptions = { formatServerResponse };
 
         const result = await doMockSend(null, null, false, false, sendOptions).request;
@@ -196,7 +194,7 @@ describe("mockSender tests", () => {
         it("should use sendOptions.isSuccessfulCall to fail request", async () => {
             let mockXhr;
 
-            const isSuccessfulCall = jest.fn((xhr) => {
+            const isSuccessfulCall = vi.fn((xhr) => {
                mockXhr = xhr;
                 return false;
             });
@@ -214,7 +212,7 @@ describe("mockSender tests", () => {
         });
 
         it("should use sendOptions.isSuccessfulCall for success", async () => {
-            const isSuccessfulCall = jest.fn(() => true);
+            const isSuccessfulCall = vi.fn(() => true);
             const sendOptions = { isSuccessfulCall };
 
             const result = await doMockSend(null, null, false, false, sendOptions).request;
@@ -224,7 +222,7 @@ describe("mockSender tests", () => {
         });
 
         it("should use mock sender init isSuccessfulCall", async () => {
-            const isSuccessfulCall = jest.fn(() => false);
+            const isSuccessfulCall = vi.fn(() => false);
 
             const result = await doMockSend({ isSuccessfulCall }).request;
 

@@ -1,7 +1,7 @@
 const getChunkedState = (state = {}) => {
-    const getState = jest.fn(() => state);
+    const getState = vi.fn(() => state);
 
-    const updateState = jest.fn((updater) => {
+    const updateState = vi.fn((updater) => {
         updater(state);
     });
 

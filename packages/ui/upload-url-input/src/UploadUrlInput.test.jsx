@@ -46,7 +46,7 @@ describe("UploadUrlInput tests", () => {
     });
 
     it("should not upload for other key presses", async () => {
-        const { input, user } = renderInput();
+        const { user } = renderInput();
 
         await user.keyboard("{Shift}");
         expect(UploadyContext.upload).not.toHaveBeenCalled();
@@ -56,7 +56,7 @@ describe("UploadUrlInput tests", () => {
     });
 
     it("should not upload if ignoreKeyPress = true", async () => {
-        const { input, user } = renderInput({ ignoreKeyPress: true });
+        const { user } = renderInput({ ignoreKeyPress: true });
 
         await user.keyboard("{Enter}");
 

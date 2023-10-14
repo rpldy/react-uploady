@@ -2,13 +2,13 @@ import "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { hasWindow } from "@rpldy/shared";
 
 describe("sessionStorage tests", () => {
-
     describe("supported tests", () => {
         let safeSessionStorage;
 
-        beforeAll(() => {
+        beforeAll(async() => {
             hasWindow.mockReturnValueOnce(true);
-            safeSessionStorage = require("../sessionStorage").default;
+            const sss = await import("../sessionStorage");
+            safeSessionStorage = sss.default;
         });
 
         it("should be supported", () => {
@@ -45,13 +45,14 @@ describe("sessionStorage tests", () => {
 		const orgStorage = window.sessionStorage;
 		let safeSessionStorage;
 
-		beforeAll(() => {
+		beforeAll(async () => {
 			delete window.sessionStorage;
 			delete global._sessionStorage;
 
-			jest.resetModules();
+			vi.resetModules();
             hasWindow.mockReturnValueOnce(true);
-			safeSessionStorage = require("../sessionStorage").default;
+            const sss = await import("../sessionStorage");
+            safeSessionStorage = sss.default;
 		});
 
         beforeEach(() => {
@@ -83,16 +84,17 @@ describe("sessionStorage tests", () => {
         const orgStorage = window.sessionStorage;
         let safeSessionStorage;
 
-        beforeAll(() => {
+        beforeAll(async () => {
             window.sessionStorage = global._sessionStorage = {
                 setItem: () => {
                     throw new Error("test");
                 }
             };
 
-            jest.resetModules();
+            vi.resetModules();
             hasWindow.mockReturnValueOnce(true);
-            safeSessionStorage = require("../sessionStorage").default;
+            const sss = await import("../sessionStorage");
+            safeSessionStorage = sss.default;
         });
 
         afterAll(() => {

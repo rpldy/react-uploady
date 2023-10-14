@@ -1,15 +1,13 @@
 import triggerCancellable from "../triggerCancellable";
 
 describe("triggerCancellable tests", () => {
-
-	const trigger = jest.fn();
+	const trigger = vi.fn();
 
 	beforeEach(() => {
-		clearJestMocks(trigger);
+		clearViMocks(trigger);
 	});
 
 	it("should return function if only trigger is passed", () => {
-
 		const cancellable = triggerCancellable(trigger);
 		expect(cancellable).toBeInstanceOf(Function);
 
@@ -20,7 +18,6 @@ describe("triggerCancellable tests", () => {
 	});
 
 	it("should return true if trigger returns false", async () => {
-
 		trigger.mockReturnValueOnce([true, false]);
 
 		const isCancelled = await triggerCancellable(trigger, "test", 2);
@@ -29,7 +26,6 @@ describe("triggerCancellable tests", () => {
 	});
 
 	it("should return true if trigger resolved with false", async () => {
-
 		trigger.mockReturnValueOnce([
 			Promise.resolve(true),
 			Promise.resolve(false)]);

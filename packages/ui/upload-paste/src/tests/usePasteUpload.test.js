@@ -2,23 +2,21 @@ import React, { useRef } from "react";
 import usePasteHandler from "../usePasteHandler";
 import usePasteUpload from "../usePasteUpload";
 
-jest.mock("../usePasteHandler");
+vi.mock("../usePasteHandler");
 
 describe("usePasteUpload hook tests", () => {
-
     it("should register paste handler on Window", () => {
-        const onPaste = jest.fn(),
-            onPasteUpload = jest.fn();
+        const onPaste = vi.fn(),
+            onPasteUpload = vi.fn();
 
         usePasteHandler.mockReturnValueOnce(onPaste);
 
         const uploadOptions = { autoUpload: true };
 
-        const {
-            getHookResult,
-        } = testCustomHook(usePasteUpload, () => [uploadOptions, undefined, onPasteUpload]);
+        const { result } = renderHook(() =>
+            usePasteUpload(uploadOptions, undefined, onPasteUpload));
 
-        const { getIsEnabled } = getHookResult();
+        const { getIsEnabled } = result.current;
 
         expect(getIsEnabled()).toBe(true);
 
@@ -32,15 +30,13 @@ describe("usePasteUpload hook tests", () => {
     });
 
     it("should toggle listener on/off", () => {
-        const onPaste = jest.fn();
+        const onPaste = vi.fn();
 
         usePasteHandler.mockReturnValueOnce(onPaste);
 
-        const {
-            getHookResult,
-        } = testCustomHook(usePasteUpload, () => []);
+        const { result } = renderHook(usePasteUpload);
 
-        const { toggle, getIsEnabled } = getHookResult();
+        const { toggle, getIsEnabled } = result.current;
 
         window.dispatchEvent(new CustomEvent("paste", {
             test: "paste"
@@ -66,19 +62,17 @@ describe("usePasteUpload hook tests", () => {
     });
 
     it("should unregister listener on unmount", () => {
-        const onPaste = jest.fn();
+        const onPaste = vi.fn();
 
         usePasteHandler.mockReturnValueOnce(onPaste);
 
-        const {
-            wrapper,
-        } = testCustomHook(usePasteUpload, () => []);
+        const { unmount } = renderHook(usePasteUpload);
 
         window.dispatchEvent(new CustomEvent("paste", {
             test: "paste"
         }));
 
-        wrapper.unmount();
+        unmount();
 
         window.dispatchEvent(new CustomEvent("paste", {
             test: "paste"
@@ -88,7 +82,7 @@ describe("usePasteUpload hook tests", () => {
     });
 
     it("should register listener to element", () => {
-        const onPaste = jest.fn();
+        const onPaste = vi.fn();
 
         usePasteHandler.mockReturnValueOnce(onPaste);
 
@@ -104,29 +98,29 @@ describe("usePasteUpload hook tests", () => {
             </>;
         };
 
-        const wrapper = mount(<ElementPaste/>);
-        const div = wrapper.find("#paste-div").getDOMNode();
+        const { unmount } = render(<ElementPaste/>);
+        const div = document.getElementById("paste-div");
 
         div.dispatchEvent(new CustomEvent("paste", {
             test: "paste"
         }));
 
-        wrapper.unmount();
+        unmount();
 
         div.dispatchEvent(new CustomEvent("paste", {
             test: "paste"
         }));
 
-        expect(onPaste).toHaveBeenCalledTimes(1);
+        expect(onPaste).toHaveBeenCalledOnce();
     });
 
     it("should not unregister listener if already off", () => {
-        const onPaste = jest.fn();
+        const onPaste = vi.fn();
 
         usePasteHandler.mockReturnValueOnce(onPaste);
 
-        const addEventListener = jest.fn(),
-            removeEventListener = jest.fn();
+        const addEventListener = vi.fn(),
+            removeEventListener = vi.fn();
 
         const elm = {
             current: {
@@ -136,16 +130,17 @@ describe("usePasteUpload hook tests", () => {
         };
 
         const {
-            wrapper,
-            getHookResult,
-        } = testCustomHook(usePasteUpload, () => [undefined, elm]);
+            result,
+            rerender,
+            unmount,
+        } = renderHook((props) => usePasteUpload(...[].concat(props || [undefined, elm])));
 
-        const { toggle } = getHookResult();
+        const { toggle } = result.current;
 
         toggle();
 
-        wrapper.setProps({ test: true });
-        wrapper.unmount();
+        rerender([undefined, elm]);
+        unmount();
 
         expect(addEventListener).toHaveBeenCalledTimes(1);
         expect(removeEventListener).toHaveBeenCalledTimes(1);

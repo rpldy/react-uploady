@@ -12,21 +12,21 @@ import { CHUNK_EVENTS } from "../../consts";
 import sendChunk from "../sendChunk";
 import getChunkedState from "./mocks/getChunkedState.mock";
 
-jest.mock("@rpldy/sender", () => jest.fn());
-jest.mock("../../utils", () => ({ getChunkDataFromFile: jest.fn() }));
-jest.mock("@rpldy/simple-state");
+vi.mock("@rpldy/sender");
+vi.mock("../../utils", () => ({ getChunkDataFromFile: vi.fn() }));
+vi.mock("@rpldy/simple-state");
 
 describe("sendChunk tests", () => {
-    const xhrSendResult = { request: Promise.resolve({ xhrSend: true }), abort: jest.fn() };
+    const xhrSendResult = { request: Promise.resolve({ xhrSend: true }), abort: vi.fn() };
 
-    const onProgress = jest.fn();
+    const onProgress = vi.fn();
 
     beforeAll(()=>{
 		unwrap.mockReturnValue({unwrapped: true});
     });
 
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             xhrSend,
             onProgress,
             triggerUpdater,
@@ -48,7 +48,7 @@ describe("sendChunk tests", () => {
             getChunkDataFromFile.mockReturnValueOnce(fileData);
         }
 
-        const trigger = jest.fn();
+        const trigger = vi.fn();
 
         triggerUpdater.mockResolvedValueOnce(chunkStartData);
         createBatchItem.mockReturnValueOnce(chunkItem);

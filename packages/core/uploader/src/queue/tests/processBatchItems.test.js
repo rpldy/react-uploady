@@ -6,23 +6,24 @@ import { getItemsPrepareUpdater } from "../preSendPrepare";
 import processFinishedRequest from "../processFinishedRequest";
 import { getBatchDataFromItemId } from "../batchHelpers";
 
-jest.mock("../preSendPrepare");
-jest.mock("../processFinishedRequest");
-jest.mock("../batchHelpers");
+vi.mock("../preSendPrepare");
+vi.mock("../processFinishedRequest");
+vi.mock("../batchHelpers");
 
 describe("processBatchItems tests", () => {
     let processBatchItems;
-    const mockNext = jest.fn();
-    const mockPreparePreRequestItems = jest.fn();
+    const mockNext = vi.fn();
+    const mockPreparePreRequestItems = vi.fn();
     const waitForTest = () => Promise.resolve();
 
-    beforeAll(() => {
+    beforeAll( async() => {
         getItemsPrepareUpdater.mockReturnValue(mockPreparePreRequestItems);
-        processBatchItems = require("../processBatchItems").default;
+        const mod = await import("../processBatchItems");
+        processBatchItems = mod.default;
     });
 
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             processFinishedRequest,
             mockPreparePreRequestItems,
             mockNext
@@ -32,7 +33,7 @@ describe("processBatchItems tests", () => {
     const requestResponse = {};
 
     const sendResult = {
-        abort: jest.fn(),
+        abort: vi.fn(),
         request: Promise.resolve(requestResponse),
     };
 
@@ -62,13 +63,13 @@ describe("processBatchItems tests", () => {
     describe("preparePreRequestItems tests", () => {
         it("should return items from subject using preparePreRequestItems-retrieveItemsFromSubject", () => {
             const items = [1, 2];
-            expect(getItemsPrepareUpdater.mock.calls[0][1](items))
+            expect(getItemsPrepareUpdater.mock.calls[1][1](items))
                 .toBe(items);
         });
 
         it("should return subject using preparePreRequestItems-createEventSubject", () => {
             const items = [1, 2], options = { test: true };
-            expect(getItemsPrepareUpdater.mock.calls[0][2](items, options))
+            expect(getItemsPrepareUpdater.mock.calls[1][2](items, options))
                 .toStrictEqual({ items, options });
         });
     });

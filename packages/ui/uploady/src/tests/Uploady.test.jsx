@@ -33,7 +33,7 @@ describe("Uploady tests", () => {
             <div id="test"/>
         </Uploady>);
 
-        expect(container.querySelector("#test")).toBeInstanceOf(HTMLDivElement)
+        expect(container.querySelector("#test")).toBeInstanceOf(HTMLDivElement);
 
         const input = document.getElementById("uploadyInput");
 

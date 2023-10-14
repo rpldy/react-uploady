@@ -1,8 +1,10 @@
 import getChunkedState from "../getChunkedState";
 
-jest.mock("@rpldy/simple-state", () => (state) => ({
-    state,
-    update: (updater) => updater(state),
+vi.mock("@rpldy/simple-state", () => ({
+    default: (state) => ({
+        state,
+        update: (updater) => updater(state),
+    })
 }));
 
 describe("getChunkedState tests", () => {

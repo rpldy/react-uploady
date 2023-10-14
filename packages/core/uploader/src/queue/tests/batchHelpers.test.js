@@ -4,20 +4,21 @@ import getQueueState from "./mocks/getQueueState.mock";
 import { getItemsPrepareUpdater } from "../preSendPrepare";
 import { finalizeItem, getIsItemExists } from "../itemHelpers";
 
-jest.mock("../preSendPrepare");
-jest.mock("../itemHelpers");
+vi.mock("../preSendPrepare");
+vi.mock("../itemHelpers");
 
 describe("batchHelpers tests", () => {
     let batchHelpers;
-    const mockPrepareBatchStartItems = jest.fn();
+    const mockPrepareBatchStartItems = vi.fn();
 
-    beforeAll(() => {
+    beforeAll(async() => {
         getItemsPrepareUpdater.mockReturnValue(mockPrepareBatchStartItems);
-        batchHelpers = require("../batchHelpers");
+        batchHelpers = await import("../batchHelpers");
+        // batchHelpers = require("../batchHelpers");
     });
 
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             finalizeItem,
             mockPrepareBatchStartItems,
         );

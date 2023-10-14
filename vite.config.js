@@ -1,13 +1,15 @@
 /// <reference types="vitest" />
+import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { flowPlugin, esbuildFlowPlugin } from "@bunchtogether/vite-plugin-flow";
+import babelPlugin from "vite-plugin-babel";
 import { getMatchingPackages } from "./scripts/lernaUtils";
-import path from "path";
 
 const createPackageAliases = () => {
     const packages = getMatchingPackages();
-    const aliases = packages.reduce((res, p) => {
+    // console.log("CREATED ALIASES ", aliases);
+    return packages.reduce((res, p) => {
         //{ find:/^i18n\!(.*)/, replacement: '$1.js' }
         res.push({
             find: new RegExp(`^${p.name}$`),
@@ -17,18 +19,26 @@ const createPackageAliases = () => {
         // res[`^${p.name}\/(.*)`] = path.resolve(`./${p.location}/$1`);
         return res;
     }, []);
-
-    // console.log("CREATED ALIASES ", aliases);
-    return aliases
 };
 
 export default defineConfig({
-    plugins: [flowPlugin(), react()],
+    plugins: [
+        flowPlugin(),
+        babelPlugin({
+            //passing specific config because setup file breaks when using config file
+            babelConfig: {
+                babelrc: false,
+                configFile: false,
+                plugins: ["@babel/plugin-proposal-export-default-from"],
+            },
+        }),
+        react()
+    ],
     test: {
         environment: "jsdom",
         globals: true,
         setupFiles: "./test/vitest-setup.js",
-        include: ["packages/**/*.test.js"],
+        include: ["packages/**/*.test.js?(x)"],
     },
     optimizeDeps: {
         esbuildOptions: {

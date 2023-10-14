@@ -1,11 +1,10 @@
 import triggerUpdater from "../triggerUpdater";
 
 describe("triggerUpdater tests", () => {
-
-	const trigger = jest.fn();
+	const trigger = vi.fn();
 
 	beforeEach(() => {
-		clearJestMocks(trigger);
+		clearViMocks(trigger);
 	});
 
 	it("should return function if only trigger is passed", () => {

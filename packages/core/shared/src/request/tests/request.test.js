@@ -5,11 +5,11 @@ describe("request tests", () => {
         window.XMLHttpRequest = function () {
             const xhr = {
                 upload: {},
-                setRequestHeader: jest.fn(),
-                open: jest.fn(),
-                send: jest.fn(),
-                getAllResponseHeaders: jest.fn(),
-                abort: jest.fn(() => {
+                setRequestHeader: vi.fn(),
+                open: vi.fn(),
+                send: vi.fn(),
+                getAllResponseHeaders: vi.fn(),
+                abort: vi.fn(() => {
                     xhr.onabort();
                 }),
             };
@@ -98,7 +98,7 @@ describe("request tests", () => {
     });
 
     it("should use preSend option", () => {
-        const preSend = jest.fn();
+        const preSend = vi.fn();
         const responseData = { success: true };
 
         const test = doTest((data) => {

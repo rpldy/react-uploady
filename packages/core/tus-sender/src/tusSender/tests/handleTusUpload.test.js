@@ -5,21 +5,20 @@ import finalizeParallelUpload from "../finalizeParallelUpload";
 import createMockState from "../../tests/tusState.mock";
 import handleTusUpload from "../handleTusUpload";
 
-jest.mock("../initTusUpload/createUpload", () => jest.fn());
-jest.mock("../finalizeParallelUpload", () => jest.fn());
+vi.mock("../initTusUpload/createUpload", () => ({ default: vi.fn() }));
+vi.mock("../finalizeParallelUpload", () => ({ default: vi.fn() }));
 
-jest.mock("../../resumableStore", () => ({
-	persistResumable: jest.fn(),
+vi.mock("../../resumableStore", () => ({
+	persistResumable: vi.fn(),
 }));
 
 describe("handleTusUpload tests", () => {
-
 	const chunkedSender = {
-		send: jest.fn(),
+		send: vi.fn(),
 	};
 
 	beforeEach(() => {
-		clearJestMocks(
+		clearViMocks(
 			chunkedSender.send,
 			createUpload,
 			persistResumable,

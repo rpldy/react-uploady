@@ -10,7 +10,7 @@ export default (initState = {}) => {
     };
 
     return {
-        getState: jest.fn(() => state),
-        updateState: jest.fn((updater) => updater(state)),
+        getState: vi.fn(() => state),
+        updateState: vi.fn((updater) => updater(state)),
     }
 };

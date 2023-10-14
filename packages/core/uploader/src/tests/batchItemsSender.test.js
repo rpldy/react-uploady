@@ -1,16 +1,15 @@
-/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "testSend"] }] */
+/* eslint vitest/expect-expect: ["error", { "assertFunctionNames": ["expect", "testSend"] }] */
 import { mockTrigger } from "@rpldy/life-events/src/tests/mocks/rpldy-life-events.mock";
 import mockSend from "@rpldy/sender";
 import { SENDER_EVENTS } from "../consts";
 import { DEFAULT_OPTIONS, DEFAULT_PARAM_NAME } from "../defaults";
 import createItemsSender from "../batchItemsSender";
 
-jest.mock("@rpldy/sender", () => jest.fn());
+vi.mock("@rpldy/sender", () => ({ default: vi.fn() }));
 
 describe("batchItemsSender tests", () => {
-
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             mockTrigger,
         );
         mockSend.mockReset();
@@ -80,8 +79,7 @@ describe("batchItemsSender tests", () => {
     });
 
     it("should send using provided send", () => {
-
-        const customSend = jest.fn();
+        const customSend = vi.fn();
 
         testSend({
             send: customSend,

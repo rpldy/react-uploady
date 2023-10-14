@@ -1,161 +1,165 @@
 import { FILE_STATES } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
+import createState from "@rpldy/simple-state";
 import { RETRY_EVENT } from "../consts";
+import retryEnhancer from "../retry";
 
-const createState = jest.fn(jest.requireActual("@rpldy/simple-state").default);
-createState.unwrap = jest.fn((obj) => obj);
-jest.doMock("@rpldy/simple-state", () => createState);
+vi.mock("@rpldy/simple-state", async () => {
+    const org = await vi.importActual("@rpldy/simple-state");
+    const mocked = vi.fn((...args) => org.createState(...args));
 
-const retryEnhancer = require("../retry").default;
+    return {
+        default: mocked,
+        createState: mocked,
+        unwrap: vi.fn((obj) => obj),
+    };
+});
 
 describe("retry tests", () => {
+    const items = [
+        { id: "f-1", file: "file1", batchId: "b1" },
+        { id: "f-2", url: "url2", batchId: "b1" },
+        { id: "f-3", file: "file3", batchId: "b2" },
+        { id: "f-4", file: "file4", batchId: "b2" },
+        { id: "f-5", url: "url5", batchId: "b3" },
+    ];
 
-	const items = [
-		{ id: "f-1", file: "file1", batchId: "b1" },
-		{ id: "f-2", url: "url2", batchId: "b1" },
-		{ id: "f-3", file: "file3", batchId: "b2" },
-		{ id: "f-4", file: "file4", batchId: "b2" },
-		{ id: "f-5", url: "url5", batchId: "b3" },
-	];
+    const getTestRetry = (itemState) => {
+        const trigger = vi.fn();
+        let retry, retryBatch;
 
-	const getTestRetry = (itemState) => {
-		const trigger = jest.fn();
-		let retry, retryBatch;
+        let uploader = {
+            registerExtension: (name, methods) => {
+                retry = methods.retry;
+                retryBatch = methods.retryBatch;
+            },
 
-		let uploader = {
-			registerExtension: (name, methods) => {
-				retry = methods.retry;
-				retryBatch = methods.retryBatch;
-			},
-
-			on: (event, method) => {
-				// if (event === itemEvent) {
+            on: (event, method) => {
+                // if (event === itemEvent) {
                 if (event === UPLOADER_EVENTS.ITEM_FINALIZE) {
                     items.map((i) => ({ ...i, state: itemState })).forEach(method);
-				}
-			},
+                }
+            },
 
-			add: jest.fn(),
-		};
+            add: vi.fn(),
+        };
 
-		uploader = retryEnhancer(uploader, trigger);
+        uploader = retryEnhancer(uploader, trigger);
 
-		const retryState = createState.mock.calls[0][0];
+        const retryState = createState.mock.calls[0][0];
 
-		return {
-			retry,
-			retryBatch,
-			uploader,
-			trigger,
-			retryState,
-		};
-	};
+        return {
+            retry,
+            retryBatch,
+            uploader,
+            trigger,
+            retryState,
+        };
+    };
 
-	beforeEach(() => {
-		clearJestMocks(
-			createState,
-		);
-	});
+    beforeEach(() => {
+        createState.mockClear();
+    });
 
-	const getItemsFromRetryState = (items, retryState) =>
-		Object.values(retryState.failed)
-			.filter((stateItem) =>
-				!!items.find((item) => item.id === stateItem.id));
+    const getItemsFromRetryState = (items, retryState) =>
+        Object.values(retryState.failed)
+            .filter((stateItem) =>
+                !!items.find((item) => item.id === stateItem.id));
 
-	describe("retry all tests", () => {
-		it.each([
+    describe("retry all tests", () => {
+        it.each([
             FILE_STATES.ERROR,
             FILE_STATES.ABORTED
-		])("should send all items to retry - %s", (itemState) => {
-			const { retry, trigger, uploader, retryState } = getTestRetry(itemState);
+        ])("should send all items to retry - %s", (itemState) => {
+            const { retry, trigger, uploader, retryState } = getTestRetry(itemState);
 
-			const options = { autoUpload: true },
-				expectedItems = getItemsFromRetryState(items, retryState);
+            const options = { autoUpload: true },
+                expectedItems = getItemsFromRetryState(items, retryState);
 
-			const result = retry();
+            const result = retry();
 
-			expect(result).toBe(true);
+            expect(result).toBe(true);
 
-			expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options });
-			expect(uploader.add).toHaveBeenCalledWith(expectedItems, options);
+            expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options });
+            expect(uploader.add).toHaveBeenCalledWith(expectedItems, options);
 
-			const result2 = retry();
-			expect(result2).toBe(false);
+            const result2 = retry();
+            expect(result2).toBe(false);
 
-			expect(trigger).toHaveBeenCalledTimes(1);
-			expect(uploader.add).toHaveBeenCalledTimes(1);
-		});
+            expect(trigger).toHaveBeenCalledTimes(1);
+            expect(uploader.add).toHaveBeenCalledTimes(1);
+        });
 
-		it.each([
+        it.each([
             FILE_STATES.ERROR,
             FILE_STATES.ABORTED
-		])("should send all items with options for event: %s", (itemState) => {
-			const { retry, trigger, uploader, retryState } = getTestRetry(itemState);
-			const options = { autoUpload: false },
-				expectedItems = getItemsFromRetryState(items, retryState);
+        ])("should send all items with options for event: %s", (itemState) => {
+            const { retry, trigger, uploader, retryState } = getTestRetry(itemState);
+            const options = { autoUpload: false },
+                expectedItems = getItemsFromRetryState(items, retryState);
 
-			retry(null, options);
+            retry(null, options);
 
-			expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options });
-			expect(uploader.add).toHaveBeenCalledWith(expectedItems, options);
-		});
-	});
+            expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options });
+            expect(uploader.add).toHaveBeenCalledWith(expectedItems, options);
+        });
+    });
 
-	describe("retry item tests", () => {
-		it.each([
-		    FILE_STATES.ERROR,
-			FILE_STATES.ABORTED
-		])("should send requested item to retry - %s", (itemState) => {
-			const { retry, trigger, uploader, retryState } = getTestRetry(itemState);
-			const options = { foo: "bar" };
-
-			const expectedOptions = {
-					...options,
-					autoUpload: true,
-				},
-				expectedItems = getItemsFromRetryState([items[2]], retryState);
-
-			const result = retry("f-3", options);
-
-			expect(result).toBe(true);
-			expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options: expectedOptions });
-			expect(uploader.add).toHaveBeenCalledWith(expectedItems, expectedOptions);
-
-			const result2 = retry("f-3", options);
-			expect(result2).toBe(false);
-
-			expect(trigger).toHaveBeenCalledTimes(1);
-			expect(uploader.add).toHaveBeenCalledTimes(1);
-		});
-	});
-
-	describe("retry batch tests", () => {
-		it.each([
+    describe("retry item tests", () => {
+        it.each([
             FILE_STATES.ERROR,
             FILE_STATES.ABORTED
-		])("should send batch items to retry", (itemState) => {
-			const { retryBatch, trigger, uploader, retryState } = getTestRetry(itemState);
+        ])("should send requested item to retry - %s", (itemState) => {
+            const { retry, trigger, uploader, retryState } = getTestRetry(itemState);
+            const options = { foo: "bar" };
 
-			const options = { foo: "bar" };
+            const expectedOptions = {
+                    ...options,
+                    autoUpload: true,
+                },
+                expectedItems = getItemsFromRetryState([items[2]], retryState);
 
-			const expectedOptions = {
-				...options,
-				autoUpload: true,
-			};
+            const result = retry("f-3", options);
 
-			const expectedItems = getItemsFromRetryState([items[2], items[3]], retryState);
+            expect(result).toBe(true);
+            expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options: expectedOptions });
+            expect(uploader.add).toHaveBeenCalledWith(expectedItems, expectedOptions);
 
-			const result = retryBatch("b2", options);
-			expect(result).toBe(true);
+            const result2 = retry("f-3", options);
+            expect(result2).toBe(false);
 
-			expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options: expectedOptions });
-			expect(uploader.add).toHaveBeenCalledWith(expectedItems, expectedOptions);
+            expect(trigger).toHaveBeenCalledTimes(1);
+            expect(uploader.add).toHaveBeenCalledTimes(1);
+        });
+    });
 
-			const result2 = retryBatch("b2", options);
-			expect(result2).toBe(false);
+    describe("retry batch tests", () => {
+        it.each([
+            FILE_STATES.ERROR,
+            FILE_STATES.ABORTED
+        ])("should send batch items to retry", (itemState) => {
+            const { retryBatch, trigger, uploader, retryState } = getTestRetry(itemState);
 
-			expect(trigger).toHaveBeenCalledTimes(1);
-			expect(uploader.add).toHaveBeenCalledTimes(1);
-		});
-	});
+            const options = { foo: "bar" };
+
+            const expectedOptions = {
+                ...options,
+                autoUpload: true,
+            };
+
+            const expectedItems = getItemsFromRetryState([items[2], items[3]], retryState);
+
+            const result = retryBatch("b2", options);
+            expect(result).toBe(true);
+
+            expect(trigger).toHaveBeenCalledWith(RETRY_EVENT, { items: expectedItems, options: expectedOptions });
+            expect(uploader.add).toHaveBeenCalledWith(expectedItems, expectedOptions);
+
+            const result2 = retryBatch("b2", options);
+            expect(result2).toBe(false);
+
+            expect(trigger).toHaveBeenCalledTimes(1);
+            expect(uploader.add).toHaveBeenCalledTimes(1);
+        });
+    });
 });

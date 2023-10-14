@@ -5,18 +5,18 @@ import mockCreateProcessor from "../processor";
 import createUploader from "../uploader";
 import { deepProxyUnwrap, getMandatoryOptions } from "../utils";
 
-jest.mock("../processor");
-jest.mock("../utils");
-jest.mock("@rpldy/abort");
+vi.mock("../processor");
+vi.mock("../utils");
+vi.mock("@rpldy/abort");
 
 describe("uploader tests", () => {
-    const mockProcess = jest.fn(),
-        mockAbort = jest.fn(),
-        mockAbortBatch = jest.fn(),
-        mockAddNewBatch = jest.fn(),
-        mockRunCancellable = jest.fn(),
-        mockProcessPendingBatches = jest.fn(),
-        mockClearPendingBatches = jest.fn();
+    const mockProcess = vi.fn(),
+        mockAbort = vi.fn(),
+        mockAbortBatch = vi.fn(),
+        mockAddNewBatch = vi.fn(),
+        mockRunCancellable = vi.fn(),
+        mockProcessPendingBatches = vi.fn(),
+        mockClearPendingBatches = vi.fn();
 
     beforeAll(()=>{
         getMandatoryOptions.mockImplementation((options) => options);
@@ -25,7 +25,7 @@ describe("uploader tests", () => {
     });
 
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             mockProcess,
             mockAbort,
             triggerCancellable,
@@ -202,7 +202,7 @@ describe("uploader tests", () => {
 
     describe("enhancer tests", () => {
         it("should create with enhancer", () => {
-            const enhancer = jest.fn((uploader, trigger) => {
+            const enhancer = vi.fn((uploader, trigger) => {
                 trigger();
                 expect(mockTrigger).toHaveBeenCalled();
                 uploader.test = true;

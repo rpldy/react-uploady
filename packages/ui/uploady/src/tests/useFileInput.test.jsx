@@ -1,15 +1,16 @@
+/**
+ * @vitest-environment-options { "url": "https://test.com/home/test.html" }
+ */
+
 import React, { useRef } from "react";
 import { UploadyContext } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import useFileInput from "../useFileInput";
 
 describe("useFileInput tests", () => {
-
     const url = "test.com/upload";
 
     beforeEach(() => {
-        clearJestMocks(
-            UploadyContext.setOptions
-        );
+        UploadyContext.setOptions.mockClear();
     });
 
     const TestComp = ({ withForm, withoutRef, formNoProps, exposeRef, action }) => {
@@ -34,16 +35,15 @@ describe("useFileInput tests", () => {
             inputRef = ref;
         };
 
-        const wrapper = mount(<TestComp {...options} exposeRef={exposeRef}/>);
+        const renderResult = render(<TestComp {...options} exposeRef={exposeRef}/>);
 
         return {
-            wrapper,
+            renderResult,
             inputRef,
         };
     };
 
     it("should pass input ref to Uploady context", () => {
-
         UploadyContext.getOptions.mockReturnValueOnce({});
 
         const { inputRef } = renderTestComp();
@@ -65,9 +65,10 @@ describe("useFileInput tests", () => {
         const pageUrl = "https://test.com/home/test.html";
 
         beforeEach(() => {
-            jsdom.reconfigure({
-                url: pageUrl
-            });
+            // JSDOM.reconfigure({
+            //     url: pageUrl
+            // });
+            // global.history.push(pageUrl)
         });
 
         it.each([
@@ -77,7 +78,6 @@ describe("useFileInput tests", () => {
             ["/upload", "https://test.com/upload"],
             ["https://my-upload.com", "https://my-upload.com"],
         ])("should pass destination props from input form for action: '%s'", (formAction, resultUrl) => {
-
             UploadyContext.getOptions.mockReturnValueOnce({});
 
             const { inputRef } = renderTestComp({ withForm: true, action: formAction });
@@ -111,7 +111,6 @@ describe("useFileInput tests", () => {
     });
 
     it("should pass undefined if no form attributes", () => {
-
         UploadyContext.getOptions.mockReturnValueOnce({});
 
         renderTestComp({ withForm: true, formNoProps: true });
@@ -133,17 +132,17 @@ describe("useFileInput tests", () => {
             .not.toHaveBeenCalled();
     });
 
-    it("should return context internal input if no params passed", () => {
+    it("should return context internal input if no params passed", async () => {
         const TestCompNoParam = () => {
-          const fileInput = useFileInput();
+            const fileInput = useFileInput();
 
-          return <div>{fileInput}</div>;
+            return <div>{fileInput}</div>;
         };
 
         UploadyContext.getInternalFileInput.mockReturnValueOnce("file input");
 
-        const wrapper = mount(<TestCompNoParam />);
-
-        expect(wrapper).toHaveText("file input");
+        const { findByText } = render(<TestCompNoParam/>);
+        const div = await findByText("file input");
+        expect(div).toBeDefined();
     });
 });

@@ -2,9 +2,8 @@ import { createUploader, uploader } from "@rpldy/uploader/src/tests/mocks/rpldy-
 import useUploader from "../useUploader";
 
 describe("useUploader tests", () => {
-
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             uploader.update,
             uploader.on,
             uploader.off,
@@ -12,42 +11,37 @@ describe("useUploader tests", () => {
     });
 
     it("should create uploader", () => {
-
         const options = {
             multiple: true,
             autoUpload: true,
             enhancer: "123",
         };
 
-        const { wrapper, getHookResult } = testCustomHook(useUploader, options);
+        const { result, rerender, unmount } = renderHook(useUploader, { initialProps: options });
 
-        expect(getHookResult()).toBe(uploader);
+        expect(result.current).toBe(uploader);
 
         expect(createUploader).toHaveBeenCalledWith(options);
         expect(uploader.update).toHaveBeenCalledWith(options);
         expect(uploader.on).not.toHaveBeenCalled();
 
-        const changedProps = { inputFieldName: "aaaa" };
-        wrapper.setProps(changedProps);
-        expect(uploader.update).toHaveBeenCalledWith({
-            ...options,
-            ...changedProps,
-        });
+        const newProps = { ...options, inputFieldName: "aaaa" };
+        rerender(newProps);
 
+        expect(uploader.update).toHaveBeenCalledWith(newProps);
         expect(createUploader).toHaveBeenCalledTimes(1);
 
-        wrapper.setProps(({ multiple: false, enhancer: true }));
+        rerender({ ...newProps, multiple: false, enhancer: true });
+
         expect(createUploader).toHaveBeenCalledTimes(2);
 
         expect(uploader.update).toHaveBeenCalledWith({
-            ...options,
-            ...changedProps,
+            ...newProps,
             enhancer: true,
             multiple: false,
         });
 
-        wrapper.unmount();
-
+        unmount();
         expect(uploader.off).not.toHaveBeenCalled();
     });
 
@@ -57,21 +51,25 @@ describe("useUploader tests", () => {
             b: "222"
         };
 
-        const { wrapper } = testCustomHook(useUploader, () => [  {autoUpload: true }, listeners]);
+        const props = [{ autoUpload: true }, listeners];
+
+        const { result, rerender, unmount } = renderHook((props) =>
+            useUploader(...props), { initialProps: props });
+
+        const uploader = result.current;
 
         expect(uploader.update).toHaveBeenCalledWith({ autoUpload: true });
 
         expect(uploader.on).toHaveBeenCalledWith("a", listeners.a);
         expect(uploader.on).toHaveBeenCalledWith("b", listeners.b);
 
-        wrapper.setProps({});
+        rerender(props);
         expect(uploader.on).toHaveBeenCalledTimes(2);
         expect(uploader.off).not.toHaveBeenCalled();
 
-        wrapper.unmount();
+        unmount();
 
         expect(uploader.off).toHaveBeenCalledWith("a", listeners.a);
         expect(uploader.off).toHaveBeenCalledWith("b", listeners.b);
-
     });
 });

@@ -38,9 +38,11 @@
     "@rpldy/upload-button": "^1.6.0-rc.0",
     "@rpldy/upload-url-input": "^1.6.0-rc.0",
     "@storybook/addon-knobs": "^7.0.2",
+    "@testing-library/react": "^14",
     "flow-bin": "^0.218.0",
     "react-image-crop": "^10.0.9",
     "styled-components": "^6.0.7"
+
   },
   "peerDependencies": {
     "react": ">=16.8",

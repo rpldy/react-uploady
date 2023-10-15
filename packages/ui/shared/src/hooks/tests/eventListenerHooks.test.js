@@ -5,10 +5,7 @@ import {
 } from "../hooksUtils";
 import "../eventListenerHooks";
 
-jest.mock("../hooksUtils", () => ({
-    generateUploaderEventHook: jest.fn(),
-    generateUploaderEventHookWithState: jest.fn(),
-}));
+vi.mock("../hooksUtils");
 
 describe("eventListenerHooks tests", () => {
     describe("generateUploaderEventHook tests without scope", () => {
@@ -54,5 +51,4 @@ describe("eventListenerHooks tests", () => {
             expect(calculator(item)).toEqual(item);
         });
     });
-
 });

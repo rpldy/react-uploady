@@ -3,7 +3,6 @@ import { PREVIEW_DEFAULTS } from "../defaults";
 import { getFallbackUrlData, getWithMandatoryOptions, getFileObjectUrlByType } from "../utils";
 
 describe("utils tests", () => {
-
     describe("getWithMandatoryOptions tests", () => {
         it("should return with defaults and overrides", () => {
             const props = {
@@ -60,7 +59,7 @@ describe("utils tests", () => {
         const url = "blob:test";
 
         beforeAll(() => {
-            URL.createObjectURL = jest.fn(() => url);
+            URL.createObjectURL = vi.fn(() => url);
         });
 
         afterAll(() => {

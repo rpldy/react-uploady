@@ -131,7 +131,7 @@ describe("queue tests", () => {
     it("should update state", () => {
         const queue = createQueue({ destination: "foo" }, cancellable, trigger, sender, uploaderId);
 
-        expect(queue.getState().currentBatch).toBe(null);
+        expect(queue.getState().currentBatch).toBeNull();
 
         queue.updateState((state) => {
             state.currentBatch = "b1";

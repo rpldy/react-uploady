@@ -139,8 +139,9 @@ module.exports = {
                 "jsdom": "readonly",
                 "vi": "readonly",
                 "render": "readonly",
-                "userEvent":"writable",
+                "userEvent":"readonly",
                 "renderHook": "readonly",
+                "renderHookWithError": "readonly",
             },
             "extends": ["plugin:vitest/recommended"],
             "rules": {

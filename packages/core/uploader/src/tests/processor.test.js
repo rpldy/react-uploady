@@ -87,7 +87,7 @@ describe("processor tests", () => {
 
            const batch = await processor.addNewBatch(files, options);
 
-           expect(batch).toBe(null);
+           expect(batch).toBeNull();
            expect(queue.addBatch).not.toHaveBeenCalled();
            expect(mockCreateBatch).toHaveBeenCalledWith(files, uploaderId, options);
         });

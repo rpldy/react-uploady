@@ -39,6 +39,7 @@
     "@rpldy/shared": "^1.6.0-rc.0",
     "@rpldy/upload-button": "^1.6.0-rc.0",
     "@rpldy/uploady": "^1.6.0-rc.0",
+    "@testing-library/react": "^14",
     "flow-bin": "^0.218.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",

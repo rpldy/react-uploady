@@ -8,7 +8,7 @@ import {
     getIsUploadOptionsComponent,
 } from "../utils";
 
-vi.mock("../assertContext", () => jest.fn());
+vi.mock("../assertContext");
 
 describe("ui-shared utils tests", () => {
     describe("logWarning test", () => {

@@ -161,9 +161,9 @@ describe("merge (deep) tests", () => {
             expect(result).not.toBe(a);
             expect(result).not.toBe(b);
 
-            expect(a.level1.level2.jj).not.toBeDefined();
-            expect(a.level1.level2.level3_1.h).not.toBeDefined();
-            expect(b.level1.level2.jj).not.toBeDefined();
+            expect(a.level1.level2.jj).toBeUndefined();
+            expect(a.level1.level2.level3_1.h).toBeUndefined();
+            expect(b.level1.level2.jj).toBeUndefined();
 
             expect(result).toEqual({
                 lll: "bbb",

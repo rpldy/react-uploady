@@ -433,8 +433,8 @@ describe("handleEvents with chunking support tests", () => {
                     expect(result.sendOptions.sendWithFormData).toBe(false);
                     expect(result.sendOptions.method).toBe("PATCH");
                     expect(result.sendOptions.headers["Upload-Offset"]).toBe(0);
-                    expect(result.sendOptions.headers["Upload-Length"]).toBe(undefined);
-                    expect(result.sendOptions.headers["Content-Range"]).toBe(undefined);
+                    expect(result.sendOptions.headers["Upload-Length"]).toBeUndefined();
+                    expect(result.sendOptions.headers["Content-Range"]).toBeUndefined();
                     expect(result.sendOptions.headers["Upload-Concat"]).toBe("partial");
 
                     expect(tusState.getState().items["i1"].parallelChunks[0])

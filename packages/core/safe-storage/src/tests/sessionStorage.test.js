@@ -31,7 +31,7 @@ describe("sessionStorage tests", () => {
             safeSessionStorage.setItem("test", "1234");
             safeSessionStorage.setItem("test2", "12345");
             safeSessionStorage.clear();
-            expect(safeSessionStorage.getItem("test")).toBe(null);
+            expect(safeSessionStorage.getItem("test")).toBeNull();
             expect(safeSessionStorage.length).toBe(0);
         });
 

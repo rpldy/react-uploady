@@ -28,3 +28,28 @@ global.clearViMocks = (...mocks) => {
         }
     });
 };
+
+const suppressConsoleError = () => {
+    const errorSpy = vi.spyOn(console, "error")
+        .mockImplementation(() => {
+            //do nothing
+        });
+
+    return () => errorSpy.mockRestore();
+};
+
+global.renderHookWithError = (...args) => {
+    let error;
+    const restore = suppressConsoleError();
+
+    try {
+        renderHook(...args);
+    } catch (ex) {
+        error = ex;
+    }
+
+    restore();
+    throw error;
+};
+
+

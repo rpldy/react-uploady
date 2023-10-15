@@ -1,18 +1,17 @@
 import assertContext from "../../assertContext";
 import useUploadyContext from "../useUploadyContext";
 
-jest.mock("../../assertContext");
+vi.mock("../../assertContext");
 
 describe("useUploadyContext tests", () => {
-
     beforeAll(()=>{
         assertContext.mockReturnValue("context");
     });
 
     it("should set options on context", () => {
-        const { getHookResult } = testCustomHook(useUploadyContext);
+        const { result } = renderHook(useUploadyContext);
 
-        expect(getHookResult()).toBe("context");
+        expect(result.current).toBe("context");
     });
 });
 

@@ -2,13 +2,15 @@ describe("scheduleIdleWork tests", () => {
     let hasWindow, scheduleIdleWork;
     const orgRIC = window.requestIdleCallback;
 
-    const init = (preReq = null) => {
+    const init = async (preReq = null) => {
         vi.mock("../hasWindow");
-        hasWindow = require("../hasWindow").default;
+        const hasWindowMod = await import("../hasWindow");
+        hasWindow = hasWindowMod.default;
 
         preReq?.();
 
-        scheduleIdleWork = require("../scheduleIdleWork").default;
+        const siwMod = await import("../scheduleIdleWork");
+        scheduleIdleWork = siwMod.default;
     };
 
     afterEach(() => {
@@ -19,8 +21,8 @@ describe("scheduleIdleWork tests", () => {
     describe("test with requestIdleCallback", () => {
         let mockRIC;
 
-        beforeEach(() => {
-            init(() => {
+        beforeEach(async () => {
+            await init(() => {
                 mockRIC = vi.fn((fn) => fn());
                 window.requestIdleCallback = mockRIC;
                 hasWindow.mockReturnValueOnce(true);
@@ -49,8 +51,8 @@ describe("scheduleIdleWork tests", () => {
     });
 
     describe("should fallback on setTimeout when no RIC", () => {
-        beforeEach(() => {
-            init(() => {
+        beforeEach(async () => {
+            await init(() => {
                 vi.useFakeTimers();
                 hasWindow.mockReturnValueOnce(true);
             });
@@ -93,8 +95,8 @@ describe("scheduleIdleWork tests", () => {
     });
 
     describe("no window tests", () => {
-        beforeEach(() => {
-            init(() => {
+        beforeEach(async() => {
+        await    init(() => {
                 vi.useFakeTimers();
                 hasWindow.mockReturnValueOnce(false);
             });

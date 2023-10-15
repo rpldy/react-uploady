@@ -5,9 +5,6 @@ import { UploadyContext } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared
 import UploadDropZone from "./UploadDropZone";
 
 vi.mock("html-dir-content");
-// , () => ({
-//     getFilesFromDragEvent: vi.fn()
-// }));
 
 describe("UploadDropZone tests", () => {
     const dropEvent = {
@@ -146,7 +143,7 @@ describe("UploadDropZone tests", () => {
                 .toHaveBeenCalledWith(files, {
                     autoUpload: true
                 });
-        })
+        });
     });
 
     it("should getFiles in drop handler", async () => {
@@ -178,7 +175,7 @@ describe("UploadDropZone tests", () => {
     it("should add & remove drag className", () => {
         const onDragOverClassName = "drag-over";
 
-        const { div, span, mockRef, fireDragEnter, fireDragEnd, fireDragOver, fireDragLeave } = testDropZone({
+        const { span, mockRef, fireDragEnter, fireDragEnd, fireDragOver, fireDragLeave } = testDropZone({
             onDragOverClassName
         }, false);
 
@@ -231,7 +228,7 @@ describe("UploadDropZone tests", () => {
     it("should not handle drag or add className if child and contains is disabled", () => {
         const onDragOverClassName = "drag-over";
 
-        const { div, span, mockRef, fireDragEnter, fireDragEnd, fireDragOver } = testDropZone({
+        const { span, mockRef, fireDragEnter, fireDragEnd, fireDragOver } = testDropZone({
             enableOnContains: false,
             onDragOverClassName,
         }, false);

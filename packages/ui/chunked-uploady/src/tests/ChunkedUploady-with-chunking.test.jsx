@@ -1,46 +1,47 @@
 import React from "react";
 import { logWarning } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import Uploady, { composeEnhancers } from "@rpldy/uploady/src/tests/mocks/rpldy-uploady.mock";
-import TusUploady from "../TusUploady";
-import { getTusEnhancer } from "@rpldy/tus-sender";
+import getChunkedEnhancer from "@rpldy/chunked-sender";
+import ChunkedUploady from "../ChunkedUploady";
 
-vi.mock("@rpldy/tus-sender", () => ({
-    getTusEnhancer: vi.fn(),
+vi.mock("@rpldy/chunked-sender", () => ({
+    default: vi.fn(),
     CHUNKING_SUPPORT: true
 }));
 
-describe("test TusUploady with chucking support", () => {
-    const tusEnhancer = (uploader) => uploader;
+describe("ChunkedUploady tests with chunking support", () => {
+    const chunkedEnhancer = (uploader) => uploader;
 
-    beforeAll(() => {
-        getTusEnhancer.mockImplementation(() => tusEnhancer);
+    beforeEach(() => {
+        clearViMocks(
+            Uploady,
+        );
     });
 
-    it("should render TusUploady with enhancer", () => {
-        const tusProps = {
+    beforeAll(() => {
+        getChunkedEnhancer.mockImplementation(() => chunkedEnhancer);
+    });
+
+    it("should render ChunkedUploady with enhancer", () => {
+        const chunkedProps = {
             chunked: true,
             chunkSize: 11,
             retries: 7,
             parallel: 3,
-            deferLength: true,
-            featureDetection: true,
-            storagePrefix: "---"
         };
 
         const enhancer = vi.fn((uploader) => uploader);
 
         const props = {
             enhancer,
-            ...tusProps,
+            ...chunkedProps,
         };
 
         composeEnhancers.mockReturnValueOnce(enhancer);
 
-        const { container } = render(<TusUploady {...props} />);
+        render(<ChunkedUploady {...props} />);
 
-        const UploadyElm = container.firstChild;
-
-        expect(UploadyElm).toBeDefined();
+        expect(Uploady).toHaveBeenCalledOnce();
 
         const update = vi.fn();
         const uploader = enhancer({
@@ -48,14 +49,14 @@ describe("test TusUploady with chucking support", () => {
         });
 
         expect(uploader).toBeDefined();
-        expect(composeEnhancers).toHaveBeenCalledWith(tusEnhancer, enhancer);
+        expect(composeEnhancers).toHaveBeenCalledWith(chunkedEnhancer, enhancer);
 
         expect(logWarning).toHaveBeenCalledWith(true, expect.any(String));
-        expect(getTusEnhancer).toHaveBeenCalledWith(tusProps);
+        expect(getChunkedEnhancer).toHaveBeenCalledWith(chunkedProps);
     });
 
     it("should render ChunkedUploady without enhancer", () => {
-        const { container } = render(<TusUploady/>);
+        render(<ChunkedUploady/>);
 
         const enhancer = Uploady.mock.calls[0][0].enhancer;
 

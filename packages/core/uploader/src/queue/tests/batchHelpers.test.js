@@ -957,7 +957,7 @@ describe("batchHelpers tests", () => {
             expect(state.batches[batchId]).toBeUndefined();
             expect(state.batches["b2"]).toBeDefined();
             expect(state.batchQueue[0]).toBe("b2");
-            expect(state.currentBatch).toBe(null);
+            expect(state.currentBatch).toBeNull();
             expect(state.items["i1"]).toBeUndefined();
             expect(state.items["i2"]).toBeUndefined();
             expect(state.items["i3"]).toBeDefined();

@@ -22,7 +22,7 @@ describe("createUpload tests", () => {
             ["https://www.test.com/tus/", "/upload/123"],
         ])("should combine createUrl %s with absolute location %s", (url, loc) => {
             expect(resolveUploadUrl(url, loc))
-            		.toEqual("https://www.test.com/upload/123");
+            		.toBe("https://www.test.com/upload/123");
         });
 
         it.each([
@@ -168,7 +168,7 @@ describe("createUpload tests", () => {
 				requestResult
 			} = await doCreateTest({ status: 400 });
 
-			expect(requestResult).toEqual(null);
+			expect(requestResult).toBeNull();
 		});
 
 		it("should return null on error", async () => {
@@ -176,7 +176,7 @@ describe("createUpload tests", () => {
 				requestResult
 			} = await doCreateTest({ error: true });
 
-			expect(requestResult).toEqual(null);
+			expect(requestResult).toBeNull();
 		});
 
 		it("should do create with defer length", async () => {

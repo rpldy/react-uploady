@@ -1,4 +1,4 @@
-/* eslint vitest/expect-expect: ["error", { "assertFunctionNames": ["expect", "testSingleItem"] }] */
+/* eslint vitest/expect-expect: ["error", { "customExpressions": ["expect", "testSingleItem"] }] */
 import getQueueState, { realUnwrap } from "./mocks/getQueueState.mock";
 import { FILE_STATES } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../../consts";

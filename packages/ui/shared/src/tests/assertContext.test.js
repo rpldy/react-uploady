@@ -1,7 +1,7 @@
 import assertContext, { ERROR_MSG, DIFFERENT_VERSION_ERROR_MSG } from "../assertContext";
 import { getIsVersionRegisteredAndDifferent, getRegisteredVersion } from "../uploadyVersion";
 
-jest.mock("../uploadyVersion");
+vi.mock("../uploadyVersion");
 
 describe("assertContext tests", () => {
     it("should throw if no context", () => {

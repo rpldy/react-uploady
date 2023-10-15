@@ -31,7 +31,7 @@ describe("localStorage tests", () => {
             safeLocalStorage.setItem("test", "1234");
             safeLocalStorage.setItem("test2", "12345");
             safeLocalStorage.clear();
-            expect(safeLocalStorage.getItem("test")).toBe(null);
+            expect(safeLocalStorage.getItem("test")).toBeNull();
             expect(safeLocalStorage.length).toBe(0);
         });
 

@@ -147,16 +147,14 @@ describe("usePreviewLoader tests", () => {
         expect(previews[0].props).toEqual({ test: "123" });
         expect(previews[1].props).toEqual({ test: "123" });
 
-        console.log("re-rendering")
         rerender({ previewComponentProps: { test: "456" } });
 
-        //
-        // const { previews: updatedPreviews } = hookResult.current;
-        //
-        // expect(updatedPreviews).toHaveLength(2);
-        // expect(updatedPreviews[0].url).toBe("preview.test");
-        // expect(updatedPreviews[0].props).toEqual({ test: "456" });
-        // expect(updatedPreviews[1].props).toEqual({ test: "456" });
+        const { previews: updatedPreviews } = hookResult.current;
+
+        expect(updatedPreviews).toHaveLength(2);
+        expect(updatedPreviews[0].url).toBe("preview.test");
+        expect(updatedPreviews[0].props).toEqual({ test: "456" });
+        expect(updatedPreviews[1].props).toEqual({ test: "456" });
     });
 
     it("should return preview for video", () => {

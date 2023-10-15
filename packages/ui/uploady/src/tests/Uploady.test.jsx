@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import { invariant } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { hasWindow } from "@rpldy/shared";
 import {
@@ -95,19 +96,24 @@ describe("Uploady tests", () => {
             inputFieldName: "file",
         });
 
-        const wrapper = render(<Uploady
+        const portalSpy = vi.spyOn(ReactDOM, "createPortal");
+
+        render(<Uploady
             noPortal
             multiple
             accept={".doc"}
+            fileInputId="uploadyInput"
         >
             <div id="test"/>
         </Uploady>);
 
-        expect(wrapper.find("Portal").find("input")).toHaveLength(0);
+        expect(portalSpy).not.toHaveBeenCalled();
 
-        const input = wrapper.find("input");
-        expect(input).toHaveLength(1);
-        expect(input).toHaveProp("multiple", true);
-        expect(input).toHaveProp("name", "file");
+        const input = document.getElementById("uploadyInput");
+        expect(input).to.be.instanceof(HTMLInputElement);
+        expect(input).to.have.attr("multiple");
+        expect(input).to.have.attr("name", "file");
+
+        portalSpy.mockRestore();
     });
 });

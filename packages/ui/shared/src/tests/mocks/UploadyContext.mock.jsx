@@ -11,7 +11,7 @@ const UploadyContextMock = {
     on: vi.fn(),
     off: vi.fn(),
     Provider: vi.fn(({ children }) => {
-        return <div id="uploady-context-provider">{children}</div>
+        return <div id="uploady-context-provider">{children}</div>;
     }),
     createContextApi: vi.fn(),
 };

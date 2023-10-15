@@ -4,16 +4,20 @@ import { NO_EXT } from "../consts";
 import useRetry from "../useRetry";
 
 describe("useRetry tests", () => {
+    beforeEach(() => {
+        invariant.mockReset();
+    });
+
     it("should throw if ext not registered", () => {
-        const { getError } = testCustomHook(useRetry);
+        invariant.mockImplementation(() => {
+            throw new Error("bah");
+        });
+
+        expect(() => {
+            renderHookWithError(useRetry);
+        }).toThrow("bah");
 
         expect(invariant).toHaveBeenCalledWith(undefined, NO_EXT);
-
-        const msg = getError().message;
-
-        expect(msg).toContain("Cannot read proper");
-        expect(msg).toContain("of undefined");
-        expect(msg).toContain("'retry'");
     });
 
     it("should return retry from context", () => {
@@ -21,8 +25,8 @@ describe("useRetry tests", () => {
             retry: "test"
         });
 
-        const { getHookResult } = testCustomHook(useRetry);
+        const { result } = renderHook(useRetry);
 
-        expect(getHookResult()).toBe("test");
+        expect(result.current).toBe("test");
     });
 });

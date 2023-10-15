@@ -2,22 +2,18 @@ import { UploadyContext } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared
 import usePasteHandler from "../usePasteHandler";
 
 describe("usePasteHandler hook tests", () => {
-
     beforeEach(() => {
-        clearJestMocks(UploadyContext.upload);
+        clearViMocks(UploadyContext.upload);
     });
 
     it("should upload file on handler called", () => {
-
         const uploadOptions = { autoUpload: true };
-        const onPasteUpload = jest.fn();
+        const onPasteUpload = vi.fn();
 
-        const { getHookResult } = testCustomHook(usePasteHandler, () => [
-            uploadOptions,
-            onPasteUpload,
-        ]);
+        const { result } = renderHook(() =>
+            usePasteHandler(uploadOptions, onPasteUpload));
 
-        const pasteHandler = getHookResult();
+        const pasteHandler = result.current;
 
         const files = [1, 2, 3];
 
@@ -33,19 +29,16 @@ describe("usePasteHandler hook tests", () => {
         { files: null },
         { files: [] }
     ])("should not call upload if no files %s", (clipboardData) => {
-        const onPasteUpload = jest.fn();
+        const onPasteUpload = vi.fn();
 
-        const { getHookResult } = testCustomHook(usePasteHandler, () => [
-            undefined,
-            onPasteUpload,
-        ]);
+        const { result } = renderHook(() =>
+            usePasteHandler(undefined, onPasteUpload));
 
-        const pasteHandler = getHookResult();
+        const pasteHandler = result.current;
 
         pasteHandler({ clipboardData });
 
         expect(UploadyContext.upload).not.toHaveBeenCalled();
-
         expect(onPasteUpload).not.toHaveBeenCalled();
     });
 });

@@ -51,7 +51,7 @@ describe("featureDetection tests", () => {
 
             const result = doFeatureDetection("upload.url", tusState);
 
-            expect(result).toBe(null);
+            expect(result).toBeNull();
             expect(request).not.toHaveBeenCalled();
             expect(onFeaturesDetected).toHaveBeenCalled();
 
@@ -80,7 +80,7 @@ describe("featureDetection tests", () => {
 
             const result = doFeatureDetection("upload.url", tusState);
 
-            expect(result).toBe(null);
+            expect(result).toBeNull();
             expect(request).not.toHaveBeenCalled();
             expect(onFeaturesDetected).toHaveBeenCalled();
 
@@ -107,7 +107,7 @@ describe("featureDetection tests", () => {
 
             const result = doFeatureDetection("upload.url", tusState);
 
-            expect(result).toBe(null);
+            expect(result).toBeNull();
 
             expect(tusState.getState().options).toEqual(expect.objectContaining({
                 deferLength: false,
@@ -135,7 +135,7 @@ describe("featureDetection tests", () => {
 
             const result = doFeatureDetection("upload.url", tusState);
 
-            expect(result).toBe(null);
+            expect(result).toBeNull();
 
             expect(tusState.getState().options).toEqual(expect.objectContaining({
                 deferLength: true,
@@ -244,7 +244,7 @@ describe("featureDetection tests", () => {
 
             expect(xhrResponse.getResponseHeader).not.toHaveBeenCalled();
             const requestResult = await result.request;
-            expect(requestResult).toBe(undefined);
+            expect(requestResult).toBeUndefined();
         });
 
         it("should abort fd request", () => {

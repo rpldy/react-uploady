@@ -1,4 +1,4 @@
-import createState from "@rpldy/simple-state";
+import createState, { realUnwrap } from "@rpldy/simple-state";
 
 vi.mock("@rpldy/simple-state", async () => {
     const org = await vi.importActual("@rpldy/simple-state");
@@ -8,8 +8,13 @@ vi.mock("@rpldy/simple-state", async () => {
         default: mocked,
         createState: mocked,
         unwrap: vi.fn((obj) => obj),
+        realUnwrap: org.unwrap
     };
 });
+
+export {
+    realUnwrap,
+};
 
 export default (testState, options) => {
 	const { state, update } = createState({

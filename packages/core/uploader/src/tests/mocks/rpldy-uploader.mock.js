@@ -18,10 +18,14 @@ const uploader = {
 
 const createUploader = vi.fn(() => uploader);
 
-createUploader.UPLOADER_EVENTS = UPLOADER_EVENTS;
-createUploader.DEFAULT_OPTIONS = DEFAULT_OPTIONS;
+// createUploader.UPLOADER_EVENTS = UPLOADER_EVENTS;
+// createUploader.DEFAULT_OPTIONS = DEFAULT_OPTIONS;
 
-vi.doMock("@rpldy/uploader", () => createUploader);
+vi.doMock("@rpldy/uploader", () => ({
+    default: createUploader,
+    UPLOADER_EVENTS,
+    DEFAULT_OPTIONS,
+}));
 
 export {
     uploader,

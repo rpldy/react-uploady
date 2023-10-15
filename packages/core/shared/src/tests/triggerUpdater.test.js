@@ -79,6 +79,6 @@ describe("triggerUpdater tests", () => {
 	it("should throw when rejected", async () => {
 		trigger.mockImplementationOnce(() => [Promise.reject("baaa")]);
 
-		expect(triggerUpdater(trigger, "test")).rejects.toEqual("baaa");
+		expect(triggerUpdater(trigger, "test")).rejects.toBe("baaa");
 	});
 });

@@ -91,7 +91,7 @@ describe("utils tests", () => {
         it("should cope with slice method returning empty", () => {
             mockBlobSlice.mockReturnValueOnce(null);
             const result = utils.getChunkDataFromFile(new File([], "test"), 0, 2);
-            expect(result).toBe(null);
+            expect(result).toBeNull();
         });
     });
 });

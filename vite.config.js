@@ -41,6 +41,7 @@ export default defineConfig({
         globals: true,
         setupFiles: "./test/vitest-setup.js",
         include: ["packages/**/*.test.js?(x)"],
+        exclude: ["packages/**/lib/**"],
         coverage: {
             provider: "istanbul",
             thresholdAutoUpdate: true,

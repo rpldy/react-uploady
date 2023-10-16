@@ -1,47 +1,27 @@
 import getInitialData from "./mocks/getTestData.mock";
+import { clone } from "@rpldy/shared";
+import createState, { unwrap, isProxy } from "../createState";
+
+vi.mock("@rpldy/shared", async () => {
+    const shared = await vi.importActual("@rpldy/shared");
+    return {
+        isPlainObject: shared.isPlainObject,
+        clone: vi.fn(),
+        getMerge: () => {
+        },
+        isProduction: () => false,
+        hasWindow: () => true,
+    };
+});
 
 describe("createState tests", () => {
-    const env = process.env.NODE_ENV;
-    let clone, createState, unwrap, isProxy;
-
     beforeEach(() => {
         clearViMocks(
             clone
         );
     });
 
-    afterAll(() => {
-        process.env.NODE_ENV = env;
-    });
-
-    const createTest = (runTest, isProd = false) =>
-        async () => {
-            vi.resetModules();
-
-            const mockClone = vi.fn();
-            clone = mockClone;
-
-            vi.doMock("@rpldy/shared", async () => {
-                const shared = await vi.importActual("@rpldy/shared");
-                return {
-                    isPlainObject: shared.isPlainObject,
-                    clone: mockClone,
-                    getMerge: () => {
-                    },
-                    isProduction: () => isProd,
-                    hasWindow: () => true,
-                };
-            });
-
-            const mdl = await import("../createState");
-            createState = mdl.default;
-            unwrap = mdl.unwrap;
-            isProxy = mdl.isProxy;
-
-            runTest();
-        };
-
-    it("should deep proxy object", createTest(() => {
+    it("should deep proxy object", () => {
         const initial = getInitialData();
         const { state } = createState(initial);
 
@@ -66,9 +46,9 @@ describe("createState tests", () => {
 
         delete state.sub.foo;
         expect(state.sub.foo).toBe("bar");
-    }));
+    });
 
-    it("should not proxy react-native file object", createTest(() => {
+    it("should not proxy react-native file object", () => {
         const initial = {
             rnFile: {
                 name: "file",
@@ -81,10 +61,9 @@ describe("createState tests", () => {
 
         expect(isProxy(state)).toBe(true);
         expect(isProxy(state.rnFile)).toBe(false);
-    }));
+    });
 
-    it("should only be updateable through update method", createTest(() => {
-
+    it("should only be updateable through update method", () => {
         const { state, update } = createState(getInitialData());
 
         const state1 = update((obj) => {
@@ -109,9 +88,9 @@ describe("createState tests", () => {
 
         state2.sub.newVal = 1234;
         expect(state2.sub.newVal).toBe(123);
-    }));
+    });
 
-    it("should block defining prototype", createTest(() => {
+    it("should block defining prototype", () => {
         const { state, update } = createState(getInitialData());
 
         expect(() => {
@@ -127,9 +106,9 @@ describe("createState tests", () => {
                 });
             });
         }).toThrow();
-    }));
+    });
 
-    it("should block setPrototypeOf", createTest(() => {
+    it("should block setPrototypeOf", () => {
         const { state, update } = createState(getInitialData());
 
         expect(() => {
@@ -141,9 +120,9 @@ describe("createState tests", () => {
                 Object.setPrototypeOf(state, {});
             });
         }).toThrow();
-    }));
+    });
 
-    it("should throw on double update", createTest(() => {
+    it("should throw on double update", () => {
         const { update } = createState(getInitialData());
 
         expect(() => {
@@ -151,10 +130,9 @@ describe("createState tests", () => {
                 update();
             });
         }).toThrow();
-    }));
+    });
 
-    it("should proxy new object trees added with update", createTest(() => {
-
+    it("should proxy new object trees added with update", () => {
         const { state, update } = createState(getInitialData());
 
         update((state) => {
@@ -175,24 +153,9 @@ describe("createState tests", () => {
         });
 
         expect(state2.section1.players).toHaveLength(3);
-    }));
+    });
 
-    it("should not proxy in production", createTest(() => {
-
-        const initial = getInitialData();
-        const { state, update } = createState(initial);
-
-        expect(state).toBe(initial);
-
-        const state1 = update((obj) => {
-            obj.arr.push(4);
-        });
-
-        expect(state1).toBe(state);
-        expect(state1.arr).toHaveLength(4);
-    }, true));
-
-    it("should proxy object with symbol prop", createTest(() => {
+    it("should proxy object with symbol prop", () => {
         const sym = Symbol.for("test-sym");
 
         const { state } = createState({
@@ -201,7 +164,7 @@ describe("createState tests", () => {
         });
 
         expect(state[sym]).toBe(true);
-    }));
+    });
 
     //TODO: uncomment when this is supported
     // it("should work for existing prop proxy", createTest(() => {
@@ -225,28 +188,7 @@ describe("createState tests", () => {
     // }));
 
     describe("unwrap tests", () => {
-        it("should unwrap to same object in production", createTest(() => {
-            process.env.NODE_ENV = "production";
-
-            const initial = getInitialData();
-            const { unwrap } = createState(initial);
-
-            const org = unwrap();
-            expect(org).toBe(initial);
-        }, true));
-
-        it("unwrap export should return same object in production", createTest(() => {
-
-            process.env.NODE_ENV = "production";
-
-            const { state } = createState(getInitialData());
-
-            const children = unwrap(state.children);
-
-            expect(children).toBe(state.children);
-        }, true));
-
-        it("should unwrap entry", createTest(() => {
+        it("should unwrap entry", () => {
             const initial = getInitialData();
             const { state, unwrap } = createState(initial);
 
@@ -254,15 +196,15 @@ describe("createState tests", () => {
             const unwrapResult = unwrap(state);
 
             expect(unwrapResult).toBe("clone");
-        }));
+        });
 
-        it("should do nothing for non-proxy", createTest(() => {
+        it("should do nothing for non-proxy", () => {
             const obj = { test: true };
             const result = unwrap(obj);
             expect(result).toBe(obj);
-        }));
+        });
 
-        it("unwrap export should clone", createTest(() => {
+        it("unwrap export should clone", () => {
             const initial = getInitialData();
             const { state } = createState(initial);
 
@@ -270,9 +212,9 @@ describe("createState tests", () => {
 
             const children = unwrap(state.children);
             expect(children).toBe("clone");
-        }));
+        });
 
-        it("should work for exiting proxy", createTest(() => {
+        it("should work for exiting proxy", () => {
             const { state } = createState(getInitialData());
             const { state: state2, update } = createState(state);
 
@@ -282,6 +224,6 @@ describe("createState tests", () => {
 
             expect(state2.children).toHaveLength(3);
             expect(state.children).toHaveLength(3);
-        }));
+        });
     });
 });

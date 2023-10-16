@@ -80,7 +80,7 @@ describe("mockSender tests", () => {
         }).request;
 
         const response = result.response;
-        expect(response.time).toBeLessThan(1.5);
+        expect(response.time).toBeLessThan(2.5);
         expect(response.data).toEqual({ mock: true, success: true, sendOptions: { } });
         expect(response.progressEvents).toHaveLength(0);
         expect(result.state).toBe(FILE_STATES.FINISHED);

@@ -96,11 +96,11 @@ jobs:
             - store_artifacts:
                   path: reports/junit
             - store_artifacts:
-                  path: .jest-coverage
+                  path: coverage
             - persist_to_workspace:
                   root: .
                   paths:
-                      - .jest-coverage
+                      - coverage
 
     coverage:
         docker: *docker_image
@@ -112,7 +112,7 @@ jobs:
                   name: Upload Coverage
                   command: yarn coverage
             - store_artifacts:
-                  path: .jest-coverage
+                  path: coverage
 
     bundle:
         docker: *docker_image

@@ -1,24 +1,20 @@
 import React from "react";
 import { fireEvent } from "@testing-library/react";
-import { getPreviewsLoaderHook } from "../usePreviewsLoader";
+import { getPreviewsLoaderHook, mockUsePreviewsLoader } from "../usePreviewsLoader";
 import { getFallbackUrlData } from "../utils";
 import { PREVIEW_TYPES } from "../consts";
+import UploadPreview, { getUploadPreviewForBatchItemsMethod } from "../UploadPreview";
 
-vi.mock("../usePreviewsLoader");
 vi.mock("../utils");
+vi.mock("../usePreviewsLoader", async () => {
+    const mockUsePreviewsLoader = vi.fn();
+    return {
+        getPreviewsLoaderHook: vi.fn(() => mockUsePreviewsLoader),
+        mockUsePreviewsLoader,
+    };
+});
 
 describe("UploadPreview tests", () => {
-    const mockUsePreviewsLoader = vi.fn();
-    let UploadPreview, getUploadPreviewForBatchItemsMethod;
-
-    beforeAll(async () => {
-        getPreviewsLoaderHook.mockReturnValue(mockUsePreviewsLoader);
-
-        const mdl = await import("../UploadPreview");
-        UploadPreview = mdl.default;
-        getUploadPreviewForBatchItemsMethod = mdl.getUploadPreviewForBatchItemsMethod;
-    });
-
     beforeEach(() => {
         clearViMocks(
             mockUsePreviewsLoader,
@@ -164,7 +160,8 @@ describe("UploadPreview tests", () => {
     it("should use custom batch items method", () => {
         mockUsePreviewsLoader.mockReturnValueOnce({ previews: [] });
 
-        const customBatchItemsMethod = () => {};
+        const customBatchItemsMethod = () => {
+        };
 
         const CustomUploadPreview = getUploadPreviewForBatchItemsMethod(customBatchItemsMethod);
 

@@ -37,6 +37,7 @@
   "devDependencies": {
     "@rpldy/upload-button": "^1.6.0-rc.0",
     "@rpldy/upload-url-input": "^1.6.0-rc.0",
+    "@storybook/addons": "^7.4.6",
     "@storybook/addon-knobs": "^7.0.2",
     "@testing-library/react": "^14",
     "flow-bin": "^0.218.0",

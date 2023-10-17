@@ -113,7 +113,7 @@
     "codecov": "^3.8.3",
     "concurrently": "^8.2.1",
     "core-js": "^3.19.1",
-    "cypress": "^13.2.0",
+    "cypress": "^13.3.1",
     "cypress-intercept-formdata": "^0.6.0",
     "eslint": "^8.20.0",
     "eslint-config-react-app": "^7.0.1",

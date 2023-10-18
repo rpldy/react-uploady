@@ -6,27 +6,26 @@ import { WAIT_SHORT } from "../../constants";
 describe("UploadPreview - Crop", () => {
     const fileName = "flower.jpg";
 
-    const loadPage = () =>
+    const loadPage = () => {
         cy.visitStory(
             "uploadPreview",
             "with-crop",
             { useMock: false }
         );
 
-    // before(() => {
-    //
-    // });
-
-    // beforeEach(() => {
-    //     cy.storyLog().resetStoryLog()
-    // });
+        //have to use autoupload false since react18 - in cypress, upload doesnt cause preSend HOC's effect to run on time - need another click
+        cy.setUploadOptions({ autoUpload: false });
+    }
 
     it("should show upload crop before upload", () => {
         loadPage();
+        cy.waitShort();
         intercept();
 
         uploadFile(fileName, () => {
-            cy.wait(WAIT_SHORT);
+            cy.waitShort();
+
+            cy.get("#resume").click();
 
             cy.get("img.react-crop-img")
                 .should("be.visible");
@@ -56,7 +55,8 @@ describe("UploadPreview - Crop", () => {
         intercept();
 
         uploadFile(fileName, () => {
-            cy.wait(WAIT_SHORT);
+            cy.waitShort();
+            cy.get("#resume").click();
 
             cy.get("img.react-crop-img")
                 .should("be.visible");
@@ -76,7 +76,8 @@ describe("UploadPreview - Crop", () => {
         intercept();
 
         uploadFile(fileName, () => {
-            cy.wait(WAIT_SHORT);
+            cy.waitShort();
+            cy.get("#resume").click();
 
             cy.get("img.react-crop-img")
                 .should("be.visible");
@@ -106,7 +107,8 @@ describe("UploadPreview - Crop", () => {
         intercept();
 
         uploadFile(fileName, () => {
-            cy.wait(WAIT_SHORT);
+            cy.waitShort();
+            cy.get("#resume").click();
 
             cy.get("img.react-crop-img")
                 .should("not.exist");

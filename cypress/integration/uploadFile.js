@@ -1,9 +1,11 @@
 import selectFiles from "./selectFiles";
 
-const uploadFile = (fixtureName, cb, button = "button", options = {}) => {
+const uploadFile = (fixtureName, cb, button = "button", options = { }) => {
+    const selectorRoot = cy.config("spec").specType !== "component" ? "#storybook-root " : "";
+
     selectFiles(
         fixtureName,
-        (button === false ? button : `#storybook-root ${button}`),
+        (button === false ? button : `${selectorRoot}${button}`),
         "uploadButton",
         cb,
         { ...options, force: true }

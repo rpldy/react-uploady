@@ -6,19 +6,26 @@ import { examineCroppedUploadReq, examineFullUploadRequest } from "./examineCrop
 describe("UploadPreview - Multi Crop", () => {
     const fileName = "flower.jpg";
 
-    const loadPage = () =>
+    const loadPage = () => {
         cy.visitStory(
             "uploadPreview",
             "with-multi-crop",
             { useMock: false }
         );
 
+        //have to use autoupload false since react18 - in cypress, upload doesnt cause preSend HOC's effect to run on time - need another click
+        cy.setUploadOptions({ autoUpload: false });
+    };
+
     it("should allow cropping for all items in a batch", () => {
         loadPage();
+
         interceptWithDelay(100);
 
         uploadFileTimes(fileName, () => {
             cy.waitExtraShort();
+
+            cy.get("#resume").click();
 
             cy.storyLog().assertLogPattern(BATCH_ADD);
             cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });
@@ -63,6 +70,8 @@ describe("UploadPreview - Multi Crop", () => {
         uploadFileTimes(fileName, () => {
             cy.waitExtraShort();
 
+            cy.get("#resume").click();
+
             cy.get("img.preview-thumb").eq(1).click();
             cy.get("#save-crop-btn").click();
             cy.waitShort();
@@ -76,6 +85,7 @@ describe("UploadPreview - Multi Crop", () => {
 
             uploadFileTimes(fileName, () => {
                 cy.waitExtraShort();
+                cy.get("#resume").click();
                 cy.get("img.preview-thumb").eq(2).click();
                 cy.get("#save-crop-btn").click();
                 cy.waitShort();

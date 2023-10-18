@@ -43,3 +43,5 @@ tstest/
 
 server/tusFiles/
 test/react-uploady-ssr/
+
+cypress/test-bundle

@@ -2,9 +2,7 @@ import { generateUploaderEventHook } from "@rpldy/shared-ui";
 import { TUS_EVENTS } from "@rpldy/tus-sender";
 import "../useTusResumeStartListener";
 
-jest.mock("@rpldy/shared-ui", () => ({
-    generateUploaderEventHook: jest.fn(),
-}));
+vi.mock("@rpldy/shared-ui");
 
 describe("TUS eventListenerHooks tests", () => {
     it.each([

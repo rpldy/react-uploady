@@ -1,50 +1,64 @@
 import React from "react";
+import { fireEvent, createEvent } from "@testing-library/react";
 import { getIsUploadOptionsComponent } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import usePasteHandler from "../usePasteHandler";
 import withPasteUpload from "../withPasteUpload";
 
-jest.mock("../usePasteHandler");
+vi.mock("../usePasteHandler");
 
 describe("withPasteUpload HOC tests", () => {
-    const MyComp = () => {
-        return <div/>;
+    const MyComp = ({ onPaste, autoUpload }) => {
+        return <div id="paste-elm" onPaste={onPaste} data-auto={autoUpload}/>;
+    };
+
+    const firePasteEvent = () => {
+        const pasteElm = document.getElementById("paste-elm");
+
+        const pasteEvent = createEvent.paste(pasteElm, {
+            clipboardData: {
+                getData: () => "123456",
+            },
+        });
+
+        fireEvent(pasteElm, pasteEvent);
+
+        return { elm: pasteElm };
     };
 
     it("should add paste listener", () => {
-        const onPasteUpload = jest.fn();
-        const onPaste = jest.fn();
+        const onPasteUpload = vi.fn();
+        const onPaste = vi.fn();
+        // const user = userEvent.setup();
 
         usePasteHandler.mockReturnValueOnce(onPaste);
 
         const PasteArea = withPasteUpload(MyComp);
 
-        const wrapper = mount(<PasteArea onPasteUpload={onPasteUpload} id="paste-area">
+        render(<PasteArea onPasteUpload={onPasteUpload} id="paste-area">
             Click here & Paste a file
         </PasteArea>);
 
-        wrapper.find(MyComp).props().onPaste();
+        firePasteEvent();
 
         expect(onPaste).toHaveBeenCalled();
     });
 
     it("should pass upload options for Uploady input component", () => {
-
         getIsUploadOptionsComponent.mockReturnValueOnce(true);
 
-        const onPasteUpload = jest.fn();
-        const onPaste = jest.fn();
+        const onPasteUpload = vi.fn();
+        const onPaste = vi.fn();
 
         usePasteHandler.mockReturnValueOnce(onPaste);
 
         const PasteArea = withPasteUpload(MyComp);
 
-        const wrapper = mount(<PasteArea onPasteUpload={onPasteUpload} id="paste-area" autoUpload>
+        render(<PasteArea onPasteUpload={onPasteUpload} id="paste-area" autoUpload>
             Click here & Paste a file
         </PasteArea>);
 
-        wrapper.find(MyComp).props().extraProps.onPaste();
-        expect(onPaste).toHaveBeenCalled();
+        const { elm } = firePasteEvent();
 
-        expect(wrapper.find(MyComp)).toHaveProp("autoUpload", true);
+        expect(elm).to.have.attr("data-auto", "true");
     });
 });

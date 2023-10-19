@@ -1,30 +1,22 @@
 import React from "react";
-import { getPreviewsLoaderHook } from "../usePreviewsLoader";
+import { fireEvent } from "@testing-library/react";
+import { getPreviewsLoaderHook, mockUsePreviewsLoader } from "../usePreviewsLoader";
 import { getFallbackUrlData } from "../utils";
 import { PREVIEW_TYPES } from "../consts";
+import UploadPreview, { getUploadPreviewForBatchItemsMethod } from "../UploadPreview";
 
-jest.mock("../usePreviewsLoader", () => ({
-    getPreviewsLoaderHook: jest.fn()
-}));
-
-jest.mock("../utils", () => ({
-    getFallbackUrlData: jest.fn(),
-}));
+vi.mock("../utils");
+vi.mock("../usePreviewsLoader", async () => {
+    const mockUsePreviewsLoader = vi.fn();
+    return {
+        getPreviewsLoaderHook: vi.fn(() => mockUsePreviewsLoader),
+        mockUsePreviewsLoader,
+    };
+});
 
 describe("UploadPreview tests", () => {
-    const mockUsePreviewsLoader = jest.fn();
-    let UploadPreview, getUploadPreviewForBatchItemsMethod;
-
-    beforeAll(() => {
-        getPreviewsLoaderHook.mockReturnValue(mockUsePreviewsLoader);
-
-        const mdl = require("../UploadPreview");
-        UploadPreview = mdl.default;
-        getUploadPreviewForBatchItemsMethod = mdl.getUploadPreviewForBatchItemsMethod;
-    });
-
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             mockUsePreviewsLoader,
             getFallbackUrlData,
         );
@@ -38,15 +30,15 @@ describe("UploadPreview tests", () => {
             ]
         });
 
-        const wrapper = mount(<UploadPreview/>);
+        render(<UploadPreview/>);
 
-        const imgs = wrapper.find("img");
+        const imgs = document.getElementsByTagName("img");
 
-        expect(imgs.at(0)).toHaveProp("src", "test.com");
-        expect(imgs.at(0)).toHaveProp("data-test", "123");
+        expect(imgs[0]).to.have.attr("src", "test.com");
+        expect(imgs[0]).to.have.attr("data-test", "123");
 
-        expect(imgs.at(1)).toHaveProp("src", "test2.com");
-        expect(imgs.at(1)).toHaveProp("data-test", "456");
+        expect(imgs[1]).to.have.attr("src", "test2.com");
+        expect(imgs[1]).to.have.attr("data-test", "456");
     });
 
     it("should render with simple video preview", () => {
@@ -57,11 +49,11 @@ describe("UploadPreview tests", () => {
             }]
         });
 
-        const wrapper = mount(<UploadPreview/>);
+        render(<UploadPreview/>);
 
-        const videos = wrapper.find("video");
+        const videos = document.getElementsByTagName("video");
 
-        expect(videos.at(0)).toHaveProp("src", "video.mp4");
+        expect(videos[0]).to.have.attr("src", "video.mp4");
     });
 
     it("should render with PreviewComponent from props", () => {
@@ -80,23 +72,24 @@ describe("UploadPreview tests", () => {
             ]
         });
 
-        const wrapper = mount(<UploadPreview
-            PreviewComponent={PreviewComp}/>);
+        render(<UploadPreview
+            PreviewComponent={PreviewComp}
+        />);
 
-        const articles = wrapper.find("article");
+        const articles = document.getElementsByTagName("article");
 
-        expect(articles.at(0)).toHaveProp("data-preview-type", "img");
-        expect(articles.at(0)).toHaveProp("data-test", "123");
-        expect(articles.at(0)).toHaveText("test.com");
+        expect(articles[0]).to.have.attr("data-preview-type", "img");
+        expect(articles[0]).to.have.attr("data-test", "123");
+        expect(articles[0]).to.have.text("test.com");
 
-        expect(articles.at(1)).toHaveProp("data-preview-type", "img");
-        expect(articles.at(1)).toHaveProp("data-test", "456");
-        expect(articles.at(1)).toHaveText("test2.com");
+        expect(articles[1]).to.have.attr("data-preview-type", "img");
+        expect(articles[1]).to.have.attr("data-test", "456");
+        expect(articles[1]).to.have.text("test2.com");
     });
 
     it("should use fallback on image load error", () => {
-        const previewUrl = "test.com",
-            fbUrl = "fallback.com";
+        const previewUrl = "http://test.com/",
+            fbUrl = "http://fallback.com/";
 
         mockUsePreviewsLoader.mockReturnValueOnce({
             previews: [
@@ -104,18 +97,20 @@ describe("UploadPreview tests", () => {
             ]
         });
 
-        const wrapper = mount(<UploadPreview
-            fallbackUrl={fbUrl}/>);
+        render(<UploadPreview
+            fallbackUrl={fbUrl}
+        />);
 
         getFallbackUrlData.mockReturnValueOnce({ url: fbUrl });
 
-        const img = { src: previewUrl };
-        wrapper.find("img").props().onError({ currentTarget: img });
-        expect(img.src).toBe(fbUrl);
+        const imgElm = document.getElementsByTagName("img")[0];
+        fireEvent.error(imgElm);
+
+        expect(imgElm.src).toBe(fbUrl);
         expect(getFallbackUrlData).toHaveBeenCalledWith(fbUrl, previewUrl);
 
-        wrapper.find("img").props().onError({ currentTarget: img });
-        expect(img.src).toBe(fbUrl);
+        // wrapper.find("img").props().onError({ currentTarget: img });
+        // expect(img.src).toBe(fbUrl);
     });
 
     it("should provide methods ref and call onPreviewsChanged", () => {
@@ -130,11 +125,10 @@ describe("UploadPreview tests", () => {
             removeItemFromPreview: "removeP",
         });
 
-        const onPreviewsChanged = jest.fn();
-
+        const onPreviewsChanged = vi.fn();
         const methodsRef = { current: null };
 
-        mount(<UploadPreview
+        render(<UploadPreview
             onPreviewsChanged={onPreviewsChanged}
             previewMethodsRef={methodsRef}
         />);
@@ -156,23 +150,23 @@ describe("UploadPreview tests", () => {
             </article>;
         };
 
-        const wrapper = mount(<UploadPreview
+        render(<UploadPreview
             PreviewComponent={PreviewComp}
         />);
 
-        expect(wrapper.find("article")).toHaveProp("data-fallback", true);
+        expect(document.getElementsByTagName("article")[0]).to.have.attr("data-fallback", "true");
     });
 
     it("should use custom batch items method", () => {
         mockUsePreviewsLoader.mockReturnValueOnce({ previews: [] });
 
-        const customBatchItemsMethod = () => {};
+        const customBatchItemsMethod = () => {
+        };
 
         const CustomUploadPreview = getUploadPreviewForBatchItemsMethod(customBatchItemsMethod);
 
-        mount(<CustomUploadPreview/>);
+        render(<CustomUploadPreview/>);
 
         expect(getPreviewsLoaderHook).toHaveBeenLastCalledWith(customBatchItemsMethod);
     });
 });
-

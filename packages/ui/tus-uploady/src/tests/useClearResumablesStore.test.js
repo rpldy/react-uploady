@@ -4,27 +4,35 @@ import { clearResumables } from "@rpldy/tus-sender";
 import { NO_EXT } from "../consts";
 import useClearResumableStore from "../useClearResumableStore";
 
-jest.mock("@rpldy/tus-sender", () =>({
-	clearResumables: jest.fn(),
-}));
+vi.mock("@rpldy/tus-sender");
 
 describe("useClearResumableStore tests", () => {
+    beforeEach(() => {
+        invariant.mockReset();
+    });
 
 	it("should throw if ext not registered", () => {
-		testCustomHook(useClearResumableStore);
+        invariant.mockImplementation(() => {
+            throw new Error("bah");
+        });
+
+		expect(() => {
+            renderHookWithError(useClearResumableStore);
+        }).toThrow("bah");
+
 		expect(invariant).toHaveBeenCalledWith(undefined, NO_EXT);
 	});
 
 	it("should return retry from context", () => {
-		const getOptions = jest.fn();
+		const getOptions = vi.fn();
 
 		UploadyContext.getExtension.mockReturnValueOnce({
 			getOptions
 		});
 
-		const { getHookResult } = testCustomHook(useClearResumableStore);
+		const { result } = renderHook(useClearResumableStore);
 
-		getHookResult()();
+		result.current();
 		expect(getOptions).toHaveBeenCalled();
 		expect(clearResumables).toHaveBeenCalled();
 	});

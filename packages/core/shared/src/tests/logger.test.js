@@ -1,25 +1,28 @@
 import { DEBUG_LOG_KEY } from "../consts";
 
 describe("logger tests", () => {
-
     let logger, hasWindow;
 
-    const resetLogger = (resetWindow = true) => {
-        jest.resetModules();
+    const resetLogger = async (resetWindow = true) => {
+        vi.resetModules();
+
         if (resetWindow) {
             window[DEBUG_LOG_KEY] = undefined;
         }
-        jest.doMock("../utils/hasWindow", () => jest.fn(() => true));
-        logger = require("../logger");
-        hasWindow = require("../utils/hasWindow");
+
+        vi.doMock("../utils/hasWindow", () => ({ default: vi.fn(() => true) }));
+        const hasWindowMod = await import("../utils/hasWindow");
+        hasWindow = hasWindowMod.default;
+
+        logger = await import("../logger");
     };
 
-    beforeEach(() => {
-        resetLogger();
+    beforeEach(async () => {
+        await resetLogger();
     });
 
     afterEach(() => {
-        jest.resetModules();
+        vi.resetModules();
         window[DEBUG_LOG_KEY] = undefined;
     });
 
@@ -33,15 +36,15 @@ describe("logger tests", () => {
         expect(logger.isDebugOn()).toBe(state);
     });
 
-    it("should not set debug without window", () => {
+    it("should not set debug without window", async () => {
         hasWindow.mockReturnValueOnce(false);
         logger.setDebug(true);
-        resetLogger(false);
+        await resetLogger(false);
         expect(logger.isDebugOn()).toBe(false);
     });
 
     it("should write to console when debug enabled", () => {
-        const consoleLog = jest.spyOn(console, "log")
+        const consoleLog = vi.spyOn(console, "log")
             .mockImplementationOnce(() => {
             });
 
@@ -53,7 +56,7 @@ describe("logger tests", () => {
     });
 
     it("should not write to console when debug disabled", () => {
-        const consoleLog = jest.spyOn(console, "log");
+        const consoleLog = vi.spyOn(console, "log");
 
         logger.debugLog("hello", 1, { foo: "bar" });
         expect(consoleLog).not.toHaveBeenCalled();
@@ -62,9 +65,7 @@ describe("logger tests", () => {
     });
 
     it("should use debug from url param", () => {
-        jsdom.reconfigure({
-            url: "https://test.com/?foo=bar&rpldy_debug=true"
-        });
+        window.location = new URL("https://test.com/?foo=bar&rpldy_debug=true");
 
         expect(logger.isDebugOn()).toBe(true);
     });

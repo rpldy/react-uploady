@@ -4,16 +4,15 @@ import useUploadyContext from "../../hooks/useUploadyContext";
 import withBatchStartUpdate from "../withBatchStartUpdate";
 import mockContext from "../../tests/mocks/UploadyContext.mock";
 
-jest.mock("../../hooks/useUploadyContext");
+vi.mock("../../hooks/useUploadyContext");
 
 describe("withRequestPreSendUpdate tests", () => {
-
     beforeAll(() => {
         useUploadyContext.mockReturnValue(mockContext);
     });
 
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             mockContext,
         );
     });
@@ -23,9 +22,9 @@ describe("withRequestPreSendUpdate tests", () => {
             return <div>{props.name}</div>;
         });
 
-        const wrapper = mount(<MyComp name="bob"/>);
+        const { container } = render(<MyComp name="bob"/>);
 
-        expect(wrapper).toHaveText("bob");
+        expect(container.firstChild).to.have.text("bob");
 
         expect(mockContext.on).not.toHaveBeenCalled();
     });
@@ -35,9 +34,9 @@ describe("withRequestPreSendUpdate tests", () => {
             return <div>{props.name}</div>;
         });
 
-        const wrapper = mount(<MyComp name="bob"/>);
+        const { rerender } = render(<MyComp name="bob"/>);
 
-        wrapper.setProps({ id: "bi1" });
+        rerender(<MyComp name="bob" id="bi1"/> );
         expect(mockContext.on).toHaveBeenCalledTimes(1);
         expect(mockContext.off).not.toHaveBeenCalled();
     });
@@ -49,7 +48,7 @@ describe("withRequestPreSendUpdate tests", () => {
         const options = { option: 1 };
         const batch = { id: "b1", items };
 
-        const MockComp = jest.fn((props) =>
+        const MockComp = vi.fn((props) =>
             <div>{props.name}-{props.requestData?.batch.id || ""}</div>);
 
         mockContext.on.mockImplementationOnce((name, handler) => {
@@ -59,9 +58,9 @@ describe("withRequestPreSendUpdate tests", () => {
 
         const MyComp = withBatchStartUpdate(MockComp);
 
-        const wrapper = mount(<MyComp id={"b1"} name="bob"/>);
+        const { container } = render(<MyComp id={"b1"} name="bob"/>);
 
-        expect(wrapper).toHaveText("bob-b1");
+        expect(container.firstChild).to.have.text("bob-b1");
 
         expect(MockComp).toHaveBeenCalledWith({
             id: "b1",
@@ -94,7 +93,7 @@ describe("withRequestPreSendUpdate tests", () => {
         const options = { option: 1 };
         const batch = { id: "b1", items };
 
-        const MockComp = jest.fn((props) =>
+        const MockComp = vi.fn((props) =>
             <div>{props.id}-{props.name}-{props.requestData?.batch.id || ""}</div>);
 
         mockContext.on.mockImplementationOnce((name, handler) => {
@@ -104,9 +103,9 @@ describe("withRequestPreSendUpdate tests", () => {
 
         const MyComp = withBatchStartUpdate(MockComp);
 
-        const wrapper = mount(<MyComp id={"b2"} name="bob"/>);
+        const { container } = render(<MyComp id={"b2"} name="bob"/>);
 
-        expect(wrapper).toHaveText("b2-bob-");
+        expect(container.firstChild).to.have.text("b2-bob-");
 
         expect(mockContext.on)
             .toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_START, expect.any(Function));
@@ -126,7 +125,7 @@ describe("withRequestPreSendUpdate tests", () => {
         const options = { option: 1 };
         const batch = { id: "b1", items };
 
-        const MockComp = jest.fn((props) =>
+        const MockComp = vi.fn((props) =>
             <div>{props.name}-{props.requestData?.batch.id || ""}</div>);
 
         mockContext.on.mockImplementationOnce((name, handler) => {
@@ -136,17 +135,16 @@ describe("withRequestPreSendUpdate tests", () => {
 
         const MyComp = withBatchStartUpdate(MockComp);
 
-        const wrapper = mount(<MyComp id={"b1"} name="bob"/>);
+        const { rerender } = render(<MyComp id="b1" name="bob"/>);
 
         expect(mockContext.on)
             .toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_START, expect.any(Function));
 
-        wrapper.setProps({ id: "b2" });
+        rerender(<MyComp id="b2" name="bob"/>);
 
         expect(mockContext.off)
             .toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_START, expect.any(Function));
 
         expect(mockContext.on).toHaveBeenCalledTimes(2);
-
     });
 });

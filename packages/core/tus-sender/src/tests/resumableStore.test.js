@@ -1,4 +1,4 @@
-import { safeLocalStorage } from "@rpldy/safe-storage/src/tests/mocks/safeStorage.mock";
+import { safeLocalStorage } from "@rpldy/safe-storage";
 import { DEFAULT_OPTIONS } from "../defaults";
 import {
 	persistResumable,
@@ -7,10 +7,21 @@ import {
 	clearResumables,
 } from "../resumableStore";
 
-describe("resumeableStore tests", () => {
+vi.mock("@rpldy/safe-storage", () => {
+    return {
+        safeLocalStorage: {
+            key: vi.fn(),
+            setItem: vi.fn(),
+            removeItem: vi.fn(),
+            getItem: vi.fn(),
+            length: 0,
+        }
+    };
+});
 
+describe("resumeableStore tests", () => {
 	beforeEach(() => {
-		clearJestMocks(
+		clearViMocks(
 			persistResumable,
 			retrieveResumable,
 			removeResumable,

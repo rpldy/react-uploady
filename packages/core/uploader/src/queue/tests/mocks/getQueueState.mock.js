@@ -1,8 +1,20 @@
-const simpleState = jest.requireActual("@rpldy/simple-state");
-const createState = simpleState.default;
-export const realUnwrap = simpleState.unwrap;
-createState.unwrap = jest.fn((obj) => obj);
-jest.doMock("@rpldy/simple-state", () => createState);
+import createState, { realUnwrap } from "@rpldy/simple-state";
+
+vi.mock("@rpldy/simple-state", async () => {
+    const org = await vi.importActual("@rpldy/simple-state");
+    const mocked = vi.fn((...args) => org.createState(...args));
+
+    return {
+        default: mocked,
+        createState: mocked,
+        unwrap: vi.fn((obj) => obj),
+        realUnwrap: org.unwrap
+    };
+});
+
+export {
+    realUnwrap,
+};
 
 export default (testState, options) => {
 	const { state, update } = createState({
@@ -26,16 +38,16 @@ export default (testState, options) => {
 	return {
 		state,
 		getOptions: () => options,
-		getState: jest.fn(() => state),
-		getCurrentActiveCount: jest.fn(() => state.activeIds.length),
-		updateState: jest.fn(updateState),
-		trigger: jest.fn(),
-        runCancellable: jest.fn(),
+		getState: vi.fn(() => state),
+		getCurrentActiveCount: vi.fn(() => state.activeIds.length),
+		updateState: vi.fn(updateState),
+		trigger: vi.fn(),
+        runCancellable: vi.fn(),
 		sender: {
-			send: jest.fn(),
+			send: vi.fn(),
 		},
-		handleItemProgress: jest.fn(),
-        clearAllUploads: jest.fn(),
-        clearBatchUploads: jest.fn(),
+		handleItemProgress: vi.fn(),
+        clearAllUploads: vi.fn(),
+        clearBatchUploads: vi.fn(),
 	};
 };

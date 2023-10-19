@@ -1,7 +1,4 @@
 import { FILE_STATES } from "@rpldy/shared";
-
-jest.mock("../processBatchItems", () => jest.fn());
-import "./mocks/batchHelpers.mock";
 import getQueueState from "./mocks/getQueueState.mock";
 import mockProcessBatchItems from "../processBatchItems";
 import {
@@ -14,13 +11,16 @@ import {
 } from "../batchHelpers";
 import processQueueNext, { getNextIdGroup, findNextItemIndex } from "../processQueueNext";
 
+vi.mock("../batchHelpers");
+vi.mock("../processBatchItems", () => ({ default: vi.fn() }));
+
 describe("processQueueNext tests", () => {
 	beforeAll(() => {
         getIsBatchReady.mockReturnValue(true);
 	});
 
 	beforeEach(() => {
-		clearJestMocks(
+		clearViMocks(
 			mockProcessBatchItems,
 			isNewBatchStarting,
 			loadNewBatchForItem,

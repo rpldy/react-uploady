@@ -3,10 +3,6 @@ import React, { useLayoutEffect, useState } from "react";
 import useUploadyContext from "../hooks/useUploadyContext";
 
 import type { Node } from "React";
-// import type { BatchItem } from "@rpldy/shared";
-// import type { UploaderCreateOptions } from "@rpldy/uploader";
-
-// type UpdaterData = { items: BatchItem, options: UploaderCreateOptions };
 export type RequestUpdater<T> = (?T) => void;
 type EventDataValidator = (...params: any[]) => boolean;
 type RequestDataRetriever<T> = (...params: any[]) => ?T;

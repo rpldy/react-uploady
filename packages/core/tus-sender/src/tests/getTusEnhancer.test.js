@@ -2,15 +2,15 @@ import createTusSender from "../tusSender";
 import getTusEnhancer from "../getTusEnhancer";
 import { TUS_EXT } from "../consts";
 
-jest.mock("../tusSender", () => jest.fn());
+vi.mock("../tusSender");
 
 describe("getTusEnhancer tests", () => {
 
 	it("should enhance uploader", () => {
 		const options = { parallel: 2 };
 
-		const send = jest.fn(),
-			getOptions = jest.fn();
+		const send = vi.fn(),
+			getOptions = vi.fn();
 
 		createTusSender.mockReturnValueOnce({
 			send,
@@ -20,8 +20,8 @@ describe("getTusEnhancer tests", () => {
 		const enhancer = getTusEnhancer(options);
 
 		const uploader = {
-			update: jest.fn(),
-			registerExtension: jest.fn(),
+			update: vi.fn(),
+			registerExtension: vi.fn(),
 		};
 
 		enhancer(uploader, "trigger");

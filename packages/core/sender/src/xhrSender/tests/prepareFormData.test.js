@@ -1,7 +1,7 @@
 import prepareFormData from "../prepareFormData";
 
 describe("prepareFormData tests", () => {
-    const mockFormDataSet = jest.fn();
+    const mockFormDataSet = vi.fn();
     const paramName = "my-file";
 
     beforeEach(() => {
@@ -11,7 +11,7 @@ describe("prepareFormData tests", () => {
             };
         };
 
-        clearJestMocks(mockFormDataSet);
+        clearViMocks(mockFormDataSet);
     });
 
     const testPrepare = (items, options) => {
@@ -127,8 +127,8 @@ describe("prepareFormData tests", () => {
     });
 
     it("should use delete & append if no set", () => {
-        const fdDelete = jest.fn(),
-            fdAppend = jest.fn();
+        const fdDelete = vi.fn(),
+            fdAppend = vi.fn();
 
         window.FormData = function () {
             return {
@@ -151,7 +151,7 @@ describe("prepareFormData tests", () => {
     });
 
     it("should use append if no set or delete", () => {
-        const fdAppend = jest.fn();
+        const fdAppend = vi.fn();
 
         window.FormData = function () {
             return {

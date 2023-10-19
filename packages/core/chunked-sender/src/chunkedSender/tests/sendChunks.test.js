@@ -6,13 +6,13 @@ import sendChunk from "../sendChunk";
 import sendChunks, { handleChunk } from "../sendChunks";
 import getChunkedState from "./mocks/getChunkedState.mock";
 
-jest.mock("../handleChunkRequest", () => jest.fn());
-jest.mock("../getChunksToSend", () => jest.fn());
-jest.mock("../sendChunk", () => jest.fn());
+vi.mock("../handleChunkRequest");
+vi.mock("../getChunksToSend");
+vi.mock("../sendChunk");
 
 describe("sendChunks tests", () => {
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             handleChunkRequest,
             getChunksToSend,
             sendChunk,
@@ -39,7 +39,7 @@ describe("sendChunks tests", () => {
             throw new ChunkedSendError();
         });
 
-        const resolve = jest.fn();
+        const resolve = vi.fn();
 
         sendChunks(getChunkedState({
             requests: {},
@@ -63,7 +63,7 @@ describe("sendChunks tests", () => {
             throw new Error("test");
         });
 
-        const resolve = jest.fn();
+        const resolve = vi.fn();
 
         sendChunks(getChunkedState({ requests: {} }), null, null, resolve);
 
@@ -140,7 +140,7 @@ describe("sendChunks tests", () => {
                 throw new ChunkedSendError();
             });
 
-            const resolve = jest.fn();
+            const resolve = vi.fn();
 
             await doSend([1,2,3], {}, resolve);
 
@@ -169,9 +169,9 @@ describe("sendChunks tests", () => {
 
             const chunkId = "c1";
 
-            const resolve = jest.fn();
-            const trigger = jest.fn();
-            const onProgress = jest.fn();
+            const resolve = vi.fn();
+            const trigger = vi.fn();
+            const onProgress = vi.fn();
 
             await handleChunk(state, {}, onProgress, resolve, { id: chunkId }, trigger);
 
@@ -202,7 +202,7 @@ describe("sendChunks tests", () => {
                 responses: ["aborted"],
             });
 
-            const resolve = jest.fn();
+            const resolve = vi.fn();
 
             await handleChunk(state, {}, {}, resolve, { id: chunkId }, { });
 
@@ -224,8 +224,8 @@ describe("sendChunks tests", () => {
                 chunks: [1, 2],
             });
 
-            const trigger = jest.fn();
-            const resolve = jest.fn();
+            const trigger = vi.fn();
+            const resolve = vi.fn();
 
             const chunk = { id: "c1", start: 1, end: 2 };
 

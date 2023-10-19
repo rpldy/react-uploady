@@ -4,11 +4,11 @@ import "@rpldy/uploady/src/tests/mocks/rpldy-uploady.mock";
 import getChunkedEnhancer from "@rpldy/chunked-sender";
 import ChunkedUploady from "../ChunkedUploady";
 
-jest.mock("@rpldy/chunked-sender", () => {
-    const fn = jest.fn();
-    fn.CHUNKING_SUPPORT = false;
-    return fn;
-});
+vi.mock("@rpldy/chunked-sender", () => ({
+    default: vi.fn(),
+    CHUNKING_SUPPORT: false
+}));
+
 
 describe("ChunkedUploady tests without chunking support", () => {
     const chunkedEnhancer = (uploader) => uploader;
@@ -18,7 +18,7 @@ describe("ChunkedUploady tests without chunking support", () => {
     });
 
     it("should render Uploady when no chunk support", () => {
-        shallow(<ChunkedUploady/>);
+        render(<ChunkedUploady/>);
 
         expect(logWarning).toHaveBeenCalledWith(false, expect.any(String));
         expect(getChunkedEnhancer).not.toHaveBeenCalled();

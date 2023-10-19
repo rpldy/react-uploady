@@ -87,20 +87,21 @@ jobs:
             - attach_workspace:
                   at: .
             - run:
-                  name: Test Code (lint, flow, jest, types)
+                  name: Test Code (lint, flow, types)
                   command: yarn test:ci
-                  environment:
-                      JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+            - run:
+                  name: Vitest with coverage
+                  command: yarn vitest:ci
             - store_test_results:
                   path: reports/junit
             - store_artifacts:
                   path: reports/junit
             - store_artifacts:
-                  path: .jest-coverage
+                  path: coverage
             - persist_to_workspace:
                   root: .
                   paths:
-                      - .jest-coverage
+                      - coverage
 
     coverage:
         docker: *docker_image
@@ -112,7 +113,7 @@ jobs:
                   name: Upload Coverage
                   command: yarn coverage
             - store_artifacts:
-                  path: .jest-coverage
+                  path: coverage
 
     bundle:
         docker: *docker_image

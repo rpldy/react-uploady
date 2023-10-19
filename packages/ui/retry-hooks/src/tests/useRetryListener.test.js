@@ -2,8 +2,8 @@ import { generateUploaderEventHook } from "@rpldy/shared-ui";
 import { RETRY_EVENT } from "@rpldy/retry";
 import "../useRetryListener";
 
-jest.mock("@rpldy/shared-ui", () => ({
-    generateUploaderEventHook: jest.fn(),
+vi.mock("@rpldy/shared-ui", () => ({
+    generateUploaderEventHook: vi.fn(),
 }));
 
 describe("useRetryListener hook test", () => {

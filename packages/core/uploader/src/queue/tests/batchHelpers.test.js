@@ -4,20 +4,21 @@ import getQueueState from "./mocks/getQueueState.mock";
 import { getItemsPrepareUpdater } from "../preSendPrepare";
 import { finalizeItem, getIsItemExists } from "../itemHelpers";
 
-jest.mock("../preSendPrepare");
-jest.mock("../itemHelpers");
+vi.mock("../preSendPrepare");
+vi.mock("../itemHelpers");
 
 describe("batchHelpers tests", () => {
     let batchHelpers;
-    const mockPrepareBatchStartItems = jest.fn();
+    const mockPrepareBatchStartItems = vi.fn();
 
-    beforeAll(() => {
+    beforeAll(async() => {
         getItemsPrepareUpdater.mockReturnValue(mockPrepareBatchStartItems);
-        batchHelpers = require("../batchHelpers");
+        batchHelpers = await import("../batchHelpers");
+        // batchHelpers = require("../batchHelpers");
     });
 
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             finalizeItem,
             mockPrepareBatchStartItems,
         );
@@ -956,7 +957,7 @@ describe("batchHelpers tests", () => {
             expect(state.batches[batchId]).toBeUndefined();
             expect(state.batches["b2"]).toBeDefined();
             expect(state.batchQueue[0]).toBe("b2");
-            expect(state.currentBatch).toBe(null);
+            expect(state.currentBatch).toBeNull();
             expect(state.items["i1"]).toBeUndefined();
             expect(state.items["i2"]).toBeUndefined();
             expect(state.items["i3"]).toBeDefined();

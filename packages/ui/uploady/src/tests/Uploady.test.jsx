@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import { invariant } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { hasWindow } from "@rpldy/shared";
 import {
@@ -7,12 +8,10 @@ import {
 import Uploady from "../Uploady";
 
 describe("Uploady tests", () => {
-
     beforeEach(() => {
-        clearJestMocks(
-            useUploadOptions,
-            invariant,
-        );
+
+        useUploadOptions.mockClear();
+        invariant.mockClear();
     });
 
     it("should render Uploady successfully", () => {
@@ -23,30 +22,30 @@ describe("Uploady tests", () => {
         });
 
         const listeners = [1, 2, 3];
-        const wrapper = mount(<Uploady
+        const { container } = render(<Uploady
             debug
             accept={".doc"}
             capture="user"
             multiple
             listeners={listeners}
             autoUpload
+            fileInputId="uploadyInput"
         >
             <div id="test"/>
         </Uploady>);
 
-        expect(wrapper.find("#test")).toHaveLength(1);
+        expect(container.querySelector("#test")).toBeInstanceOf(HTMLDivElement);
 
-        const input = wrapper.find("Portal").find("input");
+        const input = document.getElementById("uploadyInput");
 
-        expect(input).toHaveLength(1);
-        expect(input).toHaveProp("multiple", true);
-        expect(input).toHaveProp("name", "file");
-        expect(input).toHaveProp("capture", "user");
-        expect(input).toHaveProp("accept", ".doc");
+        expect(input).toBeInstanceOf(HTMLInputElement);
+        expect(input).to.have.attr("multiple");
+        expect(input).to.have.attr("name", "file");
+        expect(input).to.have.attr("capture", "user");
+        expect(input).to.have.attr("accept", ".doc");
     });
 
     it("should use provided container for file input", () => {
-
         useUploadOptions.mockReturnValueOnce({
             inputFieldName: "file",
         });
@@ -54,17 +53,17 @@ describe("Uploady tests", () => {
         const div = document.createElement("div");
         document.body.appendChild(div);
 
-        const wrapper = mount(<Uploady inputFieldContainer={div}/>);
+        render(<Uploady inputFieldContainer={div} fileInputId="uploadyInput"/>);
 
         expect(invariant).toHaveBeenCalledWith(
             true,
             expect.any(String)
         );
 
-        const input = wrapper.find("input");
+        const input = document.getElementById("uploadyInput");
 
-        expect(input).toHaveLength(1);
-        expect(wrapper.find("Portal").props().containerInfo).toBe(div);
+        expect(input).toBeInstanceOf(HTMLInputElement);
+        expect(div).to.contain(input);
     });
 
     it("should show error in case no valid container", () => {
@@ -74,7 +73,7 @@ describe("Uploady tests", () => {
             inputFieldContainer: true,
         });
 
-        mount(<Uploady inputFieldContainer/>);
+        render(<Uploady inputFieldContainer/>);
 
         expect(invariant).toHaveBeenCalledWith(
             false,
@@ -83,29 +82,38 @@ describe("Uploady tests", () => {
     });
 
     it("should work with customInput", () => {
+        render(<Uploady
+            customInput
+            fileInputId="uploadyInput"
+        />);
 
-        const wrapper = mount(<Uploady customInput/>);
-
-        expect(wrapper.find("input")).toHaveLength(0);
+        const input = document.getElementById("uploadyInput");
+        expect(input).toBeNull();
     });
 
     it("should respect noPortal", () => {
-
         useUploadOptions.mockReturnValueOnce({
             inputFieldName: "file",
         });
 
-        const wrapper = mount(<Uploady noPortal
-                                       multiple
-                                       accept={".doc"}>
+        const portalSpy = vi.spyOn(ReactDOM, "createPortal");
+
+        render(<Uploady
+            noPortal
+            multiple
+            accept={".doc"}
+            fileInputId="uploadyInput"
+        >
             <div id="test"/>
         </Uploady>);
 
-        expect(wrapper.find("Portal").find("input")).toHaveLength(0);
+        expect(portalSpy).not.toHaveBeenCalled();
 
-        const input = wrapper.find("input");
-        expect(input).toHaveLength(1);
-        expect(input).toHaveProp("multiple", true);
-        expect(input).toHaveProp("name", "file");
+        const input = document.getElementById("uploadyInput");
+        expect(input).to.be.instanceof(HTMLInputElement);
+        expect(input).to.have.attr("multiple");
+        expect(input).to.have.attr("name", "file");
+
+        portalSpy.mockRestore();
     });
 });

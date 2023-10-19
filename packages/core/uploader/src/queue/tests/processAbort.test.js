@@ -6,13 +6,13 @@ import processFinishedRequest from "../processFinishedRequest";
 import processQueueNext from "../processQueueNext";
 import { getIsBatchFinalized, finalizeBatch } from "../batchHelpers";
 
-jest.mock("../processFinishedRequest");
-jest.mock("../processQueueNext");
-jest.mock("../batchHelpers");
+vi.mock("../processFinishedRequest");
+vi.mock("../processQueueNext");
+vi.mock("../batchHelpers");
 
 describe("processAbort tests", () => {
     afterEach(() => {
-        clearJestMocks(
+        clearViMocks(
             processFinishedRequest,
             processQueueNext,
             getIsBatchFinalized,
@@ -30,7 +30,7 @@ describe("processAbort tests", () => {
         });
 
         it("should handle abort all - not fast", () => {
-            const abortAll = jest.fn(() => ({}));
+            const abortAll = vi.fn(() => ({}));
 
             const queueState = getQueueState({}, { abortAll });
 
@@ -48,7 +48,7 @@ describe("processAbort tests", () => {
         });
 
         it("should handle abort all - fast", () => {
-            const abortAll = jest.fn(() => ({ isFast: true }));
+            const abortAll = vi.fn(() => ({ isFast: true }));
 
             const queueState = getQueueState({}, { abortAll });
 
@@ -69,7 +69,7 @@ describe("processAbort tests", () => {
         });
 
         it("should handle abort batch - not fast", () => {
-            const abortBatch = jest.fn(() => ({}));
+            const abortBatch = vi.fn(() => ({}));
 
             const batch = { id: "b1" },
                 batchOptions = { autoUpload: false };
@@ -106,7 +106,7 @@ describe("processAbort tests", () => {
         });
 
         it("should handle abort batch - fast", () => {
-            const abortBatch = jest.fn(() => ({ isFast: true }));
+            const abortBatch = vi.fn(() => ({ isFast: true }));
 
             const batch = { id: "b1" },
                 batchOptions = { autoUpload: false };
@@ -128,7 +128,7 @@ describe("processAbort tests", () => {
         });
 
         it("should skip batch abort if finalized already", () => {
-            const abortBatch = jest.fn(() => ({ }));
+            const abortBatch = vi.fn(() => ({ }));
 
             const batch = { id: "b1" },
                 batchOptions = { autoUpload: false };
@@ -162,7 +162,7 @@ describe("processAbort tests", () => {
         });
 
         it("should abort item", () => {
-            const abortItem = jest.fn(() => true);
+            const abortItem = vi.fn(() => true);
 
             const queueState = getQueueState({}, { abortItem });
 

@@ -3,19 +3,21 @@ import { UploadyContext } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared
 import { NO_EXT } from "../consts";
 import useBatchRetry from "../useBatchRetry";
 
-jest.mock("invariant", () => jest.fn());
+describe("useBatchRetry tests",  () => {
+    beforeEach(() => {
+        invariant.mockReset();
+    });
 
-describe("useBatchRetry tests", () => {
-    it("should throw if ext not registered", () => {
-        const { getError } = testCustomHook(useBatchRetry);
+    it("should throw if ext not registered", async() => {
+        invariant.mockImplementation(() => {
+            throw new Error("bah");
+        });
+
+        expect(() => {
+            renderHookWithError(useBatchRetry);
+        }).toThrow("bah");
 
         expect(invariant).toHaveBeenCalledWith(undefined, NO_EXT);
-
-        const msg = getError().message;
-
-        expect(msg).toContain("Cannot read proper");
-        expect(msg).toContain("of undefined");
-        expect(msg).toContain("'retryBatch'");
     });
 
     it("should return batchRetry from context", () => {
@@ -23,8 +25,8 @@ describe("useBatchRetry tests", () => {
             retryBatch: "test"
         });
 
-        const { getHookResult } = testCustomHook(useBatchRetry);
+        const { result } = renderHook(useBatchRetry);
 
-        expect(getHookResult()).toBe("test");
+        expect(result.current).toBe("test");
     });
 });

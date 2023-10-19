@@ -1,4 +1,4 @@
-/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "doTest"] }] */
+/* eslint vitest/expect-expect: ["error", { "customExpressions": ["expect", "doTest"] }] */
 import {
     FILE_STATES,
     request,
@@ -8,11 +8,11 @@ import MissingUrlError from "../../MissingUrlError";
 import getXhrSend, { SUCCESS_CODES } from "../xhrSender";
 import prepareFormData from "../prepareFormData";
 
-jest.mock("../prepareFormData", () => jest.fn());
+vi.mock("../prepareFormData", () => ({ default: vi.fn() }));
 
 describe("xhrSender tests", () => {
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             request,
             parseResponseHeaders,
             prepareFormData,
@@ -32,7 +32,7 @@ describe("xhrSender tests", () => {
             ...options
         };
 
-        const mockProgress = jest.fn();
+        const mockProgress = vi.fn();
         items = items || [{ id: "u1" }, { id: "u2" }];
 
         if (options.sendWithFormData && !options.formatServerResponse) {
@@ -46,7 +46,7 @@ describe("xhrSender tests", () => {
 
         const xhr = {
             upload: {},
-            abort: jest.fn(() => xhrReject()),
+            abort: vi.fn(() => xhrReject()),
         };
 
         const pXhr = new Promise((resolve, reject) => {
@@ -268,16 +268,16 @@ describe("xhrSender tests", () => {
     describe("with custom config", () => {
 
         beforeEach(() => {
-            jest.useFakeTimers();
+            vi.useFakeTimers();
         });
 
         afterEach(() => {
-            jest.useRealTimers();
+            vi.useRealTimers();
         });
 
         it("should work with config preRequestHandler", async() => {
 
-            const customCode = jest.fn();
+            const customCode = vi.fn();
 
             const send = getXhrSend({
                 preRequestHandler: (issueRequest, items, url) => {
@@ -292,7 +292,7 @@ describe("xhrSender tests", () => {
 
             const { sendResult, items, url, confirmRequest, xhrResolve, xhr } = doTest({}, null, [1, 2], "test.com", send);
 
-            jest.runAllTimers();
+            vi.runAllTimers();
 
             confirmRequest();
             xhr.status = 200;
@@ -318,7 +318,7 @@ describe("xhrSender tests", () => {
 
             const { sendResult, confirmRequest, xhr } = doTest({}, null, [1, 2], "test.com", send);
 
-            jest.runAllTimers();
+            vi.runAllTimers();
 
             confirmRequest();
 
@@ -347,7 +347,7 @@ describe("xhrSender tests", () => {
 
             doTest({ }, null, [1,2], "test.com", send);
 
-            jest.runAllTimers();
+            vi.runAllTimers();
 
             expect(request).toHaveBeenCalledWith(requestUrl, requestDate, expect.objectContaining(requestOptions));
         });
@@ -375,7 +375,7 @@ describe("xhrSender tests", () => {
 
     describe("formatServerResponse tests", () => {
         it("should use custom format function", async () => {
-            const formatServerResponse = jest.fn(() => "parsed");
+            const formatServerResponse = vi.fn(() => "parsed");
             const test = doTest({ formatServerResponse }, {});
 
             test.xhr.status = 200;

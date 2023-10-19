@@ -7,19 +7,24 @@ import { examineCroppedUploadReq, examineFullUploadRequest } from "./examineCrop
 describe("UploadPreview - Multi Crop", () => {
     const fileName = "flower.jpg";
 
-    const loadPage = () =>
+    const loadPage = () => {
         cy.visitStory(
             "uploadPreview",
             "with-multi-crop",
             { useMock: false }
         );
 
+        //have to use autoupload false since react18 - in cypress, upload doesnt cause preSend HOC's effect to run on time - need another click
+        cy.setUploadOptions({ autoUpload: false });
+    };
+
     it("should remove file from thumb", () => {
         loadPage();
         interceptWithDelay(100);
 
         uploadFileTimes(fileName, () => {
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
+            cy.get("#resume").click();
 
             cy.get(".remove-preview-batch-1_item-1")
                 .click();
@@ -42,7 +47,7 @@ describe("UploadPreview - Multi Crop", () => {
 
             cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
 
-            cy.wait(WAIT_SHORT);
+            cy.waitShort();
 
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
         }, 3, "#upload-btn");
@@ -53,7 +58,8 @@ describe("UploadPreview - Multi Crop", () => {
         interceptWithDelay(100);
 
         uploadFileTimes(fileName, () => {
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
+            cy.get("#resume").click();
 
             cy.get("img.preview-thumb")
                 .should("have.length", 3)
@@ -81,7 +87,7 @@ describe("UploadPreview - Multi Crop", () => {
 
             cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
 
-            cy.wait(WAIT_SHORT);
+            cy.waitShort();
 
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
         }, 3, "#upload-btn");

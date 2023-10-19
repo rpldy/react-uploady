@@ -1,16 +1,17 @@
-/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "testSingleItem"] }] */
+/* eslint vitest/expect-expect: ["error", { "customExpressions": ["expect", "testSingleItem"] }] */
 import getQueueState, { realUnwrap } from "./mocks/getQueueState.mock";
-import "./mocks/batchHelpers.mock";
 import { FILE_STATES } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "../../consts";
 import { cleanUpFinishedBatches, incrementBatchFinishedCounter, getBatchDataFromItemId } from "../batchHelpers";
 import processFinishedRequest, { FILE_STATE_TO_EVENT_MAP } from "../processFinishedRequest";
 
+vi.mock("../batchHelpers");
+
 describe("onRequestFinished tests", () => {
-	const mockNext = jest.fn();
+	const mockNext = vi.fn();
 
 	beforeEach(() => {
-		clearJestMocks(
+		clearViMocks(
 			cleanUpFinishedBatches,
             incrementBatchFinishedCounter,
 			mockNext

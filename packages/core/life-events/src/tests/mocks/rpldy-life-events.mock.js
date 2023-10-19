@@ -1,18 +1,20 @@
-const mockTrigger = jest.fn();
+import addLife, { createLifePack } from "@rpldy/life-events";
 
-const addLife = jest.fn((target) => ({
-    target,
-    trigger: mockTrigger,
-}));
+const mockTrigger = vi.fn();
 
-const createLifePack = jest.fn();
-addLife.createLifePack = createLifePack;
-
-jest.doMock("@rpldy/life-events", () => addLife);
+vi.mock("@rpldy/life-events", () => {
+    return {
+        default: vi.fn((target) => ({
+            target,
+            trigger: mockTrigger,
+        })),
+        createLifePack: vi.fn(),
+    }
+});
 
 export default addLife;
 
 export {
     createLifePack,
-    mockTrigger
+    mockTrigger,
 };

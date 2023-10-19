@@ -1,70 +1,54 @@
 import getInitialData from "./mocks/getTestData.mock";
+import { clone } from "@rpldy/shared";
+import createState, { unwrap, isProxy } from "../createState";
+
+vi.mock("@rpldy/shared", async () => {
+    const shared = await vi.importActual("@rpldy/shared");
+    return {
+        isPlainObject: shared.isPlainObject,
+        clone: vi.fn(),
+        getMerge: () => {
+        },
+        isProduction: () => false,
+        hasWindow: () => true,
+    };
+});
 
 describe("createState tests", () => {
-	const env = process.env.NODE_ENV;
-	let clone, createState, unwrap, isProxy;
+    beforeEach(() => {
+        clearViMocks(
+            clone
+        );
+    });
 
-	beforeEach(() => {
-		clearJestMocks(
-			clone
-		);
-	});
+    it("should deep proxy object", () => {
+        const initial = getInitialData();
+        const { state } = createState(initial);
 
-	afterAll(() => {
-		process.env.NODE_ENV = env;
-	});
+        expect(state).not.toBe(initial);
 
-	const createTest = (runTest, isProd = false) =>
-		() => {
-			jest.resetModules();
+        state.arr.push(4);
+        expect(state.arr).toHaveLength(3);
 
-			const mockClone = jest.fn();
-			clone = mockClone;
+        state.arr[0] = 10;
+        expect(state.arr[0]).toBe(1);
+        state.arr[4] = 1111;
+        expect(state.arr[4]).toBeUndefined();
 
-			jest.doMock("@rpldy/shared", () => ({
-				isPlainObject: jest.requireActual("@rpldy/shared").isPlainObject,
-				clone: mockClone,
-				getMerge: () => {},
-                isProduction: () => isProd,
-                hasWindow: () => true,
-			}));
+        state.arr.splice(0, 1);
+        expect(state.arr).toHaveLength(3);
 
-			const mdl = require("../createState");
-			createState = mdl.default;
-			unwrap = mdl.unwrap;
-			isProxy = mdl.isProxy;
+        state.children[0].name = "foo";
+        expect(state.children[0].name).toBe("child-a");
 
-			runTest();
-		};
+        state.sub.newVal = 123;
+        expect(state.sub.newVal).toBeUndefined();
 
-	it("should deep proxy object", createTest(() => {
-		const initial = getInitialData();
-		const { state } = createState(initial);
+        delete state.sub.foo;
+        expect(state.sub.foo).toBe("bar");
+    });
 
-		expect(state).not.toBe(initial);
-
-		state.arr.push(4);
-		expect(state.arr).toHaveLength(3);
-
-		state.arr[0] = 10;
-		expect(state.arr[0]).toBe(1);
-		state.arr[4] = 1111;
-		expect(state.arr[4]).toBeUndefined();
-
-		state.arr.splice(0, 1);
-		expect(state.arr).toHaveLength(3);
-
-		state.children[0].name = "foo";
-		expect(state.children[0].name).toBe("child-a");
-
-		state.sub.newVal = 123;
-		expect(state.sub.newVal).toBe(undefined);
-
-		delete state.sub.foo;
-		expect(state.sub.foo).toBe("bar");
-	}));
-
-    it("should not proxy react-native file object", createTest(() => {
+    it("should not proxy react-native file object", () => {
         const initial = {
             rnFile: {
                 name: "file",
@@ -77,207 +61,169 @@ describe("createState tests", () => {
 
         expect(isProxy(state)).toBe(true);
         expect(isProxy(state.rnFile)).toBe(false);
-    }));
+    });
 
-    it("should only be updateable through update method", createTest(() => {
+    it("should only be updateable through update method", () => {
+        const { state, update } = createState(getInitialData());
 
-		const { state, update } = createState(getInitialData());
+        const state1 = update((obj) => {
+            obj.arr.push(4);
+        });
 
-		const state1 = update((obj) => {
-			obj.arr.push(4);
-		});
+        expect(state1).toBe(state);
+        expect(state1.arr).toHaveLength(4);
 
-		expect(state1).toBe(state);
-		expect(state1.arr).toHaveLength(4);
+        const state2 = update((obj) => {
+            obj.arr[1] = 10;
+            obj.arr[3] = 1111;
+            obj.arr.splice(0, 1);
+            obj.children[0].name = "foo";
+            obj.sub.newVal = 123;
+        });
 
-		const state2 = update((obj) => {
-			obj.arr[1] = 10;
-			obj.arr[3] = 1111;
-			obj.arr.splice(0, 1);
-			obj.children[0].name = "foo";
-			obj.sub.newVal = 123;
-		});
+        expect(state2.arr[0]).toBe(10);
+        expect(state2.arr[2]).toBe(1111);
+        expect(state2.children[0].name).toBe("foo");
+        expect(state2.sub.newVal).toBe(123);
 
-		expect(state2.arr[0]).toBe(10);
-		expect(state2.arr[2]).toBe(1111);
-		expect(state2.children[0].name).toBe("foo");
-		expect(state2.sub.newVal).toBe(123);
+        state2.sub.newVal = 1234;
+        expect(state2.sub.newVal).toBe(123);
+    });
 
-		state2.sub.newVal = 1234;
-		expect(state2.sub.newVal).toBe(123);
-	}));
+    it("should block defining prototype", () => {
+        const { state, update } = createState(getInitialData());
 
-	it("should block defining prototype", createTest(() => {
-		const { state, update } = createState(getInitialData());
+        expect(() => {
+            Object.defineProperty(state, "someProp", {
+                value: 111,
+            });
+        }).toThrow();
 
-		expect(() => {
-			Object.defineProperty(state, "someProp", {
-				value: 111,
-			});
-		}).toThrow();
+        expect(() => {
+            update((obj) => {
+                Object.defineProperty(state, "someProp", {
+                    value: 111,
+                });
+            });
+        }).toThrow();
+    });
 
-		expect(() => {
-			update((obj) => {
-				Object.defineProperty(state, "someProp", {
-					value: 111,
-				});
-			});
-		}).toThrow();
-	}));
+    it("should block setPrototypeOf", () => {
+        const { state, update } = createState(getInitialData());
 
-	it("should block setPrototypeOf", createTest(() => {
-		const { state, update } = createState(getInitialData());
+        expect(() => {
+            Object.setPrototypeOf(state, {});
+        }).toThrow();
 
-		expect(() => {
-			Object.setPrototypeOf(state, {});
-		}).toThrow();
+        expect(() => {
+            update((obj) => {
+                Object.setPrototypeOf(state, {});
+            });
+        }).toThrow();
+    });
 
-		expect(() => {
-			update((obj) => {
-				Object.setPrototypeOf(state, {});
-			});
-		}).toThrow();
-	}));
+    it("should throw on double update", () => {
+        const { update } = createState(getInitialData());
 
-	it("should throw on double update", createTest(() => {
-		const { update } = createState(getInitialData());
+        expect(() => {
+            update(() => {
+                update();
+            });
+        }).toThrow();
+    });
 
-		expect(() => {
-			update(() => {
-				update();
-			});
-		}).toThrow();
-	}));
+    it("should proxy new object trees added with update", () => {
+        const { state, update } = createState(getInitialData());
 
-	it("should proxy new object trees added with update", createTest(() => {
+        update((state) => {
+            state.section1 = {
+                area: 51,
+                players: ["ross", "joey"]
+            };
+        });
 
-		const { state, update } = createState(getInitialData());
+        state.section1.players.push("rachel");
+        expect(state.section1.players).toHaveLength(2);
 
-		update((state) => {
-			state.section1 = {
-				area: 51,
-				players: ["ross", "joey"]
-			};
-		});
+        delete state.section1.area;
+        expect(state.section1.area).toBe(51);
 
-		state.section1.players.push("rachel");
-		expect(state.section1.players).toHaveLength(2);
+        const state2 = update((state) => {
+            state.section1.players.push("rachel");
+        });
 
-		delete state.section1.area;
-		expect(state.section1.area).toBe(51);
+        expect(state2.section1.players).toHaveLength(3);
+    });
 
-		const state2 = update((state) => {
-			state.section1.players.push("rachel");
-		});
+    it("should proxy object with symbol prop", () => {
+        const sym = Symbol.for("test-sym");
 
-		expect(state2.section1.players).toHaveLength(3);
-	}));
+        const { state } = createState({
+            foo: "bar",
+            [sym]: true
+        });
 
-	it("should not proxy in production", createTest(() => {
+        expect(state[sym]).toBe(true);
+    });
 
-		const initial = getInitialData();
-		const { state, update } = createState(initial);
+    //TODO: uncomment when this is supported
+    // it("should work for existing prop proxy", createTest(() => {
+    // 	const { state: child } = createState(getInitialData());
+    //
+    // 	const { state: parent, update } = createState({
+    // 		test: true,
+    // 	});
+    //
+    // 	update((stt) => {
+    // 		stt.child = child;
+    // 	});
+    //
+    // 	expect(parent.child.children).toHaveLength(2);
+    //
+    // 	update((stt) => {
+    // 		stt.child.children.push({complex: true});
+    // 	});
+    //
+    // 	expect(parent.child.children).toHaveLength(3);
+    // }));
 
-		expect(state).toBe(initial);
+    describe("unwrap tests", () => {
+        it("should unwrap entry", () => {
+            const initial = getInitialData();
+            const { state, unwrap } = createState(initial);
 
-		const state1 = update((obj) => {
-			obj.arr.push(4);
-		});
+            clone.mockReturnValueOnce("clone");
+            const unwrapResult = unwrap(state);
 
-		expect(state1).toBe(state);
-		expect(state1.arr).toHaveLength(4);
-	}, true));
+            expect(unwrapResult).toBe("clone");
+        });
 
-	it("should proxy object with symbol prop", createTest(() => {
-		const sym = Symbol.for("test-sym");
+        it("should do nothing for non-proxy", () => {
+            const obj = { test: true };
+            const result = unwrap(obj);
+            expect(result).toBe(obj);
+        });
 
-		const { state } = createState({
-			foo: "bar",
-			[sym]: true
-		});
+        it("unwrap export should clone", () => {
+            const initial = getInitialData();
+            const { state } = createState(initial);
 
-		expect(state[sym]).toBe(true);
-	}));
+            clone.mockReturnValueOnce("clone");
 
-	//TODO: uncomment when this is supported
-	// it("should work for existing prop proxy", createTest(() => {
-	// 	const { state: child } = createState(getInitialData());
-	//
-	// 	const { state: parent, update } = createState({
-	// 		test: true,
-	// 	});
-	//
-	// 	update((stt) => {
-	// 		stt.child = child;
-	// 	});
-	//
-	// 	expect(parent.child.children).toHaveLength(2);
-	//
-	// 	update((stt) => {
-	// 		stt.child.children.push({complex: true});
-	// 	});
-	//
-	// 	expect(parent.child.children).toHaveLength(3);
-	// }));
+            const children = unwrap(state.children);
+            expect(children).toBe("clone");
+        });
 
-	describe("unwrap tests", () => {
-		it("should unwrap to same object in production", createTest(() => {
-			process.env.NODE_ENV = "production";
+        it("should work for exiting proxy", () => {
+            const { state } = createState(getInitialData());
+            const { state: state2, update } = createState(state);
 
-			const initial = getInitialData();
-			const { unwrap } = createState(initial);
+            update((st) => {
+                st.children.push({ reproxy: true });
+            });
 
-			const org = unwrap();
-			expect(org).toBe(initial);
-		}, true));
-
-		it("unwrap export should return same object in production", createTest(() => {
-
-			process.env.NODE_ENV = "production";
-
-			const { state } = createState(getInitialData());
-
-			const children = unwrap(state.children);
-
-			expect(children).toBe(state.children);
-		}, true));
-
-		it("should unwrap entry", createTest(() => {
-			const initial = getInitialData();
-			const { state, unwrap } = createState(initial);
-
-			clone.mockReturnValueOnce("clone");
-			const unwrapResult = unwrap(state);
-
-			expect(unwrapResult).toBe("clone");
-		}));
-
-		it("should do nothing for non-proxy", createTest(() => {
-			const obj = { test: true };
-			const result = unwrap(obj);
-			expect(result).toBe(obj);
-		}));
-
-		it("unwrap export should clone", createTest(() => {
-			const initial = getInitialData();
-			const { state } = createState(initial);
-
-			clone.mockReturnValueOnce("clone");
-
-			const children = unwrap(state.children);
-			expect(children).toBe("clone");
-		}));
-
-		it("should work for exiting proxy", createTest(() => {
-			const { state } = createState(getInitialData());
-			const { state: state2, update } = createState(state);
-
-			update((st) => {
-				st.children.push({ reproxy: true });
-			});
-
-			expect(state2.children).toHaveLength(3);
-			expect(state.children).toHaveLength(3);
-		}));
-	});
+            expect(state2.children).toHaveLength(3);
+            expect(state.children).toHaveLength(3);
+        });
+    });
 });

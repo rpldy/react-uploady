@@ -1,11 +1,10 @@
 import triggerUpdater from "../triggerUpdater";
 
 describe("triggerUpdater tests", () => {
-
-	const trigger = jest.fn();
+	const trigger = vi.fn();
 
 	beforeEach(() => {
-		clearJestMocks(trigger);
+		clearViMocks(trigger);
 	});
 
 	it("should return function if only trigger is passed", () => {
@@ -80,6 +79,6 @@ describe("triggerUpdater tests", () => {
 	it("should throw when rejected", async () => {
 		trigger.mockImplementationOnce(() => [Promise.reject("baaa")]);
 
-		expect(triggerUpdater(trigger, "test")).rejects.toEqual("baaa");
+		expect(triggerUpdater(trigger, "test")).rejects.toBe("baaa");
 	});
 });

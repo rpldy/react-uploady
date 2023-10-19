@@ -1,13 +1,12 @@
 import useUploadyContext from "../useUploadyContext";
 import useUploadOptions from "../useUploadOptions";
 
-jest.mock("../useUploadyContext");
+vi.mock("../useUploadyContext");
 
 describe("useUploadOptions tests", () => {
-
     const context = {
-        setOptions: jest.fn(),
-        getOptions: jest.fn(),
+        setOptions: vi.fn(),
+        getOptions: vi.fn(),
     };
 
     beforeAll(() => {
@@ -15,26 +14,26 @@ describe("useUploadOptions tests", () => {
     });
 
     beforeEach(() => {
-        clearJestMocks(context);
+        clearViMocks(context);
     });
 
     it("should set options on context", () => {
         const options = { autoUpload: true };
         context.getOptions.mockReturnValueOnce(options);
 
-        const { getHookResult } = testCustomHook(useUploadOptions, () => [options]);
+        const { result } = renderHook(() => useUploadOptions(options));
 
         expect(context.setOptions).toHaveBeenCalledWith(options);
-        expect(getHookResult()).toBe(options);
+        expect(result.current).toBe(options);
     });
 
     it("should not set options when not passed", () => {
         const options = { autoUpload: true };
         context.getOptions.mockReturnValueOnce(options);
 
-        const { getHookResult } = testCustomHook(useUploadOptions, () => []);
+        const { result } = renderHook(() => useUploadOptions());
 
         expect(context.setOptions).not.toHaveBeenCalled();
-        expect(getHookResult()).toBe(options);
+        expect(result.current).toBe(options);
     });
 });

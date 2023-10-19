@@ -3,22 +3,17 @@ import { getUploadMetadata, addLocationToResponse } from "../utils";
 import createMockState from "../../tests/tusState.mock";
 import finalizeParallelUpload from "../finalizeParallelUpload";
 
-jest.mock("../utils");
-// , () => ({
-// 	getUploadMetadata: jest.fn(),
-// }));
+vi.mock("../utils");
 
 describe("finalizeParallelUpload tests", () => {
-
 	beforeEach(() => {
-		clearJestMocks(
+		clearViMocks(
 			request,
 			getUploadMetadata,
 		);
 	});
 
 	it("should do nothing if state != FINISHED", () => {
-
 		finalizeParallelUpload(null, null, null, null, Promise.resolve({
 			state: FILE_STATES.ERROR
 		}));
@@ -27,7 +22,6 @@ describe("finalizeParallelUpload tests", () => {
 	});
 
 	it("should do nothing if no item data in state", () => {
-
 		const tusState = createMockState({
 			items: {}
 		});
@@ -126,7 +120,7 @@ describe("finalizeParallelUpload tests", () => {
 		});
 
 		pXhr.xhr = {
-			abort: jest.fn(),
+			abort: vi.fn(),
 		};
 
 		request.mockReturnValueOnce(pXhr);
@@ -176,7 +170,6 @@ describe("finalizeParallelUpload tests", () => {
 	});
 
 	it("should fail if request rejects", async () => {
-
 		const item = { id: "i1" };
 
 		const tusState = createMockState({

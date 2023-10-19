@@ -1,12 +1,11 @@
 import useUploadyContext from "../useUploadyContext";
 import useAbortBatch from "../useAbortBatch";
 
-jest.mock("../useUploadyContext");
+vi.mock("../useUploadyContext");
 
 describe("useAbortItem tests", () => {
-
 	const context = {
-		abortBatch: jest.fn()
+		abortBatch: vi.fn()
 	};
 
 	beforeAll(() => {
@@ -14,14 +13,13 @@ describe("useAbortItem tests", () => {
 	});
 
 	beforeEach(() => {
-		clearJestMocks(context);
+		clearViMocks(context);
 	});
 
 	it("should return abort item", () => {
+		const { result } = renderHook(useAbortBatch);
 
-		const { getHookResult } = testCustomHook(useAbortBatch);
-
-		getHookResult()("123");
+		result.current("123");
 
 		expect(context.abortBatch).toHaveBeenCalledWith("123");
 	});

@@ -1,30 +1,30 @@
 import React from "react";
 import UploadyContextMock from "./UploadyContext.mock";
 
-const assertContext = jest.fn(() => UploadyContextMock);
+const assertContext = vi.fn(() => UploadyContextMock);
 
-const createContextApi = jest.fn();
+const createContextApi = vi.fn();
 
 const withForwardRefMock = {
-    setRef: jest.fn(),
+    setRef: vi.fn(),
     ref: { current: null },
 };
 
-const useBatchStartListener = jest.fn();
+const useBatchStartListener = vi.fn();
 
-const logWarning = jest.fn();
+const logWarning = vi.fn();
 
-const useUploadyContext = jest.fn(() => UploadyContextMock);
+const useUploadyContext = vi.fn(() => UploadyContextMock);
 const useUploady = useUploadyContext;
 
-const useUploader = jest.fn();
+const useUploader = vi.fn();
 
-const useUploadOptions = jest.fn();
+const useUploadOptions = vi.fn();
 
-const NoDomUploady = jest.fn(({ children }) => <div>{children}</div>);
+const NoDomUploady = vi.fn(({ children }) => <div>{children}</div>);
 
-const markAsUploadOptionsComponent = jest.fn();
-const getIsUploadOptionsComponent = jest.fn();
+const markAsUploadOptionsComponent = vi.fn();
+const getIsUploadOptionsComponent = vi.fn();
 
 const uiSharedMock = {
     UploadyContext: UploadyContextMock,
@@ -53,7 +53,7 @@ const uiSharedMock = {
     getIsUploadOptionsComponent,
 };
 
-jest.doMock("@rpldy/shared-ui", () => uiSharedMock);
+vi.doMock("@rpldy/shared-ui", () => uiSharedMock);
 
 export {
     UploadyContextMock as UploadyContext,

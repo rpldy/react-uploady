@@ -1,12 +1,11 @@
 import useUploadyContext from "../useUploadyContext";
 import useAbortAll from "../useAbortAll";
 
-jest.mock("../useUploadyContext");
+vi.mock("../useUploadyContext");
 
 describe("useAbortItem tests", () => {
-
 	const context = {
-		abort: jest.fn()
+		abort: vi.fn()
 	};
 
 	beforeAll(() => {
@@ -14,14 +13,13 @@ describe("useAbortItem tests", () => {
 	});
 
 	beforeEach(() => {
-		clearJestMocks(context);
+		clearViMocks(context);
 	});
 
 	it("should return abort item", () => {
+		const { result } = renderHook(useAbortAll);
 
-		const { getHookResult } = testCustomHook(useAbortAll);
-
-		getHookResult()();
+		result.current();
 
 		expect(context.abort).toHaveBeenCalled();
 	});

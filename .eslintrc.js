@@ -130,19 +130,20 @@ module.exports = {
             }
         },
         {
-            "files": ["*.test.js"],
-            "plugins": ["jest"],
+            "files": ["*.test.js", "*.test.jsx", "*.mock.jsx"],
+            "plugins": ["vitest"],
             "env": {
-                "jest/globals": true
             },
             "globals": {
-                "clearJestMocks": "readonly",
-                "testCustomHook": "readonly",
-                "mount": "readonly",
-                "shallow": "readonly",
-                "jsdom": "readonly"
+                "clearViMocks": "readonly",
+                "jsdom": "readonly",
+                "vi": "readonly",
+                "render": "readonly",
+                "userEvent":"readonly",
+                "renderHook": "readonly",
+                "renderHookWithError": "readonly",
             },
-            "extends": ["plugin:jest/recommended"],
+            "extends": ["plugin:vitest/recommended"],
             "rules": {
                 "no-empty": 0,
                 "import/first": 0,
@@ -151,9 +152,9 @@ module.exports = {
                 "object-curly-spacing": 0,
                 "no-unexpected-multiline": 0,
                 "react/jsx-no-bind": 0,
-                "jest/valid-expect": 0,
-                "jest/expect-expect": 2,
-                "jest/no-commented-out-tests": 0,
+                "vitest/valid-expect": 0,
+                "vitest/expect-expect": 2,
+                "vitest/no-commented-out-tests": 0,
                 "no-async/no-async": 0
             }
         }

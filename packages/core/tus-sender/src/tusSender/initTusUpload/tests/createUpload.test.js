@@ -3,8 +3,8 @@ import { getChunkDataFromFile } from "@rpldy/chunked-sender";
 import createMockState from "../../../tests/tusState.mock";
 import createUpload, { resolveUploadUrl } from "../createUpload";
 
-jest.mock("@rpldy/chunked-sender", () => ({
-	getChunkDataFromFile: jest.fn(),
+vi.mock("@rpldy/chunked-sender", () => ({
+	getChunkDataFromFile: vi.fn(),
 }));
 
 describe("createUpload tests", () => {
@@ -22,7 +22,7 @@ describe("createUpload tests", () => {
             ["https://www.test.com/tus/", "/upload/123"],
         ])("should combine createUrl %s with absolute location %s", (url, loc) => {
             expect(resolveUploadUrl(url, loc))
-            		.toEqual("https://www.test.com/upload/123");
+            		.toBe("https://www.test.com/upload/123");
         });
 
         it.each([
@@ -45,7 +45,7 @@ describe("createUpload tests", () => {
 
 	describe("createUpload tests", () => {
 		beforeEach(() => {
-			clearJestMocks(
+			clearViMocks(
 				request
 			);
 		});
@@ -67,11 +67,11 @@ describe("createUpload tests", () => {
 
 			const xhrResponse = {
 				status: config.status,
-				getResponseHeader: jest.fn(),
+				getResponseHeader: vi.fn(),
 			};
 
 			const xhr = {
-				abort: jest.fn(),
+				abort: vi.fn(),
 			};
 
 			if (config.error) {
@@ -168,7 +168,7 @@ describe("createUpload tests", () => {
 				requestResult
 			} = await doCreateTest({ status: 400 });
 
-			expect(requestResult).toEqual(null);
+			expect(requestResult).toBeNull();
 		});
 
 		it("should return null on error", async () => {
@@ -176,7 +176,7 @@ describe("createUpload tests", () => {
 				requestResult
 			} = await doCreateTest({ error: true });
 
-			expect(requestResult).toEqual(null);
+			expect(requestResult).toBeNull();
 		});
 
 		it("should do create with defer length", async () => {

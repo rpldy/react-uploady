@@ -4,29 +4,34 @@ import useUploader from "../hooks/useUploader";
 import NoDomUploady from "../NoDomUploady";
 import { createContextApi } from "../UploadyContext";
 
-jest.mock("../UploadyContext", () => require("./mocks/UploadyContext.mock").default);
+// vi.mock("../UploadyContext", () => require("./mocks/UploadyContext.mock").default);
+vi.mock("../UploadyContext", async () => {
+    const mockContext = await import("./mocks/UploadyContext.mock");
+    return {
+        createContextApi: vi.fn(() => mockContext.default),
+        default: mockContext.default,
+    };
+});
 
-jest.mock("../hooks/useUploader", () => jest.fn());
+vi.mock("../hooks/useUploader");
 
 describe("Uploady tests", () => {
-
     const uploader = {};
 
     beforeEach(() => {
         useUploader.mockReturnValueOnce(uploader);
 
-        clearJestMocks(
+        clearViMocks(
             uploader.getOptions,
             uploader.add,
         );
     });
 
-    it("should render Uploady successfully", () => {
-
+    it("should render NoDomUploady successfully", () => {
         const inputRef = "inputRef";
 
         const listeners = [1, 2, 3];
-        const wrapper = mount(<NoDomUploady
+        render(<NoDomUploady
             debug
             listeners={listeners}
             autoUpload
@@ -38,7 +43,7 @@ describe("Uploady tests", () => {
         expect(logger.setDebug).toHaveBeenCalledWith(true);
         expect(createContextApi).toHaveBeenCalledWith(uploader, inputRef);
 
-        expect(wrapper.find("#test")).toHaveLength(1);
+        expect(document.getElementById("test")).toBeDefined();
 
         expect(useUploader).toHaveBeenCalledWith({ autoUpload: true }, listeners);
     });

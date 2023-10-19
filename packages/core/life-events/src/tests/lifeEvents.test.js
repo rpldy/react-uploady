@@ -2,10 +2,10 @@ import addLife, { isLE } from "../lifeEvents";
 import createLifePack from "../lifePack";
 
 describe("life-events tests", () => {
-    const noOp = jest.fn();
+    const noOp = vi.fn();
 
     beforeEach(() => {
-        clearJestMocks(noOp);
+        clearViMocks(noOp);
     });
 
     describe("init tests", () => {
@@ -118,7 +118,7 @@ describe("life-events tests", () => {
             const obj = {};
             const api = addLife(obj);
             const event = "on-foo";
-            const handler = jest.fn();
+            const handler = vi.fn();
 
             const off = obj.on(event, handler);
 
@@ -237,7 +237,7 @@ describe("life-events tests", () => {
 
             it("triggering within once handler shouldnt call it", () => {
 
-                const handler = jest.fn(() => {
+                const handler = vi.fn(() => {
                     api.trigger("test");
                 });
 
@@ -259,7 +259,7 @@ describe("life-events tests", () => {
             api.target.on("test", () => {
             });
 
-            const creator = jest.fn();
+            const creator = vi.fn();
             const pack = createLifePack(creator);
 
             api.trigger("test2", pack);
@@ -270,13 +270,13 @@ describe("life-events tests", () => {
         it("should unpack life pack with listeners", () => {
             const api = addLife();
 
-            const listener = jest.fn();
-            const listener2 = jest.fn();
+            const listener = vi.fn();
+            const listener2 = vi.fn();
 
             api.target.on("test", listener);
             api.target.on("test", listener2);
 
-            const creator = jest.fn(() => ["value", "value2"]);
+            const creator = vi.fn(() => ["value", "value2"]);
             const pack = createLifePack(creator);
 
             api.trigger("test", pack);

@@ -4,23 +4,23 @@ import getChunks from "../getChunks";
 import sendChunks from "../sendChunks";
 import processChunks, { process, abortChunkedRequest } from "../processChunks";
 
-jest.mock("@rpldy/simple-state");
-jest.mock("lodash", () => ({ throttle: (fn) => fn })); //doesnt work :(
-jest.mock("../getChunks", () => jest.fn());
-jest.mock("../sendChunks", () => jest.fn());
+vi.mock("@rpldy/simple-state");
+vi.mock("lodash", () => ({ throttle: (fn) => fn })); //doesnt work :(
+vi.mock("../getChunks");
+vi.mock("../sendChunks");
 
 describe("processChunks tests", () => {
     beforeAll(()=>{
         createState.mockImplementation((state) => ({
             state,
-            update: jest.fn((updater) => updater(state)),
+            update: vi.fn((updater) => updater(state)),
         }));
     });
 
 	beforeEach(() => {
-	    jest.useRealTimers();
+	    vi.useRealTimers();
 
-		clearJestMocks(
+		clearViMocks(
 			getChunks,
 			sendChunks,
 		);
@@ -32,8 +32,8 @@ describe("processChunks tests", () => {
 			url = "test.com",
 			sendOptions = {},
 			chunks = [1,2,3],
-			onProgress = jest.fn(),
-            trigger = jest.fn();
+			onProgress = vi.fn(),
+            trigger = vi.fn();
 
 		getChunks.mockReturnValueOnce(chunks);
 
@@ -63,7 +63,7 @@ describe("processChunks tests", () => {
 
 	describe("process tests", () => {
 		it("should send chunks and handle progress", () => {
-		    jest.useFakeTimers(); //using fake timers coz for some reason lodash isnt mocked... :(
+		    vi.useFakeTimers(); //using fake timers coz for some reason lodash isnt mocked... :(
 
 			const state = getChunkedState({
 				uploaded: {},
@@ -76,8 +76,8 @@ describe("processChunks tests", () => {
 			});
 
 			const item = { file: { size: 1000 }};
-			const onProgress = jest.fn();
-			const trigger = jest.fn();
+			const onProgress = vi.fn();
+			const trigger = vi.fn();
 
 			process(state, item, onProgress, trigger);
 
@@ -92,7 +92,7 @@ describe("processChunks tests", () => {
 				total: 1000
 			}, [item]);
 
-			jest.runAllTimers();
+			vi.runAllTimers();
             onChunkProgress({ loaded: 300 }, [{id: "c1"}]);
 
 			expect(onProgress).toHaveBeenCalledWith({
@@ -100,7 +100,7 @@ describe("processChunks tests", () => {
 				total: 1000
 			}, [item]);
 
-            jest.runAllTimers();
+            vi.runAllTimers();
             onChunkProgress({ loaded: 300 }, [{id: "c2"}]);
 
             expect(onProgress).toHaveBeenCalledWith({
@@ -112,7 +112,7 @@ describe("processChunks tests", () => {
 		});
 
 		it("should call abort on chunks", () => {
-			const abort = jest.fn();
+			const abort = vi.fn();
 
 			const state = getChunkedState({
 				requests: {
@@ -133,7 +133,7 @@ describe("processChunks tests", () => {
 
 	describe("abortChunkedRequest", () => {
 		it("should do nothing for finished request", () => {
-			const abort = jest.fn();
+			const abort = vi.fn();
 
 			const state = getChunkedState({
 				finished: true,
@@ -149,7 +149,7 @@ describe("processChunks tests", () => {
 		});
 
 		it("should do nothing for aborted request", () => {
-			const abort = jest.fn();
+			const abort = vi.fn();
 
 			const state = getChunkedState({
 				finished: true,
@@ -164,7 +164,7 @@ describe("processChunks tests", () => {
 		});
 
 		it("should abort requests for in progress request", () => {
-			const abort = jest.fn();
+			const abort = vi.fn();
 
 			const state = getChunkedState({
 				requests: {

@@ -38,6 +38,7 @@
     "@rpldy/upload-button": "^1.6.0",
     "@rpldy/upload-drop-zone": "^1.6.0",
     "@rpldy/uploady": "^1.6.0",
+    "@testing-library/react": "^14",
     "flow-bin": "^0.218.0",
     "styled-components": "^6.0.7"
   },

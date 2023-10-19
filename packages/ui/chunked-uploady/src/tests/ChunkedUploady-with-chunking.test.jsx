@@ -4,14 +4,19 @@ import Uploady, { composeEnhancers } from "@rpldy/uploady/src/tests/mocks/rpldy-
 import getChunkedEnhancer from "@rpldy/chunked-sender";
 import ChunkedUploady from "../ChunkedUploady";
 
-jest.mock("@rpldy/chunked-sender", () => {
-    const fn = jest.fn();
-    fn.CHUNKING_SUPPORT = true;
-    return fn;
-});
+vi.mock("@rpldy/chunked-sender", () => ({
+    default: vi.fn(),
+    CHUNKING_SUPPORT: true
+}));
 
 describe("ChunkedUploady tests with chunking support", () => {
     const chunkedEnhancer = (uploader) => uploader;
+
+    beforeEach(() => {
+        clearViMocks(
+            Uploady,
+        );
+    });
 
     beforeAll(() => {
         getChunkedEnhancer.mockImplementation(() => chunkedEnhancer);
@@ -25,7 +30,7 @@ describe("ChunkedUploady tests with chunking support", () => {
             parallel: 3,
         };
 
-        const enhancer = jest.fn((uploader) => uploader);
+        const enhancer = vi.fn((uploader) => uploader);
 
         const props = {
             enhancer,
@@ -34,13 +39,11 @@ describe("ChunkedUploady tests with chunking support", () => {
 
         composeEnhancers.mockReturnValueOnce(enhancer);
 
-        const wrapper = shallow(<ChunkedUploady {...props} />);
+        render(<ChunkedUploady {...props} />);
 
-        const UploadyElm = wrapper.find(Uploady);
+        expect(Uploady).toHaveBeenCalledOnce();
 
-        expect(UploadyElm).toHaveLength(1);
-
-        const update = jest.fn();
+        const update = vi.fn();
         const uploader = enhancer({
             update,
         });
@@ -53,13 +56,11 @@ describe("ChunkedUploady tests with chunking support", () => {
     });
 
     it("should render ChunkedUploady without enhancer", () => {
-        const wrapper = shallow(<ChunkedUploady/>);
+        render(<ChunkedUploady/>);
 
-        const UploadyElm = wrapper.find(Uploady);
+        const enhancer = Uploady.mock.calls[0][0].enhancer;
 
-        const enhancer = UploadyElm.props().enhancer;
-
-        const update = jest.fn();
+        const update = vi.fn();
         const uploader = {
             update,
         };

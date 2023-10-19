@@ -5,21 +5,21 @@ import getTusSend from "../tusSend";
 import handleEvents from "../handleEvents";
 import createTusSender from "../createTusSender";
 
-jest.mock("@rpldy/chunked-sender", () => ({
-	createChunkedSender: jest.fn(),
+vi.mock("@rpldy/chunked-sender", () => ({
+	createChunkedSender: vi.fn(),
 }));
 
-jest.mock("../../utils", () => ({
-	getMandatoryOptions: jest.fn((opts) => ({ ...opts }))
+vi.mock("../../utils", () => ({
+	getMandatoryOptions: vi.fn((opts) => ({ ...opts }))
 }));
 
-jest.mock("../tusSend", () => jest.fn());
-jest.mock("../handleEvents", () => jest.fn());
+vi.mock("../tusSend", () => ({ default: vi.fn() }));
+vi.mock("../handleEvents", () => ({ default: vi.fn() }));
 
 describe("tusSender index tests", () => {
 
 	beforeEach(() => {
-		clearJestMocks(
+		clearViMocks(
 			createChunkedSender,
 			handleEvents,
 			getTusSend
@@ -36,7 +36,7 @@ describe("tusSender index tests", () => {
 			...options
 		};
 
-		const tusSend = jest.fn(),
+		const tusSend = vi.fn(),
 			chunkedSender = {};
 
 		getTusSend.mockReturnValueOnce(tusSend);

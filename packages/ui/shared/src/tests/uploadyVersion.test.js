@@ -7,7 +7,6 @@ import {
 } from "../uploadyVersion";
 
 describe("uploadyVersion tests", () => {
-
     beforeEach(() => {
         process.env.BUILD_TIME_VERSION = "0.0.0";
         delete window[GLOBAL_VERSION_SYM];

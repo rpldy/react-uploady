@@ -6,11 +6,11 @@ import getChunkedState from "./mocks/getChunkedState.mock";
 describe("handleChunkRequest tests", () => {
 
 	beforeAll(() => {
-		jest.useFakeTimers();
+		vi.useFakeTimers();
 	});
 
 	const doTest = async (chunks, response, trigger) => {
-	    const onProgress = jest.fn();
+	    const onProgress = vi.fn();
         chunks = chunks ? chunks : [{ id: "c1", start: 1, end: 2, attempt: 0 }, { id: "c2" }];
 
 	    const item = {
@@ -42,7 +42,7 @@ describe("handleChunkRequest tests", () => {
 		expect(state.getState().requests.c1.id).toBe("c1");
 		expect(state.getState().requests.c1.abort).toBeInstanceOf(Function);
 
-		jest.runAllTimers();
+		vi.runAllTimers();
 
 		await test;
 
@@ -50,7 +50,7 @@ describe("handleChunkRequest tests", () => {
 	};
 
     it("should handle send success", async () => {
-        const trigger = jest.fn();
+        const trigger = vi.fn();
         const response = {
             state: FILE_STATES.FINISHED,
             response: "success"
@@ -75,7 +75,7 @@ describe("handleChunkRequest tests", () => {
     });
 
 	it("should handle send fail", async () => {
-        const trigger = jest.fn();
+        const trigger = vi.fn();
 
 		const { state, onProgress } = await doTest(null, {
 			state: FILE_STATES.ERROR,

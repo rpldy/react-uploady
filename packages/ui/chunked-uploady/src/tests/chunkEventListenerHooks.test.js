@@ -2,9 +2,7 @@ import { CHUNK_EVENTS } from "@rpldy/chunked-sender";
 import { generateUploaderEventHook } from "@rpldy/shared-ui";
 import "../chunkEventListenerHooks";
 
-jest.mock("@rpldy/shared-ui", () => ({
-	generateUploaderEventHook: jest.fn(),
-}));
+vi.mock("@rpldy/shared-ui");
 
 describe("eventListenerHooks tests", () => {
 	describe("generateUploaderEventHook tests", () => {

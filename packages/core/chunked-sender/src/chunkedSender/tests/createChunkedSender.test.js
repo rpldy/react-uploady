@@ -2,13 +2,13 @@ import send from "@rpldy/sender";
 import processChunks from "../processChunks";
 import createChunkedSender from "../createChunkedSender";
 
-jest.mock("@rpldy/sender", () => jest.fn());
+vi.mock("@rpldy/sender");
 
-jest.mock("../../utils", () => ({
-	getMandatoryOptions: jest.fn((options) => options),
+vi.mock("../../utils", () => ({
+	getMandatoryOptions: vi.fn((options) => options),
 }));
 
-jest.mock("../processChunks", () => jest.fn());
+vi.mock("../processChunks");
 
 describe("chunkedSender index tests", () => {
 	const url = "test.com",
@@ -22,7 +22,7 @@ describe("chunkedSender index tests", () => {
 	};
 
 	beforeEach(() => {
-		clearJestMocks(send, processChunks);
+		clearViMocks(send, processChunks);
 	});
 
 	it("should use default send for chunked = false", () => {

@@ -46,7 +46,7 @@ export {
     isEmpty,
 } from "./utils";
 
-export type * from "./types";
+export * from "./types";
 export type {
     MergeOptions
 } from "./utils/merge";

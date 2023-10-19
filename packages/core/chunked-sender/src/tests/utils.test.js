@@ -3,10 +3,10 @@ import { DEFAULT_OPTIONS } from "../defaults";
 describe("utils tests", () => {
     let utils, mockBlobSlice;
 
-    beforeAll(()=>{
-        mockBlobSlice = jest.spyOn(Blob.prototype, "slice");
+    beforeAll(async () => {
+        mockBlobSlice = vi.spyOn(Blob.prototype, "slice");
 
-        utils = require("../utils");
+        utils = await import("../utils");
     });
 
     describe("isChunkingSupported tests", () => {
@@ -91,7 +91,7 @@ describe("utils tests", () => {
         it("should cope with slice method returning empty", () => {
             mockBlobSlice.mockReturnValueOnce(null);
             const result = utils.getChunkDataFromFile(new File([], "test"), 0, 2);
-            expect(result).toBe(null);
+            expect(result).toBeNull();
         });
     });
 });

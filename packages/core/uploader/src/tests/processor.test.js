@@ -4,12 +4,11 @@ import mockCreateItemsSender from "../batchItemsSender";
 import mockCreateBatch from "../batch";
 import createProcessor from "../processor";
 
-jest.mock("../queue", () => jest.fn());
-jest.mock("../batchItemsSender", () => jest.fn());
-jest.mock("../batch");
+vi.mock("../queue");
+vi.mock("../batchItemsSender");
+vi.mock("../batch");
 
 describe("processor tests", () => {
-
 	const trigger = () => {
 	};
 	const options = {};
@@ -17,19 +16,19 @@ describe("processor tests", () => {
 	const cancellable = {};
 	const sender = {};
 	const queue = {
-		uploadBatch: jest.fn(),
-		abortAll: jest.fn(),
-		abortItem: jest.fn(),
-		abortBatch: jest.fn(),
-        addBatch: jest.fn(),
-        runCancellable: jest.fn(),
-        clearPendingBatches: jest.fn(),
-        uploadPendingBatches: jest.fn(),
-        cancelBatch: jest.fn(),
+		uploadBatch: vi.fn(),
+		abortAll: vi.fn(),
+		abortItem: vi.fn(),
+		abortBatch: vi.fn(),
+        addBatch: vi.fn(),
+        runCancellable: vi.fn(),
+        clearPendingBatches: vi.fn(),
+        uploadPendingBatches: vi.fn(),
+        cancelBatch: vi.fn(),
 	};
 
 	beforeEach(() => {
-		clearJestMocks(
+		clearViMocks(
 			mockCreateUploadQueue,
 			mockCreateItemsSender,
 			mockTriggerCancellable,
@@ -88,7 +87,7 @@ describe("processor tests", () => {
 
            const batch = await processor.addNewBatch(files, options);
 
-           expect(batch).toBe(null);
+           expect(batch).toBeNull();
            expect(queue.addBatch).not.toHaveBeenCalled();
            expect(mockCreateBatch).toHaveBeenCalledWith(files, uploaderId, options);
         });

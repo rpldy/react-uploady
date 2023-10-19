@@ -3,17 +3,15 @@ import { isProduction, hasWindow } from "@rpldy/shared";
 import { unwrap, isProxiable, isProxy } from "@rpldy/simple-state";
 import { deepProxyUnwrap, getMandatoryOptions } from "../utils";
 
-jest.mock("@rpldy/simple-state");
+vi.mock("@rpldy/simple-state");
 
 describe("uploader utils tests", () => {
-
     beforeEach(() => {
-        clearJestMocks(unwrap, isProxiable, isProxy);
+        clearViMocks(unwrap, isProxiable, isProxy);
     });
 
     describe("getMandatoryOptions tests", () => {
         it("should update options", () => {
-
             const options = getMandatoryOptions({ clearPendingOnAdd: true, destination: { url: "test.com" } });
 
             expect(options.autoUpload).toBe(true);
@@ -26,17 +24,18 @@ describe("uploader utils tests", () => {
         it("should set destination to null if not provided", () => {
             const options = getMandatoryOptions({ clearPendingOnAdd: true });
             expect(options.autoUpload).toBe(true);
-            expect(options.destination).toBe(null);
+            expect(options.destination).toBeNull();
         });
     });
 
     describe("getIsFileList tests", () => {
         let getIsFileList;
 
-        beforeAll(() => {
-            jest.resetModules();
+        beforeAll ( async() => {
+            vi.resetModules();
             hasWindow.mockReturnValueOnce(true);
-            getIsFileList = require("../utils").getIsFileList;
+            const utils =  await import("../utils");
+            getIsFileList = utils.getIsFileList;
         });
 
         it("should return false for non FileList", () => {
@@ -223,7 +222,6 @@ describe("uploader utils tests", () => {
         });
 
         it("should not unwrap object on level 3", () => {
-
             const obj = { child: { gchild: { ggchild: { test: true } } } };
 
             isProxy

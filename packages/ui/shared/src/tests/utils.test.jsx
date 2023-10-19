@@ -8,14 +8,14 @@ import {
     getIsUploadOptionsComponent,
 } from "../utils";
 
-jest.mock("../assertContext", () => jest.fn());
+vi.mock("../assertContext");
 
 describe("ui-shared utils tests", () => {
     describe("logWarning test", () => {
         let mockWarn;
 
         beforeAll(() => {
-            mockWarn = jest.spyOn(console, "warn");
+            mockWarn = vi.spyOn(console, "warn");
             mockWarn.mockImplementation(()=>{});
         });
 
@@ -24,7 +24,7 @@ describe("ui-shared utils tests", () => {
         });
 
         beforeEach(() => {
-            clearJestMocks(mockWarn);
+            mockWarn.mockClear();
         });
 
         it.each([

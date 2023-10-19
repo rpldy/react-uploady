@@ -2,10 +2,10 @@ import { FILE_STATES } from "@rpldy/shared";
 import { abortItem, abortBatch, abortAll } from "../abort";
 import { fastAbortAll, fastAbortBatch } from "../fastAbort";
 
-jest.mock("../fastAbort");
+vi.mock("../fastAbort");
 
 describe("abort tests", () => {
-    const finalizeMock = jest.fn();
+    const finalizeMock = vi.fn();
 
     afterEach(() => {
         finalizeMock.mockReset();
@@ -22,7 +22,7 @@ describe("abort tests", () => {
             [FILE_STATES.CANCELLED],
             [FILE_STATES.ERROR]
         ])("should not call abort for item not in progress - %s", (fileState) => {
-            const abort = jest.fn();
+            const abort = vi.fn();
 
             const result = abortItem(itemId, { [itemId]: { state: fileState } }, { [itemId]: abort }, finalizeMock);
 
@@ -35,7 +35,7 @@ describe("abort tests", () => {
             [FILE_STATES.ADDED],
             [FILE_STATES.PENDING],
         ])("should finalize pending item", (fileState) => {
-            const abort = jest.fn();
+            const abort = vi.fn();
 
             const result = abortItem(itemId, {
                 [itemId]: {
@@ -51,7 +51,7 @@ describe("abort tests", () => {
         });
 
         it("should abort item in progress", () => {
-            const abort = jest.fn(() => true);
+            const abort = vi.fn(() => true);
             const result = abortItem(itemId, {
                 [itemId]: {
                     id: itemId,
@@ -85,7 +85,7 @@ describe("abort tests", () => {
 
         it("should abort items in batch", () => {
             const batch = getBatch();
-            const abort = jest.fn();
+            const abort = vi.fn();
 
             abortBatch(batch, {}, { "i2": abort }, { "b1": ["i1", "i2", "i3"] }, finalizeMock, { fastAbortThreshold: 4 });
 
@@ -99,7 +99,7 @@ describe("abort tests", () => {
                 { id: "i2" },
                 { id: "i3" },
             ]);
-            const abort = jest.fn();
+            const abort = vi.fn();
 
             const { isFast } = abortBatch(batch, { fastAbortThreshold: 3 }, {
                 "i1": abort,
@@ -115,7 +115,7 @@ describe("abort tests", () => {
 
         it("fast abort - should use 0 threshold from batch options", () => {
             const batch = getBatch();
-            const abort = jest.fn();
+            const abort = vi.fn();
 
             const { isFast } = abortBatch(batch, { fastAbortThreshold: 0 }, {
                 "i1": abort,
@@ -131,7 +131,7 @@ describe("abort tests", () => {
 
         it("fast abort - should ignore 0 threshold from options", () => {
             const batch = getBatch();
-            const abort = jest.fn();
+            const abort = vi.fn();
 
             const { isFast } = abortBatch(batch, {}, {
                 "i1": abort,
@@ -146,7 +146,7 @@ describe("abort tests", () => {
 
     describe("all abort tests", () => {
         it("should abort all items", () => {
-            const abort = jest.fn();
+            const abort = vi.fn();
 
             const { isFast } = abortAll({
                 "u1": {
@@ -187,7 +187,7 @@ describe("abort tests", () => {
         });
 
         it("should use fast abort for all", () => {
-            const abort = jest.fn();
+            const abort = vi.fn();
 
             const { isFast } = abortAll({
                 "u1": {

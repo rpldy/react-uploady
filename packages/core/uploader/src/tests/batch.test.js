@@ -2,9 +2,8 @@ import { BATCH_STATES, createBatchItem, getIsBatchItem } from "@rpldy/shared/src
 import createBatch from "../batch";
 
 describe("Batch tests", () => {
-
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             createBatchItem,
             getIsBatchItem,
         );
@@ -77,7 +76,7 @@ describe("Batch tests", () => {
     });
 
     it("should work with async file filter and falsy/truthy values", async () => {
-        const filter = jest.fn();
+        const filter = vi.fn();
 
         filter
             .mockReturnValueOnce(false)
@@ -123,7 +122,7 @@ describe("Batch tests", () => {
             { url: "https://url.test" }
         ];
 
-        const fileFilter = jest.fn(() => true);
+        const fileFilter = vi.fn(() => true);
 
         createBatchItem
             .mockReturnValueOnce("item1")

@@ -355,22 +355,30 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 		</>;
 });
 
+const ResumeUpload = () => {
+    const { processPending } = useUploady();
+
+    return <button id="resume" onClick={() => processPending()}>resume</button>
+}
+
 export const WithCrop = (): Node => {
-	const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+	const { enhancer, destination, grouped, groupSize, extOptions } = useStoryUploadySetup();
 	const previewMethodsRef = useRef<?PreviewMethods>(null);
 
 	return <Uploady
 		debug
+        autoUpload={extOptions?.autoUpload ?? true}
 		multiple={false}
 		destination={destination}
 		enhancer={enhancer}
 		grouped={grouped}
-		maxGroupSize={groupSize}>
+		maxGroupSize={groupSize}
+    >
 
 		<StyledUploadButton id="upload-btn">
 			Upload
 		</StyledUploadButton>
-
+        {extOptions?.autoUpload === false && <ResumeUpload/>}
 		<UploadPreview
 			PreviewComponent={ItemPreviewWithCrop}
 			previewComponentProps={{ previewMethods: previewMethodsRef }}
@@ -609,7 +617,7 @@ const BatchCrop = withBatchStartUpdate((props) => {
     </MultiCropContainer>);
 });
 
-const MultiCropQueue = () => {
+const MultiCropQueue = ({ extOptions }: { extOptions: ?{ autoUpload: boolean } }) => {
     const [currentBatch, setCurrentBatch] = useState<?string>(null);
     const [inProgress, setInProgress] = useState<boolean>(false);
 
@@ -636,6 +644,8 @@ const MultiCropQueue = () => {
                 Select Files
             </StyledUploadButton>}
 
+            {extOptions?.autoUpload === false && !inProgress && <ResumeUpload/>}
+
             <BatchCrop
                 id={currentBatch}
                 uploadInProgress={inProgress}
@@ -645,14 +655,15 @@ const MultiCropQueue = () => {
 };
 
 export const WithMultiCrop = (): Node => {
-    const { enhancer, destination } = useStoryUploadySetup();
+    const { enhancer, destination, extOptions } = useStoryUploadySetup();
 
     return <Uploady
         debug
+        autoUpload={extOptions?.autoUpload ?? true}
         destination={destination}
         enhancer={enhancer}
     >
-        <MultiCropQueue  />
+        <MultiCropQueue extOptions={extOptions} />
     </Uploady>;
 };
 

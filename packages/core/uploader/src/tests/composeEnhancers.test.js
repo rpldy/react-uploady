@@ -1,10 +1,8 @@
 import composeEnhancers from "../composeEnhancers";
 
 describe("test composeEnhancers", () => {
-
     it("should enhance by order of input", () => {
-
-        const triggerMock =jest.fn();
+        const triggerMock = vi.fn();
 
         const e1 = (uploader) => {
             uploader.test += "y";
@@ -28,7 +26,7 @@ describe("test composeEnhancers", () => {
             return uploader;
         };
 
-        const orgEnhancer = {test: ""};
+        const orgEnhancer = { test: "" };
 
         const enhancer = composeEnhancers(e1, e2, e3, e4);
 
@@ -57,7 +55,7 @@ describe("test composeEnhancers", () => {
             uploader.test += "v";
         };
 
-        const uploader = {test: ""};
+        const uploader = { test: "" };
 
         const enhancer = composeEnhancers(e4, e3, e2, e1);
 
@@ -71,7 +69,7 @@ describe("test composeEnhancers", () => {
             uploader.test += "y";
         };
 
-        const uploader = {test: ""};
+        const uploader = { test: "" };
 
         const enhancer = composeEnhancers(e1);
 

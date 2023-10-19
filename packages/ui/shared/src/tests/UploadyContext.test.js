@@ -3,11 +3,10 @@ import { uploader } from "@rpldy/uploader/src/tests/mocks/rpldy-uploader.mock";
 import { createContextApi } from "../UploadyContext";
 
 describe("UploadyContext tests", () => {
-
     const fileInput = {
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        click: jest.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        click: vi.fn(),
     };
 
     const getTestContext = (input, contextUploader = uploader) => {
@@ -24,7 +23,7 @@ describe("UploadyContext tests", () => {
     };
 
     beforeEach(() => {
-        clearJestMocks(
+        clearViMocks(
             fileInput.addEventListener,
             fileInput.removeEventListener,
             fileInput.click,
@@ -159,7 +158,6 @@ describe("UploadyContext tests", () => {
         });
 
         it("should handle file input change with upload options", () => {
-
             const files = [1, 2];
             const contextApi = getTestContext({ files });
             const options = { autoUpload: true };

@@ -57,9 +57,8 @@ jobs:
         steps:
             -   name: Check is pre-release
                 id: is-pre
-                if: ${{ inputs.version == 'premajor' || inputs.version == 'preminor' || inputs.version == 'prepatch' || inputs.version == 'prerelease' }}
                 run: |
-                    echo "PRE_RELEASE=true" >> $GITHUB_OUTPUT
+                    echo "PRE_RELEASE=${{ inputs.version == 'premajor' || inputs.version == 'preminor' || inputs.version == 'prepatch' || inputs.version == 'prerelease' }}" >> $GITHUB_OUTPUT
 
             -   name: Validate version with pre-id
                 if: ${{ steps.is-pre.outputs.PRE_RELEASE == 'true' && inputs.preid == '' }}
@@ -162,7 +161,7 @@ jobs:
                 with:
                     name: ${{ steps.version-name.outputs.NEW_VERSION }}
                     body: ${{ steps.version-log.outputs.VERSION_LOG }}
-                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) || false }}
+                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) && true || false }}
                     tag: ${{ steps.version-name.outputs.NEW_VERSION }}
 
             -   name: Create PR for Release

@@ -31,18 +31,18 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js"
   },
   "dependencies": {
-    "@rpldy/retry": "^1.6.0",
-    "@rpldy/shared": "^1.6.0",
-    "@rpldy/shared-ui": "^1.6.0",
-    "@rpldy/uploader": "^1.6.0"
+    "@rpldy/retry": "workspace:*",
+    "@rpldy/shared": "workspace:*",
+    "@rpldy/shared-ui": "workspace:*",
+    "@rpldy/uploader": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=16.8",
     "react-dom": ">=16.8"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^1.6.0",
-    "@rpldy/upload-preview": "^1.6.0",
+    "@rpldy/upload-button": "workspace:*",
+    "@rpldy/upload-preview": "workspace:*",
     "flow-bin": "^0.218.0",
     "rc-progress": "^3.1.4"
   },

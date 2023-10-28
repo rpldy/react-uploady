@@ -31,12 +31,12 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore *.test.js --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^1.6.0",
-    "@rpldy/shared-ui": "^1.6.0"
+    "@rpldy/shared": "workspace:*",
+    "@rpldy/shared-ui": "workspace:*"
   },
   "devDependencies": {
-    "@rpldy/upload-button": "^1.6.0",
-    "@rpldy/upload-url-input": "^1.6.0",
+    "@rpldy/upload-button": "workspace:*",
+    "@rpldy/upload-url-input": "workspace:*",
     "@storybook/addon-knobs": "^7.0.2",
     "@testing-library/react": "^14",
     "flow-bin": "^0.218.0",

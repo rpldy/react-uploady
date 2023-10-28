@@ -31,7 +31,7 @@ export const abortChunkedRequest = (chunkedState: ChunkedState, item: BatchItem)
     return state.aborted;
 };
 
-export const process = (
+export const startProcessing = (
     chunkedState: ChunkedState,
     item: BatchItem,
     onProgress: OnProgress,
@@ -66,7 +66,7 @@ const processChunks = (
 
     logger.debugLog(`chunkedSender: created ${chunks.length} chunks for: ${item.file.name}`);
 
-    const { sendPromise, abort } = process(chunkedState, item, onProgress, trigger);
+    const { sendPromise, abort } = startProcessing(chunkedState, item, onProgress, trigger);
 
     return {
         request: sendPromise,

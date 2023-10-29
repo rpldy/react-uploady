@@ -136,6 +136,7 @@ jobs:
                   command: |
                     (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /root/.bashrc
                     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+                    source /root/.bashrc
             - run:
                 name: install gnu
                 command: brew install gnupg gnupg2

@@ -2,8 +2,12 @@
 import type { BatchItem } from "@rpldy/shared";
 import type { ChunkedState } from "./types";
 
-const processChunkProgressData = (chunkedState: ChunkedState, item: BatchItem, chunkId: string, chunkUploaded: number):
-    { loaded: number, total: number } => {
+const processChunkProgressData = (
+    chunkedState: ChunkedState,
+    item: BatchItem,
+    chunkId: string,
+    chunkUploaded: number
+): { loaded: number, total: number } => {
     chunkedState.updateState((state) => {
         state.uploaded[chunkId] = Math.max(chunkUploaded, (state.uploaded[chunkId] || 0));
     });

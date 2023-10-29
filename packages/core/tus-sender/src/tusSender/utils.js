@@ -13,7 +13,7 @@ const getUploadMetadata = (sendOptions: SendOptions): void | string => {
 		undefined;
 };
 
-const addLocationToResponse = (request: Promise<UploadData>, location: ?string) : Promise<UploadData> =>
+const addLocationToResponse = (request: Promise<UploadData>, location: ?string): Promise<UploadData> =>
     request.then((data: UploadData) => {
         if (data.state === FILE_STATES.FINISHED) {
             data.response.location = location;

@@ -10,8 +10,7 @@ import type { Batch, TriggerCancellableOutcome, UploadInfo, UploadOptions } from
 import type { UploaderCreateOptions, UploaderProcessor } from "./types";
 
 const createProcessor =
-    (trigger: TriggerMethod, cancellable: TriggerCancellableOutcome, options: UploaderCreateOptions, uploaderId: string):
-        UploaderProcessor => {
+    (trigger: TriggerMethod, cancellable: TriggerCancellableOutcome, options: UploaderCreateOptions, uploaderId: string): UploaderProcessor => {
         const sender = createItemsSender(),
             queue = createUploadQueue(options, trigger, cancellable, sender, uploaderId);
 

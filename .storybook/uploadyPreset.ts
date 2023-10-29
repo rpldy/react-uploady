@@ -1,7 +1,8 @@
-const webpack = require("webpack"),
-    HtmlWebpackPlugin = require("html-webpack-plugin"),
-    { getMatchingPackages } = require("../scripts/lernaUtils"),
-    { getUploadyVersion } = require("../scripts/utils");
+import webpack from "webpack";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import { getMatchingPackages } from "../scripts/lernaUtils.js";
+import { getUploadyVersion } from "../scripts/uploadyVersion.js";
+import path from "path";
 
 const getAllPackagesVersions = async () => {
     const pkgs = getMatchingPackages();
@@ -70,20 +71,38 @@ const updateHtmlTitle = (config) => {
     const htmlPlugin = config.plugins.find((plugin) =>
         plugin instanceof HtmlWebpackPlugin);
 
-    htmlPlugin.userOptions.title = "React-Uploady Official Storybook";
+    if (htmlPlugin) {
+        htmlPlugin.userOptions.title = "React-Uploady Official Storybook";
+    }
 
     return config;
 }
 
-module.exports = {
-    webpack: async (config) => {
+const createPackageAliases = () =>
+    getMatchingPackages()
+        .reduce((res, p) => ({
+            ...res,
+            [p.name]: path.resolve(`./${p.location}/src/index.js`)
+        }), {});
+
+export default {
+    webpackFinal: async (config) => {
+
+        console.log("ALIASES !!!!!!", createPackageAliases());
+
         config.resolve = {
             ...config.resolve,
-            mainFields: ["main:dev"].concat(config.resolve.mainFields),
+            mainFields: ["main:dev"].concat(config.resolve.mainFields).filter(Boolean),
+
+            alias: createPackageAliases(),
         };
 
+        config.mode = config.mode || process.env.SB_OPTIMIZE ? "production" : "development";
+
+        config.optimization = config.optimization || {};
         config.optimization.minimize = !!process.env.SB_OPTIMIZE;
 
+        config.stats = config.stats || {}
         config.stats.errorDetails = true;
 
         config = updateHtmlTitle(config);

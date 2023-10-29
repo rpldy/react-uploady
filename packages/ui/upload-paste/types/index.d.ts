@@ -17,10 +17,12 @@ export interface PasteProps extends UploadOptions, PasteCompProps {}
 
 export type PasteUploadHookResult = { toggle: () => boolean, getIsEnabled: () => boolean};
 
-export const usePasteUpload:
-    (uploadOptions: UploadOptions, element: React.RefObject<HTMLHtmlElement>, onPasteUpload: PasteUploadHandler) => PasteUploadHookResult;
+export const usePasteUpload: (
+    uploadOptions: UploadOptions,
+    element: React.RefObject<HTMLHtmlElement>,
+    onPasteUpload: PasteUploadHandler
+) => PasteUploadHookResult;
 
-export const withPasteUpload:
-    <T>(component: React.ForwardRefExoticComponent<T> | React.ComponentType<T>) => React.FC<PasteProps>;
+export const withPasteUpload: <T>(component: React.ForwardRefExoticComponent<T> | React.ComponentType<T>) => React.FC<PasteProps>;
 
 export default withPasteUpload;

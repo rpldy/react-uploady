@@ -1,8 +1,7 @@
 const fs = require("fs"),
     path = require("path"),
     fsExtra = !process.browser && require("fs-extra"),
-    chalk = require("chalk"),
-    uploadyPkg = require("../packages/ui/uploady/package.json");
+    chalk = require("chalk");
 
 const DEP_TYPES = {
     dependencies: "regular",
@@ -67,10 +66,6 @@ const copyFilesToPackage = (currentDir, destination, files = []) => {
     });
 };
 
-const getUploadyVersion = () => {
-    return uploadyPkg.version;
-};
-
 const logger = {
     verbose: (...args) => console.log(chalk.gray(...args)),
     log: (...args) => console.log(chalk.white(...args)),
@@ -85,6 +80,5 @@ module.exports = {
     getPackageName,
     copyFilesToPackage,
     savePackageJson,
-    getUploadyVersion,
     getPkgDependency,
 };

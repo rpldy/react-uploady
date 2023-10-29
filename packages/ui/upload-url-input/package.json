@@ -28,8 +28,8 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore *.test.js --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^1.6.0",
-    "@rpldy/shared-ui": "^1.6.0"
+    "@rpldy/shared": "workspace:*",
+    "@rpldy/shared-ui": "workspace:*"
   },
   "devDependencies": {
     "@rpldy/uploady": "^1.6.0",

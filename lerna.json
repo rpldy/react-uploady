@@ -1,6 +1,5 @@
 {
   "version": "1.6.0",
-  "npmClient": "yarn",
   "command": {
     "version": {
       "allowBranch": "release-*"
@@ -13,10 +12,6 @@
       "message": "chore: publish new version: %v"
     }
   },
-  "packages": [
-    "packages/core/*",
-    "packages/ui/*",
-    "packages/native/*"
-  ],
-  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "npmClient": "pnpm"
 }

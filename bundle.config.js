@@ -7,7 +7,7 @@ const path = require("path"),
     webpack = require("webpack"),
     _ = require("lodash"),
     VirtualModulesPlugin = require("webpack-virtual-modules"),
-    { getUploadyVersion } = require("./scripts/utils");
+    { getUploadyVersion } = require("./scripts/uploadyVersion");
 
 const PKGS = {
     LIFE_EVENTS: "@life-events",

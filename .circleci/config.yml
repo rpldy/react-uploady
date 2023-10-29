@@ -22,6 +22,7 @@ commands:
                     command: |
                         corepack enable
                         corepack prepare pnpm@8.4.0 --activate
+
     bundle:
         description: "Create UMD bundles"
         steps:
@@ -74,7 +75,7 @@ jobs:
             - checkout
             - setup
             - run: pnpm install
-            - run: pnpm build
+#            - run: pnpm build
             - save_cache:
                     name: Save pnpm Package Cache
                     key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
@@ -140,7 +141,7 @@ jobs:
             - run:
                 name: install gnu
                 command: brew install gnupg gnupg2
-#            - codecov/upload
+            - codecov/upload
 
     bundle:
         docker: *docker_image
@@ -215,13 +216,13 @@ jobs:
 workflows:
     create-rpldy:
         jobs:
-            - setup
-#            - test:
+#            - setup
+            - test
 #                  requires:
 #                      - setup
-            - coverage
-#                  requires:
-#                      - test
+            - coverage:
+                  requires:
+                      - test
 #                  filters:
 #                      branches:
 #                          only: master

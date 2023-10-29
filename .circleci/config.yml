@@ -10,11 +10,15 @@ commands:
     setup:
         description: "Setup command to install/bootstrap/build"
         steps:
-            - run: pnpm install
-            #--frozen-lockfile
-#            - run: pnpm cache dir
-            - run: pnpm build
-
+            -   restore_cache:
+                    name: Restore pnpm Package Cache
+                    keys:
+                        - pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
+            -   run:
+                    name: Install pnpm package manager
+                    command: |
+                        corepack enable
+                        corepack prepare pnpm@8.4.0 --activate
     bundle:
         description: "Create UMD bundles"
         steps:
@@ -65,16 +69,9 @@ jobs:
         docker: *docker_image
         steps:
             - checkout
-            - restore_cache:
-                    name: Restore pnpm Package Cache
-                    keys:
-                        - pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
-            - run:
-                    name: Install pnpm package manager
-                    command: |
-                        corepack enable
-                        corepack prepare pnpm@8.4.0 --activate
             - setup
+            - run: pnpm build
+            - run: pnpm install
             - save_cache:
                     name: Save pnpm Package Cache
                     key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
@@ -90,6 +87,7 @@ jobs:
         docker: *docker_image
         steps:
             - checkout
+            - setup
             - attach_workspace:
                   at: .
             - run:
@@ -113,6 +111,7 @@ jobs:
         docker: *docker_image
         steps:
             - checkout
+            - setup
             - attach_workspace:
                   at: .
             - run:
@@ -125,6 +124,7 @@ jobs:
         docker: *docker_image
         steps:
             - checkout
+            - setup
             - attach_workspace:
                 at: .
             - bundle
@@ -139,6 +139,7 @@ jobs:
         docker: *docker_image
         steps:
             - checkout
+            - setup
             - attach_workspace:
                 at: .
             - sb
@@ -151,6 +152,7 @@ jobs:
         docker: *docker_image
         steps:
             - checkout
+            - setup
             - attach_workspace:
                   at: .
             - prepare-e2e
@@ -164,6 +166,7 @@ jobs:
         parallelism: 5
         steps:
             - checkout
+            - setup
             - attach_workspace:
                   at: .
             - run:

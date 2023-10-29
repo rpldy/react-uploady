@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+    codecov: codecov/codecov@3.3.0
+
 references:
     docker_image: &docker_image
         - image: cypress/base:16.17.1
@@ -111,14 +114,9 @@ jobs:
         docker: *docker_image
         steps:
             - checkout
-            - setup
             - attach_workspace:
                   at: .
-            - run:
-                  name: Upload Coverage
-                  command: pnpm coverage
-            - store_artifacts:
-                  path: coverage
+            - codecov/upload
 
     bundle:
         docker: *docker_image

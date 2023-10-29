@@ -4,7 +4,6 @@
   "author": "yoav niran (https://github.com/yoavniran)",
   "scripts": {
     "upgradep": "node scripts/upgradeDep.js",
-    "coverage": "codecov",
     "bundle": "rimraf bundle; node scripts/bundle.js --validate",
     "bundle:prod": "UPLOADY_BUNDLE=true NODE_ENV=production pnpm bundle",
     "bundle:serve": "http-server ./bundle -p 8009",
@@ -110,7 +109,6 @@
     "chai": "^4.3.10",
     "chai-dom": "^1.11.0",
     "chalk": "^4.1.2",
-    "codecov": "^3.8.3",
     "concurrently": "^8.2.1",
     "core-js": "^3.33.1",
     "cypress": "^13.3.1",

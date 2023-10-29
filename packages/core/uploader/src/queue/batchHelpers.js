@@ -254,7 +254,7 @@ const detachRecycledFromPreviousBatch = (queue: QueueState, item: BatchItem): vo
     }
 };
 
-const preparePendingForUpload = (queue: QueueState,  uploadOptions: ?UploadOptions) : void => {
+const preparePendingForUpload = (queue: QueueState,  uploadOptions: ?UploadOptions): void => {
     queue.updateState((state) => {
         //remove pending state from pending batches
         Object.keys(state.batches)

@@ -1,5 +1,15 @@
 module.exports = {
     "parser": "@babel/eslint-parser",
+    parserOptions: {
+        ecmaVersion: 2018,
+        sourceType: "module",
+        ecmaFeatures: {
+            jsx: true,
+        },
+
+        // typescript-eslint specific options
+        warnOnUnsupportedTypeScriptVersion: true,
+    },
     "env": {
         "es6": true,
         "node": true,
@@ -7,13 +17,17 @@ module.exports = {
         "browser": true,
         "commonjs": true
     },
-    "extends": ["eslint:recommended", "react-app", "plugin:jsx-a11y/recommended", "plugin:storybook/recommended"],
+    "extends": ["eslint:recommended", "plugin:jsx-a11y/recommended", "plugin:storybook/recommended", "plugin:flowtype/recommended"],
     "globals": {
         "ENV": true,
         "globalThis": false,
     },
-    "plugins": ["react", "jsx-a11y", "react-hooks", "flowtype", "no-async"],
+    "plugins": ["import", "react", "jsx-a11y", "react-hooks", "flowtype", "no-async"],
     "settings": {
+        react: {
+            version: "detect",
+            "flowVersion": "0.218"
+        },
         "import/resolver": "webpack",
         "import/core-modules": ["fs", "path", "os"]
     },
@@ -125,6 +139,8 @@ module.exports = {
                 "flowtype/no-types-missing-file-annotation": 0,
                 "import/no-extraneous-dependencies": 0,
                 "@typescript-eslint/no-explicit-any": 0,
+                "@typescript-eslint/consistent-type-assertions": "warn",
+                "@typescript-eslint/no-redeclare": "warn",
                 "no-console": 0,
                 "no-async/no-async": 0
             }
@@ -132,14 +148,13 @@ module.exports = {
         {
             "files": ["*.test.js", "*.test.jsx", "*.mock.jsx"],
             "plugins": ["vitest"],
-            "env": {
-            },
+            "env": {},
             "globals": {
                 "clearViMocks": "readonly",
                 "jsdom": "readonly",
                 "vi": "readonly",
                 "render": "readonly",
-                "userEvent":"readonly",
+                "userEvent": "readonly",
                 "renderHook": "readonly",
                 "renderHookWithError": "readonly",
             },

@@ -35,6 +35,7 @@
     "@rpldy/shared-ui": "workspace:*"
   },
   "devDependencies": {
+    "@rpldy/shared": "workspace:*",
     "@rpldy/upload-button": "workspace:*",
     "@rpldy/upload-drop-zone": "workspace:*",
     "@rpldy/uploady": "workspace:*",

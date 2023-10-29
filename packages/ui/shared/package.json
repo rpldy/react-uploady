@@ -27,6 +27,7 @@
     "@rpldy/uploader": "workspace:*"
   },
   "devDependencies": {
+    "@rpldy/life-events": "workspace:*",
     "flow-bin": "^0.218.0"
   },
   "peerDependencies": {

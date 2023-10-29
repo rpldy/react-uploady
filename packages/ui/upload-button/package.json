@@ -34,6 +34,7 @@
     "@rpldy/shared-ui": "workspace:*"
   },
   "devDependencies": {
+    "@rpldy/shared": "workspace:*",
     "@rpldy/retry": "workspace:*",
     "@rpldy/uploady": "workspace:*",
     "flow-bin": "^0.218.0",

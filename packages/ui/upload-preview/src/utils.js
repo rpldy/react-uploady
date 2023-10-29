@@ -18,7 +18,7 @@ const getWithMandatoryOptions = (options: ?PreviewOptions): MandatoryPreviewOpti
 	};
 };
 
-const getFallbackUrlData = (fallbackProp: ?string | FallbackMethod, file: Object) : ?BasicPreviewItem => {
+const getFallbackUrlData = (fallbackProp: ?string | FallbackMethod, file: Object): ?BasicPreviewItem => {
     let data = isFunction(fallbackProp) ?
         fallbackProp(file) :
         fallbackProp;

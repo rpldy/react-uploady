@@ -1,6 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { getUploadyVersion } from "../../../scripts/utils";
+import { getUploadyVersion } from "../../../scripts/uploadyVersion";
 
 describe("Uploady - Simple", () => {
     const fileName = "flower.jpg";

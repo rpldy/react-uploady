@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 const chalk = require("chalk"),
 	shell = require("shelljs"),
-	{ getPackageName, copyFilesToPackage, getUploadyVersion } = require("./utils");
+    { getUploadyVersion } = require("./uploadyVersion"),
+	{ getPackageName, copyFilesToPackage } = require("./utils");
 
 const ENVS = ["esm", "cjs"];
 

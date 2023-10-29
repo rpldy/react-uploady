@@ -1,7 +1,7 @@
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import { getMatchingPackages } from "../scripts/lernaUtils.js";
-import { getUploadyVersion } from "../scripts/utils.js";
+import { getUploadyVersion } from "../scripts/uploadyVersion.js";
 import path from "path";
 
 const getAllPackagesVersions = async () => {

@@ -133,16 +133,19 @@ jobs:
                 name: Install and set Linuxbrew
                 command: |
                     sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
-
                     echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin/:$PATH"' >> $BASH_ENV
                     echo 'export MANPATH="/home/linuxbrew/.linuxbrew/share/man:$MANPATH"' >> $BASH_ENV
                     echo 'export INFOPATH="/home/linuxbrew/.linuxbrew/share/info:$INFOPATH"' >> $BASH_ENV
 
             - run:
                 name: install gnu
-                command: brew install gnupg gnupg2
-            - codecov/upload
+                command: |
+                    export HOMEBREW_NO_AUTO_UPDATE=true
+                    export HOMEBREW_NO_INSTALL_CLEANUP=true
+                    brew install gnupg
 
+            - codecov/upload
+#gnupg2
     bundle:
         docker: *docker_image
         steps:

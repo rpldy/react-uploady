@@ -16,5 +16,6 @@ jest*
 .env
 .jest-cache/
 .jest-coverage/
+coverage/
 
 

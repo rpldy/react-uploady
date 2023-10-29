@@ -20,7 +20,7 @@ const useEventEffect = (event: string, fn: Callback) => {
 
 const generateUploaderEventHookWithState =
     <T>(event: string, stateCalculator: (state: T) => any): WithStateFn<T> =>
-        (fn? : Callback | string, id?: string): any  => {
+        (fn?: Callback | string, id?: string): any  => {
         const [eventState, setEventState] = useState(null);
         let cbFn = fn;
         let usedId = id;

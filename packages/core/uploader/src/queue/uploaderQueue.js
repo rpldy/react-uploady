@@ -25,7 +25,7 @@ const createUploaderQueue = (
     cancellable: TriggerCancellableOutcome,
     sender: ItemsSender,
     uploaderId: string,
-) : UploaderQueue => {
+): UploaderQueue => {
     const { state, update } = createState<State>({
         itemQueue: { },
         batchQueue: [],

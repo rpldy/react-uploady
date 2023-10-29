@@ -25,29 +25,15 @@ const config =  {
     ],
     plugins: [
         "@babel/plugin-proposal-function-bind",
-        "@babel/plugin-proposal-class-properties",
-        "@babel/plugin-proposal-optional-chaining",
         "@babel/plugin-proposal-export-default-from",
-        "@babel/plugin-proposal-nullish-coalescing-operator",
         //adding these here to stop sb build from breaking on loose mode issue :(
-        "@babel/plugin-proposal-private-methods",
-        "@babel/plugin-proposal-private-property-in-object",
         "minify-dead-code-elimination",
-        "lodash",
         ["module-resolver", {
             "root": ["./"],
             // "alias": {}
         }]
     ],
     env: {
-        development: {
-            //adding loose = true to remove warnings in SB build (only in dev)
-            plugins: [
-                ["@babel/plugin-proposal-class-properties", { loose: true }],
-                ["@babel/plugin-proposal-private-methods", { loose: true }],
-                ["@babel/plugin-proposal-private-property-in-object", { loose: true }],
-            ]
-        },
         //cant use plugin when building storybook :(
         production: isUploadyBundle ? productionConfig : undefined,
         esm: productionConfig,

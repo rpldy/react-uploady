@@ -2,7 +2,7 @@ import createState from "@rpldy/simple-state";
 import getChunkedState from "./mocks/getChunkedState.mock";
 import getChunks from "../getChunks";
 import sendChunks from "../sendChunks";
-import processChunks, { process, abortChunkedRequest } from "../processChunks";
+import processChunks, { startProcessing, abortChunkedRequest } from "../processChunks";
 
 vi.mock("@rpldy/simple-state");
 vi.mock("../getChunks");
@@ -60,7 +60,7 @@ describe("processChunks tests", () => {
         });
 	});
 
-	describe("process tests", () => {
+	describe("startProcessing tests", () => {
 		it("should send chunks and handle progress", () => {
 		    vi.useFakeTimers();
 
@@ -78,7 +78,7 @@ describe("processChunks tests", () => {
 			const onProgress = vi.fn();
 			const trigger = vi.fn();
 
-			process(state, item, onProgress, trigger);
+			startProcessing(state, item, onProgress, trigger);
 
 			expect(sendChunks).toHaveBeenCalledWith(state, item, expect.any(Function), expect.any(Function), expect.any(Function));
 
@@ -120,7 +120,7 @@ describe("processChunks tests", () => {
 				},
 			});
 
-			const result = process(state, {}, );
+			const result = startProcessing(state, {}, );
 
 			result.abort();
 

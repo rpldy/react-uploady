@@ -23,7 +23,7 @@ describe("mockSender tests", () => {
 
     const items = [1, 2, 3];
 
-    const doMockSend = async (options = {}, updatedOptions = {}, abort = false, noProgressCb = false, sendOptions = {  }) => {
+    const doMockSend = (options = {}, updatedOptions = {}, abort = false, noProgressCb = false, sendOptions = {  }) => {
         const sender = createMockSender(options);
 
         if (updatedOptions) {

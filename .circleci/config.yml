@@ -198,12 +198,8 @@ workflows:
             - test:
                   requires:
                       - setup
-            - coverage-prepare:
-                   requires:
-                    - setup
             - coverage:
                   requires:
-                      - coverage-prepare
                       - test
 #                  filters:
 #                      branches:

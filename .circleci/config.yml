@@ -136,7 +136,10 @@ jobs:
                   command: |
                     (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /root/.bashrc
                     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+                    cat /root/.bashrc
                     source /root/.bashrc
+                    export PATH="/opt/homebrew/bin:$PATH"
+                    echo $PATH
             - run:
                 name: install gnu
                 command: brew install gnupg gnupg2

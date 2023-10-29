@@ -120,6 +120,9 @@ jobs:
                 name: install curl
                 command: apt-get -y update; apt-get -y install curl
             - run:
+                  name: install homebrew
+                  command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            - run:
                 name: install gnu
                 command: brew install gnupg gnupg2
             - codecov/upload

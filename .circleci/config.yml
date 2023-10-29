@@ -216,7 +216,7 @@ jobs:
 workflows:
     create-rpldy:
         jobs:
-#            - setup
+            - setup
             - test:
                   requires:
                       - setup

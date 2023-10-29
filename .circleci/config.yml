@@ -10,30 +10,35 @@ commands:
     setup:
         description: "Setup command to install/bootstrap/build"
         steps:
-            - run: yarn --frozen-lockfile
-            - run: yarn cache dir
-            - run: yarn build
-
+            -   restore_cache:
+                    name: Restore pnpm Package Cache
+                    keys:
+                        - pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
+            -   run:
+                    name: Install pnpm package manager
+                    command: |
+                        corepack enable
+                        corepack prepare pnpm@8.4.0 --activate
     bundle:
         description: "Create UMD bundles"
         steps:
             - run:
                 name: Bundle for Production
-                command: yarn bundle:prod
+                command: pnpm bundle:prod
 
     sb:
        description: Build Storybook
        steps:
            - run:
                 name: Build Storybook
-                command: yarn sb:build:internal
+                command: pnpm sb:build:internal
 
     prepare-e2e:
         description: "Prepare for cypress e2e tests"
         steps:
             - run:
                   name: Install cypress
-                  command: yarn cypress install
+                  command: pnpm cypress install
             - run:
                   name: Verify cypress
                   command: npx cypress verify
@@ -43,11 +48,11 @@ commands:
         steps:
           - run:
                 name: Serve built Storybook
-                command: yarn sb:serve
+                command: pnpm sb:serve
                 background: true
           - run:
                 name: Serve bundled js files
-                command: yarn bundle:serve
+                command: pnpm bundle:serve
                 background: true
 
     run-e2e:
@@ -57,23 +62,21 @@ commands:
                  name: Run cypress e2e
                  command: |
                     echo RUNNING SPECS = $(tr [:blank:] ',' < /tmp/specs-to-run)
-                    yarn cy:run:ci --spec $(tr [:blank:] ',' < /tmp/specs-to-run)
+                    pnpm cy:run:ci --spec $(tr [:blank:] ',' < /tmp/specs-to-run)
 
 jobs:
     setup:
         docker: *docker_image
         steps:
             - checkout
-            - restore_cache:
-                  keys:
-                      - yarn-deps-v2-{{ checksum "yarn.lock" }}
             - setup
+            - run: pnpm install
+            - run: pnpm build
             - save_cache:
-                  key: yarn-deps-v2-{{ checksum "yarn.lock" }}
-                  paths:
-                      - node_modules
-                      - ~/.cache/yarn
-                      - /usr/local/share/.cache/yarn/
+                    name: Save pnpm Package Cache
+                    key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
+                    paths:
+                        - node_modules
             -   persist_to_workspace:
                     root: .
                     paths:
@@ -84,14 +87,15 @@ jobs:
         docker: *docker_image
         steps:
             - checkout
+            - setup
             - attach_workspace:
                   at: .
             - run:
                   name: Test Code (lint, flow, types)
-                  command: yarn test:ci
+                  command: pnpm test:ci
             - run:
                   name: Vitest with coverage
-                  command: yarn vitest:ci
+                  command: pnpm vitest:ci
             - store_test_results:
                   path: reports/junit
             - store_artifacts:
@@ -107,11 +111,12 @@ jobs:
         docker: *docker_image
         steps:
             - checkout
+            - setup
             - attach_workspace:
                   at: .
             - run:
                   name: Upload Coverage
-                  command: yarn coverage
+                  command: pnpm coverage
             - store_artifacts:
                   path: coverage
 
@@ -119,6 +124,7 @@ jobs:
         docker: *docker_image
         steps:
             - checkout
+            - setup
             - attach_workspace:
                 at: .
             - bundle
@@ -133,6 +139,7 @@ jobs:
         docker: *docker_image
         steps:
             - checkout
+            - setup
             - attach_workspace:
                 at: .
             - sb
@@ -145,11 +152,12 @@ jobs:
         docker: *docker_image
         steps:
             - checkout
+            - setup
             - attach_workspace:
                   at: .
             - prepare-e2e
             - save_cache:
-                    key: cy-install-{{ checksum "yarn.lock" }}
+                    key: cy-install-{{ checksum "pnpm-lock.yaml" }}
                     paths:
                         - /root/.cache/Cypress
 
@@ -158,6 +166,7 @@ jobs:
         parallelism: 5
         steps:
             - checkout
+            - setup
             - attach_workspace:
                   at: .
             - run:
@@ -167,7 +176,7 @@ jobs:
             - run-e2e-http
             - restore_cache:
                 keys:
-                    - cy-install-{{ checksum "yarn.lock" }}
+                    - cy-install-{{ checksum "pnpm-lock.yaml" }}
             - run-e2e
             -  run:
                 when: always

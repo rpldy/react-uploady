@@ -5,7 +5,6 @@ import sendChunks from "../sendChunks";
 import processChunks, { process, abortChunkedRequest } from "../processChunks";
 
 vi.mock("@rpldy/simple-state");
-vi.mock("lodash", () => ({ throttle: (fn) => fn })); //doesnt work :(
 vi.mock("../getChunks");
 vi.mock("../sendChunks");
 
@@ -63,7 +62,7 @@ describe("processChunks tests", () => {
 
 	describe("process tests", () => {
 		it("should send chunks and handle progress", () => {
-		    vi.useFakeTimers(); //using fake timers coz for some reason lodash isnt mocked... :(
+		    vi.useFakeTimers();
 
 			const state = getChunkedState({
 				uploaded: {},

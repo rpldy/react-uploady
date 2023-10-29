@@ -58,7 +58,7 @@ const retryItem = (
     trigger: TriggerMethod,
     itemId: string,
     options: ?UploadOptions
-) : boolean => {
+): boolean => {
     logger.debugLog(`uploady.retry: about to retry item: ${itemId}`);
     return uploadFailedIds(uploader, retryState, trigger, [itemId], options);
 };
@@ -69,7 +69,7 @@ const retry = (
     trigger: TriggerMethod,
     itemId: ?string,
     options: ?UploadOptions
-) : boolean => {
+): boolean => {
     let result;
 
     if (itemId) {
@@ -88,7 +88,7 @@ const retryBatch = (
     trigger: TriggerMethod,
     batchId: string,
     options: ?UploadOptions
-) : boolean => {
+): boolean => {
     logger.debugLog(`uploady.retry: about to retry batch: ${batchId}`);
 
     //we make a copy of the ids because later on we use splice on this array

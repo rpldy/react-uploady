@@ -8,7 +8,7 @@ const TestDropZone: React.FC = () => {
     const overlayRef = React.useRef<HTMLSpanElement | null>(null);
 
     const checkRemoveDragOver = React.useCallback(
-        ({ target } : DragEvent) => target === overlayRef.current, []);
+        ({ target }: DragEvent) => target === overlayRef.current, []);
 
     const checkShouldHandleDrag = React.useCallback(() => true, []);
 

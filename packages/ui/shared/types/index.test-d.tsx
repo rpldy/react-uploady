@@ -25,12 +25,11 @@ import {
     withRequestPreSendUpdate,
     withBatchStartUpdate,
     WithRequestPreSendUpdateWrappedProps,
-    CreateOptions,
     PreSendResponse,
     UploadOptions,
 } from "./index";
 
-const makeApiCall = (options: CreateOptions): Promise<{ important: string }> =>
+const makeApiCall = (): Promise<{ important: string }> =>
     new Promise((resolve) => {
         resolve({ important: "info" });
     });
@@ -129,8 +128,8 @@ const EventHooksTest: React.FC = () => {
         return res;
     });
 
-    useRequestPreSend(async ({ options }) => {
-        const apiResult = await makeApiCall(options);
+    useRequestPreSend(async () => {
+        const apiResult = await makeApiCall();
 
         return {
            options: {
@@ -144,7 +143,7 @@ const EventHooksTest: React.FC = () => {
     });
 
     useRequestPreSend(async () => {
-        await makeApiCall({});
+        await makeApiCall();
         return false;
     });
 

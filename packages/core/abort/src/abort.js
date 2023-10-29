@@ -33,7 +33,7 @@ const callAbortOnItem = (
     item: BatchItem,
     aborts: AbortsMap,
     finalizeItem: FinalizeRequestMethod
-) : boolean => {
+): boolean => {
     const itemState = item?.state;
 
     const method =!!itemState &&
@@ -47,10 +47,10 @@ const callAbortOnItem = (
 
 const abortItem = (
     id: string,
-    items:  { [string]: BatchItem },
+    items: { [string]: BatchItem },
     aborts: AbortsMap,
     finalizeItem: FinalizeRequestMethod
-) : boolean => callAbortOnItem(items[id], aborts, finalizeItem);
+): boolean => callAbortOnItem(items[id], aborts, finalizeItem);
 
 const getIsFastAbortNeeded = (count: number, threshold: ?number) => {
     let result = false;
@@ -63,14 +63,14 @@ const getIsFastAbortNeeded = (count: number, threshold: ?number) => {
 };
 
 const abortAll = (
-    items:  { [string]: BatchItem },
+    items: { [string]: BatchItem },
     aborts: AbortsMap,
     queue: ItemsQueue,
     finalizeItem: FinalizeRequestMethod,
     options: UploadOptions
-) : AbortResult => {
+): AbortResult => {
     //$FlowIssue[incompatible-type] - no flat
-    const itemIds : string[] = Object
+    const itemIds: string[] = Object
         .values(queue)
         .flat();
 
@@ -95,7 +95,7 @@ const abortBatch = (
     queue: ItemsQueue,
     finalizeItem: FinalizeRequestMethod,
     options: UploadOptions,
-) : AbortResult => {
+): AbortResult => {
     const threshold = batchOptions.fastAbortThreshold === 0 ? 0 :
         (batchOptions.fastAbortThreshold || options.fastAbortThreshold);
 

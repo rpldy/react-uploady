@@ -23,10 +23,11 @@
     "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^1.6.0",
-    "@rpldy/uploader": "^1.6.0"
+    "@rpldy/shared": "workspace:*",
+    "@rpldy/uploader": "workspace:*"
   },
   "devDependencies": {
+    "@rpldy/life-events": "workspace:*",
     "flow-bin": "^0.218.0"
   },
   "peerDependencies": {

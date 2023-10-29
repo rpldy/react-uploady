@@ -80,6 +80,5 @@ module.exports = {
     getPackageName,
     copyFilesToPackage,
     savePackageJson,
-    getUploadyVersion,
     getPkgDependency,
 };

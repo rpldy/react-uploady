@@ -131,7 +131,7 @@ jobs:
             -   run:
                     name: Install and set Linuxbrew
                     command: |
-                        sudo apt-get install build-essential curl file git
+#                        sudo apt-get install build-essential curl file git
                         sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
 
                         echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin/:$PATH"' >> $BASH_ENV

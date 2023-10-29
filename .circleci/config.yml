@@ -128,18 +128,16 @@ jobs:
                     xdg-utils \
                     wget \
                     curl
-            - run:
-                  name: install homebrew
-                  command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            - run:
-                  name: add homebew to path
-                  command: |
-                    (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /root/.bashrc
-                    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-                    cat /root/.bashrc
-                    source /root/.bashrc
-                    export PATH="/opt/homebrew/bin:$PATH"
-                    echo $PATH
+            -   run:
+                    name: Install and set Linuxbrew
+                    command: |
+                        sudo apt-get install build-essential curl file git
+                        sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+
+                        echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin/:$PATH"' >> $BASH_ENV
+                        echo 'export MANPATH="/home/linuxbrew/.linuxbrew/share/man:$MANPATH"' >> $BASH_ENV
+                        echo 'export INFOPATH="/home/linuxbrew/.linuxbrew/share/info:$INFOPATH"' >> $BASH_ENV
+
             - run:
                 name: install gnu
                 command: brew install gnupg gnupg2

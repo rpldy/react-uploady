@@ -110,21 +110,15 @@ jobs:
                   paths:
                       - coverage
 
-    coverage-prepare:
-        docker: *docker_image
-        steps:
-            -   attach_workspace:
-                    at: .
-            - run:
-                name: install curl
-                command: apt-get -y update; apt-get -y install curl
-
     coverage:
         docker: *docker_image
         steps:
             - checkout
             - attach_workspace:
                   at: .
+            - run:
+                name: install curl
+                command: apt-get -y update; apt-get -y install curl
             - codecov/upload
 
     bundle:

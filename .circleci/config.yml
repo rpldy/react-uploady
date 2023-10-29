@@ -132,6 +132,11 @@ jobs:
                   name: install homebrew
                   command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             - run:
+                  name: add homebew to path
+                  command: |
+                    (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /root/.bashrc
+                    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+            - run:
                 name: install gnu
                 command: brew install gnupg gnupg2
 #            - codecov/upload

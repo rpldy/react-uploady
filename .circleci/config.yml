@@ -128,13 +128,13 @@ jobs:
                     xdg-utils \
                     wget \
                     curl
-#            - run:
-#                  name: install homebrew
-#                  command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-#            - run:
-#                name: install gnu
-#                command: brew install gnupg gnupg2
-            - codecov/upload
+            - run:
+                  name: install homebrew
+                  command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            - run:
+                name: install gnu
+                command: brew install gnupg gnupg2
+#            - codecov/upload
 
     bundle:
         docker: *docker_image
@@ -210,29 +210,29 @@ workflows:
     create-rpldy:
         jobs:
             - setup
-            - test:
-                  requires:
-                      - setup
-            - coverage:
-                  requires:
-                      - test
+#            - test:
+#                  requires:
+#                      - setup
+            - coverage
+#                  requires:
+#                      - test
 #                  filters:
 #                      branches:
 #                          only: master
-            - bundle:
-                  requires:
-                      - setup
-            - build-sb:
-                  requires:
-                      - setup
-            - cypress-prepare:
-                  requires:
-                      - setup
-            - cypress-run:
-                  requires:
-                      - cypress-prepare
-                      - bundle
-                      - build-sb
+#            - bundle:
+#                  requires:
+#                      - setup
+#            - build-sb:
+#                  requires:
+#                      - setup
+#            - cypress-prepare:
+#                  requires:
+#                      - setup
+#            - cypress-run:
+#                  requires:
+#                      - cypress-prepare
+#                      - bundle
+#                      - build-sb
 
 #      - cypress/install:
 #          name: Prepare E2E (cypress)

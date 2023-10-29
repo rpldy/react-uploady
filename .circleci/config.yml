@@ -110,6 +110,15 @@ jobs:
                   paths:
                       - coverage
 
+    coverage-prepare:
+        docker: *docker_image
+        steps:
+            -   attach_workspace:
+                    at: .
+            - run:
+                name: install curl
+                command: apt-get -y update; apt-get -y install curl
+
     coverage:
         docker: *docker_image
         steps:
@@ -195,12 +204,16 @@ workflows:
             - test:
                   requires:
                       - setup
+            - coverage-prepare:
+                   requires:
+                    - setup
             - coverage:
                   requires:
+                      - coverage-prepare
                       - test
-                  filters:
-                      branches:
-                          only: master
+#                  filters:
+#                      branches:
+#                          only: master
             - bundle:
                   requires:
                       - setup

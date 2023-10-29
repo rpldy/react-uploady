@@ -87,9 +87,6 @@ const createPackageAliases = () =>
 
 export default {
     webpackFinal: async (config) => {
-
-        console.log("ALIASES !!!!!!", createPackageAliases());
-
         config.resolve = {
             ...config.resolve,
             mainFields: ["main:dev"].concat(config.resolve.mainFields).filter(Boolean),

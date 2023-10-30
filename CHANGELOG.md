@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.6.1-rc.1 (2023-10-30)
+
+_PRE-RELEASE_
+
+### Internal
+
+- `all` - remove export (flow) types
+
+
 ## 1.6.1-rc.0 (2023-10-30)
 
 _PRE-RELEASE_

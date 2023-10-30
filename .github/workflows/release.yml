@@ -63,7 +63,7 @@ jobs:
             -   name: Validate version with pre-id
                 if: ${{ steps.is-pre.outputs.PRE_RELEASE == 'true' && inputs.preid == '' }}
                 run: |
-                    echo "🔴 Failing Job - Cant use version: (premajor, preminor, prepatch, prerelease) without selecting PreId too! >> $GITHUB_STEP_SUMMARY
+                    echo "🔴 Failing Job - Cant use version: (premajor, preminor, prepatch, prerelease) without selecting 'preid' value too! >> $GITHUB_STEP_SUMMARY
                     exit 1
 
             -   uses: actions/checkout@v3
@@ -83,13 +83,13 @@ jobs:
             -   uses: actions/setup-node@v3
                 with:
                     node-version: "16.17"
-                    cache: "yarn"
+                    cache: "pnpm"
 
             -   name: Install deps
-                run: yarn --frozen-lockfile
+                run: pnpm --frozen-lockfile
 
             -   name: Clean
-                run: yarn clean
+                run: pnpm clean
 
             -   name: Define Lerna args
                 id: lerna-args
@@ -119,10 +119,10 @@ jobs:
                     lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --no-git-tag-version ${{ inputs.dry == false && '--yes' || ''  }}
 
             -   name: Build source
-                run: yarn build
+                run: pnpm build
 
             -   name: Bundle source
-                run: yarn bundle:prod
+                run: pnpm bundle:prod
 
             -   name: Authenticate with NPM registry
                 run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc

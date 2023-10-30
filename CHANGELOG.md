@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.6.1-rc.0 (2023-10-30)
+
+_PRE-RELEASE_
+
+### Docs
+
+- `docs` - fix link to guides on react-uploady.org (thanks @CanRau)
+
+### Internal
+
+- `[chunked-sender]` - rename internal fn 'process' so doesnt conflict with online sandbox providers
+- `root` - switch to pnpm from yarn
+- `root` - switch to codecov orb
+
 ## 1.6.0 (2023-10-09)
 
 ### Features

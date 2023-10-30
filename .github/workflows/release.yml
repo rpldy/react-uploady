@@ -91,7 +91,7 @@ jobs:
                     cache: "pnpm"
 
             -   name: Install deps
-                run: pnpm --frozen-lockfile
+                run: pnpm install --frozen-lockfile
 
             -   name: Clean
                 run: pnpm clean

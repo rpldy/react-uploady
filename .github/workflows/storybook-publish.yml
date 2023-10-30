@@ -1,0 +1,23 @@
+name: Uploady Release
+
+on:
+    workflow_dispatch
+
+defaults:
+    run:
+        shell: bash
+
+jobs:
+    publish:
+        name: Publish Uploady Storybook
+        runs-on: ubuntu-latest
+        steps:
+
+            -   name: Publish Storybook
+                uses: netlify/actions/cli@master
+                env:
+                    NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+                    NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+                with:
+                    args: deploy --prod
+                    #--dir=site --functions=functions

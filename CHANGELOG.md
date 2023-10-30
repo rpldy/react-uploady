@@ -14,6 +14,7 @@ _PRE-RELEASE_
 - `root` - switch to pnpm from yarn
 - `root` - switch to codecov orb
 
+
 ## 1.6.0 (2023-10-09)
 
 ### Features

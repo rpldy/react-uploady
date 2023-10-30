@@ -1,4 +1,4 @@
-name: Uploady Release
+name: Uploady Storybook Publish
 
 on:
     workflow_dispatch

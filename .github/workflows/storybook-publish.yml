@@ -26,5 +26,5 @@ jobs:
                     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
                     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
                 with:
-                    args: deploy --prod --trigger
+                    args: deploy --prod --trigger --filter="@rpldy/root"
                     #--dir=site --functions=functions

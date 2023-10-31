@@ -17,8 +17,8 @@ jobs:
             -   name: Prepare
                 uses: ./.github/actions/prepare
 
-            -   name: Build Storybook Site
-                run: pnpm sb:build:prod
+#            -   name: Build Storybook Site
+#                run: pnpm sb:build:prod
 
             -   name: Install Netlify CLI
                 run: pnpm install -w netlify-cli

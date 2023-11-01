@@ -158,10 +158,10 @@ importers:
         version: 3.33.1
       cypress:
         specifier: ^13.3.1
-        version: 13.3.1
+        version: 13.4.0
       cypress-intercept-formdata:
         specifier: ^0.6.0
-        version: 0.6.0(cypress@13.3.1)
+        version: 0.6.0(cypress@13.4.0)
       eslint:
         specifier: ^8.20.0
         version: 8.20.0
@@ -8452,17 +8452,17 @@ packages:
     resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
     dev: true
 
-  /cypress-intercept-formdata@0.6.0(cypress@13.3.1):
+  /cypress-intercept-formdata@0.6.0(cypress@13.4.0):
     resolution: {integrity: sha512-r3v+Gb7tGGNiHyzcoDPzqk6Z3lJe2t+8ZEo6VPNA/XvfrG6DF3nXjR4KeQq0/rt3h8ve4FL14CUDtacSGNMv5Q==}
     engines: {node: '>=14'}
     peerDependencies:
       cypress: '>=6.3.0'
     dependencies:
-      cypress: 13.3.1
+      cypress: 13.4.0
     dev: true
 
-  /cypress@13.3.1:
-    resolution: {integrity: sha512-g4mJLZxYN+UAF2LMy3Znd4LBnUmS59Vynd81VES59RdW48Yt+QtR2cush3melOoVNz0PPbADpWr8DcUx6mif8Q==}
+  /cypress@13.4.0:
+    resolution: {integrity: sha512-KeWNC9xSHG/ewZURVbaQsBQg2mOKw4XhjJZFKjWbEjgZCdxpPXLpJnfq5Jns1Gvnjp6AlnIfpZfWFlDgVKXdWQ==}
     engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
     requiresBuild: true
@@ -9636,7 +9636,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       cross-spawn: 7.0.3
-      get-stream: 6.0.0
+      get-stream: 6.0.1
       human-signals: 2.1.0
       is-stream: 2.0.1
       merge-stream: 2.0.0

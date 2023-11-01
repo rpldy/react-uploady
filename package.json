@@ -137,7 +137,7 @@
     "markdown-it": "^13.0.1",
     "mocha-junit-reporter": "^2.0.2",
     "mocha-multi-reporters": "^1.5.1",
-    "octokit-plugin-create-pull-request": "^4.1.1",
+    "octokit-plugin-create-pull-request": "^5.1.1",
     "rc-progress": "^3.1.4",
     "react": "^18",
     "react-dnd-html5-backend": "^14.0.2",

@@ -32,7 +32,7 @@ importers:
         version: 7.18.10(@babel/core@7.23.2)
       '@babel/plugin-proposal-function-bind':
         specifier: ^7.18.9
-        version: 7.18.9(@babel/core@7.23.2)
+        version: 7.22.5(@babel/core@7.23.2)
       '@babel/plugin-transform-runtime':
         specifier: ^7.19.6
         version: 7.19.6(@babel/core@7.23.2)
@@ -1245,8 +1245,8 @@ packages:
       '@babel/plugin-syntax-export-default-from': 7.22.5(@babel/core@7.23.2)
     dev: true
 
-  /@babel/plugin-proposal-function-bind@7.18.9(@babel/core@7.23.2):
-    resolution: {integrity: sha512-9RfxqKkRBCCT0xoBl9AqieCMscJmSAL9HYixGMWH549jUpT9csWWK/HEYZEx9t9iW/PRSXgX95x9bDlgtAJGFA==}
+  /@babel/plugin-proposal-function-bind@7.22.5(@babel/core@7.23.2):
+    resolution: {integrity: sha512-ckAugfDtdcrXKP49z7K7JI7QkA8SRidmsKxLizH8mg0UWOvcmvEd9/VDLzFcWlZqchvLDPUYpwuXNGAYjsscrw==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0

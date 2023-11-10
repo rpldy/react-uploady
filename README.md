@@ -259,18 +259,18 @@ const App = () => (<ChunkedUploady
 
 ### Upload Options
 
-These are the options that are passed to the [uploader](packages/uploader) to configure aspects of the upload process.
+These are the options that are passed to the [uploader](https://react-uploady.org/docs/api/uploader/#upload-options) to configure aspects of the upload process.
 For example, whether files can be grouped in a single request (by default, no).
 
-Upload Options are typically passed to the [Uploady](packages/ui/uploady) instance. But these can be overridden. For example, by props passed to the [upload button](packages/ui/upload-button).
-Or even during [upload processing](guides/DynamicParameters.md).  
+Upload Options are typically passed to the [Uploady](https://react-uploady.org/docs/api/#props) instance. But these can be overridden. For example, by props passed to the [upload button](https://react-uploady.org/docs/api/components/uploadButton/#props).
+Or even during [upload processing](https://react-uploady.org/docs/guides/DynamicParameters/).  
 
 ### Destination
 
 Passed as a part of the upload options. It's an object that is used to configure the end-point where the files will be uploaded to.
-Its type is defined [here](packages/core/shared/src/types.js#L7).
+Its type is defined [here](https://react-uploady.org/docs/api/types/#destination).
 
-See more information in the [Uploady](packages/ui/uploady#props) README.
+See more information in the [Uploady](https://react-uploady.org/docs/api/) doc.
 
 At the very least, a destination should contain a URL property with the server endpoint.
 
@@ -285,26 +285,26 @@ Enhancers are functions that can enhance an uploader instance. They are also pas
 
 As they are applied when the uploader instance is created, they can change the way uploader does things or pass different defaults. 
 
-See this [guide](guides/UploaderEnhancers.md) for practical information and sample code.
+See this [guide](https://react-uploady.org/docs/guides/UploaderEnhancers/) for practical information and sample code.
 
 ### Batch
 
 When a file or files are handed over to the uploader, they are grouped into a batch. 
-This batch will have its own lifetime [events](packages/ui/uploady#events).
-With a batch ID, it is possible to cancel all files that are part of it. It can also be used to retry all files in the batch (see [@rpldy/retry](packages/retry)).
+This batch will have its own lifetime [events](https://react-uploady.org/docs/api/events/).
+With a batch ID, it is possible to cancel all files that are part of it. It can also be used to retry all files in the batch (see [@rpldy/retry](https://react-uploady.org/docs/packages/rpldy-retry/)).
 
 ### BatchItem
 
 Each file (or URL) added to the uploader is wrapped by a BatchItem object. They will have a unique ID within the life-time of the uploader instance.
-A BatchItem has its own lifetime [events](packages/ui/uploady#events).
+A BatchItem has its own lifetime [events](https://react-uploady.org/docs/api/events/).
 
 ## Resumable Uploads
 
 Uploady supports resumable uploads through the [tus](https://tus.io/) [protocol](https://tus.io/protocols/resumable-upload.html).
-Instead of using <Uploady> from @rpldy/uploady, use <TusUploady> from @rpldy/tus-uploady and you will have resumable upload support on the client side.
+Instead of using &lt;Uploady&gt; from @rpldy/uploady, use &lt;TusUploady&gt; from @rpldy/tus-uploady and you will have resumable upload support on the client side.
 Your server will also have to support the same protocol for this to work, of course.
 
-See the [@rpldy/tus-uploady](packages/ui/tus-uploady) documentation for more details.
+See the [@rpldy/tus-uploady](https://react-uploady.org/docs/packages/rpldy-tus-uploady/) documentation for more details.
 
 ## UMD Bundles
 
@@ -314,12 +314,12 @@ See this [guide](guides/UMD.md) for more information on how to use.
 
 ### jsDelivr
 
-| Bundle                       | URL                                                                                      |
-| ---------------------------- |------------------------------------------------------------------------------------------| 
-| core                         | https://cdn.jsdelivr.net/npm/@rpldy/uploader/umd/rpldy-core.umd.min.js                   |
-| core + ui                    | https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/rpldy-ui-core.umd.min.js                 |
-| core + ui + chunked support  | https://cdn.jsdelivr.net/npm/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js |  
-| everything                   | https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/rpldy-all.umd.min.js                     |
+| Bundle                      | URL                                                                                      |
+|-----------------------------|------------------------------------------------------------------------------------------| 
+| core                        | https://cdn.jsdelivr.net/npm/@rpldy/uploader/umd/rpldy-core.umd.min.js                   |
+| core + ui                   | https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/rpldy-ui-core.umd.min.js                 |
+| core + ui + chunked support | https://cdn.jsdelivr.net/npm/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js |  
+| everything                  | https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/rpldy-all.umd.min.js                     |
 
 You will most likely need the polyfill (core js) bundle as well (load it first):
 
@@ -328,12 +328,12 @@ You will most likely need the polyfill (core js) bundle as well (load it first):
 
 ### unpkg
 
-| Bundle                        | URL                                                                           |
-| ---------------------------- |-------------------------------------------------------------------------------|
-| core                         | https://unpkg.com/@rpldy/uploader/umd/rpldy-core.umd.min.js                   |
-| core + ui                    | https://unpkg.com/@rpldy/uploady/umd/rpldy-ui-core.umd.min.js                 |
-| core + ui + chunked support  | https://unpkg.com/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js |  
-| everything                   | https://unpkg.com/@rpldy/uploady/umd/rpldy-all.umd.min.js                     |
+| Bundle                      | URL                                                                           |
+|-----------------------------|-------------------------------------------------------------------------------|
+| core                        | https://unpkg.com/@rpldy/uploader/umd/rpldy-core.umd.min.js                   |
+| core + ui                   | https://unpkg.com/@rpldy/uploady/umd/rpldy-ui-core.umd.min.js                 |
+| core + ui + chunked support | https://unpkg.com/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js |  
+| everything                  | https://unpkg.com/@rpldy/uploady/umd/rpldy-all.umd.min.js                     |
 
 You will most likely need the polyfill (core js) bundle as well (load it first):
 

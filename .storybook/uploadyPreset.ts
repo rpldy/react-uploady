@@ -1,8 +1,31 @@
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import pacote from "pacote";
 import { getMatchingPackages } from "../scripts/lernaUtils.js";
 import { getUploadyVersion } from "../scripts/uploadyVersion.js";
 import path from "path";
+
+const getCurrentNpmVersion = async (pkg) => {
+    let result = null;
+
+    try {
+        let version =  pgk.get("version");
+
+        if (process.env.CI) {
+            //for CI - publishing to production - get latest from npm
+            console.log(`retrieving version for ${pkg.name} from npm repository`);
+            const pkgManifest = await pacote.manifest(pkg.name);
+            console.log(`retrieved version for ${pkg.name} from npm repository: ${pkgManifest.version}`);
+            version = pkgManifest.version;
+        }
+
+        result = { name: pkg.name, version };
+    } catch (e) {
+        console.error("FAILED TO GET NPM VERSION !!!!!", e);
+    }
+
+    return result;
+};
 
 const getAllPackagesVersions = async () => {
     const pkgs = getMatchingPackages();
@@ -15,18 +38,6 @@ const getAllPackagesVersions = async () => {
 
     return JSON.stringify(pkgVersions);
 };
-
-const getCurrentNpmVersion = async (pkg) => {
-    let result = null;
-
-    try {
-        result = { name: pkg.name, version: pkg.get("version") };
-    } catch (e) {
-        console.error("FAILED TO GET NPM VERSION !!!!!", e);
-    }
-
-    return result;
-}
 
 const stringify = (obj) =>
     Object.entries(obj)
@@ -55,7 +66,7 @@ const addEnvParams = async (config) =>
     await updateDefinePlugin(config, async (definitions) => {
         return {
             ...definitions,
-            "PUBLISHED_VERSIONS": await getAllPackagesVersions(config),
+            "PUBLISHED_VERSIONS": await getAllPackagesVersions(),
             "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
             "process.env": {
                 ...(definitions["process.env"] || stringify(process.env)),

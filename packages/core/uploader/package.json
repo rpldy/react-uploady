@@ -1,5 +1,5 @@
 {
-  "version": "1.6.1-rc.1",
+  "version": "1.6.1-rc.2",
   "name": "@rpldy/uploader",
   "description": "the processing and queuing engine for react-uploady",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -29,12 +29,12 @@
     "build": "node ../../../scripts/build.js"
   },
   "dependencies": {
-    "@rpldy/abort": "^1.6.1-rc.1",
-    "@rpldy/life-events": "^1.6.1-rc.1",
-    "@rpldy/raw-uploader": "^1.6.1-rc.1",
-    "@rpldy/sender": "^1.6.1-rc.1",
-    "@rpldy/shared": "^1.6.1-rc.1",
-    "@rpldy/simple-state": "^1.6.1-rc.1"
+    "@rpldy/abort": "^1.6.1-rc.2",
+    "@rpldy/life-events": "^1.6.1-rc.2",
+    "@rpldy/raw-uploader": "^1.6.1-rc.2",
+    "@rpldy/sender": "^1.6.1-rc.2",
+    "@rpldy/shared": "^1.6.1-rc.2",
+    "@rpldy/simple-state": "^1.6.1-rc.2"
   },
   "devDependencies": {
     "flow-bin": "^0.218.0"

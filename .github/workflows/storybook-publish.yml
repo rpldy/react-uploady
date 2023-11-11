@@ -17,8 +17,8 @@ jobs:
             -   name: Prepare
                 uses: ./.github/actions/prepare
 
-#            -   name: Build Storybook Site
-#                run: pnpm sb:build:prod
+            -   name: Build Storybook Site
+                run: pnpm sb:build:prod
 
             -   name: Install Netlify CLI
                 run: pnpm install -w netlify-cli
@@ -28,7 +28,10 @@ jobs:
                   NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
                   NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
                 run: |
-                    netlify deploy --trigger
+                    netlify deploy --prod --debug --cwd .sb-static
+
+
+                #netlify deploy --trigger
 #                  NETLIFY_DEPLOY_MESSAGE: "Deployed from GitHub action"
 #                  NETLIFY_DEPLOY_TO_PROD: true
 #                  install_command: "echo Skipping installing the dependencies"

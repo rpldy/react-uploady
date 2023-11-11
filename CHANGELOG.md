@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.6.1-rc.2 (2023-11-11)
+
+_PRE-RELEASE_
+
+### Internal
+
+- `docs` - publish storybook site to netlify from GH flow
+- `all` - remove flow-copy-source
+
+
 ## 1.6.1-rc.1 (2023-10-30)
 
 _PRE-RELEASE_

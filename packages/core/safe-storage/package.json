@@ -19,8 +19,7 @@
     "url": "https://opencollective.com/react-uploady"
   },
   "scripts": {
-    "build": "node ../../../scripts/build.js",
-    "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js"
+    "build": "node ../../../scripts/build.js"
   },
   "dependencies": {
     "@rpldy/shared": "^1.6.1-rc.1"

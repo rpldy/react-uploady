@@ -26,8 +26,7 @@
     "hooks"
   ],
   "scripts": {
-    "build": "node ../../../scripts/build.js",
-    "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
+    "build": "node ../../../scripts/build.js"
   },
   "dependencies": {
     "@rpldy/abort": "^1.6.1-rc.1",

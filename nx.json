@@ -4,9 +4,7 @@
       "runner": "nx/tasks-runners/default",
       "options": {
         "cacheableOperations": [
-          "build",
-          "flow:copy",
-          "jest"
+          "build"
         ]
       }
     }
@@ -15,11 +13,6 @@
     "build": {
       "outputs": [
         "{projectRoot}/lib"
-      ]
-    },
-    "flow:copy": {
-      "outputs": [
-        "{projectRoot}/lib/**/*.js.flow"
       ]
     }
   },

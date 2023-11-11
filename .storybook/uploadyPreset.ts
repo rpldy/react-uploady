@@ -9,7 +9,7 @@ const getCurrentNpmVersion = async (pkg) => {
     let result = null;
 
     try {
-        let version =  pgk.get("version");
+        let version = pkg.get("version");
 
         if (process.env.CI) {
             //for CI - publishing to production - get latest from npm

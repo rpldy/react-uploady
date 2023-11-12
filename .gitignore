@@ -45,3 +45,6 @@ server/tusFiles/
 test/react-uploady-ssr/
 
 cypress/test-bundle
+
+# Local Netlify folder
+.netlify

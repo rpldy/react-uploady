@@ -1,5 +1,5 @@
 {
-  "version": "1.6.0",
+  "version": "1.6.1",
   "name": "@rpldy/life-events",
   "description": "events pub/sub management with return values",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -24,11 +24,10 @@
     "url": "https://opencollective.com/react-uploady"
   },
   "scripts": {
-    "build": "node ../../../scripts/build.js",
-    "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
+    "build": "node ../../../scripts/build.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^1.6.0"
+    "@rpldy/shared": "^1.6.1"
   },
   "devDependencies": {
     "flow-bin": "^0.218.0"

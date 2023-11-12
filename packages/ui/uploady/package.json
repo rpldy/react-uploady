@@ -1,5 +1,5 @@
 {
-  "version": "1.6.0",
+  "version": "1.6.1",
   "name": "@rpldy/uploady",
   "description": "wrapper&context component to expose and provide react-uploady functionality",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -28,8 +28,7 @@
     "library"
   ],
   "scripts": {
-    "build": "node ../../../scripts/build.js",
-    "flow:copy": "flow-copy-source ./src ./lib --ignore *.test.js --ignore **/*.test.js --ignore **/*.mock.js;"
+    "build": "node ../../../scripts/build.js"
   },
   "dependencies": {
     "@rpldy/life-events": "workspace:*",

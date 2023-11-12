@@ -9,4 +9,4 @@ export default withPasteUpload;
 
 export { default as usePasteUpload } from "./usePasteUpload";
 
-export * from "./types";
+export type * from "./types";

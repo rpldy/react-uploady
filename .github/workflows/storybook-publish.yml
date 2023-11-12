@@ -12,12 +12,28 @@ jobs:
         name: Publish Uploady Storybook
         runs-on: ubuntu-latest
         steps:
+            -   uses: actions/checkout@v3
 
-            -   name: Publish Storybook
-                uses: netlify/actions/cli@master
+            -   name: Prepare
+                uses: ./.github/actions/prepare
+
+            -   name: Build Storybook Site
+                run: pnpm sb:build:prod
+
+            -   name: Install Netlify CLI
+                run: pnpm install -w netlify-cli
+
+            -   name: Publish Storybook to Netlify
                 env:
-                    NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-                    NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-                with:
-                    args: deploy --prod
-                    #--dir=site --functions=functions
+                  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+                  NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+                run: |
+                    netlify deploy --prod --debug --cwd .sb-static
+
+
+                #netlify deploy --trigger
+#                  NETLIFY_DEPLOY_MESSAGE: "Deployed from GitHub action"
+#                  NETLIFY_DEPLOY_TO_PROD: true
+#                  install_command: "echo Skipping installing the dependencies"
+#                  build_command: "echo Skipping building the web files"
+

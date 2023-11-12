@@ -63,7 +63,7 @@ jobs:
             -   name: Validate version with pre-id
                 if: ${{ steps.is-pre.outputs.PRE_RELEASE == 'true' && inputs.preid == '' }}
                 run: |
-                    echo "🔴 Failing Job - Cant use version: (premajor, preminor, prepatch, prerelease) without selecting PreId too! >> $GITHUB_STEP_SUMMARY
+                    echo "🔴 Failing Job - Cant use version: (premajor, preminor, prepatch, prerelease) without selecting 'preid' value too! >> $GITHUB_STEP_SUMMARY
                     exit 1
 
             -   uses: actions/checkout@v3
@@ -80,16 +80,23 @@ jobs:
                 run: |
                     git merge origin/master -m "chore: merge content from master"
 
-            -   uses: actions/setup-node@v3
-                with:
-                    node-version: "16.17"
-                    cache: "yarn"
-
-            -   name: Install deps
-                run: yarn --frozen-lockfile
+            - name: Prepare
+              uses: ./.github/actions/prepare
+#            - uses: pnpm/action-setup@v2
+#              with:
+#                version: 8
+#                run_install: false
+#
+#            -   uses: actions/setup-node@v3
+#                with:
+#                    node-version: "18.18"
+#                    cache: "pnpm"
+#
+#            -   name: Install deps
+#                run: pnpm install --frozen-lockfile
 
             -   name: Clean
-                run: yarn clean
+                run: pnpm clean
 
             -   name: Define Lerna args
                 id: lerna-args
@@ -119,10 +126,10 @@ jobs:
                     lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --no-git-tag-version ${{ inputs.dry == false && '--yes' || ''  }}
 
             -   name: Build source
-                run: yarn build
+                run: pnpm build
 
             -   name: Bundle source
-                run: yarn bundle:prod
+                run: pnpm bundle:prod
 
             -   name: Authenticate with NPM registry
                 run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc

@@ -32,4 +32,4 @@ export {
     useAbortItem,
 } from "@rpldy/shared-ui";
 
-export * from "./types";
+export type * from "./types";

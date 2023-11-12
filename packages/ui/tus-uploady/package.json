@@ -1,5 +1,5 @@
 {
-  "version": "1.6.0",
+  "version": "1.6.1",
   "name": "@rpldy/tus-uploady",
   "description": "wrapper&context component to expose and provide react-uploady functionality with TUS protocol support",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -29,8 +29,7 @@
     "resumable"
   ],
   "scripts": {
-    "build": "node ../../../scripts/build.js",
-    "flow:copy": "flow-copy-source ./src ./lib --ignore **/*.test.js --ignore **/*.mock.js; cp src/types.js lib/types.js"
+    "build": "node ../../../scripts/build.js"
   },
   "publishConfig": {
     "access": "public"

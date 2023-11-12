@@ -1,5 +1,5 @@
 {
-  "version": "1.6.1-rc.2",
+  "version": "1.6.1",
   "name": "@rpldy/sender",
   "description": "react-uploady's default XHR sender",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -22,7 +22,7 @@
     "build": "node ../../../scripts/build.js"
   },
   "dependencies": {
-    "@rpldy/shared": "^1.6.1-rc.2"
+    "@rpldy/shared": "^1.6.1"
   },
   "devDependencies": {
     "flow-bin": "^0.218.0"

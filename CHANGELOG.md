@@ -1,12 +1,32 @@
 # Changelog
 
+## 1.6.1 (2023-11-12)
+
+### Docs
+
+- `docs` - fix link to guides on react-uploady.org (thanks @CanRau)
+- `doc` - readme: switch links to doc site instead of gh
+- `docs` - publish storybook site to netlify from GH flow
+
+### Internal
+
+- `[chunked-sender]` - rename internal fn 'process' so doesnt conflict with online sandbox providers
+- `root` - switch to pnpm from yarn
+- `root` - switch to codecov orb
+- `all` - remove flow-copy-source
+- `all` - remove export (flow) types
+
+
 ## 1.6.1-rc.2 (2023-11-11)
 
 _PRE-RELEASE_
 
-### Internal
+### Docs
 
 - `docs` - publish storybook site to netlify from GH flow
+
+### Internal
+
 - `all` - remove flow-copy-source
 
 

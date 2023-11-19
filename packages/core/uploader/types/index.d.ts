@@ -51,5 +51,14 @@ export enum UPLOADER_EVENTS {
 export default createUploader;
 
 export { SendOptions } from "@rpldy/sender";
-export { FileFilterMethod, Trigger } from "@rpldy/shared";
+
+export {
+    Batch,
+    BatchItem,
+    FileFilterMethod,
+    Trigger,
+    FILE_STATES,
+    BATCH_STATES,
+} from "@rpldy/shared";
+
 export { UploadAddMethod };

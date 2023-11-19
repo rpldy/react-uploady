@@ -22,8 +22,6 @@ type FileInputPortalProps = {|
     noPortal: boolean,
 |};
 
-// type InputRef =  { current: null | HTMLInputElement, ... } | ((null | HTMLInputElement) => mixed);
-
 const NO_CONTAINER_ERROR_MSG = "Uploady - Container for file input must be a valid dom element";
 
 const renderInput = (inputProps: FileInputProps, instanceOptions: UploaderCreateOptions, ref: React$RefSetter<HTMLInputElement>) => <input

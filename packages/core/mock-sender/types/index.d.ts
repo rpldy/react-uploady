@@ -18,6 +18,6 @@ export type MockSender = {
 
 export const createMockSender: (option: MockOptions) => MockSender;
 
-export const getMockSenderEnhancer: (options: MockOptions) => UploaderEnhancer;
+export const getMockSenderEnhancer: (options?: MockOptions) => UploaderEnhancer;
 
 export default createMockSender;

@@ -47,7 +47,7 @@ importers:
         version: 7.22.15(@babel/core@7.23.2)
       '@babel/runtime-corejs3':
         specifier: ^7.23.2
-        version: 7.23.2
+        version: 7.23.5
       '@bunchtogether/vite-plugin-flow':
         specifier: ^1.0.2
         version: 1.0.2
@@ -2312,8 +2312,8 @@ packages:
     resolution: {integrity: sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==}
     dev: true
 
-  /@babel/runtime-corejs3@7.23.2:
-    resolution: {integrity: sha512-54cIh74Z1rp4oIjsHjqN+WM4fMyCBYe+LpZ9jWm51CZ1fbH3SkAzQD/3XLoNkjbJ7YEmjobLXyvQrFypRHOrXw==}
+  /@babel/runtime-corejs3@7.23.5:
+    resolution: {integrity: sha512-7+ziVclejQTLYhXl+Oi1f6gTGD1XDCeLa4R472TNGQxb08zbEJ0OdNoh5Piz+57Ltmui6xR88BXR4gS3/Toslw==}
     engines: {node: '>=6.9.0'}
     dependencies:
       core-js-pure: 3.33.1

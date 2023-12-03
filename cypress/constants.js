@@ -20,9 +20,13 @@ export const BATCH_FINALIZE = /BATCH_FINALIZE/;
 
 export const BATCH_ABORT = /BATCH_ABORT/;
 
+export const BATCH_PROGRESS = /BATCH_PROGRESS/;
+
 export const ITEM_START = /ITEM_START/;
 
 export const ITEM_ABORT = /ITEM_ABORT/;
+
+export const ITEM_PROGRESS = /ITEM_PROGRESS/;
 
 export const ITEM_FINISH = /ITEM_FINISH/;
 

@@ -8,7 +8,7 @@ declare namespace Cypress {
         assertUrlItemStartFinish: (fileName: string, startIndex?: number) => void;
         assertLogEntryCount: (count: number, obj: any) => void;
         assertLogEntryContains: (index: number, obj: any) => void;
-        customAssertLogEntry: (event: string, asserter: (logLine: any[], env: string) => void, options?: { index?: number, all?: boolean }) => void;
+        customAssertLogEntry: (event: string | RegExp, asserter: (logLine: any[], env: string) => void, options?: { index?: number, all?: boolean }) => void;
         assertLogPattern: (pattern: RegExp, options: { times?: number, index?: number, different?: boolean }) => Promise<PATTERN_MATCH[]>;
         assertNoLogPattern: (pattern: RegExp, options: { index?: number, different?: boolean }) => Promise<PATTERN_MATCH[]>;
         resetStoryLog: () => void;

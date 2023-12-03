@@ -27,6 +27,7 @@ const StyledReactCrop = styled(ReactCrop)`
     width: 100%;
     max-width: 900px;
     height: 400px;
+    max-height: 400px;
 `;
 
 const ReactCropWithImage: React$AbstractComponent<CropProps, ?HTMLImageElement> =

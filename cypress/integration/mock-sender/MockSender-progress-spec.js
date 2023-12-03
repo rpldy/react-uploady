@@ -36,7 +36,8 @@ describe("MockSender - Progress", () => {
 
                     batchProgress.forEach((p, index) => {
                         if (p < 100) {
-                            expect(p, `expect batch progress (index: ${index}) ${p} to match item progress ${itemProgress[index]}`)
+                            expect(p, `expect batch progress (index: ${index}) ${p} to match item progress ${itemProgress[index]}
+                            items: ${itemProgress.join(",")}`)
                                 .to.equal(itemProgress[index] / 100);
                         }
                     });
@@ -72,7 +73,8 @@ describe("MockSender - Progress", () => {
                                 .to.be.closeTo(0.05, 0.001);
                         } else {
                             //on 10% intervals, the 10th event also begins the new item so jump is by 0.10 instead of 0.05
-                            expect(current - prev, `expect current (index = ${index}) completed ${current} to be 0.1 higher than prev: ${prev}`)
+                            expect(current - prev, `expect current (index = ${index}) completed ${current} to be 0.1 higher than prev: ${prev}
+                            items: ${itemProgress.join(",")}`)
                                 .to.be.closeTo(0.1, 0.001);
                         }
 

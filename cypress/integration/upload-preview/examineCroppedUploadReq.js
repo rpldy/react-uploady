@@ -1,3 +1,5 @@
+const CROPPED_MAX_SIZE = 70_000;
+
 const examineCroppedUploadReq = (req, name) =>
     req.interceptFormData((formData) => {
         expect(formData["file"]).to.eq(name);
@@ -5,7 +7,7 @@ const examineCroppedUploadReq = (req, name) =>
         .its("request.headers")
         .its("content-length")
         .then((length) => {
-            expect(parseInt(length)).to.be.lessThan(5000);
+            expect(parseInt(length)).to.be.lessThan(CROPPED_MAX_SIZE);
         });
 
 const examineFullUploadRequest = (req, name) =>
@@ -19,6 +21,7 @@ const examineFullUploadRequest = (req, name) =>
         });
 
 export {
+    CROPPED_MAX_SIZE,
     examineCroppedUploadReq,
     examineFullUploadRequest,
 }

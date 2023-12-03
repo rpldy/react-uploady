@@ -36,14 +36,15 @@
     "@rpldy/uploader": "workspace:*"
   },
   "peerDependencies": {
-    "react": ">=16.8",
-    "react-dom": ">=16.8"
+    "react": ">=16.8"
   },
   "devDependencies": {
     "@rpldy/upload-button": "workspace:*",
     "@rpldy/upload-preview": "workspace:*",
     "flow-bin": "^0.223.2",
-    "rc-progress": "^3.1.4"
+    "rc-progress": "^3.1.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "publishConfig": {
     "access": "public"

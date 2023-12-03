@@ -40,12 +40,13 @@
     "@storybook/addon-knobs": "^7.0.2",
     "@testing-library/react": "^14",
     "flow-bin": "^0.223.2",
-    "react-image-crop": "^10.0.9",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-image-crop": "^11.0.1",
     "styled-components": "^6.0.7"
   },
   "peerDependencies": {
-    "react": ">=16.8",
-    "react-dom": ">=16.8"
+    "react": ">=16.8"
   },
   "publishConfig": {
     "access": "public"

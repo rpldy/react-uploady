@@ -2,12 +2,6 @@
  * config for scripts/bundle.js
  */
 
-// const path = require("path"),
-//     fs = require("fs-extra"),
-//     webpack = require("webpack"),
-//     _ = require("lodash"),
-//     VirtualModulesPlugin = require("webpack-virtual-modules"),
-//     { getUploadyVersion } = require("./scripts/uploadyVersion");
 
 import path from "path";
 import fs from "fs-extra";

@@ -33,9 +33,6 @@ importers:
       '@babel/plugin-proposal-function-bind':
         specifier: ^7.18.9
         version: 7.23.3(@babel/core@7.23.2)
-      '@babel/plugin-syntax-import-attributes':
-        specifier: ^7.23.3
-        version: 7.23.3(@babel/core@7.23.2)
       '@babel/plugin-transform-runtime':
         specifier: ^7.19.6
         version: 7.19.6(@babel/core@7.23.2)

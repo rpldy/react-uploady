@@ -1,6 +1,7 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 import { BATCH_ADD } from "../../constants";
+import { CROPPED_MAX_SIZE } from "./examineCroppedUploadReq";
 
 describe("UploadPreview - Crop in Form", () => {
     const fileName = "flower.jpg";
@@ -44,7 +45,7 @@ describe("UploadPreview - Crop in Form", () => {
                 .its("request.headers")
                 .its("content-length")
                 .then((length) => {
-                    expect(parseInt(length)).to.be.lessThan(5000);
+                    expect(parseInt(length)).to.be.lessThan(CROPPED_MAX_SIZE);
 
                     cy.storyLog().assertFileItemStartFinish(fileName, 1);
                 });

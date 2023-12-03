@@ -1,5 +1,4 @@
 import { uploadFileTimes } from "../uploadFile";
-import { WAIT_MEDIUM, WAIT_X_SHORT } from "../../constants";
 import { ITEM_START } from "../../constants";
 
 describe("UploadPreview - Custom Batch Items Method", () => {
@@ -11,7 +10,7 @@ describe("UploadPreview - Custom Batch Items Method", () => {
 
     it("should show upload previews for pending batch", () => {
         uploadFileTimes(fileName, () => {
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
 
             cy.get("img[data-test='upload-preview']")
                 .should("have.length", 3);
@@ -20,7 +19,7 @@ describe("UploadPreview - Custom Batch Items Method", () => {
 
             cy.get("#upload-pending-btn").click();
 
-            cy.wait(WAIT_MEDIUM);
+            cy.waitMedium();
 
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower2.jpg", 3);

@@ -1,7 +1,6 @@
 import { interceptWithDelay } from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
-import { BATCH_ADD, ITEM_START, ITEM_FINISH } from "../../constants";
-import { WAIT_SHORT, WAIT_X_SHORT } from "../../constants";
+import { ITEM_START, ITEM_FINISH } from "../../constants";
 import { examineCroppedUploadReq, examineFullUploadRequest } from "./examineCroppedUploadReq";
 
 describe("UploadPreview - Multi Crop", () => {

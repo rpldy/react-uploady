@@ -40,7 +40,9 @@
     "@rpldy/uploady": "workspace:*",
     "@testing-library/react": "^14",
     "flow-bin": "^0.218.0",
+    "react": "^18.2.0",
     "react-dnd": "^16.0.1",
+    "react-dom": "^18.2.0",
     "react-dnd-html5-backend": "^16.0.1",
     "styled-components": "^6.0.7"
   },

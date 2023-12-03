@@ -97,6 +97,10 @@ Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, e
     try {
         if (options.all) {
             logLine = storyLog.filter((item) => item.args[0] === eventName).map((item) => item.args.slice(1));
+        } else if (eventName instanceof RegExp) {
+            logLine = storyLog.filter((item) =>  eventName.test( item.args[0]));
+            expect(logLine).to.have.lengthOf.at.least(2, `expect to find at least one match for ${eventName}`);
+            logLine = logLine.map((ll) => ({ ...ll, args: ll.args.slice(1) }));
         } else if (options.index) {
             logLine = storyLog[options.index];
             expect(logLine.args[0], `expect log line ${options.index} with ${logLine.args[0]} to equal = ${eventName}`).to.equal(eventName);

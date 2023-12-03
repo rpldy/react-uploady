@@ -22,11 +22,11 @@
     "build": "node ../../../scripts/build.js"
   },
   "dependencies": {
-    "@rpldy/sender": "^1.6.1",
-    "@rpldy/shared": "^1.6.1",
-    "@rpldy/uploader": "^1.6.1"
+    "@rpldy/shared": "^1.6.1"
   },
   "devDependencies": {
+    "@rpldy/sender": "^1.6.1",
+    "@rpldy/uploader": "^1.6.1",
     "flow-bin": "^0.218.0"
   },
   "publishConfig": {

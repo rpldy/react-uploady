@@ -9,6 +9,7 @@ export default {
         env: {
             storybookPath: "/?path=/story/",
             components: {
+                mockSender :"core-mock-sender",
                 uploader: "core-uploader",
                 uploady: "ui-uploady",
                 chunkedUploady: "ui-chunked-uploady",

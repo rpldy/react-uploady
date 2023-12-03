@@ -23,7 +23,7 @@
     "flow": "flow --show-all-errors",
     "lint": "eslint ./packages --cache",
     "lint:nocache": "eslint ./packages",
-    "ensureTypes": "node scripts/ensureTypes.js",
+    "ensureTypes": "node scripts/ensureTypes.mjs",
     "types": "pnpm ensureTypes && tsc --outDir ./tstest",
     "test": "pnpm flow && pnpm lint && pnpm vitest:cov && pnpm types",
     "vitest": "vitest",

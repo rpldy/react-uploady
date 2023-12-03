@@ -28,7 +28,7 @@ const PKGS = {
 
 let licenseContent;
 
-module.exports = {
+export default {
     org: "@rpldy/",
 
     version: getUploadyVersion(),

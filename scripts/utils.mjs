@@ -1,8 +1,3 @@
-// const fs = require("fs"),
-//     path = require("path"),
-//     fsExtra = !process.browser && require("fs-extra"),
-//     chalk = require("chalk");
-
 import fs from "fs";
 import path from "path";
 import fsExtra from "fs-extra";
@@ -78,7 +73,6 @@ const logger = {
     error: (...args) => console.log(chalk.red(...args)),
 };
 
-// module.exports = {
 export {
     DEP_TYPES,
     logger,

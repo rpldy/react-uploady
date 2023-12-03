@@ -1,15 +1,4 @@
 #!/usr/bin/env node
-// const path = require("path"),
-//     fs = require("fs-extra"),
-//     yargs = require("yargs"),
-//     webpack = require("webpack"),
-//     shell = require("shelljs"),
-//     bytes = require("bytes"),
-//     _ = require("lodash"),
-//     { mergeWithCustomize: wpMerge, customizeArray } = require("webpack-merge"),
-//     { getMatchingPackages } = require("./lernaUtils"),
-//     { logger } = require("./utils");
-
 import path from "path";
 import fs from "fs-extra";
 import webpack from "webpack";

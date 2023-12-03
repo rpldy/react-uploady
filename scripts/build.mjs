@@ -1,9 +1,4 @@
 #!/usr/bin/env node
-// const chalk = require("chalk"),
-// 	shell = require("shelljs"),
-//     { getUploadyVersion } = require("./uploadyVersion"),
-// 	{ getPackageName, copyFilesToPackage } = require("./utils");
-import path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
 import shell from "shelljs";

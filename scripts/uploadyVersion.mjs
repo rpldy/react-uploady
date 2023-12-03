@@ -7,6 +7,3 @@ const getUploadyVersion = () => {
 export {
     getUploadyVersion
 }
-// module.exports = {
-//     getUploadyVersion,
-// };

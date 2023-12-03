@@ -1,11 +1,28 @@
 # Changelog
 
+## 1.7.0-rc.0 (2023-12-03)
+
+### Bug fixes
+
+- `mock-sender` - align progress tracking with file size if available. Fix for [#626](https://github.com/rpldy/react-uploady/issues/626).
+- `mock-sender` - BREAKING-ish: removed default file size field from defaults in favour of above fix
+
+### Docs
+
+- `storybook` - add story for mock-sender
+
+### Internal
+
+- `all` - upgrade vite & vitest
+- `all` - upgrade flow to latest (0.223.2)
+
+
 ## 1.6.1 (2023-11-12)
 
 ### Docs
 
 - `docs` - fix link to guides on react-uploady.org (thanks @CanRau)
-- `doc` - readme: switch links to doc site instead of gh
+- `docs` - readme: switch links to doc site instead of gh
 - `docs` - publish storybook site to netlify from GH flow
 
 ### Internal
@@ -74,7 +91,7 @@ _PRE-RELEASE_
 
 ### Features
 
-- `[chunked-sender]` - feat: expose chunk error to item response data. fix for [#597](https://github.com/rpldy/react-uploady/issues/597) -
+- `[chunked-sender]` - feat: expose chunk error to item response data. Fix for [#597](https://github.com/rpldy/react-uploady/issues/597) -
 
   > Technically **breaking change** (only for ChunkedUploady / Chunked-Sender users) as item's responseData for failed chunked upload will now be different than it was.
 

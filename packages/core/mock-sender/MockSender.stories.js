@@ -21,12 +21,12 @@ const ProgressReport = ({ uploader }: { uploader: ?UploadyUploaderType}) => {
 
         if (uploader) {
             offBatchProgress = uploader.on(UPLOADER_EVENTS.BATCH_PROGRESS, (batch) => {
-                logToCypress("BATCH_PROGRESS", batch);
+                logToCypress("BATCH_PROGRESS", { ...batch });
                 setCompletionPercentages((prev) => [ ...prev, `${batch.loaded} | ${batch.completed}` ]);
             });
 
             offItemProgress = uploader.on(UPLOADER_EVENTS.ITEM_PROGRESS, (item, options) => {
-                logToCypress("ITEM_PROGRESS", item, options);
+                logToCypress("ITEM_PROGRESS", { ...item }, options);
                 setItemProgress((prev) => ({
                     ...prev,
                     [item.id]: [ ...prev[item.id] ?? [], `${item.loaded} | ${item.completed}` ],

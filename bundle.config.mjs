@@ -2,12 +2,13 @@
  * config for scripts/bundle.js
  */
 
-const path = require("path"),
-    fs = require("fs-extra"),
-    webpack = require("webpack"),
-    _ = require("lodash"),
-    VirtualModulesPlugin = require("webpack-virtual-modules"),
-    { getUploadyVersion } = require("./scripts/uploadyVersion");
+
+import path from "path";
+import fs from "fs-extra";
+import webpack from "webpack";
+import _ from "lodash";
+import VirtualModulesPlugin from "webpack-virtual-modules";
+import { getUploadyVersion } from "./scripts/uploadyVersion.mjs"
 
 const PKGS = {
     LIFE_EVENTS: "@life-events",
@@ -21,7 +22,7 @@ const PKGS = {
 
 let licenseContent;
 
-module.exports = {
+export default {
     org: "@rpldy/",
 
     version: getUploadyVersion(),

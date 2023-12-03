@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-const yargs = require("yargs"),
-    pacote = require("pacote"),
-    semverUtils = require("semver-utils"),
-    shell = require("shelljs"),
-    { getMatchingPackages } = require("./lernaUtils"),
-    { logger, savePackageJson, getPkgDependency } = require("./utils");
+import pacote from "pacote";
+import Yargs from "yargs";
+import semverUtils from "semver-utils";
+import shell from "shelljs";
+import { getMatchingPackages } from "./lernaUtils.mjs";
+import { logger, savePackageJson, getPkgDependency } from "./utils.mjs";
 
+const yargs = Yargs(process.argv.slice(2));
 const argv = yargs.argv;
 
 //TODO - ONLY SUPPORTS ONE DEP AT A TIME...
@@ -105,7 +106,7 @@ const upgradeDep = async () => {
             if (writes.length) {
                 await Promise.all(writes);
                 logger.info(`>>>> finished updating ${writes.length} packages`);
-                shell.exec("lerna exec --stream -- yarn");
+                shell.exec("pnpm i");
             } else {
                 logger.error(`!!! no packages found that use ${exactDep.name}`);
             }

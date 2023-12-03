@@ -27,7 +27,7 @@
     "upload button"
   ],
   "scripts": {
-    "build": "node ../../../scripts/build.js"
+    "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
     "@rpldy/shared-ui": "workspace:*"
@@ -36,14 +36,13 @@
     "@rpldy/retry": "workspace:*",
     "@rpldy/shared": "workspace:*",
     "@rpldy/uploady": "workspace:*",
-    "flow-bin": "^0.218.0",
+    "flow-bin": "^0.223.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "styled-components": "^6.0.7"
   },
   "peerDependencies": {
-    "react": ">=16.8",
-    "react-dom": ">=16.8"
+    "react": ">=16.8"
   },
   "publishConfig": {
     "access": "public"

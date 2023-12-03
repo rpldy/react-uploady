@@ -249,4 +249,5 @@ const release = async () => {
     return process.exit(lastCode);
 };
 
-release();
+// release();
+throw new Error("Release should only be done from GH!!!")

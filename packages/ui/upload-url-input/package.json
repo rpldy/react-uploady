@@ -24,7 +24,7 @@
     "react"
   ],
   "scripts": {
-    "build": "node ../../../scripts/build.js"
+    "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
     "@rpldy/shared": "workspace:*",
@@ -32,13 +32,12 @@
   },
   "devDependencies": {
     "@rpldy/uploady": "^1.6.1",
-    "flow-bin": "^0.218.0",
+    "flow-bin": "^0.223.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "peerDependencies": {
-    "react": ">=16.8",
-    "react-dom": ">=16.8"
+    "react": ">=16.8"
   },
   "publishConfig": {
     "access": "public"

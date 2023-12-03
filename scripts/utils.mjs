@@ -1,7 +1,7 @@
-const fs = require("fs"),
-    path = require("path"),
-    fsExtra = !process.browser && require("fs-extra"),
-    chalk = require("chalk");
+import fs from "fs";
+import path from "path";
+import fsExtra from "fs-extra";
+import chalk from "chalk";
 
 const DEP_TYPES = {
     dependencies: "regular",
@@ -49,7 +49,7 @@ const getPackageName = (dir) => {
 
     const packagePath = path.resolve(dir, "package.json");
     if (fs.existsSync(packagePath)) {
-        const json = require(packagePath);
+        const json = fsExtra.readJsonSync(packagePath); //require(packagePath);
         name = json.name;
     } else {
         throw new Error("failed to get package name. package.json not found in " + dir);
@@ -58,11 +58,10 @@ const getPackageName = (dir) => {
     return name;
 };
 
-const copyFilesToPackage = (currentDir, destination, files = []) => {
-
+const copyFilesToPackage = (dir, destination, files = []) => {
     files.forEach((file) => {
         const destFile = path.resolve(destination, path.basename(file));
-        fs.copyFileSync(path.resolve(currentDir, file), destFile);
+        fs.copyFileSync(path.resolve(dir, file), destFile);
     });
 };
 
@@ -74,7 +73,7 @@ const logger = {
     error: (...args) => console.log(chalk.red(...args)),
 };
 
-module.exports = {
+export {
     DEP_TYPES,
     logger,
     getPackageName,

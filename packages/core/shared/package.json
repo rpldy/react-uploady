@@ -19,10 +19,10 @@
     "url": "https://opencollective.com/react-uploady"
   },
   "scripts": {
-    "build": "node ../../../scripts/build.js"
+    "build": "node ../../../scripts/build.mjs"
   },
   "devDependencies": {
-    "flow-bin": "^0.218.0"
+    "flow-bin": "^0.223.2"
   },
   "dependencies": {
     "invariant": "^2.2.4",

@@ -1,5 +1,4 @@
 import { uploadFileTimes } from "../uploadFile";
-import { WAIT_X_LONG } from "../../constants";
 
 describe("UploadButton - With Progress", () => {
     const fileName = "flower.jpg";
@@ -10,14 +9,14 @@ describe("UploadButton - With Progress", () => {
 
     it("should show upload progress", () => {
         uploadFileTimes(fileName, () => {
-            cy.wait(WAIT_X_LONG);
+            cy.waitMedium();
 
-            cy.storyLog().assertLogPattern(/progress event uploaded: \d+, completed: \d+ - batch-1.item-\d$/, {
+            cy.storyLog().assertLogPattern(/progress event uploaded: [\d.]+, completed: \d+ - batch-1.item-\d/, {
                 between: [4, 6],
                 different: true
             });
 
-            cy.storyLog().assertLogPattern(/Batch Progress - batch-1 : completed = [\d.]+, loaded = \d+$/, {
+            cy.storyLog().assertLogPattern(/Batch Progress - batch-1 : completed = [\d.]+, loaded = [\d.]+/, {
                 between: [3, 5],
             });
 

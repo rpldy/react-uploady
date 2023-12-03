@@ -29,7 +29,7 @@ type MockRequest = {
 const createRequest = (options: MandatoryMockOptions, items: BatchItem[]): MockRequest => {
 	const start = performance.now();
 	const progressEventsData: SenderProgressEvent[] = [];
-    const totalFileSize = items.reduce((size, item) => size + item.file?.size ?? 0, 0);
+    const totalFileSize = items.reduce((size, item) => size + (item.file?.size ?? 0), 0);
 
 	let isCancelled = false,
 		isDone = false,
@@ -86,13 +86,14 @@ const createRequest = (options: MandatoryMockOptions, items: BatchItem[]): MockR
 
 			return setTimeout(() => {
 				if (!isCancelled && !isDone && progressCallback) {
-                    const size = options.fileSize || totalFileSize || 0;
+                    const size = options.fileSize !== undefined ? options.fileSize : (totalFileSize || 0);
 					const event = {
 						total: size,
 						loaded: size * perc,
 					};
 
 					progressEventsData.push(event);
+
 					progressCallback(event, items);
 				}
 			}, ms);

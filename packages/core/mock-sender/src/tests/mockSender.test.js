@@ -21,16 +21,16 @@ describe("mockSender tests", () => {
         response: { test: true },
     };
 
-    const items = [1, 2, 3];
+    const items = [{ file: { size: 1 } }, { file: { size: 2 } }, { file: { size: 3 } }];
 
-    const doMockSend = (options = {}, updatedOptions = {}, abort = false, noProgressCb = false, sendOptions = {  }) => {
+    const doMockSend = (options = {}, updatedOptions = {}, abort = false, noProgressCb = false, sendOptions = {  }, sentItems = items) => {
         const sender = createMockSender(options);
 
         if (updatedOptions) {
             sender.update(updatedOptions);
         }
 
-        const result = sender.send(items, null, sendOptions, !noProgressCb && onProgress);
+        const result = sender.send(sentItems, null, sendOptions, !noProgressCb && onProgress);
 
         if (abort) {
             vi.advanceTimersByTime(100);
@@ -58,18 +58,16 @@ describe("mockSender tests", () => {
         expect(response.data).toEqual({ mock: true, success: true, sendOptions: { } });
         expect(response.progressEvents).toHaveLength(5);
 
-        expect(response.progressEvents[0].total).toBe(MOCK_DEFAULTS.fileSize);
-        expect(response.progressEvents[0].loaded).toBe(MOCK_DEFAULTS.fileSize / 10);
-        expect(response.progressEvents[4].loaded).toBe(MOCK_DEFAULTS.fileSize * 0.99);
+        expect(response.progressEvents[0].total).toBe(6);
+        expect(response.progressEvents[0].loaded).toBeCloseTo(6 / 10, 0.01);
+        expect(response.progressEvents[4].loaded).toBe(6 * 0.99);
 
         expect(response.options).toEqual(MOCK_DEFAULTS);
 
         expect(onProgress).toHaveBeenCalledTimes(5);
 
-        expect(onProgress).toHaveBeenNthCalledWith(1, {
-            total: MOCK_DEFAULTS.fileSize,
-            loaded: MOCK_DEFAULTS.fileSize / 10,
-        }, items);
+        expect(onProgress.mock.calls[0][0].total).toBe(6);
+        expect(onProgress.mock.calls[0][0].loaded).toBeCloseTo(0.6, 0.01);
 
         expect(result.state).toBe(FILE_STATES.FINISHED);
     });
@@ -101,6 +99,36 @@ describe("mockSender tests", () => {
         expect(response.progressEvents[0].loaded).toBe(0);
         expect(response.progressEvents[4].total).toBe(0);
         expect(response.progressEvents[4].loaded).toBe(0);
+    });
+
+    it("should emit progress events for non-file items, using config fileSize", async() => {
+        const items = [{ url: "aaa" }, { url: "bbb" }];
+
+        await doMockSend({
+            fileSize: 100,
+        }, {}, false, false, {}, items).request;
+
+        expect(onProgress).toHaveBeenCalledTimes(5);
+
+        expect(onProgress).toHaveBeenNthCalledWith(1, {
+            total: 100,
+            loaded: 10,
+        }, items);
+
+        expect(onProgress).toHaveBeenNthCalledWith(5, {
+            total: 100,
+            loaded: 99,
+        }, items);
+    });
+
+    it("should emit progress events for non-file items, when config fileSize not set", async() => {
+        const items = [{ url: "aaa" }, { url: "bbb" }];
+        await doMockSend({}, {}, false, false, {}, items).request;
+
+        expect(onProgress).toHaveBeenNthCalledWith(1, {
+            total: 0,
+            loaded: 0,
+        }, items);
     });
 
     it("should send mock request with custom options", async () => {

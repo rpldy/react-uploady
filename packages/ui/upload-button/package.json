@@ -36,7 +36,7 @@
     "@rpldy/retry": "workspace:*",
     "@rpldy/shared": "workspace:*",
     "@rpldy/uploady": "workspace:*",
-    "flow-bin": "^0.218.0",
+    "flow-bin": "^0.223.2",
     "styled-components": "^6.0.7"
   },
   "peerDependencies": {

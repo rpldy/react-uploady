@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@rpldy/life-events": "workspace:*",
-    "flow-bin": "^0.218.0"
+    "flow-bin": "^0.223.2"
   },
   "peerDependencies": {
     "react": ">=16.8",

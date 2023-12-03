@@ -44,7 +44,7 @@
     "@rpldy/upload-button": "workspace:*",
     "@rpldy/uploady": "workspace:*",
     "@storybook/addon-knobs": "^7.0.2",
-    "flow-bin": "^0.218.0"
+    "flow-bin": "^0.223.2"
   },
   "peerDependencies": {
     "react": ">=16.8"

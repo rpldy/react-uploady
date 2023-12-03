@@ -122,7 +122,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-storybook": "^0.6.15",
     "eslint-plugin-vitest": "^0.3.8",
-    "flow-bin": "^0.218.0",
+    "flow-bin": "^0.223.2",
     "fs-extra": "^11.1.0",
     "html-webpack-plugin": "^5.5.0",
     "http-server": "^14.0.0",

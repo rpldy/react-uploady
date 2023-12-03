@@ -12,7 +12,9 @@
   "targetDefaults": {
     "build": {
       "outputs": [
-        "{projectRoot}/lib"
+        "{projectRoot}/lib",
+        "{projectRoot}/LICENSE.md",
+        "{projectRoot}/.npmignore"
       ]
     }
   },

@@ -1,17 +1,18 @@
 #!/usr/bin/env node
-const path = require("path"),
-    fs = require("fs-extra"),
-    yargs = require("yargs"),
-    webpack = require("webpack"),
-    shell = require("shelljs"),
-    bytes = require("bytes"),
-    _ = require("lodash"),
-    { mergeWithCustomize: wpMerge, customizeArray } = require("webpack-merge"),
-    { getMatchingPackages } = require("./lernaUtils"),
-    { logger } = require("./utils");
-
+import path from "path";
+import fs from "fs-extra";
+import webpack from "webpack";
+import Yargs from "yargs";
+import shell from "shelljs";
+import bytes from "bytes";
+import _ from "lodash";
+import { mergeWithCustomize as wpMerge, customizeArray } from "webpack-merge";
+import { getMatchingPackages } from "./lernaUtils.mjs";
+import { logger } from "./utils.mjs"
 //TODO: should be passed by options or found in root (dynamically)
-const config = require("../bundle.config");
+import config from "../bundle.config.mjs";
+
+const yargs = Yargs(process.argv.slice(2));
 
 const options = {
     validate: yargs.argv.validate,

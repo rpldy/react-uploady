@@ -29,7 +29,7 @@ module.system.node.resolve_dirname=node_modules
 #dealing with deps without index.js entry
 module.name_mapper='^invariant$' -> '<PROJECT_ROOT>/node_modules/invariant/invariant'
 module.name_mapper='^html-dir-content$' -> '<PROJECT_ROOT>/node_modules/html-dir-content/dist/html-dir-content'
-module.name_mapper='^react-image-crop$' -> '<PROJECT_ROOT>/node_modules/react-image-crop/dist/index.js'
+module.name_mapper='^react-image-crop$' -> '<PROJECT_ROOT>/node_modules/react-image-crop/dist/index.umd.cjs'
 module.name_mapper='^styled-components$' -> '<PROJECT_ROOT>/node_modules/styled-components/dist/styled-components.cjs.js'
 module.name_mapper='^react-dnd$' -> '<PROJECT_ROOT>/node_modules/react-dnd/dist/index.js'
 module.name_mapper='^react-dnd-html5-backend$' -> '<PROJECT_ROOT>/node_modules/react-dnd-html5-backend/dist/index.js'

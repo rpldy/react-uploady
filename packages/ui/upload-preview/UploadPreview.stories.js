@@ -1,6 +1,5 @@
 // @flow
-import React, { useCallback, useState, useRef, useEffect } from "react";
-import type { Node } from "React";
+import React, { useCallback, useState, useRef, useEffect, type Node } from "react";
 import styled,  { css } from "styled-components";
 import { number } from "@storybook/addon-knobs";
 import Uploady, {
@@ -55,7 +54,7 @@ const usePreviewStorySetup = () => {
     return {...setup, maxImageSize};
 };
 
-export const Simple = (): Node => {
+export const Simple = (): React$Element<typeof Uploady> => {
     const { enhancer, destination, multiple, grouped, groupSize, maxImageSize } = usePreviewStorySetup();
 
     return <Uploady

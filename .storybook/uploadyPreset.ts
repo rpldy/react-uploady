@@ -1,8 +1,8 @@
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import pacote from "pacote";
-import { getMatchingPackages } from "../scripts/lernaUtils.js";
-import { getUploadyVersion } from "../scripts/uploadyVersion.js";
+import { getMatchingPackages } from "../scripts/lernaUtils.mjs";
+import { getUploadyVersion } from "../scripts/uploadyVersion.mjs";
 import path from "path";
 
 const getCurrentNpmVersion = async (pkg) => {

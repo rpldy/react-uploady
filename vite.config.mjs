@@ -3,7 +3,7 @@ import path from "path";
 import { defineConfig } from "vite";
 import { esbuildFlowPlugin } from "@bunchtogether/vite-plugin-flow";
 import babelPlugin from "vite-plugin-babel";
-import { getMatchingPackages } from "./scripts/lernaUtils";
+import { getMatchingPackages } from "./scripts/lernaUtils.mjs";
 
 const createPackageAliases = () => {
     const packages = getMatchingPackages();
@@ -39,7 +39,7 @@ export default defineConfig({
     test: {
         environment: "jsdom",
         globals: true,
-        setupFiles: "./test/vitest-setup.js",
+        setupFiles: "./test/vitest-setup.mjs",
         include: ["packages/**/*.test.js?(x)"],
         exclude: ["packages/**/lib/**", "packages/**/node_modules/**"],
         coverage: {

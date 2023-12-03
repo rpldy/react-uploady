@@ -27,7 +27,7 @@
     "retry uploads"
   ],
   "scripts": {
-    "build": "node ../../../scripts/build.js"
+    "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
     "@rpldy/retry": "workspace:*",
@@ -36,13 +36,12 @@
     "@rpldy/uploader": "workspace:*"
   },
   "peerDependencies": {
-    "react": ">=16.8",
-    "react-dom": ">=16.8"
+    "react": ">=16.8"
   },
   "devDependencies": {
     "@rpldy/upload-button": "workspace:*",
     "@rpldy/upload-preview": "workspace:*",
-    "flow-bin": "^0.218.0",
+    "flow-bin": "^0.223.2",
     "rc-progress": "^3.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

@@ -1,4 +1,4 @@
-const { getPackages } = require("@monorepo-utils/package-utils");
+import { getPackages } from "@monorepo-utils/package-utils"
 
 const getMatchingPackages =  () => {
     const pkgs = getPackages(".");
@@ -15,6 +15,6 @@ const getMatchingPackages =  () => {
     });
 };
 
-module.exports = {
+export {
     getMatchingPackages,
 };

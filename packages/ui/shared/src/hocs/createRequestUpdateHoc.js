@@ -2,7 +2,6 @@
 import React, { useLayoutEffect, useState } from "react";
 import useUploadyContext from "../hooks/useUploadyContext";
 
-import type { Node } from "React";
 export type RequestUpdater<T> = (?T) => void;
 type EventDataValidator = (...params: any[]) => boolean;
 type RequestDataRetriever<T> = (...params: any[]) => ?T;
@@ -24,7 +23,7 @@ const createRequestUpdateHoc = <T>({
         getRequestData,
     }: RequestUpdateHocOptions<T>
 ): RequestUpdateHoc =>
-    (Component: React$ComponentType<any>): ((props: Props) => Node) =>
+    (Component: React$ComponentType<any>): ((props: Props) => React$Element<any>) =>
         (props: Props) => {
             const context = useUploadyContext();
             const [updater, setUpdater] = useState<{| updateRequest: ?RequestUpdater<T>, requestData: ?T |}>({

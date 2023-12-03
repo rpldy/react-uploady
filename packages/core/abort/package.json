@@ -19,7 +19,7 @@
     "url": "https://opencollective.com/react-uploady"
   },
   "scripts": {
-    "build": "node ../../../scripts/build.js"
+    "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
     "@rpldy/raw-uploader": "^1.6.1",
@@ -27,7 +27,7 @@
     "@rpldy/simple-state": "^1.6.1"
   },
   "devDependencies": {
-    "flow-bin": "^0.218.0"
+    "flow-bin": "^0.223.2"
   },
   "publishConfig": {
     "access": "public"

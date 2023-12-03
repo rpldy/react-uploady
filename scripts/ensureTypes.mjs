@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-const assert = require("assert"),
-    path = require("path"),
-    fs = require("fs-extra"),
-    { getMatchingPackages } = require("./lernaUtils"),
-    { logger } = require("./utils");
+import assert from "assert";
+import path from "path";
+import fs from "fs-extra";
+import { getMatchingPackages } from "./lernaUtils.mjs";
+import { logger } from "./utils.mjs";
 
 const TYPES_FOLDER = "types",
     DEF_FILE = "index.d.ts",

@@ -1,5 +1,5 @@
 {
-  "version": "1.6.1",
+  "version": "1.7.0-rc.0",
   "name": "@rpldy/upload-drop-zone",
   "description": "drop zone (container) component to initiate file and folder content uploads",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -42,8 +42,8 @@
     "flow-bin": "^0.223.2",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
-    "react-dom": "^18.2.0",
     "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "^18.2.0",
     "styled-components": "^6.0.7"
   },
   "peerDependencies": {

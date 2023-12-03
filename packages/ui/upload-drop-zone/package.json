@@ -28,7 +28,7 @@
     "d&d"
   ],
   "scripts": {
-    "build": "node ../../../scripts/build.js"
+    "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
     "@rpldy/shared-ui": "workspace:*",

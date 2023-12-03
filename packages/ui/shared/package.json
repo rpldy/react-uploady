@@ -19,7 +19,7 @@
     "url": "https://opencollective.com/react-uploady"
   },
   "scripts": {
-    "build": "node ../../../scripts/build.js"
+    "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
     "@rpldy/shared": "workspace:*",

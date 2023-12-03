@@ -26,7 +26,7 @@
     "hooks"
   ],
   "scripts": {
-    "build": "node ../../../scripts/build.js"
+    "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
     "@rpldy/abort": "^1.6.1",

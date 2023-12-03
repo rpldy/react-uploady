@@ -1,8 +1,16 @@
 #!/usr/bin/env node
-const chalk = require("chalk"),
-	shell = require("shelljs"),
-    { getUploadyVersion } = require("./uploadyVersion"),
-	{ getPackageName, copyFilesToPackage } = require("./utils");
+// const chalk = require("chalk"),
+// 	shell = require("shelljs"),
+//     { getUploadyVersion } = require("./uploadyVersion"),
+// 	{ getPackageName, copyFilesToPackage } = require("./utils");
+import path from "path";
+import { fileURLToPath } from "url";
+import chalk from "chalk";
+import shell from "shelljs";
+import { getUploadyVersion } from "./uploadyVersion.mjs";
+import { getPackageName, copyFilesToPackage } from "./utils.mjs";
+
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const ENVS = ["esm", "cjs"];
 
@@ -33,8 +41,8 @@ const runWithEnv = (pkgeName, env) => {
 };
 
 const build = () => {
-	const pkgDir = process.cwd(),
-		pkgeName = getPackageName(pkgDir),
+    const pkgDir = process.cwd(),
+        pkgeName = getPackageName(pkgDir),
         scriptsDir = __dirname;
 
     console.log(chalk.bold(chalk.cyan(`___ copying mandatory build files to: ${pkgeName} ___`)));

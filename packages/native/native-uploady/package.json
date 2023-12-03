@@ -29,7 +29,7 @@
     "react-native"
   ],
   "scripts": {
-    "build": "node ../../../scripts/build.js"
+    "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
     "@rpldy/shared-ui": "^1.6.1"

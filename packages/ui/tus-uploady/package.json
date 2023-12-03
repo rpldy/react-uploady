@@ -29,7 +29,7 @@
     "resumable"
   ],
   "scripts": {
-    "build": "node ../../../scripts/build.js"
+    "build": "node ../../../scripts/build.mjs"
   },
   "publishConfig": {
     "access": "public"

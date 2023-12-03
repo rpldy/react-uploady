@@ -1,7 +1,12 @@
-const fs = require("fs"),
-    path = require("path"),
-    fsExtra = !process.browser && require("fs-extra"),
-    chalk = require("chalk");
+// const fs = require("fs"),
+//     path = require("path"),
+//     fsExtra = !process.browser && require("fs-extra"),
+//     chalk = require("chalk");
+
+import fs from "fs";
+import path from "path";
+import fsExtra from "fs-extra";
+import chalk from "chalk";
 
 const DEP_TYPES = {
     dependencies: "regular",

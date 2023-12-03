@@ -4,6 +4,9 @@ const getUploadyVersion = () => {
     return uploadyPkg.version;
 };
 
-module.exports = {
-    getUploadyVersion,
-};
+export {
+    getUploadyVersion
+}
+// module.exports = {
+//     getUploadyVersion,
+// };

@@ -1,14 +1,26 @@
 #!/usr/bin/env node
-const path = require("path"),
-    fs = require("fs-extra"),
-    yargs = require("yargs"),
-    webpack = require("webpack"),
-    shell = require("shelljs"),
-    bytes = require("bytes"),
-    _ = require("lodash"),
-    { mergeWithCustomize: wpMerge, customizeArray } = require("webpack-merge"),
-    { getMatchingPackages } = require("./lernaUtils"),
-    { logger } = require("./utils");
+// const path = require("path"),
+//     fs = require("fs-extra"),
+//     yargs = require("yargs"),
+//     webpack = require("webpack"),
+//     shell = require("shelljs"),
+//     bytes = require("bytes"),
+//     _ = require("lodash"),
+//     { mergeWithCustomize: wpMerge, customizeArray } = require("webpack-merge"),
+//     { getMatchingPackages } = require("./lernaUtils"),
+//     { logger } = require("./utils");
+
+import path from "path";
+import fs from "fs-extra";
+import webpack from "webpack";
+import yargs from "yargs";
+import shell from "shell";
+import bytes from "bytes";
+import _ from "lodash";
+import { mergeWithCustomize as wpMerge, customizeArray } from "webpack-merge";
+import { getMatchingPackages } from "./lernaUtils.mjs";
+import { logger } from "./utils.mjs"
+
 
 //TODO: should be passed by options or found in root (dynamically)
 const config = require("../bundle.config");

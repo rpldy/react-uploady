@@ -1,9 +1,8 @@
 const fs = require("fs"),
-    { logger } = require("./utils"),
     MarkDownIt = require("markdown-it");
 
 const extractChangelogNotesForVersion = (version) => {
-    logger.log(`Extracting changes from changelog for version ${version}`);
+    console.log(`Extracting changes from changelog for version ${version}`);
 
     let versionLog;
 
@@ -36,7 +35,7 @@ const extractChangelogNotesForVersion = (version) => {
                     (t.type === "heading_close" ? "\n" : "")
                 ).join("");
 
-                logger.verbose(`___ Version (${version}) Changelog ___\n\n${versionLog}\n\n`);
+                console.log(`___ Version (${version}) Changelog ___\n\n${versionLog}\n\n`);
             }
 
             resolve(versionLog);

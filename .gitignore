@@ -48,3 +48,4 @@ cypress/test-bundle
 
 # Local Netlify folder
 .netlify
+.nx/

@@ -82,18 +82,6 @@ jobs:
 
             - name: Prepare
               uses: ./.github/actions/prepare
-#            - uses: pnpm/action-setup@v2
-#              with:
-#                version: 8
-#                run_install: false
-#
-#            -   uses: actions/setup-node@v3
-#                with:
-#                    node-version: "18.18"
-#                    cache: "pnpm"
-#
-#            -   name: Install deps
-#                run: pnpm install --frozen-lockfile
 
             -   name: Clean
                 run: pnpm clean
@@ -123,7 +111,7 @@ jobs:
                 id: version
                 run: |
                     echo "### Using version args: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
-                    lerna version ${{ steps.lerna-args.outputs.VERSION }} --force-publish=* --no-push --no-git-tag-version ${{ inputs.dry == false && '--yes' || ''  }}
+                    lerna version ${{ steps.lerna-args.outputs.VERSION }} --sync-dist-version --force-publish=* --no-push --no-git-tag-version ${{ inputs.dry == false && '--yes' || ''  }}
 
             -   name: Build source
                 run: pnpm build

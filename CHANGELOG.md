@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.7.0-rc.1 (2023-12-10)
+
+### Internal
+
+- `all` - upgrade dev deps including lerna (8.0.0)
+
+
 ## 1.7.0-rc.0 (2023-12-03)
 
 ### Bug fixes

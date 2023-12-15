@@ -50,3 +50,5 @@ export { default as dropZoneCss } from "./dropZoneCss";
 export { useExternalUploadOptionsProvider } from "./useExternalUploadOptionsProvider";
 
 export { default as ReactCropWithImage, CropData } from "./ReactCropWithImage";
+
+export { default as ProgressReportTable } from "./ProgressReportTable";

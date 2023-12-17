@@ -7,6 +7,7 @@ import {
     addActionLogEnhancer,
     useStoryUploadySetup,
     logToCypress,
+    ProgressReportTable,
     getCsfExport,
     type CsfExport
 } from "../../../story-helpers";
@@ -49,6 +50,47 @@ export const WithCustomUI = (): Element<"div"> => {
     </div>;
 };
 
+export const WithProgress = (): Element<"div"> => {
+    const { enhancer, destination } = useStoryUploadySetup();
+    const uploaderRef = useRef<?UploadyUploaderType>(null)
+    const [uploaderId, setUploaderId] = useState<?string>(null);
+    const { url } = destination;
+
+    console.log("rendering progress story", { uploaderId })
+    useEffect(() => {
+        console.log("progress story effect")
+        uploaderRef.current = createUploader({
+            enhancer,
+            destination: { url },
+        });
+        setUploaderId(uploaderRef.current.id);
+    }, [url]);
+
+    const inputRef = useRef<?HTMLInputElement>(null);
+
+    const onClick = useCallback(() => {
+        const input = inputRef.current;
+        if (input) {
+            input.value = "";
+            input.click();
+        }
+    }, []);
+
+    const onInputChange = useCallback(() => {
+        if (inputRef.current?.files) {
+            uploaderRef.current?.add(inputRef.current?.files);
+        }
+    }, []);
+
+    return (
+        <div>
+            <input type="file" ref={inputRef} style={{ display: "none" }} onChange={onInputChange}/>
+            <button id="upload-button" onClick={onClick}>Upload</button>
+            <ProgressReportTable uploader={uploaderRef.current}/>
+        </div>
+    );
+};
+
 export const TEST_EventsData = (): Element<"div"> => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
     const uploaderRef = useRef<?UploadyUploaderType>(null);
@@ -78,10 +120,10 @@ export const TEST_EventsData = (): Element<"div"> => {
 
             batch._test = "TEST!";
             batch.items[0]._test = "TEST!";
-            batchOptions._test =  "TEST!";
+            batchOptions._test = "TEST!";
         });
 
-        uploader.on(UPLOADER_EVENTS.REQUEST_PRE_SEND, ({items, options}) => {
+        uploader.on(UPLOADER_EVENTS.REQUEST_PRE_SEND, ({ items, options }) => {
             logToCypress(`###${UPLOADER_EVENTS.REQUEST_PRE_SEND}`, items, options);
         });
 

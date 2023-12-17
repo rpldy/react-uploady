@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.7.0 (2023-12-17)
+
+### Bug fixes
+
+- `mock-sender` - align progress tracking with file size if available. Fix for [#626](https://github.com/rpldy/react-uploady/issues/626).
+- `mock-sender` - BREAKING(ish): removed default file size field from defaults in favour of above fix
+
+### Docs
+
+- `storybook` - add story for mock-sender
+- `storybook` - add progress story for uploader
+
+### Internal
+
+- `all` - upgrade vite & vitest
+- `all` - upgrade flow to latest (0.223.2)
+- `all` - upgrade dev deps including lerna (8.0.0)
+
+
 ## 1.7.0-rc.1 (2023-12-10)
 
 ### Internal
@@ -12,7 +31,7 @@
 ### Bug fixes
 
 - `mock-sender` - align progress tracking with file size if available. Fix for [#626](https://github.com/rpldy/react-uploady/issues/626).
-- `mock-sender` - BREAKING-ish: removed default file size field from defaults in favour of above fix
+- `mock-sender` - BREAKING(ish): removed default file size field from defaults in favour of above fix
 
 ### Docs
 

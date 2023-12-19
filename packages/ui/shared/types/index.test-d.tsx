@@ -76,6 +76,15 @@ const EventHooksTest: React.FC = () => {
         return !item.url;
     });
 
+    useItemStartListener(async (item,options) => {
+        console.log(`item ${item.id} started - options.autoUpload: ${options.autoUpload}`);
+        return !item.url;
+    });
+
+    useItemStartListener(() => {
+        return Promise.resolve(false);
+    });
+
     useItemFinishListener((item, options) => {
         console.log(`item ${item.id} finished - options.autoUpload: ${options.autoUpload}`);
     });

@@ -49,8 +49,10 @@ export type UploadyContextType = {
     getExtension: (name: unknown) => Record<string, unknown>;
 };
 
+type CancellableResponse = boolean | void | Promise<boolean | void>;
+
 type EventHook<T> = (cb: (obj: T, options: CreateOptions) => void, id?: string) => void;
-type CancellableHook<T> = (cb: (obj: T, options: CreateOptions) => boolean | void, id?: string) => void;
+type CancellableHook<T> = (cb: (obj: T, options: CreateOptions) => CancellableResponse, id?: string) => void;
 type EventHookWithState<T> = ((cb?: (obj: T) => void, id?: string) => T) & ((id?: string) => T);
 
 type ItemEventHook = EventHook<BatchItem>;
@@ -58,7 +60,7 @@ type ItemCancellableEventHook = CancellableHook<BatchItem>;
 type ItemEventHookWithState = EventHookWithState<BatchItem>;
 
 type BatchEventHook = EventHook<Batch>;
-type BatchCancellableEventHook = (cb: (batch: Batch, options: CreateOptions) => boolean | void) => void;
+type BatchCancellableEventHook = CancellableHook<Batch>;
 type BatchEventHookWithState = EventHookWithState<Batch>;
 
 export type PreSendResponse = { items?: BatchItem[]; options?: CreateOptions } | boolean | void;

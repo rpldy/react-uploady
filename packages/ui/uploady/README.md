@@ -233,6 +233,8 @@ Called when batch items start uploading
 
 > This event can be scoped to a specific batch by passing the batch id as a second parameter
 
+> The callback function can be `async` or return a promise when needed
+
 ```javascript
     import { useBatchStartListener } from "@rpldy/uploady";
 
@@ -378,6 +380,8 @@ For grouped uploads (multiple files in same xhr request) ITEM_START is triggered
 > This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
 
 > This event can be scoped to a specific item by passing the item id as a second parameter
+
+> The callback function can be `async` or return a promise when needed
 
 ```javascript
     import { useItemStartListener } from "@rpldy/uploady";

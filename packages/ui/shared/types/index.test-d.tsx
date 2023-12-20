@@ -41,6 +41,11 @@ const EventHooksTest: React.FC = () => {
         return batch.id !== "b1";
     });
 
+    useBatchAddListener(async (batch, options: UploadOptions) => {
+        console.log(`batch ${batch.id} added. auto upload = ${options.autoUpload}`);
+        return batch.id !== "b1";
+    });
+
     useBatchStartListener((batch) => {
         console.log(`batch ${batch.id} started`);
         return batch.id !== "b1";

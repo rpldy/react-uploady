@@ -60,7 +60,7 @@ type ItemCancellableEventHook = CancellableHook<BatchItem>;
 type ItemEventHookWithState = EventHookWithState<BatchItem>;
 
 type BatchEventHook = EventHook<Batch>;
-type BatchCancellableEventHook = (cb: (batch: Batch, options: CreateOptions) => CancellableResponse) => void;
+type BatchCancellableEventHook = CancellableHook<Batch>;
 type BatchEventHookWithState = EventHookWithState<Batch>;
 
 export type PreSendResponse = { items?: BatchItem[]; options?: CreateOptions } | boolean | void;

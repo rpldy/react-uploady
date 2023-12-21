@@ -41,6 +41,11 @@ const EventHooksTest: React.FC = () => {
         return batch.id !== "b1";
     });
 
+    useBatchAddListener(async (batch, options: UploadOptions) => {
+        console.log(`batch ${batch.id} added. auto upload = ${options.autoUpload}`);
+        return batch.id !== "b1";
+    });
+
     useBatchStartListener((batch) => {
         console.log(`batch ${batch.id} started`);
         return batch.id !== "b1";
@@ -74,6 +79,15 @@ const EventHooksTest: React.FC = () => {
     useItemStartListener((item,options) => {
         console.log(`item ${item.id} started - options.autoUpload: ${options.autoUpload}`);
         return !item.url;
+    });
+
+    useItemStartListener(async (item,options) => {
+        console.log(`item ${item.id} started - options.autoUpload: ${options.autoUpload}`);
+        return !item.url;
+    });
+
+    useItemStartListener(() => {
+        return Promise.resolve(false);
     });
 
     useItemFinishListener((item, options) => {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.7.1 (2023-12-20)
+
+### Bug fixes
+
+- `shared-ui` - async callbacks TD for cancellable event hooks
+
+
 ## 1.7.0 (2023-12-17)
 
 ### Bug fixes

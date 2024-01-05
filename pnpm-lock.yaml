@@ -116,7 +116,7 @@ importers:
         version: 0.34.6(vitest@0.34.6)
       '@vitest/ui':
         specifier: ^0.34.5
-        version: 0.34.5(vitest@0.34.6)
+        version: 0.34.7(vitest@0.34.6)
       async:
         specifier: ^3.2.5
         version: 3.2.5
@@ -275,7 +275,7 @@ importers:
         version: 1.1.3(@babel/core@7.23.2)(vite@5.0.5)
       vitest:
         specifier: ^0.34.6
-        version: 0.34.6(@vitest/ui@0.34.5)(jsdom@22.1.0)
+        version: 0.34.6(@vitest/ui@0.34.7)(jsdom@22.1.0)
       wait-on:
         specifier: ^7.2.0
         version: 7.2.0
@@ -6191,7 +6191,7 @@ packages:
       dom-accessibility-api: 0.5.16
       lodash: 4.17.21
       redent: 3.0.0
-      vitest: 0.34.6(@vitest/ui@0.34.5)(jsdom@22.1.0)
+      vitest: 0.34.6(@vitest/ui@0.34.7)(jsdom@22.1.0)
     dev: true
 
   /@testing-library/react@14.0.0(react-dom@18.2.0)(react@18.2.0):
@@ -6814,7 +6814,7 @@ packages:
       istanbul-reports: 3.1.6
       picocolors: 1.0.0
       test-exclude: 6.0.0
-      vitest: 0.34.6(@vitest/ui@0.34.5)(jsdom@22.1.0)
+      vitest: 0.34.6(@vitest/ui@0.34.7)(jsdom@22.1.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -6835,7 +6835,7 @@ packages:
       std-env: 3.4.3
       test-exclude: 6.0.0
       v8-to-istanbul: 9.1.3
-      vitest: 0.34.6(@vitest/ui@0.34.5)(jsdom@22.1.0)
+      vitest: 0.34.6(@vitest/ui@0.34.7)(jsdom@22.1.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -6870,31 +6870,31 @@ packages:
       tinyspy: 2.2.0
     dev: true
 
-  /@vitest/ui@0.34.5(vitest@0.34.6):
-    resolution: {integrity: sha512-nK3Ny7fQgoTJMCGXLzYL0oo1ePtruRM9eYT1Y8esQx8fHj05davqVgqWv4Kd+Yy8PfzyrduTx1EYBdSMIbQh8A==}
+  /@vitest/ui@0.34.7(vitest@0.34.6):
+    resolution: {integrity: sha512-iizUu9R5Rsvsq8FtdJ0suMqEfIsIIzziqnasMHe4VH8vG+FnZSA3UAtCHx6rLeRupIFVAVg7bptMmuvMcsn8WQ==}
     peerDependencies:
       vitest: '>=0.30.1 <1'
     dependencies:
-      '@vitest/utils': 0.34.5
+      '@vitest/utils': 0.34.7
       fast-glob: 3.3.1
       fflate: 0.8.1
       flatted: 3.2.9
       pathe: 1.1.1
       picocolors: 1.0.0
       sirv: 2.0.3
-      vitest: 0.34.6(@vitest/ui@0.34.5)(jsdom@22.1.0)
+      vitest: 0.34.6(@vitest/ui@0.34.7)(jsdom@22.1.0)
     dev: true
 
-  /@vitest/utils@0.34.5:
-    resolution: {integrity: sha512-ur6CmmYQoeHMwmGb0v+qwkwN3yopZuZyf4xt1DBBSGBed8Hf9Gmbm/5dEWqgpLPdRx6Av6jcWXrjcKfkTzg/pw==}
+  /@vitest/utils@0.34.6:
+    resolution: {integrity: sha512-IG5aDD8S6zlvloDsnzHw0Ut5xczlF+kv2BOTo+iXfPr54Yhi5qbVOgGB1hZaVq4iJ4C/MZ2J0y15IlsV/ZcI0A==}
     dependencies:
       diff-sequences: 29.6.3
       loupe: 2.3.7
       pretty-format: 29.7.0
     dev: true
 
-  /@vitest/utils@0.34.6:
-    resolution: {integrity: sha512-IG5aDD8S6zlvloDsnzHw0Ut5xczlF+kv2BOTo+iXfPr54Yhi5qbVOgGB1hZaVq4iJ4C/MZ2J0y15IlsV/ZcI0A==}
+  /@vitest/utils@0.34.7:
+    resolution: {integrity: sha512-ziAavQLpCYS9sLOorGrFFKmy2gnfiNU0ZJ15TsMz/K92NAPS/rp9K4z6AJQQk5Y8adCy4Iwpxy7pQumQ/psnRg==}
     dependencies:
       diff-sequences: 29.6.3
       loupe: 2.3.7
@@ -9819,7 +9819,7 @@ packages:
       '@typescript-eslint/eslint-plugin': 6.9.0(@typescript-eslint/parser@6.16.0)(eslint@8.20.0)(typescript@5.3.2)
       '@typescript-eslint/utils': 6.9.0(eslint@8.20.0)(typescript@5.3.2)
       eslint: 8.20.0
-      vitest: 0.34.6(@vitest/ui@0.34.5)(jsdom@22.1.0)
+      vitest: 0.34.6(@vitest/ui@0.34.7)(jsdom@22.1.0)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -16765,7 +16765,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitest@0.34.6(@vitest/ui@0.34.5)(jsdom@22.1.0):
+  /vitest@0.34.6(@vitest/ui@0.34.7)(jsdom@22.1.0):
     resolution: {integrity: sha512-+5CALsOvbNKnS+ZHMXtuUC7nL8/7F1F2DnHGjSsszX8zCjWSSviphCb/NuS9Nzf4Q03KyyDRBAXhF/8lffME4Q==}
     engines: {node: '>=v14.18.0'}
     hasBin: true
@@ -16803,7 +16803,7 @@ packages:
       '@vitest/runner': 0.34.6
       '@vitest/snapshot': 0.34.6
       '@vitest/spy': 0.34.6
-      '@vitest/ui': 0.34.5(vitest@0.34.6)
+      '@vitest/ui': 0.34.7(vitest@0.34.6)
       '@vitest/utils': 0.34.6
       acorn: 8.11.2
       acorn-walk: 8.3.0

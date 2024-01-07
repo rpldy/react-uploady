@@ -200,7 +200,7 @@ importers:
         version: 11.1.0
       html-webpack-plugin:
         specifier: ^5.5.0
-        version: 5.5.0(webpack@5.89.0)
+        version: 5.6.0(webpack@5.89.0)
       http-server:
         specifier: ^14.0.0
         version: 14.0.0
@@ -5272,7 +5272,7 @@ packages:
       express: 4.18.2
       fork-ts-checker-webpack-plugin: 8.0.0(typescript@5.3.2)(webpack@5.89.0)
       fs-extra: 11.1.1
-      html-webpack-plugin: 5.5.0(webpack@5.89.0)
+      html-webpack-plugin: 5.6.0(webpack@5.89.0)
       path-browserify: 1.0.1
       process: 0.11.10
       semver: 7.5.4
@@ -5289,6 +5289,7 @@ packages:
       webpack-hot-middleware: 2.25.4
       webpack-virtual-modules: 0.5.0
     transitivePeerDependencies:
+      - '@rspack/core'
       - '@swc/helpers'
       - encoding
       - esbuild
@@ -5877,6 +5878,7 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
       typescript: 5.3.2
     transitivePeerDependencies:
+      - '@rspack/core'
       - '@swc/core'
       - '@swc/helpers'
       - '@types/webpack'
@@ -11041,11 +11043,17 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /html-webpack-plugin@5.5.0(webpack@5.89.0):
-    resolution: {integrity: sha512-sy88PC2cRTVxvETRgUHFrL4No3UxvcH8G1NepGhqaTT+GXN2kTamqasot0inS5hXeg1cMbFDt27zzo9p35lZVw==}
+  /html-webpack-plugin@5.6.0(webpack@5.89.0):
+    resolution: {integrity: sha512-iwaY4wzbe48AfKLZ/Cc8k0L+FKG6oSNRaZ8x5A/T/IVDGyXcbHncM9TdDa93wn0FsSm82FhTKW7f3vS61thXAw==}
     engines: {node: '>=10.13.0'}
     peerDependencies:
+      '@rspack/core': 0.x || 1.x
       webpack: ^5.20.0
+    peerDependenciesMeta:
+      '@rspack/core':
+        optional: true
+      webpack:
+        optional: true
     dependencies:
       '@types/html-minifier-terser': 6.1.0
       html-minifier-terser: 6.1.0

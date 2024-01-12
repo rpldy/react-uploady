@@ -4,15 +4,15 @@ import { ITEM_START } from "../../constants";
 describe("UploadPaste - Element Listener", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    const loadPage = () =>
         cy.visitStory(
             "uploadPaste",
             "with-element-paste",
             { useMock: false }
         );
-    });
 
     it("should upload pasted file from element only", () => {
+        loadPage();
         intercept();
 
         //shouldnt trigger upload
@@ -29,6 +29,8 @@ describe("UploadPaste - Element Listener", () => {
 
         cy.get("#process-pending")
             .click();
+
+        cy.waitShort();
 
         cy.wait("@uploadReq")
             .interceptFormData((formData) => {

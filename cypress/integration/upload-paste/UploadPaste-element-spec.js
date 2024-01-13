@@ -11,7 +11,7 @@ describe("UploadPaste - Element Listener", () => {
             { useMock: false }
         );
 
-    it.skip("should upload pasted file from element only", () => {
+    it("should upload pasted file from element only", () => {
         loadPage();
         intercept();
 

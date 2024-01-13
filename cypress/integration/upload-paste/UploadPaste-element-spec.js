@@ -19,18 +19,18 @@ describe("UploadPaste - Element Listener", () => {
         cy.get("body")
             .pasteFile(fileName);
 
-        //should trigger upload
+        //story uses autoUpload=false so shouldnt trigger upload, but should add to queue
         cy.get("#element-paste")
             .pasteFile(fileName);
 
-        cy.waitExtraShort();
+        cy.waitLong();
 
         cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });
 
         cy.get("#process-pending")
             .click();
 
-        cy.waitShort();
+        cy.waitLong();
 
         cy.wait("@uploadReq")
             .interceptFormData((formData) => {

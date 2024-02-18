@@ -1,4 +1,4 @@
-/* eslint vitest/expect-expect: ["error", { "customExpressions": ["expect", "doTest"] }] */
+/* eslint vitest/expect-expect: ["error", { "assertFunctionNames": ["expect", "doTest"] }] */
 import {
     FILE_STATES,
     request,

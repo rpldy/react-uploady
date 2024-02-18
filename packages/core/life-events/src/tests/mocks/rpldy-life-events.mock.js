@@ -1,4 +1,4 @@
-import addLife, { createLifePack } from "@rpldy/life-events";
+import addLife, { createLifePack as orgCreateLifePack } from "@rpldy/life-events";
 
 const mockTrigger = vi.fn();
 
@@ -14,7 +14,8 @@ vi.mock("@rpldy/life-events", () => {
 
 export default addLife;
 
+export const createLifePack = orgCreateLifePack;
+
 export {
-    createLifePack,
     mockTrigger,
 };

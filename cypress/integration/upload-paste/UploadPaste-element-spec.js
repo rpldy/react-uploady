@@ -1,19 +1,18 @@
 import intercept from "../intercept";
-import { ITEM_START } from "../../constants";
-import { WAIT_X_SHORT } from "../../constants";
+import { BATCH_ADD, ITEM_START } from "../../constants";
 
 describe("UploadPaste - Element Listener", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    const visitStory = () =>
         cy.visitStory(
             "uploadPaste",
             "with-element-paste",
             { useMock: false }
         );
-    });
 
     it("should upload pasted file from element only", () => {
+        visitStory();
         intercept();
 
         //shouldnt trigger upload
@@ -24,9 +23,10 @@ describe("UploadPaste - Element Listener", () => {
         cy.get("#element-paste")
             .pasteFile(fileName);
 
-        cy.wait(WAIT_X_SHORT);
+        cy.waitLong();
 
         cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });
+        // cy.storyLog().assertLogPattern(BATCH_ADD, { times: 1 });
 
         cy.get("#process-pending")
             .click();
@@ -36,7 +36,7 @@ describe("UploadPaste - Element Listener", () => {
                 expect(formData["test"]).to.eq("paste");
             });
 
-        cy.wait(WAIT_X_SHORT);
+        cy.waitExtraShort();
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
     });
 });

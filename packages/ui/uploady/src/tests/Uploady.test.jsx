@@ -111,8 +111,8 @@ describe("Uploady tests", () => {
 
         const input = document.getElementById("uploadyInput");
         expect(input).to.be.instanceof(HTMLInputElement);
-        expect(input).to.have.attr("multiple");
-        expect(input).to.have.attr("name", "file");
+        expect(input).to.have.attribute("multiple");
+        expect(input).to.have.attribute("name", "file");
 
         portalSpy.mockRestore();
     });

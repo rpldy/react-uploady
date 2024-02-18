@@ -1,4 +1,8 @@
-import { BATCH_STATES, createBatchItem, getIsBatchItem } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
+import {
+    BATCH_STATES,
+    createBatchItem,
+    getIsBatchItem
+} from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import createBatch from "../batch";
 
 describe("Batch tests", () => {

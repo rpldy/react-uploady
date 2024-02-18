@@ -1,5 +1,6 @@
 /// <reference types="vitest" />
 import path from "path";
+import fs from "fs";
 import { defineConfig } from "vite";
 import { esbuildFlowPlugin } from "@bunchtogether/vite-plugin-flow";
 import babelPlugin from "vite-plugin-babel";
@@ -12,6 +13,15 @@ const createPackageAliases = () => {
             find: new RegExp(`^${p.name}$`),
             replacement: path.resolve(`./${p.location}/src/index.js`)
         });
+
+        res.push({
+            find: new RegExp(`^${p.name}/(.*)`),
+            replacement: `./${p.location}/$1.js`,
+            customResolver: (importPath) => {
+                const jsDep = path.resolve(importPath);
+                return fs.existsSync(jsDep) ? jsDep : jsDep + "x";
+            },
+        })
 
         return res;
     }, []);
@@ -51,6 +61,7 @@ export default defineConfig({
             functions: 100,
             statements: 99.95,
             perFile: false,
+            include: ["packages/**/src/*.js?(x)"],
             exclude: ["**/*.mock.*"]
         },
     },

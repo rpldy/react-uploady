@@ -52,4 +52,13 @@ global.renderHookWithError = (...args) => {
     throw error;
 };
 
+//JSDOM (still) hasnt implemented drag event... https://github.com/jsdom/jsdom/issues/2913
+//thanks: https://gist.github.com/alexreardon/cbc317ede2212d6db59ba5ff59dcf419
+class DragEvent extends MouseEvent {
+    constructor(type, eventInitDict = {}) {
+        super(type, eventInitDict);
+    }
+}
+
+window.DragEvent = DragEvent;
 

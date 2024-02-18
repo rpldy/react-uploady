@@ -1,4 +1,4 @@
-describe("UploadDropZone - Different Config", () => {
+describe("UploadDropZone - Custom Remove", () => {
     before(() => {
         cy.visitStory("uploadDropZone", "with-full-screen");
     });

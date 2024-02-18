@@ -1,1 +1,2 @@
-export default from "./createTusSender";
+import createTusSender from "./createTusSender";
+export default createTusSender;

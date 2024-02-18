@@ -1,10 +1,10 @@
-import { FILE_STATES, BATCH_STATES } from "../../consts";
+import { FILE_STATES as ORG_FILES_STATES, BATCH_STATES as ORG_BATCH_STATES } from "../../consts";
 import merge, { getMerge } from "../../utils/merge";
 import clone from "../../utils/clone";
 import pick from "../../utils/pick";
 import isFunction from "../../utils/isFunction";
 import isPromise from "../../utils/isPromise";
-import * as utils from "../../utils";
+import * as mockedUtils from "../../utils";
 
 vi.mock("../../utils");
 
@@ -23,6 +23,8 @@ const getIsBatchItem = vi.fn();
 const request = vi.fn();
 const parseResponseHeaders = vi.fn();
 
+const utils = mockedUtils;
+
 //keep merge working - dont mock it
 utils.merge = vi.fn((...args) => merge(...args));
 utils.getMerge = vi.fn((...args) => getMerge(...args));
@@ -39,8 +41,8 @@ utils.isPromise = vi.fn((...args) => isPromise(...args));
 utils.scheduleIdleWork = vi.fn((fn) => fn());
 
 const sharedMock = {
-    FILE_STATES,
-    BATCH_STATES,
+    FILE_STATES: ORG_FILES_STATES,
+    BATCH_STATES: ORG_BATCH_STATES,
 
     invariant,
 
@@ -59,10 +61,10 @@ const sharedMock = {
 
 vi.doMock("@rpldy/shared", () => sharedMock);
 
-export {
-    FILE_STATES,
-    BATCH_STATES,
+export const BATCH_STATES = ORG_BATCH_STATES;
+export const FILE_STATES = ORG_FILES_STATES;
 
+export {
     invariant,
 
     logger,

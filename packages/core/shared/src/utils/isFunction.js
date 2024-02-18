@@ -1,7 +1,6 @@
 // @flow
 
-//defined as function for flow's sake... (https://github.com/facebook/flow/issues/3635)
-function isFunction(f: mixed): boolean %checks {
+function isFunction(f: any): f is (...args: any[]) => any {
     return typeof (f) === "function";
 }
 

@@ -19,7 +19,7 @@ const config: StorybookConfig = {
         getAbsolutePath("@storybook/addon-knobs"),
     ],
     framework: {
-        name: getAbsolutePath("@storybook/react-webpack5"),
+        name: "@storybook/react-webpack5",
         options: {},
     },
     docs: {

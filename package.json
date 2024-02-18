@@ -110,7 +110,7 @@
     "chalk": "^4.1.2",
     "concurrently": "^8.2.2",
     "core-js": "^3.36.0",
-    "cypress": "^13.3.1",
+    "cypress": "^13.6.4",
     "cypress-intercept-formdata": "^0.6.0",
     "eslint": "^8.56.0",
     "eslint-import-resolver-webpack": "^0.13.8",
@@ -162,9 +162,9 @@
   "optionalDependencies": {
     "fsevents": "^2.3.3"
   },
-    "pnpm": {
-        "overrides": {
-            "@storybook/addon-actions": "~7.5"
-        }
+  "pnpm": {
+    "overrides": {
+      "@storybook/addon-actions": "~7.5"
     }
+  }
 }

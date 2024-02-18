@@ -19,11 +19,11 @@ describe("UploadPaste - Element Listener", () => {
         cy.get("body")
             .pasteFile(fileName);
 
+        cy.waitLong();
+
         //should trigger upload
         cy.get("#element-paste")
             .pasteFile(fileName);
-
-        cy.waitLong();
 
         cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });
         // cy.storyLog().assertLogPattern(BATCH_ADD, { times: 1 });

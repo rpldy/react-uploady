@@ -36,9 +36,9 @@ describe("UploadDropZone tests", () => {
         () =>
             fireEvent(elm, createEvent.dragEnd(elm, {}));
 
-    const getDragLeaveEvent = (elm) =>
+    const getDragLeaveEvent = (elm, eventProps = {}) =>
         () =>
-            fireEvent(elm, createEvent.dragLeave(elm, {}));
+            fireEvent.dragLeave(elm, eventProps); //(elm, createEvent.dragLeave(elm, eventProps )); //createEvent("dragleave", elm, eventProps));
 
     const testDropZone = (props = {}, doDragEnter = true) => {
         const mockRef = vi.fn();
@@ -220,8 +220,10 @@ describe("UploadDropZone tests", () => {
         //simulate drag is over child element
         const fireDragEnterOnSpan = getDragEnterEvent(span);
         fireDragEnterOnSpan();
-        const fireDragLeaveOnSpan = getDragLeaveEvent(span);
+        expect(refElm.classList.contains("drag-over")).toBe(true);
+        const fireDragLeaveOnSpan = getDragLeaveEvent(span, { relatedTarget: refElm });
         fireDragLeaveOnSpan();
+
         expect(refElm.classList.contains("drag-over")).toBe(true);
     });
 

@@ -12,9 +12,10 @@ const getShouldHandleDrag = (e: SyntheticDragEvent<HTMLDivElement>, shouldHandle
     (isFunction(shouldHandle) && shouldHandle(e));
 
 const isOnTarget = (e: SyntheticDragEvent<HTMLDivElement>, containerElm: ?Element, allowContains: boolean) => {
-    return e.target === containerElm ||
+    const target = e.type === "dragleave" ? e.relatedTarget : e.target;
+    return target === containerElm ||
         // $FlowIssue[incompatible-call] flow needs to figure it out :(
-        (allowContains && containerElm?.contains(e.target));
+        (allowContains && containerElm?.contains(target));
 };
 
 const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivElement> = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
@@ -96,10 +97,10 @@ const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivEleme
 
         const onDragLeave = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             if ((dragLeaveTrackerRef.current &&
-                e.target === containerRef.current) || shouldRemoveDragOver?.(e)) {
+                !isOnTarget(e, containerRef.current, enableOnContains)) || shouldRemoveDragOver?.(e)) {
                 handleEnd();
             }
-        }, [handleEnd, containerRef, shouldRemoveDragOver]);
+        }, [handleEnd, containerRef, shouldRemoveDragOver, enableOnContains]);
 
         const onDragEnd = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             if (dragLeaveTrackerRef.current) {

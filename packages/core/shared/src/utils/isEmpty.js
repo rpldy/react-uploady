@@ -1,7 +1,8 @@
 // @flow
 
-//defined as function for flow's sake... (https://github.com/facebook/flow/issues/3635)
-function isEmpty (val: any): boolean %checks {
+type Empty = null | void;
+
+function isEmpty (val: any): val is Empty { // eslint-disable-line
     return (val === null || val === undefined);
 }
 

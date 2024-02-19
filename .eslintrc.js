@@ -1,5 +1,5 @@
 module.exports = {
-    parser: "@babel/eslint-parser",
+    parser: "hermes-eslint",
     parserOptions: {
         ecmaVersion: 2018,
         sourceType: "module",
@@ -17,12 +17,12 @@ module.exports = {
         "browser": true,
         "commonjs": true
     },
-    "extends": ["eslint:recommended", "plugin:jsx-a11y/recommended", "plugin:storybook/recommended", "plugin:flowtype/recommended"],
+    "extends": ["eslint:recommended", "plugin:jsx-a11y/recommended", "plugin:storybook/recommended"],
     "globals": {
         "ENV": true,
         "globalThis": false,
     },
-    "plugins": ["import", "react", "jsx-a11y", "react-hooks", "flowtype", "no-async"],
+    "plugins": ["import", "react", "jsx-a11y", "react-hooks",, "no-async"],
     "settings": {
         react: {
             version: "detect",
@@ -106,7 +106,6 @@ module.exports = {
             "optionalDependencies": false,
             "peerDependencies": ["packages/**/src/**", "packages/**/*.stories.js"]
         }],
-        "flowtype/no-types-missing-file-annotation": 1,
         "import/no-unresolved": 0,
         "import/no-named-as-default": 0,
         "import/extensions": 0,
@@ -124,6 +123,11 @@ module.exports = {
     },
     "overrides": [
         {
+            "files": ["*.js", "*.jsx"],
+            extends: [ "plugin:ft-flow/recommended"],
+            "plugins": [ "ft-flow"],
+        },
+        {
             "files": ["*.ts", "*.tsx"],
             "parser": "@typescript-eslint/parser",
             "parserOptions": {
@@ -136,7 +140,6 @@ module.exports = {
             "plugins": ["@typescript-eslint"],
             "extends": ["eslint:recommended", "plugin:@typescript-eslint/eslint-recommended", "plugin:@typescript-eslint/recommended"],
             rules: {
-                "flowtype/no-types-missing-file-annotation": 0,
                 "import/no-extraneous-dependencies": 0,
                 "@typescript-eslint/no-explicit-any": 0,
                 "@typescript-eslint/consistent-type-assertions": "warn",

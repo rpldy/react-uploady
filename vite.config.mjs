@@ -34,7 +34,10 @@ export default defineConfig({
             babelConfig: {
                 babelrc: false,
                 configFile: false,
-                plugins: ["@babel/plugin-proposal-export-default-from"],
+                plugins: [
+                    "@babel/plugin-proposal-export-default-from",
+                    "babel-plugin-syntax-hermes-parser",
+                ],
                 presets: [
                     [
                         "@babel/env",
@@ -42,7 +45,8 @@ export default defineConfig({
                             "modules": false,
                         },
                     ],
-                    "@babel/react", "@babel/flow"]
+                    "@babel/react",
+                    "@babel/flow"]
             },
         }),
     ],

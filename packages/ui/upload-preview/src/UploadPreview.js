@@ -5,7 +5,7 @@ import { getPreviewsLoaderHook } from "./usePreviewsLoader";
 import { getFallbackUrlData } from "./utils";
 import { PREVIEW_TYPES } from "./consts";
 
-import type { Element, ComponentType } from "react";
+import type { Element, ComponentType, AbstractComponent } from "react";
 import type { RefObject } from "@rpldy/shared-ui";
 import type {
 	PreviewProps,
@@ -17,7 +17,6 @@ import type {
     RemovePreviewMethod,
     PreviewsChangedHandler,
 } from "./types";
-
 
 const showBasicPreview = (type: string, url: string, previewProps: Object, onImgError: (e: SyntheticEvent<HTMLImageElement>) => void) =>
 	type === PREVIEW_TYPES.VIDEO ?
@@ -44,7 +43,7 @@ const usePreviewMethods = (
 };
 
 const getUploadPreviewForBatchItemsMethod =
-    (method: PreviewBatchItemsMethod = useBatchStartListener): React$StatelessFunctionalComponent<PreviewProps> => {
+    (method: PreviewBatchItemsMethod = useBatchStartListener): AbstractComponent<PreviewProps> => {
     const usePreviewsLoader = getPreviewsLoaderHook(method);
 
     return (props: PreviewProps): Element<"img">[] | Element<ComponentType<any>>[] => {
@@ -91,7 +90,7 @@ const getUploadPreviewForBatchItemsMethod =
 /**
  * UploadPreview uses Batch start event to display uploading items
  */
-const UploadPreview: React$StatelessFunctionalComponent<PreviewProps> = getUploadPreviewForBatchItemsMethod();
+const UploadPreview: AbstractComponent<PreviewProps> = getUploadPreviewForBatchItemsMethod();
 
 export {
     getUploadPreviewForBatchItemsMethod

@@ -1,1 +1,2 @@
-export default from "./createChunkedSender";
+import createChunkedSender from "./createChunkedSender";
+export default createChunkedSender;

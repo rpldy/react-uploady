@@ -112,8 +112,8 @@ const getPreviewsDataWithItemProps = (
 };
 
 const getPreviewsLoaderHook = (batchItemsMethod: PreviewBatchItemsMethod): PreviewsLoaderHook => {
-    return (props: PreviewOptions): PreviewData => {
-        const previewComponentProps = props.previewComponentProps;
+    return (props?: PreviewOptions): PreviewData => {
+        const { previewComponentProps, rememberPreviousBatches } = props || {};
         const [previews, setPreviews] = useState<{ previews: PreviewItem[], items: BatchItem[] }>({ previews: [], items: [] });
         const previewOptions: MandatoryPreviewOptions = getWithMandatoryOptions(props);
 
@@ -136,9 +136,9 @@ const getPreviewsLoaderHook = (batchItemsMethod: PreviewBatchItemsMethod): Previ
                 .filter(Boolean);
 
             setPreviews({
-                previews: props.rememberPreviousBatches ?
+                previews: rememberPreviousBatches ?
                     mergePreviewData(previews.previews, previewsData) : previewsData,
-                items: props.rememberPreviousBatches ? previews.items.concat(items) : items,
+                items: rememberPreviousBatches ? previews.items.concat(items) : items,
             });
         });
 

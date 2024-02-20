@@ -87,4 +87,4 @@ export type MandatoryPreviewOptions = {|
     previewComponentProps: PreviewComponentPropsOrMethod,
 |};
 
-export type PreviewsLoaderHook = (props: PreviewOptions) => PreviewData;
+export type PreviewsLoaderHook = (props?: PreviewOptions) => PreviewData;

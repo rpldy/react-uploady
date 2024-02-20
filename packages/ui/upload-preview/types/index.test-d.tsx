@@ -8,7 +8,13 @@ import Uploady, {
     WithRequestPreSendUpdateProps
 } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
-import UploadPreview, { getUploadPreviewForBatchItemsMethod, PreviewComponentProps, PreviewType, PreviewMethods } from "./index";
+import UploadPreview, {
+    getUploadPreviewForBatchItemsMethod,
+    PreviewComponentProps,
+    PreviewType,
+    PreviewMethods,
+    getPreviewsLoaderHook, PreviewItem,
+} from "./index";
 
 const CustomImagePreview = (props: PreviewComponentProps): JSX.Element => {
     return <img src={props.url}/>;
@@ -50,7 +56,6 @@ const getBlobFromCanvas = (canvas: HTMLCanvasElement, file: FileLike) =>
             }
         }, file.type);
     });
-
 
 const cropImage = async (imageUrl: string, file: FileLike, crop: Crop) => {
     const canvas = document.createElement("canvas");
@@ -140,13 +145,13 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props: PropsWithChildren<P
     }, [updateRequest, previewMethods, removePreview, id]);
 
     return isFallback || type !== PreviewType.IMAGE ? (
-        <img src={url} alt="fallback img" />
+        <img src={url} alt="fallback img"/>
     ) : (
         <>
             {requestData && !finished ? (
                 <div>crop</div>
             ) : (
-                <img src={url} alt="uploading img" />
+                <img src={url} alt="uploading img"/>
             )}
             <PreviewButtons
                 finished={finished}
@@ -162,7 +167,19 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props: PropsWithChildren<P
 
 const CustomUploadPreview = getUploadPreviewForBatchItemsMethod(useBatchAddListener);
 
-export default function App(): JSX.Element {
+const useBatchAddPreviewsData = getPreviewsLoaderHook(useBatchAddListener);
+
+const PreviewDataCustomerViewer = () => {
+    const { previews } = useBatchAddPreviewsData({ rememberPreviousBatches: true });
+
+    return previews.map((p: PreviewItem) =>
+        <div key={p.id}>
+            {p.name}
+            <img src={p.url}/>
+        </div>);
+};
+
+export default function App() {
     const previewMethodsRef = React.useRef<PreviewMethods | null>(null);
 
     return (
@@ -172,13 +189,15 @@ export default function App(): JSX.Element {
             <div className="App">
                 <h1>Hello React Uploady</h1>
                 <UploadButton>Upload Files</UploadButton>
-                <br />
+                <br/>
                 <UploadPreview
                     PreviewComponent={ItemPreviewWithCrop}
                     previewComponentProps={{ previewMethods: previewMethodsRef }}
                     previewMethodsRef={previewMethodsRef}
                     fallbackUrl="https://icon-library.net/images/image-placeholder-icon/image-placeholder-icon-6.jpg"
                 />
+
+                <PreviewDataCustomerViewer/>
 
                 <CustomUploadPreview
                     maxPreviewVideoSize={2}

@@ -1,4 +1,4 @@
-import { WAIT_MEDIUM } from "../../constants";
+import { WAIT_SHORT } from "../../constants";
 
 describe("UploadPaste - Simple", () => {
     const fileName = "flower.jpg";

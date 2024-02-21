@@ -5,7 +5,7 @@ import { PREVIEW_TYPES } from "../consts";
 import { getPreviewsLoaderHook } from "../usePreviewsLoader";
 
 vi.mock("../utils", () => ({
-    getWithMandatoryOptions: vi.fn((o) => o),
+    getWithMandatoryOptions: vi.fn((o) => o || {}),
     getFallbackUrlData: vi.fn(),
     getFileObjectUrlByType: vi.fn(),
 }));
@@ -17,6 +17,13 @@ describe("usePreviewLoader tests", () => {
         );
     });
 
+    const mockBatchStart = (batch) => {
+        useBatchStartListener
+            .mockImplementationOnce((cb) => {
+                cb(batch);
+            });
+    };
+
     const testPreviewsLoader = (props = {}, items) => {
         items = items || [
             { id: "f1", file: {} },
@@ -27,10 +34,7 @@ describe("usePreviewLoader tests", () => {
             items
         };
 
-        useBatchStartListener
-            .mockImplementationOnce((cb) => {
-                cb(batch);
-            });
+        mockBatchStart(batch);
 
         const usePreviewsLoader = getPreviewsLoaderHook(useBatchStartListener);
 
@@ -59,6 +63,25 @@ describe("usePreviewLoader tests", () => {
         expect(previews[0].id).toBe("f1");
         expect(previews[0].url).toBe("preview.test");
         expect(previews[0].props).toBeUndefined();
+    });
+
+    it("should load previews without params passed to hook", () => {
+        getFileObjectUrlByType
+            .mockReturnValueOnce({ url: "preview.test" });
+
+        const batch = {
+            items: [{ id: "f1", file: {} }],
+        };
+
+        mockBatchStart(batch);
+
+        const usePreviewsLoader = getPreviewsLoaderHook(useBatchStartListener);
+
+        const { result } = renderHook(usePreviewsLoader, {});
+
+        const { previews } = result.current;
+
+        expect(previews).toHaveLength(1);
     });
 
     it("should load preview for all items in batch", () => {
@@ -107,7 +130,7 @@ describe("usePreviewLoader tests", () => {
             .mockReturnValueOnce({ url: "preview3.test", type: "img" })
             .mockReturnValueOnce({ url: "preview4.test", type: "img" });
 
-        rerender({ ...props, rememberPreviousBatches: false  });
+        rerender({ ...props, rememberPreviousBatches: false });
 
         const { previews: newPreviews } = hookResult.current;
 

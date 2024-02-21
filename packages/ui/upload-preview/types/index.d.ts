@@ -26,8 +26,10 @@ export type PreviewComponentPropsMethod = (item: BatchItem, url: string, type: P
 
 export type PreviewComponentPropsOrMethod = Record<string, unknown> | PreviewComponentPropsMethod;
 
+export type ClearPreviewsMethod = () => void;
+
 export type PreviewMethods = {
-    clear: () => void;
+    clear: ClearPreviewsMethod;
     removePreview: RemovePreviewMethod;
 };
 
@@ -54,9 +56,19 @@ export interface PreviewProps extends PreviewOptions {
     onPreviewsChanged?: (previews: PreviewItem[]) => void;
 }
 
+export type PreviewData = {
+    previews: PreviewItem[],
+    clearPreviews: ClearPreviewsMethod,
+    removeItemFromPreview: RemovePreviewMethod,
+};
+
 export type PreviewBatchItemsMethod = (cb: (batch: { items: BatchItem[] }) => void) => void;
 
 export type UploadPreviewType = (props: PreviewProps) => JSX.Element;
+
+export type PreviewsLoaderHook = (props?: PreviewOptions) => PreviewData;
+
+export const getPreviewsLoaderHook: (method: PreviewBatchItemsMethod) => PreviewsLoaderHook;
 
 export const getUploadPreviewForBatchItemsMethod: (method: PreviewBatchItemsMethod) => UploadPreviewType;
 

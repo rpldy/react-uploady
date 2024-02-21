@@ -31,6 +31,7 @@ import {
 } from "../../../story-helpers";
 import UploadPreview, {
     getUploadPreviewForBatchItemsMethod,
+    getPreviewsLoaderHook,
     PREVIEW_TYPES
 } from "./src";
 import readme from "./README.md";
@@ -940,6 +941,39 @@ export const WithCropInForm = (): Node => {
             </div>
         </Uploady>
     );
+};
+
+const usePreviewsLoader = getPreviewsLoaderHook(useBatchAddListener);
+
+const CustomPreviews = () => {
+    const { previews } = usePreviewsLoader();
+
+    return (
+        <div>
+            previews
+            <ul>
+                {previews.map(({ id, url }) =>
+                    <li key={id}>{url}</li>)}
+            </ul>
+        </div>
+    )
+};
+
+export const WithPreviewsLoaderHook = (): Node => {
+    const { enhancer, destination, multiple, grouped, groupSize } = usePreviewStorySetup();
+
+    return <Uploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        grouped={grouped}
+        maxGroupSize={groupSize}
+    >
+        <StyledUploadButton/>
+        <br/><br/>
+        <CustomPreviews />
+    </Uploady>;
 };
 
 const previewStories: CsfExport = getCsfExport(UploadPreview, "Upload Preview", readme, { pkg: "upload-preview", section: "UI" });

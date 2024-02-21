@@ -40,7 +40,7 @@ By default, will present a preview of the file being uploaded in case its an ima
 | previewComponentProps   | [PreviewComponentPropsOrMethod](src/types.js#L18) | undefined                              | object or function to generate object as additional props for the preview component                    |
 | PreviewComponent        | React.ComponentType&lt;any&gt;                    | img &#124; video                       | The component that will show the preview                                                               |
 | rememberPreviousBatches | boolean                                           | false                                  | show previous batches' previews as opposed to just the last                                            |
-| previewMethodsRef       | React Ref                                         | undefined                              | ref will be set with preview helper [methods](src/types.js#L29)                                        |
+| previewMethodsRef       | React Ref                                         | undefined                              | ref will be set with preview helper [methods](src/types.js#L39)                                        |
 | onPreviewsChanged       | (PreviewItem[]) => void                           | undefined                              | callback will be called whenever preview items array changes                                           |
 
 ## Usage
@@ -194,6 +194,32 @@ export const App = () => {
 
 ```
 
+### Custom Previews Render
+
+The UploadPreview component allows for a lot of customization by providing your own component to render each single preview.
+This is mostly enough since it doesn't render anything else beyond the preview items - no surrounding element/component.
+
+However, in case you wish even more control, you can create your own hook from the batch method you wish to use 
+(typically either `useBatchAddListener` or `useBatchStartListener`).
+
+```jsx
+import { useBatchAddListener } from "@rpldy/uploady";
+import { getPreviewsLoaderHook } from "@rpldy/upload-preview";
+
+const useBatchAddPreviewsData = getPreviewsLoaderHook(useBatchAddListener);
+
+const PreviewDataCustomerViewer = () => {
+    const { previews } = useBatchAddPreviewsData({ rememberPreviousBatches: true });
+
+    return previews.map((p: PreviewItem) =>
+        <div key={p.id}>
+            {p.name}
+            <img src={p.url}/>
+        </div>);
+};
+```
+
+The hook receives [PreviewOptions](src/types.js#L46) and can also be called without any param.  
 
 ## Default image types
 

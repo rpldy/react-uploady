@@ -1,5 +1,6 @@
 // @flow
 import UploadPreview, { getUploadPreviewForBatchItemsMethod } from "./UploadPreview";
+import { getPreviewsLoaderHook } from "./usePreviewsLoader";
 
 export {
     PREVIEW_TYPES,
@@ -17,6 +18,7 @@ export default UploadPreview;
 
 export {
     getUploadPreviewForBatchItemsMethod,
+    getPreviewsLoaderHook,
     UploadPreview,
 };
 

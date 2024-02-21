@@ -1,5 +1,5 @@
 {
-  "version": "1.7.1",
+  "version": "1.8.0-rc.0",
   "name": "@rpldy/upload-url-input",
   "description": "input component to enter a URL (or any string for that matter) to be sent as an upload",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -31,7 +31,7 @@
     "@rpldy/shared-ui": "workspace:*"
   },
   "devDependencies": {
-    "@rpldy/uploady": "^1.7.1",
+    "@rpldy/uploady": "^1.8.0-rc.0",
     "flow-bin": "^0.229.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

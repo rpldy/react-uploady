@@ -3,6 +3,8 @@ import uploadFile, { uploadFileTimes } from "../uploadFile";
 import { ITEM_ABORT, ITEM_FINISH, ITEM_START } from "../../constants";
 import { WAIT_LONG, WAIT_MEDIUM, WAIT_SHORT } from "../../constants";
 
+const WAIT_OP_TIME = 2247
+
 describe("RetryHooks - Queue", () => {
     const fileName = "flower.jpg",
         fileName2 = "sea.jpg";
@@ -92,7 +94,7 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.wait(WAIT_LONG);
+            cy.wait(WAIT_OP_TIME);
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg");
             cy.storyLog().assertFileItemStartFinish("flower2.jpg");

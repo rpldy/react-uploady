@@ -211,7 +211,7 @@ const useBatchAddPreviewsData = getPreviewsLoaderHook(useBatchAddListener);
 const PreviewDataCustomerViewer = () => {
     const { previews } = useBatchAddPreviewsData({ rememberPreviousBatches: true });
 
-    return previews.map((p: PreviewItem) =>
+    return previews.map((p) =>
         <div key={p.id}>
             {p.name}
             <img src={p.url}/>

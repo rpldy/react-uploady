@@ -12,7 +12,7 @@ describe("UploadPaste - Simple", () => {
             .should("exist")
             .pasteFile(fileName);
 
-         cy.wait(WAIT_MEDIUM);
+         cy.wait(WAIT_SHORT);
          cy.storyLog().assertFileItemStartFinish(fileName, 1);
     });
 
@@ -22,7 +22,7 @@ describe("UploadPaste - Simple", () => {
             .should("exist")
             .pasteFile(fileName, 2);
 
-        cy.wait(WAIT_MEDIUM);
+        cy.wait(WAIT_SHORT);
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
         cy.storyLog().assertFileItemStartFinish("flower2.jpg", 3);
     });

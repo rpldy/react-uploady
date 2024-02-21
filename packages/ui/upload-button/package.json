@@ -1,5 +1,5 @@
 {
-  "version": "1.7.1",
+  "version": "1.8.0-rc.0",
   "name": "@rpldy/upload-button",
   "description": "upload button component and asUploadButton HOC",
   "author": "yoav niran (https://github.com/yoavniran)",

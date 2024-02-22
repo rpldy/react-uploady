@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.8.0 (2024-02-22)
+
+### Features
+
+- `upload-preview` - expose getPreviewsLoaderHook. ER [#646](https://github.com/rpldy/react-uploady/issues/646).
+
+### Bug fixes
+
+- `upload-drop-zone` - fix drag&drop over child elements. Fix for [#652](https://github.com/rpldy/react-uploady/issues/652).
+
+### Internal
+
+- `all` - upgrade most deps to latest (flow, lerna, vite, etc.)
+  
+
 ## 1.8.0-rc.0 (2024-02-21)
 
 ### Features

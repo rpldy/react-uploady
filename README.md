@@ -314,31 +314,31 @@ See this [guide](guides/UMD.md) for more information on how to use.
 
 ### jsDelivr
 
-| Bundle                      | URL                                                                                      |
-|-----------------------------|------------------------------------------------------------------------------------------| 
-| core                        | https://cdn.jsdelivr.net/npm/@rpldy/uploader/umd/rpldy-core.umd.min.js                   |
-| core + ui                   | https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/rpldy-ui-core.umd.min.js                 |
-| core + ui + chunked support | https://cdn.jsdelivr.net/npm/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js |  
-| everything                  | https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/rpldy-all.umd.min.js                     |
+| Bundle                      | URL                                                                                          |
+|-----------------------------|----------------------------------------------------------------------------------------------| 
+| core                        | https://cdn.jsdelivr.net/npm/@rpldy/uploader/lib/umd/rpldy-core.umd.min.js                   |
+| core + ui                   | https://cdn.jsdelivr.net/npm/@rpldy/uploady/lib/umd/rpldy-ui-core.umd.min.js                 |
+| core + ui + chunked support | https://cdn.jsdelivr.net/npm/@rpldy/chunked-uploady/lib/umd/rpldy-ui-core-chunked.umd.min.js |  
+| everything                  | https://cdn.jsdelivr.net/npm/@rpldy/uploady/lib/umd/rpldy-all.umd.min.js                     |
 
 You will most likely need the polyfill (core js) bundle as well (load it first):
 
-- core bundles -> https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/polyfills-bundle.js
-- everything bundle -> https://cdn.jsdelivr.net/npm/@rpldy/uploady/umd/polyfills-all-bundle.js
+- core bundles -> https://cdn.jsdelivr.net/npm/@rpldy/uploady/lib/umd/polyfills-bundle.js
+- everything bundle -> https://cdn.jsdelivr.net/npm/@rpldy/uploady/lib/umd/polyfills-all-bundle.js
 
 ### unpkg
 
-| Bundle                      | URL                                                                           |
-|-----------------------------|-------------------------------------------------------------------------------|
-| core                        | https://unpkg.com/@rpldy/uploader/umd/rpldy-core.umd.min.js                   |
-| core + ui                   | https://unpkg.com/@rpldy/uploady/umd/rpldy-ui-core.umd.min.js                 |
-| core + ui + chunked support | https://unpkg.com/@rpldy/chunked-uploady/umd/rpldy-ui-core-chunked.umd.min.js |  
-| everything                  | https://unpkg.com/@rpldy/uploady/umd/rpldy-all.umd.min.js                     |
+| Bundle                      | URL                                                                               |
+|-----------------------------|-----------------------------------------------------------------------------------|
+| core                        | https://unpkg.com/@rpldy/uploader/lib/umd/rpldy-core.umd.min.js                   |
+| core + ui                   | https://unpkg.com/@rpldy/uploady/lib/umd/rpldy-ui-core.umd.min.js                 |
+| core + ui + chunked support | https://unpkg.com/@rpldy/chunked-uploady/lib/umd/rpldy-ui-core-chunked.umd.min.js |  
+| everything                  | https://unpkg.com/@rpldy/uploady/lib/umd/rpldy-all.umd.min.js                     |
 
 You will most likely need the polyfill (core js) bundle as well (load it first):
 
-- core bundles -> https://unpkg.com/@rpldy/uploady/umd/polyfills-bundle.js
-- everything bundle -> https://unpkg.com/@rpldy/uploady/umd/polyfills-all-bundle.js
+- core bundles -> https://unpkg.com/@rpldy/uploady/lib/umd/polyfills-bundle.js
+- everything bundle -> https://unpkg.com/@rpldy/uploady/lib/umd/polyfills-all-bundle.js
 
 > Note that unpkg does a redirect to the latest version in case the URL doesn't already contain it. So don't copy any of the URLs above into your code. 
 > Instead, load them in the browser first and then copy the final URL from there (after the redirect).  

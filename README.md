@@ -371,6 +371,9 @@ Become a financial contributor and help us sustain our community.
 
 <a href="https://opencollective.com/react-uploady" target="_blank"><img src="https://images.opencollective.com/static/images/become_backer.svg"></a>
 
+Or just [buy me a coffee](https://www.buymeacoffee.com/yoav) 😄
+
+
 ## Acknowledgements 
 
 logo's wing thanks to <a href="https://www.vecteezy.com/free-vector/illustration">Illustration Vectors by Vecteezy</a>

@@ -20,6 +20,23 @@ Additional information about tus functionality can be found the [tus-sender READ
 
 **The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
+<p align="center">
+    <a href="https://www.buymeacoffee.com/yoav"> 
+        <img width="540" alt="uploady-buy-me-coffee" src="https://github.com/rpldy/react-uploady/assets/1102278/c6de6710-1c93-47a5-85fa-1af7170907f8">
+    </a>
+</p>
+
+
+## Installation
+
+```shell
+#Yarn:
+  $ yarn add @rpldy/tus-uploady
+
+#NPM:
+  $ npm i @rpldy/tus-uploady
+``` 
+
 ## Props
 
 | Name (* = mandatory)        | Type                      | Default             | Description                                                                                                            |
@@ -48,15 +65,6 @@ See [Uploady documentation](../uploady#props) for detailed list of upload option
 
 > Custom headers set on the Destination will be sent (and override existing headers) with the Creation request
 
-## Installation
-
-```shell
-#Yarn:
-  $ yarn add @rpldy/tus-uploady
-
-#NPM:
-  $ npm i @rpldy/tus-uploady
-``` 
 
 ## TUS Protocol
 

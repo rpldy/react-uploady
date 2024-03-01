@@ -17,6 +17,12 @@ This can be useful for services that accept a URL and do server-side fetch. [Clo
 
 **The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
+<p align="center">
+    <a href="https://www.buymeacoffee.com/yoav"> 
+        <img width="540" alt="uploady-buy-me-coffee" src="https://github.com/rpldy/react-uploady/assets/1102278/c6de6710-1c93-47a5-85fa-1af7170907f8">
+    </a>
+</p>
+
 ## Installation
 
 ```shell

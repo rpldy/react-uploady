@@ -84,7 +84,7 @@
     "@storybook/addon-knobs": "^7.0.2",
     "@storybook/addon-links": "^7.6.16",
     "@storybook/addon-onboarding": "^1.0.11",
-    "@storybook/blocks": "^7.6.16",
+    "@storybook/blocks": "^8.0.5",
     "@storybook/react": "^7.6.16",
     "@storybook/react-webpack5": "^7.6.16",
     "@storybook/testing-library": "^0.2.2",

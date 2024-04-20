@@ -52,12 +52,14 @@ describe("TusUploady - Parallel", () => {
                 .then((startFinishEvents) => {
                     cy.wait("@createReq")
                         .then((xhr) => {
-                            expect(xhr.request.headers["upload-length"]).to.eq("200000")
+                            expect(xhr.request.headers["upload-length"]).to.eq("200000");
+                            expect(xhr.request.headers["upload-concat"]).to.eq("partial");
                         });
 
                     cy.wait("@createReq")
                         .then((xhr) => {
-                            expect(xhr.request.headers["upload-length"]).to.eq("172445")
+                            expect(xhr.request.headers["upload-length"]).to.eq("172445");
+                            expect(xhr.request.headers["upload-concat"]).to.eq("partial");
                         });
 
                     cy.wait("@patchReq1")

@@ -295,7 +295,6 @@ describe("createUpload tests", () => {
 		});
 
 		it("should not send metadata for parallel chunk", async() => {
-
 			const {
 				url,
 				state,
@@ -306,12 +305,13 @@ describe("createUpload tests", () => {
 					"tus-resumable": state.getState().options.version,
 					"Upload-Defer-Length": undefined,
 					"Upload-Length": 123,
-					"Upload-Metadata": undefined,
-					"Content-Type": undefined,
-					"x-test": "abcd",
-				}
-			});
-		});
+                    "Upload-Metadata": undefined,
+                    "Content-Type": undefined,
+                    "Upload-Concat": "partial",
+                    "x-test": "abcd",
+                }
+            });
+        });
 
 		it("should handle invalid offset response header", async () => {
 
@@ -347,6 +347,7 @@ describe("createUpload tests", () => {
 					"Upload-Metadata": undefined,
 					"Content-Type": "application/offset+octet-stream",
 					"x-test": "abcd",
+					"Upload-Concat": "partial",
 				}
 			});
 

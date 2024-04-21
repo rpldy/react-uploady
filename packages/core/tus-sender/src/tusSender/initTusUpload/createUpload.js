@@ -65,6 +65,7 @@ const createUpload = (item: BatchItem, url: string, tusState: TusState, sendOpti
         "Upload-Length": !options.deferLength ? item.file.size : undefined,
         "Upload-Metadata": parallelIdentifier ? undefined : getUploadMetadata(sendOptions),
         "Content-Type": options.sendDataOnCreate ? "application/offset+octet-stream" : undefined,
+        "Upload-Concat": parallelIdentifier ? "partial" : undefined,
         ...sendOptions.headers
     };
 

@@ -15,6 +15,12 @@ export const KNOWN_EXTENSIONS = {
 	CREATION_DEFER_LENGTH: "creation-defer-length",
 };
 
+export const KNOWN_EXTENSIONS_CONVERTERS = {
+    CONCATENATION: "concatenation",
+    CREATION_WITH_UPLOAD: "creation-with-upload",
+    CREATION_DEFER_LENGTH: "creation-defer-length",
+};
+
 export const FD_STORAGE_PREFIX = "rpldy_tus_fd_";
 
 export const TUS_EVENTS: Object = devFreeze({

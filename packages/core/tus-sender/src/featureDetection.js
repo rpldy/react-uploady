@@ -2,9 +2,9 @@
 import { logger, request, merge } from "@rpldy/shared";
 import { safeSessionStorage } from "@rpldy/safe-storage";
 import {
-	SUCCESS_CODES,
-	KNOWN_EXTENSIONS,
-	FD_STORAGE_PREFIX
+    SUCCESS_CODES,
+    KNOWN_EXTENSIONS,
+    FD_STORAGE_PREFIX, KNOWN_EXTENSIONS_CONVERTERS
 } from "./consts";
 
 import type { TusState, RequestResult } from "./types";
@@ -12,7 +12,7 @@ import type { TusState, RequestResult } from "./types";
 const getStorageKey = (url: string) => `${FD_STORAGE_PREFIX}${url}`;
 
 const optionsConverter = {
-	[KNOWN_EXTENSIONS.CONCATENATION]: (extensions: string[], tusState: TusState) => {
+	[KNOWN_EXTENSIONS_CONVERTERS.CONCATENATION]: (extensions: string[], tusState: TusState) => {
 		const parallel = tusState.getState().options.parallel;
 
 		if (+parallel > 1 &&
@@ -25,7 +25,7 @@ const optionsConverter = {
 		}
 	},
 
-	[KNOWN_EXTENSIONS.CREATION_WITH_UPLOAD]: (extensions: string[], tusState: TusState) => {
+	[KNOWN_EXTENSIONS_CONVERTERS.CREATION_WITH_UPLOAD]: (extensions: string[], tusState: TusState) => {
 		if (tusState.getState().options.sendDataOnCreate &&
 			!~extensions.indexOf(KNOWN_EXTENSIONS.CREATION_WITH_UPLOAD)) {
 
@@ -36,7 +36,7 @@ const optionsConverter = {
 		}
 	},
 
-	[KNOWN_EXTENSIONS.CREATION_DEFER_LENGTH]: (extensions: string[], tusState: TusState) => {
+	[KNOWN_EXTENSIONS_CONVERTERS.CREATION_DEFER_LENGTH]: (extensions: string[], tusState: TusState) => {
 		if (tusState.getState().options.deferLength &&
 			!~extensions.indexOf(KNOWN_EXTENSIONS.CREATION_DEFER_LENGTH)) {
 
@@ -65,7 +65,7 @@ const processResponse = (tusState: TusState, extensions: ?string, version: ?stri
 				});
 			}
 		} else {
-			Object.keys(optionsConverter).forEach((key: string) => {
+			Object.keys(optionsConverter).forEach((key: $Values<typeof KNOWN_EXTENSIONS_CONVERTERS>) => {
 				optionsConverter[key](extArr, tusState);
 			});
 		}

@@ -85,7 +85,7 @@ type ApiCreated = { target: Object, [string]: (...args: any[]) => any };
 const createApi = (target: Object): LifeEventsAPI =>
     Object.keys(apiMethods)
         .reduce<ApiCreated>
-        ((res, name: string) => {
+        ((res, name: $Keys<typeof apiMethods>) => {
             res[name] = apiMethods[name].bind(target);
             return res;
         }, { target, ...apiMethods });

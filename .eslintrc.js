@@ -22,7 +22,7 @@ module.exports = {
         "ENV": true,
         "globalThis": false,
     },
-    "plugins": ["import", "react", "jsx-a11y", "react-hooks",, "no-async"],
+    "plugins": ["import", "react", "jsx-a11y", "react-hooks", "no-async"],
     "settings": {
         react: {
             version: "detect",

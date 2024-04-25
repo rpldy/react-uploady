@@ -175,7 +175,7 @@ const PreviewItemContainer = styled.article`
   padding: 10px;
   display: flex;
   flex-direction: column;
-  box-shadow: ${({ state }: { state : string }) => (state ? STATE_COLORS[state] : "#c3d2dd")} 0px
+  box-shadow: ${({ state }: { state : $Values<typeof STATES> }) => (state ? STATE_COLORS[state] : "#c3d2dd")} 0px
     8px 5px -2px;
   position: relative;
   align-items: center;

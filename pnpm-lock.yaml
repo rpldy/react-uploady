@@ -136,8 +136,8 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2
       babel-plugin-syntax-hermes-parser:
-        specifier: ^0.19.2
-        version: 0.19.2
+        specifier: ^0.20.1
+        version: 0.20.1
       babel-plugin-transform-inline-environment-variables:
         specifier: ^0.4.4
         version: 0.4.4
@@ -179,7 +179,7 @@ importers:
         version: 8.0.3(@babel/plugin-syntax-flow@7.24.1)(@babel/plugin-transform-react-jsx@7.23.4)(eslint@8.57.0)
       eslint-plugin-ft-flow:
         specifier: ^3.0.7
-        version: 3.0.7(eslint@8.57.0)(hermes-eslint@0.19.2)
+        version: 3.0.7(eslint@8.57.0)(hermes-eslint@0.20.1)
       eslint-plugin-import:
         specifier: ^2.29.1
         version: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-webpack@0.13.8)(eslint@8.57.0)
@@ -199,8 +199,8 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0(eslint@8.57.0)(typescript@5.4.5)
       eslint-plugin-vitest:
-        specifier: ^0.3.26
-        version: 0.3.26(@typescript-eslint/eslint-plugin@7.7.1)(eslint@8.57.0)(typescript@5.4.5)(vitest@1.5.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@typescript-eslint/eslint-plugin@7.7.1)(eslint@8.57.0)(typescript@5.4.5)(vitest@1.5.2)
       flow-bin:
         specifier: ^0.235.1
         version: 0.235.1
@@ -208,8 +208,8 @@ importers:
         specifier: ^11.2.0
         version: 11.2.0
       hermes-eslint:
-        specifier: ^0.19.2
-        version: 0.19.2
+        specifier: ^0.20.1
+        version: 0.20.1
       html-webpack-plugin:
         specifier: ^5.6.0
         version: 5.6.0(webpack@5.90.2)
@@ -244,8 +244,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       pacote:
-        specifier: ^17.0.7
-        version: 17.0.7
+        specifier: ^18.0.2
+        version: 18.0.2
       rc-progress:
         specifier: ^3.5.1
         version: 3.5.1(react-dom@18.2.0)(react@18.2.0)
@@ -3712,7 +3712,7 @@ packages:
       agent-base: 7.1.0
       http-proxy-agent: 7.0.0
       https-proxy-agent: 7.0.2
-      lru-cache: 10.0.1
+      lru-cache: 10.2.0
       socks-proxy-agent: 8.0.2
     transitivePeerDependencies:
       - supports-color
@@ -3730,7 +3730,7 @@ packages:
     engines: {node: ^16.14.0 || >=18.0.0}
     dependencies:
       '@npmcli/promise-spawn': 7.0.0
-      lru-cache: 10.0.1
+      lru-cache: 10.2.0
       npm-pick-manifest: 9.0.0
       proc-log: 3.0.0
       promise-inflight: 1.0.1
@@ -3755,6 +3755,21 @@ packages:
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dev: true
 
+  /@npmcli/package-json@5.1.0:
+    resolution: {integrity: sha512-1aL4TuVrLS9sf8quCLerU3H9J4vtCtgu8VauYozrmEyU57i/EdKleCnsQ7vpnABIH6c9mnTxcH5sFkO3BlV8wQ==}
+    engines: {node: ^16.14.0 || >=18.0.0}
+    dependencies:
+      '@npmcli/git': 5.0.3
+      glob: 10.3.12
+      hosted-git-info: 7.0.1
+      json-parse-even-better-errors: 3.0.0
+      normalize-package-data: 6.0.0
+      proc-log: 4.2.0
+      semver: 7.6.0
+    transitivePeerDependencies:
+      - bluebird
+    dev: true
+
   /@npmcli/promise-spawn@7.0.0:
     resolution: {integrity: sha512-wBqcGsMELZna0jDblGd7UXgOby45TQaMWmbFwWX+SEotk4HV6zG2t6rT9siyLhPk4P6YYqgfL1UO8nMWDBVJXQ==}
     engines: {node: ^16.14.0 || >=18.0.0}
@@ -3772,6 +3787,21 @@ packages:
       read-package-json-fast: 3.0.2
       which: 4.0.0
     transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@npmcli/run-script@8.0.0:
+    resolution: {integrity: sha512-5noc+eCQmX1W9nlFUe65n5MIteikd3vOA2sEPdXtlUv68KWyHNFZnT/LDRXu/E4nZ5yxjciP30pADr/GQ97W1w==}
+    engines: {node: ^16.14.0 || >=18.0.0}
+    dependencies:
+      '@npmcli/node-gyp': 3.0.0
+      '@npmcli/package-json': 5.1.0
+      '@npmcli/promise-spawn': 7.0.0
+      node-gyp: 10.0.1
+      proc-log: 4.2.0
+      which: 4.0.0
+    transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -6423,7 +6453,7 @@ packages:
     engines: {node: ^16.14.0 || >=18.0.0}
     dependencies:
       '@tufjs/canonical-json': 2.0.0
-      minimatch: 9.0.3
+      minimatch: 9.0.4
     dev: true
 
   /@types/aria-query@5.0.3:
@@ -8002,10 +8032,10 @@ packages:
       - supports-color
     dev: true
 
-  /babel-plugin-syntax-hermes-parser@0.19.2:
-    resolution: {integrity: sha512-vUP1c/oYMTGIVatQI9K2GyK+1NeEf/1HoWlDiQK7s8ECcAN3N0NeCgYH/nS3XaX6dZr4t9ywB7YbI0mTQovxJQ==}
+  /babel-plugin-syntax-hermes-parser@0.20.1:
+    resolution: {integrity: sha512-fTP6P0NV+0PrJLUQZSjAe7G4D/WvD2/Q38dNEsuBr9c6FUJ82VggApUQx6l3HnkvDtr5zHbNcJUIplGqumQ+Hg==}
     dependencies:
-      hermes-parser: 0.19.2
+      hermes-parser: 0.20.1
     dev: true
 
   /babel-plugin-transform-inline-environment-variables@0.4.4:
@@ -8257,7 +8287,7 @@ packages:
       '@npmcli/fs': 3.1.0
       fs-minipass: 3.0.3
       glob: 10.3.12
-      lru-cache: 10.0.1
+      lru-cache: 10.2.0
       minipass: 7.0.4
       minipass-collect: 1.0.2
       minipass-flush: 1.0.5
@@ -10073,7 +10103,7 @@ packages:
       string-natural-compare: 3.0.1
     dev: true
 
-  /eslint-plugin-ft-flow@3.0.7(eslint@8.57.0)(hermes-eslint@0.19.2):
+  /eslint-plugin-ft-flow@3.0.7(eslint@8.57.0)(hermes-eslint@0.20.1):
     resolution: {integrity: sha512-XeoddFsrqhEnp6vp+7ndQVPH8qTRiflgcDaQujv7WjVgGAdBbG8osWhRFcg2u9aQhz6Y+egBUL4+oTS0n6IfUQ==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
@@ -10081,7 +10111,7 @@ packages:
       hermes-eslint: '>=0.15.0'
     dependencies:
       eslint: 8.57.0
-      hermes-eslint: 0.19.2
+      hermes-eslint: 0.20.1
       lodash: 4.17.21
       string-natural-compare: 3.0.1
     dev: true
@@ -10206,8 +10236,8 @@ packages:
       - typescript
     dev: true
 
-  /eslint-plugin-vitest@0.3.26(@typescript-eslint/eslint-plugin@7.7.1)(eslint@8.57.0)(typescript@5.4.5)(vitest@1.5.2):
-    resolution: {integrity: sha512-oxe5JSPgRjco8caVLTh7Ti8PxpwJdhSV0hTQAmkFcNcmy/9DnqLB/oNVRA11RmVRP//2+jIIT6JuBEcpW3obYg==}
+  /eslint-plugin-vitest@0.4.1(@typescript-eslint/eslint-plugin@7.7.1)(eslint@8.57.0)(typescript@5.4.5)(vitest@1.5.2):
+    resolution: {integrity: sha512-+PnZ2u/BS+f5FiuHXz4zKsHPcMKHie+K+1Uvu/x91ovkCMEOJqEI8E9Tw1Wzx2QRz4MHOBHYf1ypO8N1K0aNAA==}
     engines: {node: ^18.0.0 || >= 20.0.0}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': '*'
@@ -11404,22 +11434,22 @@ packages:
     hasBin: true
     dev: true
 
-  /hermes-eslint@0.19.2:
-    resolution: {integrity: sha512-k0U/fZuIOLMIUA1qERpm0HTsNsyPQFodvQRdVcy3BAI4dqgFHOXXP9UisENr5tlu8rApIrZQrRUvWsJ+QD/Z2Q==}
+  /hermes-eslint@0.20.1:
+    resolution: {integrity: sha512-EhdvFV6RkPIJvbqN8oqFZO1oF4NlPWMjhMjCWkUJX1YL1MZMfkF7nSdx6RKTq6xK17yo+Bgv88L21xuH9GtRpw==}
     dependencies:
       esrecurse: 4.3.0
-      hermes-estree: 0.19.2
-      hermes-parser: 0.19.2
+      hermes-estree: 0.20.1
+      hermes-parser: 0.20.1
     dev: true
 
-  /hermes-estree@0.19.2:
-    resolution: {integrity: sha512-dMDmDgaW9LXQxGOQ+gsAZUlXiPXkHvUrpKESCPhkm3pH0SjHy5uaBaT8psxmPol1EBh8GVM2lGC/W0bhuW/fpQ==}
+  /hermes-estree@0.20.1:
+    resolution: {integrity: sha512-SQpZK4BzR48kuOg0v4pb3EAGNclzIlqMj3Opu/mu7bbAoFw6oig6cEt/RAi0zTFW/iW6Iz9X9ggGuZTAZ/yZHg==}
     dev: true
 
-  /hermes-parser@0.19.2:
-    resolution: {integrity: sha512-FxPcupAYzTks42tx8c29UGW59BbZQ67aKKS4jFi0eiD8Q3US3O8raxfNx0yi0ha0dTCq1WXK2MlJv+RCjkVp3Q==}
+  /hermes-parser@0.20.1:
+    resolution: {integrity: sha512-BL5P83cwCogI8D7rrDCgsFY0tdYUtmFP9XaXtl2IQjC+2Xo+4okjfXintlTxcIwl4qeGddEl28Z11kbVIw0aNA==}
     dependencies:
-      hermes-estree: 0.19.2
+      hermes-estree: 0.20.1
     dev: true
 
   /hoist-non-react-statics@3.3.2:
@@ -11457,7 +11487,7 @@ packages:
     resolution: {integrity: sha512-+K84LB1DYwMHoHSgaOY/Jfhw3ucPmSET5v98Ke/HdNSw4a0UktWzyW1mjhjpuxxTqOOsfWT/7iVshHmVZ4IpOA==}
     engines: {node: ^16.14.0 || >=18.0.0}
     dependencies:
-      lru-cache: 10.0.1
+      lru-cache: 10.2.0
     dev: true
 
   /html-dir-content@0.3.2:
@@ -11708,7 +11738,7 @@ packages:
     resolution: {integrity: sha512-C7FfFoTA+bI10qfeydT8aZbvr91vAEU+2W5BZUlzPec47oNb07SsOfwYrtxuvOYdUApPP/Qlh4DtAO51Ekk2QA==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
-      minimatch: 9.0.3
+      minimatch: 9.0.4
     dev: true
 
   /ignore@5.2.4:
@@ -14300,6 +14330,33 @@ packages:
       promise-retry: 2.0.1
       read-package-json: 7.0.0
       read-package-json-fast: 3.0.2
+      sigstore: 2.2.2
+      ssri: 10.0.5
+      tar: 6.2.0
+    transitivePeerDependencies:
+      - bluebird
+      - supports-color
+    dev: true
+
+  /pacote@18.0.2:
+    resolution: {integrity: sha512-oMxnZQCOZqFZyEh5oJtpMepoub4hoI6EfMUCdbwkBqkFuJ1Dwfz5IMQD344dKbwPPBNZWKwGL/kNvmDubZyvug==}
+    engines: {node: ^16.14.0 || >=18.0.0}
+    hasBin: true
+    dependencies:
+      '@npmcli/git': 5.0.3
+      '@npmcli/installed-package-contents': 2.0.2
+      '@npmcli/package-json': 5.1.0
+      '@npmcli/promise-spawn': 7.0.0
+      '@npmcli/run-script': 8.0.0
+      cacache: 18.0.0
+      fs-minipass: 3.0.3
+      minipass: 7.0.4
+      npm-package-arg: 11.0.1
+      npm-packlist: 8.0.0
+      npm-pick-manifest: 9.0.0
+      npm-registry-fetch: 16.1.0
+      proc-log: 4.2.0
+      promise-retry: 2.0.1
       sigstore: 2.2.2
       ssri: 10.0.5
       tar: 6.2.0

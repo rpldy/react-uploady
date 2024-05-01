@@ -281,10 +281,10 @@ importers:
         version: 5.3.3
       vite:
         specifier: ^5.1.3
-        version: 5.2.7(@types/node@20.8.9)
+        version: 5.2.10(@types/node@20.8.9)
       vite-plugin-babel:
         specifier: ^1.2.0
-        version: 1.2.0(@babel/core@7.23.9)(vite@5.2.7)
+        version: 1.2.0(@babel/core@7.23.9)(vite@5.2.10)
       vitest:
         specifier: ^1.3.0
         version: 1.3.0(@types/node@20.8.9)(@vitest/ui@1.3.0)(jsdom@24.0.0)
@@ -15214,7 +15214,7 @@ packages:
     dependencies:
       nanoid: 3.3.7
       picocolors: 1.0.0
-      source-map-js: 1.0.2
+      source-map-js: 1.2.0
     dev: true
 
   /postcss@8.4.38:
@@ -16548,11 +16548,6 @@ packages:
       is-plain-obj: 2.1.0
     dev: true
 
-  /source-map-js@1.0.2:
-    resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
-    engines: {node: '>=0.10.0'}
-    dev: true
-
   /source-map-js@1.2.0:
     resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
     engines: {node: '>=0.10.0'}
@@ -17815,7 +17810,7 @@ packages:
       debug: 4.3.4(supports-color@8.1.1)
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 5.2.7(@types/node@20.8.9)
+      vite: 5.2.10(@types/node@20.8.9)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -17827,18 +17822,18 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-babel@1.2.0(@babel/core@7.23.9)(vite@5.2.7):
+  /vite-plugin-babel@1.2.0(@babel/core@7.23.9)(vite@5.2.10):
     resolution: {integrity: sha512-ltAnq535Ubf9sDbVCkztAdkwx5aQbNrwPFs+iZTJ5FaAhTdxjqmLGpxsAaRfJWEKBJ/kFf9KwMoTdArm0IRUUw==}
     peerDependencies:
       '@babel/core': ^7.0.0
       vite: ^2.7.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
     dependencies:
       '@babel/core': 7.23.9
-      vite: 5.2.7(@types/node@20.8.9)
+      vite: 5.2.10(@types/node@20.8.9)
     dev: true
 
-  /vite@5.2.7(@types/node@20.8.9):
-    resolution: {integrity: sha512-k14PWOKLI6pMaSzAuGtT+Cf0YmIx12z9YGon39onaJNy8DLBfBJrzg9FQEmkAM5lpHBZs9wksWAsyF/HkpEwJA==}
+  /vite@5.2.10(@types/node@20.8.9):
+    resolution: {integrity: sha512-PAzgUZbP7msvQvqdSD+ErD5qGnSFiGOoWmV5yAKUEI0kdhjbH6nMWVyZQC/hSc4aXwc0oJ9aEdIiF9Oje0JFCw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -17918,7 +17913,7 @@ packages:
       strip-literal: 2.0.0
       tinybench: 2.5.1
       tinypool: 0.8.2
-      vite: 5.2.7(@types/node@20.8.9)
+      vite: 5.2.10(@types/node@20.8.9)
       vite-node: 1.3.0(@types/node@20.8.9)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:

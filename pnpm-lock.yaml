@@ -35,7 +35,7 @@ importers:
         version: 7.23.3(@babel/core@7.23.9)
       '@babel/plugin-proposal-function-bind':
         specifier: ^7.23.3
-        version: 7.23.3(@babel/core@7.23.9)
+        version: 7.24.1(@babel/core@7.23.9)
       '@babel/plugin-transform-runtime':
         specifier: ^7.23.9
         version: 7.23.9(@babel/core@7.23.9)
@@ -134,7 +134,7 @@ importers:
         version: 0.5.2
       babel-plugin-module-resolver:
         specifier: ^5.0.0
-        version: 5.0.0
+        version: 5.0.2
       babel-plugin-syntax-hermes-parser:
         specifier: ^0.19.1
         version: 0.19.1
@@ -179,7 +179,7 @@ importers:
         version: 8.0.3(@babel/plugin-syntax-flow@7.24.1)(@babel/plugin-transform-react-jsx@7.22.15)(eslint@8.56.0)
       eslint-plugin-ft-flow:
         specifier: ^3.0.5
-        version: 3.0.5(eslint@8.56.0)(hermes-eslint@0.19.1)
+        version: 3.0.5(eslint@8.56.0)(hermes-eslint@0.20.1)
       eslint-plugin-import:
         specifier: ^2.29.1
         version: 2.29.1(@typescript-eslint/parser@7.0.1)(eslint-import-resolver-webpack@0.13.8)(eslint@8.56.0)
@@ -208,8 +208,8 @@ importers:
         specifier: ^11.2.0
         version: 11.2.0
       hermes-eslint:
-        specifier: ^0.19.1
-        version: 0.19.1
+        specifier: ^0.20.1
+        version: 0.20.1
       html-webpack-plugin:
         specifier: ^5.6.0
         version: 5.6.0(webpack@5.90.2)
@@ -281,10 +281,10 @@ importers:
         version: 5.3.3
       vite:
         specifier: ^5.1.3
-        version: 5.2.7(@types/node@20.8.9)
+        version: 5.2.10(@types/node@20.8.9)
       vite-plugin-babel:
         specifier: ^1.2.0
-        version: 1.2.0(@babel/core@7.23.9)(vite@5.2.7)
+        version: 1.2.0(@babel/core@7.23.9)(vite@5.2.10)
       vitest:
         specifier: ^1.3.0
         version: 1.3.0(@types/node@20.8.9)(@vitest/ui@1.3.0)(jsdom@24.0.0)
@@ -1492,15 +1492,15 @@ packages:
       '@babel/plugin-syntax-export-default-from': 7.23.3(@babel/core@7.23.9)
     dev: true
 
-  /@babel/plugin-proposal-function-bind@7.23.3(@babel/core@7.23.9):
-    resolution: {integrity: sha512-LlDuU9NIXn1JJugzvqWeEY4m/K/vJpIp93L2fA9tHqDVsIxezsit/sHrqJWbswWkzSIrKuuI8nF65Ewtka3k2g==}
+  /@babel/plugin-proposal-function-bind@7.24.1(@babel/core@7.23.9):
+    resolution: {integrity: sha512-GDz3lXY623E+SMhloR0HDKYfFjLnqYEHjxIHo3SvpJTV3SV89974Y3mADXSYnO1N+UP7bioAFKqpOmsD9aOnuw==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.23.9
-      '@babel/helper-plugin-utils': 7.22.5
-      '@babel/plugin-syntax-function-bind': 7.23.3(@babel/core@7.23.9)
+      '@babel/helper-plugin-utils': 7.24.0
+      '@babel/plugin-syntax-function-bind': 7.24.1(@babel/core@7.23.9)
     dev: true
 
   /@babel/plugin-proposal-object-rest-spread@7.20.7(@babel/core@7.23.2):
@@ -1648,8 +1648,8 @@ packages:
       '@babel/helper-plugin-utils': 7.24.0
     dev: true
 
-  /@babel/plugin-syntax-function-bind@7.23.3(@babel/core@7.23.9):
-    resolution: {integrity: sha512-BVBglNxpv45awQYCln57SX2EJge4YK0liwH1Clzk/Nnx/bdLmZRhP0vt1koJqDLAEG8MngIPbIMNNNOXPcnXYQ==}
+  /@babel/plugin-syntax-function-bind@7.24.1(@babel/core@7.23.9):
+    resolution: {integrity: sha512-7K+uzNJ5ZuL6g4Ud/UhbIxghwN2FAj8NBrzEO+eM0g9YddjOv+BD81ar/N7Es5sH+G8z9tnTYcfCu6EaPrkSDw==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -9493,12 +9493,11 @@ packages:
       lodash: 4.17.21
     dev: true
 
-  /babel-plugin-module-resolver@5.0.0:
-    resolution: {integrity: sha512-g0u+/ChLSJ5+PzYwLwP8Rp8Rcfowz58TJNCe+L/ui4rpzE/mg//JVX0EWBUYoxaextqnwuGHzfGp2hh0PPV25Q==}
-    engines: {node: '>= 16'}
+  /babel-plugin-module-resolver@5.0.2:
+    resolution: {integrity: sha512-9KtaCazHee2xc0ibfqsDeamwDps6FZNo5S0Q81dUqEuFzVwPhcT4J5jOqIVvgCA3Q/wO9hKYxN/Ds3tIsp5ygg==}
     dependencies:
-      find-babel-config: 2.0.0
-      glob: 8.1.0
+      find-babel-config: 2.1.1
+      glob: 9.3.5
       pkg-up: 3.1.0
       reselect: 4.1.8
       resolve: 1.22.8
@@ -11495,7 +11494,7 @@ packages:
       string-natural-compare: 3.0.1
     dev: true
 
-  /eslint-plugin-ft-flow@3.0.5(eslint@8.56.0)(hermes-eslint@0.19.1):
+  /eslint-plugin-ft-flow@3.0.5(eslint@8.56.0)(hermes-eslint@0.20.1):
     resolution: {integrity: sha512-owZMmncrI6m4+ypPoGRAFZY3SGcJ+9tFSxeR/aTHTXm14/BWVRqVVeg8fc+k8Ljbfv7dhe+FY4ZVBjgLBV/Ndg==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
@@ -11503,7 +11502,7 @@ packages:
       hermes-eslint: '>=0.15.0'
     dependencies:
       eslint: 8.56.0
-      hermes-eslint: 0.19.1
+      hermes-eslint: 0.20.1
       lodash: 4.17.21
       string-natural-compare: 3.0.1
     dev: true
@@ -12055,9 +12054,8 @@ packages:
       - supports-color
     dev: true
 
-  /find-babel-config@2.0.0:
-    resolution: {integrity: sha512-dOKT7jvF3hGzlW60Gc3ONox/0rRZ/tz7WCil0bqA1In/3I8f1BctpXahRnEKDySZqci7u+dqq93sZST9fOJpFw==}
-    engines: {node: '>=16.0.0'}
+  /find-babel-config@2.1.1:
+    resolution: {integrity: sha512-5Ji+EAysHGe1OipH7GN4qDjok5Z1uw5KAwDCbicU/4wyTZY7CqOCzcWbG7J5ad9mazq67k89fXlbc1MuIfl9uA==}
     dependencies:
       json5: 2.2.3
       path-exists: 4.0.0
@@ -12779,22 +12777,32 @@ packages:
     hasBin: true
     dev: true
 
-  /hermes-eslint@0.19.1:
-    resolution: {integrity: sha512-GCTgMq1zpR4z5AcBVzgjmirwLEA6TpYIAgmK37Ncpc8NTGnE3cgtPikLtQIVS5GrNtVNOBvPnbCARTu0Esojhw==}
+  /hermes-eslint@0.20.1:
+    resolution: {integrity: sha512-EhdvFV6RkPIJvbqN8oqFZO1oF4NlPWMjhMjCWkUJX1YL1MZMfkF7nSdx6RKTq6xK17yo+Bgv88L21xuH9GtRpw==}
     dependencies:
       esrecurse: 4.3.0
-      hermes-estree: 0.19.1
-      hermes-parser: 0.19.1
+      hermes-estree: 0.20.1
+      hermes-parser: 0.20.1
     dev: true
 
   /hermes-estree@0.19.1:
     resolution: {integrity: sha512-daLGV3Q2MKk8w4evNMKwS8zBE/rcpA800nu1Q5kM08IKijoSnPe9Uo1iIxzPKRkn95IxxsgBMPeYHt3VG4ej2g==}
     dev: true
 
+  /hermes-estree@0.20.1:
+    resolution: {integrity: sha512-SQpZK4BzR48kuOg0v4pb3EAGNclzIlqMj3Opu/mu7bbAoFw6oig6cEt/RAi0zTFW/iW6Iz9X9ggGuZTAZ/yZHg==}
+    dev: true
+
   /hermes-parser@0.19.1:
     resolution: {integrity: sha512-Vp+bXzxYJWrpEuJ/vXxUsLnt0+y4q9zyi4zUlkLqD8FKv4LjIfOvP69R/9Lty3dCyKh0E2BU7Eypqr63/rKT/A==}
     dependencies:
       hermes-estree: 0.19.1
+    dev: true
+
+  /hermes-parser@0.20.1:
+    resolution: {integrity: sha512-BL5P83cwCogI8D7rrDCgsFY0tdYUtmFP9XaXtl2IQjC+2Xo+4okjfXintlTxcIwl4qeGddEl28Z11kbVIw0aNA==}
+    dependencies:
+      hermes-estree: 0.20.1
     dev: true
 
   /hoist-non-react-statics@3.3.2:
@@ -15934,7 +15942,7 @@ packages:
     dependencies:
       nanoid: 3.3.7
       picocolors: 1.0.0
-      source-map-js: 1.0.2
+      source-map-js: 1.2.0
     dev: true
 
   /postcss@8.4.38:
@@ -17382,11 +17390,6 @@ packages:
       is-plain-obj: 2.1.0
     dev: true
 
-  /source-map-js@1.0.2:
-    resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
-    engines: {node: '>=0.10.0'}
-    dev: true
-
   /source-map-js@1.2.0:
     resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
     engines: {node: '>=0.10.0'}
@@ -18704,7 +18707,7 @@ packages:
       debug: 4.3.4(supports-color@8.1.1)
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 5.2.7(@types/node@20.8.9)
+      vite: 5.2.10(@types/node@20.8.9)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -18716,18 +18719,18 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-babel@1.2.0(@babel/core@7.23.9)(vite@5.2.7):
+  /vite-plugin-babel@1.2.0(@babel/core@7.23.9)(vite@5.2.10):
     resolution: {integrity: sha512-ltAnq535Ubf9sDbVCkztAdkwx5aQbNrwPFs+iZTJ5FaAhTdxjqmLGpxsAaRfJWEKBJ/kFf9KwMoTdArm0IRUUw==}
     peerDependencies:
       '@babel/core': ^7.0.0
       vite: ^2.7.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
     dependencies:
       '@babel/core': 7.23.9
-      vite: 5.2.7(@types/node@20.8.9)
+      vite: 5.2.10(@types/node@20.8.9)
     dev: true
 
-  /vite@5.2.7(@types/node@20.8.9):
-    resolution: {integrity: sha512-k14PWOKLI6pMaSzAuGtT+Cf0YmIx12z9YGon39onaJNy8DLBfBJrzg9FQEmkAM5lpHBZs9wksWAsyF/HkpEwJA==}
+  /vite@5.2.10(@types/node@20.8.9):
+    resolution: {integrity: sha512-PAzgUZbP7msvQvqdSD+ErD5qGnSFiGOoWmV5yAKUEI0kdhjbH6nMWVyZQC/hSc4aXwc0oJ9aEdIiF9Oje0JFCw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -18807,7 +18810,7 @@ packages:
       strip-literal: 2.0.0
       tinybench: 2.5.1
       tinypool: 0.8.2
-      vite: 5.2.7(@types/node@20.8.9)
+      vite: 5.2.10(@types/node@20.8.9)
       vite-node: 1.3.0(@types/node@20.8.9)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:

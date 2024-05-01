@@ -35,7 +35,7 @@ importers:
         version: 7.23.3(@babel/core@7.23.9)
       '@babel/plugin-proposal-function-bind':
         specifier: ^7.23.3
-        version: 7.23.3(@babel/core@7.23.9)
+        version: 7.24.1(@babel/core@7.23.9)
       '@babel/plugin-transform-runtime':
         specifier: ^7.23.9
         version: 7.23.9(@babel/core@7.23.9)
@@ -1492,15 +1492,15 @@ packages:
       '@babel/plugin-syntax-export-default-from': 7.23.3(@babel/core@7.23.9)
     dev: true
 
-  /@babel/plugin-proposal-function-bind@7.23.3(@babel/core@7.23.9):
-    resolution: {integrity: sha512-LlDuU9NIXn1JJugzvqWeEY4m/K/vJpIp93L2fA9tHqDVsIxezsit/sHrqJWbswWkzSIrKuuI8nF65Ewtka3k2g==}
+  /@babel/plugin-proposal-function-bind@7.24.1(@babel/core@7.23.9):
+    resolution: {integrity: sha512-GDz3lXY623E+SMhloR0HDKYfFjLnqYEHjxIHo3SvpJTV3SV89974Y3mADXSYnO1N+UP7bioAFKqpOmsD9aOnuw==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.23.9
-      '@babel/helper-plugin-utils': 7.22.5
-      '@babel/plugin-syntax-function-bind': 7.23.3(@babel/core@7.23.9)
+      '@babel/helper-plugin-utils': 7.24.0
+      '@babel/plugin-syntax-function-bind': 7.24.1(@babel/core@7.23.9)
     dev: true
 
   /@babel/plugin-proposal-object-rest-spread@7.20.7(@babel/core@7.23.2):
@@ -1648,8 +1648,8 @@ packages:
       '@babel/helper-plugin-utils': 7.24.0
     dev: true
 
-  /@babel/plugin-syntax-function-bind@7.23.3(@babel/core@7.23.9):
-    resolution: {integrity: sha512-BVBglNxpv45awQYCln57SX2EJge4YK0liwH1Clzk/Nnx/bdLmZRhP0vt1koJqDLAEG8MngIPbIMNNNOXPcnXYQ==}
+  /@babel/plugin-syntax-function-bind@7.24.1(@babel/core@7.23.9):
+    resolution: {integrity: sha512-7K+uzNJ5ZuL6g4Ud/UhbIxghwN2FAj8NBrzEO+eM0g9YddjOv+BD81ar/N7Es5sH+G8z9tnTYcfCu6EaPrkSDw==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0

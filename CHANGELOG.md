@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.8.1 (2024-05-16)
+
+### Bug fixes
+
+- `tus-sender` - for parallel send partial upload-concat header on create. Fix for [#685](https://github.com/rpldy/react-uploady/issues/685)
+
+### Internal
+
+- `all` - upgrade several dev deps
+  
+
 ## 1.8.0 (2024-02-22)
 
 ### Features

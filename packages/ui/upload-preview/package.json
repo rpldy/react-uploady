@@ -40,8 +40,8 @@
     "@storybook/addon-knobs": "^7.0.2",
     "@testing-library/react": "^14",
     "flow-bin": "^0.229.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-image-crop": "^11.0.1",
     "styled-components": "^6.0.7"
   },

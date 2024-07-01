@@ -145,7 +145,7 @@
     "rimraf": "^5.0.5",
     "semver-utils": "^1.1.4",
     "shelljs": "^0.8.5",
-    "storybook": "^7.6.16",
+    "storybook": "^8.1.11",
     "styled-components": "^6.1.8",
     "typescript": "^5.3.3",
     "vite": "^5.1.3",

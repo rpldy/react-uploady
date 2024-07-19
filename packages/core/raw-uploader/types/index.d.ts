@@ -2,9 +2,9 @@ import { Batch, Trigger, UploadInfo, UploadOptions } from "@rpldy/shared";
 import { OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
 
 export interface RawCreateOptions extends UploadOptions {
-    enhancer?: RawUploaderEnhancer;
-    concurrent?: boolean;
-    maxConcurrent?: number;
+    enhancer?: RawUploaderEnhancer | undefined;
+    concurrent?: boolean | undefined;
+    maxConcurrent?: number | undefined;
 }
 
 export type PendingBatch = {

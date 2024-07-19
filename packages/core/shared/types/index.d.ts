@@ -29,16 +29,16 @@ export interface SendOptions  {
 }
 
 export interface UploadOptions extends Partial<SendOptions> {
-    autoUpload?: boolean;
-    clearPendingOnAdd?: boolean;
-    formatGroupParamName?: FormatParamGroupNameMethod;
-    grouped?: boolean;
-    maxGroupSize?: number;
-    fileFilter?: FileFilterMethod;
-    destination?: Destination;
-    inputFieldName?: string;
-    fastAbortThreshold?: number;
-    userData?: any;
+    autoUpload?: boolean | undefined;
+    clearPendingOnAdd?: boolean | undefined;
+    formatGroupParamName?: FormatParamGroupNameMethod | undefined;
+    grouped?: boolean | undefined;
+    maxGroupSize?: number | undefined;
+    fileFilter?: FileFilterMethod | undefined;
+    destination?: Destination | undefined;
+    inputFieldName?: string | undefined;
+    fastAbortThreshold?: number | undefined;
+    userData?: any | undefined;
 }
 
 export enum BATCH_STATES {

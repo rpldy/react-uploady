@@ -15,8 +15,8 @@ export type UploaderType = RawUploaderType & {
 export type UploaderEnhancer = (uploader: UploaderType, trigger: Trigger<any>) => UploaderType;
 
 export interface CreateOptions extends RawCreateOptions {
-    enhancer?: UploaderEnhancer;
-    send?: SendMethod;
+    enhancer?: UploaderEnhancer | undefined;
+    send?: SendMethod | undefined;
 }
 
 export type UploaderCreator = (options?: CreateOptions) => UploaderType;

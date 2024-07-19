@@ -114,21 +114,21 @@ export const useAbortBatch: () => (batchId: string) => boolean;
 export const useAbortItem: () => (itemId: string) => boolean;
 
 export interface NoDomUploadyProps extends CreateOptions {
-    debug?: boolean;
-    listeners?: UploaderListeners;
-    inputRef?: InputRef;
-    children?: JSX.Element[] | JSX.Element;
+    debug?: boolean | undefined;
+    listeners?: UploaderListeners | undefined;
+    inputRef?: InputRef | undefined;
+    children?: React.ReactNode | undefined;
 }
 
 export interface UploadyProps extends NoDomUploadyProps {
-    customInput?: boolean;
-    inputFieldContainer?: HTMLElement;
-    capture?: string;
-    multiple?: boolean;
-    accept?: string;
-    webkitdirectory?: boolean;
-    fileInputId?: string;
-    noPortal?: boolean;
+    customInput?: boolean | undefined;
+    inputFieldContainer?: HTMLElement | undefined;
+    capture?: string | undefined;
+    multiple?: boolean | undefined;
+    accept?: string | undefined;
+    webkitdirectory?: boolean | undefined;
+    fileInputId?: string | undefined;
+    noPortal?: boolean | undefined;
 }
 
 export const NoDomUploady: React.ComponentType<NoDomUploadyProps>;

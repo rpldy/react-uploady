@@ -63,8 +63,13 @@ export default defineConfig({
         include: ["packages/**/*.test.js?(x)"],
         exclude: ["packages/**/lib/**", "packages/**/node_modules/**"],
         ...(process.env.CI && {
-            minThreads: 4,
-            maxThreads: 4,
+            maxConcurrency: 20,
+            pool: "vmThreads",
+            poolOptions: {
+                threads: {
+                    singleThread: true,
+                }
+            },
         } || {}),
         coverage: {
             provider: "istanbul",

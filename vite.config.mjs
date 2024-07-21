@@ -62,6 +62,10 @@ export default defineConfig({
         setupFiles: "./test/vitest-setup.mjs",
         include: ["packages/**/*.test.js?(x)"],
         exclude: ["packages/**/lib/**", "packages/**/node_modules/**"],
+        ...(process.env.CI && {
+            minThreads: 4,
+            maxThreads: 4,
+        } || {}),
         coverage: {
             provider: "istanbul",
             thresholdAutoUpdate: true,

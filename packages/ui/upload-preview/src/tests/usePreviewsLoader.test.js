@@ -1,4 +1,4 @@
-import { act } from "react-dom/test-utils";
+import { act } from "react";
 import { useBatchStartListener } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import { getFallbackUrlData, getFileObjectUrlByType } from "../utils";
 import { PREVIEW_TYPES } from "../consts";

@@ -2,7 +2,7 @@
 import path from "path";
 import fs from "fs";
 import { defineConfig } from "vite";
-import { esbuildFlowPlugin } from "@bunchtogether/vite-plugin-flow";
+import { esbuildFlowPlugin, flowPlugin } from "@bunchtogether/vite-plugin-flow";
 import babelPlugin from "vite-plugin-babel";
 import { getMatchingPackages } from "./scripts/lernaUtils.mjs";
 
@@ -29,19 +29,25 @@ const createPackageAliases = () => {
 
 export default defineConfig({
     plugins: [
+        flowPlugin(),
         babelPlugin({
             //passing specific config because setup file breaks when using config file
             babelConfig: {
                 babelrc: false,
                 configFile: false,
                 plugins: [
-                    "@babel/plugin-proposal-export-default-from",
-                    "babel-plugin-syntax-hermes-parser",
+                    [
+                        "@babel/plugin-transform-runtime", {
+                        corejs: 3,
+                        "version": "^7.24.9"
+                    }],
+                    "@babel/plugin-proposal-export-default-from"
                 ],
                 presets: [
                     [
                         "@babel/env",
                         {
+                            useBuiltIns: false,
                             "modules": false,
                         },
                     ],
@@ -60,13 +66,15 @@ export default defineConfig({
             provider: "istanbul",
             thresholdAutoUpdate: true,
             reporter: ["lcov", "html"],
-            lines: 99.95,
-            branches: 98.32,
-            functions: 100,
-            statements: 99.95,
-            perFile: false,
+            thresholds: {
+                lines: 99.95,
+                branches: 98.32,
+                functions: 100,
+                statements: 99.95,
+                perFile: false,
+            },
             include: ["packages/**/src/*.js?(x)"],
-            exclude: ["**/*.mock.*"]
+            exclude: ["**/*.mock.*", "**/types.js", "packages/**/src/index.js", "**/*.test.js?(x)"],
         },
     },
     optimizeDeps: {

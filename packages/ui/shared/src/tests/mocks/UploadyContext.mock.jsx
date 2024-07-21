@@ -16,4 +16,6 @@ const UploadyContextMock = {
     createContextApi: vi.fn(),
 };
 
-export default UploadyContextMock;
+export {
+    UploadyContextMock
+};

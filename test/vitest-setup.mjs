@@ -1,7 +1,7 @@
 import { afterEach } from "vitest";
 import { render, renderIntoDocument, renderHook, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
-import chai from "chai";
+import { use as chaiUse } from "chai";
 import chaiDom from "chai-dom";
 import userEvent from "@testing-library/user-event";
 
@@ -10,7 +10,7 @@ global.renderIntoDocument = renderIntoDocument;
 global.renderHook = renderHook;
 global.userEvent = userEvent;
 
-chai.use(chaiDom);
+chaiUse(chaiDom);
 
 // runs a cleanup after each test case (e.g. clearing jsdom)
 afterEach(() => {

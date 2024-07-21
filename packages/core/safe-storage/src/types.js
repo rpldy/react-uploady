@@ -7,5 +7,5 @@ export type SafeStorage = {
     clear(): void;
     removeItem(key: string): void;
     key(index: number): ?string;
-    isSupported: boolean,
+    isSupported: boolean;
 };

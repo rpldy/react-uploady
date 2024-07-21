@@ -1,6 +1,5 @@
 // @flow
-import safeLocalStorage from "./localStorage";
-import safeSessionStorage from "./sessionStorage";
+import  { safeLocalStorage, safeSessionStorage } from "./storage";
 
 export {
     safeLocalStorage,

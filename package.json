@@ -28,7 +28,7 @@
     "test": "pnpm flow && pnpm lint && pnpm vitest:cov && pnpm types",
     "vitest": "vitest",
     "vitest:cov": "pnpm vitest --coverage --run",
-    "vitest:ci": "pnpm vitest:cov --reporter=junit --reporter=verbose --outputFile.junit=reports/junit/js-test-results.xml",
+    "vitest:ci": "NODE_OPTIONS=--max-old-space-size=1536 pnpm vitest:cov --reporter=junit --reporter=verbose --outputFile.junit=reports/junit/js-test-results.xml",
     "ci-flow": "pnpm flow",
     "ci-lint": "pnpm lint:nocache",
     "ci-types": "pnpm types",

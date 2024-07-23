@@ -63,7 +63,7 @@ export default defineConfig({
         include: ["packages/**/*.test.js?(x)"],
         exclude: ["packages/**/lib/**", "packages/**/node_modules/**"],
         ...(process.env.CI && {
-            maxConcurrency: 20,
+            maxConcurrency: 15,
             pool: "vmThreads",
             poolOptions: {
                 threads: {

@@ -126,11 +126,6 @@ jobs:
                 uses: ./.github/actions/prepare
                 with:
                     with-cypress: true
-#            -   name: Set up Cypress binary cache
-#                uses: actions/cache@v4
-#                with:
-#                    path: ~/.cache/Cypress
-#                    key: ${{ runner.os }}-cypress-${{ hashFiles('pnpm-lock.yaml') }}
             -   name: Restore SB Build Cache
                 uses: actions/cache@v4
                 with:
@@ -150,8 +145,9 @@ jobs:
                     start: |
                         pnpm sb:serve
                         pnpm bundle:serve
-                    wait-on: 'http://localhost:8001'
+                    wait-on: 'http://127.0.0.1:8001'
+                    config: baseUrl=http://127.0.0.1:8001
                     env:
-                        CYPRESS_BASE_URL=http://localhost:8001
+                        CYPRESS_BASE_URL=http://127.0.0.1:8001
 
 # TODO :!!!!! ADD CODECOV UPDATE ON MASTER BRANCH

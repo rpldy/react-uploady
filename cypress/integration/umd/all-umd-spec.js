@@ -13,6 +13,7 @@ describe("UMD ALL - Bundle", () => {
         intercept("http://localhost:4000/upload");
 
         uploadFile(fileName, () => {
+            cy.waitShort();
             cy.wait("@uploadReq")
                 .interceptFormData((formData) => {
                     expect(formData["file"]).to.eq(fileName);

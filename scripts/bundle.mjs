@@ -101,7 +101,7 @@ const validateSize = (type, name, wpResult, bundleSizes) => {
 
         const gzipSize = result.stdout.split(": ")[1]?.split(` ${result.code ? ">" : "<"}`)[0];
 
-        bundleSizes.push({ name, size: gzipSize, maxSize, success: !result.code });
+        bundleSizes.push({ name, size: gzipSize, max: maxSize, success: !result.code });
     }
 };
 
@@ -271,9 +271,9 @@ const doBundle = async () => {
         await Promise.all(bundlers);
         logger.info(`>>> Finished bundling successfully!`);
 
-        if (isCI) {
+        // if (isCI) {
             await reportBundleSize(bundleSizes);
-        }
+        // }
     } catch (e) {
         logger.error(`!!!! Failed to bundle`, e);
         process.exit(1);

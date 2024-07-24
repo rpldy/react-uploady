@@ -10,7 +10,8 @@ const reportBundleSize = async (data) => {
             .map((key) =>
                 ({ data: key, header: true })),
         //rows
-        ...data.map((row) => Object.values(row))
+        ...data.map((row) =>
+            Object.values(row).map((val) => ({ data: val })))
     ];
 
     core.debug("Summary Table: " + JSON.stringify(report));

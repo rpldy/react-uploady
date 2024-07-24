@@ -18,12 +18,14 @@ const reportBundleSize = async (data) => {
     core.debug("Summary Table: " + JSON.stringify(report));
 
     core.summary
-        .addHeading("Bundle Size Report 📦")
+        .addHeading("📦 Bundle Size Report")
         .addTable(report)
 
+    //retrieve the table from the summary so we can also add it to the PR
     const reportTable = `<table>${core.summary.stringify().split("<table>")[1].split("</table>")[0]}</table>`;
+    core.debug("GOT TABLE FROM SUMMARY " + reportTable);
 
-    core.info("GOT TABLE FROM SUMMARY " + reportTable);
+    core.setOutput("BUNDLE_SIZE_REPORT_TABLE", reportTable);
 
     await core.summary.write();
 };

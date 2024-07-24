@@ -56,6 +56,7 @@ jobs:
                 with:
                     with-cypress: true
             -   name: Bundle for Production
+                id: bundle-prod
                 run: pnpm bundle:prod
             -   name: Cache Bundle Folder
                 id: cache-bundle
@@ -64,6 +65,12 @@ jobs:
                     path: bundle
                     key: bundle-${{ runner.os }}-${{ hashFiles('bundle/**') }}
 
+            -   name: Add Bundle Size Report as PR Comment
+                uses: mshick/add-pr-comment@v2
+                with:
+                    message: |
+                        ## 📦 Bundle Size Report
+                        ${{ steps.bundle-prod.outputs.BUNDLE_SIZE_REPORT_TABLE }}
     sb:
         name: Build Storybook
         runs-on: ubuntu-latest

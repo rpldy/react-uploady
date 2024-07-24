@@ -8,7 +8,7 @@ describe("UMD ALL - Bundle", () => {
     it("should use Uploady and UploadButton to upload file", () => {
         cy.visitStory("uploady", "umd-all");
 
-        intercept(UPLOAD_URL);
+        intercept("POST", UPLOAD_URL);
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq")

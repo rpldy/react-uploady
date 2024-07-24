@@ -9,7 +9,7 @@ runs:
                 version: 8
                 run_install: false
 
-        -   uses: actions/setup-node@v3
+        -   uses: actions/setup-node@v4
             with:
                 node-version: "20.15.1"
                 cache: "pnpm"

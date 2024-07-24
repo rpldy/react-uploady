@@ -23,7 +23,7 @@ const reportBundleSize = async (data) => {
 
     const reportTable = `<table>${core.summary.stringify().split("<table>")[1].split("</table>")[0]}</table>`;
 
-    core.info("GOT TABLE FROM SUMMARY ", reportTable);
+    core.info("GOT TABLE FROM SUMMARY " + reportTable);
 
     await core.summary.write();
 };

@@ -11,16 +11,21 @@ const reportBundleSize = async (data) => {
                 ({ data: key, header: true })),
         //rows
         ...data.map((row) =>
-            Object.entries(row).map(([key,val]) =>
+            Object.entries(row).map(([key, val]) =>
                 ({ data: key === "success" ? (val === true ? "🟢" : "💥") : val })))
     ];
 
     core.debug("Summary Table: " + JSON.stringify(report));
 
-    await core.summary
+    core.summary
         .addHeading("Bundle Size Report 📦")
         .addTable(report)
-        .write();
+
+    const reportTable = `<table>${core.summary.stringify().split("<table>")[1].split("</table>")[0]}</table>`;
+
+    core.info("GOT TABLE FROM SUMMARY ", reportTable);
+
+    await core.summary.write();
 };
 
 export default reportBundleSize;

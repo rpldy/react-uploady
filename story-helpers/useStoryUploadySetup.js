@@ -41,7 +41,8 @@ export const localDestination = ({noLong = false} = {}) => {
         result = {
             destinationType: DESTINATION_TYPES.local,
             destination: {
-                url: `http://localhost:${process.env.LOCAL_PORT || LOCAL_PORT || 4000}/upload${long ? "?long=true" : ""}`,
+                url: process.env.UPLOAD_URL ||
+                    `http://localhost:${process.env.LOCAL_PORT || LOCAL_PORT || 4000}/upload${long ? "?long=true" : ""}`,
                 params: { test: true }
             }
         }

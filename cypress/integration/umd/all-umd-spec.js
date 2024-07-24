@@ -1,19 +1,16 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { BATCH_ADD, ITEM_START } from "../../constants";
+import { BATCH_ADD, ITEM_START, UPLOAD_URL } from "../../constants";
 
 describe("UMD ALL - Bundle", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
-        cy.visitStory("uploady", "umd-all");
-    });
-
     it("should use Uploady and UploadButton to upload file", () => {
-        intercept("http://localhost:4000/upload");
+        cy.visitStory("uploady", "umd-all");
+
+        intercept(UPLOAD_URL);
 
         uploadFile(fileName, () => {
-            cy.waitShort();
             cy.wait("@uploadReq")
                 .interceptFormData((formData) => {
                     expect(formData["file"]).to.eq(fileName);

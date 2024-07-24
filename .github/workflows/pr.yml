@@ -8,6 +8,9 @@ defaults:
         shell: bash
 permissions:
     pull-requests: write
+    contents: read
+    actions: read
+    checks: write
 
 jobs:
     #    build:

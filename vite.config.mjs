@@ -6,6 +6,8 @@ import { esbuildFlowPlugin, flowPlugin } from "@bunchtogether/vite-plugin-flow";
 import babelPlugin from "vite-plugin-babel";
 import { getMatchingPackages } from "./scripts/lernaUtils.mjs";
 
+const isCI = !!process.env.CI;
+
 const createPackageAliases = () => {
     const packages = getMatchingPackages();
     return packages.reduce((res, p) => {
@@ -62,19 +64,19 @@ export default defineConfig({
         setupFiles: "./test/vitest-setup.mjs",
         include: ["packages/**/*.test.js?(x)"],
         exclude: ["packages/**/lib/**", "packages/**/node_modules/**"],
-        ...(process.env.CI && {
-            maxConcurrency: 15,
-            pool: "vmThreads",
-            poolOptions: {
-                threads: {
-                    singleThread: true,
-                }
-            },
-        } || {}),
+        // ...(isCI ? {
+        //     maxConcurrency: 15,
+        //     pool: "vmThreads",
+        //     poolOptions: {
+        //         threads: {
+        //             singleThread: true,
+        //         }
+        //     },
+        // } : {}),
         coverage: {
             provider: "istanbul",
             thresholdAutoUpdate: true,
-            reporter: ["lcov", "html"],
+            reporter: ["lcov", "html"].concat(isCI ? ["json", "json-summary"] : []),
             thresholds: {
                 lines: 99.95,
                 branches: 98.32,

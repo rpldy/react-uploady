@@ -1,0 +1,54 @@
+name: Uploady PR Verify
+
+on:
+    workflow_dispatch:
+
+defaults:
+    run:
+        shell: bash
+permissions:
+    pull-requests: write
+    contents: read
+    actions: read
+    checks: write
+
+jobs:
+    #    build:
+    #        name: Build
+    #        runs-on: ubuntu-latest
+    #        steps:
+    #            -   name: Checkout
+    #                uses: actions/checkout@v3
+    #            -   name: Prepare
+    #                uses: ./.github/actions/prepare
+
+    lft:
+        name: Lint, Flow, Types
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+            -   name: Prepare
+                uses: ./.github/actions/prepare
+            -   name: lft
+                run: pnpm test:ci
+
+    unit-test:
+        name: Unit-Test (Vitest)
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+            -   name: Prepare
+                uses: ./.github/actions/prepare
+            -   name: unit-test
+                run: pnpm vitest:ci
+            -   name: Show Report Coverage
+                uses: davelosert/vitest-coverage-report-action@v2
+            -   name: Test Report
+                uses: dorny/test-reporter@v1
+                if: success() || failure()
+                with:
+                    name: Unit-test Report
+                    path: reports/junit/js-*.xml
+                    reporter: jest-junit

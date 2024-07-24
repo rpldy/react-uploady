@@ -102,10 +102,12 @@ jobs:
             -   name: Restore SB Build Cache
                 uses: actions/cache@v4
                 with:
+                    key: sb-static-${{ runner.os }}-
                     restore-keys: sb-static-${{ runner.os }}-
             -   name: Restore Bundle Cache
                 uses: actions/cache@v4
                 with:
+                    key: bundle-${{ runner.os }}-
                     restore-keys: bundle-${{ runner.os }}-
             -   name: Cypress run
                 uses: cypress-io/github-action@v6

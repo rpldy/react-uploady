@@ -6,6 +6,8 @@ import { esbuildFlowPlugin } from "@bunchtogether/vite-plugin-flow";
 import babelPlugin from "vite-plugin-babel";
 import { getMatchingPackages } from "./scripts/lernaUtils.mjs";
 
+const isCI = !!process.env.CI;
+
 const createPackageAliases = () => {
     const packages = getMatchingPackages();
     return packages.reduce((res, p) => {
@@ -59,7 +61,7 @@ export default defineConfig({
         coverage: {
             provider: "istanbul",
             thresholdAutoUpdate: true,
-            reporter: ["lcov", "html"],
+            reporter: ["lcov", "html"].concat(isCI ? ["json-summary"] : []),
             lines: 99.95,
             branches: 98.32,
             functions: 100,

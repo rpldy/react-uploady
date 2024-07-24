@@ -147,6 +147,13 @@ jobs:
                         pnpm bundle:serve
                     wait-on: 'http://127.0.0.1:8001, http://127.0.0.1:8009'
                     command: pnpm cy:run:gh
+            -   name: Store screenshots
+                uses: actions/upload-artifact@v4
+                if: failure()
+                with:
+                    name: cypress-screenshots
+                    path: cypress/screenshots
+                    if-no-files-found: ignore
             -   name: E2E Report
                 uses: dorny/test-reporter@v1
                 if: success() || failure()

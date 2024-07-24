@@ -3,9 +3,14 @@ name: Uploady PR Verify
 on:
     workflow_dispatch:
     pull_request:
+    push:
+        branches:
+            - master
+
 defaults:
     run:
         shell: bash
+
 permissions:
     pull-requests: write
     contents: read
@@ -112,6 +117,14 @@ jobs:
                     name: Unit-test Report
                     path: reports/junit/js-*.xml
                     reporter: jest-junit
+            -   name: Upload Coverage (master only)
+                uses: codecov/codecov-action@v3
+                if: ${{ github.ref_name == 'master' }}
+                with:
+                    token: ${{ secrets.CODECOV_TOKEN }}
+                    files: ./coverage/coverage-final.json
+                    fail_ci_if_error: true
+                    verbose: true
 
     e2e:
         runs-on: ubuntu-latest
@@ -161,9 +174,3 @@ jobs:
                     name: E2E Report
                     path: cypress/results/results-*.xml
                     reporter: java-junit
-# TODO :!!!!! ADD CODECOV UPDATE ON MASTER BRANCH
-
-
-#                    config: baseUrl=http://127.0.0.1:8001,reporter=mocha-multi-reporters,reporter-options=configFile=cypress/reporters-config.json
-#                    env:
-#                        CYPRESS_BASE_URL=http://127.0.0.1:8001

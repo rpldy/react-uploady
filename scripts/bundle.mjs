@@ -11,6 +11,7 @@ import { getMatchingPackages } from "./lernaUtils.mjs";
 import { logger } from "./utils.mjs"
 //TODO: should be passed by options or found in root (dynamically)
 import config from "../bundle.config.mjs";
+import reportBundleSize from "./reportBundleSizeToGithub.mjs";
 
 const yargs = Yargs(process.argv.slice(2));
 
@@ -22,6 +23,7 @@ const options = {
 };
 
 const isProduction = process.env.NODE_ENV === "production";
+const isCI = !!process.env.CI;
 
 const getEntryPath = (pkgName, repoPackages) => {
     let result;
@@ -83,7 +85,7 @@ const getEntriesFromDefinition = ({ pkgs, exclude }, type, repoPackages) => {
         .map((entry) => (!_.isString(entry) || entry.startsWith("./")) ? entry : `./${entry}`);
 };
 
-const validateSize = (type, name, wpResult) => {
+const validateSize = (type, name, wpResult, bundleSizes) => {
     const maxSize = _.get(config.bundles, [type, name, "maxSize"]);
 
     if (isProduction && maxSize) {
@@ -93,9 +95,13 @@ const validateSize = (type, name, wpResult) => {
 
         const result = shell.exec(`bundlesize -f ${outputFile} -s ${maxSize} ${options.debugBundleSize ? "--debug" : ""}`);
 
-        if (result.code) {
+        if (result.code && !isCI) {
             throw new Error(`bundle: ${outputFile} exceeds allowed maxSize: ${bytes(maxSize)}`)
         }
+
+        const gzipSize = result.stdout.split(": ")[1]?.split(` ${result.code ? ">" : "<"}`)[0];
+
+        bundleSizes.push({ name, size: gzipSize, maxSize, success: !result.code });
     }
 };
 
@@ -215,7 +221,7 @@ const getWebpackConfig = (type, name, definition, repoPackages) => {
     );
 }
 
-const createBundleFromDefinition = async (type, name, definition, repoPackages) => {
+const createBundleFromDefinition = async (type, name, definition, repoPackages, bundleSizes) => {
     let wpResult;
 
     const bundleConfig = getWebpackConfig(type, name, definition, repoPackages);
@@ -230,7 +236,7 @@ const createBundleFromDefinition = async (type, name, definition, repoPackages) 
     }
 
     if (options.validate && wpResult) {
-        validateSize(type, name, wpResult);
+        validateSize(type, name, wpResult, bundleSizes);
     }
 };
 
@@ -239,13 +245,14 @@ const doBundle = async () => {
 
     const repoPackages = getMatchingPackages();
     const bundlers = [];
+    const bundleSizes = [];
 
     if (options.bundle) {
         //only bundle the definition requested by argument
         const parts = options.bundle.split("."),
             definition = _.get(config.bundles, parts);
 
-        bundlers.push(createBundleFromDefinition(parts[0], parts[1], definition, repoPackages));
+        bundlers.push(createBundleFromDefinition(parts[0], parts[1], definition, repoPackages, bundleSizes));
     } else {
         //bundle all definitions in config
         Object.entries(config.bundles)
@@ -253,7 +260,7 @@ const doBundle = async () => {
                 Object.entries(bundle)
                     .forEach(([name, definition]) => {
                         bundlers.push(
-                            createBundleFromDefinition(type, name, definition, repoPackages)
+                            createBundleFromDefinition(type, name, definition, repoPackages, bundleSizes)
                         );
                     });
             });
@@ -263,6 +270,10 @@ const doBundle = async () => {
         logger.verbose(`>>> waiting for ${bundlers.length} bundles to compile`);
         await Promise.all(bundlers);
         logger.info(`>>> Finished bundling successfully!`);
+
+        if (isCI) {
+            await reportBundleSize(bundleSizes);
+        }
     } catch (e) {
         logger.error(`!!!! Failed to bundle`, e);
         process.exit(1);

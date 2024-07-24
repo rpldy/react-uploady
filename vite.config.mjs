@@ -64,15 +64,6 @@ export default defineConfig({
         setupFiles: "./test/vitest-setup.mjs",
         include: ["packages/**/*.test.js?(x)"],
         exclude: ["packages/**/lib/**", "packages/**/node_modules/**"],
-        // ...(isCI ? {
-        //     maxConcurrency: 15,
-        //     pool: "vmThreads",
-        //     poolOptions: {
-        //         threads: {
-        //             singleThread: true,
-        //         }
-        //     },
-        // } : {}),
         coverage: {
             provider: "istanbul",
             thresholdAutoUpdate: true,

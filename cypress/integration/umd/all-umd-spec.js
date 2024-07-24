@@ -5,9 +5,14 @@ import { BATCH_ADD, ITEM_START, UPLOAD_URL } from "../../constants";
 describe("UMD ALL - Bundle", () => {
     const fileName = "flower.jpg";
 
+    beforeEach(() => {
+        cy.visitStory("uploady", "umd-all");
+    });
+
     it("should use Uploady and UploadButton to upload file", () => {
         intercept(UPLOAD_URL);
-        cy.visitStory("uploady", "umd-all");
+
+        cy.waitLong();
 
         uploadFile(fileName, () => {
 

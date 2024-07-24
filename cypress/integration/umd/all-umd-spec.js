@@ -12,8 +12,6 @@ describe("UMD ALL - Bundle", () => {
     it("should use Uploady and UploadButton to upload file", () => {
         intercept(UPLOAD_URL);
 
-        cy.waitLong();
-
         uploadFile(fileName, () => {
 
             cy.wait("@uploadReq")

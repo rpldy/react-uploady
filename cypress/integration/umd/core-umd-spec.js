@@ -5,7 +5,7 @@ import { ITEM_START, BATCH_ADD, UPLOAD_URL } from "../../constants";
 describe("UMD Core - Bundle", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    beforeEach(() => {
         cy.visitStory("uploader", "umd-core");
     });
 

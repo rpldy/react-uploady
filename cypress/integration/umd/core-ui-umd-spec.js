@@ -5,9 +5,11 @@ import { ITEM_START, BATCH_ADD, UPLOAD_URL } from "../../constants";
 describe("UMD UI CORE - Bundle", () => {
     const fileName = "flower.jpg";
 
-    it("should use uploady and upload file", () => {
+    beforeEach(() => {
         cy.visitStory("uploady", "umd-core-ui");
+    });
 
+    it("should use uploady and upload file", () => {
         intercept(UPLOAD_URL)
 
         uploadFile(fileName, () => {

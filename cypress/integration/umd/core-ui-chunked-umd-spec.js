@@ -5,9 +5,11 @@ import { UPLOAD_URL, WAIT_X_SHORT } from "../../constants";
 describe("UMD UI CHUNKED - Bundle", () => {
     const fileName = "flower.jpg";
 
-    it("should use uploady and upload file", () => {
+    beforeEach(() => {
         cy.visitStory("chunkedUploady", "umd-core-chunked-ui");
+    });
 
+    it("should use uploady and upload file", () => {
         intercept(UPLOAD_URL);
 
         uploadFile(fileName, () => {

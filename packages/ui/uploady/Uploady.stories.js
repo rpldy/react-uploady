@@ -505,7 +505,7 @@ const renderUploadyAll = () => {
 
     const uploadPreview = react.createElement(rpldy.uploadPreview.UploadPreview, {
         id: "upload-preview",
-        previewComponentProps: { "data-test": "upload-preview" },
+        previewComponentProps: { "data-test": "upload-preview", style: { maxWidth: "200px" } },
     });
 
     const uploadyProps = {
@@ -514,10 +514,12 @@ const renderUploadyAll = () => {
         enhancer: addActionLogEnhancer(),
     };
 
+    const uploadUrlLog = react.createElement("div", { children: `about to upload to: ${uploadyProps.destination.url}` })
+
     return react.createElement(
         rpldy.uploady.Uploady,
         uploadyProps,
-        [uploadButton, uploadPreview]);
+        [uploadUrlLog, uploadButton, uploadPreview]);
 };
 
 export const UMD_ALL = (): Element<"div"> => {

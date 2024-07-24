@@ -8,13 +8,11 @@ describe("UMD ALL - Bundle", () => {
     it("should use Uploady and UploadButton to upload file", () => {
         cy.visitStory("uploady", "umd-all");
 
-        cy.intercept("POST", UPLOAD_URL, () => {
-            return RESPONSE_DEFAULTS;
-        }).as("umdUpload");
+        intercept(UPLOAD_URL);
 
         uploadFile(fileName, () => {
             cy.waitLong();
-            cy.wait("@umdUpload")
+            cy.wait("@uploadReq")
                 .interceptFormData((formData) => {
                     expect(formData["file"]).to.eq(fileName);
                 })

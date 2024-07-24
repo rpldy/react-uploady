@@ -40,7 +40,7 @@
     "cy:run": "wait-on http://localhost:9111 -d 1000 && CYPRESS_BASE_URL=http://localhost:9111 cypress run --e2e --browser chrome",
     "cy:run:build": "CYPRESS_BASE_URL=http://localhost:8001 cypress run --e2e --browser chrome",
     "cy:run:ci": "wait-on http://localhost:8001 -d 1000 && CYPRESS_BASE_URL=http://localhost:8001 cypress run --e2e --record false --reporter mocha-multi-reporters --reporter-options configFile=\"cypress/reporters-config.json\"",
-    "cy:run:gh": "CYPRESS_BASE_URL=http://127.0.0.1:8001 UPLOAD_URL=http://test.upload cypress run --e2e --record false --reporter mocha-multi-reporters --reporter-options configFile=\"cypress/reporters-config.json\" --spec cypress/integration/umd/*-spec.js",
+    "cy:run:gh": "CYPRESS_BASE_URL=http://127.0.0.1:8001 UPLOAD_URL=http://test.upload cypress run --e2e --record false --reporter mocha-multi-reporters --reporter-options configFile=\"cypress/reporters-config.json\" --spec cypress/integration/uploady/Uploady-undefined-param-spec.js",
     "cy:run:ff": "pnpm cy:run --browser firefox",
     "e2e:ci": "concurrently --success last --kill-others \"pnpm bundle:serve\" \"pnpm sb:serve\" \"pnpm cy:run:ci\""
   },

@@ -145,9 +145,15 @@ jobs:
                     start: |
                         pnpm sb:serve
                         pnpm bundle:serve
-                    wait-on: 'http://127.0.0.1:8001'
-                    config: baseUrl=http://127.0.0.1:8001
+                    wait-on: 'http://127.0.0.1:8001','http://127.0.0.1:8009'
+                    config: baseUrl=http://127.0.0.1:8001,reporter=mocha-multi-reporters,reporter-options="configFile=\"cypress/reporters-config.json\""
                     env:
                         CYPRESS_BASE_URL=http://127.0.0.1:8001
-
+            -   name: E2E Report
+                uses: dorny/test-reporter@v1
+                if: success() || failure()
+                with:
+                    name: E2E Report
+                    path: cypress/results/results-*.xml
+                    reporter: java-junit
 # TODO :!!!!! ADD CODECOV UPDATE ON MASTER BRANCH

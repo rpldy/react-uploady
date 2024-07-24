@@ -25,6 +25,8 @@ export const interceptWithDelay = (delay = 100, alias = "uploadReq", url = DEFAU
 const intercept = (url = DEFAULT_URL, method = DEFAULT_METHOD, resOptions, alias = "uploadReq") => {
     const handler = (typeof resOptions === "function")  ? resOptions : createResponse(resOptions)
 
+    cy.log(`intercepting url: ${url} with method: ${method}`);
+
     cy.intercept(method, url, handler)
         .as(alias);
 };

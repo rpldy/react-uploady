@@ -271,9 +271,9 @@ const doBundle = async () => {
         await Promise.all(bundlers);
         logger.info(`>>> Finished bundling successfully!`);
 
-        // if (isCI) {
+        if (isCI) {
             await reportBundleSize(bundleSizes);
-        // }
+        }
     } catch (e) {
         logger.error(`!!!! Failed to bundle`, e);
         process.exit(1);

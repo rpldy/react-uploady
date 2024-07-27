@@ -61,8 +61,9 @@ jobs:
 
             -   name: Bundle for Production
                 id: bundle-prod
-                run: ACTIONS_RUNTIME_TOKEN='${{steps.get-action-rt-tokens.outputs.ACTIONS_RUNTIME_TOKEN}}' \
-                    ACTIONS_RESULTS_URL='${{steps.get-action-rt-tokens.outputs.ACTIONS_RESULTS_URL}}' \
+                run: |
+                    ACTIONS_RUNTIME_TOKEN="${{ steps.get-action-rt-tokens.outputs.ACTIONS_RUNTIME_TOKEN }}" \
+                    ACTIONS_RESULTS_URL="${{ steps.get-action-rt-tokens.outputs.ACTIONS_RESULTS_URL }}" \
                     pnpm bundle:prod
 
             -   name: Cache Bundle Folder

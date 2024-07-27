@@ -56,6 +56,8 @@ const uploadBundleSizeReport = async (dataStr) => {
 const reportBundleSize = async (data) => {
     core.info("processing bundle size report...");
 
+    core.info("TOKEN.... " + process.env.ACTIONS_RUNTIME_TOKEN)
+
     const dataWithMasterCompare = await getWithPreviousBundleSizeReport(data);
 
     const dataStr = JSON.stringify(dataWithMasterCompare);

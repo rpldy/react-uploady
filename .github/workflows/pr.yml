@@ -55,9 +55,15 @@ jobs:
                 uses: ./.github/actions/prepare
                 with:
                     with-cypress: true
+            -   uses: actions/github-script@v7
+                id: get-action-rt-token
+                with:
+                    script: process.env.ACTIONS_RUNTIME_TOKEN
+                    result-encoding: string
             -   name: Bundle for Production
                 id: bundle-prod
-                run: ACTIONS_RUNTIME_TOKEN='${{ secrets.GITHUB_TOKEN }}' pnpm bundle:prod
+                run: ACTIONS_RUNTIME_TOKEN='token:${{steps.get-action-rt-token.outputs.result}}' pnpm bundle:prod
+
             -   name: Cache Bundle Folder
                 id: cache-bundle
                 uses: actions/cache@v4

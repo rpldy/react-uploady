@@ -4,18 +4,28 @@ import { DefaultArtifactClient } from "@actions/artifact";
 
 const BUNDLE_SIZE_REPORT_ARTIFACT = "bundle-size-report-master";
 
+const BRANCH = process.env.GITHUB_REF_NAME || process.env.GITHUB_REF;
+
 const getWithPreviousBundleSizeReport = async (data) => {
 //tODO: retrieve previous report from master and compare.
 // if not available return as is but add columns with N/A
+
+    if (!BRANCH.includes("master")) {
+        core.info("looking for bundle size report artifact from MASTER");
+
+        const artifactClient = new DefaultArtifactClient();
+        const artifact = await artifactClient.getArtifact(BUNDLE_SIZE_REPORT_ARTIFACT);
+
+
+
+        //await artifactClient.downloadArtifact()
+    }
 
     return data;
 };
 
 const uploadBundleSizeReport = async (dataStr) => {
-    const branch = process.env.GITHUB_REF_NAME || process.env.GITHUB_REF;
-    core.info(`checking if to upload report - ref:${process.env.GITHUB_REF}, ref-name: ${process.env.GITHUB_REF_NAME}`);
-
-    if (process.env.GITHUB_REF === "refs/heads/master") {
+    if (BRANCH.endsWith("master")) {
         core.info("uploading bundle size report to artifacts from MASTER");
 
         //save to local file we can uploas as artifact
@@ -23,8 +33,8 @@ const uploadBundleSizeReport = async (dataStr) => {
         fs.writeFileSync(reportPath, dataStr, { encoding: "utf-8" });
         core.debug("saved report to file: " + reportPath);
 
-        const artifact = new DefaultArtifactClient();
-        const { id, size } = await artifact.uploadArtifact(
+        const artifactClient = new DefaultArtifactClient();
+        const { id, size } = await artifactClient.uploadArtifact(
             // name of the artifact
             BUNDLE_SIZE_REPORT_ARTIFACT,
             [reportPath],
@@ -36,7 +46,7 @@ const uploadBundleSizeReport = async (dataStr) => {
         );
         core.debug(`saved artifact (${id}) for later comparisons (size: ${size})`);
     } else {
-        core.info(`not uploading bundle size report because we're not on MASTER (${branch})`);
+        core.info(`not uploading bundle size report because we're not on MASTER (${BRANCH})`);
     }
 };
 
@@ -74,7 +84,7 @@ const reportBundleSize = async (data) => {
     //flush to summary
     await core.summary.write();
 
-    //TODO: on Master save report as artifact (or to git???) for comparing with next time PR is run
+    //on Master save report as artifact (or to git???) for comparing with next time PR is run
     await uploadBundleSizeReport(dataStr);
 };
 

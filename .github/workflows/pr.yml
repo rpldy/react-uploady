@@ -57,9 +57,7 @@ jobs:
                     with-cypress: true
             -   name: Bundle for Production
                 id: bundle-prod
-                env:
-                    ACTIONS_RUNTIME_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                run: pnpm bundle:prod
+                run: ACTIONS_RUNTIME_TOKEN='${{ secrets.GITHUB_TOKEN }}' pnpm bundle:prod
             -   name: Cache Bundle Folder
                 id: cache-bundle
                 uses: actions/cache@v4

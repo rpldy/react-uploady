@@ -9,6 +9,7 @@ const BRANCH = process.env.GITHUB_REF_NAME || process.env.GITHUB_REF;
 const getWithPreviousBundleSizeReport = async (data) => {
 //tODO: retrieve previous report from master and compare.
 // if not available return as is but add columns with N/A
+    let updatedData, masterData;
 
     if (!BRANCH.includes("master")) {
         core.info("looking for bundle size report artifact from MASTER");
@@ -26,10 +27,12 @@ const getWithPreviousBundleSizeReport = async (data) => {
                     core.info(`found bundle size report artifact from MASTER, loading data from: ${downloadPath}`);
 
                     const str = fs.readFileSync(downloadPath, { encoding: "utf-8" });
-                    const masterData = JSON.parse(str);
+                    masterData = JSON.parse(str);
 
                     core.info(`loaded master data with ${masterData.length} rows`);
                     core.debug(str);
+
+
                 } catch (ex) {
                     core.warning("failed to download bundle size report artifact from MASTER - " + ex.message);
                 }
@@ -39,6 +42,7 @@ const getWithPreviousBundleSizeReport = async (data) => {
             core.debug(ex.message);
         }
     }
+
 
     return data;
 };

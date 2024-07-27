@@ -14,11 +14,14 @@ const getWithPreviousBundleSizeReport = async (data) => {
         core.info("looking for bundle size report artifact from MASTER");
 
         const artifactClient = new DefaultArtifactClient();
-        const artifact = await artifactClient.getArtifact(BUNDLE_SIZE_REPORT_ARTIFACT);
+        const { artifact } = await artifactClient.getArtifact(BUNDLE_SIZE_REPORT_ARTIFACT) || {};
 
-
-
-        //await artifactClient.downloadArtifact()
+        if (artifact) {
+            core.info(`found bundle size report artifact (id: ${artifact.id}) from MASTER (size: ${artifact.size}), created at: ${artifact.createdAt}`);
+            //await artifactClient.downloadArtifact()
+        } else {
+            core.info("no bundle size report artifact found from MASTER, skipping comparison")
+        }
     }
 
     return data;

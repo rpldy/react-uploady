@@ -1,0 +1,26 @@
+name: GH Actions Tokens
+description: Retrieve env variables for GH Actions
+
+outputs:
+    ACTIONS_RUNTIME_TOKEN:
+        description: The runtime token for GH Actions
+        value: ${{ steps.get-gh-actions-tokens.outputs.runtimeToken }}
+    ACTIONS_RESULTS_URL:
+        description: The results URL for GH Actions
+        value: ${{ steps.get-gh-actions-tokens.outputs.resultsUrl }}
+
+runs:
+    using: composite
+    steps:
+      - name: Get GH Actions Tokens
+        id: get-gh-actions-tokens
+        uses: actions/github-script@v7
+        with:
+            script: |
+                const runtimeToken = process.env.ACTIONS_RUNTIME_TOKEN;
+                core.setOutput("runtimeToken", runtimeToken);
+
+                const resultsUrl = process.env.ACTIONS_RESULTS_URL
+                core.setOutput("resultsUrl, resultsUrl);
+
+                core.info("Got GH Actions Tokens and set into step output");

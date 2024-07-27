@@ -55,14 +55,15 @@ jobs:
                 uses: ./.github/actions/prepare
                 with:
                     with-cypress: true
-            -   uses: actions/github-script@v7
-                id: get-action-rt-token
-                with:
-                    script: return "token:" + process.env.ACTIONS_RUNTIME_TOKEN
-                    result-encoding: string
+            -   name: Retrieve GH Actions Tokens
+                uses: ./.github/actions/actions-token
+                id: get-action-rt-tokens
+
             -   name: Bundle for Production
                 id: bundle-prod
-                run: ACTIONS_RUNTIME_TOKEN='${{steps.get-action-rt-token.outputs.result}}' pnpm bundle:prod
+                run: ACTIONS_RUNTIME_TOKEN='${{steps.get-action-rt-tokens.outputs.ACTIONS_RUNTIME_TOKEN}}' \
+                    ACTIONS_RESULTS_URL='${{steps.get-action-rt-tokens.outputs.ACTIONS_RESULTS_URL}}' \
+                    pnpm bundle:prod
 
             -   name: Cache Bundle Folder
                 id: cache-bundle

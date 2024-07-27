@@ -1,5 +1,5 @@
 
-const actionScript = ({ core }) =>{
+module.exports = async ({ core }) => {
     const runtimeToken = process.env.ACTIONS_RUNTIME_TOKEN;
     core.setOutput("runtimeToken", runtimeToken);
 
@@ -8,6 +8,3 @@ const actionScript = ({ core }) =>{
 
     core.info("Got GH Actions Tokens and set into step output");
 };
-
-export default actionScript;
-

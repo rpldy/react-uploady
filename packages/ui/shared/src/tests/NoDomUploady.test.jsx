@@ -6,10 +6,10 @@ import { createContextApi } from "../UploadyContext";
 
 // vi.mock("../UploadyContext", () => require("./mocks/UploadyContext.mock").default);
 vi.mock("../UploadyContext", async () => {
-    const mockContext = await import("./mocks/UploadyContext.mock");
+    const mod = await import("./mocks/UploadyContext.mock");
     return {
-        createContextApi: vi.fn(() => mockContext.default),
-        default: mockContext.default,
+        createContextApi: vi.fn(() => mod.UploadyContextMock),
+        default: mod.UploadyContextMock,
     };
 });
 

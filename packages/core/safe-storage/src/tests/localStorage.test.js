@@ -6,9 +6,9 @@ describe("localStorage tests", () => {
         let safeLocalStorage;
 
         beforeAll(async () => {
-            hasWindow.mockReturnValueOnce(true);
-            const ls = await import("../localStorage");
-            safeLocalStorage = ls.default;
+            hasWindow.mockReturnValue(true);
+            const storage = await import("../storage");
+            safeLocalStorage = storage.safeLocalStorage;
         });
 
         it("should be supported", () => {
@@ -51,8 +51,8 @@ describe("localStorage tests", () => {
 
 			vi.resetModules();
             hasWindow.mockReturnValueOnce(true);
-            const ls = await import("../localStorage");
-            safeLocalStorage = ls.default;
+            const storage = await import("../storage");
+            safeLocalStorage = storage.safeLocalStorage;
 		});
 
 		afterAll(() => {
@@ -89,8 +89,8 @@ describe("localStorage tests", () => {
 
             vi.resetModules();
             hasWindow.mockReturnValueOnce(true);
-            const ls = await import("../localStorage");
-            safeLocalStorage = ls.default;
+            const storage = await import("../storage");
+            safeLocalStorage = storage.safeLocalStorage;
         });
 
         afterAll(() => {

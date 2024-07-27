@@ -50,3 +50,4 @@ cypress/test-bundle
 .netlify
 .nx/
 /cypress/downloads
+/test.mjs

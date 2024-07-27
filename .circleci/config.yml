@@ -5,7 +5,7 @@ orbs:
 
 references:
     docker_image: &docker_image
-        - image: cypress/base:16.17.1
+        - image: cypress/base:20.15.1
           environment:
               TERM: xterm
 

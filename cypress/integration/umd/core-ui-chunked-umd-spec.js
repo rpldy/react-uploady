@@ -1,16 +1,16 @@
 import intercept  from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_X_SHORT } from "../../constants";
+import { UPLOAD_URL, WAIT_X_SHORT } from "../../constants";
 
 describe("UMD UI CHUNKED - Bundle", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    beforeEach(() => {
         cy.visitStory("chunkedUploady", "umd-core-chunked-ui");
     });
 
     it("should use uploady and upload file", () => {
-        intercept("http://localhost:4000/upload");
+        intercept(UPLOAD_URL);
 
         uploadFile(fileName, () => {
             let uniqueHeader;

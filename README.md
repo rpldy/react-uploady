@@ -59,14 +59,14 @@ You can start simple, or you can configure just about every aspect of the upload
 For this purpose, there are components, hooks, and plenty of features. 
 You get to choose which ones you need and only install the dependencies required (See [Packages](#packages) details below)
 
-React-Uploady has a small footprint (by design) with very few (and small) dependencies.
+React-Uploady has a small footprint (by design) with very few (tiny) dependencies.
 
 | Bundle                      | Minified size | GZipped size |
 |-----------------------------|---------------|--------------|
-| core                        | 28.6KB        | 11.0KB       |        
-| core + ui                   | 39.8KB        | 13.9KB       |      
-| core + ui + chunked support | 49.1KB        | 16.3KB       |    
-| everything                  | 75.7KB        | 23.7KB       |    
+| core                        | 29.1KB        | 10.5KB       |        
+| core + ui                   | 36.9KB        | 13.3KB       |      
+| core + ui + chunked support | 44.1KB        | 15.7KB       |    
+| everything                  | 71.0KB        | 22.9KB       |    
 
 ## Documentation
 

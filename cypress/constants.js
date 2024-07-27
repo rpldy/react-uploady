@@ -1,3 +1,6 @@
+
+export const UPLOAD_URL = Cypress.env("UPLOAD_URL") || "http://localhost:4000/upload";
+
 export const DEFAULT_URL = "http://test.upload/url";
 
 export const DEFAULT_METHOD = "POST";

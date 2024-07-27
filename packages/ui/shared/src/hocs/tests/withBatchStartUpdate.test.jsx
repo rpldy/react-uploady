@@ -2,18 +2,18 @@ import React from "react";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import useUploadyContext from "../../hooks/useUploadyContext";
 import withBatchStartUpdate from "../withBatchStartUpdate";
-import mockContext from "../../tests/mocks/UploadyContext.mock";
+import { UploadyContextMock } from "../../tests/mocks/UploadyContext.mock";
 
 vi.mock("../../hooks/useUploadyContext");
 
 describe("withRequestPreSendUpdate tests", () => {
     beforeAll(() => {
-        useUploadyContext.mockReturnValue(mockContext);
+        useUploadyContext.mockReturnValue(UploadyContextMock);
     });
 
     beforeEach(() => {
         clearViMocks(
-            mockContext,
+            UploadyContextMock,
         );
     });
 
@@ -26,7 +26,7 @@ describe("withRequestPreSendUpdate tests", () => {
 
         expect(container.firstChild).to.have.text("bob");
 
-        expect(mockContext.on).not.toHaveBeenCalled();
+        expect(UploadyContextMock.on).not.toHaveBeenCalled();
     });
 
     it("shouldn't unregister if no id on first render", () => {
@@ -37,8 +37,8 @@ describe("withRequestPreSendUpdate tests", () => {
         const { rerender } = render(<MyComp name="bob"/>);
 
         rerender(<MyComp name="bob" id="bi1"/> );
-        expect(mockContext.on).toHaveBeenCalledTimes(1);
-        expect(mockContext.off).not.toHaveBeenCalled();
+        expect(UploadyContextMock.on).toHaveBeenCalledTimes(1);
+        expect(UploadyContextMock.off).not.toHaveBeenCalled();
     });
 
     it("should provide update data for matching item id", async () => {
@@ -51,7 +51,7 @@ describe("withRequestPreSendUpdate tests", () => {
         const MockComp = vi.fn((props) =>
             <div>{props.name}-{props.requestData?.batch.id || ""}</div>);
 
-        mockContext.on.mockImplementationOnce((name, handler) => {
+        UploadyContextMock.on.mockImplementationOnce((name, handler) => {
             handlerPromise = handler(batch, options);
             expect(handlerPromise).toBeInstanceOf(Promise);
         });
@@ -76,12 +76,12 @@ describe("withRequestPreSendUpdate tests", () => {
             updateRequest: expect.any(Function),
         }, {});
 
-        expect(mockContext.on)
+        expect(UploadyContextMock.on)
             .toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_START, expect.any(Function));
 
         MockComp.mock.calls[1][0].updateRequest("test");
 
-        expect(mockContext.off)
+        expect(UploadyContextMock.off)
             .toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_START, expect.any(Function));
 
         const handlerResult = await handlerPromise;
@@ -96,7 +96,7 @@ describe("withRequestPreSendUpdate tests", () => {
         const MockComp = vi.fn((props) =>
             <div>{props.id}-{props.name}-{props.requestData?.batch.id || ""}</div>);
 
-        mockContext.on.mockImplementationOnce((name, handler) => {
+        UploadyContextMock.on.mockImplementationOnce((name, handler) => {
             const handlerPromise = handler(batch, options);
             expect(handlerPromise).toBeUndefined();
         });
@@ -107,7 +107,7 @@ describe("withRequestPreSendUpdate tests", () => {
 
         expect(container.firstChild).to.have.text("b2-bob-");
 
-        expect(mockContext.on)
+        expect(UploadyContextMock.on)
             .toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_START, expect.any(Function));
 
         expect(MockComp).toHaveBeenCalledTimes(1);
@@ -128,7 +128,7 @@ describe("withRequestPreSendUpdate tests", () => {
         const MockComp = vi.fn((props) =>
             <div>{props.name}-{props.requestData?.batch.id || ""}</div>);
 
-        mockContext.on.mockImplementationOnce((name, handler) => {
+        UploadyContextMock.on.mockImplementationOnce((name, handler) => {
             const handlerPromise = handler(batch, options);
             expect(handlerPromise).toBeInstanceOf(Promise);
         });
@@ -137,14 +137,14 @@ describe("withRequestPreSendUpdate tests", () => {
 
         const { rerender } = render(<MyComp id="b1" name="bob"/>);
 
-        expect(mockContext.on)
+        expect(UploadyContextMock.on)
             .toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_START, expect.any(Function));
 
         rerender(<MyComp id="b2" name="bob"/>);
 
-        expect(mockContext.off)
+        expect(UploadyContextMock.off)
             .toHaveBeenCalledWith(UPLOADER_EVENTS.BATCH_START, expect.any(Function));
 
-        expect(mockContext.on).toHaveBeenCalledTimes(2);
+        expect(UploadyContextMock.on).toHaveBeenCalledTimes(2);
     });
 });

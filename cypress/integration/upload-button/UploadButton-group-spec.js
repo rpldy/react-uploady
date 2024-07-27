@@ -1,17 +1,17 @@
 import intercept from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
-import { ITEM_START, ITEM_FINISH } from "../../constants";
+import { ITEM_START, ITEM_FINISH, UPLOAD_URL } from "../../constants";
 import { WAIT_MEDIUM } from "../../constants";
 
 describe("UploadButton - Simple - Multiple files", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    beforeEach(() => {
         cy.visitStory("uploadButton", "simple&knob-destination_Upload Destination=local&knob-group files in single request_Upload Settings=true&knob-max in group_Upload Settings=2");
     });
 
     it("should show upload preview for multiple files", () => {
-        intercept("http://localhost:4000/upload");
+        intercept(UPLOAD_URL);
 
         uploadFileTimes(fileName, () => {
             cy.wait("@uploadReq")

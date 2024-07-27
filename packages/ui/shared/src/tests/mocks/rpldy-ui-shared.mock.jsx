@@ -1,5 +1,8 @@
 import React from "react";
-import UploadyContextMock from "./UploadyContext.mock";
+import { UploadyContextMock as MockedUploadyContext } from "./UploadyContext.mock";
+
+//for some reason using the mock dep directly fails in tests ;(
+const UploadyContextMock = MockedUploadyContext;
 
 const assertContext = vi.fn(() => UploadyContextMock);
 

@@ -23,6 +23,7 @@ export default {
                 nativeUploady: "react-native-native-uploady",
                 chunkedSender: "core-chunked-sender",
             },
+            UPLOAD_URL: process.env.UPLOAD_URL
         },
         projectId: "excxm9",
     },

@@ -1,7 +1,6 @@
 // @flow
 import React, { forwardRef } from "react";
 import asUploadButton from "./asUploadButton";
-
 import type { ComponentType } from "react";
 
 const UploadButton = (asUploadButton(forwardRef(

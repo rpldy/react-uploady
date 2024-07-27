@@ -1,15 +1,15 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_X_SHORT } from "../../constants";
+import { UPLOAD_URL, WAIT_X_SHORT } from "../../constants";
 
 describe("Uploady - Undefined params", () => {
     const fileName = "flower.jpg";
 
-    const loadPage = () =>
+    beforeEach(() => {
         cy.visitStory("uploady", "with-header-from-file-name&knob-destination_Upload Destination=local&knob-mock send delay_Upload Destination=1000&knob-multiple files_Upload Settings=true&knob-group files in single request_Upload Settings=&knob-max in group_Upload Settings=2&knob-auto upload on add_Upload Settings=true");
+    });
 
     const testUndefinedNotPassed = () => {
-        loadPage();
         cy.wait(WAIT_X_SHORT);
 
         uploadFile(fileName, () => {
@@ -24,8 +24,7 @@ describe("Uploady - Undefined params", () => {
     };
 
     it("should not pass undefined param to formData from upload options", () => {
-        loadPage();
-        intercept("http://localhost:4000/upload");
+        intercept(UPLOAD_URL);
 
         cy.setUploadOptions({ params: { empty: undefined } });
 
@@ -33,8 +32,7 @@ describe("Uploady - Undefined params", () => {
     });
 
     it("should not pass undefined param to formData from requestPreSend", () => {
-        loadPage();
-        intercept("http://localhost:4000/upload");
+        intercept(UPLOAD_URL);
 
         cy.setPreSendOptions({ params: { empty: undefined } });
 
@@ -42,8 +40,7 @@ describe("Uploady - Undefined params", () => {
     });
 
     it("should pass undefined param with formDataAllowUndefined", () => {
-        loadPage();
-        intercept("http://localhost:4000/upload");
+        intercept(UPLOAD_URL);
 
         cy.setUploadOptions({
             formDataAllowUndefined: true,

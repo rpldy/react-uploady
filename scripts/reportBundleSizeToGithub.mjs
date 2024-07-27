@@ -14,13 +14,29 @@ const getWithPreviousBundleSizeReport = async (data) => {
         core.info("looking for bundle size report artifact from MASTER");
 
         const artifactClient = new DefaultArtifactClient();
-        const { artifact } = await artifactClient.getArtifact(BUNDLE_SIZE_REPORT_ARTIFACT) || {};
 
-        if (artifact) {
-            core.info(`found bundle size report artifact (id: ${artifact.id}) from MASTER (size: ${artifact.size}), created at: ${artifact.createdAt}`);
-            //await artifactClient.downloadArtifact()
-        } else {
-            core.info("no bundle size report artifact found from MASTER, skipping comparison")
+        try {
+            const { artifact } = await artifactClient.getArtifact(BUNDLE_SIZE_REPORT_ARTIFACT) || {};
+
+            if (artifact) {
+                core.info(`found bundle size report artifact (id: ${artifact.id}) from MASTER (size: ${artifact.size}), created at: ${artifact.createdAt}`);
+                try {
+                    const { downloadPath } = await artifactClient.downloadArtifact(artifact.id);
+
+                    core.info(`found bundle size report artifact from MASTER, loading data from: ${downloadPath}`);
+
+                    const str = fs.readFileSync(downloadPath, { encoding: "utf-8" });
+                    const masterData = JSON.parse(str);
+
+                    core.info(`loaded master data with ${masterData.length} rows`);
+                    core.debug(str);
+                } catch (ex) {
+                    core.warning("failed to download bundle size report artifact from MASTER - " + ex.message);
+                }
+            }
+        } catch(ex){
+            core.info("no bundle size report artifact found from MASTER, skipping comparison ")
+            core.debug(ex.message);
         }
     }
 
@@ -55,9 +71,6 @@ const uploadBundleSizeReport = async (dataStr) => {
 
 const reportBundleSize = async (data) => {
     core.info("processing bundle size report...");
-
-    core.info("TOKEN.... " + process.env.ACTIONS_RUNTIME_TOKEN)
-    core.info("URL.... " + process.env.ACTIONS_RESULTS_URL)
 
     const dataWithMasterCompare = await getWithPreviousBundleSizeReport(data);
 

@@ -7,9 +7,9 @@
     <a href="https://badge.fury.io/js/%40rpldy%2Fuploady">
         <img src="https://badge.fury.io/js/%40rpldy%2Fuploady.svg" alt="npm version" height="20">
     </a>
-    <a href="https://circleci.com/gh/rpldy/react-uploady">
-        <img src="https://circleci.com/gh/rpldy/react-uploady.svg?style=svg" alt="circleci status"/>
-    </a>  
+    <a href="https://github.com/rpldy/react-uploady/actions/workflows/pr.yml">
+        <img src="https://github.com/rpldy/react-uploady/actions/workflows/pr.yml/badge.svg" alt="Build Status"/>
+    </a>
     <a href="https://codecov.io/gh/rpldy/react-uploady">
       <img src="https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg" alt="codecov status"/>
     </a>
@@ -358,6 +358,7 @@ Already using Uploady in Production? Let us know how & where in this open [discu
 Companies/Organizations that have contributed to the project:
 
 <a href="https://opencollective.com/react-uploady/organization/0/website"><img src="https://opencollective.com/react-uploady/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/react-uploady/organization/3/website"><img src="https://opencollective.com/react-uploady/organization/4/avatar.svg"></a>
 <a href="https://opencollective.com/react-uploady/organization/1/website"><img src="https://opencollective.com/react-uploady/organization/1/avatar.svg"></a>
 <a href="https://opencollective.com/react-uploady/organization/2/website"><img src="https://opencollective.com/react-uploady/organization/2/avatar.svg"></a>
 <a href="https://opencollective.com/react-uploady/organization/3/website"><img src="https://opencollective.com/react-uploady/organization/3/avatar.svg"></a>

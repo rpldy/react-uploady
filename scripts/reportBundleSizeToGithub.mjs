@@ -2,50 +2,70 @@ import fs from "fs";
 import path from "path";
 import core from "@actions/core";
 import { DefaultArtifactClient } from "@actions/artifact";
+import { parseFileSize } from "./utils.mjs";
 
 const BUNDLE_SIZE_REPORT_ARTIFACT = "bundle-size-report-master";
 
 const BRANCH = process.env.GITHUB_REF_NAME || process.env.GITHUB_REF;
 
+const getBundleSizeReportArtifactData = async () => {
+    let data;
+    const artifactClient = new DefaultArtifactClient();
+
+    try {
+        const { artifact } = await artifactClient.getArtifact(BUNDLE_SIZE_REPORT_ARTIFACT) || {};
+
+        if (artifact) {
+            core.info(`found bundle size report artifact info (id: ${artifact.id}) from MASTER (size: ${artifact.size}), created at: ${artifact.createdAt}`);
+
+            try {
+                const { downloadPath } = await artifactClient.downloadArtifact(artifact.id);
+                core.info("downloaded bundle size report artifact from MASTER");
+                core.debug(`reading data from: ${downloadPath}`);
+
+                const str = fs.readFileSync(downloadPath, { encoding: "utf-8" });
+                data = JSON.parse(str);
+
+                core.info(`loaded master data with ${data.length} rows`);
+                core.debug(str);
+            } catch (ex) {
+                core.warning("failed to download bundle size report artifact from MASTER - " + ex.message);
+            }
+        }
+    } catch (ex) {
+        core.info("no bundle size report artifact found from MASTER, skipping comparison ")
+        core.debug(ex.message);
+    }
+
+    return data;
+};
+
 const getWithPreviousBundleSizeReport = async (data) => {
-//tODO: retrieve previous report from master and compare.
-// if not available return as is but add columns with N/A
-    let updatedData, masterData;
+    let updatedData = data;
 
     if (!BRANCH.includes("master")) {
         core.info("looking for bundle size report artifact from MASTER");
+        const masterData = await getBundleSizeReportArtifactData() || [];
 
-        const artifactClient = new DefaultArtifactClient();
+        updatedData = data.map((row) => {
+            const masterRow = masterData.find((r) => r.name === name);
 
-        try {
-            const { artifact } = await artifactClient.getArtifact(BUNDLE_SIZE_REPORT_ARTIFACT) || {};
+            const previous = masterRow ?
+                parseFileSize(row.size) - parseFileSize(masterRow.size) : "N/A";
 
-            if (artifact) {
-                core.info(`found bundle size report artifact (id: ${artifact.id}) from MASTER (size: ${artifact.size}), created at: ${artifact.createdAt}`);
-                try {
-                    const { downloadPath } = await artifactClient.downloadArtifact(artifact.id);
+            const trend = masterRow ? (previous > 0 ? "🔺" : (previous < 0 ? "⬇" : "=")) : "N/A";
 
-                    core.info(`found bundle size report artifact from MASTER, loading data from: ${downloadPath}`);
-
-                    const str = fs.readFileSync(downloadPath, { encoding: "utf-8" });
-                    masterData = JSON.parse(str);
-
-                    core.info(`loaded master data with ${masterData.length} rows`);
-                    core.debug(str);
-
-
-                } catch (ex) {
-                    core.warning("failed to download bundle size report artifact from MASTER - " + ex.message);
-                }
+            return {
+                ...row,
+                previous,
+                trend,
             }
-        } catch(ex){
-            core.info("no bundle size report artifact found from MASTER, skipping comparison ")
-            core.debug(ex.message);
-        }
+        });
+    } else {
+        core.info("skipping download of bundle size report artifact on MASTER");
     }
 
-
-    return data;
+    return updatedData;
 };
 
 const uploadBundleSizeReport = async (dataStr) => {
@@ -59,15 +79,12 @@ const uploadBundleSizeReport = async (dataStr) => {
 
         const artifactClient = new DefaultArtifactClient();
         const { id, size } = await artifactClient.uploadArtifact(
-            // name of the artifact
             BUNDLE_SIZE_REPORT_ARTIFACT,
             [reportPath],
-            path.resolve("./"), //process.env.GITHUB_WORKSPACE,
-            {
-                // optional: how long to retain the artifact
-                // if unspecified, defaults to repository/org retention settings (the limit of this value)
-                retentionDays: 720
-            }
+            path.resolve("./"),
+            // gh limits to 90 days max {
+            //     retentionDays: 720
+            // }
         );
         core.debug(`saved artifact (${id}) for later comparisons (size: ${size})`);
     } else {
@@ -81,7 +98,7 @@ const reportBundleSize = async (data) => {
     const dataWithMasterCompare = await getWithPreviousBundleSizeReport(data);
 
     const dataStr = JSON.stringify(dataWithMasterCompare);
-    core.debug("bundle size data: " + dataWithMasterCompare);
+    core.debug("bundle size data with compare: " + dataWithMasterCompare);
 
     const report = [
         //headers
@@ -109,8 +126,8 @@ const reportBundleSize = async (data) => {
     //flush to summary
     await core.summary.write();
 
-    //on Master save report as artifact (or to git???) for comparing with next time PR is run
-    await uploadBundleSizeReport(dataStr);
+    //on Master save report as artifact for comparing with next time PR is run - we save data without compare info!
+    await uploadBundleSizeReport(JSON.stringify(data));
 };
 
 export default reportBundleSize;

@@ -1,4 +1,4 @@
-name: Uploady PR Verify
+name: Uploady Build
 
 on:
     workflow_dispatch:

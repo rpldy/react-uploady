@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 import core from "@actions/core";
 import { DefaultArtifactClient } from "@actions/artifact";
 
@@ -61,6 +62,7 @@ const uploadBundleSizeReport = async (dataStr) => {
             // name of the artifact
             BUNDLE_SIZE_REPORT_ARTIFACT,
             [reportPath],
+            path.resolve("./"), //process.env.GITHUB_WORKSPACE,
             {
                 // optional: how long to retain the artifact
                 // if unspecified, defaults to repository/org retention settings (the limit of this value)

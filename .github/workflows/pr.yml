@@ -79,6 +79,7 @@ jobs:
                     message: |
                         ## 📦 Bundle Size Report
                         ${{ steps.bundle-prod.outputs.BUNDLE_SIZE_REPORT_TABLE }}
+
     sb:
         name: Build Storybook
         runs-on: ubuntu-latest
@@ -114,6 +115,7 @@ jobs:
     unit-test:
         name: Unit-Test (Vitest)
         runs-on: ubuntu-latest
+        environment: "Rpldy-Build"
         steps:
             -   name: Checkout
                 uses: actions/checkout@v4
@@ -133,7 +135,7 @@ jobs:
                     path: reports/junit/js-*.xml
                     reporter: jest-junit
             -   name: Upload Coverage (master only)
-                uses: codecov/codecov-action@v3
+                uses: codecov/codecov-action@v4
                 if: ${{ github.ref_name == 'master' }}
                 with:
                     token: ${{ secrets.CODECOV_TOKEN }}

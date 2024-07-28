@@ -35,6 +35,7 @@ const getBundleSizeReportArtifactData = async () => {
     } catch (ex) {
         core.info("no bundle size report artifact found from MASTER, skipping comparison ")
         core.debug(ex.message);
+        throw ex;
     }
 
     return data;

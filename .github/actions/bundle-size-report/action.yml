@@ -26,7 +26,7 @@ runs:
             with:
                 add: ${{ steps.bundle-size-report.outputs.SAVED_MASTER_REPORT }}
                 message: "chore: update master bundle size report"
-                push: true
+                push: origin 'updated-bundle-size-report-${{ github.run_id }}' --set-upstream --force
                 new_branch: updated-bundle-size-report-${{ github.run_id }}
                 committer_name: Uploady Bot
                 committer_email: bot@react-uploady.org

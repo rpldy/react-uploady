@@ -22,14 +22,14 @@ runs:
         -   name: Commit Master Bundle Size Report
             id: commit-report
             if: ${{ steps.bundle-size-report.outputs.SAVED_MASTER_REPORT }}
-            uses: EndBug/add-and-commit@v9
-            with:
-                add: ${{ steps.bundle-size-report.outputs.SAVED_MASTER_REPORT }}
-                message: "chore: update master bundle size report"
-                push: origin 'updated-bundle-size-report-${{ github.run_id }}' --set-upstream --force
-                new_branch: updated-bundle-size-report-${{ github.run_id }}
-                committer_name: Uploady Bot
-                committer_email: bot@react-uploady.org
+            shell: bash
+            run: |
+                git config user.email "ci@react-uploady.org"
+                git config user.name "Uploady CI"
+                git status
+                git checkout -b "updated-bundle-size-report-${{ github.run_id }}"
+                git commit -a -m "chore: update master bundle size report"
+                push origin 'updated-bundle-size-report-${{ github.run_id }}' --set-upstream --force
 
         -   name: Create PR for Master Bundle Size Report
             if: ${{ steps.commit-report.outputs.committed == 'true' }}
@@ -40,3 +40,14 @@ runs:
                 branch: updated-bundle-size-report-${{ github.run_id }}
                 base: "refs/heads/master"
                 commit-message: "chore: commit new master bundle size report"
+
+
+
+#            uses: EndBug/add-and-commit@v9
+#            with:
+#                add: ${{ steps.bundle-size-report.outputs.SAVED_MASTER_REPORT }}
+#                message: "chore: update master bundle size report"
+#                push: origin 'updated-bundle-size-report-${{ github.run_id }}' --set-upstream --force
+#                new_branch: updated-bundle-size-report-${{ github.run_id }}
+#                committer_name: Uploady Bot
+#                committer_email: bot@react-uploady.org

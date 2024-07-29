@@ -1,0 +1,32 @@
+name: Bundle Size Report
+description: report (summary & PR) bundle size with comparison to master
+
+inputs:
+    reportData:
+        description: 'The report data to process'
+        required: true
+
+runs:
+    using: composite
+    steps:
+        -   name: Process Report
+            id: bundle-size-report
+            uses: actions/github-script@v7
+            env:
+                BUNDLE_SIZE_REPORT: ${{ inputs.reportData }}
+            with:
+                script: |
+                    const { default: script } = await import('${{ github.workspace }}/.github/actions/bundle-size-report/index.mjs');
+                    return await script({ fetch, github, context, core });
+
+        -   name: Commit Master Bundle Size Report
+            if: ${{ steps.bundle-size-report.outputs.SAVED_MASTER_REPORT }}
+            uses: EndBug/add-and-commit@v9
+            with:
+                add: ${{ steps.bundle-size-report.outputs.SAVED_MASTER_REPORT }}
+                message: 'chore: update master bundle size report'
+                push: true
+                committer_name: Uploady Bot
+                committer_email: bot@react-uploady.org
+
+

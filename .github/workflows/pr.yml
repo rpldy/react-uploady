@@ -1,4 +1,4 @@
-name: Uploady PR Verify
+name: Uploady Build
 
 on:
     workflow_dispatch:
@@ -55,30 +55,27 @@ jobs:
                 uses: ./.github/actions/prepare
                 with:
                     with-cypress: true
-            -   name: Retrieve GH Actions Tokens
-                uses: ./.github/actions/actions-token
-                id: get-action-rt-tokens
-
             -   name: Bundle for Production
                 id: bundle-prod
                 run: |
-                    ACTIONS_RUNTIME_TOKEN="${{ steps.get-action-rt-tokens.outputs.ACTIONS_RUNTIME_TOKEN }}" \
-                    ACTIONS_RESULTS_URL="${{ steps.get-action-rt-tokens.outputs.ACTIONS_RESULTS_URL }}" \
                     pnpm bundle:prod
-
             -   name: Cache Bundle Folder
                 id: cache-bundle
                 uses: actions/cache@v4
                 with:
                     path: bundle
                     key: bundle-${{ runner.os }}-${{ hashFiles('bundle/**') }}
-
+            -   name: Bundle Size Report
+                id: bundle-side-report
+                uses: ./.github/actions/bundle-size-report
+                with:
+                    reportData: ${{ steps.bundle-prod.outputs.BUNDLE_SIZE_REPORT_DATA }}
             -   name: Add Bundle Size Report as PR Comment
                 uses: mshick/add-pr-comment@v2
                 with:
                     message: |
                         ## 📦 Bundle Size Report
-                        ${{ steps.bundle-prod.outputs.BUNDLE_SIZE_REPORT_TABLE }}
+                        ${{ steps.bundle-side-report.outputs.BUNDLE_SIZE_REPORT_TABLE }}
 
     sb:
         name: Build Storybook

@@ -73,6 +73,25 @@ const logger = {
     error: (...args) => console.log(chalk.red(...args)),
 };
 
+const FILESIZE_UNITS =  {
+    "b": 1,
+    "kb": 1024,
+    "mb": 1024 * 1024,
+    "gb": 1024 * 1024 * 1024
+};
+
+const FILE_SIZE_PARSE_RGX = /(\d+\.?\d*)\s*(\w+)/;
+
+const parseFileSize = (sizeStr) => {
+    const match = sizeStr.match(FILE_SIZE_PARSE_RGX);
+    if (match) {
+        const [_, val, unit] = match;
+        return parseInt(val) * FILESIZE_UNITS[unit.toLowerCase()];
+    }
+
+    return NaN;
+};
+
 export {
     DEP_TYPES,
     logger,
@@ -80,4 +99,5 @@ export {
     copyFilesToPackage,
     savePackageJson,
     getPkgDependency,
+    parseFileSize,
 };

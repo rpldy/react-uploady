@@ -125,9 +125,9 @@ const getReportValue = (key, val) => {
         case "success":
             return val === true ? "🟢" : "💥"
         case "max":
-            return filesize(val);
+            return filesize(val, { standard: "jedec", spacer: "" });
         default:
-            return val;
+            return `${val}`;
     }
 };
 

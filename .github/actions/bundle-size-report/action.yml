@@ -20,13 +20,23 @@ runs:
                     return await script({ fetch, github, context, core });
 
         -   name: Commit Master Bundle Size Report
+            id: commit-report
             if: ${{ steps.bundle-size-report.outputs.SAVED_MASTER_REPORT }}
             uses: EndBug/add-and-commit@v9
             with:
                 add: ${{ steps.bundle-size-report.outputs.SAVED_MASTER_REPORT }}
-                message: 'chore: update master bundle size report'
+                message: "chore: update master bundle size report"
                 push: true
+                new_branch: updated-bundle-size-report-${{ github.run_id }}
                 committer_name: Uploady Bot
                 committer_email: bot@react-uploady.org
 
-
+        -   name: Create PR for Master Bundle Size Report
+            if: ${{ steps.commit-report.outputs.committed == 'true' }}
+            uses: peter-evans/create-pull-request@v6
+            with:
+                title: "chore: update master bundle size report"
+                body: "Automatic PR for new bundle size report"
+                branch: updated-bundle-size-report-${{ github.run_id }}
+                base: "refs/heads/master"
+                commit-message: "chore: commit new master bundle size report"

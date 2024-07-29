@@ -72,12 +72,13 @@ const getWithPreviousBundleSizeReport = async (data, masterData, core) => {
 
     if (!BRANCH.includes("master")) {
         updatedData = data.map((row) => {
-            const masterRow = masterData.find((r) => r.name === name);
+            const masterRow = masterData.find((mr) => mr.name === row.name);
 
             const previous = masterRow ?
                 parseFileSize(row.size) - parseFileSize(masterRow.size) : "N/A";
 
-            const trend = masterRow ? (previous > 0 ? "🔺" : (previous < 0 ? "⬇" : "=")) : "N/A";
+            const trend = masterRow ?
+                (previous > 0 ? "🔺" : (previous < 0 ? "⬇" : "=")) : "N/A";
 
             return {
                 ...row,

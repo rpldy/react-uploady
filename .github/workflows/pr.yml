@@ -49,6 +49,7 @@ jobs:
         name: Create code bundles
         runs-on: ubuntu-latest
         permissions:
+            pull-requests: write
             contents: write
         steps:
             -   name: Checkout

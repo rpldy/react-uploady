@@ -27,9 +27,7 @@ runs:
                 git config user.email "ci@react-uploady.org"
                 git config user.name "Uploady CI"
                 git status
-                git checkout -b "updated-bundle-size-report-${{ github.run_id }}"
                 git commit -a -m "chore: update master bundle size report"
-                git push origin 'updated-bundle-size-report-${{ github.run_id }}' --set-upstream --force
                 echo "committed=true" >> $GITHUB_OUTPUT
 
         -   name: check committed output
@@ -37,15 +35,15 @@ runs:
             run: |
                 echo "Did Commit? ${{ steps.commit-report.outputs.committed }}"
 
-#        -   name: Create PR for Master Bundle Size Report
-#            if: ${{ steps.commit-report.outputs.committed == 'true' }}
-#            uses: peter-evans/create-pull-request@v6
-#            with:
-#                title: "chore: update master bundle size report"
-#                body: "Automatic PR for new bundle size report"
-#                branch: updated-bundle-size-report-${{ github.run_id }}
-#                base: "refs/heads/master"
-#                commit-message: "chore: commit new master bundle size report"
+        -   name: Create PR for Master Bundle Size Report
+            if: ${{ steps.commit-report.outputs.committed == 'true' }}
+            uses: peter-evans/create-pull-request@v6
+            with:
+                title: "chore: update master bundle size report"
+                body: "Automatic PR for new bundle size report"
+                branch: updated-bundle-size-report-${{ github.run_id }}
+                base: "refs/heads/master"
+                commit-message: "chore: commit new master bundle size report"
 
         -   name: Add Bundle Size Report as PR Comment (for PR Builds)
             uses: mshick/add-pr-comment@v2

@@ -157,8 +157,8 @@ importers:
         specifier: ^1.12.0
         version: 1.12.0(chai@5.1.1)
       chalk:
-        specifier: ^4.1.2
-        version: 4.1.2
+        specifier: ^5.3.0
+        version: 5.3.0
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
@@ -204,6 +204,9 @@ importers:
       eslint-plugin-vitest:
         specifier: ^0.3.22
         version: 0.3.26(@typescript-eslint/eslint-plugin@7.16.1)(eslint@8.57.0)(typescript@5.4.5)(vitest@2.0.3)
+      filesize:
+        specifier: ^10.1.4
+        version: 10.1.4
       flow-bin:
         specifier: ^0.229.0
         version: 0.229.0
@@ -9214,6 +9217,11 @@ packages:
       supports-color: 7.2.0
     dev: true
 
+  /chalk@5.3.0:
+    resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+    dev: true
+
   /chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
     dev: true
@@ -11474,6 +11482,11 @@ packages:
     resolution: {integrity: sha512-w1cEuf3S+DrLCQL7ET6kz+gmlJdbq9J7yXCSjK/OZCPA+qEN1WyF4ZAf0YYJa4/shHJra2t/d/r8SV4Ji+x+8Q==}
     dependencies:
       minimatch: 5.1.6
+    dev: true
+
+  /filesize@10.1.4:
+    resolution: {integrity: sha512-ryBwPIIeErmxgPnm6cbESAzXjuEFubs+yKYLBZvg3CaiNcmkJChoOGcBSrZ6IwkMwPABwPpVXE6IlNdGJJrvEg==}
+    engines: {node: '>= 10.4.0'}
     dev: true
 
   /fill-range@7.0.1:

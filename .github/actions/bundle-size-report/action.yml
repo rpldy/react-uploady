@@ -30,14 +30,12 @@ runs:
                 git checkout -b "updated-bundle-size-report-${{ github.run_id }}"
                 git commit -a -m "chore: update master bundle size report"
                 git push origin 'updated-bundle-size-report-${{ github.run_id }}' --set-upstream --force
-                echo "committed=true" >> $GITHUB_ENV
+                echo "committed=true" >> $GITHUB_OUTPUT
 
         -   name: check committed output
             shell: bash
             run: |
-                echo "committed=${{ steps.commit-report.outputs.committed }}"
-                echo "string: ${{ steps.commit-report.outputs.committed == 'true' }}"
-                echo "bool: ${{ steps.commit-report.outputs.committed == true }}"
+                echo "Did Commit? ${{ steps.commit-report.outputs.committed }}"
 
         -   name: Create PR for Master Bundle Size Report
             if: ${{ steps.commit-report.outputs.committed == 'true' }}

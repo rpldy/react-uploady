@@ -74,6 +74,9 @@ const getWithPreviousBundleSizeReport = async (data, masterData, core) => {
         updatedData = data.map((row) => {
             const masterRow = masterData.find((mr) => mr.name === row.name);
 
+            core.info(`MASTER ROW SIZE: ${masterRow.size} (${parseFileSize(masterRow.size)}) `);
+            core.info(`NEW ROW SIZE: ${row.size} (${parseFileSize(row.size)}) `);
+
             const previous = masterRow ?
                 parseFileSize(row.size) - parseFileSize(masterRow.size) : "N/A";
 

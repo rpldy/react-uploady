@@ -11,7 +11,7 @@ import { getMatchingPackages } from "./lernaUtils.mjs";
 import { logger } from "./utils.mjs"
 //TODO: should be passed by options or found in root (dynamically)
 import config from "../bundle.config.mjs";
-import reportBundleSize from "./reportBundleSizeToGithub.mjs";
+import outputBundleSize from "./reportBundleSizeToGithub.mjs";
 
 const yargs = Yargs(process.argv.slice(2));
 
@@ -96,6 +96,7 @@ const validateSize = (type, name, wpResult, bundleSizes) => {
         const result = shell.exec(`bundlesize -f ${outputFile} -s ${maxSize} ${options.debugBundleSize ? "--debug" : ""}`);
 
         if (result.code && !isCI) {
+            //on CI we dont fail so the report is printed in GH and then the action should fail the flow
             throw new Error(`bundle: ${outputFile} exceeds allowed maxSize: ${bytes(maxSize)}`)
         }
 
@@ -272,7 +273,7 @@ const doBundle = async () => {
         logger.info(`>>> Finished bundling successfully!`);
 
         if (isCI) {
-            await reportBundleSize(bundleSizes);
+            await outputBundleSize(bundleSizes);
         }
     } catch (e) {
         logger.error(`!!!! Failed to bundle`, e);

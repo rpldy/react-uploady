@@ -68,16 +68,10 @@ jobs:
                     path: bundle
                     key: bundle-${{ runner.os }}-${{ hashFiles('bundle/**') }}
             -   name: Bundle Size Report
-                id: bundle-side-report
+                id: bundle-size-report
                 uses: ./.github/actions/bundle-size-report
                 with:
                     reportData: ${{ steps.bundle-prod.outputs.BUNDLE_SIZE_REPORT_DATA }}
-            -   name: Add Bundle Size Report as PR Comment
-                uses: mshick/add-pr-comment@v2
-                with:
-                    message: |
-                        ## 📦 Bundle Size Report
-                        ${{ steps.bundle-side-report.outputs.BUNDLE_SIZE_REPORT_TABLE }}
 
     sb:
         name: Build Storybook

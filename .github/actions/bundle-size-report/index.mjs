@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import filesize from "filesize";
+import { filesize } from "filesize";
 import { parseFileSize } from "../../../scripts/utils.mjs";
 
 const BRANCH = process.env.GITHUB_REF_NAME || process.env.GITHUB_REF;

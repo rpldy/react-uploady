@@ -16,7 +16,7 @@ runs:
                 BUNDLE_SIZE_REPORT: ${{ inputs.reportData }}
             with:
                 script: |
-                    const { default: script } = await import('./.github/actions/bundle-size-report/index.js');
+                    const { default: script } = await import('${{ github.workspace }}/.github/actions/bundle-size-report/index.js');
                     return await script({ fetch, github, context, core });
 
         -   name: Commit Master Bundle Size Report

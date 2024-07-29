@@ -37,15 +37,15 @@ runs:
             run: |
                 echo "Did Commit? ${{ steps.commit-report.outputs.committed }}"
 
-        -   name: Create PR for Master Bundle Size Report
-            if: ${{ steps.commit-report.outputs.committed == 'true' }}
-            uses: peter-evans/create-pull-request@v6
-            with:
-                title: "chore: update master bundle size report"
-                body: "Automatic PR for new bundle size report"
-                branch: updated-bundle-size-report-${{ github.run_id }}
-                base: "refs/heads/master"
-                commit-message: "chore: commit new master bundle size report"
+#        -   name: Create PR for Master Bundle Size Report
+#            if: ${{ steps.commit-report.outputs.committed == 'true' }}
+#            uses: peter-evans/create-pull-request@v6
+#            with:
+#                title: "chore: update master bundle size report"
+#                body: "Automatic PR for new bundle size report"
+#                branch: updated-bundle-size-report-${{ github.run_id }}
+#                base: "refs/heads/master"
+#                commit-message: "chore: commit new master bundle size report"
 
         -   name: Add Bundle Size Report as PR Comment (for PR Builds)
             uses: mshick/add-pr-comment@v2
@@ -53,12 +53,3 @@ runs:
                 message: |
                     ## 📦 Bundle Size Report
                     ${{ steps.bundle-size-report.outputs.BUNDLE_SIZE_REPORT_TABLE }}
-
-#            uses: EndBug/add-and-commit@v9
-#            with:
-#                add: ${{ steps.bundle-size-report.outputs.SAVED_MASTER_REPORT }}
-#                message: "chore: update master bundle size report"
-#                push: origin 'updated-bundle-size-report-${{ github.run_id }}' --set-upstream --force
-#                new_branch: updated-bundle-size-report-${{ github.run_id }}
-#                committer_name: Uploady Bot
-#                committer_email: bot@react-uploady.org

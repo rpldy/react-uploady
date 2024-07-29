@@ -152,7 +152,7 @@ export default async ({ core }) => {
     core.debug("got bundle size data input: " + dataStr);
     const data = JSON.parse(dataStr);
 
-    const masterData = await getBundleSizeReportMasterData();
+    const masterData = await getBundleSizeReportMasterData(core);
 
     const dataWithMasterCompare = await getWithPreviousBundleSizeReport(data, masterData, core);
     core.debug("bundle size data with compare: " + dataWithMasterCompare);

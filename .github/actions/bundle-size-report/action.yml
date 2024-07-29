@@ -42,7 +42,7 @@ runs:
                 title: "chore: update master bundle size report"
                 body: "Automatic PR for new bundle size report"
                 branch: updated-bundle-size-report-${{ github.run_id }}
-                base: "refs/heads/master"
+                base: "master"
                 commit-message: "chore: commit new master bundle size report"
 
         -   name: Add Bundle Size Report as PR Comment (for PR Builds)

@@ -29,7 +29,7 @@ runs:
                 git status
                 git checkout -b "updated-bundle-size-report-${{ github.run_id }}"
                 git commit -a -m "chore: update master bundle size report"
-                push origin 'updated-bundle-size-report-${{ github.run_id }}' --set-upstream --force
+                git push origin 'updated-bundle-size-report-${{ github.run_id }}' --set-upstream --force
 
         -   name: Create PR for Master Bundle Size Report
             if: ${{ steps.commit-report.outputs.committed == 'true' }}

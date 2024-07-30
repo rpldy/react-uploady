@@ -64,15 +64,16 @@ const updateDefinePlugin = async (config, withDefinitions) => {
 
 const addEnvParams = async (config) =>
     await updateDefinePlugin(config, async (definitions) => {
+        const buildVersion = getUploadyVersion()
+        console.info(`Uploady StoryBook Build - Uploady Version: ${buildVersion}`);
+
         return {
             ...definitions,
             "PUBLISHED_VERSIONS": await getAllPackagesVersions(),
             "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
             "process.env": {
                 ...(definitions["process.env"] || stringify(process.env)),
-                BUILD_TIME_VERSION: JSON.stringify(getUploadyVersion()),
-                CIRCLECI: JSON.stringify(process.env.CIRCLECI),
-                CIRCLECI_BRANCH: JSON.stringify(process.env.CIRCLE_BRANCH),
+                BUILD_TIME_VERSION: JSON.stringify(buildVersion),
                 SB_INTERNAL: JSON.stringify(process.env.SB_INTERNAL),
             }
         };

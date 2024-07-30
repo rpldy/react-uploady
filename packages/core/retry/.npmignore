@@ -17,5 +17,5 @@ jest*
 .jest-cache/
 .jest-coverage/
 coverage/
-
+.github/
 

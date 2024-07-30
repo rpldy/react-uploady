@@ -1,5 +1,5 @@
 {
-  "version": "1.8.1",
+  "version": "1.8.2",
   "name": "@rpldy/safe-storage",
   "description": "safe (dont throw) versions of local and session storage",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -22,7 +22,7 @@
     "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
-    "@rpldy/shared": "^1.8.1"
+    "@rpldy/shared": "^1.8.2"
   },
   "devDependencies": {
     "flow-bin": "^0.229.0"

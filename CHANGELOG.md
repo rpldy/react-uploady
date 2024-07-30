@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.8.2 (2024-07-30)
+
+### Features
+
+- `[ui-shared]` - fix: improve uploady props extendability. Fix for [#710](https://github.com/rpldy/react-uploady/issues/710).
+
+### Internal
+
+- `ci` - move build & PR verification from circle-ci to github
+- `all` - upgrade several dev deps
+
+
 ## 1.8.1 (2024-05-16)
 
 ### Bug fixes

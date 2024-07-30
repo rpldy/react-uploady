@@ -1,5 +1,5 @@
 {
-  "version": "1.8.1",
+  "version": "1.8.2",
   "name": "@rpldy/uploady",
   "description": "wrapper&context component to expose and provide react-uploady functionality",
   "author": "yoav niran (https://github.com/yoavniran)",

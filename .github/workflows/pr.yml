@@ -91,7 +91,7 @@ jobs:
                 uses: actions/cache@v4
                 with:
                     path: .sb-static
-                    key: sb-static-${{ runner.os }}-${{ hashFiles('.sb-static/*.bundle.js') }}
+                    key: sb-static-${{ hashFiles('lerna.json') }}-${{ github.run_id }}
 
     lft:
         name: Lint, Flow, Types
@@ -154,8 +154,8 @@ jobs:
                 uses: actions/cache@v4
                 with:
                     path: .sb-static
-                    key: sb-static-${{ runner.os }}-
-                    restore-keys: sb-static-${{ runner.os }}-
+                    key: sb-static-${{ hashFiles('lerna.json') }}-${{ github.run_id }}
+                    restore-keys: sb-static-${{ hashFiles('lerna.json') }}-
             -   name: Restore Bundle Cache
                 uses: actions/cache@v4
                 with:

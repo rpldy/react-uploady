@@ -5,6 +5,10 @@ inputs:
     with-cypress:
         description: whether to cache cypress bin folder
         required: false
+    with-frozen:
+        description: whether to use --frozen--lockfile
+        required: false
+        default: "true"
 
 runs:
     using: composite
@@ -21,7 +25,7 @@ runs:
 
         -   name: Install deps
             shell: bash
-            run: pnpm install --frozen-lockfile
+            run: pnpm install ${{ inputs.with-frozen == 'true' && '--frozen-lockfile' || '' }}
 
         -   name: Set up Cypress binary cache
             if: ${{ inputs.with-cypress == 'true' }}

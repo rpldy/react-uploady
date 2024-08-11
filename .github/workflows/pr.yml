@@ -42,6 +42,7 @@ jobs:
                 uses: ./.github/actions/prepare
                 with:
                     with-cypress: true
+                    with-frozen: false
             -   name: Build
                 run: pnpm build
 

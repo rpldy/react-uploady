@@ -1,8 +1,10 @@
 import testsWebpackConfig from "./cypress/webpack.cypress.config.mjs";
 
+const threadIndex = process.env.PRLL_THREAD_INDX || 0;
+
 export default {
     e2e: {
-        port: 8089,
+        port: (8089 + parseInt(threadIndex)),
         specPattern: "cypress/integration/**/*-spec.js",
         chromeWebSecurity: false,
         video: false,

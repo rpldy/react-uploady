@@ -38,6 +38,7 @@ cypress/videos/
 cypress/screenshots/
 cypress/examples
 cypress/results/
+runner-results/
 
 tstest/
 

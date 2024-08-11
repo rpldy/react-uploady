@@ -27,6 +27,7 @@ jobs:
                 uses: ./.github/actions/prepare
                 with:
                     with-cypress: true
+                    with-frozen: false
             -   name: Install dependencies
                 uses: cypress-io/github-action@v6
                 with:
@@ -59,6 +60,7 @@ jobs:
                 uses: ./.github/actions/prepare
                 with:
                     with-cypress: true
+                    with-frozen: false
             -   name: Bundle for Production
                 id: bundle-prod
                 run: |
@@ -85,6 +87,7 @@ jobs:
                 uses: ./.github/actions/prepare
                 with:
                     with-cypress: true
+                    with-frozen: false
             -   name: build storybook
                 run: pnpm sb:build:internal
             -   name: Cache SB Build
@@ -104,6 +107,7 @@ jobs:
                 uses: ./.github/actions/prepare
                 with:
                     with-cypress: true
+                    with-frozen: false
             -   name: lft
                 run: pnpm test:ci
 
@@ -118,6 +122,7 @@ jobs:
                 uses: ./.github/actions/prepare
                 with:
                     with-cypress: true
+                    with-frozen: false
             -   name: unit-test
                 run: pnpm vitest:ci
             -   name: Show Report Coverage
@@ -151,6 +156,7 @@ jobs:
                 uses: ./.github/actions/prepare
                 with:
                     with-cypress: true
+                    with-frozen: false
             -   name: Restore SB Build Cache
                 uses: actions/cache@v4
                 with:

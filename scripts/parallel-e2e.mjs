@@ -9,6 +9,11 @@ const argv = Yargs(process.argv.slice(2))
         //override duplicates instead of putting them in array
         "duplicate-arguments-array": false
     })
+    .option("pre", {
+        alias: "p",
+        type: "string",
+        description: "Command to run before starting the tests"
+    })
     .option("specs", {
         alias: "s",
         type: "string",
@@ -39,6 +44,7 @@ const argv = Yargs(process.argv.slice(2))
 console.log("ARGS ", argv)
 
 const options = {
+    pre: argv.pre,
     specs: argv.specs,
     threads: argv.threads,
     command: argv.command,
@@ -56,6 +62,7 @@ const getSpecs = async () => {
 
 const runGroupInThread = async (group, index, cancelSignal) => {
     const cmdStr = [
+        `${options.pre ? `${options.pre} && ` : ""}`,
         `PRLL_THREAD_INDX=${index + 1} PRLL_GROUP_SIZE=${group.length}`,
         `${options.command}`,
         `--spec=${group.join(",")}`,

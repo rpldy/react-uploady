@@ -39,8 +39,8 @@
     "cy:run:gh": "CYPRESS_BASE_URL=http://127.0.0.1:8001 UPLOAD_URL=http://test.upload cypress run --e2e --record false",
     "cy:run:ff": "pnpm cy:run --browser firefox",
     "e2e:ci": "concurrently --success last --kill-others \"pnpm bundle:serve\" \"pnpm sb:serve\" \"pnpm cy:run:ci\"",
-    "cy:parallel": "rimraf cypress/results; node scripts/parallel-e2e.mjs -t 2 -c 'pnpm cy:run' --arguments=$'--reporter cypress-multi-reporters --reporter-options configFile=\"cypress/reporters-config.json\"'",
-    "cy:parallel:gh": "node scripts/parallel-e2e.mjs -t 3 -c 'pnpm cy:run:gh' --arguments=$'--reporter cypress-multi-reporters --reporter-options configFile=\"cypress/reporters-config.json\"'"
+    "cy:parallel": "rimraf cypress/results; node scripts/parallel-e2e.mjs -t 2 -c 'pnpm cy:run' --arguments='--reporter cypress-multi-reporters --reporter-options configFile=\"cypress/reporters-config.json\"'",
+    "cy:parallel:gh": "node scripts/parallel-e2e.mjs -t 3 -c 'pnpm cy:run:gh' --arguments='--reporter cypress-multi-reporters --reporter-options configFile=\"cypress/reporters-config.json\"'"
   },
   "private": true,
   "license": "MIT",

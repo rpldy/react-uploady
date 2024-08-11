@@ -62,8 +62,8 @@ const getSpecs = async () => {
 
 const runGroupInThread = async (group, index, cancelSignal) => {
     const cmdStr = [
-        `${options.pre ? `${options.pre} ` : ""}`,
         `PRLL_THREAD_INDX=${index + 1} PRLL_GROUP_SIZE=${group.length}`,
+        `${options.pre ? `${options.pre} ` : ""}`,
         `${options.command}`,
         `--spec=${group.join(",")}`,
         `${options.args}`

@@ -1,11 +1,19 @@
 #!/usr/bin/env node
-// import path from "path";
 import Yargs from "yargs";
 import { glob } from "glob";
 import { execa } from "execa";
 import { logger } from "./utils.mjs";
 
 const argv = Yargs(process.argv.slice(2))
+    .parserConfiguration({
+        //override duplicates instead of putting them in array
+        "duplicate-arguments-array": false
+    })
+    .option("specs", {
+        alias: "s",
+        type: "string",
+        description: "Glob pattern for specs files"
+    })
     .option("threads", {
         alias: "t",
         type: "number",
@@ -22,7 +30,7 @@ const argv = Yargs(process.argv.slice(2))
         description: "arguments to pass to the test command",
     })
     .parse();
-// .option('bail', {
+// .option('bail', { //bail is on by default
 //     alias: 'b',
 //     type: 'boolean',
 //     description: 'Exit on first suite finishing with errors'
@@ -31,6 +39,7 @@ const argv = Yargs(process.argv.slice(2))
 console.log("ARGS ", argv)
 
 const options = {
+    specs: argv.specs,
     threads: argv.threads,
     command: argv.command,
     args: argv.arguments,
@@ -40,7 +49,7 @@ logger.info(">>> running E2E in Parallel", JSON.stringify(options));
 
 const getSpecs = async () => {
 //find specs files under cypress/integration folder
-    const specs = await glob("cypress/integration/**/*-spec.js");
+    const specs = await glob(options.specs);
     console.log("specs", specs);
     return specs;
 };
@@ -55,11 +64,11 @@ const runGroupInThread = async (group, index, cancelSignal) => {
 
     logger.info(`about to run specs group: ${index} with command: ${cmdStr}`);
 
-    const result = await execa({
+    const { failed, exitCode } = await execa({
         reject: false,
         shell: true,
         cancelSignal,
-        stdout: ["pipe", "inherit"],
+        stdio: "inherit",
         verbose: (line, { message, ...info }) => {
             if (["command", "output"].includes(info.type)) {
                 logger.info(`[p:${index}] ${message}`);
@@ -69,9 +78,7 @@ const runGroupInThread = async (group, index, cancelSignal) => {
         }
     })`${cmdStr}`;
 
-    logger.info(`finished running specs group ${index}`, result);
-
-    const { failed, exitCode } = result;
+    logger.info(`finished running specs group ${index} (code: ${exitCode})`);
 
     return {
         index,
@@ -132,10 +139,6 @@ const runTests = async () => {
     if (!success) {
         process.exit(1);
     }
-    // execa({
-    //     stdout: "inherit",
-    //     stderr: "inherit",
-    // })`jrm cypress/results/results-combined.xml "cypress/results/*.xml"`
 }
 
 runTests();

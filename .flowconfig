@@ -6,7 +6,7 @@
 .*/node_modules/jest-enzyme/.*
 .*/node_modules/webpack-cli/node_modules/.*
 .*/node_modules/resolve/.*
-.*/node_modules/.pnpm/hermes-estree@0.23.0/.*
+.*/node_modules/.pnpm/hermes-estree.*/.*
 .*/lib/.*
 
 [include]

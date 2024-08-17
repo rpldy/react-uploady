@@ -92,15 +92,17 @@ export const WithAbortButton = (): Node => {
     </ChunkedUploady>
 };
 
-const ChunkEventLog = () => {
+const ChunkEventLog = ({ isAsync = false }: { isAsync?: boolean }) => {
 	useChunkStartListener((data) => {
 		console.log(`Chunk Start - ${data.chunk.id} - attempt: ${data.chunk.attempt}`, data);
         logToCypress(`###${CHUNK_EVENTS.CHUNK_START}`, data);
+        return isAsync ? Promise.resolve(undefined) : undefined;
 	});
 
 	useChunkFinishListener((data) => {
 		console.log(`Chunk Finish - ${data.chunk.id} - attempt: ${data.chunk.attempt}`, data);
         logToCypress(`###${CHUNK_EVENTS.CHUNK_FINISH}`, data);
+        return isAsync ? Promise.resolve(undefined) : undefined;
 	});
 
 	return null;
@@ -119,6 +121,21 @@ export const WithChunkEventHooks = (): Node => {
 		<ChunkEventLog/>
 	</ChunkedUploady>
 };
+
+export const WithAsyncChunkEventHooks = (): Node => {
+    const { enhancer, destination, multiple, chunkSize } = useChunkedStoryHelper();
+
+    return <ChunkedUploady
+        debug
+        multiple={multiple}
+        destination={destination}
+        enhancer={enhancer}
+        chunkSize={chunkSize}>
+        <UploadButtonWithUniqueIdHeader/>
+        <ChunkEventLog isAsync/>
+    </ChunkedUploady>
+};
+
 
 //mimic rendering with react and ChunkedUploady loaded through <script> tags
 const renderChunkedUploadyFromBundle = () => {

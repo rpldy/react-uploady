@@ -150,8 +150,16 @@ jobs:
             - bundle
             - sb
         steps:
+            -   name: Checkout PR
+                uses: actions/checkout@v4
+                if: ${{ github.event_name == 'pull_request' }}
+                with:
+                    ref: ${{ github.base_ref }}
+                    fetch-depth: 0
             -   name: Checkout
                 uses: actions/checkout@v4
+                if: ${{ github.event_name != 'pull_request' }}
+
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:

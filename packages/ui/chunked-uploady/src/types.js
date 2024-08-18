@@ -8,10 +8,9 @@ export type StartEventResponse = void | boolean | {
     sendOptions?: SendOptions
 };
 
-export type ChunkStartListenerHook = (cb: (data: ChunkStartEventData ) => StartEventResponse) => void;
+export type ChunkStartListenerHook = (cb: (data: ChunkStartEventData) => StartEventResponse | Promise<StartEventResponse>) => void;
 
-export type ChunkFinishListenerHook = (cb: (data: ChunkFinishEventData) => void) => void;
-
+export type ChunkFinishListenerHook = (cb: (data: ChunkFinishEventData) => void | Promise<void>) => void;
 
 export type ChunkedUploadyProps = {|
 	...UploadyProps,

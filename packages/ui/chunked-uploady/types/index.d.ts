@@ -14,8 +14,8 @@ export type StartEventResponse = void | boolean | {
     sendOptions?: SendOptions
 };
 
-export const useChunkStartListener: (cb: (data: ChunkStartEventData ) => StartEventResponse) => void;
+export const useChunkStartListener: (cb: (data: ChunkStartEventData ) => StartEventResponse | Promise<StartEventResponse>) => void;
 
-export const useChunkFinishListener: (cb: (data: ChunkFinishEventData) => void) => void;
+export const useChunkFinishListener: (cb: (data: ChunkFinishEventData) => void | Promise<void>) => void;
 
 export default ChunkedUploady;

@@ -5,17 +5,7 @@ import { WAIT_LONG } from "../../constants";
 describe("ChunkedUploady - WithChunkEventHooks", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
-        cy.visitStory(
-            "chunkedUploady",
-            "with-chunk-event-hooks&knob-chunk size (bytes)_Upload Settings=50000",
-            { useMock: false }
-        );
-    });
-
-    it("should use chunked uploady with unique id", () => {
-        intercept();
-
+    const doTest = () => {
         cy.get("input")
             .should("exist")
             .as("fInput");
@@ -58,5 +48,27 @@ describe("ChunkedUploady - WithChunkEventHooks", () => {
                 expect(Object.getOwnPropertySymbols(logLine[0].uploadData)).to.have.lengthOf(0, "CHUNK_FINISH uploadData - shouldnt have proxy symbols");
             });
         });
+    }
+
+    it("should use chunked uploady with unique id", () => {
+        cy.visitStory(
+            "chunkedUploady",
+            "with-chunk-event-hooks&knob-chunk size (bytes)_Upload Settings=50000",
+            { useMock: false }
+        );
+
+        intercept();
+        doTest()
+    });
+
+    it("should use chunked uploady with async chunk hooks", () => {
+        cy.visitStory(
+            "chunkedUploady",
+            "with-async-chunk-event-hooks&knob-chunk size (bytes)_Upload Settings=50000",
+            { useMock: false }
+        );
+
+        intercept();
+        doTest();
     });
 });

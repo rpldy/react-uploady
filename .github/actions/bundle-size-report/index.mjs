@@ -50,6 +50,9 @@ const saveUpdatedMasterData = (data, masterData, core) => {
             const reportPath = path.resolve(`./${BUNDLE_SIZE_REPORT_FILE}`);
             core.info(`saving updated master bundle size report to: ${reportPath}`);
 
+            //sort data by name prop so contents don't change based on order of insert:
+            data.sort((a, b) => a.name.localeCompare(b.name));
+
             fs.writeFileSync(reportPath, JSON.stringify(data), { encoding: "utf-8" });
 
             core.setOutput("SAVED_MASTER_REPORT", reportPath);
@@ -64,6 +67,7 @@ const getBundleSizeReportMasterData = (core) => {
     core.info(`looking for bundle size report file from MASTER at ${reportPath}`);
 
     const str = fs.readFileSync(reportPath, { encoding: "utf-8" });
+    core.info("read master data to bundle size report: " + str);
     return JSON.parse(str);
 };
 
@@ -163,7 +167,7 @@ export default async ({ core }) => {
 
     core.summary
         .addHeading("📦 Bundle Size Report")
-        .addTable(report)
+        .addTable(report);
 
     //retrieve the table from the summary, so we can also add it to the PR as a comment
     const reportTable = `<table>${core.summary.stringify().split("<table>")[1].split("</table>")[0]}</table>`;

@@ -165,10 +165,5 @@
   },
   "optionalDependencies": {
     "fsevents": "^2.3.3"
-  },
-  "pnpm": {
-    "overrides": {
-      "@storybook/addon-actions": "~7.5"
-    }
   }
 }

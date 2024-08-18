@@ -199,10 +199,11 @@ const insertSortedByDuration = (arr, file, duration, data) => {
 
 const createWeightsFile = async () => {
     if (options.weightsPath) {
+        logger.info("calculating weights for next e2e parallel run based on results timings");
         const results = await glob(options.resultFiles);
+        logger.info(`found ${results.length} result json files`);
 
         const { threads } = options;
-
         const weights = {
             threads,
             files: 0,
@@ -242,7 +243,7 @@ const createWeightsFile = async () => {
         logger.info(`writing weights file to: ${options.weightsPath}. ${weights.files} specs, ${weights.total} tests, ${weights.passed} passed, ${weights.failed} failed.`)
         fsExtra.writeJsonSync(options.weightsPath, weights, { spaces: 2 });
     } else {
-        logger.warn("weights file not provided, skipping creation");
+        logger.warn("weights file path not provided, skipping creation");
     }
 };
 

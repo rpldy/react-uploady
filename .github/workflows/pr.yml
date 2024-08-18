@@ -186,6 +186,7 @@ jobs:
                     git status
                     git add cypress/e2e-weights.json
                     git commit -m "chore: update e2e weights file"
+                    git push
             -   name: Store screenshots
                 uses: actions/upload-artifact@v4
                 if: failure()

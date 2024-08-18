@@ -178,6 +178,7 @@ jobs:
                     key: bundle-${{ runner.os }}-
                     restore-keys: bundle-${{ runner.os }}-
             -   name: Cypress run
+                id: cypress-e2e
                 uses: cypress-io/github-action@v6
                 with:
                     install: false
@@ -187,7 +188,7 @@ jobs:
                     wait-on: 'http://127.0.0.1:8001, http://127.0.0.1:8009'
                     command: pnpm cy:parallel:gh
             -   name: Commit Weights File (only for PR & if there was a change)
-                if:  ${{ github.ref_name != 'master' }}
+                if:  ${{ github.ref_name != 'master' && steps.cypress-e2e.outcome == 'success' }}
                 run: |
                     git config user.email "ci@react-uploady.org"
                     git config user.name "Uploady CI"

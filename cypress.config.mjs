@@ -1,8 +1,29 @@
 import testsWebpackConfig from "./cypress/webpack.cypress.config.mjs";
+import cypressAwesomeReporterPlugin from "cypress-mochawesome-reporter/plugin.js";
 
 const threadIndex = process.env.PRLL_THREAD_INDX || 0;
 
 export default {
+    reporter: "cypress-multi-reporters",
+    reporterOptions: {
+        reporterEnabled: "cypress-mochawesome-reporter, mocha-junit-reporter",
+        mochaJunitReporterReporterOptions: {
+            mochaFile: "cypress/results/results-[suiteName].xml"
+        },
+        //using Mochawesome Reporter for its ability to store json report files
+        cypressMochawesomeReporterReporterOptions: {
+            reportDir: "cypress/reports/mochawesome",
+            reportFilename: "report-[status]_[name]",
+            removeJsonsFolderAfterMerge: false,
+            charts: false,
+            json: true,
+            saveJson: true,
+            html: false,
+            saveHtml: false,
+            reportPageTitle: "Uploady Test Results"
+        },
+    },
+
     e2e: {
         port: (8089 + parseInt(threadIndex)),
         specPattern: "cypress/integration/**/*-spec.js",
@@ -11,7 +32,7 @@ export default {
         env: {
             storybookPath: "/?path=/story/",
             components: {
-                mockSender :"core-mock-sender",
+                mockSender: "core-mock-sender",
                 uploader: "core-uploader",
                 uploady: "ui-uploady",
                 chunkedUploady: "ui-chunked-uploady",
@@ -28,6 +49,8 @@ export default {
             UPLOAD_URL: process.env.UPLOAD_URL
         },
         projectId: "excxm9",
+
+        setupNodeEvents: cypressAwesomeReporterPlugin,
     },
 
     component: {

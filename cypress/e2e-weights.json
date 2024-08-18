@@ -1,0 +1,111 @@
+{
+  "threads": 2,
+  "files": 16,
+  "total": 35,
+  "passed": 35,
+  "failed": 0,
+  "sortedFiles": [
+    {
+      "file": "cypress/integration/uploady/Uploady-autoUpload-off-spec.js",
+      "duration": 12808,
+      "tests": 7
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-cancel-with-async-presend-spec.js",
+      "duration": 11247,
+      "tests": 6
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-abort-spec.js",
+      "duration": 8317,
+      "tests": 3
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-fast-abort-spec.js",
+      "duration": 8307,
+      "tests": 3
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-cancel-on-add-spec.js",
+      "duration": 2995,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-custom-success-spec.js",
+      "duration": 2754,
+      "tests": 2
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-invalid-batch-start-spec.js",
+      "duration": 2310,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-failed-mock-spec.js",
+      "duration": 2181,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-undefined-param-spec.js",
+      "duration": 1999,
+      "tests": 3
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-filesParamName-spec.js",
+      "duration": 1429,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-invalid-request-pre-send-spec.js",
+      "duration": 1332,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-simple-spec.js",
+      "duration": 845,
+      "tests": 2
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-pending-with-options-spec.js",
+      "duration": 604,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-internal-input-spec.js",
+      "duration": 579,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-customResponseFormat-spec.js",
+      "duration": 537,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-headerFromPreSend-spec.js",
+      "duration": 528,
+      "tests": 1
+    }
+  ],
+  "groups": [
+    [
+      "cypress/integration/uploady/Uploady-autoUpload-off-spec.js",
+      "cypress/integration/uploady/Uploady-abort-spec.js",
+      "cypress/integration/uploady/Uploady-cancel-on-add-spec.js",
+      "cypress/integration/uploady/Uploady-invalid-batch-start-spec.js",
+      "cypress/integration/uploady/Uploady-undefined-param-spec.js",
+      "cypress/integration/uploady/Uploady-invalid-request-pre-send-spec.js",
+      "cypress/integration/uploady/Uploady-pending-with-options-spec.js",
+      "cypress/integration/uploady/Uploady-customResponseFormat-spec.js"
+    ],
+    [
+      "cypress/integration/uploady/Uploady-cancel-with-async-presend-spec.js",
+      "cypress/integration/uploady/Uploady-fast-abort-spec.js",
+      "cypress/integration/uploady/Uploady-custom-success-spec.js",
+      "cypress/integration/uploady/Uploady-failed-mock-spec.js",
+      "cypress/integration/uploady/Uploady-filesParamName-spec.js",
+      "cypress/integration/uploady/Uploady-simple-spec.js",
+      "cypress/integration/uploady/Uploady-internal-input-spec.js",
+      "cypress/integration/uploady/Uploady-headerFromPreSend-spec.js"
+    ]
+  ]
+}

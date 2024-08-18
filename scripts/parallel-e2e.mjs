@@ -76,6 +76,60 @@ const getSpecs = async () => {
     return specs;
 };
 
+const getSpecsInGroups = (specs) => {
+    const specGroups = [];
+
+    if (!options.ignore && options.weightsPath) {
+        let weightsJson;
+        try {
+            weightsJson = fsExtra.readJsonSync(options.weightsPath);
+            logger.info(`using weights file (${options.weightsPath}) to split specs into groups`);
+        } catch (ex) {
+            logger.info(`failed to load weights file from ${options.weightsPath}`, ex);
+        }
+
+        if (weightsJson) {
+            if (weightsJson.threads === options.threads) {
+                //use groups from weights file but also make sure to add specs that arent listed (probably new specs)
+                weightsJson.groups.forEach((group) => {
+                    specGroups.push(group);
+                });
+
+                //find new specs that aren't in the weights file
+                const newSpecs = specs.filter((spec) => {
+                    return !weightsJson.groups.find((group) => group.includes(spec));
+                });
+
+                if (newSpecs.length) {
+                    logger.verbose("found specs that arent in the weights file", newSpecs);
+
+                    //add new specs to the groups
+                    let lastGroup = 0;
+                    while (newSpecs.length) {
+                        specGroups[lastGroup].push(newSpecs.shift());
+                        //increase or circle back to the first group
+                        lastGroup = (lastGroup + 1) % specGroups.length;
+                    }
+                }
+            } else {
+                logger.info(`ignoring weights file because threads count doesnt match: ${weightsJson.threads} != ${options.threads}`)
+            }
+        }
+    }
+
+    if (!specGroups.length) {
+        const groupSize = Math.ceil(specs.length / options.threads);
+        logger.info(`weights file not used. splitting specs into ${options.threads} groups of size: ${groupSize}`);
+
+        while (specs.length) {
+            specGroups.push(specs.splice(0, groupSize));
+        }
+    }
+
+    logger.verbose("returning spec groups", specGroups)
+    return specGroups;
+};
+
 const runGroupInThread = async (group, index, cancelSignal) => {
     const cmdStr = [
         `PRLL_THREAD_INDX=${index + 1} PRLL_GROUP_SIZE=${group.length}`,
@@ -134,58 +188,6 @@ const runInParallel = async (specGroups) => {
     });
 
     return results;
-};
-
-const getSpecsInGroups = (specs) => {
-    const specGroups = [];
-
-    if (!options.ignore && options.weightsPath) {
-        let weightsJson;
-        try {
-            weightsJson = fsExtra.readJsonSync(options.weightsPath);
-            logger.info(`using weights file (${options.weightsPath}) to split specs into groups`);
-        } catch (ex) {
-            logger.info(`failed to load weights file from ${options.weightsPath}`, ex);
-        }
-
-        if (weightsJson) {
-            if (weightsJson.threads === options.threads) {
-                //use groups from weights file but also make sure to add specs that arent listed (probably new specs)
-                weightsJson.groups.forEach((group) => {
-                    specGroups.push(group);
-                });
-
-                //find new specs that arent in the weights file
-                const newSpecs = specs.filter((spec) => {
-                    return !weightsJson.groups.find((group) => group.includes(spec));
-                });
-
-                logger.verbose("found specs that arent in the weights file", newSpecs);
-
-                //add new specs to the groups
-                let lastGroup = 0;
-                while (newSpecs.length) {
-                    specGroups[lastGroup].push(newSpecs.shift());
-                    //increase or circle back to the first group
-                    lastGroup = (lastGroup + 1) % specGroups.length;
-                }
-            } else {
-                logger.info(`ignoring weights file because threads count doesnt match: ${weightsJson.threads} != ${options.threads}`)
-            }
-        }
-    }
-
-    if (!specGroups.length) {
-        const groupSize = Math.ceil(specs.length / options.threads);
-        logger.info(`weights file not used. splitting specs into ${options.threads} groups of size: ${groupSize}`);
-
-        while (specs.length) {
-            specGroups.push(specs.splice(0, groupSize));
-        }
-    }
-
-    logger.verbose("returning spec groups", specGroups)
-    return specGroups;
 };
 
 const insertSortedByDuration = (arr, file, duration, data) => {

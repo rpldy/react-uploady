@@ -11,7 +11,7 @@
       "tests": 7
     },
     {
-      "file": "cypress/integration/uploady/Uploady-cancel-with-async-presend-spec.js",
+      "file": "cypress/integration/uploady/Uploady-cancel-with-async-presend-spec.js2",
       "duration": 11247,
       "tests": 6
     },

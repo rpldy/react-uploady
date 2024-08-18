@@ -190,5 +190,5 @@ jobs:
                 if: success() || failure()
                 with:
                     name: E2E Report
-                    path: cypress/results/results-*.xml
+                    path: cypress/results/**/results-*.xml
                     reporter: java-junit

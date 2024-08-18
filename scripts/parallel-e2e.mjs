@@ -216,7 +216,6 @@ const createWeightsFile = async () => {
         //sort specs by their duration and collected some metadata
         results.forEach((resultPath) => {
             const resultJson = fsExtra.readJsonSync(resultPath);
-            console.log(`read results json file: ${resultPath}`, resultJson.stats);
 
             weights.files += 1;
             weights.total += resultJson.stats.tests;
@@ -240,6 +239,7 @@ const createWeightsFile = async () => {
             lastGroup = (lastGroup + 1) % threads;
         }
 
+        logger.info(`writing weights file to: ${options.weightsPath}. ${weights.files} specs, ${weights.total} tests, ${weights.passed} passed, ${weights.failed} failed.`)
         fsExtra.writeJsonSync(options.weightsPath, weights, { spaces: 2 });
     } else {
         logger.warn("weights file not provided, skipping creation");

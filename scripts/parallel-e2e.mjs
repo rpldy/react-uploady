@@ -133,7 +133,7 @@ const runInParallel = async (specGroups) => {
         console.log(`group ${index} finished with result: ${res.success} and exit code: ${res.exitCode}`)
     });
 
-    return !results.find((res) => !res.success);
+    return results;
 };
 
 const getSpecsInGroups = (specs) => {
@@ -254,11 +254,18 @@ const runTests = async () => {
 
     //divide the array of specs into arrays that match in count to options.threads:
     const specGroups = getSpecsInGroups(specs);
-    const success = await runInParallel(specGroups);
+    const results = await runInParallel(specGroups);
+    const success = !results.find((res) => !res.success);
 
     logger.info(`>>> finished! (success=${success})`);
 
     if (!success) {
+        results.forEach((res) => {
+            if (!res.success) {
+                logger.warn(`group ${res.index} FAILED! exit code: ${res.exitCode}`);
+            }
+        });
+
         process.exit(1);
     } else {
         try {

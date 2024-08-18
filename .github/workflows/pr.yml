@@ -13,7 +13,7 @@ defaults:
 
 permissions:
     pull-requests: write
-    contents: read
+    contents: write
     actions: read
     checks: write
 

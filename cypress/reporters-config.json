@@ -5,7 +5,7 @@
         "toConsole": true
     },
     "mochaJunitReporterReporterOptions": {
-        "mochaFile": "cypress/results/results-[hash].xml",
+        "mochaFile": "cypress/results/results-[suiteFilename].xml",
         "toConsole": true
     }
 }

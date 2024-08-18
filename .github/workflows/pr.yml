@@ -152,13 +152,13 @@ jobs:
         steps:
             -   name: Checkout PR
                 uses: actions/checkout@v4
-                if: ${{ github.event_name == 'pull_request' }}
+                if: ${{ github.ref_name != 'master' }}
                 with:
                     ref: ${{ github.head_ref }}
                     fetch-depth: 0
             -   name: Checkout
                 uses: actions/checkout@v4
-                if: ${{ github.event_name != 'pull_request' }}
+                if: ${{ github.ref_name == 'master' }}
 
             -   name: Prepare
                 uses: ./.github/actions/prepare
@@ -187,7 +187,7 @@ jobs:
                     wait-on: 'http://127.0.0.1:8001, http://127.0.0.1:8009'
                     command: pnpm cy:parallel:gh
             -   name: Commit Weights File (only for PR & if there was a change)
-                if:  ${{ github.event_name == 'pull_request' }}
+                if:  ${{ github.ref_name != 'master' }}
                 run: |
                     git config user.email "ci@react-uploady.org"
                     git config user.name "Uploady CI"

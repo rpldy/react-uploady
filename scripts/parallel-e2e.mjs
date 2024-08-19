@@ -54,8 +54,6 @@ const argv = Yargs(process.argv.slice(2))
 //     description: 'Exit on first suite finishing with errors'
 // })
 
-console.log("ARGS ", argv)
-
 const options = {
     pre: argv.pre,
     specs: argv.specs,
@@ -67,7 +65,7 @@ const options = {
     ignore: argv.ignoreWeightsFile,
 };
 
-logger.info(">>> running E2E in Parallel", JSON.stringify(options));
+logger.info(">>> running E2E in Parallel", options);
 
 const getSpecs = async () => {
     //find specs files under cypress/integration folder

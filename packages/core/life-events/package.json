@@ -1,5 +1,5 @@
 {
-  "version": "1.8.2",
+  "version": "1.8.3",
   "name": "@rpldy/life-events",
   "description": "events pub/sub management with return values",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -27,7 +27,7 @@
     "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
-    "@rpldy/shared": "^1.8.2"
+    "@rpldy/shared": "^1.8.3"
   },
   "devDependencies": {
     "flow-bin": "^0.229.0"

@@ -1,5 +1,5 @@
 {
-  "version": "1.8.2",
+  "version": "1.8.3",
   "name": "@rpldy/upload-paste",
   "description": "easily add paste-to-upload to React components",
   "author": "yoav niran (https://github.com/yoavniran)",

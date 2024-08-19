@@ -1,5 +1,5 @@
 {
-  "version": "1.8.2",
+  "version": "1.8.3",
   "name": "@rpldy/uploader",
   "description": "the processing and queuing engine for react-uploady",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -29,12 +29,12 @@
     "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
-    "@rpldy/abort": "^1.8.2",
-    "@rpldy/life-events": "^1.8.2",
-    "@rpldy/raw-uploader": "^1.8.2",
-    "@rpldy/sender": "^1.8.2",
-    "@rpldy/shared": "^1.8.2",
-    "@rpldy/simple-state": "^1.8.2"
+    "@rpldy/abort": "^1.8.3",
+    "@rpldy/life-events": "^1.8.3",
+    "@rpldy/raw-uploader": "^1.8.3",
+    "@rpldy/sender": "^1.8.3",
+    "@rpldy/shared": "^1.8.3",
+    "@rpldy/simple-state": "^1.8.3"
   },
   "devDependencies": {
     "flow-bin": "^0.229.0"

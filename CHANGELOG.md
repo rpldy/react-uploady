@@ -4,7 +4,7 @@
 
 ### Bug fixes
 
-- `[tus-sender]` - fix: typings for chunk events hooks, to accept promise return type. Fix for [#726](https://github.com/rpldy/react-uploady/issues/726)
+- `[chunked-uploady]` - fix: typings for chunk events hooks, to accept promise return type. Fix for [#726](https://github.com/rpldy/react-uploady/issues/726)
 
 ### Internal
 

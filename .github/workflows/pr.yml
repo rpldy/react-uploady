@@ -13,7 +13,7 @@ defaults:
 
 permissions:
     pull-requests: write
-    contents: read
+    contents: write
     actions: read
     checks: write
 
@@ -150,8 +150,16 @@ jobs:
             - bundle
             - sb
         steps:
+            -   name: Checkout PR
+                uses: actions/checkout@v4
+                if: ${{ github.ref_name != 'master' }}
+                with:
+                    ref: ${{ github.head_ref }}
+                    fetch-depth: 0
             -   name: Checkout
                 uses: actions/checkout@v4
+                if: ${{ github.ref_name == 'master' }}
+
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -170,6 +178,7 @@ jobs:
                     key: bundle-${{ runner.os }}-
                     restore-keys: bundle-${{ runner.os }}-
             -   name: Cypress run
+                id: cypress-e2e
                 uses: cypress-io/github-action@v6
                 with:
                     install: false
@@ -178,6 +187,25 @@ jobs:
                         pnpm bundle:serve
                     wait-on: 'http://127.0.0.1:8001, http://127.0.0.1:8009'
                     command: pnpm cy:parallel:gh
+            -   name: Check for GIT Changes (Weights File)
+                id: check-weights-changes
+                if:  ${{ github.ref_name != 'master' && steps.cypress-e2e.outcome == 'success' }}
+                run: |
+                    if [[ `git status --porcelain` ]]; then
+                        echo "found changes to weights file!"
+                        echo "WEIGHTS_HAS_CHANGES=true" >> $GITHUB_OUTPUT
+                    else
+                        echo "NO changes to weights file!"
+                    fi
+            -   name: Commit Weights File (only if there was a change)
+                if:  ${{ steps.check-weights-changes.outputs.WEIGHTS_HAS_CHANGES == 'true' }}
+                run: |
+                    git config user.email "ci@react-uploady.org"
+                    git config user.name "Uploady CI"
+                    git status
+                    git add cypress/e2e-weights.json
+                    git commit -m "chore: update e2e weights file"
+                    git push
             -   name: Store screenshots
                 uses: actions/upload-artifact@v4
                 if: failure()

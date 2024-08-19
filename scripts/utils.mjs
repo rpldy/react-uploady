@@ -66,11 +66,11 @@ const copyFilesToPackage = (dir, destination, files = []) => {
 };
 
 const logger = {
-    verbose: (...args) => console.log(chalk.gray(...args)),
-    log: (...args) => console.log(chalk.white(...args)),
-    info: (...args) => console.log(chalk.cyan(...args)),
-    warn: (...args) => console.log(chalk.yellow(...args)),
-    error: (...args) => console.log(chalk.red(...args)),
+    verbose: (msg, ...args) => console.debug(chalk.gray(msg), ...args),
+    log: (msg, ...args) => console.log(chalk.white(msg), ...args),
+    info: (msg, ...args) => console.log(chalk.cyan(msg), ...args),
+    warn: (msg, ...args) => console.log(chalk.yellow(msg), ...args),
+    error: (msg, ...args) => console.log(chalk.red(msg), ...args),
 };
 
 const FILESIZE_UNITS =  {

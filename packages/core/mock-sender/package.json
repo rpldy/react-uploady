@@ -1,5 +1,5 @@
 {
-  "version": "1.8.2",
+  "version": "1.8.3",
   "name": "@rpldy/mock-sender",
   "description": "mock sender for testing purposes",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -22,11 +22,11 @@
     "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
-    "@rpldy/shared": "^1.8.2"
+    "@rpldy/shared": "^1.8.3"
   },
   "devDependencies": {
-    "@rpldy/sender": "^1.8.2",
-    "@rpldy/uploader": "^1.8.2",
+    "@rpldy/sender": "^1.8.3",
+    "@rpldy/uploader": "^1.8.3",
     "flow-bin": "^0.229.0"
   },
   "publishConfig": {

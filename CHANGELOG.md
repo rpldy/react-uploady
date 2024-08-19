@@ -1,10 +1,21 @@
 # Changelog
 
+## 1.8.3 (2024-08-19)
+
+### Bug fixes
+
+- `[tus-sender]` - fix: typings for chunk events hooks, to accept promise return type. Fix for [#726](https://github.com/rpldy/react-uploady/issues/726)
+
+### Internal
+
+- `ci` - parallelize e2e test runs and create weights file based on timings for optimized future runs
+
+ 
 ## 1.8.2 (2024-07-30)
 
 ### Features
 
-- `[ui-shared]` - fix: improve uploady props extendability. Fix for [#710](https://github.com/rpldy/react-uploady/issues/710).
+- `[ui-shared]` - feat: improve uploady props extendability. Fix for [#710](https://github.com/rpldy/react-uploady/issues/710).
 
 ### Internal
 
@@ -16,7 +27,7 @@
 
 ### Bug fixes
 
-- `tus-sender` - for parallel send partial upload-concat header on create. Fix for [#685](https://github.com/rpldy/react-uploady/issues/685)
+- `[tus-sender]` - for parallel send partial upload-concat header on create. Fix for [#685](https://github.com/rpldy/react-uploady/issues/685)
 
 ### Internal
 
@@ -27,11 +38,11 @@
 
 ### Features
 
-- `upload-preview` - expose getPreviewsLoaderHook. ER [#646](https://github.com/rpldy/react-uploady/issues/646).
+- `[upload-preview]` - expose getPreviewsLoaderHook. ER [#646](https://github.com/rpldy/react-uploady/issues/646).
 
 ### Bug fixes
 
-- `upload-drop-zone` - fix drag&drop over child elements. Fix for [#652](https://github.com/rpldy/react-uploady/issues/652).
+- `[upload-drop-zone]` - fix drag&drop over child elements. Fix for [#652](https://github.com/rpldy/react-uploady/issues/652).
 
 ### Internal
 
@@ -42,11 +53,11 @@
 
 ### Features
 
-- `upload-preview` - expose getPreviewsLoaderHook. ER [#646](https://github.com/rpldy/react-uploady/issues/646).
+- `[upload-preview]` - expose getPreviewsLoaderHook. ER [#646](https://github.com/rpldy/react-uploady/issues/646).
 
 ### Bug fixes
 
-- `upload-drop-zone` - fix drag&drop over child elements. Fix for [#652](https://github.com/rpldy/react-uploady/issues/652).
+- `[upload-drop-zone]` - fix drag&drop over child elements. Fix for [#652](https://github.com/rpldy/react-uploady/issues/652).
 
 ### Internal
 
@@ -57,15 +68,15 @@
 
 ### Bug fixes
 
-- `shared-ui` - async callbacks TD for cancellable event hooks
+- `[shared-ui]` - async callbacks TD for cancellable event hooks
 
 
 ## 1.7.0 (2023-12-17)
 
 ### Bug fixes
 
-- `mock-sender` - align progress tracking with file size if available. Fix for [#626](https://github.com/rpldy/react-uploady/issues/626).
-- `mock-sender` - BREAKING(ish): removed default file size field from defaults in favour of above fix
+- `[mock-sender]` - align progress tracking with file size if available. Fix for [#626](https://github.com/rpldy/react-uploady/issues/626).
+- `[mock-sender]` - BREAKING(ish): removed default file size field from defaults in favour of above fix
 
 ### Docs
 
@@ -90,8 +101,8 @@
 
 ### Bug fixes
 
-- `mock-sender` - align progress tracking with file size if available. Fix for [#626](https://github.com/rpldy/react-uploady/issues/626).
-- `mock-sender` - BREAKING(ish): removed default file size field from defaults in favour of above fix
+- `[mock-sender]` - align progress tracking with file size if available. Fix for [#626](https://github.com/rpldy/react-uploady/issues/626).
+- `[mock-sender]` - BREAKING(ish): removed default file size field from defaults in favour of above fix
 
 ### Docs
 

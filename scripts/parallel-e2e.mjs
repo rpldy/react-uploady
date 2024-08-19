@@ -78,6 +78,8 @@ const getSpecs = async () => {
 
 const getSpecsInGroups = (specs) => {
     const specGroups = [];
+    let newSpecsFound = false;
+    let usedWeights = false;
 
     if (!options.ignore && options.weightsPath) {
         let weightsJson;
@@ -95,13 +97,16 @@ const getSpecsInGroups = (specs) => {
                     specGroups.push(group);
                 });
 
+                usedWeights = true;
+
                 //find new specs that aren't in the weights file
                 const newSpecs = specs.filter((spec) => {
                     return !weightsJson.groups.find((group) => group.includes(spec));
                 });
 
                 if (newSpecs.length) {
-                    logger.verbose("found specs that arent in the weights file", newSpecs);
+                    newSpecsFound = true;
+                    logger.info("found specs that arent in the weights file", newSpecs);
 
                     //add new specs to the groups
                     let lastGroup = 0;
@@ -110,6 +115,8 @@ const getSpecsInGroups = (specs) => {
                         //increase or circle back to the first group
                         lastGroup = (lastGroup + 1) % specGroups.length;
                     }
+                } else {
+                    logger.info("no new specs found - all specs are already in the weights file");
                 }
             } else {
                 logger.info(`ignoring weights file because threads count doesnt match: ${weightsJson.threads} != ${options.threads}`)
@@ -126,8 +133,13 @@ const getSpecsInGroups = (specs) => {
         }
     }
 
-    logger.verbose("returning spec groups", specGroups)
-    return specGroups;
+    logger.verbose("returning spec groups", specGroups);
+
+    return {
+        usedWeights,
+        newSpecsFound,
+        specGroups,
+    };
 };
 
 const runGroupInThread = async (group, index, cancelSignal) => {
@@ -255,7 +267,7 @@ const runTests = async () => {
     logger.info(`found ${specs.length} specs`);
 
     //divide the array of specs into arrays that match in count to options.threads:
-    const specGroups = getSpecsInGroups(specs);
+    const { specGroups, usedWeights, newSpecsFound } = getSpecsInGroups(specs);
     const results = await runInParallel(specGroups);
     const success = !results.find((res) => !res.success);
 
@@ -271,7 +283,11 @@ const runTests = async () => {
         process.exit(1);
     } else {
         try {
-            await createWeightsFile();
+            if (!usedWeights || newSpecsFound) {
+                await createWeightsFile();
+            } else {
+                logger.info("weights file already exists and was used, skipping creation/update");
+            }
         } catch (ex) {
             logger.error("failed to create weights file", ex);
         }

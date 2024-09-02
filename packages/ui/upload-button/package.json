@@ -36,7 +36,7 @@
     "@rpldy/retry": "workspace:*",
     "@rpldy/shared": "workspace:*",
     "@rpldy/uploady": "workspace:*",
-    "flow-bin": "^0.229.0",
+    "flow-bin": "^0.242.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "styled-components": "^6.0.7"

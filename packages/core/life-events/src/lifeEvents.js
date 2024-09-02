@@ -62,15 +62,17 @@ const publicMethods = {
 	"getEvents": getEvents,
 };
 
-const getPublicMethods = () => Object.entries(publicMethods)
-	.reduce((res, [key, m]) => {
+const getPublicMethods = () =>
+    Object.entries(publicMethods)
+        .reduce((res, [key, m]) => {
+            res[key] = { value: m };
+            return res;
+        }, ({}: { [string]: any }));
 
-		res[key] = { value: m };
-		return res;
-	}, ({}: { [string]: any }));
+type ApiFn =  (...args: any[]) => any;
 
 //using string keys here because can't rely on function names to stay after (babel/webpack) build
-const apiMethods = {
+const apiMethods: { [string]: ApiFn }  = {
     "trigger": trigger,
     "addEvent": addEvent,
     "removeEvent": removeEvent,
@@ -80,15 +82,15 @@ const apiMethods = {
 };
 
 //placating flow while using reduce to create an object API
-type ApiCreated = { target: Object, [string]: (...args: any[]) => any };
+type ApiCreated = { target: Object, [string]: ApiFn };
 
 const createApi = (target: Object): LifeEventsAPI =>
-    Object.keys(apiMethods)
+    Object.entries(apiMethods)
         .reduce<ApiCreated>
-        ((res, name: string) => {
-            res[name] = apiMethods[name].bind(target);
+        ((res, [name, fn]) => {
+            res[name] = fn.bind(target);
             return res;
-        }, { target, ...apiMethods });
+        }, { ...apiMethods, target });
 
 const cleanRegistryForName = (obj: Object, name: any, force: boolean = false) => {
 	const registry = getValidLE(obj).registry;

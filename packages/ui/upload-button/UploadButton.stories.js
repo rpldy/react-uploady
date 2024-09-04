@@ -32,7 +32,7 @@ import UploadButton, { asUploadButton } from "./src";
 
 import readme from "./README.md";
 
-import type { Node, Element } from "react"
+import type { Node } from "react"
 import type { Batch, BatchItem, UploadyContextType } from "@rpldy/uploady";
 
 export const Simple = (): Node => {
@@ -238,7 +238,7 @@ export const DisabledDuringUpload = (): Node => {
     </Uploady>;
 };
 
-export const DifferentConfiguration = (): Element<"div"> => {
+export const DifferentConfiguration = (): Node => {
     const { enhancer, destination, multiple } = useStoryUploadySetup();
 
     const destinationOverride = useMemo(() => ({
@@ -299,7 +299,7 @@ const ExampleForm = ({ url }: { url: string }) => {
     </form>;
 };
 
-export const WithCustomFileInputAndForm = (): Element<"section"> => {
+export const WithCustomFileInputAndForm = (): Node => {
     return <section>
         <Uploady
             debug
@@ -343,7 +343,7 @@ const ExampleFormWithCustomButton = ({ url }: { url: string }) => {
     </>;
 };
 
-export const WithCustomFileInputAndCustomButton = (): Element<"section"> => {
+export const WithCustomFileInputAndCustomButton = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
 
     return <section>

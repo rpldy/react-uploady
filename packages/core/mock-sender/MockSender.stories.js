@@ -1,5 +1,5 @@
 // @flow
-import { useCallback, useEffect, useRef, useState, type Element } from "react";
+import { useCallback, useEffect, useRef, useState, type Node } from "react";
 import {
     getCsfExport,
     addActionLogEnhancer,
@@ -16,7 +16,7 @@ const mockSenderEnhancer = getMockSenderEnhancer({
     progressIntervals: [10, 20, 30, 40, 50, 60, 70, 80, 90]
 });
 
-export const WithMockProgress = (): Element<"div"> => {
+export const WithMockProgress = (): Node => {
     const uploaderRef = useRef<?UploadyUploaderType>(null)
     const [_, setHasUploader] = useState(false);
 

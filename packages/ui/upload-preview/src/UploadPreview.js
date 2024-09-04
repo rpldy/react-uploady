@@ -5,7 +5,7 @@ import { getPreviewsLoaderHook } from "./usePreviewsLoader";
 import { getFallbackUrlData } from "./utils";
 import { PREVIEW_TYPES } from "./consts";
 
-import type { Element, ComponentType, AbstractComponent } from "react";
+import type { Node, AbstractComponent } from "react";
 import type { RefObject } from "@rpldy/shared-ui";
 import type {
 	PreviewProps,
@@ -46,7 +46,7 @@ const getUploadPreviewForBatchItemsMethod =
     (method: PreviewBatchItemsMethod = useBatchStartListener): AbstractComponent<PreviewProps> => {
     const usePreviewsLoader = getPreviewsLoaderHook(method);
 
-    return (props: PreviewProps): Element<"img">[] | Element<ComponentType<any>>[] => {
+    return (props: PreviewProps): Node[] => {
         const { PreviewComponent, previewMethodsRef, onPreviewsChanged, ...previewOptions } = props;
         const { previews, clearPreviews, removeItemFromPreview }: PreviewData = usePreviewsLoader(previewOptions);
 
@@ -68,7 +68,7 @@ const getUploadPreviewForBatchItemsMethod =
             removeItemFromPreview
         );
 
-        return previews.map((data: PreviewItem): Element<any> => {
+        return previews.map((data: PreviewItem): Node => {
             const { id, url, type, name, isFallback, removePreview, props: previewProps } = data;
 
             return PreviewComponent ?

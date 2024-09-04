@@ -1,5 +1,5 @@
 // @flow
-import React, { useCallback, useState, useRef, useEffect, type Element } from "react";
+import React, { useCallback, useState, useRef, useEffect, type Node } from "react";
 import {
     UmdBundleScript,
     localDestination,
@@ -15,7 +15,7 @@ import createUploader, { UPLOADER_EVENTS } from "./src";
 import readme from "./README.md";
 import type { UploadyUploaderType } from "./src";
 
-export const WithCustomUI = (): Element<"div"> => {
+export const WithCustomUI = (): Node => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
     const uploaderRef = useRef<?UploadyUploaderType>(null);
     const inputRef = useRef<?HTMLInputElement>(null);
@@ -50,7 +50,7 @@ export const WithCustomUI = (): Element<"div"> => {
     </div>;
 };
 
-export const WithProgress = (): Element<"div"> => {
+export const WithProgress = (): Node => {
     const { enhancer, destination } = useStoryUploadySetup();
     const uploaderRef = useRef<?UploadyUploaderType>(null)
     const [uploaderId, setUploaderId] = useState<?string>(null);
@@ -91,7 +91,7 @@ export const WithProgress = (): Element<"div"> => {
     );
 };
 
-export const TEST_EventsData = (): Element<"div"> => {
+export const TEST_EventsData = (): Node => {
     const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
     const uploaderRef = useRef<?UploadyUploaderType>(null);
     const inputRef = useRef<?HTMLInputElement>(null);
@@ -154,7 +154,7 @@ export const TEST_EventsData = (): Element<"div"> => {
     </div>;
 };
 
-export const UMD_Core = (): Element<"div"> => {
+export const UMD_Core = (): Node => {
     const [uploaderReady, setUploaderReady] = useState(false);
     const inputRef = useRef<?HTMLInputElement>(null);
     const uploaderRef = useRef<?UploadyUploaderType>(null);

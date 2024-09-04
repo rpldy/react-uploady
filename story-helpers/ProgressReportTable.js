@@ -2,10 +2,11 @@
 import { useEffect, useState } from "react";
 import { UPLOADER_EVENTS } from "../packages/core/uploader";
 import { logToCypress, } from "./uploadyStoryLogger";
-import type { UploadyUploaderType } from "../packages/core/uploader";
-import type { Element } from "react";
 
-const ProgressReportTable = ({ uploader }: { uploader: ?UploadyUploaderType }): Element<"table"> => {
+import type { Node } from "react";
+import type { UploadyUploaderType } from "../packages/core/uploader";
+
+const ProgressReportTable = ({ uploader }: { uploader: ?UploadyUploaderType }): Node => {
     const [completionPercentages, setCompletionPercentages] = useState<string[]>([]);
     const [itemProgress, setItemProgress] = useState<Record<string, string[]>>({});
 

@@ -37,7 +37,7 @@ import Uploady, {
 } from "./src";
 import readme from "./README.md";
 
-import type { Node, Element } from "react";
+import type { Node } from "react";
 import type { Batch, BatchItem } from "@rpldy/shared";
 
 const ContextUploadButton = ({ text = "Custom Upload Button" }: { text?: string, ... }) => {
@@ -279,7 +279,7 @@ export const WithAutoUploadOff = (): Node => {
     </Uploady>
 };
 
-export const WithAbort = (): Element<"div"> => {
+export const WithAbort = (): Node => {
     const { enhancer, destination, multiple, extOptions } = useStoryUploadySetup();
 
     return <div>
@@ -481,7 +481,7 @@ const renderUploadyFromBundle = () => {
     return result;
 };
 
-export const UMD_CoreUI = (): Element<"div"> => {
+export const UMD_CoreUI = (): Node => {
     const [UploadyUI, setUploadyUI] = useState(null);
 
     const onBundleLoad = useCallback(() => {
@@ -522,7 +522,7 @@ const renderUploadyAll = () => {
         [uploadUrlLog, uploadButton, uploadPreview]);
 };
 
-export const UMD_ALL = (): Element<"div"> => {
+export const UMD_ALL = (): Node => {
     const [UploadyUI, setUploadyUI] = useState(null);
 
     const onBundleLoad = useCallback(() => {

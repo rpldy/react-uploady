@@ -24,7 +24,7 @@ import {
 } from "../../../story-helpers";
 import readme from "./README.md";
 
-import type { Node, Element } from "react";
+import type { Node } from "react";
 
 //expose react and react-dom for Uploady bundle
 window.react = React;
@@ -178,7 +178,7 @@ const renderChunkedUploadyFromBundle = () => {
     );
 };
 
-export const UMD_CoreChunkedUI = (): Element<"div"> => {
+export const UMD_CoreChunkedUI = (): Node => {
     const [UploadyUI, setUploadyUI] = useState(null);
 
     const onBundleLoad = useCallback(() => {

@@ -6,7 +6,7 @@ import { useStoryUploadySetup, DESTINATION_TYPES, getCsfExport, type CsfExport }
 import getTusEnhancer from "./src";
 import readme from "./README.md";
 
-import type { Element } from "react";
+import type { Node } from "react";
 import type { UploadyUploaderType } from "@rpldy/uploader";
 import type { TusOptions } from "./src";
 
@@ -37,7 +37,7 @@ const useUploaderWithTus = (tusOptions: TusOptions = {}) => {
 	return uploaderRef;
 };
 
-export const WithTusSender = (): Element<"div"> => {
+export const WithTusSender = (): Node => {
 	const inputRef = useRef<?HTMLInputElement>(null);
 	const uploaderRef = useUploaderWithTus();
 
@@ -60,7 +60,7 @@ export const WithTusSender = (): Element<"div"> => {
 	</div>
 };
 
-export const WithTusDataOnCreate = (): Element<"div"> => {
+export const WithTusDataOnCreate = (): Node => {
 	const inputRef = useRef<?HTMLInputElement>(null);
 	const uploaderRef = useUploaderWithTus({ sendDataOnCreate: true });
 
@@ -83,7 +83,7 @@ export const WithTusDataOnCreate = (): Element<"div"> => {
 	</div>
 };
 
-export const WithTusConcatenation = (): Element<"div"> => {
+export const WithTusConcatenation = (): Node => {
 	const inputRef = useRef<?HTMLInputElement>(null);
 	const uploaderRef = useUploaderWithTus({ parallel: 2 });
 
@@ -106,7 +106,7 @@ export const WithTusConcatenation = (): Element<"div"> => {
 	</div>
 };
 
-export const WithFeatureDetection = (): Element<"div"> => {
+export const WithFeatureDetection = (): Node => {
 	const inputRef = useRef<?HTMLInputElement>(null);
 	const uploaderRef = useUploaderWithTus({
 		featureDetection: true,

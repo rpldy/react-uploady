@@ -27,7 +27,7 @@
     "@rpldy/uploader": "^1.8.3"
   },
   "devDependencies": {
-    "flow-bin": "^0.243.0"
+    "flow-bin": "^0.245.1"
   },
   "publishConfig": {
     "access": "public"

@@ -55,7 +55,7 @@ const usePreviewStorySetup = () => {
     return {...setup, maxImageSize};
 };
 
-export const Simple = (): React$Element<typeof Uploady> => {
+export const Simple = (): Node => {
     const { enhancer, destination, multiple, grouped, groupSize, maxImageSize } = usePreviewStorySetup();
 
     return <Uploady

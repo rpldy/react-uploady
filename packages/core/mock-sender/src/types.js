@@ -1,6 +1,6 @@
 // @flow
 
-import type { NonMaybeTypeFunc, IsSuccessfulCall } from "@rpldy/shared";
+import type { IsSuccessfulCall } from "@rpldy/shared";
 
 export type MockOptions = {|
 	//the time in ms it should take to "upload" (default: 500ms)
@@ -17,4 +17,4 @@ export type MockOptions = {|
     isSuccessfulCall?: IsSuccessfulCall
 |};
 
-export type MandatoryMockOptions = $ObjMap<MockOptions, NonMaybeTypeFunc>;
+export type MandatoryMockOptions = {[key in keyof MockOptions]: $NonMaybeType<MockOptions[key]>}

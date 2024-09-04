@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import { invariant, hasWindow } from "@rpldy/shared";
 import { NoDomUploady, useUploadOptions } from "@rpldy/shared-ui";
 
+import type { Node } from "react";
 import type { UploaderCreateOptions } from "@rpldy/uploader";
 import type { UploadyProps } from "@rpldy/shared-ui";
 
@@ -59,7 +60,7 @@ const FileInputField = memo(forwardRef(({ container, noPortal, ...inputProps }: 
         renderInPortal(container, isValidContainer, inputProps, instanceOptions, ref);
 }));
 
-const Uploady = (props: UploadyProps): React$Element<typeof NoDomUploady> => {
+const Uploady = (props: UploadyProps): Node => {
     const {
         multiple = true,
         capture,

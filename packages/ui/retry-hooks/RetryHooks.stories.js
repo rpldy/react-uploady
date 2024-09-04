@@ -138,7 +138,7 @@ const STATES = {
 	ERROR: "ERROR",
 };
 
-const STATE_COLORS = {
+const STATE_COLORS: { [string]: string } = {
 	[STATES.PROGRESS]: "#f4e4a4",
 	[STATES.DONE]: "#a5f7b3",
 	[STATES.ABORTED]: "#b855da",

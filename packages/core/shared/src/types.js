@@ -1,8 +1,6 @@
 // @flow
 import { BATCH_STATES, FILE_STATES } from "./consts";
 
-export type NonMaybeTypeFunc = <T>(param: T) => $NonMaybeType<T>;
-
 export type Destination = {
 	//upload URL
 	url?: ?string,

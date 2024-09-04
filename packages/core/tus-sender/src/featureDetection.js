@@ -11,7 +11,9 @@ import type { TusState, RequestResult } from "./types";
 
 const getStorageKey = (url: string) => `${FD_STORAGE_PREFIX}${url}`;
 
-const optionsConverter = {
+type ConverterFn = (extensions: string[], tusState: TusState) => void;
+
+const optionsConverter: { [string]: ConverterFn } = {
 	[KNOWN_EXTENSIONS.CONCATENATION]: (extensions: string[], tusState: TusState) => {
 		const parallel = tusState.getState().options.parallel;
 
@@ -65,8 +67,8 @@ const processResponse = (tusState: TusState, extensions: ?string, version: ?stri
 				});
 			}
 		} else {
-			Object.keys(optionsConverter).forEach((key: string) => {
-				optionsConverter[key](extArr, tusState);
+			Object.entries(optionsConverter).forEach(([key, converter]) => {
+                converter(extArr, tusState);
 			});
 		}
 	}

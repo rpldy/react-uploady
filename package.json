@@ -154,7 +154,7 @@
     "weak-napi": "^2.0.2",
     "webpack": "5",
     "webpack-cli": "5",
-    "webpack-merge": "^5.10.0",
+    "webpack-merge": "^6.0.1",
     "webpack-virtual-modules": "^0.6.2",
     "xml2js": "^0.6.2",
     "yargs": "^17.7.2"

@@ -362,6 +362,7 @@ Companies/Organizations that have contributed to the project:
 <a href="https://opencollective.com/react-uploady/organization/1/website"><img src="https://opencollective.com/react-uploady/organization/1/avatar.svg"></a>
 <a href="https://opencollective.com/react-uploady/organization/2/website"><img src="https://opencollective.com/react-uploady/organization/2/avatar.svg"></a>
 <a href="https://opencollective.com/react-uploady/organization/3/website"><img src="https://opencollective.com/react-uploady/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/react-uploady/organization/5/website"><img src="https://opencollective.com/react-uploady/organization/5/avatar.svg"></a>
 
 #### Support us
 

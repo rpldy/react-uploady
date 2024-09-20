@@ -29,7 +29,33 @@ const TestPasteUpload: React.FC = () => {
     </>;
 };
 
+const TestWindowPasteUpload: React.FC = () => {
+    const { toggle, getIsEnabled } = usePasteUpload();
+
+    return (
+        <div>
+            paste anywhere on this page
+            <button onClick={toggle}>Toggle Paste</button>
+            enabled: {getIsEnabled()}
+        </div>
+    );
+};
+
+const TestWithJustOptions: React.FC = () => {
+    const { toggle, getIsEnabled } = usePasteUpload({ autoUpload: false });
+
+    return (
+        <div>
+            paste anywhere on this page
+            <button onClick={toggle}>Toggle Paste</button>
+            enabled: {getIsEnabled()}
+        </div>
+    );
+};
+
 export {
     TestWithPasteUpload,
     TestPasteUpload,
+    TestWindowPasteUpload,
+    TestWithJustOptions,
 };

@@ -73,7 +73,7 @@
     "@commitlint/config-conventional": "^19.4.1",
     "@commitlint/config-lerna-scopes": "^19.0.0",
     "@monorepo-utils/package-utils": "^2.10.4",
-    "@storybook/addon-essentials": "^7.6.16",
+    "@storybook/addon-essentials": "^8.1.11",
     "@storybook/addon-interactions": "^7.6.16",
     "@storybook/addon-knobs": "^7.0.2",
     "@storybook/addon-links": "^7.6.16",

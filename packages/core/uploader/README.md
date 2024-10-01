@@ -23,20 +23,20 @@
 
 # Uploader
 
-The Uploader is the processing and queuing engine for React-Uploady.
+The Uploader is the processing and queuing engine for React-Uploady, written in vanilla javascript.
 When files are handed to the Uploader, it will represent each file as a Batch Item and group them together in Batches.
 This is for the most part internal to the uploading mechanism. 
 
 The Uploader fires Batch & BatchItem lifecycle [events](#events) that can be registered to. 
 Some of these events also allow to cancel uploads dynamically. 
 
-_If you're looking to integrate file upload with your React app, you'd probably want to head over to the [@rpldy/uploady README](../ui/uploady).
+> If you're building a React app and want to add file-upload capabilities, you'd probably want to head over to the [@rpldy/uploady README](../ui/uploady).
 
 **The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 <p align="center">
     <a href="https://www.buymeacoffee.com/yoav"> 
-        <img width="540" alt="uploady-buy-me-coffee" src="https://github.com/rpldy/react-uploady/assets/1102278/c6de6710-1c93-47a5-85fa-1af7170907f8">
+        <img width="700" alt="uploady-buy-me-coffee" src="https://github.com/rpldy/react-uploady/assets/1102278/c6de6710-1c93-47a5-85fa-1af7170907f8">
     </a>
 </p>
 

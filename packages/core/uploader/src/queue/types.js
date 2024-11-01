@@ -4,7 +4,12 @@ import type { TriggerMethod } from "@rpldy/life-events";
 import type { AbortsMap } from "@rpldy/abort";
 import type { ItemsSender, UploaderCreateOptions } from "../types";
 
-export type BatchData = { batch: Batch, batchOptions: UploaderCreateOptions, finishedCounter: number };
+export type BatchData = {
+    batch: Batch,
+    batchOptions: UploaderCreateOptions,
+    itemBatchOptions: { [string]: UploaderCreateOptions },
+    finishedCounter: number,
+};
 
 export type State = {|
 	itemQueue: { [string]: string[] },

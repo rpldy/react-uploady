@@ -12,6 +12,14 @@ describe("itemHelpers tests", () => {
                 },
                 activeIds: ["f1", "f2"],
                 itemQueue: { "b1": ["f1", "f2"] },
+                batches: {
+                    "b1": {
+                        itemBatchOptions: {
+                            "f1": { test: "test" },
+                            "f2": { test: "test2" },
+                        }
+                    }
+                }
             });
 
             itemHelpers.finalizeItem(queueState, "f1", true);
@@ -23,6 +31,9 @@ describe("itemHelpers tests", () => {
 
             expect(state.items["f1"]).toBeUndefined();
             expect(state.items["f2"]).toBeDefined();
+
+            expect(state.batches["b1"].itemBatchOptions["f1"]).toBeUndefined();
+            expect(state.batches["b1"].itemBatchOptions["f2"]).toBeDefined();
         });
 
         it("should finalize item but not remove completely with del = false", () => {
@@ -33,6 +44,9 @@ describe("itemHelpers tests", () => {
                 },
                 activeIds: ["f1", "f2"],
                 itemQueue: { "b1": ["f1", "f2"] },
+                batches: {
+                    "b1": { itemBatchOptions: {} }
+                }
             });
 
             itemHelpers.finalizeItem(queueState, "f1");
@@ -53,6 +67,9 @@ describe("itemHelpers tests", () => {
                 },
                 activeIds: ["f1", "f2"],
                 itemQueue: { "b1": ["f2"] },
+                batches: {
+                    "b1": { itemBatchOptions: {} }
+                }
             });
 
             itemHelpers.finalizeItem(queueState, "f1", true);

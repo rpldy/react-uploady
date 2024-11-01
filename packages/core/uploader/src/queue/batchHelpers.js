@@ -249,6 +249,10 @@ const detachRecycledFromPreviousBatch = (queue: QueueState, item: BatchItem): vo
                 if (~index) {
                     batch.items.splice(index, 1);
                 }
+
+                if (state.batches[batchId].itemBatchOptions[item.id]) {
+                    delete state.batches[batchId].itemBatchOptions[item.id];
+                }
             });
         }
     }

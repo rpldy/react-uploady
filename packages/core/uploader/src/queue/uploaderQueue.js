@@ -74,7 +74,7 @@ const createUploaderQueue = (
 
     const addBatch = (batch: Batch, batchOptions: UploaderCreateOptions) => {
         updateState((state) => {
-            state.batches[batch.id] = { batch, batchOptions, finishedCounter: 0 };
+            state.batches[batch.id] = { batch, batchOptions, itemBatchOptions: {}, finishedCounter: 0 };
             state.batchQueue.push(batch.id);
             state.itemQueue[batch.id] = batch.items.map(({ id }) => id);
         });

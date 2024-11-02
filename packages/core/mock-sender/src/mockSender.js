@@ -128,7 +128,7 @@ const getIsSuccessfulMockRequest = (
         }) : true;
 };
 
-const processResponse = (request: MockRequest, options: MandatoryMockOptions, sendOptions: SendOptions): Promise<UploadData> => {
+const processResponse = (request: MockRequest, options: MandatoryMockOptions, sendOptions: SendOptions, url: ?string): Promise<UploadData> => {
 	return request.then(({ items, ...mockResponse }: MockResponse) => {
 		logger.debugLog("uploady.mockSender: mock request finished successfully", items);
 
@@ -150,6 +150,7 @@ const processResponse = (request: MockRequest, options: MandatoryMockOptions, se
 				data: options.response ||
                     sendOptions.formatServerResponse?.(JSON.stringify(mockResponseData), mockStatus, mockHeaders) ||
                     mockResponseData,
+                url,
 			}
 		};
 	})
@@ -186,7 +187,7 @@ const mockSender = (options?: MockOptions): {|
         request.onProgress(onProgress);
 
         return {
-            request: processResponse(request, mockOptions, sendOptions),
+            request: processResponse(request, mockOptions, sendOptions, url),
             abort: request.abort,
             senderType: MOCK_SENDER_TYPE,
         };

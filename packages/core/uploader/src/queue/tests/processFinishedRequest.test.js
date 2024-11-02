@@ -28,7 +28,7 @@ describe("onRequestFinished tests", () => {
 				"u2": { batchId: batch.id, completed, url: "myfile.com" },
 			},
 			batches: {
-				[batch.id]: { batch, batchOptions: {} },
+				[batch.id]: { batch, batchOptions: {}, itemBatchOptions: {} },
 			},
 			itemQueue: { [batch.id]: [itemId] },
             batchQueue: [batch.id],
@@ -125,7 +125,7 @@ describe("onRequestFinished tests", () => {
 				"u2": { batchId: batch.id },
 			},
 			batches: {
-				[batch.id]: { batch, batchOptions: {} },
+				[batch.id]: { batch, batchOptions: {}, itemBatchOptions: {} },
 			},
             itemQueue: { [batch.id]: ["u1", "u2"] },
             batchQueue: [batch.id],
@@ -171,7 +171,7 @@ describe("onRequestFinished tests", () => {
 					"u1": { batchId: batch.id },
 				},
 				batches: {
-					[batch.id]: { batch, batchOptions: {} },
+					[batch.id]: { batch, batchOptions: {}, itemBatchOptions: {} },
 				},
 				itemQueue: { [batch.id] : ["u1"] },
 				activeIds: ["u1"],
@@ -206,7 +206,7 @@ describe("onRequestFinished tests", () => {
                 "u1": { batchId: batch.id },
             },
             batches: {
-                [batch.id]: { batch, batchOptions: {} },
+                [batch.id]: { batch, batchOptions: {}, itemBatchOptions: {} },
             },
             itemQueue: { [batch.id] : ["u1"] },
             activeIds: ["u1"],
@@ -242,7 +242,7 @@ describe("onRequestFinished tests", () => {
 					"u2": { id: "u2", batchId: batch.id },
 				},
 				batches: {
-					b1: { batch, batchOptions: {} },
+					b1: { batch, batchOptions: {}, itemBatchOptions: {} },
 				},
 				itemQueue: { [batch.id] : ["u1", "u2"] },
 				activeIds: ["u1", "u2"],

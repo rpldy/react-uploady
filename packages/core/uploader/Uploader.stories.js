@@ -91,8 +91,8 @@ export const WithProgress = (): Node => {
     );
 };
 
-export const TEST_EventsData = (): Node => {
-    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+const UploaderWithEvents = ({ options = {},  }: {  options?: any }): Node => {
+    const { enhancer, destination, grouped, groupSize, extOptions } = useStoryUploadySetup();
     const uploaderRef = useRef<?UploadyUploaderType>(null);
     const inputRef = useRef<?HTMLInputElement>(null);
 
@@ -112,7 +112,8 @@ export const TEST_EventsData = (): Node => {
             enhancer,
             destination,
             grouped,
-            maxGroupSize: groupSize
+            maxGroupSize: groupSize,
+            ...options,
         });
 
         uploader.on(UPLOADER_EVENTS.BATCH_ADD, (batch, batchOptions) => {
@@ -125,6 +126,8 @@ export const TEST_EventsData = (): Node => {
 
         uploader.on(UPLOADER_EVENTS.REQUEST_PRE_SEND, ({ items, options }) => {
             logToCypress(`###${UPLOADER_EVENTS.REQUEST_PRE_SEND}`, items, options);
+
+            return extOptions?.preSendCallback?.(items, options) ?? undefined;
         });
 
         uploader.on(UPLOADER_EVENTS.ITEM_START, (item, options) => {
@@ -147,11 +150,17 @@ export const TEST_EventsData = (): Node => {
         uploaderRef.current = uploader;
     }, [enhancer, destination, grouped, groupSize]);
 
-    return <div>
-        <p>Uses the uploader as is, without the rpldy React wrappers</p>
-        <input type="file" ref={inputRef} style={{ display: "none" }} onChange={onInputChange}/>
-        <button id="upload-button" onClick={onClick}>Upload</button>
-    </div>;
+    return (
+        <div>
+            <p>Uses the uploader as is, without the rpldy React wrappers</p>
+            <input type="file" ref={inputRef} style={{ display: "none" }} onChange={onInputChange}/>
+            <button id="upload-button" onClick={onClick}>Upload</button>
+        </div>
+    );
+};
+
+export const TEST_EventsData = (): Node => {
+  return <UploaderWithEvents />
 };
 
 export const UMD_Core = (): Node => {

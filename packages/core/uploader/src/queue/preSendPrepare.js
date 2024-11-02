@@ -60,8 +60,10 @@ const triggerItemsPrepareEvent = (
         });
 
 const persistPrepareResponse = (queue: QueueState, prepared: ItemsSendData) => {
+    const batchId = prepared.items[0].batchId;
+
     //for async prepare, items could already be cancelled before we reach here
-    if (prepared.items[0] && queue.getState().batches[prepared.items[0].batchId]) {
+    if (prepared.items[0] && queue.getState().batches[batchId]) {
         queue.updateState((state) => {
             //update potentially changed data back into queue state
             prepared.items.forEach((i) => {
@@ -71,13 +73,17 @@ const persistPrepareResponse = (queue: QueueState, prepared: ItemsSendData) => {
                 }
             });
 
-            state.batches[prepared.items[0].batchId].batchOptions = prepared.options;
+            const batchData = state.batches[batchId];
+            prepared.items.forEach(({ id }) => {
+                batchData.itemBatchOptions[id] = prepared.options;
+            });
         });
 
         //use objects from internal state(proxies) - not objects from user-land!
         const updatedState = queue.getState();
         prepared.items = prepared.items.map((item) => updatedState.items[item.id]);
-        prepared.options = updatedState.batches[prepared.items[0].batchId].batchOptions;
+        const batchData = updatedState.batches[batchId];
+        prepared.options = batchData.itemBatchOptions[prepared.items[0].id] || batchData.batchOptions;
     }
 };
 

@@ -18,6 +18,7 @@ describe("preSendPrepare tests", () => {
 
     const batchOptions = {
         autoUpload: true,
+        destination: { url: "a" },
     };
 
     const getMockStateData = (testItems) => ({
@@ -30,11 +31,13 @@ describe("preSendPrepare tests", () => {
         batches: {
             "b1": {
                 batch: { id: "b1" },
-                batchOptions
+                batchOptions,
+                itemBatchOptions: {},
             },
             "b2": {
                 batch: { id: "b2" },
-                batchOptions
+                batchOptions,
+                itemBatchOptions: {},
             }
         },
         aborts: {}
@@ -121,7 +124,7 @@ describe("preSendPrepare tests", () => {
             }, batchOptions);
 
         expect(Object.values(queueState.getState().items)).toEqual(newItems);
-        expect(queueState.getState().batches["b1"].batchOptions).toStrictEqual({...batchOptions, ...newOptions});
+        expect(queueState.getState().batches["b1"].batchOptions).toStrictEqual(batchOptions);
     });
 
     it("Preparer should ignore updates for finalized items", async () => {
@@ -169,7 +172,27 @@ describe("preSendPrepare tests", () => {
             { id: "u3", batchId: "b1", state: FILE_STATES.CANCELLED },
         ]);
 
-        expect(queueState.getState().batches["b1"].batchOptions).toStrictEqual({...batchOptions, ...newOptions});
+        expect(queueState.getState().batches["b1"].batchOptions).toStrictEqual(batchOptions);
+    });
+
+    it("Preparar should not override options for batch, instead save per item to avoid pollution", async () => {
+        const queueState = getQueueState(getMockStateData());
+        const preparer = getItemsPrepareUpdater(eventType, retrieveItems, retrieveSubject);
+
+        triggerUpdater.mockResolvedValueOnce({
+            options: {
+                destination: { url: "b" },
+            },
+        });
+
+        const result = await preparer(queueState, items.slice(0,1));
+
+        expect(queueState.getState().batches["b1"].batchOptions.destination.url).toBe("a");
+        expect(queueState.getState().batches["b1"].itemBatchOptions[items[0].id]).toBeDefined();
+        expect(queueState.getState().batches["b1"].itemBatchOptions[items[0].id].destination.url).toBe("b");
+        expect(queueState.getState().batches["b1"].itemBatchOptions[items[1].id]).toBeUndefined();
+
+        expect(result.options).toStrictEqual({...batchOptions, ...{ destination: { url: "b"} }});
     });
 
     it("Preparer should update options without items", async () => {
@@ -197,10 +220,7 @@ describe("preSendPrepare tests", () => {
                 options: batchOptions,
             }, batchOptions);
 
-        expect(queueState.getState().batches["b1"].batchOptions).toEqual({
-            ...batchOptions,
-            ...newOptions
-        });
+        expect(queueState.getState().batches["b1"].batchOptions).toEqual(batchOptions);
     });
 
     it("Preparer should update items without options", async () => {

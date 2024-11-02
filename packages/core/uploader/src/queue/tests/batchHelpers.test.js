@@ -611,7 +611,8 @@ describe("batchHelpers tests", () => {
                         batch: {
                             id: "b1",
                             items: Object.values(items)
-                        }
+                        },
+                        itemBatchOptions: { "i1": {}, "i2": { } },
                     },
                     b3: {
                         batch: {
@@ -632,6 +633,8 @@ describe("batchHelpers tests", () => {
             const updatedBatch = batchHelpers.getBatchFromState(qState.getState(), "b1");
             expect(updatedBatch.items).toHaveLength(2);
             expect(updatedBatch.items.find(({id}) => id === item.id)).toBeUndefined();
+            expect(qState.getState().batches["b1"].itemBatchOptions[item.id]).toBeUndefined();
+            expect(qState.getState().batches["b1"].itemBatchOptions["i1"]).toBeDefined();
         });
 
         it("should not detach for non-recycled", () => {

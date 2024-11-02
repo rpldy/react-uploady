@@ -14,7 +14,7 @@ describe("Uploader - PreSend Tests", () => {
     });
 
     it("should not pollute options for items when using preSend Prepare", () => {
-        intercept(UPLOAD_URL + "*");
+        intercept(UPLOAD_URL + "/*");
 
         cy.setUploadOptions({
            preSendCallback: (items, options) => {

@@ -2,95 +2,108 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Uploady from "@rpldy/uploady";
 import {
-    useStoryUploadySetup,
+    createUploadyStory,
     StoryUploadProgress,
     getCsfExport,
     type CsfExport,
+    type UploadyStory,
 } from "../../../story-helpers";
 import UploadUrlInput from "./src";
-import readme from "./README.md";
 
+import readme from "./README.md";
 import type { Node } from "react";
 
-export const Simple = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}
-        grouped={grouped}
-        maxGroupSize={groupSize}>
-
-        <UploadUrlInput placeholder="URL to upload" />
-    </Uploady>;
-};
-
-export const WithRef = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-    const inputRef = useRef<?HTMLInputElement>(null);
-
-    const onInputChange = useCallback(() => {
-        console.log("INPUT = ", inputRef.current?.value);
-    }, []);
-
-    useEffect(() => {
-        if (inputRef.current) {
-            inputRef.current.addEventListener("input", onInputChange);
-        }
-
-        return () => {
-            if (inputRef.current) {
-                inputRef.current.removeEventListener("input", onInputChange);
-            }
-        };
+export const Simple: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <UploadUrlInput placeholder="URL to upload"/>
+            </Uploady>
+        );
     });
 
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}
-        grouped={grouped}
-        maxGroupSize={groupSize}>
+export const WithRef: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        const inputRef = useRef<?HTMLInputElement>(null);
 
-        <UploadUrlInput placeholder="URL to upload" ref={inputRef}/>
-    </Uploady>;
-};
+        const onInputChange = useCallback(() => {
+            console.log("INPUT = ", inputRef.current?.value);
+        }, []);
 
-export const WithButtonAndValidate = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-    const [error, setError] = useState<?string | void>(null);
-    const uploadRef = useRef<(() => void) | void | null>(null);
+        useEffect(() => {
+            if (inputRef.current) {
+                inputRef.current.addEventListener("input", onInputChange);
+            }
 
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}
-        grouped={grouped}
-        maxGroupSize={groupSize}>
+            return () => {
+                if (inputRef.current) {
+                    inputRef.current.removeEventListener("input", onInputChange);
+                }
+            };
+        });
 
-        <UploadUrlInput
-            uploadRef={uploadRef}
-            validate={(value) => {
-                const valid = !!(value && !value.indexOf("http"));
-                setError(valid ? null : "URL must be valid http address");
-                return valid;
-            }}
-            placeholder="URL to upload"/>
-        {error && <span style={{ color: "red" }}>{error}</span>}
-        <br/>
-        <button onClick={() => {
-                uploadRef.current?.();
-        }}>Upload
-        </button>
-        <br/>
-        <StoryUploadProgress/>
-    </Uploady>;
-};
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <UploadUrlInput placeholder="URL to upload" ref={inputRef}/>
+            </Uploady>
+        );
+    });
 
-const UrlInputStories: CsfExport = getCsfExport(UploadUrlInput, "Upload Url Input", readme, { pkg: "upload-url-input", section: "UI" });
+export const WithButtonAndValidate: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        const [error, setError] = useState<?string | void>(null);
+        const uploadRef = useRef<(() => void) | void | null>(null);
+
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <UploadUrlInput
+                    uploadRef={uploadRef}
+                    validate={(value) => {
+                        const valid = !!(value && !value.indexOf("http"));
+                        setError(valid ? null : "URL must be valid http address");
+                        return valid;
+                    }}
+                    placeholder="URL to upload"
+                />
+                {error && <span style={{ color: "red" }}>{error}</span>}
+                <br/>
+                <button
+                    onClick={() => {
+                        uploadRef.current?.();
+                    }}
+                >
+                    Upload
+                </button>
+                <br/>
+                <StoryUploadProgress/>
+            </Uploady>
+        );
+    });
+
+const UrlInputStories: CsfExport = getCsfExport(UploadUrlInput, "Upload Url Input", readme, {
+    pkg: "upload-url-input",
+    section: "UI"
+});
 
 export default { ...UrlInputStories, title: "UI/Upload Url Input" };

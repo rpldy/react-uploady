@@ -1,5 +1,4 @@
 import uploadFile from "../uploadFile";
-import { WAIT_LONG } from "../../constants";
 
 describe("UploadButton - With Component asButton", () => {
     const fileName = "flower.jpg";
@@ -10,7 +9,7 @@ describe("UploadButton - With Component asButton", () => {
 
     it("should make any custom component an upload button", () => {
         uploadFile(fileName, () => {
-            cy.wait(WAIT_LONG);
+            cy.waitMedium();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         }, "#div-upload");
     });

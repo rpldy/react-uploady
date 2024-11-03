@@ -6,7 +6,11 @@ describe("UploadPreview - Progress", () => {
     const fileName = "flower.jpg";
 
     beforeEach(() => {
-        cy.visitStory("uploadPreview", "with-progress&knob-destination_Upload Destination=local");
+        cy.visitStory(
+            "uploadPreview",
+            "with-progress",
+            { uploadType: "local" }
+        );
     });
 
     it("should show upload preview", () => {

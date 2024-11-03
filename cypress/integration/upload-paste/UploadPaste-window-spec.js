@@ -1,12 +1,11 @@
-import { WAIT_X_SHORT } from "../../constants";
-
 describe("UploadPaste - Window Listener", () => {
     const fileName = "flower.jpg";
 
     const loadPage = () =>
         cy.visitStory(
             "uploadPaste",
-            "with-window-paste&knob-mock send delay_Upload Destination=100",
+            "with-window-paste",
+            { mockDelay: 100 }
         );
 
     it("should upload pasted file from anywhere on the page", () => {
@@ -17,7 +16,7 @@ describe("UploadPaste - Window Listener", () => {
         cy.get("body")
             .pasteFile(fileName);
 
-        cy.wait(WAIT_X_SHORT);
+        cy.waitExtraShort();
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
     });
 });

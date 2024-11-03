@@ -4,7 +4,11 @@ describe("Uploader - Event data test", () => {
     const fileName = "flower.jpg";
 
     const loadStory = () =>
-        cy.visitStory("uploader", "test-events-data&knob-mock send delay_Upload Destination=100");
+        cy.visitStory(
+            "uploader",
+            "test-events-data",
+            { mockDelay: 100 }
+        );
 
     it("should upload and trigger events with non-proxy data", () => {
         loadStory();

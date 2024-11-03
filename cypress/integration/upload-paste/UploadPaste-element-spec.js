@@ -1,5 +1,5 @@
 import intercept from "../intercept";
-import { BATCH_ADD, ITEM_START } from "../../constants";
+import { ITEM_START } from "../../constants";
 
 describe("UploadPaste - Element Listener", () => {
     const fileName = "flower.jpg";

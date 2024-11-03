@@ -1,13 +1,16 @@
 import uploadFile from "../uploadFile";
 import { BATCH_ADD, ITEM_FINISH, ITEM_ABORT } from "../../constants";
-import { WAIT_X_SHORT } from "../../constants";
 
 describe("RetryHooks - Retry Upload", () => {
     const fileName = "flower.jpg",
         fileName2 = "sea.jpg";
 
     before(() => {
-        cy.visitStory("retryHooks", "with-retry&knob-mock send delay_Upload Destination=100");
+        cy.visitStory(
+            "retryHooks",
+            "with-retry",
+            { mockDelay: 100 }
+        );
     });
 
     it("should retry batch", () => {
@@ -15,7 +18,7 @@ describe("RetryHooks - Retry Upload", () => {
         uploadFile(fileName, () => {
             //create second batch
             uploadFile(fileName2, () => {
-                cy.wait(WAIT_X_SHORT);
+                cy.waitExtraShort();
 
                 cy.storyLog().assertLogPattern(BATCH_ADD, { times: 2 });
                 cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 2 });
@@ -25,7 +28,7 @@ describe("RetryHooks - Retry Upload", () => {
 
                 cy.storyLog().assertLogPattern(BATCH_ADD, { times: 3 });
 
-                cy.wait(WAIT_X_SHORT);
+                cy.waitExtraShort();
 
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });
             }, "#upload-button");

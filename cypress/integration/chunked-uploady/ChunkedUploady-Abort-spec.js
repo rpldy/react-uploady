@@ -1,8 +1,7 @@
 import { interceptWithHandler } from "../intercept";
 import { interceptFormData } from "cypress-intercept-formdata";
-import uploadFile from "../uploadFile";
 import { ITEM_ABORT, BATCH_ABORT } from "../../constants";
-import { WAIT_MEDIUM, WAIT_X_LONG, WAIT_X_SHORT } from "../../constants";
+import uploadFile from "../uploadFile";
 
 describe("ChunkedUploady - Abort and continue", () => {
     const fileName = "flower.jpg",
@@ -11,8 +10,8 @@ describe("ChunkedUploady - Abort and continue", () => {
     before(() => {
         cy.visitStory(
             "chunkedUploady",
-            "with-abort-button&knob-chunk size (bytes)_Upload Settings=50000",
-            { useMock: false }
+            "with-abort-button",
+            { useMock: false, chunkSize: 50000 }
         );
     });
 
@@ -30,11 +29,10 @@ describe("ChunkedUploady - Abort and continue", () => {
         }, "canceledReq");
 
         uploadFile(fileName, () => {
-            // cy.wait(WAIT_X_SHORT);
             cy.get("button[data-test='abort-batch-0']")
                 .click();
 
-            cy.wait(WAIT_MEDIUM);
+            cy.waitMedium();
 
             cy.storyLog().assertLogPattern(BATCH_ABORT);
             cy.storyLog().assertLogPattern(ITEM_ABORT);
@@ -44,7 +42,7 @@ describe("ChunkedUploady - Abort and continue", () => {
             }, "uploadReq");
 
             uploadFile(fileName, () => {
-                cy.wait(WAIT_X_LONG);
+                cy.waitExtraLong();
 
                 let uniqueHeader;
 

@@ -1,6 +1,6 @@
 import intercept, { interceptWithDelay } from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_SHORT, ITEM_ABORT, ITEM_FINISH, WAIT_MEDIUM } from "../../constants";
+import { ITEM_ABORT, ITEM_FINISH } from "../../constants";
 
 describe("TusUploady - With Retry", () => {
     const fileName = "flower.jpg",
@@ -9,8 +9,16 @@ describe("TusUploady - With Retry", () => {
     before(() => {
         cy.visitStory(
             "tusUploady",
-            "with-retry&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=100000&knob-forget on success_Upload Settings=&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true&knob-ignore modifiedDate in resume storage_Upload Settings=true&knob-send custom header_Upload Settings=true",
-            { useMock: false, uploadUrl }
+            "with-retry",
+            {
+                useMock: false,
+                uploadUrl,
+                chunkSize: 100000,
+                uploadParams: { foo: "bar" },
+                tusResumeStorage: true,
+                tusIgnoreModifiedDateInStorage: true,
+                tusSendWithCustomHeader: true,
+            }
         );
     });
 
@@ -35,6 +43,7 @@ describe("TusUploady - With Retry", () => {
         );
 
         uploadFile(fileName, () => {
+            //must be 150... dont ask why
             cy.wait(150);
 
             cy.get("#abort-btn").click();
@@ -60,12 +69,12 @@ describe("TusUploady - With Retry", () => {
                 },
             }, "resumeReq");
 
-            cy.wait(WAIT_SHORT);
+            cy.waitShort();
 
             //retry aborted
             cy.get("#retry-tus-btn").click();
 
-            cy.wait(WAIT_MEDIUM);
+            cy.waitMedium();
 
             cy.storyLog().assertFileItemStartFinish(fileName, 6)
                 .then((events) => {

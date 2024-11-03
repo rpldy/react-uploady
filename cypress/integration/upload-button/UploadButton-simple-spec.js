@@ -1,12 +1,15 @@
 import uploadFile from "../uploadFile";
-import { WAIT_SHORT } from "../../constants";
 
 describe("UploadButton - Simple", () => {
 	const fileName = "flower.jpg";
 
-	before(() => {
-		cy.visitStory("uploadButton", "simple&knob-mock send delay_Upload Destination=100");
-	});
+    before(() => {
+        cy.visitStory(
+            "uploadButton",
+            "simple",
+            { mockDelay: 100 }
+        );
+    });
 
 	it("should use uploady", () => {
 		cy.get("input")
@@ -14,7 +17,7 @@ describe("UploadButton - Simple", () => {
 			.as("fInput");
 
 		uploadFile(fileName, () => {
-			cy.wait(WAIT_SHORT);
+			cy.waitShort();
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 		}, "button");
 	});

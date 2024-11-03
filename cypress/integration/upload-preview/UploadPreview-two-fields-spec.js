@@ -6,7 +6,11 @@ describe("UploadPreview - Simple", () => {
     const fileName = "flower.jpg";
 
     beforeEach(() => {
-        cy.visitStory("uploadPreview", "with-two-fields&knob-destination_Upload Destination=local");
+        cy.visitStory(
+            "uploadPreview",
+            "with-two-fields",
+            { uploadType: "local" }
+        );
     });
 
     it("should show previews in appropriate field", () => {

@@ -3,12 +3,9 @@ import {
     ITEM_ABORT,
     BATCH_ABORT,
     ITEM_FINISH,
-    WAIT_X_SHORT,
     ITEM_START,
-    WAIT_LONG,
     BATCH_FINALIZE,
 } from "../../constants";
-import { WAIT_SHORT } from "../../constants";
 
 describe("Uploady - With Abort", () => {
     const fileName = "flower.jpg";
@@ -28,7 +25,7 @@ describe("Uploady - With Abort", () => {
                 .should("be.visible")
                 .click();
 
-            cy.wait(WAIT_LONG);
+            cy.waitLong();
 
             cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
@@ -40,7 +37,7 @@ describe("Uploady - With Abort", () => {
 
         uploadFileTimes(fileName, () => {
             uploadFileTimes(fileName, () => {
-                cy.wait(WAIT_X_SHORT);
+                cy.waitExtraShort();
 
                 cy.get("button[data-test='abort-batch-0']")
                     .should("be.visible")
@@ -54,7 +51,7 @@ describe("Uploady - With Abort", () => {
                         cy.storyLog().assertLogEntryContains(logIndex, { state: "aborted" });
                     });
 
-                cy.wait(WAIT_LONG);
+                cy.waitLong();
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 3 });
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
 
@@ -68,12 +65,12 @@ describe("Uploady - With Abort", () => {
 
         uploadFileTimes(fileName, () => {
             uploadFileTimes(fileName, () => {
-                cy.wait(WAIT_X_SHORT);
+                cy.waitExtraShort();
                 cy.get("button[data-test='story-abort-all-button']")
                     .should("be.visible")
                     .click();
 
-                cy.wait(WAIT_SHORT);
+                cy.waitShort();
 
                 cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 4 });
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 0 });

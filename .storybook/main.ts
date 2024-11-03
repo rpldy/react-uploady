@@ -1,9 +1,5 @@
-import type { StorybookConfig } from "@storybook/react-webpack5";
-
 import path from "path";
-
-const getAbsolutePath = (value) =>
-    path.dirname(require.resolve(path.join(value, "package.json")));
+import type { StorybookConfig } from "@storybook/react-webpack5";
 
 const config: StorybookConfig = {
     stories: [
@@ -12,11 +8,9 @@ const config: StorybookConfig = {
     ],
     addons: [
         path.resolve("./.storybook/uploadyPreset"),
-        getAbsolutePath("@storybook/addon-links"),
-        getAbsolutePath("@storybook/addon-essentials"),
-        getAbsolutePath("@storybook/addon-onboarding"),
-        getAbsolutePath("@storybook/addon-interactions"),
-        getAbsolutePath("@storybook/addon-knobs"),
+        "@storybook/addon-links",
+        "@storybook/addon-essentials",
+        "@storybook/addon-interactions",
     ],
     framework: {
         name: "@storybook/react-webpack5",

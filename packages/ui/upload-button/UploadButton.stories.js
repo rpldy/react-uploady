@@ -20,54 +20,58 @@ import Uploady, {
     useUploady,
 } from "@rpldy/uploady";
 import {
-    useStoryUploadySetup,
+    createUploadyStory,
     StoryUploadProgress,
     uploadButtonCss,
     mockDestination,
     useEventsLogUpdater,
     getCsfExport,
     type CsfExport,
+    type UploadyStory,
 } from "../../../story-helpers";
 import UploadButton, { asUploadButton } from "./src";
 
 import readme from "./README.md";
 
-import type { Node } from "react"
+import type { Node } from "react";
 import type { Batch, BatchItem, UploadyContextType } from "@rpldy/uploady";
 
-export const Simple = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-
-    return <Uploady debug
-                    multiple={multiple}
-                    destination={destination}
-                    enhancer={enhancer}
-                    grouped={grouped}
-                    maxGroupSize={groupSize}
-                    fileInputId={"rpldyInput"}
-    >
-        <UploadButton/>
-    </Uploady>;
-};
+export const Simple: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+                fileInputId={"rpldyInput"}
+            >
+                <UploadButton/>
+            </Uploady>
+        );
+    });
 
 const StyledUploadButton = styled(UploadButton)`
   ${uploadButtonCss}
 `;
 
-export const WithStyledComponent = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-
-    return <Uploady
-        debug
-                    multiple={multiple}
-                    destination={destination}
-                    enhancer={enhancer}
-                    grouped={grouped}
-                    maxGroupSize={groupSize}
-    >
-        <StyledUploadButton/>
-    </Uploady>;
-};
+export const WithStyledComponent: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <StyledUploadButton/>
+            </Uploady>
+        );
+    });
 
 const EventsLog = ({ setUpdater }: { setUpdater: (fn: any) => void }) => {
     const [events, setEvents] = useState<string[]>([]);
@@ -83,38 +87,47 @@ const EventsLog = ({ setUpdater }: { setUpdater: (fn: any) => void }) => {
     </ul>
 };
 
-export const WithEventListeners = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-    const { setUpdater, logEvent } = useEventsLogUpdater();
+export const WithEventListeners: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        const { setUpdater, logEvent } = useEventsLogUpdater();
 
-    const listeners = useMemo(() => ({
-        [UPLOADER_EVENTS.BATCH_START]: (batch: Batch) => {
-            logEvent(`Batch Start - ${batch.id} - item count = ${batch.items.length}`);
-        },
-        [UPLOADER_EVENTS.BATCH_FINISH]: (batch: Batch) => {
-            logEvent(`Batch Finish - ${batch.id} - item count = ${batch.items.length}`);
-        },
-        [UPLOADER_EVENTS.ITEM_START]: (item: BatchItem) => {
-            logEvent(`Item Start - ${item.id} : ${item.file.name}`);
-        },
-        [UPLOADER_EVENTS.ITEM_FINISH]: (item: BatchItem) => {
-            logEvent(`Item Finish - ${item.id} : ${item.file.name}`);
-        },
-    }), []);
+        const listeners = useMemo(
+            () => ({
+                [UPLOADER_EVENTS.BATCH_START]: (batch: Batch) => {
+                    logEvent(
+                        `Batch Start - ${batch.id} - item count = ${batch.items.length}`,
+                    );
+                },
+                [UPLOADER_EVENTS.BATCH_FINISH]: (batch: Batch) => {
+                    logEvent(
+                        `Batch Finish - ${batch.id} - item count = ${batch.items.length}`,
+                    );
+                },
+                [UPLOADER_EVENTS.ITEM_START]: (item: BatchItem) => {
+                    logEvent(`Item Start - ${item.id} : ${item.file.name}`);
+                },
+                [UPLOADER_EVENTS.ITEM_FINISH]: (item: BatchItem) => {
+                    logEvent(`Item Finish - ${item.id} : ${item.file.name}`);
+                },
+            }),
+            [],
+        );
 
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}
-        listeners={listeners}
-        grouped={grouped}
-        maxGroupSize={groupSize}
-    >
-        <UploadButton/>
-        <EventsLog setUpdater={setUpdater}/>
-    </Uploady>;
-};
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                listeners={listeners}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <UploadButton/>
+                <EventsLog setUpdater={setUpdater}/>
+            </Uploady>
+        );
+    });
 
 //to be able to use uploady hooks, we need a components that's rendered inside <Uploady>
 const HookedUploadButton = () => {
@@ -136,38 +149,42 @@ const HookedUploadButton = () => {
         logEvent(`hooks: Item Finish - ${item.id} : ${item.file.name}`);
     });
 
-    return <>
-        <UploadButton/>
-        <EventsLog setUpdater={setUpdater}/>
-    </>;
+    return (
+        <>
+            <UploadButton/>
+            <EventsLog setUpdater={setUpdater}/>
+        </>
+    );
 };
 
-export const withEventHooks = (): Node => {
-    const { enhancer, destination, multiple } = useStoryUploadySetup();
+export const withEventHooks: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple }): Node => {
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+            >
+                <HookedUploadButton/>
+            </Uploady>
+        );
+    });
 
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}>
-
-        <HookedUploadButton/>
-    </Uploady>;
-};
-
-export const WithProgress = (): Node => {
-    const { enhancer, destination, multiple } = useStoryUploadySetup();
-
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}
-    >
-        <UploadButton/>
-        <StoryUploadProgress batchProgress itemProgress/>
-    </Uploady>;
-};
+export const WithProgress: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple }): Node => {
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+            >
+                <UploadButton/>
+                <StoryUploadProgress batchProgress itemProgress/>
+            </Uploady>
+        );
+    });
 
 class ClassUsingCustomButton extends Component<any> {
 
@@ -192,22 +209,23 @@ class ClassUsingCustomButton extends Component<any> {
     };
 
     render(): Node {
-        return (
-            <button onClick={this.showFileChooser}>Custom Upload Button</button>
-        );
+        return <button onClick={this.showFileChooser}>Custom Upload Button</button>;
     }
 }
 
-export const WithClass = (): Node => {
-    const { enhancer, destination, multiple } = useStoryUploadySetup();
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}>
-        <ClassUsingCustomButton/>
-    </Uploady>;
-};
+export const WithClass: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple }): Node => {
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+            >
+                <ClassUsingCustomButton/>
+            </Uploady>
+        );
+    });
 
 const DisabledDuringUploadButton = () => {
     const [uploading, setUploading] = useState<boolean>(false);
@@ -223,49 +241,58 @@ const DisabledDuringUploadButton = () => {
     return <StyledUploadButton extraProps={{ disabled: uploading }}/>;
 };
 
-export const DisabledDuringUpload = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+export const DisabledDuringUpload: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <DisabledDuringUploadButton/>
+            </Uploady>
+        );
+    });
 
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}
-        grouped={grouped}
-        maxGroupSize={groupSize}
-    >
-        <DisabledDuringUploadButton/>
-    </Uploady>;
-};
+export const DifferentConfiguration: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple }): Node => {
+        const destinationOverride = useMemo(
+            () => ({
+                headers: { ...destination.headers, "x-test": "1234" },
+            }),
+            [],
+        );
 
-export const DifferentConfiguration = (): Node => {
-    const { enhancer, destination, multiple } = useStoryUploadySetup();
-
-    const destinationOverride = useMemo(() => ({
-        headers: { ...destination.headers, "x-test": "1234" }
-    }), []);
-
-    return <div>
-        <p>Buttons can use different configuration overrides.<br/>
-            However, Some options cannot be overriden by the button.<br/>
-            For example, any prop that influence the file input directly (such as multiple)
-        </p>
-        <Uploady
-            debug
-            multiple={multiple}
-            destination={destination}
-            enhancer={enhancer}>
-
-            <UploadButton autoUpload={false} id="upload-a">
-                autoUpload = false
-            </UploadButton>
-            <br/>
-            <UploadButton destination={destinationOverride} id="upload-b">
-                add 'x-test' header
-            </UploadButton>
-        </Uploady>
-    </div>
-};
+        return (
+            <div>
+                <p>
+                    Buttons can use different configuration overrides.
+                    <br/>
+                    However, Some options cannot be overriden by the button.
+                    <br/>
+                    For example, any prop that influence the file input directly (such as
+                    multiple)
+                </p>
+                <Uploady
+                    debug
+                    multiple={multiple}
+                    destination={destination}
+                    enhancer={enhancer}
+                >
+                    <UploadButton autoUpload={false} id="upload-a">
+                        autoUpload = false
+                    </UploadButton>
+                    <br/>
+                    <UploadButton destination={destinationOverride} id="upload-b">
+                        add 'x-test' header
+                    </UploadButton>
+                </Uploady>
+            </div>
+        );
+    });
 
 const DivUploadButton = asUploadButton(forwardRef((props, ref) => {
     return <div {...props} ref={ref}
@@ -275,20 +302,21 @@ const DivUploadButton = asUploadButton(forwardRef((props, ref) => {
     </div>
 }));
 
-export const WithComponentAsButton = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-
-    return <Uploady
-        debug
-                    multiple={multiple}
-                    destination={destination}
-                    enhancer={enhancer}
-                    grouped={grouped}
-                    maxGroupSize={groupSize}
-    >
-        <DivUploadButton/>
-    </Uploady>;
-};
+export const WithComponentAsButton: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <DivUploadButton/>
+            </Uploady>
+        );
+    });
 
 const ExampleForm = ({ url }: { url: string }) => {
     const inputRef = useRef<?HTMLInputElement>();
@@ -312,6 +340,9 @@ export const WithCustomFileInputAndForm = (): Node => {
 };
 
 const ExampleFormWithCustomButton = ({ url }: { url: string }) => {
+
+    console.log("RENDERING CUSTOM FORM !!!!!! ", { url })
+
     const { showFileUpload } = useUploady();
     const [selectDir, setSelectDir] = useState<boolean>(false);
     const inputRef = useRef<?HTMLInputElement>();
@@ -343,42 +374,46 @@ const ExampleFormWithCustomButton = ({ url }: { url: string }) => {
     </>;
 };
 
-export const WithCustomFileInputAndCustomButton = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-
-    return <section>
-        <Uploady
-            debug
-            customInput
-            multiple={multiple}
-            enhancer={enhancer}
-            grouped={grouped}
-            maxGroupSize={groupSize}
-        >
-            <ExampleFormWithCustomButton url={destination.url}/>
-        </Uploady>
-    </section>
-};
-
-export const WithFileFilter = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-
-    const filterBySize = useCallback((file: mixed) => {
-        //filter out files larger than 5MB
-        return !(file instanceof File) || file.size < 5242880;
-    }, []);
-
-    return <Uploady debug
+export const WithCustomFileInputAndCustomButton: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        return (
+            <section>
+                <Uploady
+                    debug
+                    customInput
                     multiple={multiple}
-                    destination={destination}
                     enhancer={enhancer}
                     grouped={grouped}
                     maxGroupSize={groupSize}
-                    fileFilter={filterBySize}>
+                >
+                    <ExampleFormWithCustomButton url={destination.url}/>
+                </Uploady>
+            </section>
+        );
+    });
 
-        <UploadButton id="upload-button"/>
-    </Uploady>;
-};
+export const WithFileFilter: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+
+        const filterBySize = useCallback((file: mixed) => {
+            //filter out files larger than 5MB
+            return !(file instanceof File) || file.size < 5242880;
+        }, []);
+
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+                fileFilter={filterBySize}
+            >
+                <UploadButton id="upload-button"/>
+            </Uploady>
+        );
+    });
 
 const Form = styled.form`
   display: flex;
@@ -455,28 +490,30 @@ const MyForm = () => {
     );
 };
 
-export const WithForm = (): Node => {
-    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+export const WithForm: UploadyStory = createUploadyStory(
+    ({ enhancer, destination,  grouped, groupSize }): Node => {
+        return (
+            <Uploady
+                debug
+                clearPendingOnAdd
+                multiple={false}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <div className="App">
+                    <h3>Using a Form with file input and additional fields</h3>
 
-    return (
-        <Uploady
-            debug
-            clearPendingOnAdd
-            multiple={false}
-            destination={destination}
-            enhancer={enhancer}
-            grouped={grouped}
-            maxGroupSize={groupSize}
-        >
-            <div className="App">
-                <h3>Using a Form with file input and additional fields</h3>
+                    <MyForm/>
+                </div>
+            </Uploady>
+        );
+    });
 
-                <MyForm/>
-            </div>
-        </Uploady>
-    );
-};
-
-const UploadButtonStories: CsfExport = getCsfExport(UploadButton, "Upload Button", readme, { pkg: "upload-button", section: "UI" })
+const UploadButtonStories: CsfExport = getCsfExport(UploadButton, "Upload Button", readme, {
+    pkg: "upload-button",
+    section: "UI"
+});
 
 export default { ...UploadButtonStories, title: "UI/Upload Button" };

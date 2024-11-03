@@ -1,7 +1,6 @@
 import { interceptWithDelay } from "../intercept";
 import uploadFile, { uploadFileTimes } from "../uploadFile";
 import { ITEM_ABORT, ITEM_FINISH, ITEM_START } from "../../constants";
-import { WAIT_LONG, WAIT_MEDIUM, WAIT_SHORT } from "../../constants";
 
 describe("RetryHooks - Queue", () => {
     const fileName = "flower.jpg",
@@ -20,7 +19,7 @@ describe("RetryHooks - Queue", () => {
 
         uploadFile(fileName, () => {
             uploadFile(fileName2, () => {
-                cy.wait(WAIT_SHORT);
+                cy.waitShort();
 
                 cy.get("button[data-test='abort-button']:last")
                     .click();
@@ -52,7 +51,7 @@ describe("RetryHooks - Queue", () => {
                     .find("button[data-test='retry-button']")
                     .click();
 
-                cy.wait(WAIT_MEDIUM);
+                cy.waitMedium();
 
                 cy.get("@secondArticle")
                     .find("button[data-test='abort-button']")
@@ -92,7 +91,7 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.wait(WAIT_LONG);
+            cy.waitMedium();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg");
             cy.storyLog().assertFileItemStartFinish("flower2.jpg");
@@ -109,7 +108,7 @@ describe("RetryHooks - Queue", () => {
                 .click();
 
             //wait until the other two files finished uploading
-            cy.wait(WAIT_LONG);
+            cy.waitMedium();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg");
 
@@ -117,7 +116,7 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.wait(WAIT_SHORT);
+            cy.waitShort();
             cy.storyLog().assertFileItemStartFinish("flower2.jpg");
         }, 3, "#upload-button");
     });

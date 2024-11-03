@@ -1,10 +1,8 @@
-import { WAIT_MEDIUM } from "../../constants";
-
 describe("UploadPaste - Simple", () => {
     const fileName = "flower.jpg";
 
     const loadPage = () =>
-        cy.visitStory("uploadPaste", "simple&knob-mock send delay_Upload Destination=100");
+        cy.visitStory("uploadPaste", "simple", { mockDelay: 100 });
 
     it("should upload pasted file", () => {
         loadPage();
@@ -12,7 +10,7 @@ describe("UploadPaste - Simple", () => {
             .should("exist")
             .pasteFile(fileName);
 
-         cy.wait(WAIT_MEDIUM);
+         cy.waitMedium();
          cy.storyLog().assertFileItemStartFinish(fileName, 1);
     });
 
@@ -22,7 +20,7 @@ describe("UploadPaste - Simple", () => {
             .should("exist")
             .pasteFile(fileName, 2);
 
-        cy.wait(WAIT_MEDIUM);
+        cy.waitMedium();
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
         cy.storyLog().assertFileItemStartFinish("flower2.jpg", 3);
     });

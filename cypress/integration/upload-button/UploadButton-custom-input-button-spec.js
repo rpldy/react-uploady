@@ -15,6 +15,7 @@ describe("UploadButton - With Custom File Input And Button", () => {
 
     it("should change file input attribute", () => {
         intercept();
+        cy.waitMedium();
 
         cy.get("#select-input-type")
             .select("dir");

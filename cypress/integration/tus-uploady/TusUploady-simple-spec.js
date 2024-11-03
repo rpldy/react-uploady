@@ -9,8 +9,15 @@ describe("TusUploady - Simple", () => {
 	before(() => {
         cy.visitStory(
             "tusUploady",
-            "simple&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true&knob-ignore modifiedDate in resume storage_Upload Settings=true&knob-send custom header_Upload Settings=true",
-            { useMock: false, uploadUrl}
+            "simple",
+            {
+                uploadUrl,
+                chunkSize: 200000,
+                uploadParams: { foo: "bar" },
+                tusResumeStorage: true,
+                tusIgnoreModifiedDateInStorage: true,
+                tusSendWithCustomHeader: true,
+            }
         );
 	});
 
@@ -22,7 +29,7 @@ describe("TusUploady - Simple", () => {
 			.as("fInput");
 
 		uploadFile(fileName, () => {
-			cy.wait(WAIT_LONG);
+			cy.waitMedium();
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
 			cy.wait("@createReq")
@@ -52,7 +59,7 @@ describe("TusUploady - Simple", () => {
 
 			//upload again, should be resumed!
 			uploadFile(fileName, () => {
-				cy.wait(WAIT_SHORT);
+				cy.waitShort();
 
 				cy.storyLog().assertFileItemStartFinish(fileName, 5)
 					.then((events) => {

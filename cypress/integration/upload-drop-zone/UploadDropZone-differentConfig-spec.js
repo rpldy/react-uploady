@@ -1,5 +1,4 @@
 import dropFile from "../dropFile";
-import { WAIT_X_SHORT } from "../../constants";
 
 describe("UploadDropZone - Different Config", () => {
     const fileName = "flower.jpg";
@@ -11,13 +10,13 @@ describe("UploadDropZone - Different Config", () => {
     it("should allow overriding upload options from dropzone", () => {
         //test button with autoUpload = false
         dropFile(fileName, () => {
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
             cy.storyLog().assertLogEntryCount(1);
         }, "#upload-dz-a");
 
         //test other button with custom destination header
         dropFile(fileName, () => {
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
 
             cy.storyLog().assertLogEntryContains(1, {
                 destination: {

@@ -1,98 +1,127 @@
 // @flow
-import React, { useCallback, useState, useRef, useEffect, type Node } from "react";
+import React, {
+    useCallback,
+    useState,
+    useRef,
+    useEffect,
+} from "react";
 import {
     UmdBundleScript,
     localDestination,
     UMD_NAMES,
     addActionLogEnhancer,
-    useStoryUploadySetup,
     logToCypress,
     ProgressReportTable,
     getCsfExport,
-    type CsfExport
+    createUploadyStory,
+    type CsfExport,
+    type UploadyStory,
 } from "../../../story-helpers";
 import createUploader, { UPLOADER_EVENTS } from "./src";
+
 import readme from "./README.md";
 import type { UploadyUploaderType } from "./src";
+import type { Node } from "react";
 
-export const WithCustomUI = (): Node => {
-    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
-    const uploaderRef = useRef<?UploadyUploaderType>(null);
-    const inputRef = useRef<?HTMLInputElement>(null);
+export const WithCustomUI: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, grouped, groupSize }): Node => {
+        const uploaderRef = useRef<?UploadyUploaderType>(null);
+        const inputRef = useRef<?HTMLInputElement>(null);
 
-    const onClick = useCallback(() => {
-        const input = inputRef.current;
-        if (input) {
-            input.value = "";
-            input.click();
-        }
-    }, []);
+        const onClick = useCallback(() => {
+            const input = inputRef.current;
+            if (input) {
+                input.value = "";
+                input.click();
+            }
+        }, []);
 
-    const onInputChange = useCallback(() => {
-        uploaderRef.current?.add(inputRef.current?.files);
-    }, []);
-
-    useEffect(() => {
-        const uploader = createUploader({
-            enhancer,
-            destination,
-            grouped,
-            maxGroupSize: groupSize
-        });
-
-        uploaderRef.current = uploader;
-    }, [enhancer, destination, grouped, groupSize]);
-
-    return <div>
-        <p>Uses the uploader as is, without the rpldy React wrappers</p>
-        <input type="file" ref={inputRef} style={{ display: "none" }} onChange={onInputChange}/>
-        <button id="upload-button" onClick={onClick}>Upload</button>
-    </div>;
-};
-
-export const WithProgress = (): Node => {
-    const { enhancer, destination } = useStoryUploadySetup();
-    const uploaderRef = useRef<?UploadyUploaderType>(null)
-    const [uploaderId, setUploaderId] = useState<?string>(null);
-    const { url } = destination;
-
-    console.log("rendering progress story", { uploaderId })
-    useEffect(() => {
-        console.log("progress story effect")
-        uploaderRef.current = createUploader({
-            enhancer,
-            destination: { url },
-        });
-        setUploaderId(uploaderRef.current.id);
-    }, [url]);
-
-    const inputRef = useRef<?HTMLInputElement>(null);
-
-    const onClick = useCallback(() => {
-        const input = inputRef.current;
-        if (input) {
-            input.value = "";
-            input.click();
-        }
-    }, []);
-
-    const onInputChange = useCallback(() => {
-        if (inputRef.current?.files) {
+        const onInputChange = useCallback(() => {
             uploaderRef.current?.add(inputRef.current?.files);
-        }
-    }, []);
+        }, []);
 
-    return (
-        <div>
-            <input type="file" ref={inputRef} style={{ display: "none" }} onChange={onInputChange}/>
-            <button id="upload-button" onClick={onClick}>Upload</button>
-            <ProgressReportTable uploader={uploaderRef.current}/>
-        </div>
-    );
+        useEffect(() => {
+            uploaderRef.current = createUploader({
+                enhancer,
+                destination,
+                grouped,
+                maxGroupSize: groupSize,
+            });
+        }, [enhancer, destination, grouped, groupSize]);
+
+        return (
+            <div>
+                <p>Uses the uploader as is, without the rpldy React wrappers</p>
+                <input
+                    type="file"
+                    ref={inputRef}
+                    style={{ display: "none" }}
+                    onChange={onInputChange}
+                />
+                <button id="upload-button" onClick={onClick}>
+                    Upload
+                </button>
+            </div>
+        );
+    });
+
+export const WithProgress: UploadyStory = createUploadyStory(
+    ({ enhancer, destination }): Node => {
+        const uploaderRef = useRef<?UploadyUploaderType>(null);
+        const [uploaderId, setUploaderId] = useState<?string>(null);
+        const { url } = destination;
+
+        console.log("rendering progress story", { uploaderId });
+        useEffect(() => {
+            uploaderRef.current = createUploader({
+                enhancer,
+                destination: { url },
+            });
+            setUploaderId(uploaderRef.current.id);
+        }, [url]);
+
+        const inputRef = useRef<?HTMLInputElement>(null);
+
+        const onClick = useCallback(() => {
+            const input = inputRef.current;
+            if (input) {
+                input.value = "";
+                input.click();
+            }
+        }, []);
+
+        const onInputChange = useCallback(() => {
+            if (inputRef.current?.files) {
+                uploaderRef.current?.add(inputRef.current?.files);
+            }
+        }, []);
+
+        return (
+            <div>
+                <input
+                    type="file"
+                    ref={inputRef}
+                    style={{ display: "none" }}
+                    onChange={onInputChange}
+                />
+                <button id="upload-button" onClick={onClick}>
+                    Upload
+                </button>
+                <ProgressReportTable uploader={uploaderRef.current}/>
+            </div>
+        );
+    });
+
+type UploaderProps = {
+    enhancer: ?Function,
+    destination: { url: string },
+    grouped: boolean,
+    groupSize: number,
+    extOptions: ?Object,
+    options?: ?Object,
 };
 
-const UploaderWithEvents = ({ options = {},  }: {  options?: any }): Node => {
-    const { enhancer, destination, grouped, groupSize, extOptions } = useStoryUploadySetup();
+const UploaderWithEvents = ({ enhancer, destination, grouped, groupSize, extOptions, options = {}, } : UploaderProps): Node => {
     const uploaderRef = useRef<?UploadyUploaderType>(null);
     const inputRef = useRef<?HTMLInputElement>(null);
 
@@ -153,15 +182,31 @@ const UploaderWithEvents = ({ options = {},  }: {  options?: any }): Node => {
     return (
         <div>
             <p>Uses the uploader as is, without the rpldy React wrappers</p>
-            <input type="file" ref={inputRef} style={{ display: "none" }} onChange={onInputChange}/>
-            <button id="upload-button" onClick={onClick}>Upload</button>
+            <input
+                type="file"
+                ref={inputRef}
+                style={{ display: "none" }}
+                onChange={onInputChange}
+            />
+            <button id="upload-button" onClick={onClick}>
+                Upload
+            </button>
         </div>
     );
 };
 
-export const TEST_EventsData = (): Node => {
-  return <UploaderWithEvents />
-};
+export const TEST_EventsData: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, grouped, groupSize, extOptions }): Node => {
+  return (
+      <UploaderWithEvents
+          enhancer={enhancer}
+          destination={destination}
+          grouped={grouped}
+          groupSize={groupSize}
+          extOptions={extOptions}
+      />
+    );
+});
 
 export const UMD_Core = (): Node => {
     const [uploaderReady, setUploaderReady] = useState(false);
@@ -188,18 +233,31 @@ export const UMD_Core = (): Node => {
         uploaderRef.current?.add(inputRef.current?.files);
     }, []);
 
-    return <div>
-        <UmdBundleScript bundle={UMD_NAMES.CORE} onLoad={onBundleLoad}/>
+    return (
+        <div>
+            <UmdBundleScript bundle={UMD_NAMES.CORE} onLoad={onBundleLoad}/>
 
-        <input type="file" ref={inputRef} style={{ display: "none" }}
-               onChange={onInputChange}/>
+            <input
+                type="file"
+                ref={inputRef}
+                style={{ display: "none" }}
+                onChange={onInputChange}
+            />
 
-        <h2>uploading to: {localDestination().destination.url}</h2>
+            <h2>uploading to: {localDestination().destination.url}</h2>
 
-        {uploaderReady && <button id="upload-button" onClick={onClick}>Upload</button>}
-    </div>;
+            {uploaderReady && (
+                <button id="upload-button" onClick={onClick}>
+                    Upload
+                </button>
+            )}
+        </div>
+    );
 };
 
-const uploaderStories: CsfExport = getCsfExport(undefined, "Uploader", readme, { pkg: "uploader", section: "Core" });
+const uploaderStories: CsfExport = getCsfExport(undefined, "Uploader", readme, {
+    pkg: "uploader",
+    section: "Core",
+});
 
 export default { ...uploaderStories, title: "Core/Uploader" };

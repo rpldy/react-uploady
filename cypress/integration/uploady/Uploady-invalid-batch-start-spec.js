@@ -1,5 +1,4 @@
 import { uploadFileTimes } from "../uploadFile";
-import { WAIT_SHORT } from "../../constants";
 import { BATCH_ADD, BATCH_ERROR, BATCH_FINALIZE, ITEM_FINISH, ITEM_START } from "../../constants";
 
 describe("Uploady - invalid BATCH_START", () => {
@@ -11,10 +10,10 @@ describe("Uploady - invalid BATCH_START", () => {
 
     it("should fail invalid updated data from batch - forbidden batch return", () => {
         uploadFileTimes(fileName, () => {
-            cy.wait(WAIT_SHORT);
+            cy.waitShort();
 
             uploadFileTimes(fileName, () => {
-                cy.wait(WAIT_SHORT);
+                cy.waitShort();
 
                 cy.storyLog().assertLogPattern(BATCH_ADD, { times: 2 });
                 cy.storyLog().assertLogPattern(BATCH_ERROR, { times: 1 });

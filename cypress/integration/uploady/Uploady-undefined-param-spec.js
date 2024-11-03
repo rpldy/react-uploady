@@ -1,16 +1,20 @@
+import { UPLOAD_URL } from "../../constants";
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { UPLOAD_URL, WAIT_X_SHORT } from "../../constants";
 
 describe("Uploady - Undefined params", () => {
     const fileName = "flower.jpg";
 
     beforeEach(() => {
-        cy.visitStory("uploady", "with-header-from-file-name&knob-destination_Upload Destination=local&knob-mock send delay_Upload Destination=1000&knob-multiple files_Upload Settings=true&knob-group files in single request_Upload Settings=&knob-max in group_Upload Settings=2&knob-auto upload on add_Upload Settings=true");
+        cy.visitStory(
+            "uploady",
+            "with-header-from-file-name",
+            { uploadType: "local" }
+        );
     });
 
     const testUndefinedNotPassed = () => {
-        cy.wait(WAIT_X_SHORT);
+        cy.waitExtraShort();
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq")
@@ -48,7 +52,7 @@ describe("Uploady - Undefined params", () => {
 
         cy.setPreSendOptions({ params: { empty: undefined } });
 
-        cy.wait(WAIT_X_SHORT);
+        cy.waitExtraShort();
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq")

@@ -69,9 +69,6 @@ importers:
       '@storybook/addon-interactions':
         specifier: ^7.6.16
         version: 7.6.20
-      '@storybook/addon-knobs':
-        specifier: ^7.0.2
-        version: 7.1.1(@storybook/addons@7.6.17)(@storybook/api@7.6.17)(@storybook/components@7.6.20)(@storybook/core-events@7.6.20)(@storybook/theming@7.6.20)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
       '@storybook/addon-links':
         specifier: ^7.6.16
         version: 7.6.20(react@18.3.1)

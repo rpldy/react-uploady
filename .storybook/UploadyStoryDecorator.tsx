@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled, { ThemeProvider } from "styled-components";
+import { useArgs } from "@storybook/preview-api";
 import VersionBadge from "./VersionBadge";
 
 const Container = styled.div`
@@ -31,6 +32,20 @@ window._getPackageVersions = () => VERSIONS;
 const UploadyStoryDecorator = (Story, context) => {
     const pkg = context.parameters.pkg;
     const fullPkgName = `@rpldy/${pkg}`;
+    const [{ }, updateArgs] = useArgs();
+
+    console.log("%#$%#$%#$%$#%$#% RENDERING STORY DECORATOR @#$E@!#$@$#@#$@#$#");
+
+    //get query string param uploadUrl value into a variable:
+    const uploadUrl = new URLSearchParams(window.location.search).get("_uploadUrl");
+
+    useEffect(() => {
+        if (uploadUrl) {
+            console.log("...Setting uploadUrl from query string:", uploadUrl, context);
+            //we have to do it ourselves because the SB parsing of URL args filters unsafe characters doesnt work in Canvas mode!!!
+            updateArgs({ uploadUrl });
+        }
+    }, [uploadUrl]);
 
     return (
         <Container>

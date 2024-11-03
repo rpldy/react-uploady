@@ -6,7 +6,11 @@ describe("Uploady - invalid requestPreSend", () => {
     const fileName = "flower.jpg";
 
     beforeEach(() => {
-        cy.visitStory("uploady", "test-invalid-pre-send&knob-destination_Upload Destination=local&knob-mock send delay_Upload Destination=1000&knob-multiple files_Upload Settings=true&knob-group files in single request_Upload Settings=&knob-max in group_Upload Settings=2&knob-auto upload on add_Upload Settings=true");
+        cy.visitStory(
+            "uploady",
+            "test-invalid-pre-send",
+            { uploadType: "local" }
+        );
     });
 
     it("should fail invalid updated data from pre send - forbidden item props", () => {

@@ -1,8 +1,8 @@
 /**
  * @vitest-environment-options { "url": "https://test.com/home/test.html" }
  */
-
 import React, { useRef } from "react";
+import { waitFor } from "@testing-library/react";
 import { UploadyContext } from "@rpldy/shared-ui/src/tests/mocks/rpldy-ui-shared.mock";
 import useFileInput from "../useFileInput";
 
@@ -37,9 +37,13 @@ describe("useFileInput tests", () => {
 
         const renderResult = render(<TestComp {...options} exposeRef={exposeRef}/>);
 
+        const reRender = (newOpts) =>
+            renderResult.rerender(<TestComp {...options} {...newOpts} exposeRef={exposeRef}/>);
+
         return {
             renderResult,
             inputRef,
+            reRender,
         };
     };
 
@@ -64,13 +68,6 @@ describe("useFileInput tests", () => {
     describe("test with form action", () => {
         const pageUrl = "https://test.com/home/test.html";
 
-        beforeEach(() => {
-            // JSDOM.reconfigure({
-            //     url: pageUrl
-            // });
-            // global.history.push(pageUrl)
-        });
-
         it.each([
             ["", pageUrl],
             ["  ", pageUrl],
@@ -93,6 +90,40 @@ describe("useFileInput tests", () => {
                         url: resultUrl,
                     }
                 });
+        });
+
+        it.each([
+            ["https://test.com/bbb", "https://test.com/bbb"],
+            ["", pageUrl],
+        ])("should update context destination when action attribute changes to: '%s'", async (formAction, resultUrl) => {
+            UploadyContext.getOptions.mockReturnValueOnce({});
+
+            const { inputRef, reRender } = renderTestComp({ withForm: true, action: "https://test.com/aaa" });
+
+            expect(UploadyContext.setExternalFileInput)
+                .toHaveBeenCalledWith(inputRef);
+
+            expect(UploadyContext.setOptions)
+                .toHaveBeenCalledWith({
+                    destination: {
+                        filesParamName: "testFile",
+                        method: "PUT",
+                        url: "https://test.com/aaa",
+                    }
+                });
+
+            reRender({ action: formAction });
+
+            await waitFor(() => {
+                expect(UploadyContext.setOptions)
+                    .toHaveBeenCalledWith({
+                        destination: {
+                            filesParamName: "testFile",
+                            method: "PUT",
+                            url: resultUrl
+                        }
+                    });
+            });
         });
     });
 

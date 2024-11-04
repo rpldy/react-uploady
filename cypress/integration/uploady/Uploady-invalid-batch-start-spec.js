@@ -5,7 +5,11 @@ describe("Uploady - invalid BATCH_START", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploady", "test-invalid-batch-start&knob-mock send delay_Upload Destination=100");
+        cy.visitStory(
+            "uploady",
+            "test-invalid-batch-start",
+            { mockDelay: 200 }
+        );
     });
 
     it("should fail invalid updated data from batch - forbidden batch return", () => {

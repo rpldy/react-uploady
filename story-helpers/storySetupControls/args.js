@@ -13,6 +13,8 @@ export const getDestinationOptions = () => isProd ?
         DESTINATION_TYPES.local,
     ];
 
+console.log("DESTINATION OPTIONS (uploadType: ", getDestinationOptions(), { isProd });
+
 export const getTusDestinationOptions = () => isProd ?
     [
         DESTINATION_TYPES.url,

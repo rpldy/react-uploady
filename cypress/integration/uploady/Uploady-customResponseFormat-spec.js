@@ -1,6 +1,5 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { UPLOAD_URL } from "../../constants";
 
 describe("Uploady - Custom Response Formatter", () => {
     const fileName = "flower.jpg";
@@ -9,12 +8,12 @@ describe("Uploady - Custom Response Formatter", () => {
         cy.visitStory(
             "uploady",
             "with-custom-response-format",
-            { uploadType: "local" }
+            { useMock: false }
         );
     });
 
     it("should use custom response formatter function", () => {
-        intercept(UPLOAD_URL);
+        intercept();
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq")

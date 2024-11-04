@@ -9,12 +9,12 @@ describe("UploadPreview - Simple", () => {
         cy.visitStory(
             "uploadPreview",
             "with-two-fields",
-            { uploadType: "local" }
+            { useMock: false }
         );
     });
 
     it("should show previews in appropriate field", () => {
-        intercept(UPLOAD_URL);
+        intercept();
 
         uploadFile(fileName, () => {
             uploadFile(fileName, () => {

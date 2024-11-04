@@ -1,6 +1,6 @@
 import intercept from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
-import { ITEM_START, ITEM_FINISH, UPLOAD_URL } from "../../constants";
+import { ITEM_START, ITEM_FINISH } from "../../constants";
 
 describe("UploadButton - Simple - Multiple files", () => {
     const fileName = "flower.jpg";
@@ -10,13 +10,13 @@ describe("UploadButton - Simple - Multiple files", () => {
             "uploadButton",
             "simple",
             {
-                uploadType: "local",
+                useMock: false,
                 grouped: true,
             });
     });
 
     it("should show upload preview for multiple files", () => {
-        intercept(UPLOAD_URL);
+        intercept();
 
         uploadFileTimes(fileName, () => {
             cy.wait("@uploadReq")

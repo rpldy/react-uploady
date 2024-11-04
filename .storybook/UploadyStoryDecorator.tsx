@@ -34,8 +34,6 @@ const UploadyStoryDecorator = (Story, context) => {
     const fullPkgName = `@rpldy/${pkg}`;
     const [{ }, updateArgs] = useArgs();
 
-    console.log("%#$%#$%#$%$#%$#% RENDERING STORY DECORATOR @#$E@!#$@$#@#$@#$#");
-
     //get query string param uploadUrl value into a variable:
     const uploadUrl = new URLSearchParams(window.location.search).get("_uploadUrl");
 

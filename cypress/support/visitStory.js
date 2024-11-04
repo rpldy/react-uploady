@@ -3,13 +3,13 @@ import { DEFAULT_URL } from "../constants";
 const getStoryControlsArgs = (options) => {
     const args = [];
 
-    if (options.uploadUrl || options.useMock === false) {
-        args.push("uploadType:url");
-        args.push(`uploadUrl:${options.uploadUrl || DEFAULT_URL}` );
-    } else {
+    const uploadType = (!options.uploadType && (options.uploadUrl || options.useMock === false)) ?
+        "url" :
         //default uploadType = mock
-        args.push(`uploadType:${options.uploadType || "mock"}`);
-    }
+        (options.uploadType || "mock");
+
+    args.push(`uploadType:${uploadType}`);
+    args.push(`uploadUrl:${options.uploadUrl || DEFAULT_URL}` );
 
     if (options.chunkSize) {
         args.push(`chunkSize:${options.chunkSize}`);

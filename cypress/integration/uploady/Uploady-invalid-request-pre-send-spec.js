@@ -1,4 +1,4 @@
-import { ITEM_ERROR, ITEM_FINISH, ITEM_START, UPLOAD_URL } from "../../constants";
+import { ITEM_ERROR, ITEM_FINISH, ITEM_START } from "../../constants";
 import intercept from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
 
@@ -9,12 +9,12 @@ describe("Uploady - invalid requestPreSend", () => {
         cy.visitStory(
             "uploady",
             "test-invalid-pre-send",
-            { uploadType: "local" }
+            { useMock: false }
         );
     });
 
     it("should fail invalid updated data from pre send - forbidden item props", () => {
-        intercept(UPLOAD_URL);
+        intercept();
 
         uploadFileTimes(fileName, () => {
             cy.waitShort();

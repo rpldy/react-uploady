@@ -1,4 +1,3 @@
-import { UPLOAD_URL } from "../../constants";
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 
@@ -9,7 +8,7 @@ describe("Uploady - Undefined params", () => {
         cy.visitStory(
             "uploady",
             "with-header-from-file-name",
-            { uploadType: "local" }
+            { useMock: false }
         );
     });
 
@@ -28,7 +27,7 @@ describe("Uploady - Undefined params", () => {
     };
 
     it("should not pass undefined param to formData from upload options", () => {
-        intercept(UPLOAD_URL);
+        intercept();
 
         cy.setUploadOptions({ params: { empty: undefined } });
 
@@ -36,7 +35,7 @@ describe("Uploady - Undefined params", () => {
     });
 
     it("should not pass undefined param to formData from requestPreSend", () => {
-        intercept(UPLOAD_URL);
+        intercept();
 
         cy.setPreSendOptions({ params: { empty: undefined } });
 
@@ -44,7 +43,7 @@ describe("Uploady - Undefined params", () => {
     });
 
     it("should pass undefined param with formDataAllowUndefined", () => {
-        intercept(UPLOAD_URL);
+        intercept();
 
         cy.setUploadOptions({
             formDataAllowUndefined: true,

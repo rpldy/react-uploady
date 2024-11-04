@@ -21,7 +21,7 @@ const mockDestination = ({ mockSendDelay } = {}) => {
     }
 };
 
-const localDestination = ({ longLocal }, { noLong = false } = {}) => {
+const localDestination = ({ longLocal } = {}, { noLong = false } = {}) => {
     const long = !noLong && longLocal;
 
     //no local when running online

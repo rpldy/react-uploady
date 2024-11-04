@@ -1,4 +1,3 @@
-import { UPLOAD_URL } from "../../constants";
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 
@@ -9,12 +8,12 @@ describe("Uploady - Header from RequestPreSend hook", () => {
         cy.visitStory(
             "uploady",
             "with-header-from-file-name",
-            { uploadType: "local"}
+            { useMock: false }
         );
     });
 
     it("should create a header from pre send hook using file name", () => {
-        intercept(UPLOAD_URL);
+        intercept();
 
         uploadFile(fileName, () => {
             cy.wait("@uploadReq")

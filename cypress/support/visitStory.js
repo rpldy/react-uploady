@@ -1,4 +1,4 @@
-import { DEFAULT_URL } from "../constants";
+import { UPLOAD_URL } from "../constants";
 
 const getStoryControlsArgs = (options) => {
     const args = [];
@@ -9,7 +9,7 @@ const getStoryControlsArgs = (options) => {
         (options.uploadType || "mock");
 
     args.push(`uploadType:${uploadType}`);
-    args.push(`uploadUrl:${options.uploadUrl || DEFAULT_URL}` );
+    args.push(`uploadUrl:${options.uploadUrl || UPLOAD_URL}` );
 
     if (options.chunkSize) {
         args.push(`chunkSize:${options.chunkSize}`);
@@ -46,7 +46,7 @@ const getStoryControlsArgs = (options) => {
     }
 
     //adding custom _uploadUrl param because SB filters out the url arg due to unsafe chars (in Canvas mode) :(
-    const argsStr = "&args=" + args.join(";") + "&_uploadUrl=" + (options.uploadUrl || DEFAULT_URL);
+    const argsStr = "&args=" + args.join(";") + "&_uploadUrl=" + (options.uploadUrl || UPLOAD_URL);
     cy.log("cmd.visitStory: STORY ARGS = " + argsStr);
 
     return argsStr;

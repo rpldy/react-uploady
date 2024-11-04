@@ -9,6 +9,7 @@ describe("UploadPreview - Simple - Multiple files", () => {
 
     it("should show upload preview for multiple files", () => {
         uploadFileTimes(fileName, () => {
+            cy.waitShort();
             cy.get("img[data-test='upload-preview']")
                 .should("be.visible")
                 .should("have.length", 3)

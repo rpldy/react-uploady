@@ -20,7 +20,7 @@ describe("UploadPaste - Simple", () => {
             .should("exist")
             .pasteFile(fileName, 2);
 
-        cy.waitMedium();
+        cy.waitLong();
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
         cy.storyLog().assertFileItemStartFinish("flower2.jpg", 3);
     });

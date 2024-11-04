@@ -1,7 +1,7 @@
 import uploadFile from "../uploadFile";
 import { ITEM_START, ITEM_ABORT, ITEM_FINISH, BATCH_ADD } from "../../constants";
 
-describe("RetryHooks - Retry Upload", () => {
+describe("RetryHooks - Retry Upload - All", () => {
     const fileName = "flower.jpg",
         fileName2 = "sea.jpg";
 

@@ -33,7 +33,7 @@ describe("UploadPaste - Wrap Upload-Button", () => {
                     expect(formData["test"]).to.eq("paste");
                 });
 
-            cy.waitExtraShort();
+            cy.waitShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 5);
         }, "#upload-button");
     });

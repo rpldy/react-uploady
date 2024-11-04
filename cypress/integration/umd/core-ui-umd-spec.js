@@ -1,16 +1,16 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { ITEM_START, BATCH_ADD, UPLOAD_URL } from "../../constants";
+import { ITEM_START, BATCH_ADD } from "../../constants";
 
 describe("UMD UI CORE - Bundle", () => {
     const fileName = "flower.jpg";
 
     beforeEach(() => {
-        cy.visitStory("uploady", "umd-core-ui");
+        cy.visitStory("uploady", "umd-core-ui", { useMock: false });
     });
 
     it("should use uploady and upload file", () => {
-        intercept(UPLOAD_URL)
+        intercept()
 
         uploadFile(fileName, () => {
 			cy.wait("@uploadReq")

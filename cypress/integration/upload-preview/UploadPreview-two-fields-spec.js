@@ -1,4 +1,3 @@
-import { UPLOAD_URL } from "../../constants";
 import uploadFile from "../uploadFile";
 import intercept from "../intercept";
 

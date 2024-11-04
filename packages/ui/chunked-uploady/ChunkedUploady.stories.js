@@ -15,12 +15,11 @@ import {
     StoryUploadProgress,
     StoryAbortButton,
     UmdBundleScript,
-    localDestination,
-    addActionLogEnhancer,
     logToCypress,
     getCsfExport,
     type CsfExport,
     type UploadyStory,
+    type UploadyStoryParams,
 } from "../../../story-helpers";
 import readme from "./README.md";
 
@@ -146,7 +145,10 @@ export const WithAsyncChunkEventHooks: UploadyStory = createUploadyStory(
     });
 
 //mimic rendering with react and ChunkedUploady loaded through <script> tags
-const renderChunkedUploadyFromBundle = () => {
+const renderChunkedUploadyFromBundle = ({
+                                            destination,
+                                            enhancer,
+                                        }: UploadyStoryParams) => {
     const rpldy = window.rpldy,
         react = window.react;
 
@@ -178,8 +180,8 @@ const renderChunkedUploadyFromBundle = () => {
 
     const uploadyProps = {
         debug: true,
-        destination: localDestination().destination,
-        enhancer: addActionLogEnhancer(),
+        destination,
+        enhancer,
         chunkSize: 200000,
     };
 
@@ -190,21 +192,28 @@ const renderChunkedUploadyFromBundle = () => {
     );
 };
 
-export const UMD_CoreChunkedUI = (): Node => {
-    const [UploadyUI, setUploadyUI] = useState(null);
+export const UMD_CoreChunkedUI: UploadyStory = createUploadyStory(
+    ({
+         destination,
+         enhancer,
+     }): Node => {
+        const [UploadyUI, setUploadyUI] = useState(null);
 
-    const onBundleLoad = useCallback(() => {
-        const result = renderChunkedUploadyFromBundle();
-        setUploadyUI(result);
-    }, []);
+        const onBundleLoad = useCallback(() => {
+            const result = renderChunkedUploadyFromBundle({
+                destination,
+                enhancer,
+            });
+            setUploadyUI(result);
+        }, [destination, enhancer]);
 
-    return (
-        <div>
-            <UmdBundleScript bundle={UMD_NAMES.ALL} onLoad={onBundleLoad}/>
-            {UploadyUI}
-        </div>
-    );
-};
+        return (
+            <div>
+                <UmdBundleScript bundle={UMD_NAMES.ALL} onLoad={onBundleLoad}/>
+                {UploadyUI}
+            </div>
+        );
+    });
 
 const chunkedUploadyStories: CsfExport = getCsfExport(ChunkedUploady, "Chunked Uploady", readme, {
     pkg: "chunked-uploady",

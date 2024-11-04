@@ -49,4 +49,4 @@ export { default as createUploadyStory } from "./createUploadyStory";
 
 export type { CsfExport } from "./getCsfExport";
 
-export type { UploadyStory } from "./createUploadyStory";
+export type { UploadyStory, UploadyStoryParams } from "./createUploadyStory";

@@ -3,7 +3,6 @@ import React, { useCallback, useState } from "react";
 import ReactDOM from "react-dom";
 import {
     UmdBundleScript,
-    localDestination,
     UMD_NAMES,
     addActionLogEnhancer,
     getCsfExport,
@@ -13,6 +12,7 @@ import {
     createUploadyStory,
     type CsfExport,
     type UploadyStory,
+    type UploadyStoryParams,
 } from "../../../story-helpers";
 import { getUploadyVersion, useBatchErrorListener } from "@rpldy/shared-ui";
 import Uploady, {
@@ -535,7 +535,11 @@ window.react = React;
 window["react-dom"] = ReactDOM;
 
 //mimic rendering with react and react-uploady loaded through <script> tags
-const renderUploadyFromBundle = () => {
+const renderUploadyFromBundle = ({
+                                     destination,
+                                     enhancer,
+                                     multiple,
+                                 }: UploadyStoryParams) => {
     const rpldy = window.rpldy,
         react = window.react;
     let result;
@@ -557,8 +561,9 @@ const renderUploadyFromBundle = () => {
 
         const uploadyProps = {
             debug: true,
-            destination: localDestination().destination,
-            enhancer: addActionLogEnhancer(),
+            destination,
+            enhancer,
+            multiple,
         };
 
         result = react.createElement(
@@ -574,24 +579,37 @@ const renderUploadyFromBundle = () => {
     return result;
 };
 
-export const UMD_CoreUI = (): Node => {
-    const [UploadyUI, setUploadyUI] = useState(null);
+export const UMD_CoreUI: UploadyStory = createUploadyStory(
+    ({
+         destination,
+         enhancer,
+         multiple,
+     }: UploadyStoryParams): Node => {
+        const [UploadyUI, setUploadyUI] = useState(null);
 
-    const onBundleLoad = useCallback(() => {
-        const result = renderUploadyFromBundle();
+        const onBundleLoad = useCallback(() => {
+            const result = renderUploadyFromBundle({
+                destination,
+                enhancer,
+                multiple,
+            });
 
-        setUploadyUI(result);
-    }, []);
+            setUploadyUI(result);
+        }, [destination, enhancer, multiple]);
 
-    return <div>
-        <UmdBundleScript bundle={UMD_NAMES.CORE_UI} onLoad={onBundleLoad}/>
+        return <div>
+            <UmdBundleScript bundle={UMD_NAMES.CORE_UI} onLoad={onBundleLoad}/>
 
-        {UploadyUI}
-    </div>;
-};
+            {UploadyUI}
+        </div>;
+    });
 
 //mimic rendering with react and react-uploady with UploadButton&UploadPreview loaded through <script> tags
-const renderUploadyAll = () => {
+const renderUploadyAll = ({
+                              destination,
+                              enhancer,
+                              multiple,
+                          }: UploadyStoryParams) => {
     const rpldy = window.rpldy, react = window.react;
 
     const uploadButton = react.createElement(rpldy.uploadButton.UploadButton, { id: "upload-button" });
@@ -603,11 +621,12 @@ const renderUploadyAll = () => {
 
     const uploadyProps = {
         debug: true,
-        destination: localDestination().destination,
-        enhancer: addActionLogEnhancer(),
+        destination,
+        multiple,
+        enhancer,
     };
 
-    const uploadUrlLog = react.createElement("div", { children: `about to upload to: ${uploadyProps.destination.url}` })
+    const uploadUrlLog = react.createElement("div", { children: `about to upload to: ${uploadyProps.destination?.url || "no destination!"}` })
 
     return react.createElement(
         rpldy.uploady.Uploady,
@@ -615,20 +634,29 @@ const renderUploadyAll = () => {
         [uploadUrlLog, uploadButton, uploadPreview]);
 };
 
-export const UMD_ALL = (): Node => {
-    const [UploadyUI, setUploadyUI] = useState(null);
+export const UMD_ALL: UploadyStory = createUploadyStory(
+    ({
+         destination,
+         enhancer,
+         multiple,
+     }): Node => {
+        const [UploadyUI, setUploadyUI] = useState(null);
 
-    const onBundleLoad = useCallback(() => {
-        const result = renderUploadyAll();
-        setUploadyUI(result);
-    }, []);
+        const onBundleLoad = useCallback(() => {
+            const result = renderUploadyAll({
+                destination,
+                enhancer,
+                multiple,
+            });
+            setUploadyUI(result);
+        }, [destination, enhancer, multiple]);
 
-    return <div>
-        <UmdBundleScript bundle={UMD_NAMES.ALL} onLoad={onBundleLoad}/>
+        return <div>
+            <UmdBundleScript bundle={UMD_NAMES.ALL} onLoad={onBundleLoad}/>
 
-        {UploadyUI}
-    </div>;
-};
+            {UploadyUI}
+        </div>;
+    });
 
 const UploadButtonWithInvalidPreSend = () => {
     useRequestPreSend(({ items }) => {

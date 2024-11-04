@@ -7,15 +7,14 @@ import React, {
 } from "react";
 import {
     UmdBundleScript,
-    localDestination,
     UMD_NAMES,
-    addActionLogEnhancer,
     logToCypress,
     ProgressReportTable,
     getCsfExport,
     createUploadyStory,
     type CsfExport,
     type UploadyStory,
+    type UploadyStoryParams,
 } from "../../../story-helpers";
 import createUploader, { UPLOADER_EVENTS } from "./src";
 
@@ -208,19 +207,25 @@ export const TEST_EventsData: UploadyStory = createUploadyStory(
     );
 });
 
-export const UMD_Core = (): Node => {
+export const UMD_Core: UploadyStory = createUploadyStory(
+    ({
+         destination,
+         enhancer,
+         multiple,
+     }: UploadyStoryParams): Node => {
     const [uploaderReady, setUploaderReady] = useState(false);
     const inputRef = useRef<?HTMLInputElement>(null);
     const uploaderRef = useRef<?UploadyUploaderType>(null);
 
     const onBundleLoad = useCallback(() => {
         uploaderRef.current = window.rpldy.createUploader({
-            destination: localDestination().destination,
-            enhancer: addActionLogEnhancer(),
+            destination,
+            enhancer,
+            multiple,
         });
 
         setUploaderReady(true);
-    }, []);
+    }, [destination, enhancer, multiple]);
 
     const onClick = useCallback(() => {
         const input = inputRef.current;
@@ -244,7 +249,7 @@ export const UMD_Core = (): Node => {
                 onChange={onInputChange}
             />
 
-            <h2>uploading to: {localDestination().destination.url}</h2>
+            <h2>uploading to: {destination?.url}</h2>
 
             {uploaderReady && (
                 <button id="upload-button" onClick={onClick}>
@@ -253,7 +258,7 @@ export const UMD_Core = (): Node => {
             )}
         </div>
     );
-};
+});
 
 const uploaderStories: CsfExport = getCsfExport(undefined, "Uploader", readme, {
     pkg: "uploader",

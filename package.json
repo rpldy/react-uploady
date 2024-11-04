@@ -34,7 +34,7 @@
     "cy:comp": "cypress open --component --browser chrome",
     "cy:open:build": "CYPRESS_BASE_URL=http://localhost:8001 UPLOAD_URL=http://test.upload cypress open --e2e --browser chrome",
     "cy:run": "wait-on http://localhost:9111 -d 1000 && CYPRESS_BASE_URL=http://localhost:9111 cypress run --e2e --browser chrome",
-    "cy:run:build": "CYPRESS_BASE_URL=http://localhost:8001 cypress run --e2e --browser chrome",
+    "cy:run:build": "CYPRESS_BASE_URL=http://localhost:8001 UPLOAD_URL=http://test.upload cypress run --e2e --browser chrome",
     "cy:run:gh": "CYPRESS_BASE_URL=http://127.0.0.1:8001 UPLOAD_URL=http://test.upload cypress run --e2e --record false",
     "cy:parallel": "node scripts/parallel-e2e.mjs -s 'cypress/integration/**/*-spec.js' -t 2 -c 'pnpm cy:run' --arguments=''",
     "cy:parallel:gh": "pnpm cy:parallel -p 'xvfb-run -a' -t 3 -c 'pnpm cy:run:gh' --weights-file='cypress/e2e-weights.json' --json-results='cypress/reports/mochawesome/.jsons/*.json'"

@@ -34,7 +34,7 @@ describe("UploadPaste - Wrap Upload-Button", () => {
                 });
 
             cy.waitShort();
-            cy.storyLog().assertFileItemStartFinish(fileName, 5);
+            cy.storyLog().assertFileItemStartFinish(fileName, 4);
         }, "#upload-button");
     });
 });

@@ -47,7 +47,7 @@ describe("Uploady - With Fast Abort", () => {
 
         uploadFileTimes(fileName, () => {
             uploadFileTimes(fileName, () => {
-                cy.waitShort();
+                cy.waitExtraShort();
 
                 cy.get("button[data-test='abort-batch-0']")
                     .should("be.visible")

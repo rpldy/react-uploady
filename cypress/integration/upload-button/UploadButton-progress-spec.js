@@ -4,7 +4,11 @@ describe("UploadButton - With Progress", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadButton", "with-progress&knob-mock send delay_Upload Destination=100");
+        cy.visitStory(
+            "uploadButton",
+            "with-progress",
+            { mockDelay: 100 }
+        );
     });
 
     it("should show upload progress", () => {

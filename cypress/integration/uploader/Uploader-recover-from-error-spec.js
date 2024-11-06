@@ -5,7 +5,11 @@ describe("Uploader - recover from sender error test", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploader", "with-custom-ui&knob-destination_Upload Destination=url&knob-upload url_Upload Destination=");
+        cy.visitStory(
+            "uploader",
+            "with-custom-ui",
+            { uploadUrl: "http://localhost:8439/not-exist" }
+        );
     });
 
     it("should upload again after unexpected sender error", () => {

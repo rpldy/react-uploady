@@ -1,16 +1,15 @@
 import intercept  from "../intercept";
 import uploadFile from "../uploadFile";
-import { UPLOAD_URL, WAIT_X_SHORT } from "../../constants";
 
 describe("UMD UI CHUNKED - Bundle", () => {
     const fileName = "flower.jpg";
 
     beforeEach(() => {
-        cy.visitStory("chunkedUploady", "umd-core-chunked-ui");
+        cy.visitStory("chunkedUploady", "umd-core-chunked-ui", { useMock: false });
     });
 
     it("should use uploady and upload file", () => {
-        intercept(UPLOAD_URL);
+        intercept();
 
         uploadFile(fileName, () => {
             let uniqueHeader;
@@ -35,7 +34,7 @@ describe("UMD UI CHUNKED - Bundle", () => {
                         .to.match(/bytes 200000-\d+\//);
                 });
 
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
 
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         }, "#upload-button");

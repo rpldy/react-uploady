@@ -1,5 +1,4 @@
 describe("Uploady - Internal Input", () => {
-
     before(() => {
         cy.visitStory("uploady", "with-exposed-internal-input");
     });

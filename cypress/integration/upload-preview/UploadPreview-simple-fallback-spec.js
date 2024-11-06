@@ -4,7 +4,11 @@ describe("UploadPreview - Simple", () => {
 	const fileName = "flower.jpg";
 
 	before(() => {
-		cy.visitStory("uploadPreview", "simple&knob-preview max image size_Upload Settings=1000");
+		cy.visitStory(
+            "uploadPreview",
+            "simple",
+            { customArgs: { maxPreviewSize: 1000 }}
+        );
 	});
 
 	it("should show fallback on image > max size", () => {

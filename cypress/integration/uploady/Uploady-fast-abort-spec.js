@@ -3,18 +3,17 @@ import {
     ITEM_ABORT,
     BATCH_ABORT,
     ITEM_FINISH,
-    WAIT_X_SHORT,
     ITEM_START,
-    WAIT_LONG,
-    BATCH_FINALIZE, ALL_ABORT,
+    BATCH_FINALIZE,
+    ALL_ABORT,
 } from "../../constants";
-import { WAIT_SHORT } from "../../constants";
 
 describe("Uploady - With Fast Abort", () => {
     const fileName = "flower.jpg";
 
-    const loadPage = () =>
-        cy.visitStory("uploady", "with-abort");
+    beforeEach(() => {
+        cy.visitStory("uploady", "with-abort", { mockDelay: 500 });
+    });
 
     const addFastAbortThreshold = () => {
         cy.setUploadOptions({
@@ -23,7 +22,6 @@ describe("Uploady - With Fast Abort", () => {
     };
 
     it("should abort uploading file - no effect", () => {
-        loadPage();
         addFastAbortThreshold();
 
         const abortSelector = "button[data-test='abort-file-0']";
@@ -36,7 +34,7 @@ describe("Uploady - With Fast Abort", () => {
                 .should("be.visible")
                 .click();
 
-            cy.wait(WAIT_LONG);
+            cy.waitLong();
 
             cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
@@ -44,13 +42,10 @@ describe("Uploady - With Fast Abort", () => {
     });
 
     it("should abort uploading batch - with fast abort", () => {
-        loadPage();
         addFastAbortThreshold();
 
         uploadFileTimes(fileName, () => {
             uploadFileTimes(fileName, () => {
-                cy.wait(WAIT_X_SHORT);
-
                 cy.get("button[data-test='abort-batch-0']")
                     .should("be.visible")
                     .click();
@@ -63,7 +58,7 @@ describe("Uploady - With Fast Abort", () => {
                         cy.storyLog().assertLogEntryContains(logIndex, { state: "aborted" });
                     });
 
-                cy.wait(WAIT_LONG);
+                cy.waitLong();
 
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 3 });
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
@@ -73,22 +68,18 @@ describe("Uploady - With Fast Abort", () => {
     });
 
     it("should abort all - with fast abort", () => {
-        loadPage();
         addFastAbortThreshold();
 
         uploadFileTimes(fileName, () => {
             uploadFileTimes(fileName, () => {
-                cy.wait(WAIT_X_SHORT);
-
                 cy.get("button[data-test='story-abort-all-button']")
                     .should("be.visible")
                     .click();
 
-                cy.wait(WAIT_SHORT);
+                cy.waitExtraShort();
 
                 cy.storyLog().assertNoLogPattern(ITEM_ABORT);
-                cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 0 });
-                cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 0 });
+                cy.storyLog().assertNoLogPattern(BATCH_FINALIZE);
                 cy.storyLog().assertLogPattern(ALL_ABORT, { times: 1 });
             }, 2, "#upload-button");
         }, 2, "#upload-button");

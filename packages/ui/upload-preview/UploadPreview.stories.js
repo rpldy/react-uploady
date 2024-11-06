@@ -1,7 +1,12 @@
 // @flow
-import React, { useCallback, useState, useRef, useEffect, type Node } from "react";
-import styled,  { css } from "styled-components";
-import { number } from "@storybook/addon-knobs";
+import React, {
+    useCallback,
+    useState,
+    useRef,
+    useEffect,
+    type Node,
+} from "react";
+import styled, { css } from "styled-components";
 import Uploady, {
     useItemProgressListener,
     useItemFinalizeListener,
@@ -18,27 +23,31 @@ import Uploady, {
 import UploadButton from "@rpldy/upload-button";
 import UploadUrlInput from "@rpldy/upload-url-input";
 import {
-    KNOB_GROUPS,
-    useStoryUploadySetup,
+    createUploadyStory,
     uploadButtonCss,
     uploadUrlInputCss,
     cropImage,
     getCsfExport,
     ReactCropWithImage,
-
     type CropData,
     type CsfExport,
+    type UploadyStory,
 } from "../../../story-helpers";
 import UploadPreview, {
     getUploadPreviewForBatchItemsMethod,
     getPreviewsLoaderHook,
-    PREVIEW_TYPES
+    PREVIEW_TYPES,
 } from "./src";
 import readme from "./README.md";
 
 import type { Batch, BatchItem } from "@rpldy/shared";
 import type { UploaderCreateOptions } from "@rpldy/uploader";
-import type { PreviewItem, RemovePreviewMethod, PreviewProps, PreviewMethods } from "./src";
+import type {
+    PreviewItem,
+    RemovePreviewMethod,
+    PreviewProps,
+    PreviewMethods,
+} from "./src";
 
 type StateSetter<T> = ((T => ?T) | ?T) => void;
 
@@ -48,32 +57,35 @@ const StyledUploadButton = styled(UploadButton)`
 	${uploadButtonCss}
 `;
 
-const usePreviewStorySetup = () => {
-    const setup = useStoryUploadySetup();
-    const maxImageSize = number("preview max image size", 2e+7, {}, KNOB_GROUPS.SETTINGS);
-
-    return {...setup, maxImageSize};
-};
-
-export const Simple = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize, maxImageSize } = usePreviewStorySetup();
-
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}
-        grouped={grouped}
-        maxGroupSize={groupSize}>
-
-        <StyledUploadButton/>
-        <br/><br/>
-        <UploadPreview
-            maxPreviewImageSize={maxImageSize}
-            previewComponentProps={{"data-test": "upload-preview"}}
-            fallbackUrl="https://picsum.photos/50"/>
-    </Uploady>;
-};
+export const Simple: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize, maxPreviewSize }): Node => {
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <StyledUploadButton/>
+                <br/>
+                <br/>
+                <UploadPreview
+                    maxPreviewImageSize={maxPreviewSize}
+                    previewComponentProps={{ "data-test": "upload-preview" }}
+                    fallbackUrl="https://picsum.photos/50"
+                />
+            </Uploady>
+        );
+    }, {
+        args: {
+            maxPreviewSize: 2e+7
+        },
+        argTypes: {
+            maxPreviewSize: { control: "number" },
+        }
+    });
 
 const PreviewImage = styled.img`
     margin: 5px;
@@ -88,60 +100,64 @@ const CustomImagePreview = ({ id, url }: { id: string, url: string }) => {
     return <PreviewImage src={url} completed={completed} className="preview-img"/>;
 };
 
-export const WithProgress = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+export const WithProgress: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        const getPreviewProps = useCallback(
+            (item: BatchItem) => ({ id: item.id }),
+            [],
+        );
 
-    const getPreviewProps = useCallback((item: BatchItem) => ({ id: item.id, }), []);
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <StyledUploadButton>Upload with Progress</StyledUploadButton>
 
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}
-        grouped={grouped}
-        maxGroupSize={groupSize}>
+                <UploadPreview
+                    fallbackUrl={"https://picsum.photos/50"}
+                    previewComponentProps={getPreviewProps}
+                    PreviewComponent={CustomImagePreview}
+                />
+            </Uploady>
+        );
+    });
 
-        <StyledUploadButton>
-            Upload with Progress
-        </StyledUploadButton>
+export const WithCustomProps: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
 
-        <UploadPreview
-            fallbackUrl={"https://picsum.photos/50"}
-            previewComponentProps={getPreviewProps}
-            PreviewComponent={CustomImagePreview}/>
-    </Uploady>;
-};
+        const getPreviewProps = useCallback(
+            (item: BatchItem, url: string, type: string) => {
+                return {
+                    alt: `${type} - ${url}`,
+                    "data-id": item.id,
+                };
+            },
+            [],
+        );
 
-export const WithCustomProps = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <StyledUploadButton>Upload</StyledUploadButton>
 
-    const getPreviewProps = useCallback((item: BatchItem, url: string, type: string) => {
-        return {
-            alt: `${type} - ${url}`,
-            "data-id": item.id,
-        }
-    }, []);
-
-    return (
-        <Uploady
-            debug
-            multiple={multiple}
-            destination={destination}
-            enhancer={enhancer}
-            grouped={grouped}
-            maxGroupSize={groupSize}
-        >
-
-            <StyledUploadButton>
-                Upload
-            </StyledUploadButton>
-
-            <UploadPreview
-                fallbackUrl={"https://picsum.photos/50"}
-                previewComponentProps={getPreviewProps}/>
-        </Uploady>
-    );
-};
+                <UploadPreview
+                    fallbackUrl={"https://picsum.photos/50"}
+                    previewComponentProps={getPreviewProps}
+                />
+            </Uploady>
+        );
+    });
 
 const StyledUploadUrlInput = styled(UploadUrlInput)`
   ${uploadUrlInputCss}
@@ -151,33 +167,31 @@ const Button = styled.button`
   ${uploadButtonCss}
 `;
 
-export const WithUrls = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
-    const uploadRef = useRef<?() => void>(null);
+export const WithUrls: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        const uploadRef = useRef<?() => void>(null);
 
-    const onButtonClick = () => {
-        uploadRef.current?.();
-	};
+        const onButtonClick = () => {
+            uploadRef.current?.();
+        };
 
-    return (
-        <Uploady
-            debug
-            multiple={multiple}
-            destination={destination}
-            enhancer={enhancer}
-            grouped={grouped}
-            maxGroupSize={groupSize}
-        >
-            <StyledUploadUrlInput uploadRef={uploadRef}/>
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <StyledUploadUrlInput uploadRef={uploadRef}/>
 
-            <Button onClick={onButtonClick}>Upload</Button>
+                <Button onClick={onButtonClick}>Upload</Button>
 
-            <UploadPreview
-                fallbackUrl={"https://picsum.photos/50"}
-            />
-        </Uploady>
-    );
-};
+                <UploadPreview fallbackUrl={"https://picsum.photos/50"}/>
+            </Uploady>
+        );
+    });
 
 const PreviewContainer = styled.div`
 	display: flex;
@@ -191,29 +205,28 @@ const PreviewContainer = styled.div`
 	}
 `;
 
-export const WithRememberPrevious = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+export const WithRememberPrevious: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <StyledUploadButton>Upload</StyledUploadButton>
 
-    return (<Uploady
-            debug
-            multiple={multiple}
-            destination={destination}
-            enhancer={enhancer}
-            grouped={grouped}
-            maxGroupSize={groupSize}
-        >
-            <StyledUploadButton>
-                Upload
-            </StyledUploadButton>
-
-            <PreviewContainer>
-                <UploadPreview
-                    rememberPreviousBatches
-                    fallbackUrl={"https://picsum.photos/50"}/>
-            </PreviewContainer>
-        </Uploady>
-    );
-};
+                <PreviewContainer>
+                    <UploadPreview
+                        rememberPreviousBatches
+                        fallbackUrl={"https://picsum.photos/50"}
+                    />
+                </PreviewContainer>
+            </Uploady>
+        );
+    });
 
 /**
  * separating into component so previews change dont cause
@@ -255,23 +268,23 @@ const PreviewsWithClear = ({ PreviewComp = UploadPreview }: { PreviewComp?: Reac
 	</>;
 };
 
-export const WithPreviewMethods = (): Node => {
-	const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+export const WithPreviewMethods: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <StyledUploadButton id="upload-btn">Upload</StyledUploadButton>
 
-	return <Uploady
-		debug
-		multiple={multiple}
-		destination={destination}
-		enhancer={enhancer}
-		grouped={grouped}
-		maxGroupSize={groupSize}>
-		<StyledUploadButton id="upload-btn">
-			Upload
-		</StyledUploadButton>
-
-		<PreviewsWithClear/>
-	</Uploady>;
-};
+                <PreviewsWithClear/>
+            </Uploady>
+        );
+    });
 
 const ButtonsWrapper = styled.div`
   display: flex;
@@ -361,32 +374,31 @@ const ResumeUpload = () => {
     return <button id="resume" onClick={() => processPending()}>resume</button>
 }
 
-export const WithCrop = (): Node => {
-	const { enhancer, destination, grouped, groupSize, extOptions } = useStoryUploadySetup();
-	const previewMethodsRef = useRef<?PreviewMethods>(null);
+export const WithCrop: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, grouped, groupSize, extOptions }): Node => {
+        const previewMethodsRef = useRef<?PreviewMethods>(null);
 
-	return <Uploady
-		debug
-        autoUpload={extOptions?.autoUpload ?? true}
-		multiple={false}
-		destination={destination}
-		enhancer={enhancer}
-		grouped={grouped}
-		maxGroupSize={groupSize}
-    >
-
-		<StyledUploadButton id="upload-btn">
-			Upload
-		</StyledUploadButton>
-        {extOptions?.autoUpload === false && <ResumeUpload/>}
-		<UploadPreview
-			PreviewComponent={ItemPreviewWithCrop}
-			previewComponentProps={{ previewMethods: previewMethodsRef }}
-			previewMethodsRef={previewMethodsRef}
-			fallbackUrl="https://picsum.photos/50"
-		/>
-	</Uploady>;
-};
+        return (
+            <Uploady
+                debug
+                autoUpload={extOptions?.autoUpload ?? true}
+                multiple={false}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <StyledUploadButton id="upload-btn">Upload</StyledUploadButton>
+                {extOptions?.autoUpload === false && <ResumeUpload/>}
+                <UploadPreview
+                    PreviewComponent={ItemPreviewWithCrop}
+                    previewComponentProps={{ previewMethods: previewMethodsRef }}
+                    previewMethodsRef={previewMethodsRef}
+                    fallbackUrl="https://picsum.photos/50"
+                />
+            </Uploady>
+        );
+    });
 
 const MultiCropContainer = styled.div`
     display: flex;
@@ -654,18 +666,19 @@ const MultiCropQueue = ({ extOptions }: { extOptions: ?{ autoUpload: boolean } }
     );
 };
 
-export const WithMultiCrop = (): Node => {
-    const { enhancer, destination, extOptions } = useStoryUploadySetup();
-
-    return <Uploady
-        debug
-        autoUpload={extOptions?.autoUpload ?? true}
-        destination={destination}
-        enhancer={enhancer}
-    >
-        <MultiCropQueue extOptions={extOptions} />
-    </Uploady>;
-};
+export const WithMultiCrop: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, extOptions }): Node => {
+        return (
+            <Uploady
+                debug
+                autoUpload={extOptions?.autoUpload ?? true}
+                destination={destination}
+                enhancer={enhancer}
+            >
+                <MultiCropQueue extOptions={extOptions}/>
+            </Uploady>
+        );
+    });
 
 const BatchAddUploadPreview = getUploadPreviewForBatchItemsMethod(useBatchAddListener);
 
@@ -675,34 +688,28 @@ const UploadPendingButton = () => {
     return <Button onClick={processPending} id="upload-pending-btn">Upload</Button>;
 };
 
-export const WithDifferentBatchItemsMethod = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = useStoryUploadySetup();
+export const WithDifferentBatchItemsMethod: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+                autoUpload={false}
+            >
+                <StyledUploadButton id="upload-btn">Select Files</StyledUploadButton>
 
-    return (
-        <Uploady
-            debug
-            multiple={multiple}
-            destination={destination}
-            enhancer={enhancer}
-            grouped={grouped}
-            maxGroupSize={groupSize}
-            autoUpload={false}
-        >
-            <StyledUploadButton id="upload-btn">
-                Select Files
-            </StyledUploadButton>
+                <PreviewsWithClear PreviewComp={BatchAddUploadPreview}/>
 
-            <PreviewsWithClear PreviewComp={BatchAddUploadPreview}/>
+                <UploadPendingButton/>
+            </Uploady>
+        );
+    });
 
-            <UploadPendingButton/>
-        </Uploady>
-    );
-};
-
-const TYPES = [
-    "IMAGES",
-    "DOCUMENTS"
-];
+const TYPES = ["IMAGES", "DOCUMENTS"];
 
 const TwoFieldsPreviewContainer = styled.div`
     img {
@@ -764,28 +771,27 @@ const createUploadFieldForType = (type: string): React$ComponentType<TypedUpload
 
 const UploadFields:  React$ComponentType<TypedUploadFieldProps>[] = TYPES.map(createUploadFieldForType);
 
-export const WithTwoFields = (): Node  => {
-    const { enhancer, destination, grouped, groupSize } = useStoryUploadySetup();
+export const WithTwoFields: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, grouped, groupSize }): Node => {
+        return (
+            <Uploady
+                debug
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <div className="App">
+                    <h3>Two Upload Fields with single Uploady</h3>
 
-    return (
-        <Uploady
-            debug
-            destination={destination}
-            enhancer={enhancer}
-            grouped={grouped}
-            maxGroupSize={groupSize}
-        >
-            <div className="App">
-                <h3>Two Upload Fields with single Uploady</h3>
-
-                {TYPES.map((type, index) => {
-                    const Field = UploadFields[index];
-                    return <Field key={type} index={index} params={{}}/>
-                })}
-            </div>
-        </Uploady>
-    );
-};
+                    {TYPES.map((type, index) => {
+                        const Field = UploadFields[index];
+                        return <Field key={type} index={index} params={{}}/>;
+                    })}
+                </div>
+            </Uploady>
+        );
+    });
 
 const CropItemPreviewContainer = styled.div`
     display: flex;
@@ -923,25 +929,24 @@ const MyForm = () => {
     </form>);
 };
 
-export const WithCropInForm = (): Node => {
-    const { enhancer, destination } = useStoryUploadySetup();
-
-    return (
-        <Uploady
-            debug
-            clearPendingOnAdd
-            multiple={false}
-            autoUpload={false}
-            destination={destination}
-            enhancer={enhancer}
-        >
-            <div className="App">
-                <h3>Crop Inside Form</h3>
-                <MyForm />
-            </div>
-        </Uploady>
-    );
-};
+export const WithCropInForm: UploadyStory = createUploadyStory(
+    ({ enhancer, destination }): Node => {
+        return (
+            <Uploady
+                debug
+                clearPendingOnAdd
+                multiple={false}
+                autoUpload={false}
+                destination={destination}
+                enhancer={enhancer}
+            >
+                <div className="App">
+                    <h3>Crop Inside Form</h3>
+                    <MyForm/>
+                </div>
+            </Uploady>
+        );
+    });
 
 const usePreviewsLoader = getPreviewsLoaderHook(useBatchAddListener);
 
@@ -959,23 +964,34 @@ const CustomPreviews = () => {
     )
 };
 
-export const WithPreviewsLoaderHook = (): Node => {
-    const { enhancer, destination, multiple, grouped, groupSize } = usePreviewStorySetup();
+export const WithPreviewsLoaderHook: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+        return (
+            <Uploady
+                debug
+                multiple={multiple}
+                destination={destination}
+                enhancer={enhancer}
+                grouped={grouped}
+                maxGroupSize={groupSize}
+            >
+                <StyledUploadButton/>
+                <br/>
+                <br/>
+                <CustomPreviews/>
+            </Uploady>
+        );
+    });
 
-    return <Uploady
-        debug
-        multiple={multiple}
-        destination={destination}
-        enhancer={enhancer}
-        grouped={grouped}
-        maxGroupSize={groupSize}
-    >
-        <StyledUploadButton/>
-        <br/><br/>
-        <CustomPreviews />
-    </Uploady>;
-};
+const previewStories: CsfExport = getCsfExport(UploadPreview, "Upload Preview", readme, {
+    pkg: "upload-preview",
+    section: "UI",
+    args: {
+        maxPreviewSize: 2e7,
+    },
+    argTypes: {
+        maxPreviewSize: { control: "number" },
+    }
+});
 
-const previewStories: CsfExport = getCsfExport(UploadPreview, "Upload Preview", readme, { pkg: "upload-preview", section: "UI" });
-
-export default { ...previewStories, title: "UI/Upload Preview" }
+export default { ...previewStories, title: "UI/Upload Preview" };

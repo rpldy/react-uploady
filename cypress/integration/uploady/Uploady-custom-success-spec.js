@@ -1,6 +1,5 @@
 import { interceptWithHandler } from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_SHORT } from "../../constants";
 
 describe("Uploady - Custom Success", () => {
     const fileName = "flower.jpg";
@@ -24,7 +23,7 @@ describe("Uploady - Custom Success", () => {
         uploadFile(fileName, () => {
             cy.wait("@uploadReq")
 
-            cy.wait(WAIT_SHORT);
+            cy.waitShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             cy.storyLog().assertLogEntryContains(2, {
@@ -47,7 +46,7 @@ describe("Uploady - Custom Success", () => {
         uploadFile(fileName, () => {
             cy.wait("@uploadReq")
 
-            cy.wait(WAIT_SHORT);
+            cy.waitShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             cy.storyLog().assertLogEntryContains(2, {

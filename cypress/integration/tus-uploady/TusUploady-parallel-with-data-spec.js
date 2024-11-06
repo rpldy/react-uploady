@@ -1,5 +1,4 @@
 import uploadFile from "../uploadFile";
-import { WAIT_SHORT } from "../../constants";
 
 describe("TusUploady - Parallel with Data on Create", () => {
     const fileName = "flower.jpg";
@@ -7,8 +6,15 @@ describe("TusUploady - Parallel with Data on Create", () => {
     before(() => {
         cy.visitStory(
             "tusUploady",
-            "with-tus-concatenation&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true&knob-send data on create_Upload Settings=true",
-            { useMock: false, uploadUrl: "http://test.tus.com/upload"}
+            "with-tus-concatenation",
+            {
+                useMock: false,
+                uploadUrl: "http://test.tus.com/upload",
+                chunkSize: 200000,
+                uploadParams: { foo: "bar" },
+                tusResumeStorage: true,
+                tusSendOnCreate: true,
+            }
         );
     });
 
@@ -41,7 +47,7 @@ describe("TusUploady - Parallel with Data on Create", () => {
                     expect(xhr.request.headers["content-length"]).to.eq("172445");
                 });
 
-            cy.wait(WAIT_SHORT);
+            cy.waitShort();
 
             cy.storyLog()
                 .assertFileItemStartFinish(fileName, 1)

@@ -1,6 +1,5 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_X_SHORT } from "../../constants";
 
 describe("UploadPaste - Wrap Upload-Button", () => {
     const fileName = "flower.jpg";
@@ -22,10 +21,10 @@ describe("UploadPaste - Wrap Upload-Button", () => {
                     expect(formData["test"]).to.eq("paste");
                 });
 
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
             cy.get("#upload-button")
                 .pasteFile(fileName);
 
@@ -34,8 +33,8 @@ describe("UploadPaste - Wrap Upload-Button", () => {
                     expect(formData["test"]).to.eq("paste");
                 });
 
-            cy.wait(WAIT_X_SHORT);
-            cy.storyLog().assertFileItemStartFinish(fileName, 5);
+            cy.waitShort();
+            cy.storyLog().assertFileItemStartFinish(fileName, 3, true);
         }, "#upload-button");
     });
 });

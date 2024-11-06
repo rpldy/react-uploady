@@ -1,19 +1,18 @@
 import intercept from "../intercept";
 import dropFile from "../dropFile";
-import { WAIT_X_SHORT } from "../../constants";
 
 describe("UploadPaste - Wrap Upload-DropZone", () => {
     const fileName = "flower.jpg";
 
-    const loadPage = () =>
+    beforeEach(() => {
         cy.visitStory(
             "uploadPaste",
             "with-paste-drop-zone",
             { useMock: false }
         );
+    });
 
     it("drop should continue working on wrapped drop-zone", () => {
-        loadPage();
         intercept();
 
         dropFile(fileName, () => {
@@ -22,14 +21,15 @@ describe("UploadPaste - Wrap Upload-DropZone", () => {
                     expect(formData["test"]).to.eq("paste");
                 });
 
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });
 
     it("should upload file pasted to wrapper drop-zone", () => {
-        loadPage();
         intercept();
+        //need to give time for storybook decorator to update the args from the url...
+        cy.waitMedium();
 
         cy.get("#upload-drop-zone")
             .pasteFile(fileName);
@@ -39,7 +39,7 @@ describe("UploadPaste - Wrap Upload-DropZone", () => {
                 expect(formData["test"]).to.eq("paste");
             });
 
-        cy.wait(WAIT_X_SHORT);
+        cy.waitExtraShort();
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
     });
 });

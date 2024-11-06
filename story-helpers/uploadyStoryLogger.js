@@ -1,4 +1,5 @@
 import { actions } from "@storybook/addon-actions";
+import { composeEnhancers } from "@rpldy/uploady";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 
 export const isCypress = !!window.parent.Cypress;
@@ -74,7 +75,12 @@ const actionLogEnhancer = (uploader) => {
     });
 };
 
+const addActionLogEnhancer = (enhancer) => {
+    return enhancer ? composeEnhancers(enhancer, actionLogEnhancer) : actionLogEnhancer;
+};
+
 export {
     actionLogEnhancer,
+    addActionLogEnhancer,
     logToCypress,
 };

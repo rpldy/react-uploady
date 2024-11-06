@@ -1,9 +1,7 @@
 // @flow
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, type Node } from "react";
 import { UPLOADER_EVENTS } from "../packages/core/uploader";
 import { logToCypress, } from "./uploadyStoryLogger";
-
-import type { Node } from "react";
 import type { UploadyUploaderType } from "../packages/core/uploader";
 
 const ProgressReportTable = ({ uploader }: { uploader: ?UploadyUploaderType }): Node => {

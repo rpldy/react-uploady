@@ -61,7 +61,7 @@ describe("TusUploady - Simple", () => {
 			uploadFile(fileName, () => {
 				cy.waitShort();
 
-				cy.storyLog().assertFileItemStartFinish(fileName, 5)
+				cy.storyLog().assertFileItemStartFinish(fileName, 3, true)
 					.then((events) => {
 						expect(events.finish.args[1].uploadResponse.message).to.eq("TUS server has file");
 						expect(events.finish.args[1].uploadResponse.location).to.eq(`${uploadUrl}/123`);

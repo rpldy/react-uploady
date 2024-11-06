@@ -49,8 +49,9 @@ const findItemStartIndex = (storyLog, prop, value, after = -1) => {
         storyLog.findIndex(finder);
 };
 
-
 const assertStartFinish = (storyLog, startIndex, prop, value, after = false) => {
+    cy.log("------- ASSERTING sTART_FINISH -------  ", { logCount: storyLog.length, startIndex, prop, value, after });
+
     if (!isNaN(startIndex)) {
         if (after) {
             const afterIndex = startIndex;
@@ -61,7 +62,7 @@ const assertStartFinish = (storyLog, startIndex, prop, value, after = false) => 
             expect(storyLog[startIndex]?.args[0]).to.equal("ITEM_START", `expect ITEM_START at: ${startIndex} in log: ${serializeLog(storyLog)}`);
 
             cy.wrap(storyLog[startIndex].args[1])
-                .its(prop).should("eq", value);
+                .its(prop).should("eq", value, `expect ${prop} at index: ${startIndex} to equal: ${value}`);
         }
     } else {
         startIndex = findItemStartIndex(storyLog, prop, value);

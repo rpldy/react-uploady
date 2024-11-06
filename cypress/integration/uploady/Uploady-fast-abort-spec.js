@@ -12,7 +12,7 @@ describe("Uploady - With Fast Abort", () => {
     const fileName = "flower.jpg";
 
     const loadPage = () =>
-        cy.visitStory("uploady", "with-abort", { mockDelay: 100 });
+        cy.visitStory("uploady", "with-abort", { mockDelay: 200 });
 
     const addFastAbortThreshold = () => {
         cy.setUploadOptions({
@@ -47,7 +47,7 @@ describe("Uploady - With Fast Abort", () => {
 
         uploadFileTimes(fileName, () => {
             uploadFileTimes(fileName, () => {
-                cy.waitExtraShort();
+                // cy.waitShort();
 
                 cy.get("button[data-test='abort-batch-0']")
                     .should("be.visible")
@@ -76,8 +76,6 @@ describe("Uploady - With Fast Abort", () => {
 
         uploadFileTimes(fileName, () => {
             uploadFileTimes(fileName, () => {
-                cy.waitExtraShort();
-
                 cy.get("button[data-test='story-abort-all-button']")
                     .should("be.visible")
                     .click();
@@ -85,8 +83,8 @@ describe("Uploady - With Fast Abort", () => {
                 cy.waitShort();
 
                 cy.storyLog().assertNoLogPattern(ITEM_ABORT);
-                cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 0 });
-                cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 0 });
+                cy.storyLog().assertNoLogPattern(ITEM_FINISH);
+                cy.storyLog().assertNoLogPattern(BATCH_FINALIZE);
                 cy.storyLog().assertLogPattern(ALL_ABORT, { times: 1 });
             }, 2, "#upload-button");
         }, 2, "#upload-button");

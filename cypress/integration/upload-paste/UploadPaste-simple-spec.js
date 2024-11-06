@@ -1,11 +1,11 @@
 describe("UploadPaste - Simple", () => {
     const fileName = "flower.jpg";
 
-    const loadPage = () =>
+    beforeEach(() => {
         cy.visitStory("uploadPaste", "simple", { mockDelay: 100 });
+    });
 
     it("should upload pasted file", () => {
-        loadPage();
         cy.get("#paste-area")
             .should("exist")
             .pasteFile(fileName);
@@ -15,7 +15,6 @@ describe("UploadPaste - Simple", () => {
     });
 
     it("should upload pasted files", () => {
-        loadPage();
         cy.get("#paste-area")
             .should("exist")
             .pasteFile(fileName, 2);

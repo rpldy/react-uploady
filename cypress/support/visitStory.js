@@ -46,7 +46,7 @@ const getStoryControlsArgs = (options) => {
     }
 
     //adding custom _uploadUrl param because SB filters out the url arg due to unsafe chars (in Canvas mode) :(
-    const argsStr = "&args=" + args.join(";") + "&_uploadUrl=" + (options.uploadUrl || UPLOAD_URL);
+    const argsStr = "&args=" + args.join(";") + (uploadType !== "mock" ? "&_uploadUrl=" + (options.uploadUrl || UPLOAD_URL) : "");
     cy.log("cmd.visitStory: STORY ARGS = " + argsStr);
 
     return argsStr;

@@ -76,7 +76,7 @@ describe("TusUploady - With Retry", () => {
 
             cy.waitMedium();
 
-            cy.storyLog().assertFileItemStartFinish(fileName, 6)
+            cy.storyLog().assertFileItemStartFinish(fileName, 4, true)
                 .then((events) => {
                     expect(events.finish.args[1].uploadResponse.location).to.eq(`${uploadUrl}/123`);
                 });

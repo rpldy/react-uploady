@@ -12,7 +12,7 @@ describe("Uploady - With Fast Abort", () => {
     const fileName = "flower.jpg";
 
     const loadPage = () =>
-        cy.visitStory("uploady", "with-abort");
+        cy.visitStory("uploady", "with-abort", { mockDelay: 100 });
 
     const addFastAbortThreshold = () => {
         cy.setUploadOptions({

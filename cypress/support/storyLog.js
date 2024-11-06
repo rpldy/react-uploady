@@ -40,16 +40,31 @@ Cypress.Commands.add("storyLog", () =>
 
 const serializeLog = (log) => {
     return log.map(({ args }, index) => `[${index}]=${args[0]}`).join(",");
-}
+};
 
-const assertStartFinish = (storyLog, startIndex, prop, value) => {
+const findItemStartIndex = (storyLog, prop, value, after = -1) => {
+    const finder = ({ args }) => args[0] === "ITEM_START" && _get(args[1], prop) === value;
+    return ~after ?
+        storyLog.slice(after).findIndex(finder) + after :
+        storyLog.findIndex(finder);
+};
+
+
+const assertStartFinish = (storyLog, startIndex, prop, value, after = false) => {
     if (!isNaN(startIndex)) {
-        expect(storyLog[startIndex]?.args[0]).to.equal("ITEM_START", `expect ITEM_START at: ${startIndex} in log: ${serializeLog(storyLog)}`);
+        if (after) {
+            const afterIndex = startIndex;
+            startIndex = findItemStartIndex(storyLog, prop, value, afterIndex);
+            expect(startIndex).to.be
+                .above(afterIndex, `expect to find ITEM_START for ${value} in log: ${serializeLog(storyLog)} after index: ${afterIndex}`);
+        } else {
+            expect(storyLog[startIndex]?.args[0]).to.equal("ITEM_START", `expect ITEM_START at: ${startIndex} in log: ${serializeLog(storyLog)}`);
 
-        cy.wrap(storyLog[startIndex].args[1])
-            .its(prop).should("eq", value);
+            cy.wrap(storyLog[startIndex].args[1])
+                .its(prop).should("eq", value);
+        }
     } else {
-        startIndex = storyLog.findIndex(({ args }) => args[0] === "ITEM_START" && _get(args[1], prop) === value);
+        startIndex = findItemStartIndex(storyLog, prop, value);
 
         expect(startIndex).to.be.above(-1, `expect to find ITEM_START for ${value} in log: ${serializeLog(storyLog)}`);
     }
@@ -69,14 +84,14 @@ const assertStartFinish = (storyLog, startIndex, prop, value) => {
     });
 };
 
-Cypress.Commands.add("assertFileItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex) => {
-    console.log("assertFileItemStartFinish received log", storyLog);
-    assertStartFinish(storyLog, startIndex, "file.name", fileName);
+Cypress.Commands.add("assertFileItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex, after = false) => {
+    console.log("assertFileItemStartFinish received log", storyLog, { startIndex, after });
+    assertStartFinish(storyLog, startIndex, "file.name", fileName, after);
 });
 
-Cypress.Commands.add("assertUrlItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex = 0) => {
-    console.log("assertUrlItemStartFinish received log", storyLog);
-    assertStartFinish(storyLog, startIndex, "url", fileName);
+Cypress.Commands.add("assertUrlItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex = 0, after = false) => {
+    console.log("assertUrlItemStartFinish received log", storyLog, { startIndex, after });
+    assertStartFinish(storyLog, startIndex, "url", fileName, after);
 });
 
 Cypress.Commands.add("assertLogEntryCount", { prevSubject: true }, (storyLog, count) => {

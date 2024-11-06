@@ -4,7 +4,7 @@ type PATTERN_MATCH = { index: number };
 
 declare namespace Cypress {
     interface StoryLog {
-        assertFileItemStartFinish: (fileName: string, startIndex?: number) => void;
+        assertFileItemStartFinish: (fileName: string, startIndex?: number, after?: boolean) => void;
         assertUrlItemStartFinish: (fileName: string, startIndex?: number) => void;
         assertLogEntryCount: (count: number, obj: any) => void;
         assertLogEntryContains: (index: number, obj: any) => void;

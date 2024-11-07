@@ -11,12 +11,12 @@
 
 # Tus Uploady
 
-This package is provided as a convenient alternative to the main [Uploady](../uploady) package. 
+This package is provided as a convenient alternative to the main [Uploady](https://react-uploady.org/docs/api/) package. 
 To be used in case resumable (tus) upload is required.
 
-The package wraps the [tus-sender](../../core/tus-sender) 
+The package wraps the [tus-sender](https://react-uploady.org/docs/packages/rpldy-tus-sender/) 
 
-Additional information about tus functionality can be found the [tus-sender README](../../core/tus-sender).
+Additional information about tus functionality can be found at the [tus-sender API doc](https://react-uploady.org/docs/api/enhancers/getTusEnhancer/).
 
 **The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
@@ -55,11 +55,11 @@ Additional information about tus functionality can be found the [tus-sender READ
 | ignoreModifiedDateInStorage | boolean                   | false               | ignore File's modified date when creating key for storage                                                              |
 | resumeHeaders               | Record<string, string>    | null                | Headers to use for the resume check (HEAD) request                                                                     |
 
-In addition, all [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to TusUploady.
+In addition, all [UploadOptions](https://react-uploady.org/docs/api/types/#uploadoptions) props can be passed to TusUploady.
 In order to override configuration passed to the parent Uploady component. 
-See [Uploady documentation](../uploady#props) for detailed list of upload options.   
+See [Uploady documentation](https://react-uploady.org/docs/api/#props) for detailed list of upload options.   
 
-> All of the [chunked-sender options](../../core/chunked-sender#options) are supported as well
+> All of the [chunked-sender options](https://react-uploady.org/docs/api/senders/chunkedSender/#options) are supported as well
 
 > Params prop that is set on the Destination or upload options is serialized (encoded according to Tus protocol) and sent as the value of the Upload-Metadata header.
 
@@ -83,7 +83,7 @@ It also supports the __Upload-Metadata__ header and will turn the destination __
 
 Called before the (HEAD) request is issued on behalf of a potentially resumeable upload.
 
-> This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
+> This event is _[cancellable](https://react-uploady.org/docs/api/events/#cancellable-events)_
 
 Receives an object with:
 
@@ -91,7 +91,7 @@ Receives an object with:
 - item: the BatchItem being sent
 - resumeHeaders: an optional object that was passed to the TusUploady props
 
-May return `false` to cancel the resume, nothing, or an [object](../../core/tus-sender/src/tusSender/types.js#L32) with `url` property to overwrite the URL the request will be sent to.
+May return `false` to cancel the resume, nothing, or an [object](https://react-uploady.org/docs/api/types/#tusresumestarteventresponse) with `url` property to overwrite the URL the request will be sent to.
 And/Or a `resumeHeaders` object that will be merged with the optional object passed as a prop to TusUploady.
 
 ```javascript

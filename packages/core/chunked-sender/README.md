@@ -11,13 +11,13 @@
 
 # Chunked Sender
 
-Adds chunked upload capabilities on top of the regular XHR [@rpldy/sender](../sender)
-Exposes an UploaderEnhancer that replaces the default send method the [uploader](../uploader) uses.
+Adds chunked upload capabilities on top of the regular XHR [@rpldy/sender](https://react-uploady.org/docs/packages/rpldy-sender/)
+Exposes an UploaderEnhancer that replaces the default send method the [uploader](https://react-uploady.org/docs/packages/rpldy-uploader/) uses.
 
-For usage with your React app, see [@rpldy/chunked-uploady](../ui/chunked-uploady).
+For usage with your React app, see [@rpldy/chunked-uploady](https://react-uploady.org/docs/packages/rpldy-chunked-uploady/).
 
 Chunked uploading doesn't support grouped uploads (in single XHR request) or URL uploading. 
-These will be handed over to the default [@rpldy/sender](../sender)
+These will be handed over to the default [@rpldy/sender](https://react-uploady.org/docs/packages/rpldy-sender/)
 
 **The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
@@ -33,34 +33,34 @@ These will be handed over to the default [@rpldy/sender](../sender)
 
 ## Options
 
-| Name (* = mandatory) | Type          | Default       | Description  |
-| --------------       | ------------- | ------------- | ------------|
-| chunked               | boolean       | true          | chunk uploads. setting to false will return to default sending behavior|
-| chunkSize             | number        | 5242880      | the chunk size. relevant when uploaded file is larger than the value|
-| retries               | number        | 0             | how many times to retry sending a failed chunk|
-| parallel              | number        | 0             | how many (chunk) requests to send simultaneously|
+| Name (* = mandatory) | Type    | Default | Description                                                             |
+|----------------------|---------|---------|-------------------------------------------------------------------------|
+| chunked              | boolean | true    | chunk uploads. setting to false will return to default sending behavior |
+| chunkSize            | number  | 5242880 | the chunk size. relevant when uploaded file is larger than the value    |
+| retries              | number  | 0       | how many times to retry sending a failed chunk                          |
+| parallel             | number  | 0       | how many (chunk) requests to send simultaneously                        |
 
 ## Events
 
 Chunked Sender makes it possible to handle chunk life-time events.
-See [uploader events](../uploader/README.md#events) section on more info regarding how to register for events.
+See [uploader events](https://react-uploady.org/docs/api/events/) section on more info regarding how to register for events.
 
 ### CHUNK_EVENTS.CHUNK_START
 
 Triggered when a chunk is about to be sent to the server
 
-> This event is _[cancellable](../uploader/README.md#cancellable-events)_
+> This event is _[cancellable](https://react-uploady.org/docs/api/events/#cancellable-events)_
 
 The event handler may return an object with the following shape: 
 
 ```javascript
 type StartEventResponse = {
 	url: string,
-    sendOptions: ChunkedSendOptions
+    sendOptions: SendOptions
 }
 ``` 
 
-> * [ChunkedSendOptions](src/types.js#L16)
+> * [SendOptions](https://react-uploady.org/docs/api/types/#sendoptions)
 
 ### CHUNK_EVENTS.CHUNK_FINISH
 

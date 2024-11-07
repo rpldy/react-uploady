@@ -11,7 +11,7 @@
    
 # Retry-Hooks
 
-This package exposes useful hooks for the [@rpldy/retry](../../core/retry) package which adds upload retry capabilities to the uploader.
+This package exposes useful hooks for the [@rpldy/retry](https://react-uploady.org/docs/packages/rpldy-retry/) package which adds upload retry capabilities to the uploader.
  
 It makes it easy to use retry from a React UI application.
 

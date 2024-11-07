@@ -25,7 +25,7 @@
 
 # Uploady
 
-This is the main UI package. Its role is to initialize and expose the [uploader](../../core/uploader) functionality.
+This is the main UI package. Its role is to initialize and expose the [uploader](https://react-uploady.org/docs/packages/rpldy-uploader/) functionality.
 It contains the Provider that all other UI packages rely on.
 
 It provides multiple hooks that enable more advanced features and data for client apps.
@@ -50,46 +50,46 @@ It provides multiple hooks that enable more advanced features and data for clien
 
 ## Props
 
-| Name (* = mandatory) | Type                                                                   | Default       | Description                                                                                                                                                                                                         |
-|----------------------|------------------------------------------------------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Uploader Options** |                                                                        |               |                                                                                                                                                                                                                     |
-| autoUpload           | boolean                                                                | true          | automatically upload files when they are added                                                                                                                                                                      |
-| destination          | [Destination](../../core/shared/src/types.js#L7)                       | undefined     | configure the end-point to upload to                                                                                                                                                                                |
-| inputFieldName       | string                                                                 | "file"        | name (attribute) of the file input field (requires sendWithFormData = true)                                                                                                                                         |
-| grouped              | boolean                                                                | false         | group multiple files in a single request                                                                                                                                                                            |
-| maxGroupSize         | number                                                                 | 5             | maximum of files to group together in a single request                                                                                                                                                              |
-| formatGroupParamName | (number, string) => string                                             | undefined     | determine the upload request field name when more than file is grouped in a single upload                                                                                                                           |
-| fileFilter           | (File &#124; string, index: number, File[] &#124; string[]) => boolean | undefined     | return false to exclude from batch                                                                                                                                                                                  |
-| method               | string                                                                 | "POST"        | HTTP method in upload request                                                                                                                                                                                       |
-| params               | Object                                                                 | undefined     | collection of params to pass along with the upload (requires sendWithFormData = true)                                                                                                                               |
-| forceJsonResponse    | boolean                                                                | false         | parse server response as JSON even if no JSON content-type header received                                                                                                                                          |
-| withCredentials      | boolean                                                                | false         | set XHR withCredentials to true                                                                                                                                                                                     |
-| enhancer             | [UploaderEnhancer](../../core/uploader/src/types.js#L37)               | undefined     | uploader [enhancer](../../../README.md#enhancer) function                                                                                                                                                           |
-| concurrent           | boolean                                                                | false         | issue multiple upload requests simultaneously                                                                                                                                                                       |
-| maxConcurrent        | number                                                                 | 2             | maximum allowed simultaneous requests                                                                                                                                                                               |
-| send                 | [SendMethod](../../core/sender/src/types.js#L38)                       | @rpldy/sender | how to send files to the server                                                                                                                                                                                     |
-| sendWithFormData     | boolean                                                                | true          | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data                                                 |
-| formatServerResponse | [FormatServerResponseMethod](../../core/shared/src/types.js#L40)       | undefined     | function to create the batch item's uploadResponse from the raw xhr response                                                                                                                                        |
-| clearPendingOnAdd    | boolean                                                                | false         | whether to clear pending batch(es) when a new one is added                                                                                                                                                          |
-| isSuccessfulCall     | [IsSuccessfulCall](../../core/shared/src/types.js#L42)                 | undefined     | callback to use to decide whether upload response is succssful or not                                                                                                                                               |
-| fastAbortThreshold   | number                                                                 | 100           | the pending/active item count threshold from which to start using the performant abort mechanism                                                                                                                    |
-| userData             | any                                                                    | undefined     | metadata set by the user and isn't used by the upload process in any way, provided as a convenience to pass data around                                                                                             |
-| **Uploady Options**  |                                                                        |               |                                                                                                                                                                                                                     |
-| debug                | boolean                                                                | false         | enable console logs from uploady packages                                                                                                                                                                           |
-| listeners            | Object                                                                 | undefined     | map of [event](../../core/uploader/README.md#events) name and event handler                                                                                                                                         |
-| customInput          | boolean                                                                | false         | whether to use a custom file input (see: [useFileInput](#useFileInput)                                                                                                                                              |
-| inputFieldContainer  | HTMLElement                                                            | document.body | html element to place the file input element inside                                                                                                                                                                 |
-| children             | React.Node                                                             | undefined     | any part of your React app that will require access to the upload flow  (components, hooks, etc.)                                                                                                                   |
-| capture              | string                                                                 | null          | [input/file#capture](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting   |
-| multiple             | boolean                                                                | true          | [input/file#multiple](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#multiple) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting |
-| accept               | string                                                                 | null          | [input/file#accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting     |
-| webkitdirectory      | boolean                                                                | false         | [webkitdirectory](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting |
-| fileInputId          | string                                                                 | undefined     | the value to use for the internal file input element                                                                                                                                                                |
-| noPortal             | boolean                                                                | false         | Dont render Uploady's file input in a portal. (default: false) For SSR, noPortal = false causes a React warning in DEV.                                                                                             |
+| Name (* = mandatory) | Type                                                                                               | Default       | Description                                                                                                                                                                                                         |
+|----------------------|----------------------------------------------------------------------------------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Uploader Options** |                                                                                                    |               |                                                                                                                                                                                                                     |
+| autoUpload           | boolean                                                                                            | true          | automatically upload files when they are added                                                                                                                                                                      |
+| destination          | [Destination](https://react-uploady.org/docs/api/types/#destination)                               | undefined     | configure the end-point to upload to                                                                                                                                                                                |
+| inputFieldName       | string                                                                                             | "file"        | name (attribute) of the file input field (requires sendWithFormData = true)                                                                                                                                         |
+| grouped              | boolean                                                                                            | false         | group multiple files in a single request                                                                                                                                                                            |
+| maxGroupSize         | number                                                                                             | 5             | maximum of files to group together in a single request                                                                                                                                                              |
+| formatGroupParamName | (number, string) => string                                                                         | undefined     | determine the upload request field name when more than file is grouped in a single upload                                                                                                                           |
+| fileFilter           | (File &#124; string, index: number, File[] &#124; string[]) => boolean                             | undefined     | return false to exclude from batch                                                                                                                                                                                  |
+| method               | string                                                                                             | "POST"        | HTTP method in upload request                                                                                                                                                                                       |
+| params               | Object                                                                                             | undefined     | collection of params to pass along with the upload (requires sendWithFormData = true)                                                                                                                               |
+| forceJsonResponse    | boolean                                                                                            | false         | parse server response as JSON even if no JSON content-type header received                                                                                                                                          |
+| withCredentials      | boolean                                                                                            | false         | set XHR withCredentials to true                                                                                                                                                                                     |
+| enhancer             | [UploaderEnhancer](https://react-uploady.org/docs/api/types/#uploaderenhancer)                     | undefined     | uploader [enhancer](https://react-uploady.org/docs/api/types/#uploaderenhancer) function                                                                                                                            |
+| concurrent           | boolean                                                                                            | false         | issue multiple upload requests simultaneously                                                                                                                                                                       |
+| maxConcurrent        | number                                                                                             | 2             | maximum allowed simultaneous requests                                                                                                                                                                               |
+| send                 | [SendMethod](https://react-uploady.org/docs/api/types/#sendmethod)                                 | @rpldy/sender | how to send files to the server                                                                                                                                                                                     |
+| sendWithFormData     | boolean                                                                                            | true          | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data                                                 |
+| formatServerResponse | [FormatServerResponseMethod](https://react-uploady.org/docs/api/types/#formatserverresponsemethod) | undefined     | function to create the batch item's uploadResponse from the raw xhr response                                                                                                                                        |
+| clearPendingOnAdd    | boolean                                                                                            | false         | whether to clear pending batch(es) when a new one is added                                                                                                                                                          |
+| isSuccessfulCall     | [IsSuccessfulCall](https://react-uploady.org/docs/api/types/#issuccessfulcall)                     | undefined     | callback to use to decide whether upload response is succssful or not                                                                                                                                               |
+| fastAbortThreshold   | number                                                                                             | 100           | the pending/active item count threshold from which to start using the performant abort mechanism                                                                                                                    |
+| userData             | any                                                                                                | undefined     | metadata set by the user and isn't used by the upload process in any way, provided as a convenience to pass data around                                                                                             |
+| **Uploady Options**  |                                                                                                    |               |                                                                                                                                                                                                                     |
+| debug                | boolean                                                                                            | false         | enable console logs from uploady packages                                                                                                                                                                           |
+| listeners            | Object                                                                                             | undefined     | map of [event](https://react-uploady.org/docs/api/events/) name and event handler                                                                                                                                   |
+| customInput          | boolean                                                                                            | false         | whether to use a custom file input (see: [useFileInput](#useFileInput)                                                                                                                                              |
+| inputFieldContainer  | HTMLElement                                                                                        | document.body | html element to place the file input element inside                                                                                                                                                                 |
+| children             | React.Node                                                                                         | undefined     | any part of your React app that will require access to the upload flow  (components, hooks, etc.)                                                                                                                   |
+| capture              | string                                                                                             | null          | [input/file#capture](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting   |
+| multiple             | boolean                                                                                            | true          | [input/file#multiple](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#multiple) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting |
+| accept               | string                                                                                             | null          | [input/file#accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting     |
+| webkitdirectory      | boolean                                                                                            | false         | [webkitdirectory](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory) - affects file input only. for example, drag&drop or programmatic uploads will not be affected by this setting |
+| fileInputId          | string                                                                                             | undefined     | the value to use for the internal file input element                                                                                                                                                                |
+| noPortal             | boolean                                                                                            | false         | Dont render Uploady's file input in a portal. (default: false) For SSR, noPortal = false causes a React warning in DEV.                                                                                             |
 
 ## Example
 
-To be able to use one of the [UI Components](../../../README.md#ui-packages) or one of the hooks, you need to wrap them with Uploady.
+To be able to use one of the [UI Components](https://react-uploady.org/docs/category/components/) or one of the hooks, you need to wrap them with Uploady.
 This will give them access to the UploadyContext.
 
 ```javascript
@@ -195,13 +195,13 @@ abort a specific batch by its ID
 
 _(name: any, cb: EventCallback) => OffMethod_
 
-register for an [event](../../core/uploader/README.md#events)
+register for an [event](https://react-uploady.org/docs/api/events/)
  
 #### once 
 
 _(name: any, cb: EventCallback) => OffMethod_
  
-register once for an [event](../../core/uploader/README.md#events)
+register once for an [event](https://react-uploady.org/docs/api/events/)
     
 #### off
 
@@ -211,13 +211,13 @@ unregister an event handler
 
 ## Hooks
 
-Uploady provides hooks for all [uploader events](../../core/uploader/README.md#events), as well as a few other useful ones.
+Uploady provides hooks for all [uploader events](https://react-uploady.org/docs/api/events/), as well as a few other useful ones.
 
 ### useBatchAddListener (event hook)
 
 Called when a new batch is added.
 
-> This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
+> This event is _[cancellable](https://react-uploady.org/docs/api/events/#cancellable-events)_
 
 ```javascript
     import { useBatchAddListener } from "@rpldy/uploady";
@@ -235,7 +235,7 @@ Called when a new batch is added.
 
 Called when batch items start uploading
 
-> This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
+> This event is _[cancellable](https://react-uploady.org/docs/api/events/#cancellable-events)_
 
 > This event can be scoped to a specific batch by passing the batch id as a second parameter
 
@@ -383,7 +383,7 @@ Called for batch when all its items have finished uploading or in case the batch
 Called when item starts uploading (just before)
 For grouped uploads (multiple files in same xhr request) ITEM_START is triggered for each item separately
 
-> This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
+> This event is _[cancellable](https://react-uploady.org/docs/api/events/#cancellable-events)_
 
 > This event can be scoped to a specific item by passing the item id as a second parameter
 
@@ -532,9 +532,9 @@ Group will contain a single item unless "grouped" option is set to true.
 
 Handler receives the item(s) in the group and the upload options that were used.
 The handler can change data inside the items and in the options by returning different data than received.
-See simple example below or this more detailed [guide](../../../guides/DynamicParameters.md).
+See simple example below or this more detailed [guide](https://react-uploady.org/docs/guides/DynamicParameters/).
 
-> This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
+> This event is _[cancellable](https://react-uploady.org/docs/api/events/#cancellable-events)_
 
 ```javascript
     import { useRequestPreSend } from "@rpldy/uploady";
@@ -707,7 +707,7 @@ __NOTE!__ This isn't the recommended, or the 'Reacty' way to do things. It is st
 In the future, accessing the internal input may have other consequences related to opting to interact with it directly instead of passing props to the Uploady component.
 
 
-Check out the [Custom Input guide](../../../guides/CustomInput.md) for more details and examples.
+Check out the [Custom Input guide](https://react-uploady.org/docs/guides/CustomInput/) for more details and examples.
 
 ## HOCs
 
@@ -716,7 +716,7 @@ Check out the [Custom Input guide](../../../guides/CustomInput.md) for more deta
 HOC to enable components to interact with the upload data and options just-in-time before the request is sent.
 This is a hatch point to introduce custom logic that may affect the upload data.
 
-A good example use-case for this is applying [crop](../../../guides/Crop.md) to selected image before it is uploaded.
+A good example use-case for this is applying [crop](https://react-uploady.org/docs/guides/Crop/) to selected image before it is uploaded.
 
 When rendering the HOC's output, the id of the batch-item must be provided as a prop. 
 This ensures the HOC only re-renders for a specific item and not for all.
@@ -770,7 +770,7 @@ The id of the batch-item can be obtained from a hook (ex: [useItemStartListener]
     }
 ```
 
-See the [Crop Guide](../../../guides/Crop.md) for a full example.
+See the [Crop Guide](https://react-uploady.org/docs/guides/Crop/) for a full example.
 
 
 ### withBatchStartUpdate
@@ -883,13 +883,13 @@ The id of the batch can be obtained from the [useBatchAddListener](#usebatchaddl
     };
 ```
 
-See the [Multi Crop Guide](../../../guides/MultiCrop.md) for a full example.
+See the [Multi Crop Guide](https://react-uploady.org/docs/guides/MultiCrop/) for a full example.
 
 ## Contribute
 
 Show Uploady your support by giving us a [⭐](https://github.com/rpldy/react-uploady/stargazers).
 
-If you'd like to help Uploady grow & improve, take a look at the [Contributing](../../../CONTRIBUTING.md) doc.
+If you'd like to help Uploady grow & improve, take a look at the [Contributing](https://github.com/rpldy/react-uploady/blob/master/CONTRIBUTING.md) doc.
 
 The [Discussions](https://github.com/rpldy/react-uploady/discussions) page is a great place to ask questions, raise ideas and interact with Uploady maintainer, users and contributors.
 

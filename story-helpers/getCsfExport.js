@@ -17,8 +17,7 @@ export type ExportOptions = {
     parameters?: any
 };
 
-const getCsfExport = (component: ?React$AbstractComponent<any, any>, title: string, readme: any, options: ExportOptions): CsfExport => {
-
+const getCsfExport = (component: ?React$AbstractComponent<any, any>, title: string, Readme: any, options: ExportOptions): CsfExport => {
     if (options.pkg) {
         //we need this coz storybook doesnt pass all the CSF info to the renderLabel function
         window.top._storyToPackage = window.top._storyToPackage || {};
@@ -34,9 +33,10 @@ const getCsfExport = (component: ?React$AbstractComponent<any, any>, title: stri
             viewMode: "story",
 
             //TODO: bring back when https://github.com/storybookjs/storybook/issues/26820 is sorted!
-            // docs: {
-            //     description: { component: readme },
-            // },
+            docs: {
+                // description: { component: readme },
+                page: Readme,
+            },
 
             options: {
                 showPanel: true,

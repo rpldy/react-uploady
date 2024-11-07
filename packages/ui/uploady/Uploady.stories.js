@@ -32,7 +32,7 @@ import Uploady, {
     useRequestPreSend,
     type PreSendData,
 } from "./src";
-import readme from "./README.md";
+import Readme from "./Uploady.storydoc.mdx";
 
 import type { Node } from "react";
 import type { Batch, BatchItem } from "@rpldy/shared";
@@ -754,7 +754,7 @@ export const TEST_CancelOnBatchAdd: UploadyStory = createUploadyStory(
         );
     });
 
-const UploadyStories: CsfExport = getCsfExport(Uploady, "Uploady", readme, {
+const UploadyStories: CsfExport = getCsfExport(Uploady, "Uploady", Readme, {
     pkg: "uploady",
     section: "UI",
 });

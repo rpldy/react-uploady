@@ -10,7 +10,7 @@ import {
 } from "../../../story-helpers";
 import UploadUrlInput from "./src";
 
-import readme from "./README.md";
+import Readme from "./UploadUrlInput.storydoc.mdx";
 import type { Node } from "react";
 
 export const Simple: UploadyStory = createUploadyStory(
@@ -101,7 +101,7 @@ export const WithButtonAndValidate: UploadyStory = createUploadyStory(
         );
     });
 
-const UrlInputStories: CsfExport = getCsfExport(UploadUrlInput, "Upload Url Input", readme, {
+const UrlInputStories: CsfExport = getCsfExport(UploadUrlInput, "Upload Url Input", Readme, {
     pkg: "upload-url-input",
     section: "UI"
 });

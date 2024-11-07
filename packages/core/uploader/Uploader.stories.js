@@ -18,7 +18,7 @@ import {
 } from "../../../story-helpers";
 import createUploader, { UPLOADER_EVENTS } from "./src";
 
-import readme from "./README.md";
+import Readme from "./Uploader.storydoc.mdx";
 import type { UploadyUploaderType } from "./src";
 import type { Node } from "react";
 
@@ -260,7 +260,7 @@ export const UMD_Core: UploadyStory = createUploadyStory(
     );
 });
 
-const uploaderStories: CsfExport = getCsfExport(undefined, "Uploader", readme, {
+const uploaderStories: CsfExport = getCsfExport(undefined, "Uploader", Readme, {
     pkg: "uploader",
     section: "Core",
 });

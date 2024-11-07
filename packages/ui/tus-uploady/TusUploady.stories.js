@@ -22,7 +22,7 @@ import TusUploady, {
     useTusResumeStartListener,
 } from "./src";
 
-import readme from "./README.md";
+import Readme from "./TusUploady.storydoc.mdx";
 import type { Node } from "react";
 
 const AbortButton = () => {
@@ -303,7 +303,7 @@ export const WithResumeStartHandler: UploadyStory = createUploadyStory(
         );
     });
 
-const tusUploadyStories: CsfExport = getCsfExport(TusUploady, "Tus Uploady", readme, {
+const tusUploadyStories: CsfExport = getCsfExport(TusUploady, "Tus Uploady", Readme, {
     pkg: "tus-uploady",
     section: "UI",
     parameters: {

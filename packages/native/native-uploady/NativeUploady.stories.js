@@ -7,7 +7,7 @@ import {
     type UploadyStory
 } from "../../../story-helpers";
 import NativeUploady, { UploadyContext } from "./src";
-import readme from "./README.md";
+import Readme from "./NativeUploady.storydoc.mdx";
 
 import type { Node } from "react";
 
@@ -56,7 +56,7 @@ export const Simple: UploadyStory = createUploadyStory(
         );
     });
 
-const nativeUploadyStories: CsfExport = getCsfExport(NativeUploady, "Native Uploady", readme, {
+const nativeUploadyStories: CsfExport = getCsfExport(NativeUploady, "Native Uploady", Readme, {
     pkg: "native-uploady",
     section: "React-Native"
 });

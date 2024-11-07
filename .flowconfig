@@ -9,6 +9,7 @@
 .*/node_modules/.pnpm/hermes-estree.*/.*
 .*/lib/.*
 
+
 [include]
 ./packages/**/*.js.flow
 
@@ -45,3 +46,4 @@ module.name_mapper='^@rpldy/life-events$' -> '<PROJECT_ROOT>/packages/core/life-
 
 #tricking flow so it doesnt complain about not able to import README files in storybook
 module.name_mapper='README.md$' -> '<PROJECT_ROOT>/node_modules/react/index.js'
+module.name_mapper='.*storydoc.mdx$' -> '<PROJECT_ROOT>/node_modules/react/index.js'

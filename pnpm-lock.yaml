@@ -781,8 +781,8 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
       react-image-crop:
-        specifier: ^11.0.1
-        version: 11.0.6(react@18.3.1)
+        specifier: ^11.0.7
+        version: 11.0.7(react@18.3.1)
       styled-components:
         specifier: ^6.0.7
         version: 6.1.12(react-dom@18.3.1)(react@18.3.1)
@@ -11884,8 +11884,8 @@ packages:
       react: 18.3.1
     dev: true
 
-  /react-image-crop@11.0.6(react@18.3.1):
-    resolution: {integrity: sha512-T+/RPBhwFxdf8PjD/uoWk+tBkS0Xf2XW0lY5mnsmClvnAujO81EEjDwj0M2pcHX3seXVgKOr/yIiL+Sx4evMNw==}
+  /react-image-crop@11.0.7(react@18.3.1):
+    resolution: {integrity: sha512-ZciKWHDYzmm366JDL18CbrVyjnjH0ojufGDmScfS4ZUqLHg4nm6ATY+K62C75W4ZRNt4Ii+tX0bSjNk9LQ2xzQ==}
     peerDependencies:
       react: '>=16.13.1'
     dependencies:

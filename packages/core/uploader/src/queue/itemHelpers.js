@@ -23,6 +23,10 @@ const finalizeItem = (queue: QueueState, id: string, delItem: boolean = false) =
         if (~activeIndex) {
             state.activeIds.splice(activeIndex, 1);
         }
+
+        if (batchId && state.batches[batchId].itemBatchOptions[id]) {
+            delete state.batches[batchId].itemBatchOptions[id];
+        }
     });
 };
 

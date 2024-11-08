@@ -4,6 +4,7 @@ import createMockSender from "../mockSender";
 
 describe("mockSender tests", () => {
     const onProgress = vi.fn();
+    const url = "http://test.com";
 
     beforeEach(() => {
         vi.useFakeTimers();
@@ -30,7 +31,7 @@ describe("mockSender tests", () => {
             sender.update(updatedOptions);
         }
 
-        const result = sender.send(sentItems, null, sendOptions, !noProgressCb && onProgress);
+        const result = sender.send(sentItems, url, sendOptions, !noProgressCb && onProgress);
 
         if (abort) {
             vi.advanceTimersByTime(100);
@@ -70,6 +71,8 @@ describe("mockSender tests", () => {
         expect(onProgress.mock.calls[0][0].loaded).toBeCloseTo(0.6, 0.01);
 
         expect(result.state).toBe(FILE_STATES.FINISHED);
+
+        expect(response.url).toBe(url);
     });
 
     it("should not emit progress events with 0 delay", async () => {

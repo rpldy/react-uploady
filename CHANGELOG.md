@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.9.0-rc.0 (2024-11-04)
+
+### Features
+
+- `[mock-sender]` - feat: include url in mock-sender response data 
+  
+### Bug fixes
+
+- `[chunked-uploady]` - fix: prevent pollution batch options in requestPreSend. Fix for [#758](https://github.com/rpldy/react-uploady/issues/758)
+- `[upload-paste]` - fix: typings for usePasteUpload hook
+
+### Docs
+
+- `[uploader]` - readme improvements
+- `docs` - readme: add new contributor
+
+### Internal
+
+- `all` - upgrade several dev deps
+
+
 ## 1.8.3 (2024-08-19)
 
 ### Bug fixes

@@ -31,14 +31,14 @@ On-progress events and abort functionality are supported
 
 ## Options
 
-| Name (* = mandatory) | Type                                           | Default                         | Description                                                                                                                 |
-|----------------------|------------------------------------------------|---------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| delay                | number                                         | 500                             | time in ms for mocked upload to take                                                                                        |
-| fileSize             | number                                         | undefined                       | file size of the mocked upload, used for progress calculation, by default, the actual file size, if available, will be used | 
-| progressIntervals    | number[]                                       | [10, 25, 50, 75, 90]            | mock intervals (percentages) to emit progress events at                                                                     |
-| response             | any                                            | {"mock": true, "success": true} | mock response for upload request                                                                                            |
-| responseStatus       | number                                         | 200                             | upload request status code                                                                                                  |
-| isSuccessfulCall     | [IsSuccessfulCall](../shared/src/types.js#L42) | undefined                       | callback to use to decide whether upload response is succssful or not                                                       |
+| Name (* = mandatory) | Type                                                                           | Default                         | Description                                                                                                                 |
+|----------------------|--------------------------------------------------------------------------------|---------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| delay                | number                                                                         | 500                             | time in ms for mocked upload to take                                                                                        |
+| fileSize             | number                                                                         | undefined                       | file size of the mocked upload, used for progress calculation, by default, the actual file size, if available, will be used | 
+| progressIntervals    | number[]                                                                       | [10, 25, 50, 75, 90]            | mock intervals (percentages) to emit progress events at                                                                     |
+| response             | any                                                                            | {"mock": true, "success": true} | mock response for upload request                                                                                            |
+| responseStatus       | number                                                                         | 200                             | upload request status code                                                                                                  |
+| isSuccessfulCall     | [IsSuccessfulCall](https://react-uploady.org/docs/api/types/#issuccessfulcall) | undefined                       | callback to use to decide whether upload response is succssful or not                                                       |
 
 ## Usage
 

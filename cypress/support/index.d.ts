@@ -4,7 +4,7 @@ type PATTERN_MATCH = { index: number };
 
 declare namespace Cypress {
     interface StoryLog {
-        assertFileItemStartFinish: (fileName: string, startIndex?: number) => void;
+        assertFileItemStartFinish: (fileName: string, startIndex?: number, after?: boolean) => void;
         assertUrlItemStartFinish: (fileName: string, startIndex?: number) => void;
         assertLogEntryCount: (count: number, obj: any) => void;
         assertLogEntryContains: (index: number, obj: any) => void;
@@ -14,9 +14,25 @@ declare namespace Cypress {
         resetStoryLog: () => void;
     }
 
+    type StoryOptions = {
+        canvas?: boolean;
+        useMock?: boolean;
+        multiple?: boolean;
+        group?: boolean;
+        uploadUrl?: boolean;
+        chunkSize?: number;
+        mockDelay?: boolean;
+        tusResumeStorage?: boolean;
+        uploadParams?: Record<string, unknown>;
+        tusSendOnCreate?: boolean;
+        tusIgnoreModifiedDateInStorage?: boolean;
+        tusSendWithCustomHeader?: boolean;
+        customArgs?: Record<string, any>;
+    };
+
     interface Chainable {
         storyLog: () => StoryLog,
-        visitStory: (component: string, storyName: string, options?: { canvas?: boolean, useMock?: boolean, uploadUrl?: boolean }) => void;
+        visitStory: (component: string, storyName: string, options?: StoryOptions) => void;
         pasteFile: (fixtureName: string, times?: number, mimeType?: string) => Chainable;
         setUploadOptions: (options: Object) => void;
         setPreSendOptions: (options: Object) => void;

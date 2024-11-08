@@ -11,7 +11,6 @@ import {
 //Tests in this spec rely on mock sender config progress intervals to be at 10% increments
 describe("MockSender - Progress", () => {
     const fileName = "flower.jpg";
-    const fileName2 = "sea.jpg";
 
     const loadStory = () =>
         cy.visitStory(

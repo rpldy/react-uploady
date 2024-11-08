@@ -19,7 +19,7 @@ By default, will present a preview of the file being uploaded in case its an ima
 
 <p align="center">
     <a href="https://www.buymeacoffee.com/yoav"> 
-        <img width="540" alt="uploady-buy-me-coffee" src="https://github.com/rpldy/react-uploady/assets/1102278/c6de6710-1c93-47a5-85fa-1af7170907f8">
+        <img width="700" alt="uploady-buy-me-coffee" src="https://github.com/rpldy/react-uploady/assets/1102278/c6de6710-1c93-47a5-85fa-1af7170907f8">
     </a>
 </p>
 
@@ -35,19 +35,19 @@ By default, will present a preview of the file being uploaded in case its an ima
 
 ## Props
 
-| Name (* = mandatory)    | Type                                              | Default                                | Description                                                                                            | 
-|-------------------------|---------------------------------------------------|----------------------------------------|--------------------------------------------------------------------------------------------------------|
-| loadFirstOnly           | boolean                                           | false                                  | load preview only for the first item in a batch                                                        |
-| maxPreviewImageSize     | number                                            | 2e+7                                   | maximum size of image to preview                                                                       |
-| maxPreviewVideoSize     | number                                            | 1e+8                                   | maximum size of video to preview                                                                       |
-| fallbackUrl             | string &#124; [FallbackMethod](src/types.js#L16)  | undefined                              | static URL or function that returns fallback in case failed to load preview or when file over max size |
-| imageMimeTypes          | string[]                                          | [see list below](#default-image-types) | image mime types to load preview for                                                                   |
-| videoMimeTypes          | string[]                                          | [see list below](#default-video-types) | video mime types to load preview for                                                                   |
-| previewComponentProps   | [PreviewComponentPropsOrMethod](src/types.js#L18) | undefined                              | object or function to generate object as additional props for the preview component                    |
-| PreviewComponent        | React.ComponentType&lt;any&gt;                    | img &#124; video                       | The component that will show the preview                                                               |
-| rememberPreviousBatches | boolean                                           | false                                  | show previous batches' previews as opposed to just the last                                            |
-| previewMethodsRef       | React Ref                                         | undefined                              | ref will be set with preview helper [methods](src/types.js#L39)                                        |
-| onPreviewsChanged       | (PreviewItem[]) => void                           | undefined                              | callback will be called whenever preview items array changes                                           |
+| Name (* = mandatory)    | Type                                                                                      | Default                                | Description                                                                                             | 
+|-------------------------|-------------------------------------------------------------------------------------------|----------------------------------------|---------------------------------------------------------------------------------------------------------|
+| loadFirstOnly           | boolean                                                                                   | false                                  | load preview only for the first item in a batch                                                         |
+| maxPreviewImageSize     | number                                                                                    | 2e+7                                   | maximum size of image to preview                                                                        |
+| maxPreviewVideoSize     | number                                                                                    | 1e+8                                   | maximum size of video to preview                                                                        |
+| fallbackUrl             | string &#124; [FallbackMethod](https://react-uploady.org/docs/api/types/#previewoptions)  | undefined                              | static URL or function that returns fallback in case failed to load preview or when file over max size  |
+| imageMimeTypes          | string[]                                                                                  | [see list below](#default-image-types) | image mime types to load preview for                                                                    |
+| videoMimeTypes          | string[]                                                                                  | [see list below](#default-video-types) | video mime types to load preview for                                                                    |
+| previewComponentProps   | [PreviewComponentPropsOrMethod](https://react-uploady.org/docs/api/types/#previewoptions) | undefined                              | object or function to generate object as additional props for the preview component                     |
+| PreviewComponent        | React.ComponentType&lt;any&gt;                                                            | img &#124; video                       | The component that will show the preview                                                                |
+| rememberPreviousBatches | boolean                                                                                   | false                                  | show previous batches' previews as opposed to just the last                                             |
+| previewMethodsRef       | React Ref                                                                                 | undefined                              | ref will be set with preview helper [methods](https://react-uploady.org/docs/api/types/#previewoptions) |
+| onPreviewsChanged       | (PreviewItem[]) => void                                                                   | undefined                              | callback will be called whenever preview items array changes                                            |
 
 ## Usage
 
@@ -69,7 +69,7 @@ export const App = () => (
 The props _rememberPreviousBatches_, _previewMethodsRef_, and _onPreviewsChanged_ make it possible to do more with previews.
 Specifically, the make it possible to create a visual queue of the uploads.
 
-This is especially useful when adding other features such as abort and [retry](../core/retry-hooks).   
+This is especially useful when adding other features such as abort and [retry](https://react-uploady.org/docs/packages/rpldy-retry-hooks/).   
 
 The code below shows how to clear the previews with a button click:
 
@@ -161,13 +161,13 @@ For an example of using a custom preview component see [this story](https://reac
 
 ### Custom Batch Items Method
 
-The default way the UploadPreview component learns which items to show previews for is done by internally using the [useBatchStartListener](../uploady/README.md#usebatchstartlistener-event-hook) hook.
+The default way the UploadPreview component learns which items to show previews for is done by internally using the [useBatchStartListener](https://react-uploady.org/docs/api/hooks/useBatchStartListener/) hook.
 This means that for a batch that hasn't started uploading, because a previous batch hasn't finished or when `autoUpload = false`, the previews for the next batch will not be shown.
 
-If there's a different event (or one completely custom) you want to listen to, for example: the [useBatchAddListener](../uploady/README.md#usebatchaddlistener-event-hook) hook, you can do that with `getUploadPreviewForBatchItemsMethod`.
+If there's a different event (or one completely custom) you want to listen to, for example: the [useBatchAddListener](https://react-uploady.org/docs/api/hooks/useBatchAddListener/) hook, you can do that with `getUploadPreviewForBatchItemsMethod`.
 With useBatchAddListener, the previews will be shown even for batches that hadn't started to upload yet.
 
-This method expects a hook method as a parameter that will return a [batch](../../../README.md#batch)(-like) object with a `items` property as an array of [BatchItem](../../../README.md#batchitem)s.
+This method expects a hook method as a parameter that will return a [batch](https://react-uploady.org/docs/api/entities/#batch)(-like) object with a `items` property as an array of [BatchItem](https://react-uploady.org/docs/api/entities/#batchitem)s.
 It returns a UploadPreview component that will use the custom hook method to learn about the items to preview.
 
 Below is an example of how to use it:
@@ -225,7 +225,7 @@ const PreviewDataCustomerViewer = () => {
 };
 ```
 
-The hook receives [PreviewOptions](src/types.js#L46) and can also be called without any param.  
+The hook receives [PreviewOptions](https://react-uploady.org/docs/api/types/#previewoptions) and can also be called without any param.  
 
 ## Default image types
 

@@ -1,17 +1,20 @@
 import dropFile from "../dropFile";
-import { WAIT_X_SHORT } from "../../constants";
 
 describe("UploadDropZone - Simple", () => {
     const fileName = "flower.jpg";
 
     const loadStory = () =>
-        cy.visitStory("uploadDropZone", "with-third-party-drop-zone&knob-mock send delay_Upload Destination=100");
+        cy.visitStory(
+            "uploadDropZone",
+            "with-third-party-drop-zone",
+            { mockDelay: 100 }
+        );
 
     it("should upload dropped file using 3rd party dnd library", () => {
         loadStory();
 
         dropFile(fileName, () => {
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });
@@ -23,7 +26,7 @@ describe("UploadDropZone - Simple", () => {
         cy.setUploadOptions({ userData: { test} });
 
         dropFile(fileName, () => {
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             const assertEventData = (event) =>

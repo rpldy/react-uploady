@@ -1,6 +1,5 @@
 import uploadFile from "../uploadFile";
 import intercept from "../intercept";
-import { WAIT_LONG } from "../../constants";
 
 describe("TusUploady - Send Data", () => {
     const fileName = "flower.jpg";
@@ -8,8 +7,15 @@ describe("TusUploady - Send Data", () => {
     before(() => {
         cy.visitStory(
             "tusUploady",
-            "simple&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true&knob-ignore modifiedDate in resume storage_Upload Settings=true&knob-send data on create_Upload Settings=true",
-            { useMock: false, uploadUrl: "http://test.tus.com/upload" }
+            "simple",
+            {
+                uploadUrl: "http://test.tus.com/upload",
+                chunkSize: 200000,
+                uploadParams: { foo: "bar" },
+                tusResumeStorage: true,
+                tusIgnoreModifiedDateInStorage: true,
+                tusSendOnCreate: true,
+            }
         );
     });
 
@@ -33,7 +39,7 @@ describe("TusUploady - Send Data", () => {
             .as("fInput");
 
         uploadFile(fileName, () => {
-            cy.wait(WAIT_LONG);
+            cy.waitMedium();
 
             cy.storyLog()
                 .assertFileItemStartFinish(fileName, 1)

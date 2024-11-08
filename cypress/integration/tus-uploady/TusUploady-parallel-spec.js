@@ -1,6 +1,5 @@
 import uploadFile from "../uploadFile";
 import intercept from "../intercept";
-import { WAIT_MEDIUM } from "../../constants";
 
 describe("TusUploady - Parallel", () => {
     const fileName = "flower.jpg";
@@ -8,8 +7,14 @@ describe("TusUploady - Parallel", () => {
     before(() => {
         cy.visitStory(
             "tusUploady",
-            "with-tus-concatenation&knob-multiple files_Upload Settings=true&knob-chunk size (bytes)_Upload Settings=200000&knob-forget on success_Upload Settings=&knob-params_Upload Destination={\"foo\":\"bar\"}&knob-enable resume (storage)_Upload Settings=true",
-            { useMock: false, uploadUrl: "http://test.tus.com/upload" }
+            "with-tus-concatenation",
+            {
+                useMock: false,
+                uploadUrl: "http://test.tus.com/upload",
+                chunkSize: 200000,
+                tusResumeStorage: true,
+                uploadParams: { foo: "bar" },
+            }
         );
     });
 
@@ -45,7 +50,7 @@ describe("TusUploady - Parallel", () => {
             .as("fInput");
 
         uploadFile(fileName, () => {
-            cy.wait(WAIT_MEDIUM);
+            cy.waitMedium();
 
             cy.storyLog()
                 .assertFileItemStartFinish(fileName, 1)

@@ -18,7 +18,7 @@ An Uploady sender implementation of the TUS protocol.
 
 Supports version 1.0.0 of the [TUS protocol](https://tus.io/protocols/resumable-upload.html)
 
-Under the hood, the tus-sender uses the [@rpldy/chunked-sender](../chunked-sender) to upload the files as chunks 
+Under the hood, the tus-sender uses the [@rpldy/chunked-sender](https://react-uploady.org/docs/packages/rpldy-chunked-sender/) to upload the files as chunks 
 
 **The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
@@ -61,7 +61,7 @@ It also supports the __Upload-Metadata__ header and will turn the destination/up
 | ignoreModifiedDateInStorage | boolean                   | false           | ignore File's modified date when creating key for storage                                                              |
 | resumeHeaders               | Record<string, string>    | null            | Headers to use for the resume check (HEAD) request                                                                     |
 
-> All of the [chunked-sender options](../chunked-sender#options) are supported with this sender
+> All of the [chunked-sender options](https://react-uploady.org/docs/api/senders/mockSender/#options) are supported with this sender
 
 > When the chunked-sender parallel param is set to > 1, the Concatenation tus extension will be used.
 >It will send the chunks as different parallel requests that are finalized once done.
@@ -138,12 +138,12 @@ export const App = () => {
 ## Events
 
 The TUS Sender exposes a RESUME_START event.
-See [uploader events](../uploader/README.md#events) section on more info regarding how to register for events.
+See [uploader events](https://react-uploady.org/docs/api/events/) section on more info regarding how to register for events.
 
 ### TUS_EVENTS.RESUME_START
 
 Triggered before the (HEAD) request is issued on behalf of a potentially resumeable upload.
 
-> This event is _[cancellable](../uploader/README.md#cancellable-events)_
+> This event is _[cancellable](https://react-uploady.org/docs/api/events/#cancellable-events)_
 
-The event handler receives a [ResumeStartEventData](./src/types.js#L58) object 
+The event handler receives a [ResumeStartEventData](https://react-uploady.org/docs/api/types/#resumestarteventdata) object 

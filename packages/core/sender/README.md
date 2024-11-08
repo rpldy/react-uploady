@@ -11,7 +11,7 @@
 
 # Sender
 
-The default XHR sender of the [uploader](../uploader).
+The default XHR sender of the [uploader](https://react-uploady.org/docs/packages/rpldy-uploader/).
 
 **The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 

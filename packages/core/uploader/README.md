@@ -23,20 +23,20 @@
 
 # Uploader
 
-The Uploader is the processing and queuing engine for React-Uploady.
+The Uploader is the processing and queuing engine for React-Uploady, written in vanilla javascript.
 When files are handed to the Uploader, it will represent each file as a Batch Item and group them together in Batches.
 This is for the most part internal to the uploading mechanism. 
 
 The Uploader fires Batch & BatchItem lifecycle [events](#events) that can be registered to. 
 Some of these events also allow to cancel uploads dynamically. 
 
-_If you're looking to integrate file upload with your React app, you'd probably want to head over to the [@rpldy/uploady README](../ui/uploady).
+> If you're building a React app and want to add file-upload capabilities, you'd probably want to head over to the [@rpldy/uploady README](https://react-uploady.org/docs/api/).
 
 **The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 <p align="center">
     <a href="https://www.buymeacoffee.com/yoav"> 
-        <img width="540" alt="uploady-buy-me-coffee" src="https://github.com/rpldy/react-uploady/assets/1102278/c6de6710-1c93-47a5-85fa-1af7170907f8">
+        <img width="700" alt="uploady-buy-me-coffee" src="https://github.com/rpldy/react-uploady/assets/1102278/c6de6710-1c93-47a5-85fa-1af7170907f8">
     </a>
 </p>
 
@@ -77,7 +77,7 @@ uploader.add(myFile);
 | Name (* = mandatory)   | Type                                                                                                 | Default       | Description                                                                                                                                                         |  
 |------------------------|------------------------------------------------------------------------------------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | autoUpload             | boolean                                                                                              | true          | automatically upload files when they are added                                                                                                                      | 
-| destination            | [Destination](../shared/src/types.js#L7)                                                             | undefined     | configure the end-point to upload to                                                                                                                                |
+| destination            | [Destination](https://react-uploady.org/docs/api/types/#destination)                                 | undefined     | configure the end-point to upload to                                                                                                                                |
 | inputFieldName         | string                                                                                               | "file"        | name (attribute) of the file input field (requires sendWithFormData = true)                                                                                         |
 | grouped                | boolean                                                                                              | false         | group multiple files in a single request                                                                                                                            |
 | maxGroupSize           | number                                                                                               | 5             | maximum of files to group together in a single request                                                                                                              | 
@@ -87,15 +87,15 @@ uploader.add(myFile);
 | params                 | Object                                                                                               | undefined     | collection of params to pass along with the upload (requires sendWithFormData = true)                                                                               |
 | forceJsonResponse      | boolean                                                                                              | false         | parse server response as JSON even if no JSON content-type header received                                                                                          |
 | withCredentials        | boolean                                                                                              | false         | set XHR withCredentials to true                                                                                                                                     |
-| enhancer               | [UploaderEnhancer](../uploader/src/types.js#L37)                                                     | undefined     | uploader [enhancer](../../../README.md#enhancer) function                                                                                                           |
+| enhancer               | [UploaderEnhancer](https://react-uploady.org/docs/api/types/#uploaderenhancer)                       | undefined     | uploader [enhancer](https://react-uploady.org/docs/api/types/#uploaderenhancer) function                                                                            |
 | concurrent             | boolean                                                                                              | false         | issue multiple upload requests simultaneously                                                                                                                       |
 | maxConcurrent          | number                                                                                               | 2             | maximum allowed simultaneous requests                                                                                                                               |
-| send                   | [SendMethod](../sender/src/types.js#L38)                                                             | @rpldy/sender | how to send files to the server                                                                                                                                     |
+| send                   | [SendMethod](https://react-uploady.org/docs/api/types/#sendmethod)                                   | @rpldy/sender | how to send files to the server                                                                                                                                     |
 | sendWithFormData       | boolean                                                                                              | true          | upload is sent as part of [formdata](https://developer.mozilla.org/en-US/docs/Web/API/FormData) - when true, additional params can be sent along with uploaded data |
-| formatServerResponse   | [FormatServerResponseMethod](../shared/src/types.js#L40)                                             | undefined     | function to create the batch item's uploadResponse from the raw xhr response                                                                                        |
+| formatServerResponse   | [FormatServerResponseMethod](https://react-uploady.org/docs/api/types/#formatserverresponsemethod)   | undefined     | function to create the batch item's uploadResponse from the raw xhr response                                                                                        |
 | formDataAllowUndefined | boolean                                                                                              | false         | whether to include params with undefined value                                                                                                                      |
 | clearPendingOnAdd      | boolean                                                                                              | false         | whether to clear pending batch(es) when a new one is added                                                                                                          |
-| isSuccessfulCall       | [IsSuccessfulCall](../shared/src/types.js#L42)                                                       | undefined     | callback to use to decide whether upload response is succssful or not                                                                                               |
+| isSuccessfulCall       | [IsSuccessfulCall](https://react-uploady.org/docs/api/types/#issuccessfulcall)                       | undefined     | callback to use to decide whether upload response is succssful or not                                                                                               |
 | fastAbortThreshold     | number                                                                                               | 100           | the pending/active item count threshold from which to start using the performant abort mechanism                                                                    |
 | userData               | any                                                                                                  | undefined     | metadata set by the user and isn't used by the upload process in any way, provided as a convenience to pass data around                                             |
 
@@ -148,18 +148,18 @@ and were not sent to upload yet.
 
 ### on 
 
-_[OnAndOnceMethod](../life-events/src/types.js#29)_
+_[OnAndOnceMethod](https://react-uploady.org/docs/api/types/#onandoncemethod)_
 
 register an event handler
 
 ### once 
 
-_[OnAndOnceMethod](../life-events/src/types.js#29)_
+_[OnAndOnceMethod](https://react-uploady.org/docs/api/types/#onandoncemethod)_
 
 register an event handler that will be called only once
 
 ### off
-_[OffMethod](../life-events/src/types.js#27)_
+_[OffMethod](https://react-uploady.org/docs/api/types/#offmethod)_
 
 unregister an existing event handler
     
@@ -167,7 +167,7 @@ unregister an existing event handler
 
 _(name: any, Object) => void_
 
-Extensions can only be registered by [enhancers](../../README.md#enhancer).
+Extensions can only be registered by [enhancers](https://react-uploady.org/docs/getting-started/concepts/#enhancer).
 If registerExtension is called outside an enhancer, an error will be thrown
 Name must be unique. If not, an error will be thrown
 
@@ -306,7 +306,7 @@ Group will contain a single item unless "grouped" option is set to true.
 
 Handler receives the item(s) in the group and the upload options that were used.
 The handler can change data inside the items and in the options by returning different data than received.
-See this [guide](../../../guides/DynamicParameters.md) for more details.
+See this [guide](https://react-uploady.org/docs/guides/DynamicParameters/) for more details.
 
 - Parameters: _(items, options)_
 

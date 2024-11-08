@@ -18,7 +18,7 @@ A user pasting (ctrl/cmd+v) a file or files while focused on the element will tr
 
 <p align="center">
     <a href="https://www.buymeacoffee.com/yoav"> 
-        <img width="540" alt="uploady-buy-me-coffee" src="https://github.com/rpldy/react-uploady/assets/1102278/c6de6710-1c93-47a5-85fa-1af7170907f8">
+        <img width="700" alt="uploady-buy-me-coffee" src="https://github.com/rpldy/react-uploady/assets/1102278/c6de6710-1c93-47a5-85fa-1af7170907f8">
     </a>
 </p>
 
@@ -38,18 +38,18 @@ _withPasteUpload(ComponentType<any>) => React.FC<PasteProps>_
 
 ### PasteProps
 
-| Name (* = mandatory) | Type          | Default       | Description|
-| --------------       | ------------- | ------------- | -------------|
-| id             | string            | undefined | id attribute to pass to the button element|
-| className      | string            | undefined | the class attribute to pass to the button element|
-| children       | React.Node        | undefined | child element(s) to render inside the button (replaces text)|
-| extraProps     | Object            | undefined | any other props to pass to the wrapped component (with spread)|
-| ref            | React ref         | undefined | will be passed to the button element to acquire a ref|
-| onPasteUpload  | [PasteUploadHandler](src/types.js#L8) | undefined | function called when paste to upload occurs|
+| Name (* = mandatory) | Type                                                                               | Default   | Description                                                    |
+|----------------------|------------------------------------------------------------------------------------|-----------|----------------------------------------------------------------|
+| id                   | string                                                                             | undefined | id attribute to pass to the button element                     |
+| className            | string                                                                             | undefined | the class attribute to pass to the button element              |
+| children             | React.Node                                                                         | undefined | child element(s) to render inside the button (replaces text)   |
+| extraProps           | Object                                                                             | undefined | any other props to pass to the wrapped component (with spread) |
+| ref                  | React ref                                                                          | undefined | will be passed to the button element to acquire a ref          |
+| onPasteUpload        | [PasteUploadHandler](https://react-uploady.org/docs/api/types/#pasteuploadhandler) | undefined | function called when paste to upload occurs                    |
 
-In addition, most [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to the component returned from calling withPasteUpload.
+In addition, most [UploadOptions](https://react-uploady.org/docs/api/types/#uploadoptions) props can be passed to the component returned from calling withPasteUpload.
 In order to override configuration passed to the parent Uploady component.
-See [Uploady documentation](../uploady#props) for detailed list of upload options.
+See [Uploady documentation](https://react-uploady.org/docs/api/#props) for detailed list of upload options.
 
 ## Example
 

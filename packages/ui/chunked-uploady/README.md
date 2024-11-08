@@ -11,17 +11,17 @@
 
 # Chunked Uploady
 
-This package is provided as a convenient alternative to the main [Uploady](../uploady) package. 
+This package is provided as a convenient alternative to the main [Uploady](https://react-uploady.org/docs/api/) package. 
 To be used in case chunked upload is required.
 
 The server that is accepting the upload must also support chunked uploads. 
 The original file is broken down into smaller blobs, which are sent in different requests. 
 Each request is sent with the _Content-Range_ header to specify the bytes range.
 
-Internally, _ChunkedUploady_ uses [@rpldy/chunked-sender](../../core/chunked-sender) instead of the default sender.
+Internally, _ChunkedUploady_ uses [@rpldy/chunked-sender](https://react-uploady.org/docs/api/senders/chunkedSender/) instead of the default sender.
 
-_Chunked-Sender_, doesn't support grouped uploads (see Upload Options [documentation](../uploady#props)) or URL uploading. 
-These will be handed over to the default [@rpldy/sender](../../core/sender).
+_Chunked-Sender_, doesn't support grouped uploads (see Upload Options [documentation](https://react-uploady.org/docs/api/#props)) or URL uploading. 
+These will be handed over to the default [@rpldy/sender](https://react-uploady.org/docs/api/senders/xhrSender/).
 
 In case the browser doesn't support chunking (blob slicing), the default sender will be used as well.
 
@@ -29,7 +29,7 @@ In case the browser doesn't support chunking (blob slicing), the default sender 
 
 <p align="center">
     <a href="https://www.buymeacoffee.com/yoav"> 
-        <img width="540" alt="uploady-buy-me-coffee" src="https://github.com/rpldy/react-uploady/assets/1102278/c6de6710-1c93-47a5-85fa-1af7170907f8">
+        <img width="700" alt="uploady-buy-me-coffee" src="https://github.com/rpldy/react-uploady/assets/1102278/c6de6710-1c93-47a5-85fa-1af7170907f8">
     </a>
 </p>
 
@@ -47,16 +47,16 @@ In case the browser doesn't support chunking (blob slicing), the default sender 
 
 ## Props
 
-| Name (* = mandatory) | Type          | Default       | Description | 
-| --------------       | ------------- | ------------- | ------------|
-| chunked               | boolean       | true          | chunk uploads. setting to false will return to default sending behavior|
-| chunkSize             | number        | 5242880      | the chunk size. relevant when uploaded file is larger than the value|
-| retries               | number        | 0             | how many times to retry sending a failed chunk|
-| parallel              | number        | 0             | how many (chunk) requests to send simultaneously|
+| Name (* = mandatory) | Type    | Default | Description                                                             | 
+|----------------------|---------|---------|-------------------------------------------------------------------------|
+| chunked              | boolean | true    | chunk uploads. setting to false will return to default sending behavior |
+| chunkSize            | number  | 5242880 | the chunk size. relevant when uploaded file is larger than the value    |
+| retries              | number  | 0       | how many times to retry sending a failed chunk                          |
+| parallel             | number  | 0       | how many (chunk) requests to send simultaneously                        |
 
-In addition, all [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to ChunkedUploady.
+In addition, all [UploadOptions](https://react-uploady.org/docs/api/types/#uploadoptions) props can be passed to ChunkedUploady.
 In order to override configuration passed to the parent Uploady component. 
-See [Uploady documentation](../uploady#props) for detailed list of upload options.   
+See [Uploady documentation](https://react-uploady.org/docs/api/#props) for detailed list of upload options.   
 
 ## Hooks
 
@@ -66,7 +66,7 @@ Chunked Uploady provides hooks for chunk life-time events:
 
 Called when a chunk is about to be sent to the server
 
-> This event is _[cancellable](../../core/uploader/README.md#cancellable-events)_
+> This event is _[cancellable](https://react-uploady.org/docs/api/events/#cancellable-events)_
 
 ```javascript
 import { useChunkStartListener } from "@rpldy/chunked-uploady";

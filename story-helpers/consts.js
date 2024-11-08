@@ -1,8 +1,3 @@
-export const KNOB_GROUPS = {
-    DESTINATION: "Upload Destination",
-    SETTINGS: "Upload Settings",
-};
-
 
 export const DESTINATION_TYPES = {
     "mock": "mock",
@@ -17,3 +12,5 @@ export const UMD_NAMES = {
     "CORE_CHUNKED_UI": "CORE_CHUNKED_UI",
     "ALL": "ALL",
 }
+
+export const DEFAULT_CHUNK_SIZE = 524_288; //~500KB

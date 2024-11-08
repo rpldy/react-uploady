@@ -21,7 +21,7 @@ import {
     type UploadyStory,
     type UploadyStoryParams,
 } from "../../../story-helpers";
-import readme from "./README.md";
+import Readme from "./ChunkedUploady.storydoc.mdx";
 
 import type { Node } from "react";
 
@@ -215,7 +215,7 @@ export const UMD_CoreChunkedUI: UploadyStory = createUploadyStory(
         );
     });
 
-const chunkedUploadyStories: CsfExport = getCsfExport(ChunkedUploady, "Chunked Uploady", readme, {
+const chunkedUploadyStories: CsfExport = getCsfExport(ChunkedUploady, "Chunked Uploady", Readme, {
     pkg: "chunked-uploady",
     section: "UI",
     parameters: {

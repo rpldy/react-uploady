@@ -38,7 +38,7 @@ import UploadPreview, {
     getPreviewsLoaderHook,
     PREVIEW_TYPES,
 } from "./src";
-import readme from "./README.md";
+import Readme from "./UploadPreview.storydoc.mdx";
 
 import type { Batch, BatchItem } from "@rpldy/shared";
 import type { UploaderCreateOptions } from "@rpldy/uploader";
@@ -50,8 +50,6 @@ import type {
 } from "./src";
 
 type StateSetter<T> = ((T => ?T) | ?T) => void;
-
-// type CropData = { height: number, width: number, x: number, y: number };
 
 const StyledUploadButton = styled(UploadButton)`
 	${uploadButtonCss}
@@ -983,7 +981,7 @@ export const WithPreviewsLoaderHook: UploadyStory = createUploadyStory(
         );
     });
 
-const previewStories: CsfExport = getCsfExport(UploadPreview, "Upload Preview", readme, {
+const previewStories: CsfExport = getCsfExport(UploadPreview, "Upload Preview", Readme, {
     pkg: "upload-preview",
     section: "UI",
     args: {

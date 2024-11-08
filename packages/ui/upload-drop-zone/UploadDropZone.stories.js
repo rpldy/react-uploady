@@ -29,7 +29,7 @@ import {
     type CsfExport,
     type UploadyStory,
 } from "../../../story-helpers";
-import readme from "./README.md";
+import Readme from "./UploadDropZone.storydoc.mdx";
 
 import type { Node, Ref } from "react";
 import type { UploadButtonProps } from "@rpldy/upload-button";
@@ -517,7 +517,7 @@ export const WithChildElement: UploadyStory = createUploadyStory(
         );
     });
 
-const dropzoneStories: CsfExport = getCsfExport(UploadDropZone, "Upload Drop Zone", readme, {
+const dropzoneStories: CsfExport = getCsfExport(UploadDropZone, "Upload Drop Zone", Readme, {
     pkg: "upload-drop-zone",
     section: "UI",
 });

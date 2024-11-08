@@ -13,7 +13,7 @@ import {
     type UploadyStory,
 } from "../../../story-helpers";
 import withPasteUpload, { usePasteUpload } from "./src";
-import readme from "./README.md";
+import Readme from "./UploadPaste.storydoc.mdx";
 
 import type { Node } from "react";
 import type { UploadOptions } from "@rpldy/shared";
@@ -218,7 +218,7 @@ export const WithPasteUploadButton: UploadyStory = createUploadyStory(
         );
     });
 
-const uploadPasteStories: CsfExport = getCsfExport(undefined, "Upload Paste", readme, {
+const uploadPasteStories: CsfExport = getCsfExport(undefined, "Upload Paste", Readme, {
     pkg: "upload-paste",
     section: "UI"
 });

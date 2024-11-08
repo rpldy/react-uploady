@@ -12,7 +12,7 @@ import {
     type UploadyStory,
 } from "../../../story-helpers";
 import getChunkedEnhancer, { CHUNK_EVENTS } from "./src";
-import readme from "./README.md";
+import Readme from "./ChunkedSender.storydoc.mdx";
 
 export const WithChunkedSender: UploadyStory = createUploadyStory(
     ({ destination, chunkSize }): Node => {
@@ -86,7 +86,7 @@ export const WithChunkedSender: UploadyStory = createUploadyStory(
         );
     });
 
-const chunkedSenderStories: CsfExport = getCsfExport(undefined, "Chunked Sender", readme, {
+const chunkedSenderStories: CsfExport = getCsfExport(undefined, "Chunked Sender", Readme, {
     pkg: "chunked-sender",
     section: "Core",
     parameters: {

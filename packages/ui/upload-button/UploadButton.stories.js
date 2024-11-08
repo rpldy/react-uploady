@@ -31,7 +31,7 @@ import {
 } from "../../../story-helpers";
 import UploadButton, { asUploadButton } from "./src";
 
-import readme from "./README.md";
+import Readme from "./UploadButton.storydoc.mdx";
 
 import type { Node } from "react";
 import type { Batch, BatchItem, UploadyContextType } from "@rpldy/uploady";
@@ -511,7 +511,7 @@ export const WithForm: UploadyStory = createUploadyStory(
         );
     });
 
-const UploadButtonStories: CsfExport = getCsfExport(UploadButton, "Upload Button", readme, {
+const UploadButtonStories: CsfExport = getCsfExport(UploadButton, "Upload Button", Readme, {
     pkg: "upload-button",
     section: "UI"
 });

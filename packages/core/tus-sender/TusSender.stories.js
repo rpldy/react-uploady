@@ -10,7 +10,7 @@ import {
     type UploadyStory,
 } from "../../../story-helpers";
 import getTusEnhancer from "./src";
-import readme from "./README.md";
+import Readme from "./TusSender.storydoc.mdx";
 
 import type { Node } from "react";
 import type { UploadyUploaderType, UploaderEnhancer } from "@rpldy/uploader";
@@ -182,7 +182,7 @@ export const WithFeatureDetection: UploadyStory = createUploadyStory((props): No
     );
 });
 
-const tusSenderStories: CsfExport = getCsfExport(undefined, "TUS Sender", readme, {
+const tusSenderStories: CsfExport = getCsfExport(undefined, "TUS Sender", Readme, {
     pkg: "tus-sender",
     section: "Core",
     parameters: {

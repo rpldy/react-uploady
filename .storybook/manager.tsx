@@ -1,5 +1,5 @@
 import React from "react";
-import { addons } from "@storybook/addons";
+import { addons } from "@storybook/manager-api";
 import theme from "./theme";
 import VersionBadge from "./VersionBadge";
 
@@ -10,9 +10,9 @@ addons.setConfig({
     selectedPanel: "REACT_STORYBOOK/readme/panel",
     theme,
     sidebar: {
-        renderLabel: ({ name, isComponent }) => {
+        renderLabel: ({ name }) => {
             //storybook doesnt pass all the CSF info for isComponent items :(
-            const pkg = isComponent && window._storyToPackage?.[name];
+            const pkg = window._storyToPackage?.[name];
 
             //before SB7 it was possible to add the Versions through the manager's webpack build but no longer... :(
             const versions = document.getElementById("storybook-preview-iframe").contentWindow._getPackageVersions?.();

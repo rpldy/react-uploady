@@ -1,5 +1,5 @@
 // @flow
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
     getCsfExport,
     addActionLogEnhancer,
@@ -9,7 +9,7 @@ import {
 import createUploader, { type UploadyUploaderType } from "@rpldy/uploader";
 import { getMockSenderEnhancer } from "./src";
 
-import readme from "./README.md";
+import Readme from "./MockSender.storydoc.mdx";
 import type { Node } from "react";
 
 const mockSenderEnhancer = getMockSenderEnhancer({
@@ -60,7 +60,7 @@ export const WithMockProgress = (): Node => {
     );
 };
 
-const mockSenderStories: CsfExport = getCsfExport(undefined, "Mock Sender", readme, {
+const mockSenderStories: CsfExport = getCsfExport(undefined, "Mock Sender", Readme, {
     pkg: "mock-sender",
     section: "Core",
     parameters: {

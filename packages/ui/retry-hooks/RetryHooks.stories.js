@@ -27,7 +27,7 @@ import retryEnhancer, {
     useRetryListener,
     RETRY_EVENT,
 } from "./src";
-import readme from "./README.md";
+import Readme from "./RetryHooks.storydoc.mdx";
 
 import type { Node } from "react";
 import type { RefObject } from "@rpldy/shared-ui";
@@ -395,7 +395,7 @@ export const WithRetryAndPreview: UploadyStory = createUploadyStory(
         );
     });
 
-const retryHooksStories: CsfExport = getCsfExport(undefined, "Retry Hooks", readme, {
+const retryHooksStories: CsfExport = getCsfExport(undefined, "Retry Hooks", Readme, {
     pkg: "retry-hooks",
     section: "UI"
 });

@@ -25,7 +25,7 @@
     "vitest:cov": "pnpm vitest --coverage --run",
     "vitest:ci": "pnpm vitest:cov --reporter=junit --reporter=verbose --outputFile.junit=reports/junit/js-test-results.xml",
     "ci-flow": "pnpm flow",
-    "ci-lint": "pnpm lint:nocache",
+    "ci-lint": "pnpm lint",
     "ci-types": "pnpm types",
     "test:ci": "concurrently -s all --kill-others-on-fail \"pnpm:ci-* \"",
     "deps:serve": "concurrently --kill-others \"pnpm sb:serve\" \"pnpm bundle:serve\"",

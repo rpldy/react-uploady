@@ -1,5 +1,5 @@
 {
-  "version": "1.9.0-rc.0",
+  "version": "1.9.0-rc.1",
   "name": "@rpldy/native-uploady",
   "description": "wrapper&context component to expose and provide react-uploady functionality for react-native",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -32,7 +32,7 @@
     "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
-    "@rpldy/shared-ui": "^1.9.0-rc.0"
+    "@rpldy/shared-ui": "^1.9.0-rc.1"
   },
   "peerDependencies": {
     "react": ">=16.8"

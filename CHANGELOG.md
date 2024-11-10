@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.9.0-rc.1 (2024-11-10)
+
+### Bug fixes
+
+- `[tus-sender]` - fix: tus not handling correctly sendOnCreate with file smaller than chunk. Fix for [#759](https://github.com/rpldy/react-uploady/issues/759)
+
+### Docs
+
+- `all` - modify all internal README links to point to docs site resources
+- `storybook` - bring back package READMEs inside storybook
+- `storybook` - upgrade to SB 8.4
+
+### Internal
+
+- `all` - upgrade several dev deps (security)
+
+
 ## 1.9.0-rc.0 (2024-11-04)
 
 ### Features

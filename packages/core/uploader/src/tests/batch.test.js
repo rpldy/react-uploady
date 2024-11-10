@@ -122,7 +122,7 @@ describe("Batch tests", () => {
 
     it("should create new batch from existing batch items (retry)", async () => {
         const files = [
-            { file: { name: "test"} },
+            { file: { name: "test" } },
             { url: "https://url.test" }
         ];
 
@@ -145,7 +145,7 @@ describe("Batch tests", () => {
     });
 
     it("should filter to only the first two items", async () => {
-        const files = [ {name: "test"}, "123", "456"];
+        const files = [ { name: "test" }, "123", "456"];
 
         createBatchItem
             .mockReturnValueOnce("item1")

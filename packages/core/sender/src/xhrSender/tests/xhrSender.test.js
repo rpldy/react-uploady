@@ -333,7 +333,7 @@ describe("xhrSender tests", () => {
         it("issueRequest should accept override params", () => {
             const requestUrl = "override.com",
                 requestDate = "override data",
-                requestOptions = {test: "override options"};
+                requestOptions = { test: "override options" };
 
             const send = getXhrSend({
                 preRequestHandler: (issueRequest) => {

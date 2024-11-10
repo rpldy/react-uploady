@@ -232,7 +232,7 @@ describe("processBatchItems tests", () => {
                 [{ id: "u1", info: { state: FILE_STATES.CANCELLED, response: "cancel", status: 0 } },
                     {
                         id: "u2",
-                        info: { state: FILE_STATES.CANCELLED, response: "cancel", status: 0}
+                        info: { state: FILE_STATES.CANCELLED, response: "cancel", status: 0 }
                     }], mockNext);
 
         expect(queueState.state.items.u1.abort).toBeUndefined();

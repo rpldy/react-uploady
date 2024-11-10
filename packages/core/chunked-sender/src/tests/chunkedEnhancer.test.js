@@ -8,7 +8,7 @@ describe("chunkedEnhancer tests", () => {
         const options = { chunkSize: 111 };
         const uploader = { update: vi.fn() };
 
-		createChunkedSender.mockReturnValueOnce({send: "chunkedSend"});
+		createChunkedSender.mockReturnValueOnce({ send: "chunkedSend" });
 
         const enhancer = getChunkedEnhancer(options);
         const result = enhancer(uploader, "trigger");

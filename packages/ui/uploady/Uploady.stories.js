@@ -271,11 +271,11 @@ const QueueList = () => {
         setItems((prev) => [...prev, ...batch.items]);
     });
 
-   return <ul data-test="queue-list">
+   return (<ul data-test="queue-list">
         {items.map((item) => (
             <QueueItem key={item.id} item={item} />
         ))}
-    </ul>
+    </ul>);
 };
 
 export const WithAutoUploadOff: UploadyStory = createUploadyStory(
@@ -626,7 +626,7 @@ const renderUploadyAll = ({
         enhancer,
     };
 
-    const uploadUrlLog = react.createElement("div", { children: `about to upload to: ${uploadyProps.destination?.url || "no destination!"}` })
+    const uploadUrlLog = react.createElement("div", { children: `about to upload to: ${uploadyProps.destination?.url || "no destination!"}` });
 
     return react.createElement(
         rpldy.uploady.Uploady,
@@ -667,7 +667,7 @@ const UploadButtonWithInvalidPreSend = () => {
                 { ...items[0], id: "invalid-id" },
                 ...items.slice(1),
             ] : undefined,
-        }
+        };
     });
 
     return <ContextUploadButton/>;

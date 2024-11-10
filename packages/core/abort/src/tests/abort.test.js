@@ -176,7 +176,7 @@ describe("abort tests", () => {
                     },
             },
                 { "u1": abort, "u2": abort, "u5": abort },
-                {"b1": ["u1", "u2", "u3"], "b2": ["u4"] },
+                { "b1": ["u1", "u2", "u3"], "b2": ["u4"] },
                 finalizeMock,
                 { fastAbortThreshold: 5 }
             );
@@ -212,7 +212,7 @@ describe("abort tests", () => {
                 },
             },
                 { "u1": abort, "u2": abort },
-                {"b1": ["u1", "u2", "u3"], "b2": ["u4"] },
+                { "b1": ["u1", "u2", "u3"], "b2": ["u4"] },
                 finalizeMock, { fastAbortThreshold: 4 });
 
             expect(isFast).toBe(true);

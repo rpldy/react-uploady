@@ -2,7 +2,6 @@
 import type { Trigger, UploadInfo, UploadOptions } from "@rpldy/shared";
 import type { OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
 
-// eslint-disable-next-line no-use-before-define
 export type UploaderEnhancer<T> = (uploader: UploaderType<T>, trigger: Trigger<mixed>) => UploaderType<T>;
 
 export type RawCreateOptions = {|

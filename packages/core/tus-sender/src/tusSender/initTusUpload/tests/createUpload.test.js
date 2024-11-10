@@ -51,7 +51,6 @@ describe("createUpload tests", () => {
 		});
 
 		const doCreateTest = async (config = {}, parallelId = null) => {
-
 			config = {
 				status: 200,
 				error: false,
@@ -60,7 +59,7 @@ describe("createUpload tests", () => {
 				sendDataOnCreate: false,
 				chunkSize: 200,
 				fileSize: 123,
-				noResOffset: false,
+				resOffset: 1234,
 				parallel: false,
 				...config
 			};
@@ -113,7 +112,7 @@ describe("createUpload tests", () => {
 			xhrResponse
 				.getResponseHeader
 				.mockImplementation((name) => {
-					return name === "Upload-Offset" ? (config.noResOffset ? "bla" : 1234) : location;
+					return name === "Upload-Offset" ? (config.resOffset) : location;
 				});
 
 			const requestResult = config.resolveRequest ?
@@ -206,13 +205,12 @@ describe("createUpload tests", () => {
 		});
 
 		it("should do create with data for sendDataOnCreate - entire file", async() => {
-
 			const {
 				requestResult,
 				item,
 				url,
 				state,
-			} = await doCreateTest({ sendDataOnCreate: true, chunkSize: 123 });
+			} = await doCreateTest({ sendDataOnCreate: true, chunkSize: 123, resOffset: 123 });
 
 			expect(request).toHaveBeenCalledWith(url, item.file, {
 				method: "POST", headers: {
@@ -226,15 +224,14 @@ describe("createUpload tests", () => {
 			});
 
 			expect(requestResult).toEqual({
-				isDone: false,
-				offset: 1234,
+				isDone: true,
+				offset: 123,
 				uploadUrl: "http://upload/test",
 				isNew: true,
 			});
 		});
 
 		it("should do create with data for sendDataOnCreate - first chunk", async () => {
-
 			getChunkDataFromFile.mockReturnValueOnce("chunk");
 
 			const {
@@ -242,7 +239,7 @@ describe("createUpload tests", () => {
 				url,
 				state,
 				item,
-			} = await doCreateTest({ sendDataOnCreate: true, chunkSize: 50 });
+			} = await doCreateTest({ sendDataOnCreate: true, chunkSize: 50, resOffset: 50 });
 
 			expect(request).toHaveBeenCalledWith(url, "chunk", {
 				method: "POST", headers: {
@@ -259,14 +256,13 @@ describe("createUpload tests", () => {
 
 			expect(requestResult).toEqual({
 				isDone: false,
-				offset: 1234,
+				offset: 50,
 				uploadUrl: "http://upload/test",
 				isNew: true,
 			});
 		});
 
 		it("should abort xhr before its resolved", async () => {
-
 			const {
 				createResult,
 				xhr,
@@ -314,10 +310,9 @@ describe("createUpload tests", () => {
         });
 
 		it("should handle invalid offset response header", async () => {
-
 			const {
 				requestResult
-			} = await doCreateTest({sendDataOnCreate: true, noResOffset: true});
+			} = await doCreateTest({sendDataOnCreate: true, resOffset: "bla" });
 
 			expect(requestResult).toEqual({
 				isDone: false,
@@ -329,18 +324,19 @@ describe("createUpload tests", () => {
 
 		it("should mark as done for parallel with sendDataOnCreate", async () => {
 			const {
-				url,
-				state,
-				requestResult
-			} = await doCreateTest({
-				parallel: 2,
-				chunkSize: 1234,
-				sendDataOnCreate: true,
-				fileSize: 1234,
-				metadata: {test: 123}}, "pId1");
+                url,
+                state,
+                requestResult
+            } = await doCreateTest({
+                parallel: 2,
+                chunkSize: 1234,
+                sendDataOnCreate: true,
+                fileSize: 1234,
+                metadata: { test: 123 }
+            }, "pId1");
 
-			expect(request).toHaveBeenCalledWith(url, {"size": 1234}, {
-				method: "POST", headers: {
+            expect(request).toHaveBeenCalledWith(url, { "size": 1234 }, {
+                method: "POST", headers: {
 					"tus-resumable": state.getState().options.version,
 					"Upload-Defer-Length": undefined,
 					"Upload-Length": 1234,
@@ -358,5 +354,25 @@ describe("createUpload tests", () => {
 				isNew: true,
 			});
 		});
+
+        it("should mark as NOT done for parallel with sendDataOnCreate if there's more data", async () => {
+            const {
+                requestResult
+            } = await doCreateTest({
+                parallel: 2,
+                chunkSize: 1234,
+                sendDataOnCreate: true,
+                fileSize: 1234,
+                metadata: { test: 123 },
+                resOffset: 2000,
+            }, "pId1");
+
+            expect(requestResult).toEqual({
+                isDone: false,
+                offset: 2000,
+                uploadUrl: "http://upload/test",
+                isNew: true,
+            });
+        });
 	});
 });

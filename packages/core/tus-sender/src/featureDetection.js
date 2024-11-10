@@ -143,7 +143,7 @@ const handleStoredValue = (url: string, tusState: TusState, storedFd: string): ?
 		} else{
 			parsed = null;
 		}
-	} catch (ex) {
+	} catch (ex) { // eslint-disable-line
 		logger.debugLog(`tusSender.featureDetection: failed to load feature detection data from session storage`);
 	}
 

@@ -101,15 +101,15 @@ describe("merge (deep) tests", () => {
             expect(Array.isArray(a.b)).toBe(true);
         });
 
-		it("should merge array from source", () => {
+        it("should merge array from source", () => {
 
-			const a = {};
-			const b = {arr: [1,2,3]};
+            const a = {};
+            const b = { arr: [1, 2, 3] };
 
-			const result = merge(a, b);
+            const result = merge(a, b);
 
-	 		expect(Array.isArray(result.arr)).toBe(true);
-		});
+            expect(Array.isArray(result.arr)).toBe(true);
+        });
 
 		it("should merge multiple levels from multiple objects", () => {
 
@@ -243,7 +243,7 @@ describe("merge (deep) tests", () => {
                 c: undefined,
             };
 
-            const result = getMerge({undefinedOverwrites: true})(a, b);
+            const result = getMerge({ undefinedOverwrites: true })(a, b);
 
             expect(result).toBe(a);
             expect(a).toEqual(b);
@@ -295,7 +295,7 @@ describe("merge (deep) tests", () => {
                 }
             };
 
-            const result = getMerge({undefinedOverwrites: true})({}, a, b, c);
+            const result = getMerge({ undefinedOverwrites: true })({}, a, b, c);
 
             expect(result).toEqual({
                 lll: "bbb",

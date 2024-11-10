@@ -9,14 +9,14 @@ describe("unwrap integration tests", () => {
 
         const getBatch = () =>({
             id: "1",
-            items: [{id: "i1"}, {id: "i2"}],
+            items: [{ id: "i1" }, { id: "i2" }],
             data: {
                 test: true
             },
             [TEST_SYM]: true,
         });
 
-        const {state , update} = createState({
+        const { state , update } = createState({
             batches: {}
         });
 

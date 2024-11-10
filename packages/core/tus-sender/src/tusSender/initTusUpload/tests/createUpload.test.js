@@ -22,7 +22,7 @@ describe("createUpload tests", () => {
             ["https://www.test.com/tus/", "/upload/123"],
         ])("should combine createUrl %s with absolute location %s", (url, loc) => {
             expect(resolveUploadUrl(url, loc))
-            		.toBe("https://www.test.com/upload/123");
+                .toBe("https://www.test.com/upload/123");
         });
 
         it.each([
@@ -276,7 +276,7 @@ describe("createUpload tests", () => {
 			const {
 				url,
 				state,
-			} = await doCreateTest({metadata: {test: 123}});
+			} = await doCreateTest({ metadata: { test: 123 } });
 
 			expect(request).toHaveBeenCalledWith(url, null, {
 				method: "POST", headers: {
@@ -294,7 +294,7 @@ describe("createUpload tests", () => {
 			const {
 				url,
 				state,
-			} = await doCreateTest({metadata: {test: 123}}, "pId1");
+			} = await doCreateTest({ metadata: { test: 123 } }, "pId1");
 
 			expect(request).toHaveBeenCalledWith(url, null, {
 				method: "POST", headers: {
@@ -312,7 +312,7 @@ describe("createUpload tests", () => {
 		it("should handle invalid offset response header", async () => {
 			const {
 				requestResult
-			} = await doCreateTest({sendDataOnCreate: true, resOffset: "bla" });
+			} = await doCreateTest({ sendDataOnCreate: true, resOffset: "bla" });
 
 			expect(requestResult).toEqual({
 				isDone: false,

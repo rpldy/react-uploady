@@ -13,7 +13,7 @@ const parseResponseHeaders = (xhr: XMLHttpRequest): ?Headers => {
                 res[key] = val;
                 return res;
             }, ({}: { [string]: any }));
-    } catch (ex) {
+    } catch (ex) { // eslint-disable-line
         debugLog("uploady.request: failed to read response headers", xhr);
     }
 

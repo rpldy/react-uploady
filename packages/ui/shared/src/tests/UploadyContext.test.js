@@ -46,8 +46,8 @@ describe("UploadyContext tests", () => {
 	it("processPending should call upload on uploader", () => {
 		const contextApi = getTestContext();
 
-		contextApi.processPending({process: true});
-		expect(uploader.upload).toHaveBeenCalledWith({process: true});
+		contextApi.processPending({ process: true });
+		expect(uploader.upload).toHaveBeenCalledWith({ process: true });
 	});
 
 	it("should call abort on uploader", () => {
@@ -104,7 +104,7 @@ describe("UploadyContext tests", () => {
 
         try {
             context.showFileUpload();
-        } catch (e) {
+        } catch (e) {// eslint-disable-line
         }
 
         expect(invariant).toHaveBeenCalled(undefined, expect.any(String));

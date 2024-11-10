@@ -25,9 +25,10 @@ const asUploadButton = (Component: ComponentType<any>): React$AbstractComponent<
             onClick={onButtonClick}
             id={id}
             className={className}
-            children={children || text || "Upload"}
             {...extraProps}
-        />;
+        >
+            {children || text || "Upload"}
+        </Component>;
     };
 
     markAsUploadOptionsComponent(AsUploadButton);

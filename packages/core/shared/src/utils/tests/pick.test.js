@@ -16,10 +16,10 @@ describe("pick tests", () => {
             foo: "aaa",
             bar: "bbb",
             test: true,
-            more: {level: 2}
+            more: { level: 2 }
         }, ["foo", "more"])).toEqual({
             foo: "aaa",
-            more: {level: 2}
+            more: { level: 2 }
         });
     });
 });

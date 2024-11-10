@@ -114,7 +114,7 @@ describe("preSendPrepare tests", () => {
         const result = await preparer(queueState, items);
 
         expect(result.items).toStrictEqual(newItems);
-        expect(result.options).toStrictEqual({...batchOptions, ...newOptions});
+        expect(result.options).toStrictEqual({ ...batchOptions, ...newOptions });
         expect(result.cancelled).toBe(false);
 
         expect(triggerUpdater).toHaveBeenCalledWith(
@@ -157,7 +157,7 @@ describe("preSendPrepare tests", () => {
 
         const result = await preparer(queueState, Object.values(testItems));
 
-        expect(result.options).toStrictEqual({...batchOptions, ...newOptions});
+        expect(result.options).toStrictEqual({ ...batchOptions, ...newOptions });
         expect(result.cancelled).toBe(false);
 
         expect(triggerUpdater).toHaveBeenCalledWith(
@@ -192,7 +192,7 @@ describe("preSendPrepare tests", () => {
         expect(queueState.getState().batches["b1"].itemBatchOptions[items[0].id].destination.url).toBe("b");
         expect(queueState.getState().batches["b1"].itemBatchOptions[items[1].id]).toBeUndefined();
 
-        expect(result.options).toStrictEqual({...batchOptions, ...{ destination: { url: "b"} }});
+        expect(result.options).toStrictEqual({ ...batchOptions, ...{ destination: { url: "b" } } });
     });
 
     it("Preparer should update options without items", async () => {
@@ -211,7 +211,7 @@ describe("preSendPrepare tests", () => {
         const result = await preparer(queueState, items);
 
         expect(result.items).toStrictEqual(items);
-        expect(result.options).toStrictEqual({...batchOptions, ...newOptions});
+        expect(result.options).toStrictEqual({ ...batchOptions, ...newOptions });
         expect(result.cancelled).toBe(false);
 
         expect(triggerUpdater).toHaveBeenCalledWith(

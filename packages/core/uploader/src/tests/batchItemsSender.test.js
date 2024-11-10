@@ -39,11 +39,11 @@ describe("batchItemsSender tests", () => {
             { id: "u3" }
         ];
 
-        const batch = {id: "b1"};
+        const batch = { id: "b1" };
 
         const sendFn = options.send || mockSend;
 
-        const sendResult = {result: true};
+        const sendResult = { result: true };
         sendFn.mockReturnValueOnce(sendResult);
 
         const sender = createItemsSender();
@@ -123,6 +123,6 @@ describe("batchItemsSender tests", () => {
     });
 
     it("should use default filesParamName if none provided", () => {
-        testSend({inputFieldName: null,  destination: { filesParamName: null } });
+        testSend({ inputFieldName: null,  destination: { filesParamName: null } });
     });
 });

@@ -26,7 +26,7 @@ describe("processChunks tests", () => {
 	});
 
 	it("should create state and process chunks", () => {
-		const item = {file: {name: "file"}},
+		const item = { file: { name: "file" } },
 			chunkedOptions = { parallel: true },
 			url = "test.com",
 			sendOptions = {},
@@ -74,7 +74,7 @@ describe("processChunks tests", () => {
                 startByte: 4,
 			});
 
-			const item = { file: { size: 1000 }};
+			const item = { file: { size: 1000 } };
 			const onProgress = vi.fn();
 			const trigger = vi.fn();
 
@@ -84,7 +84,7 @@ describe("processChunks tests", () => {
 
 			const onChunkProgress = sendChunks.mock.calls[0][2];
 
-			onChunkProgress({ loaded: 200 }, [{id: "c1"}]);
+			onChunkProgress({ loaded: 200 }, [{ id: "c1" }]);
 
 			expect(onProgress).toHaveBeenCalledWith({
 				loaded: 204,
@@ -92,7 +92,7 @@ describe("processChunks tests", () => {
 			}, [item]);
 
 			vi.runAllTimers();
-            onChunkProgress({ loaded: 300 }, [{id: "c1"}]);
+            onChunkProgress({ loaded: 300 }, [{ id: "c1" }]);
 
 			expect(onProgress).toHaveBeenCalledWith({
 				loaded: 304,
@@ -100,7 +100,7 @@ describe("processChunks tests", () => {
 			}, [item]);
 
             vi.runAllTimers();
-            onChunkProgress({ loaded: 300 }, [{id: "c2"}]);
+            onChunkProgress({ loaded: 300 }, [{ id: "c2" }]);
 
             expect(onProgress).toHaveBeenCalledWith({
                 loaded: 604,

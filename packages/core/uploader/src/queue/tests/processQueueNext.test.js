@@ -241,7 +241,7 @@ describe("processQueueNext tests", () => {
 				batches: {
 				},
 				items: {
-					"u5": {state: FILE_STATES.ADDED}
+					"u5": { state: FILE_STATES.ADDED }
 				},
 				activeIds: ["u1"],
 				itemQueue: { "b1": ["u1"],  "b2": ["u2"], "b3": ["u3"], "b4": ["u5"], "b5": ["u5"] },
@@ -262,9 +262,9 @@ describe("processQueueNext tests", () => {
 			const queueState = getQueueState({
 				activeIds: ["u1"],
 				items: {
-					"u2": {state: FILE_STATES.UPLOADING},
-					"u3": {state: FILE_STATES.ABORTED},
-					"u4": {state: FILE_STATES.ADDED}
+					"u2": { state: FILE_STATES.UPLOADING },
+					"u3": { state: FILE_STATES.ABORTED },
+					"u4": { state: FILE_STATES.ADDED }
 				},
                 itemQueue: { "b1": ["u1", "u2", "u3", "u4"] },
                 batchQueue: ["b1"],

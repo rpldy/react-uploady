@@ -14,7 +14,7 @@ const safeStorageCreator = (storageType: string): SafeStorage => {
                 isSupported = true;
             }
         }
-        catch(ex){
+        catch(ex){ // eslint-disable-line
             //fail silently
         }
     };

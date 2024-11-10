@@ -1,32 +1,41 @@
-import type { StorybookConfig } from "@storybook/react-webpack5";
-
 import path from "path";
-
-const getAbsolutePath = (value) =>
-    path.dirname(require.resolve(path.join(value, "package.json")));
+import type { StorybookConfig } from "@storybook/react-webpack5";
 
 const config: StorybookConfig = {
     stories: [
         "../packages/**/*.stories.js",
-        "./welcome.stories.mdx"
+        // "./welcome.stories.mdx"
     ],
-    addons: [
-        path.resolve("./.storybook/uploadyPreset"),
-        getAbsolutePath("@storybook/addon-links"),
-        getAbsolutePath("@storybook/addon-essentials"),
-        getAbsolutePath("@storybook/addon-onboarding"),
-        getAbsolutePath("@storybook/addon-interactions"),
-        getAbsolutePath("@storybook/addon-knobs"),
-    ],
+    addons: [path.resolve("./.storybook/uploadyPreset"), "@storybook/addon-links", {
+        name: "@storybook/addon-docs", //path.dirname(require.resolve("@storybook/addon-docs/package.json")),
+        options: { transcludeMarkdown: true },
+    }, {
+        name: "@storybook/addon-essentials",
+        options: {
+            actions: true,
+            backgrounds: false,
+            controls: true,
+            docs: false,
+            viewport: false,
+            // toolbars: false
+        }
+    }, "@storybook/addon-interactions", "@storybook/addon-webpack5-compiler-babel"],
     framework: {
         name: "@storybook/react-webpack5",
         options: {},
     },
-    docs: {
-        autodocs: "tag",
-    },
+    // docs: {
+    //     autodocs: true,
+    // },
     core: {
         disableTelemetry: true
+    },
+    typescript: {
+        // Overrides the default Typescript configuration to allow multi-package components to be documented via Autodocs.
+        reactDocgen: "react-docgen-typescript",
+        check: false,
+        // skipCompiler: true,
+        // skipBabel: true,
     },
 };
 

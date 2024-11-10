@@ -1,4 +1,3 @@
-import { UPLOAD_URL } from "../../constants";
 import uploadFile from "../uploadFile";
 import intercept from "../intercept";
 
@@ -6,11 +5,15 @@ describe("UploadPreview - Simple", () => {
     const fileName = "flower.jpg";
 
     beforeEach(() => {
-        cy.visitStory("uploadPreview", "with-two-fields&knob-destination_Upload Destination=local");
+        cy.visitStory(
+            "uploadPreview",
+            "with-two-fields",
+            { useMock: false }
+        );
     });
 
     it("should show previews in appropriate field", () => {
-        intercept(UPLOAD_URL);
+        intercept();
 
         uploadFile(fileName, () => {
             uploadFile(fileName, () => {

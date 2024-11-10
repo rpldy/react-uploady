@@ -1,5 +1,4 @@
 import uploadFile from "../uploadFile";
-import { WAIT_MEDIUM, WAIT_X_SHORT } from "../../constants";
 
 describe("UploadButton - Disabled During Upload", () => {
     const fileName = "flower.jpg";
@@ -14,10 +13,10 @@ describe("UploadButton - Disabled During Upload", () => {
             .as("fInput");
 
         uploadFile(fileName, () => {
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
             cy.get("@uploadButton").should("be.disabled");
 
-            cy.wait(WAIT_MEDIUM);
+            cy.waitMedium();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.get("@uploadButton").should("not.be.disabled");
         });

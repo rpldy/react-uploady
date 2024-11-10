@@ -8,8 +8,8 @@ describe("ChunkedSender - Progress", () => {
     const loadStory = () =>
         cy.visitStory(
             "chunkedSender",
-            "with-chunked-sender&knob-chunk size (bytes)_Upload Settings=50000",
-            { useMock: false }
+            "with-chunked-sender",
+            { useMock: false, chunkSize: 50000 }
         );
 
     it("should provide server error info to item error handler", () => {

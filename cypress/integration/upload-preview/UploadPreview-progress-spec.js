@@ -1,16 +1,19 @@
 import { interceptWithDelay } from "../intercept";
 import uploadFile from "../uploadFile";
-import { UPLOAD_URL } from "../../constants";
 
 describe("UploadPreview - Progress", () => {
     const fileName = "flower.jpg";
 
     beforeEach(() => {
-        cy.visitStory("uploadPreview", "with-progress&knob-destination_Upload Destination=local");
+        cy.visitStory(
+            "uploadPreview",
+            "with-progress",
+            { useMock: false }
+        );
     });
 
     it("should show upload preview", () => {
-        interceptWithDelay(100, "uploadReq", UPLOAD_URL);
+        interceptWithDelay(100, "uploadReq");
 
         uploadFile(fileName, () => {
             cy.get(".preview-img")

@@ -11,12 +11,12 @@
 
 # Native Uploady
 
-This is the main UI package for React-Native. Its role is to initialize and expose the [uploader](../../core/uploader) functionality.
+This is the main UI package for React-Native. Its role is to initialize and expose the [uploader](https://react-uploady.org/docs/packages/rpldy-uploader/) functionality.
 It contains the Provider that all other UI packages rely on.
 
 It provides multiple hooks that enable more advanced features and data for client apps.
 
-> The difference between this package and the main [Uploady](../../uploady) is that this one doesn't use react-dom (for obvious reasons) and doesn't create a file input element.
+> The difference between this package and the main [Uploady](https://react-uploady.org/docs/api/) is that this one doesn't use react-dom (for obvious reasons) and doesn't create a file input element.
 
 **The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
@@ -32,14 +32,14 @@ It provides multiple hooks that enable more advanced features and data for clien
 
 ## Props
 
-This package is just about identical to the main [Uploady](../../uploady) package. 
+This package is just about identical to the main [Uploady](https://react-uploady.org/docs/api/) package. 
 See Props documentation in the main readme.
 
 > All props are identical besides the ones related to file input (ex: multiple, accept, etc.), which cannot be used with the native flavor.
 
 ## Example
 
-To be able to use one of the [UI Components](../../../README.md#ui-packages) or one of the hooks, you need to wrap them with Uploady.
+To be able to use one of the [UI Components](https://react-uploady.org/docs/category/components/) or one of the hooks, you need to wrap them with Uploady.
 This will give them access to the UploadyContext.
 
 ```javascript
@@ -77,4 +77,4 @@ const App = () => (<NativeUploady
 
 ## Documentation
 
-> See documentation for [events](../../ui/uploady#events)/[hooks](../../ui/uploady#hooks) and more in the main Uploady readme
+> See documentation for [events](https://react-uploady.org/docs/api/events/)/[hooks](https://react-uploady.org/docs/category/hooks/) and more in the main Uploady readme

@@ -1,6 +1,5 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_LONG } from "../../constants";
 
 describe("ChunkedUploady - WithChunkEventHooks", () => {
     const fileName = "flower.jpg";
@@ -11,7 +10,7 @@ describe("ChunkedUploady - WithChunkEventHooks", () => {
             .as("fInput");
 
         uploadFile(fileName, () => {
-            cy.wait(WAIT_LONG);
+            cy.waitLong();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             let uniqueHeader;
@@ -53,8 +52,8 @@ describe("ChunkedUploady - WithChunkEventHooks", () => {
     it("should use chunked uploady with unique id", () => {
         cy.visitStory(
             "chunkedUploady",
-            "with-chunk-event-hooks&knob-chunk size (bytes)_Upload Settings=50000",
-            { useMock: false }
+            "with-chunk-event-hooks",
+            { useMock: false, chunkSize: 50000 }
         );
 
         intercept();
@@ -64,8 +63,8 @@ describe("ChunkedUploady - WithChunkEventHooks", () => {
     it("should use chunked uploady with async chunk hooks", () => {
         cy.visitStory(
             "chunkedUploady",
-            "with-async-chunk-event-hooks&knob-chunk size (bytes)_Upload Settings=50000",
-            { useMock: false }
+            "with-async-chunk-event-hooks",
+            { useMock: false, chunkSize: 50000 }
         );
 
         intercept();

@@ -5,7 +5,11 @@ describe("UploadPreview - Custom Batch Items Method", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadPreview", "with-different-batch-items-method&knob-mock send delay_Upload Destination=100");
+        cy.visitStory(
+            "uploadPreview",
+            "with-different-batch-items-method",
+            { mockDelay: 100 }
+        );
     });
 
     it("should show upload previews for pending batch", () => {

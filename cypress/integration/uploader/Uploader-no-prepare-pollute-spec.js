@@ -9,7 +9,7 @@ describe("Uploader - PreSend Tests", () => {
         cy.visitStory(
             "uploader",
             "test-events-data",
-            { useMock: false, uploadUrl: UPLOAD_URL }
+            { useMock: false }
         );
     });
 

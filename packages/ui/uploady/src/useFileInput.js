@@ -36,26 +36,48 @@ const getUrl = (form: Element) => {
     return url;
 };
 
-const getDestinationFromInput = (input: HTMLInputElement): ?DestinationShape => {
+const getNewDestination = (input: HTMLInputElement, form?: Element): DestinationShape => {
+    const method = form?.getAttribute("method"),
+        url = form && getUrl(form);
+
+    return {
+        filesParamName: input.getAttribute("name"),
+        method: method ? method.toUpperCase() : undefined,
+        url: url,
+    };
+};
+
+const retrieveDestinationFromInput = (input: HTMLInputElement, onUpdate: (destination: DestinationShape) => void): {
+    stopObserving: ?() => void,
+} => {
+    let destination, stopObserving;
     const form = input.closest("form");
 
-    let destination: DestinationShape = {
-        filesParamName: input.getAttribute("name"),
-        method: undefined,
-        url: undefined,
-    };
-
     if (form) {
-        const method = form.getAttribute("method"),
-            url = getUrl(form);
+        destination = getNewDestination(input, form);
+        logger.debugLog(`Uploady.useFileInput: using custom input's parent form url ${destination.url || ""} and method ${destination.method || ""}`);
 
-        destination.method = method ? method.toUpperCase() : undefined;
-        destination.url = url;
+        let observer: ?MutationObserver = new MutationObserver((records) => {
+            if (records[0]?.attributeName === "action") {
+                const newDestination = getNewDestination(input, form);
+                if (newDestination.url) {
+                    logger.debugLog(`Uploady.useFileInput: form action attribute changed to ${newDestination.url}`);
+                    onUpdate(newDestination);
+                }
+            }
+        });
 
-        logger.debugLog(`Uploady.useFileInput: using custom input's parent form url ${destination.url} and method ${destination.method || ""}`);
+        observer?.observe(form, { attributes: true, attributeFilter: ["action"] });
+
+        stopObserving = () => {
+            observer?.disconnect();
+            observer = null;
+        };
     }
 
-    return destination;
+    onUpdate(destination || getNewDestination(input));
+
+    return { stopObserving };
 };
 
 const useFileInput = (fileInputRef?: InputRef): ?InputRef => {
@@ -67,6 +89,8 @@ const useFileInput = (fileInputRef?: InputRef): ?InputRef => {
     }
 
     useEffect(() => {
+            let stopObservingCallback;
+
             //uses Element.prototype.closest so no IE11 support - use polyfill
             if (fileInputRef?.current && "closest" in fileInputRef.current) {
                 const input = fileInputRef.current;
@@ -74,10 +98,18 @@ const useFileInput = (fileInputRef?: InputRef): ?InputRef => {
 
                 //if no destination was passed, try and get from input's parent form
                 if (!uploaderOptions.destination || !uploaderOptions.destination.url) {
-                    const domDestination = getDestinationFromInput(input);
-                    context.setOptions({ destination: domDestination });
+                    const { stopObserving } = retrieveDestinationFromInput(input,
+                        (newDestination) => {
+                            context.setOptions({ destination: newDestination });
+                        });
+
+                    stopObservingCallback = stopObserving;
                 }
             }
+
+            return () => {
+                stopObservingCallback?.();
+            };
         },
         [fileInputRef, context]);
 

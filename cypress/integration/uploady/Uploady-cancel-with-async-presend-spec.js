@@ -4,8 +4,6 @@ import {
     ITEM_ABORT,
     ITEM_FINISH,
     ITEM_START,
-    WAIT_X_SHORT,
-    WAIT_MEDIUM,
     BATCH_ABORT,
 } from "../../constants";
 
@@ -31,7 +29,7 @@ describe("Uploady - Cancel Upload with long running async pre-send", () => {
             cy.get("button[data-test='abort-batch-0']")
                 .click();
 
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
 
             cy.storyLog().assertLogPattern(ITEM_START, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 0 });
@@ -54,7 +52,7 @@ describe("Uploady - Cancel Upload with long running async pre-send", () => {
             cy.get("button[data-test='abort-file-0']")
                 .click();
 
-            cy.wait(WAIT_MEDIUM);
+            cy.waitMedium();
 
             cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });
@@ -77,7 +75,7 @@ describe("Uploady - Cancel Upload with long running async pre-send", () => {
             cy.get("button[data-test='abort-file-0']")
                 .click();
 
-            cy.wait(WAIT_MEDIUM);
+            cy.waitMedium();
 
             cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 0 });
@@ -100,7 +98,7 @@ describe("Uploady - Cancel Upload with long running async pre-send", () => {
             cy.get("button[data-test='abort-file-0']")
                 .click();
 
-            cy.wait(WAIT_MEDIUM);
+            cy.waitMedium();
 
             cy.storyLog().assertLogPattern(ITEM_START, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 1 });
@@ -123,7 +121,7 @@ describe("Uploady - Cancel Upload with long running async pre-send", () => {
             cy.get("button[data-test='abort-batch-0']")
                 .click();
 
-            cy.wait(WAIT_MEDIUM);
+            cy.waitMedium();
 
             cy.storyLog().assertLogPattern(BATCH_ABORT, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 2 });
@@ -147,7 +145,7 @@ describe("Uploady - Cancel Upload with long running async pre-send", () => {
                 cy.get("button[data-test='abort-batch-0']")
                     .click();
 
-                cy.wait(WAIT_MEDIUM);
+                cy.waitMedium();
 
                 cy.storyLog().assertLogPattern(BATCH_ABORT, { times: 1 });
                 cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 2 });

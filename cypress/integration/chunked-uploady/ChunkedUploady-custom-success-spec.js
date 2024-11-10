@@ -1,6 +1,5 @@
 import { interceptWithHandler } from "../intercept";
 import uploadFile from "../uploadFile";
-import { WAIT_SHORT } from "../../constants";
 
 describe("ChunkedUploady - Custom Success Callback", () => {
     const fileName = "flower.jpg";
@@ -8,8 +7,8 @@ describe("ChunkedUploady - Custom Success Callback", () => {
     before(() => {
         cy.visitStory(
             "chunkedUploady",
-            "simple&knob-chunk size (bytes)_Upload Settings=50000",
-            { useMock: false }
+            "simple",
+            { useMock: false, chunkSize: 50000 }
         );
     });
 
@@ -21,7 +20,7 @@ describe("ChunkedUploady - Custom Success Callback", () => {
         cy.setUploadOptions({ isSuccessfulCall: (xhr) => xhr.status === 308 });
 
         uploadFile(fileName, () => {
-            cy.wait(WAIT_SHORT);
+            cy.waitShort();
 
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });

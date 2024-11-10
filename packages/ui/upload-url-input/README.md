@@ -36,18 +36,18 @@ This can be useful for services that accept a URL and do server-side fetch. [Clo
 ## Props
 
 
-| Name (* = mandatory) | Type          | Default       | Description                                                                                                |
-| --------------       | ------------- | ------------- |------------------------------------------------------------------------------------------------------------|
-| id             | string   | undefined | id attribute to pass to the button element                                                                 |
-| className      | string   | undefined | the class attribute to pass to the button element                                                          |
-| placeholder    | string    | undefined | input's placeholder text                                                                                   |
-| validate       | [ValidateMethod](src/types.js#L6) | undefined | function to validate input's value before its sent                                                         |
-| uploadRef     | React Ref   | undefined | ref will be set to the upload callback so it can be triggered from the outs ide (see [example](#example))  |
-| ignoreKeyPress   | boolean | false | by default pressing Enter will initiate the upload, set to true in order to disable this behavior          |
+| Name (* = mandatory) | Type                                                                                     | Default   | Description                                                                                               |
+|----------------------|------------------------------------------------------------------------------------------|-----------|-----------------------------------------------------------------------------------------------------------|
+| id                   | string                                                                                   | undefined | id attribute to pass to the button element                                                                |
+| className            | string                                                                                   | undefined | the class attribute to pass to the button element                                                         |
+| placeholder          | string                                                                                   | undefined | input's placeholder text                                                                                  |
+| validate             | [ValidateMethod](https://react-uploady.org/docs/api/components/uploadUrlInput/#validate) | undefined | function to validate input's value before its sent                                                        |
+| uploadRef            | React Ref                                                                                | undefined | ref will be set to the upload callback so it can be triggered from the outs ide (see [example](#example)) |
+| ignoreKeyPress       | boolean                                                                                  | false     | by default pressing Enter will initiate the upload, set to true in order to disable this behavior         |
 
-In addition, most [UploadOptions](../../core/shared/src/types.js#L104) props can be passed to UploadButton.
+In addition, most [UploadOptions](https://react-uploady.org/docs/api/types/#uploadoptions) props can be passed to UploadButton.
 In order to override configuration passed to the parent Uploady component. 
-See [Uploady documentation](../uploady#props) for detailed list of upload options.
+See [Uploady documentation](https://react-uploady.org/docs/api/#props) for detailed list of upload options.
 
 ## Example
 

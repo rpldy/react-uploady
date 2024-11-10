@@ -1,8 +1,7 @@
-import React from "react";
-import { makeDecorator } from "@storybook/addons";
+import { makeDecorator } from "@storybook/preview-api";
 
 export default makeDecorator({
-	name: "cypressDecorator",
+    name: "cypressDecorator",
 	wrapper: (getStory, context) => {
 		const win = (window.parent && window.parent.Cypress) ?
 			window.parent :
@@ -21,5 +20,7 @@ export default makeDecorator({
 		}
 
 		return getStory(context);
-	}
-})
+	},
+    parameterName: "cypressDecorator",
+    skipIfNoParametersOrOptions: false,
+});

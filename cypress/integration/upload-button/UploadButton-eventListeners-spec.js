@@ -1,16 +1,15 @@
 import uploadFile from "../uploadFile";
-import { WAIT_X_SHORT } from "../../constants";
 
 describe("UploadButton - With Event Listeners", () => {
     const fileName = "flower.jpg";
 
     before(() => {
-        cy.visitStory("uploadButton", "with-event-listeners&knob-mock send delay_Upload Destination=100");
+        cy.visitStory("uploadButton", "with-event-listeners",  { mockDelay: 100 });
     });
 
     it("should use event listeners", () => {
         uploadFile(fileName, () => {
-            cy.wait(WAIT_X_SHORT);
+            cy.waitExtraShort();
 
             cy.get("ul[data-test='hooks-events']")
                 .should("be.visible")

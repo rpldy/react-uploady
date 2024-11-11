@@ -1,5 +1,5 @@
 import React, { useState, memo } from "react";
-import useScript from "./useScript"
+import useScript from "./useScript";
 import { UMD_NAMES } from "./consts";
 
 const BASE = "http://localhost:8009/",

@@ -18,7 +18,7 @@ const extractChangelogNotesForVersion = (version) => {
                 if (!~startIndex && tokens[i].tag === "h2"
                     //use space so pre-release isn't matched against non-pre-release
                     && tokens[i + 1]?.content.startsWith(version + " ")) {
-                    startIndex = i
+                    startIndex = i;
                 } else if (!!~startIndex && tokens[i].tag === "h2" && tokens[i].type === "heading_open") {
                     endIndex = i - 1;
                     break;

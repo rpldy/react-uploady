@@ -59,7 +59,7 @@ describe("TusUploady - With Retry", () => {
                 });
 
             //made-up resume offset so we know resume happened after failure
-            const resumeOffset = "200123"
+            const resumeOffset = "200123";
 
             intercept(`${uploadUrl}/123`, "HEAD", {
                 headers: {

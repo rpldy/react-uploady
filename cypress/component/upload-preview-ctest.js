@@ -103,7 +103,7 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 
 const WithFlush = () => {
     useBatchAddListener(() => {
-        console.log("FLUSH!!!!!")
+        console.log("FLUSH!!!!!");
         flushSync();
     });
 

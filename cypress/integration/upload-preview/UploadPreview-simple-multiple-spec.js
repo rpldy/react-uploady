@@ -14,7 +14,7 @@ describe("UploadPreview - Simple - Multiple files", () => {
                 .should("be.visible")
                 .should("have.length", 3)
                 .invoke("attr", "src")
-                .should("match", /blob:/)
+                .should("match", /blob:/);
         }, 3, "button");
     });
 });

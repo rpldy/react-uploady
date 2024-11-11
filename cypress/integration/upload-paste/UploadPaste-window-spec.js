@@ -11,7 +11,7 @@ describe("UploadPaste - Window Listener", () => {
     it("should upload pasted file from anywhere on the page", () => {
         loadPage();
         //wait for body to render first
-        cy.get("#storybook-root button")
+        cy.get("#storybook-root button");
 
         cy.get("body")
             .pasteFile(fileName);

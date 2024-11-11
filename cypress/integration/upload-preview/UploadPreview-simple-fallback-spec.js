@@ -7,7 +7,7 @@ describe("UploadPreview - Simple", () => {
 		cy.visitStory(
             "uploadPreview",
             "simple",
-            { customArgs: { maxPreviewSize: 1000 }}
+            { customArgs: { maxPreviewSize: 1000 } }
         );
 	});
 

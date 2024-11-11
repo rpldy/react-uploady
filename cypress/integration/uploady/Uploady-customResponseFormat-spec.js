@@ -16,7 +16,7 @@ describe("Uploady - Custom Response Formatter", () => {
         intercept();
 
         uploadFile(fileName, () => {
-            cy.wait("@uploadReq")
+            cy.wait("@uploadReq");
 
             cy.storyLog().assertLogEntryContains(2, {
                uploadResponse: {

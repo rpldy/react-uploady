@@ -3,12 +3,13 @@ import js from "@eslint/js";
 import ts from "typescript-eslint";
 import hermesParser from "hermes-eslint";
 import importPlugin from "eslint-plugin-import";
-import react from "eslint-plugin-react";
-import jsxA11Y from "eslint-plugin-jsx-a11y";
-import reactHooks from "eslint-plugin-react-hooks";
-import noAsync from "eslint-plugin-no-async";
-import ftFlow from "eslint-plugin-ft-flow";
-import vitest from "eslint-plugin-vitest";
+import reactPlugin from "eslint-plugin-react";
+import jsxA11YPlugin from "eslint-plugin-jsx-a11y";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
+import noAsyncPlugin from "eslint-plugin-no-async";
+import ftFlowPlugin from "eslint-plugin-ft-flow";
+import vitestPlugin from "eslint-plugin-vitest";
+import storybookPlugin from "eslint-plugin-storybook";
 
 const JS_RULES_OVERRIDES = {
     quotes: [2, "double", {
@@ -131,52 +132,73 @@ const JS_LANGUAGE_OPTIONS = {
 };
 
 const SHARED_SETTINGS = {
-    ...ftFlow.configs.recommended.settings,
+    ...ftFlowPlugin.configs.recommended.settings,
     react: {
         version: "detect",
         flowVersion: "0.245",
     },
 };
 
-const TS_CONFIG = ts.config(
+const flatten = (configArr) =>
+    configArr
+        .reduce((res, config) => {
+            res.rules = {
+                ...res.rules,
+                ...config.rules,
+            };
+            res.languageOptions = {
+                ...res.languageOptions,
+                ...config.languageOptions,
+            };
+            res.plugins = {
+                ...res.plugins,
+                ...config.plugins,
+            }
+            if (config.files) {
+                res.files = [
+                    ...(res.files || []),
+                    ...config.files,
+                ];
+            }
+            return res;
+        }, { rules: {}, languageOptions: {}, plugins: {}, files: undefined });
+
+const TS_CONFIG = flatten(ts.config(
     js.configs.recommended,
     ...ts.configs.recommended,
-).reduce((res, config) => {
-    res.rules = {
-        ...res.rules,
-        ...config.rules,
-    };
-    res.languageOptions = {
-        ...res.languageOptions,
-        ...config.languageOptions,
-    };
-    res.plugins = {
-        ...res.plugins,
-        ...config.plugins,
-    }
+));
 
-    return res;
-}, { rules: {}, languageOptions: {}, plugins: {} });
+const SB_CONFIG = flatten(storybookPlugin.configs["flat/csf-strict"]);
 
 export default [
     //Ignores
     {
-        ignores: ["**/lib/**", "**/dist/**", "**/*.story.js", "**/*.stories.js"],
+        ignores: [
+            "**/lib/**",
+            "**/dist/**",
+            "**/*.story.js",
+            "**/*.stories.js",
+            "node_modules",
+            ".sb-static/**/*.*",
+            "bundle/*.*",
+            "cypress/examples/*.*",
+            "cypress/component/*.*",
+        ],
     },
 
     //Source Code (JS/React)
     {
         ...js.configs.recommended,
 
-        files: ["**/*.js", "**/*.jsx"],
-        ignores: ["**/*.test.js", "**/*.test.jsx", "**/*.mock.js", "**/*.mock.jsx"],
+        files: ["packages/**/*.js", "packages/**/*.jsx"],
+        ignores: ["**/*.test.js", "**/*.test.jsx", "**/*.mock.js", "**/*.mock.jsx", "story-helpers/*.*"],
 
         "plugins": {
-            "ft-flow": ftFlow,
-            react,
-            "react-hooks": reactHooks,
-            "jsx-a11y": jsxA11Y,
-            "no-async": noAsync,
+            "ft-flow": ftFlowPlugin,
+            react: reactPlugin,
+            "react-hooks": reactHooksPlugin,
+            "jsx-a11y": jsxA11YPlugin,
+            "no-async": noAsyncPlugin,
             import: importPlugin,
         },
 
@@ -192,10 +214,10 @@ export default [
         },
 
         rules: {
-            ...react.configs.recommended.rules,
-            ...jsxA11Y.configs.recommended.rules,
-            ...reactHooks.configs.recommended.rules,
-            ...ftFlow.configs.recommended.rules,
+            ...reactPlugin.configs.recommended.rules,
+            ...jsxA11YPlugin.configs.recommended.rules,
+            ...reactHooksPlugin.configs.recommended.rules,
+            ...ftFlowPlugin.configs.recommended.rules,
             ...importPlugin.flatConfigs.recommended.rules,
 
             ...JS_RULES_OVERRIDES,
@@ -207,10 +229,10 @@ export default [
 
     //Unit Tests (VITEST)
     {
-        files: ["**/*.test.js", "**/*.test.jsx", "*.mock.jsx"],
+        files: ["packages/**/*.test.js", "packages/**/*.test.jsx", "packages/*.mock.jsx"],
 
         "plugins": {
-            vitest,
+            vitest: vitestPlugin,
             import: importPlugin,
         },
 
@@ -242,4 +264,40 @@ export default [
             "no-async/no-async": 0
         },
     },
+
+    //Storybook
+    {
+        ...SB_CONFIG,
+
+        files: [
+            ...SB_CONFIG.files,
+            "story-helpers/*.js",
+            "story-helpers/*.jsx",
+        ],
+
+        "plugins": {
+            "ft-flow": ftFlowPlugin,
+            react: reactPlugin,
+            ...SB_CONFIG.plugins,
+        },
+
+        ignores: ["packages/**/index.test-d.tsx", "/all-bundle-entry.js", "packages/**/src/**/*.js", "cypress/**/*.*"],
+
+        languageOptions: {
+            ...JS_LANGUAGE_OPTIONS,
+        },
+
+        settings: {
+            ...SHARED_SETTINGS,
+            "ft-flow": {
+                "onlyFilesWithFlowAnnotation": true,
+            }
+        },
+
+        rules: {
+            ...SB_CONFIG.rules,
+            "storybook/default-exports": 0,
+            "no-console": 0,
+        }
+    }
 ];

@@ -17,7 +17,7 @@ describe("TusUploady - Send Data", () => {
                 tusSendOnCreate: true,
             }
         );
-    }
+    };
 
     const runTest = (chunkSize, isFileSmallerThanChunk = false) => {
         loadStory(chunkSize);

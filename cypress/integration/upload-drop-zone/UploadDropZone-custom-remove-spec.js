@@ -5,7 +5,7 @@ describe("UploadDropZone - Custom Remove", () => {
 
     it("should remove the drag overlay", () => {
         cy.get("#upload-drop-zone")
-            .trigger("dragenter", { dataTransfer: { items: [ { kind: "file" } ]} });
+            .trigger("dragenter", { dataTransfer: { items: [ { kind: "file" } ] } });
 
         cy.get(".dropIndicator")
             .should("be.visible");

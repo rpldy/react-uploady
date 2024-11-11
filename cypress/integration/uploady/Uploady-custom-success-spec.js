@@ -21,7 +21,7 @@ describe("Uploady - Custom Success", () => {
         cy.setUploadOptions({ isSuccessfulCall: (xhr) => xhr.status === 308 });
 
         uploadFile(fileName, () => {
-            cy.wait("@uploadReq")
+            cy.wait("@uploadReq");
 
             cy.waitShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
@@ -44,7 +44,7 @@ describe("Uploady - Custom Success", () => {
         cy.setUploadOptions({ isSuccessfulCall: async (xhr) => xhr.status === 308 });
 
         uploadFile(fileName, () => {
-            cy.wait("@uploadReq")
+            cy.wait("@uploadReq");
 
             cy.waitShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);

@@ -1,3 +1,4 @@
+/* eslint storybook/story-exports:0 storybook/csf-component:0*/
 import path from "path";
 import type { StorybookConfig } from "@storybook/react-webpack5";
 

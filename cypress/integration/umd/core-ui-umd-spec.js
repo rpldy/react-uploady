@@ -10,7 +10,7 @@ describe("UMD UI CORE - Bundle", () => {
     });
 
     it("should use uploady and upload file", () => {
-        intercept()
+        intercept();
 
         uploadFile(fileName, () => {
 			cy.wait("@uploadReq")

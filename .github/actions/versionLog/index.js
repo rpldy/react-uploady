@@ -17,9 +17,9 @@ const extractVersionLog = async () => {
     } catch (ex) {
         core.setFailed(ex.message);
     }
-}
+};
 
-extractVersionLog()
+extractVersionLog();
 
 // github = require("@actions/github"),
 //core.getInput('who-to-greet');

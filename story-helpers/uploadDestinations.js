@@ -18,7 +18,7 @@ const mockDestination = ({ mockSendDelay } = {}) => {
         destinationType: DESTINATION_TYPES.mock,
         destination: { url: "http://react-uploady-dummy-server.comm" },
         enhancer: getMockSenderEnhancer({ delay: mockSendDelay }),
-    }
+    };
 };
 
 const localDestination = ({ longLocal } = {}, { noLong = false } = {}) => {
@@ -32,7 +32,7 @@ const localDestination = ({ longLocal } = {}, { noLong = false } = {}) => {
             params: { test: true }
         }
     } : mockDestination();
-}
+};
 
 const cldDestination = ({ cloud, preset, folder }) => {
     return {
@@ -52,4 +52,4 @@ export {
     mockDestination,
     cldDestination,
     urlDestination,
-}
+};

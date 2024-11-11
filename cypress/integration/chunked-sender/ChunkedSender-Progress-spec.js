@@ -1,8 +1,6 @@
-import { interceptWithDelay, interceptWithHandler } from "../intercept";
+import { interceptWithDelay } from "../intercept";
 import uploadFile from "../uploadFile";
 import { CHUNK_START, CHUNK_FINISH } from "../../constants";
-import { WAIT_X_LONG } from "../../constants";
-import { interceptFormData } from "cypress-intercept-formdata";
 
 describe("ChunkedSender - Progress", () => {
     const fileName = "flower.jpg";

@@ -101,7 +101,7 @@ describe("TusUploady - Simple", () => {
                 cy.get("@resumeReq")
                     .then((req) => {
                        expect(req).to.be.null;
-                    })
+                    });
             }, "#upload-button");
         }, "#upload-button");
     });

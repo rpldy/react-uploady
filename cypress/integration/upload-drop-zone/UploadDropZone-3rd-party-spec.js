@@ -23,7 +23,7 @@ describe("UploadDropZone - Simple", () => {
         const test = "!23";
 
         loadStory();
-        cy.setUploadOptions({ userData: { test} });
+        cy.setUploadOptions({ userData: { test } });
 
         dropFile(fileName, () => {
             cy.waitExtraShort();

@@ -29,7 +29,7 @@ const ProgressReportTable = ({ uploader }: { uploader: ?UploadyUploaderType }): 
 
         return () => {
             if (uploader) {
-                console.log("UNREGISTERING uploader event listeners")
+                console.log("UNREGISTERING uploader event listeners");
                 offBatchProgress();
                 offItemProgress();
             }

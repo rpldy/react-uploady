@@ -24,4 +24,4 @@ export {
     CROPPED_MAX_SIZE,
     examineCroppedUploadReq,
     examineFullUploadRequest,
-}
+};

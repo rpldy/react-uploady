@@ -11,7 +11,7 @@ describe("UploadButton - Form", () => {
             "uploadButton",
             "with-form",
             { useMock: false }
-        )
+        );
     });
 
     it("should submit form with upload and other fields", () => {

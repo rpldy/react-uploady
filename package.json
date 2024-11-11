@@ -17,7 +17,7 @@
     "sb:serve": "http-server ./.sb-static -p 8001",
     "start": "pnpm sb:start",
     "flow": "flow --show-all-errors",
-    "lint": "eslint ./packages",
+    "lint": "eslint",
     "ensureTypes": "node scripts/ensureTypes.mjs",
     "types": "pnpm ensureTypes && tsc --outDir ./tstest",
     "test": "pnpm flow && pnpm lint && pnpm vitest:cov && pnpm types",

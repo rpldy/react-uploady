@@ -21,5 +21,5 @@ export const tusIntercept = (uploadUrl) => {
             "Upload-Length": "1",
         },
     }, "resumeReq");
-}
+};
 

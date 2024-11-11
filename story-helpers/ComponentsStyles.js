@@ -28,4 +28,4 @@ const uploadUrlInputCss = css`
 export {
     uploadButtonCss,
     uploadUrlInputCss,
-}
+};

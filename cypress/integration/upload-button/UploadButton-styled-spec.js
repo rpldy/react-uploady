@@ -15,7 +15,7 @@ describe("UploadButton - With Styled Component", () => {
         uploadFile(fileName, () => {
             cy.get("@uploadButton")
                 .should("have.css", "background-color", "rgb(1, 9, 22)")
-                .should("have.css", "color", "rgb(176, 177, 179)")
+                .should("have.css", "color", "rgb(176, 177, 179)");
 
             cy.waitShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);

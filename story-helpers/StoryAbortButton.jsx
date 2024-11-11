@@ -11,7 +11,7 @@ import {
     useItemFinalizeListener,
 } from "@rpldy/shared-ui";
 
-const ListItem = ({ id, file, state, index}) => {
+const ListItem = ({ id, file, state, index }) => {
     const abortItem = useAbortItem();
 
     return (
@@ -59,7 +59,7 @@ const StoryAbortButton = () => {
         }
 
         setBatches((prevBatches) =>
-            prevBatches.map((b) => b.id === batch.id ? {...b, aborted: isAborted, finished: true } : b));
+            prevBatches.map((b) => b.id === batch.id ? { ...b, aborted: isAborted, finished: true } : b));
     });
 
     useAllAbortListener(() => {
@@ -96,7 +96,7 @@ const StoryAbortButton = () => {
             {items.map((item, i) =>
                 <ListItem {...item} index={i} key={item.id} />)}
         </ul>
-    </div>
+    </div>;
 };
 
 export default StoryAbortButton;

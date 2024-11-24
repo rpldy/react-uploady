@@ -87,12 +87,12 @@ const assertStartFinish = (storyLog, startIndex, prop, value, after = false) => 
 
 Cypress.Commands.add("assertFileItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex, after = false) => {
     console.log("assertFileItemStartFinish received log", storyLog, { startIndex, after });
-    assertStartFinish(storyLog, startIndex, "file.name", fileName, after);
+    return assertStartFinish(storyLog, startIndex, "file.name", fileName, after);
 });
 
 Cypress.Commands.add("assertUrlItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex = 0, after = false) => {
     console.log("assertUrlItemStartFinish received log", storyLog, { startIndex, after });
-    assertStartFinish(storyLog, startIndex, "url", fileName, after);
+    return assertStartFinish(storyLog, startIndex, "url", fileName, after);
 });
 
 Cypress.Commands.add("assertLogEntryCount", { prevSubject: true }, (storyLog, count) => {

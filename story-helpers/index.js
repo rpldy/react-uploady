@@ -32,7 +32,7 @@ export {
 };
 
 export  { mockDestination, urlDestination, cldDestination, localDestination } from "./uploadDestinations";
-export { getTusDestinationOptions, getDestinationOptions } from "./storySetupControls/args";
+export { getTusDestinationOptions, getDestinationOptions, getTusStoryArgs } from "./storySetupControls/args";
 
 export { default as getCsfExport } from "./getCsfExport";
 

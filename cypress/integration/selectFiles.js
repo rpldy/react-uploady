@@ -34,6 +34,7 @@ const selectFiles = (fixtureName, triggerSelector, alias, cb, {
     const usedFileName = fileName || fixtureName;
 
     cy.fixture(fixtureName, { encoding: null })
+        .as(usedFileName)
         .then((contents) => {
             const files = new Array(times)
                 .fill(null)

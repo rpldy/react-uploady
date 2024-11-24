@@ -10,8 +10,7 @@ const getChunksToSend = (chunkedState: ChunkedState): Array<Chunk> => {
         parallel = state.parallel || 1;
 
     for (let i = 0; i < state.chunks.length &&
-    inProgressIds.length < parallel &&
-    chunks.length < parallel; i++) {
+    (inProgressIds.length + chunks.length) < parallel; i++) {
         const chunk = state.chunks[i];
 
         if (!inProgressIds.includes(chunk.id)) {

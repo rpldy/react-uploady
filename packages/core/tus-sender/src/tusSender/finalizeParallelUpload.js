@@ -5,7 +5,8 @@ import { SUCCESS_CODES } from "../consts";
 
 import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
-import type { TusState } from "../types";
+import type { State, TusState } from "../types";
+import type { ParallelPartData } from "./types";
 
 const handleFinalizeResponse = (pXhr: XhrPromise, chunkedUploadData: UploadData): Promise<UploadData> =>
     pXhr
@@ -46,24 +47,19 @@ const finalizeParallelUpload = (
     chunkedRequest: Promise<UploadData>,
 ): Promise<UploadData> =>
     chunkedRequest.then((chunkedUploadData: UploadData) => {
-        let finalResult; // = chunkedUploadData;
+        let finalResult;
 
         if (chunkedUploadData.state === FILE_STATES.FINISHED) {
             const { options, items } = tusState.getState(),
                 itemData = items[item.id];
 
             if (itemData) {
-                const chunkItemIds = itemData.parallelChunks;
-                const parallelUploadUrls = chunkItemIds
-                    .filter((chunkId: string) => items[chunkId]?.uploadUrl)
-                    .map((chunkId: string) => items[chunkId].uploadUrl);
-
-                if (parallelUploadUrls.length !== chunkItemIds.length) {
-                    throw new Error(`tusSender: something went wrong. found ${parallelUploadUrls.length} upload urls for ${chunkItemIds.length} chunks`);
-                }
+                const parallelParts = itemData.parallelParts;
+                const parallelUploadUrls = parallelParts.map((pd: ParallelPartData) => pd.uploadUrl);
 
                 const headers = {
                     "tus-resumable": options.version,
+                    //we concat the parallel upload urls - there should be as many as the parallel option value
                     "Upload-Concat": `final;${parallelUploadUrls.join(" ")}`,
                     "Upload-Metadata": getUploadMetadata(sendOptions),
                 };
@@ -75,7 +71,7 @@ const finalizeParallelUpload = (
 
                 const pXhr = request(url, null, { method: "POST", headers });
 
-                tusState.updateState((state) => {
+                tusState.updateState((state: State) => {
                     state.items[item.id].abort = () => {
                         //override the state item's abort with the finalize request abort
                         pXhr.xhr.abort();
@@ -84,6 +80,9 @@ const finalizeParallelUpload = (
                 });
 
                 finalResult = handleFinalizeResponse(pXhr, chunkedUploadData);
+
+                //TODO: persist part URLS to storage (if not forget!!!) !!!!!!
+                //parallelUploadUrls
             }
         }
 

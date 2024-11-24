@@ -20,3 +20,9 @@ export const FD_STORAGE_PREFIX = "rpldy_tus_fd_";
 export const TUS_EVENTS: Object = devFreeze({
    RESUME_START: "RESUME_START"
 });
+
+export const PART_UPLOAD_STATES = {
+    UNKNOWN: "unknown",
+    IDLE: "idle",
+    UPLOADING: "uploading",
+};

@@ -7,8 +7,9 @@ import { addLocationToResponse } from "./utils";
 
 import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { ChunkedSender, ChunkedSendOptions, OnProgress } from "@rpldy/chunked-sender";
-import type { TusState } from "../types";
+import type { State, TusState } from "../types";
 import type { InitData } from "./types";
+import { PART_UPLOAD_STATES as PARALLEL_CHUNK_STATES } from "../consts";
 
 const doChunkedUploadForItem = (
 	items: BatchItem[],
@@ -55,7 +56,18 @@ const handleParallelizedChunkInit = (items: BatchItem[], tusState: TusState, ini
 
 	if (initData.uploadUrl) {
 		persistResumable(item, initData.uploadUrl, tusState.getState().options, parallelIdentifier);
-	}
+
+        tusState.updateState((state: State) => {
+            //get the parent item id for this parallel chunk
+            const orgItemId = state.items[item.id].orgItemId;
+            const ppData = orgItemId && state.items[orgItemId].parallelParts?.find((pd) => pd.identifier === parallelIdentifier);
+            if (ppData) {
+                ppData.uploadUrl = initData.uploadUrl;
+                //got upload URL, mark data as IDLE for following chunks
+                ppData.state = PARALLEL_CHUNK_STATES.IDLE;
+            }
+        });
+    }
 
 	logger.debugLog(`tusSender.handler: created upload for parallelized chunk: ${item.id}`);
 

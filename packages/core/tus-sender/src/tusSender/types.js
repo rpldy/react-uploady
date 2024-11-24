@@ -1,13 +1,25 @@
 // @flow
 import type { BatchItem } from "@rpldy/shared";
 
+export type ParallelPartData = {
+    identifier: string,
+    uploadUrl: ?string,
+    lastOffset: number,
+    state: "unknown" | "idle" | "uploading",
+    chunkIds: string[],
+};
+
 export type ItemInfo = {
 	id: string,
 	uploadUrl: ?string,
 	size: number,
 	offset: number,
 	abort?: () => boolean,
-	parallelChunks: string[],
+	parallelParts: ParallelPartData[],
+
+    //these props will be populated only for items that represent a parallel chunk:
+    parallelIdentifier: ?string,
+    orgItemId: ?string,
 };
 
 export type InitData = {|

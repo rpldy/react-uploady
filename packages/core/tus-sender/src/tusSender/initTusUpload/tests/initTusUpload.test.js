@@ -6,7 +6,7 @@ import resumeUpload from "../resumeUpload";
 import initTusUpload from "../initTusUpload";
 
 vi.mock("../../../resumableStore", () => ({
-	retrieveResumable: vi.fn(),
+    retrieveResumable: vi.fn(),
 }));
 
 vi.mock("../../handleTusUpload");
@@ -14,180 +14,247 @@ vi.mock("../createUpload");
 vi.mock("../resumeUpload");
 
 describe("initTusUpload tests", () => {
-	beforeEach(() => {
-		clearViMocks(
-			retrieveResumable,
-			handleTusUpload,
-			createUpload,
-			resumeUpload,
-		);
-	});
+    beforeEach(() => {
+        clearViMocks(
+            retrieveResumable,
+            handleTusUpload,
+            createUpload,
+            resumeUpload,
+        );
+    });
 
-	const item = { id: "i1", file: { size: 123 } },
-		url = "upload.url",
-		sendOptions = { params: "123" },
-		onProgress = () => {
-		},
-		chunkedSender = { send: "send" };
+    const item = { id: "i1", file: { size: 123 } },
+        url = "upload.url",
+        sendOptions = { params: "123" },
+        onProgress = () => {
+        },
+        chunkedSender = { send: "send" };
 
-	it("should init single upload - create", () => {
-		const tusState = createTusState({
-			items: {},
-			options: { parallel: 1 }
-		});
+    it("should init single upload - create", () => {
+        const tusState = createTusState({
+            items: {},
+            options: { parallel: 1 }
+        });
 
-		createUpload.mockReturnValueOnce({
-			request: "request"
-		});
+        createUpload.mockReturnValueOnce({
+            request: "request"
+        });
 
-		initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender);
+        initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender);
 
-		expect(tusState.getState().items[item.id].id).toBe(item.id);
-		expect(tusState.getState().items[item.id].size).toBe(item.file.size);
+        expect(tusState.getState().items[item.id].id).toBe(item.id);
+        expect(tusState.getState().items[item.id].size).toBe(item.file.size);
 
-		expect(handleTusUpload).toHaveBeenCalledWith(
-			[item],
-			url,
-			sendOptions,
-			onProgress,
-			tusState,
-			chunkedSender,
-			"request",
-			false,
-			null
-		);
-	});
+        expect(handleTusUpload).toHaveBeenCalledWith(
+            [item],
+            url,
+            sendOptions,
+            onProgress,
+            tusState,
+            chunkedSender,
+            "request",
+            false,
+            null
+        );
+    });
 
-	it("should init single upload - resume", () => {
-		const tusState = createTusState({
-			items: {},
-			options: { parallel: 1 }
-		});
+    it("should init single upload - resume", () => {
+        const tusState = createTusState({
+            items: {},
+            options: { parallel: 1 }
+        });
 
-		resumeUpload.mockReturnValueOnce({
-			request: "request"
-		});
+        resumeUpload.mockReturnValueOnce({
+            request: "request"
+        });
 
-		retrieveResumable.mockReturnValueOnce("stored.url");
+        retrieveResumable.mockReturnValueOnce("stored.url");
 
-		initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender, "trigger");
+        initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender, "trigger");
 
-		expect(tusState.getState().items[item.id].id).toBe(item.id);
-		expect(tusState.getState().items[item.id].size).toBe(item.file.size);
+        expect(tusState.getState().items[item.id].id).toBe(item.id);
+        expect(tusState.getState().items[item.id].size).toBe(item.file.size);
 
-		expect(resumeUpload).toHaveBeenCalledWith(item, "stored.url", tusState, "trigger", null);
+        expect(resumeUpload).toHaveBeenCalledWith(item, "stored.url", tusState, "trigger", null);
 
-		expect(handleTusUpload).toHaveBeenCalledWith(
-			[item],
-			url,
-			sendOptions,
-			onProgress,
-			tusState,
-			chunkedSender,
-			"request",
-			true,
-			null
-		);
-	});
+        expect(handleTusUpload).toHaveBeenCalledWith(
+            [item],
+            url,
+            sendOptions,
+            onProgress,
+            tusState,
+            chunkedSender,
+            "request",
+            true,
+            null
+        );
+    });
 
-	it("should init parallel upload", async () => {
-		const tusState = createTusState({
-			items: {},
-			options: { parallel: 2 }
-		});
+    it("should init parallel part", async () => {
+        const parallelIdentifier = "pllId2";
 
-		const { abort } = initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender);
+        const tusState = createTusState({
+            items: {
+                "orgItem1": {
+                    parallelParts: [
+                        {},
+                        {
+                            identifier: parallelIdentifier,
+                            state: "unknown"
+                        }
+                    ]
+                }
+            },
+            options: { parallel: 1 }
+        });
 
-		expect(abort()).toBe(true);
+        createUpload.mockReturnValueOnce({
+            request: "request"
+        });
 
-		expect(tusState.getState().items[item.id].id).toBe(item.id);
-		expect(tusState.getState().items[item.id].size).toBe(item.file.size);
+        initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender, "trigger", parallelIdentifier, "orgItem1");
 
-		expect(resumeUpload).not.toHaveBeenCalled();
-		expect(createUpload).not.toHaveBeenCalled();
-		expect(retrieveResumable).not.toHaveBeenCalled();
+        expect(handleTusUpload).toHaveBeenCalledWith(
+            [item],
+            url,
+            sendOptions,
+            onProgress,
+            tusState,
+            chunkedSender,
+            "request",
+            false,
+            parallelIdentifier
+        );
+    });
 
-		expect(handleTusUpload).toHaveBeenCalledWith(
-			[item],
-			url,
-			sendOptions,
-			onProgress,
-			tusState,
-			chunkedSender,
-			expect.any(Promise),
-			false,
-			null
-		);
+    it("should skip init parallel upload", async () => {
+        const tusState = createTusState({
+            items: {},
+            options: { parallel: 2 }
+        });
 
-		const initRes = await handleTusUpload.mock.calls[0][6];
-		expect(initRes.isNew).toBe(true);
-	});
+        const { abort } = initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender);
 
-	it("should abort init call and chunked call", async() => {
-		const initAbort = vi.fn(),
-			chunkedAbort = vi.fn();
+        expect(abort()).toBe(true);
 
-		const tusState = createTusState({
-			items: {},
-			options: {}
-		});
+        expect(tusState.getState().items[item.id].id).toBe(item.id);
+        expect(tusState.getState().items[item.id].size).toBe(item.file.size);
 
-		createUpload.mockReturnValue({
-			abort: initAbort,
-			request: Promise.resolve({})
-		});
+        expect(handleTusUpload).toHaveBeenCalledWith(
+            [item],
+            url,
+            sendOptions,
+            onProgress,
+            tusState,
+            chunkedSender,
+            expect.any(Promise),
+            false,
+            null
+        );
 
-		const { abort } = initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender);
+        const initRes = await handleTusUpload.mock.calls[0][6];
+        expect(initRes.isNew).toBe(true);
 
-		tusState.updateState((state) =>{
-			state.items[item.id] = {
-				abort: chunkedAbort
-			};
-		});
+        expect(resumeUpload).not.toHaveBeenCalled();
+        expect(createUpload).not.toHaveBeenCalled();
+        expect(retrieveResumable).not.toHaveBeenCalled();
+    });
 
-		await abort();
+    it("should skip init for parallel part that's already created", async () => {
+        const parallelIdentifier = "pllId2";
+        const uploadUrl = "part.url";
 
-		expect(initAbort).toHaveBeenCalled();
-		expect(chunkedAbort).toHaveBeenCalled();
-	});
+        const tusState = createTusState({
+            items: {
+                "orgItem1": {
+                    parallelParts: [
+                        {},
+                        {
+                            identifier: parallelIdentifier,
+                            uploadUrl,
+                            state: "idle"
+                        }
+                    ]
+                }
+            },
+            options: { parallel: 1 }
+        });
 
-	it("should abort and handle no chunked abort", async() => {
-		const initAbort = vi.fn();
+        initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender, "trigger", parallelIdentifier, "orgItem1");
 
-		const tusState = createTusState({
-			items: {},
-			options: {}
-		});
+        const initRes = await handleTusUpload.mock.calls[0][6];
+        expect(initRes.isNew).toBe(true);
 
-		createUpload.mockReturnValue({
-			abort: initAbort,
-			request: Promise.resolve({})
-		});
+        expect(resumeUpload).not.toHaveBeenCalled();
+        expect(createUpload).not.toHaveBeenCalled();
+        expect(retrieveResumable).not.toHaveBeenCalled();
+    });
 
-		const { abort } = initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender);
+    it("should abort init call and chunked call", async () => {
+        const initAbort = vi.fn(),
+            chunkedAbort = vi.fn();
 
-		await abort();
+        const tusState = createTusState({
+            items: {},
+            options: {}
+        });
 
-		expect(initAbort).toHaveBeenCalled();
-	});
+        createUpload.mockReturnValue({
+            abort: initAbort,
+            request: Promise.resolve({})
+        });
 
-	it("should abort and handle no init data", async() => {
-		const initAbort = vi.fn();
+        const { abort } = initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender);
 
-		const tusState = createTusState({
-			items: {},
-			options: {}
-		});
+        tusState.updateState((state) => {
+            state.items[item.id] = {
+                abort: chunkedAbort
+            };
+        });
 
-		createUpload.mockReturnValue({
-			abort: initAbort,
-			request: Promise.resolve(null)
-		});
+        await abort();
 
-		const { abort } = initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender);
+        expect(initAbort).toHaveBeenCalled();
+        expect(chunkedAbort).toHaveBeenCalled();
+    });
 
-		await abort();
+    it("should abort and handle no chunked abort", async () => {
+        const initAbort = vi.fn();
 
-		expect(initAbort).toHaveBeenCalled();
-	});
+        const tusState = createTusState({
+            items: {},
+            options: {}
+        });
+
+        createUpload.mockReturnValue({
+            abort: initAbort,
+            request: Promise.resolve({})
+        });
+
+        const { abort } = initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender);
+
+        await abort();
+
+        expect(initAbort).toHaveBeenCalled();
+    });
+
+    it("should abort and handle no init data", async () => {
+        const initAbort = vi.fn();
+
+        const tusState = createTusState({
+            items: {},
+            options: {}
+        });
+
+        createUpload.mockReturnValue({
+            abort: initAbort,
+            request: Promise.resolve(null)
+        });
+
+        const { abort } = initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender);
+
+        await abort();
+
+        expect(initAbort).toHaveBeenCalled();
+    });
 });

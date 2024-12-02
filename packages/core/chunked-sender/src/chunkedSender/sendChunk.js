@@ -80,9 +80,9 @@ const uploadChunkWithUpdatedData = (
                 logger.debugLog(`chunkedSender.sendChunk: received false from CHUNK_START handler - skipping chunk ${chunkIndex}, item ${item.id}`);
             }
 
-            //upload the chunk to the server
             return skipChunk ?
                 getSkippedResult() :
+                //upload the chunk to the server
                 xhrSend([chunkItem],
                     updatedData?.url || state.url,
                     mergeWithUndefined({}, sendOptions, updatedData?.sendOptions),

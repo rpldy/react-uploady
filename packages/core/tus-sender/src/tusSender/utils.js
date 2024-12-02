@@ -22,7 +22,22 @@ const addLocationToResponse = (request: Promise<UploadData>, location: ?string):
         return data;
     });
 
+const createResumeSuccessResult = (url) =>
+    addLocationToResponse(Promise.resolve({
+        status: 200,
+        state: FILE_STATES.FINISHED,
+        response: { message: "TUS server has file" },
+    }), url);
+
+const getHeadersWithoutContentRange = (headers: ?Object) => ({
+    ...headers,
+    //TUS doesn't expect content-range header and may not whitelist for CORS
+    "Content-Range": undefined,
+});
+
 export {
 	getUploadMetadata,
-    addLocationToResponse
+    addLocationToResponse,
+    getHeadersWithoutContentRange,
+    createResumeSuccessResult,
 };

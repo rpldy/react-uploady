@@ -22,6 +22,7 @@ export const getTusDestinationOptions = () => isProd ?
     [
         DESTINATION_TYPES.url,
         DESTINATION_TYPES.local,
+        // "tus-demo",
     ];
 
 export const getTusStoryArgs = () => {
@@ -33,6 +34,7 @@ export const getTusStoryArgs = () => {
         },
         args: {
             uploadType: "url",
+            uploadUrl: isProd ? "http" : "http://0.0.0.0:9009/upload",
             chunkSize: DEFAULT_CHUNK_SIZE,
             parallel: 0,
             forgetOnSuccess: false,

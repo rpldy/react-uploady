@@ -2,9 +2,9 @@
 import { logger } from "@rpldy/shared";
 import { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
 import xhrSend, { MissingUrlError, type SendMethod, type SendOptions } from "@rpldy/sender";
-import initTusUpload from "./initTusUpload";
 import { TUS_SENDER_TYPE } from "../consts";
 import doFeatureDetection from "../featureDetection";
+import { initTusUpload, initParallelTusUpload } from "./initTusUpload";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
@@ -29,8 +29,13 @@ const doUpload = (
 	let tusAbort;
 
 	const callInit = () => {
-		const tusResult = initTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender, trigger);
-		tusAbort = tusResult.abort;
+        const isParallel = +tusState.getState().options.parallel > 1;
+
+        const tusResult = isParallel ?
+            initParallelTusUpload(items, url, sendOptions, onProgress, tusState, trigger) :
+            initTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender, trigger);
+
+        tusAbort = tusResult.abort;
 		return tusResult.request;
 	};
 

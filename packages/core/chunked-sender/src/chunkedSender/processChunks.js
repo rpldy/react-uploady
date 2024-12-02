@@ -64,7 +64,7 @@ const processChunks = (
     const chunks = getChunks(item, chunkedOptions, sendOptions.startByte);
     const chunkedState = getChunkedState(chunks, url, sendOptions, chunkedOptions);
 
-    logger.debugLog(`chunkedSender: created ${chunks.length} chunks for: ${item.file.name}`);
+    logger.debugLog(`chunkedSender: created ${chunks.length} chunks for: ${item.file.name}.`);
 
     const { sendPromise, abort } = startProcessing(chunkedState, item, onProgress, trigger);
 

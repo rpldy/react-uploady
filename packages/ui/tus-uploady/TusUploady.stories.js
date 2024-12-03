@@ -160,7 +160,7 @@ const TusConcatUploadLog = () => {
         setLog((log) => log.concat("ITEM FINISHED UPLOADING!"));
     });
 
-    return log.map((line) => <p key={line}>{line}</p>);
+    return log.map((line, i) => <p key={line + `${i}`}>{line}</p>);
 };
 
 export const WithTusConcatenation: UploadyStory = createUploadyStory(

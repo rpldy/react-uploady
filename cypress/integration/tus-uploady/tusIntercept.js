@@ -33,14 +33,24 @@ export const createTusIntercepts = (tusOptions = {}) => {
             });
         } else {
             const partSize = parseInt(req.headers["upload-length"]);
+            let contentLength = parseInt(req.headers["content-length"]);
+
             if (!options.deferLength) {
                 expect(partSize).to.be.a("number");
+            }
+
+            //support data on create
+            contentLength = isNaN(contentLength) ? 0 : contentLength;
+
+            if (contentLength) {
+                tusData[createsCount].offset = contentLength;
             }
 
             tusData[createsCount].size = partSize;
 
             req.reply(200, { success: true }, {
                 "Location": `${uploadUrl}/${tusData[createsCount].path}`,
+                "Upload-Offset": `${contentLength}`,
                 "Tus-Resumable": "1.0.0",
             });
 

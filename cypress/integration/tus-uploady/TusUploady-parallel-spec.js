@@ -1,6 +1,6 @@
-import uploadFile from "../uploadFile";
 import { createTusIntercepts, parallelFinalUrl, uploadUrl } from "./tusIntercept";
 import clearTusPersistStorage from "./clearTusPersistStorage";
+import runParallelUpload from "./runParallerlUpload";
 
 describe("TusUploady - Parallel", () => {
     const fileName = "flower.jpg";
@@ -21,42 +21,6 @@ describe("TusUploady - Parallel", () => {
         clearTusPersistStorage();
     });
 
-    const runParallelUpload = (parallel, testCb) => {
-        let runCount = 0;
-
-        const run = (cb) => {
-            let partSize = 0, fileSize = 0;
-
-            cy.get("input")
-                .should("exist")
-                .as("fInput");
-
-            uploadFile(fileName, () => {
-                cy.waitMedium();
-
-                cy.get(`@${fileName}`)
-                    .then((uploadFile) => {
-                        fileSize = uploadFile.length;
-                        cy.log(`GOT UPLOADED FILE Length ===> ${fileSize}`);
-                        partSize = Math.floor(fileSize / parallel);
-                    });
-
-                cy.storyLog()
-                    .assertFileItemStartFinish(fileName, 1 + (runCount * 4))
-                    .then((startFinishEvents) => {
-                        cb(fileSize, partSize, startFinishEvents);
-                    });
-            });
-
-            return (nextCb) => {
-                runCount += 1;
-                run(nextCb);
-            };
-        }
-
-        return run(testCb);
-    };
-
     it("should upload chunks using tus protocol in parallel, chunk size larger than part size", () => {
         const parallel = 2;
         const {
@@ -66,7 +30,7 @@ describe("TusUploady - Parallel", () => {
             assertParallelFinalRequest,
         } = createTusIntercepts({ parallel });
 
-        runParallelUpload(parallel, (fileSize, createSize, startFinishEvents) => {
+        runParallelUpload(fileName, parallel, (fileSize, createSize, startFinishEvents) => {
             assertCreateRequest(createSize + 1);
             assertCreateRequest(createSize);
 
@@ -97,7 +61,7 @@ describe("TusUploady - Parallel", () => {
 
         cy.setUploadOptions({ chunkSize, parallel });
 
-        runParallelUpload(parallel, (fileSize, createSize, startFinishEvents) => {
+        runParallelUpload(fileName, parallel, (fileSize, createSize, startFinishEvents) => {
             assertCreateRequest(createSize + 1);
             assertCreateRequest(createSize + 1);
             assertCreateRequest(createSize - 1);
@@ -130,7 +94,7 @@ describe("TusUploady - Parallel", () => {
             assertResumeRequest,
         } = createTusIntercepts({ parallel });
 
-        const runAgain = runParallelUpload(parallel, (fileSize, createSize, startFinishEvents) => {
+        const runAgain = runParallelUpload(fileName, parallel, (fileSize, createSize, startFinishEvents) => {
             assertLastCreateRequest(({ request }) => {
                 expect(request.headers["upload-concat"])
                     .to.eq(`final;${getPartUrls().join(" ")}`);
@@ -167,7 +131,7 @@ describe("TusUploady - Parallel", () => {
             assertResumeForParts,
         } = createTusIntercepts({ parallel });
 
-        const runAgain = runParallelUpload(parallel, (fileSize, createSize, startFinishEvents) => {
+        const runAgain = runParallelUpload(fileName, parallel, (fileSize, createSize, startFinishEvents) => {
             assertLastCreateRequest(({ request }) => {
                 expect(request.headers["upload-concat"])
                     .to.eq(`final;${getPartUrls().join(" ")}`);

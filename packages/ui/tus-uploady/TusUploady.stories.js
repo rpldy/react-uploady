@@ -19,10 +19,16 @@ import TusUploady, {
     useRequestPreSend,
     composeEnhancers,
     useTusResumeStartListener,
+    useClearResumableStore,
 } from "./src";
 
 import Readme from "./TusUploady.storydoc.mdx";
 import type { Node } from "react";
+
+const ClearResumablesButton = () => {
+    const clear = useClearResumableStore();
+    return <button style={{ margin: "10px 0 10px"}} onClick={clear}>Clear Resumable Store</button>
+};
 
 const AbortButton = () => {
     const abortAll = useAbortAll();
@@ -78,6 +84,7 @@ export const Simple: UploadyStory = createUploadyStory(
          ignoreModifiedDateInStorage,
          sendDataOnCreate,
          sendWithCustomHeader,
+         parallel,
          extOptions,
      }): Node => {
         const activeDestination = sendWithCustomHeader ?
@@ -90,6 +97,7 @@ export const Simple: UploadyStory = createUploadyStory(
                 destination={activeDestination}
                 enhancer={enhancer}
                 chunkSize={extOptions?.chunkSize || chunkSize}
+                parallel={extOptions?.parallel ?? parallel}
                 forgetOnSuccess={forgetOnSuccess}
                 resume={resumeStorage}
                 ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}
@@ -99,6 +107,7 @@ export const Simple: UploadyStory = createUploadyStory(
                 <br/>
                 <AbortButton/>
                 <ItemProgress/>
+                <ClearResumablesButton/>
             </TusUploady>
         );
     });
@@ -145,6 +154,7 @@ export const WithDynamicMetadata: UploadyStory = createUploadyStory(
                 <br/>
                 <ItemProgress/>
                 <DynamicUploadMeta/>
+                <ClearResumablesButton/>
             </TusUploady>
         );
     });
@@ -172,7 +182,8 @@ export const WithTusConcatenation: UploadyStory = createUploadyStory(
          resumeStorage,
          ignoreModifiedDateInStorage,
          sendDataOnCreate,
-        extOptions
+         parallel,
+         extOptions
      }): Node => {
         return (
             <TusUploady
@@ -182,12 +193,13 @@ export const WithTusConcatenation: UploadyStory = createUploadyStory(
                 chunkSize={extOptions?.chunkSize || chunkSize}
                 forgetOnSuccess={forgetOnSuccess}
                 resume={resumeStorage}
-                parallel={extOptions?.parallel ?? 2}
+                parallel={extOptions?.parallel ?? (parallel || 2)}
                 ignoreModifiedDateInStorage={!ignoreModifiedDateInStorage}
                 sendDataOnCreate={sendDataOnCreate}
             >
-                <UploadButton>Upload with TUS Concatenation</UploadButton>
+                <UploadButton id="upload-button">Upload with TUS Concatenation</UploadButton>
                 <TusConcatUploadLog/>
+                <ClearResumablesButton/>
             </TusUploady>
         );
     });
@@ -249,6 +261,7 @@ export const WithRetry: UploadyStory = createUploadyStory(
                 <AbortButton/>
                 <RetryTus/>
                 <ItemProgress/>
+                <ClearResumablesButton/>
             </TusUploady>
         );
     });
@@ -302,6 +315,7 @@ export const WithResumeStartHandler: UploadyStory = createUploadyStory(
                 <RetryTus/>
                 <ItemProgress/>
                 <ResumeHandler cancelResume={extOptions?.tusCancelResume}/>
+                <ClearResumablesButton/>
             </TusUploady>
         );
     });

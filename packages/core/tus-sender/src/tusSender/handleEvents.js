@@ -7,10 +7,8 @@ import { SUCCESS_CODES } from "../consts";
 import { getHeadersWithoutContentRange } from "./utils";
 
 import type { BatchItem } from "@rpldy/shared";
-import type { TriggerMethod } from "@rpldy/life-events";
 import type { UploaderCreateOptions, UploaderType } from "@rpldy/uploader";
 import type {
-    ChunkedSender,
     ChunkStartEventData,
     ChunkFinishEventData,
     ChunkEventData,
@@ -39,7 +37,7 @@ const forgetPersistedUrls = (item: BatchItem ,itemInfo: ItemInfo, options: TusOp
     });
 };
 
-const handleEvents = (uploader: UploaderType<UploaderCreateOptions>, tusState: TusState, chunkedSender: ChunkedSender, trigger: TriggerMethod) => {
+const handleEvents = (uploader: UploaderType<UploaderCreateOptions>, tusState: TusState) => {
     if (CHUNKING_SUPPORT) {
         uploader.on(UPLOADER_EVENTS.ITEM_FINALIZE, (item) => {
             const { items, options } = tusState.getState(),

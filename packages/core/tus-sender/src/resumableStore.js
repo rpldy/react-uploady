@@ -77,7 +77,7 @@ const clearResumables = (options: TusOptions) => {
 	for (let i = 0; i < safeLocalStorage.length; i++) {
 		const key = safeLocalStorage.key(i);
 
-		if (key && !key.startsWith(prefix)) {
+		if (key?.startsWith(prefix)) {
 			safeLocalStorage.removeItem(key);
 		}
 	}

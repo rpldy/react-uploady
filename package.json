@@ -119,7 +119,7 @@
     "eslint-plugin-vitest": "^0.5.4",
     "execa": "^9.3.0",
     "filesize": "^10.1.4",
-    "flow-bin": "^0.245.1",
+    "flow-bin": "^0.255.0",
     "fs-extra": "^11.2.0",
     "glob": "^11.0.0",
     "globals": "^15.12.0",

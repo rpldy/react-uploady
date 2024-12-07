@@ -1,10 +1,11 @@
 import uploadFile from "../uploadFile";
-import { createTusIntercepts } from "./tusIntercept";
+import { createTusIntercepts, uploadUrl } from "./tusIntercept";
 import clearTusPersistStorage from "./clearTusPersistStorage";
+import { getParallelSizes } from "./runParallerlUpload";
 
 describe("TusUploady - Simple", () => {
 	const fileName = "flower.jpg",
-        uploadUrl = "http://test.tus.com/upload";
+        chunkSize = 200_000;
 
 	before(() => {
         clearTusPersistStorage();
@@ -13,7 +14,7 @@ describe("TusUploady - Simple", () => {
             "simple",
             {
                 uploadUrl,
-                chunkSize: 200000,
+                chunkSize,
                 uploadParams: { foo: "bar" },
                 tusResumeStorage: true,
                 tusIgnoreModifiedDateInStorage: true,
@@ -23,7 +24,12 @@ describe("TusUploady - Simple", () => {
 	});
 
 	it("should upload chunks using tus protocol", () => {
-       const { addResumeForParts, assertResumeForParts }  = createTusIntercepts();
+       const {
+           addResumeForParts,
+           assertResumeForParts,
+           assertCreateRequest,
+           assertPatchRequest,
+       }  = createTusIntercepts();
 
 		cy.get("input")
 			.should("exist")
@@ -33,29 +39,17 @@ describe("TusUploady - Simple", () => {
 			cy.waitMedium();
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
-			cy.wait("@tusCreateReq")
-				.then((xhr) => {
-					expect(xhr.request.headers["upload-metadata"])
-						.to.eq("foo YmFy");
+            assertCreateRequest(0, ({ request }) => {
+                expect(request.headers["x-test"])
+                    .to.eq("abcd");
 
-					expect(xhr.request.headers["x-test"])
-						.to.eq("abcd");
+                expect(request.body).to.eq("");
+            });
 
-					expect(xhr.request.body).to.eq("");
-				});
-
-			cy.wait("@tusPatchReq1")
-                .then(({ request }) => {
-                    const { headers } = request;
-                    expect(headers["content-length"]).to.eq("200000");
-                    expect(headers["content-type"]).to.eq("application/offset+octet-stream");
-                });
-
-            cy.wait("@tusPatchReq1")
-                .then(({ request }) => {
-                    const { headers } = request;
-                    expect(headers["upload-offset"]).to.eq("200000");
-                    expect(headers["content-type"]).to.eq("application/offset+octet-stream");
+            getParallelSizes(fileName, 1)
+                .then(({ fileSize }) => {
+                    assertPatchRequest(chunkSize, 0);
+                    assertPatchRequest(fileSize - chunkSize, 0);
                 });
 
             addResumeForParts();

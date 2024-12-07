@@ -42,7 +42,8 @@ const initTusUpload =  (items: BatchItem[],
         tusState,
         chunkedSender,
         initCall.request,
-        !!persistedUrl
+        !!persistedUrl,
+        parallelIdentifier
     );
 
     const abort = () => {
@@ -54,12 +55,9 @@ const initTusUpload =  (items: BatchItem[],
             .then((data) => {
                 if (data) {
                     logger.debugLog(`tusSender.handler: aborting chunked upload for item:  ${item.id}`);
-
                     const abortChunked = tusState.getState().items[item.id].abort;
 
-                    if (abortChunked) {
-                        abortChunked();
-                    }
+                    abortChunked?.();
                 }
             });
 

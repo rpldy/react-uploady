@@ -63,8 +63,8 @@ const ItemProgress = () => {
 
     return (
         <>
-            {progress.map((p) => (
-                <p key={p.id} data-id={p.id}>
+            {progress.map((p, i) => (
+                <p key={p.id + i} data-id={p.id}>
                     {p.text}
                 </p>
             ))}
@@ -234,12 +234,13 @@ export const WithRetry: UploadyStory = createUploadyStory(
          destination,
          enhancer,
          chunkSize,
+         parallel,
          forgetOnSuccess,
          resumeStorage,
          ignoreModifiedDateInStorage,
          sendDataOnCreate,
          sendWithCustomHeader,
-        extOptions,
+         extOptions,
      }): Node => {
         const activeDestination = sendWithCustomHeader ?
             { ...destination, headers: { "x-test": "abcd" } } :
@@ -251,6 +252,7 @@ export const WithRetry: UploadyStory = createUploadyStory(
                 destination={activeDestination}
                 enhancer={composeEnhancers(enhancer, retryEnhancer)}
                 chunkSize={extOptions?.chunkSize || chunkSize}
+                parallel={extOptions?.parallel ?? parallel}
                 forgetOnSuccess={forgetOnSuccess}
                 resume={resumeStorage}
                 ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}
@@ -284,6 +286,7 @@ export const WithResumeStartHandler: UploadyStory = createUploadyStory(
          destination,
          enhancer,
          chunkSize,
+         parallel,
          forgetOnSuccess,
          resumeStorage,
          ignoreModifiedDateInStorage,
@@ -300,6 +303,7 @@ export const WithResumeStartHandler: UploadyStory = createUploadyStory(
                 destination={activeDestination}
                 enhancer={composeEnhancers(enhancer, retryEnhancer)}
                 chunkSize={extOptions?.chunkSize || chunkSize}
+                parallel={extOptions?.parallel ?? parallel}
                 forgetOnSuccess={forgetOnSuccess}
                 resume={resumeStorage}
                 ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}

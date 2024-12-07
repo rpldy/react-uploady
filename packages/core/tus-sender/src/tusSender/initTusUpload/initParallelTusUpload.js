@@ -113,7 +113,7 @@ const createParallelUpload = (
     //wrap around the parallel requests so we can finalize them as one tus upload
     const request = Promise.all(parallelReqs.map((pr) => pr.request))
         .then((data) => {
-            const failedReq = data.find((d) => d.state === FILE_STATES.ERROR);
+            const failedReq = data.find((d) => d.state !== FILE_STATES.FINISHED);
 
             return {
                 status: failedReq?.status ?? data[0].status,

@@ -1,5 +1,4 @@
-import uploadFile from "../uploadFile";
-import { createTusIntercepts, parallelFinalUrl } from "./tusIntercept";
+import { createTusIntercepts, uploadUrl, parallelFinalUrl } from "./tusIntercept";
 import runParallelUpload from "./runParallerlUpload";
 
 describe("TusUploady - Parallel with Data on Create", () => {
@@ -11,7 +10,7 @@ describe("TusUploady - Parallel with Data on Create", () => {
             "with-tus-concatenation",
             {
                 useMock: false,
-                uploadUrl: "http://test.tus.com/upload",
+                uploadUrl,
                 chunkSize: 200000,
                 uploadParams: { foo: "bar" },
                 tusResumeStorage: true,

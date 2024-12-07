@@ -1,5 +1,14 @@
 import uploadFile from "../uploadFile";
 
+export const getParallelSizes = (fileName, parallel) =>
+    cy.get(`@${fileName}`)
+        .then((uploadFile) => {
+            const fileSize = uploadFile.length;
+            cy.log(`GOT UPLOADED FILE Length ===> ${fileSize}`);
+            const partSize = Math.floor(fileSize / parallel);
+            return cy.wrap({ fileSize, partSize });
+        });
+
 const runParallelUpload = (fileName, parallel, testCb) => {
     let runCount = 0;
 
@@ -13,11 +22,10 @@ const runParallelUpload = (fileName, parallel, testCb) => {
         uploadFile(fileName, () => {
             cy.waitMedium();
 
-            cy.get(`@${fileName}`)
-                .then((uploadFile) => {
-                    fileSize = uploadFile.length;
-                    cy.log(`GOT UPLOADED FILE Length ===> ${fileSize}`);
-                    partSize = Math.floor(fileSize / parallel);
+            getParallelSizes(fileName, parallel)
+                .then((sizes) => {
+                    fileSize = sizes.fileSize;
+                    partSize = sizes.partSize;
                 });
 
             cy.storyLog()
@@ -29,9 +37,9 @@ const runParallelUpload = (fileName, parallel, testCb) => {
 
         return (nextCb) => {
             runCount += 1;
-            run(nextCb);
+            return run(nextCb);
         };
-    }
+    };
 
     return run(testCb);
 };

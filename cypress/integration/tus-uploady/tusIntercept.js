@@ -1,11 +1,23 @@
+import { interceptWithDelay } from "../intercept";
+
 export const uploadUrl = "http://test.tus.com/upload";
 
 export const parallelFinalUrl = `${uploadUrl}/final`;
 
+let callCount = 64;
+
+beforeEach(() => {
+   callCount = 64;
+});
+
 export const createTusIntercepts = (tusOptions = {}) => {
+    callCount += 1;
+
     const options = {
         parallel: 1,
         deferLength: false,
+        patchDelay: 0,
+        id: String.fromCharCode(callCount),
         ...tusOptions
     };
 
@@ -20,6 +32,9 @@ export const createTusIntercepts = (tusOptions = {}) => {
     });
 
     let createsCount = 0;
+
+    const getA = (alias, wait, all) =>
+        `${wait ? "@": ""}${alias}_${options.id}${all ? ".all" : ""}`;
 
     cy.intercept("POST", uploadUrl, (req) => {
         const concatHeader = req.headers["upload-concat"];
@@ -56,18 +71,23 @@ export const createTusIntercepts = (tusOptions = {}) => {
 
             createsCount += 1;
         }
-    }).as("tusCreateReq");
+    }).as(getA("tusCreateReq"));
 
     tusData.forEach(({ path }, i) => {
-        cy.intercept("PATCH", `${uploadUrl}/${path}`, (req) => {
+        interceptWithDelay(options.patchDelay, getA(`tusPatchReq${i + 1}`), `${uploadUrl}/${path}`, "PATCH",
+            (req) => {
             const offset = parseInt(req.headers["content-length"]);
             tusData[i].offset += offset;
 
-            req.reply(204, "", {
-                "Tus-Resumable": "1.0.0",
-                "Upload-Offset": `${tusData[i].offset}`,
-            });
-        }).as(`tusPatchReq${i + 1}`);
+            return  {
+              statusCode: 204,
+              body: "",
+              headers: {
+                  "Tus-Resumable": "1.0.0",
+                  "Upload-Offset": `${tusData[i].offset}`,
+              }
+          };
+        });
     });
 
     const getPartUrls = () =>
@@ -76,14 +96,21 @@ export const createTusIntercepts = (tusOptions = {}) => {
     return {
         getPartUrls,
 
-        assertCreateRequest: (createSize, cb = null) => {
-            cy.wait("@tusCreateReq")
+        assertCreateRequest: (createSize = 0, cb = null) => {
+            cy.wait(getA("tusCreateReq", true))
                 .then((xhr) => {
                     const { headers } = xhr.request;
-                    expect(headers["upload-length"]).to.eq(`${createSize}`);
+
+                    if (createSize) {
+                        expect(headers["upload-length"]).to.eq(`${createSize}`);
+                    } else {
+                        expect(headers["upload-length"]).to.eq(`${tusData[0].size}`);
+                    }
 
                     if (options.parallel > 1) {
-                        expect(headers["upload-concat"]).to.eq("partial");
+                        expect(headers["upload-concat"]).to.eq("partial", "parallel parts should be created with 'partial' concat header");
+                    } else {
+                        expect(headers["upload-concat"]).to.eq(undefined, "no parallel parts shouldn't pass 'partial' concat header!");
                     }
 
                     cb?.(xhr);
@@ -91,7 +118,7 @@ export const createTusIntercepts = (tusOptions = {}) => {
         },
 
         assertPatchRequest: (contentLength, index, cb = null) => {
-            cy.wait(`@tusPatchReq${index + 1}`)
+            cy.wait(getA(`tusPatchReq${index + 1}`, true))
                 .then((xhr) => {
                     const { headers } = xhr.request;
                     expect(headers["content-length"]).to.eq(`${contentLength}`);
@@ -102,12 +129,12 @@ export const createTusIntercepts = (tusOptions = {}) => {
         },
 
         assertCreateRequestTimes: (times, msg) => {
-            cy.get("@tusCreateReq.all")
+            cy.get(getA("tusCreateReq", true, true))
                 .should("have.length", times, msg);
         },
 
         assertPatchRequestTimes: (index, times, msg) => {
-            cy.get(`@tusPatchReq${index + 1}.all`)
+            cy.get(getA(`tusPatchReq${index + 1}`, true, true))
                 .should("have.length", times, msg);
         },
 
@@ -116,7 +143,7 @@ export const createTusIntercepts = (tusOptions = {}) => {
                 throw new Error("Parallel final request can only be tested with parallel uploads > 1");
             }
 
-            cy.wait("@tusCreateReq")
+            cy.wait(getA("tusCreateReq", true))
                 .then((xhr) => {
                     expect(xhr.request.headers["upload-concat"])
                         .to.eq(`final;${getPartUrls().join(" ")}`);
@@ -126,7 +153,7 @@ export const createTusIntercepts = (tusOptions = {}) => {
         },
 
         assertLastCreateRequest: (cb) => {
-            cy.get(`@tusCreateReq.all`)
+            cy.get(getA("tusCreateReq", true, true))
                 .then((calls) => {
                     const xhr = calls[calls.length - 1];
                     cb(xhr);
@@ -146,11 +173,11 @@ export const createTusIntercepts = (tusOptions = {}) => {
                         "upload-offset": `${offset ?? length}`,
                     });
                 }
-            }).as("tusResumeReq");
+            }).as(getA("tusResumeReq"));
         },
 
         assertResumeRequest: (cb = null) => {
-            cy.wait("@tusResumeReq")
+            cy.wait(getA("tusResumeReq", true))
                 .then((xhr) => {
                     cb(xhr);
                 });
@@ -171,16 +198,18 @@ export const createTusIntercepts = (tusOptions = {}) => {
                             ...(options.parallel > 1 ? { "upload-concat": "partial" } : {}),
                         });
                     }
-                }).as(`tusResumeReq${i + 1}`);
+                }).as(getA(`tusResumeReq${i + 1}`));
             });
         },
 
-        assertResumeForParts: () => {
+        assertResumeForParts: (cb) => {
             tusData.forEach(({ path }, i) => {
-                cy.wait(`@tusResumeReq${i + 1}`)
-                    .then(({  request }) => {
+                cy.wait(getA(`tusResumeReq${i + 1}`, true))
+                    .then((xhr) => {
+                        const {  request } = xhr;
                         expect(request.method).to.eq("HEAD");
                         expect(request.headers["tus-resumable"]).to.eq("1.0.0");
+                        cb?.(xhr);
                     });
             });
         },

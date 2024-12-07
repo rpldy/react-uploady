@@ -55,6 +55,7 @@ const handleTusUpload = (
 	chunkedSender: ChunkedSender,
 	initRequest: Promise<?InitData>,
 	isResume?: boolean,
+    parallelIdentifier?: string,
 ): Promise<UploadData> =>
     initRequest
         .then((initData: ?InitData) => {
@@ -76,7 +77,7 @@ const handleTusUpload = (
 
             if (resumeFailed) {
                 logger.debugLog(`tusSender.handler: resume init failed. Will try creating a new upload for item: ${items[0].id}`);
-                const { request: createRequest } = createUpload(items[0], url, tusState, sendOptions);
+                const { request: createRequest } = createUpload(items[0], url, tusState, sendOptions, parallelIdentifier);
                 //this second init request (after failed resume) cannot be aborted
                 request = handleTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender, createRequest);
             }

@@ -33,7 +33,10 @@ const doUpload = (
 	let tusAbort;
 
 	const callInit = () => {
-        const isParallel = +tusState.getState().options.parallel > 1;
+        const parallel = +tusState.getState().options.parallel;
+        const isParallel =  parallel > 1;
+
+        logger.debugLog(`tusSender: about to initialize ${isParallel ? `parallel (${parallel})` : "single"} part upload`);
 
         const tusResult = isParallel ?
             initParallelTusUpload(items, url, sendOptions, onProgress, tusState, trigger) :

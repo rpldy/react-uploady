@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.9.0-rc.2 (2024-12-08)
+
+### Bug fixes
+
+- `[tus-sender]` - big refactor to handling parallel tus requests. Avoid 431 Request Header Fields Too Large error. Fix for [#777](https://github.com/rpldy/react-uploady/issues/777)
+- `[chunked-sender]` - respect parallel value while including in-progress
+
+### Internal
+
+- `all` - upgrade most dev deps
+- `ci` - fix incorrect calculation of diff in bundle-size report 
+
+
 ## 1.9.0-rc.1 (2024-11-10)
 
 ### Bug fixes

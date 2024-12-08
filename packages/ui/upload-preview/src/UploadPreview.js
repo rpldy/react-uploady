@@ -5,7 +5,7 @@ import { getPreviewsLoaderHook } from "./usePreviewsLoader";
 import { getFallbackUrlData } from "./utils";
 import { PREVIEW_TYPES } from "./consts";
 
-import type { Node, AbstractComponent } from "react";
+import type { Node } from "react";
 import type { RefObject } from "@rpldy/shared-ui";
 import type {
 	PreviewProps,
@@ -43,7 +43,7 @@ const usePreviewMethods = (
 };
 
 const getUploadPreviewForBatchItemsMethod =
-    (method: PreviewBatchItemsMethod = useBatchStartListener): AbstractComponent<PreviewProps> => {
+    (method: PreviewBatchItemsMethod = useBatchStartListener): React$ComponentType<PreviewProps> => {
     const usePreviewsLoader = getPreviewsLoaderHook(method);
 
     return (props: PreviewProps): Node[] => {
@@ -90,7 +90,7 @@ const getUploadPreviewForBatchItemsMethod =
 /**
  * UploadPreview uses Batch start event to display uploading items
  */
-const UploadPreview: AbstractComponent<PreviewProps> = getUploadPreviewForBatchItemsMethod();
+const UploadPreview: React$ComponentType<PreviewProps> = getUploadPreviewForBatchItemsMethod();
 
 export {
     getUploadPreviewForBatchItemsMethod

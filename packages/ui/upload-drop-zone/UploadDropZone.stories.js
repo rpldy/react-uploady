@@ -31,7 +31,7 @@ import {
 } from "../../../story-helpers";
 import Readme from "./UploadDropZone.storydoc.mdx";
 
-import type { Node, Ref } from "react";
+import type { Node } from "react";
 import type { UploadButtonProps } from "@rpldy/upload-button";
 import type { GetFilesMethod } from "./src";
 

@@ -31,7 +31,7 @@ export const Simple: UploadyStory = createUploadyStory(
 
 export const WithRef: UploadyStory = createUploadyStory(
     ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
-        const inputRef = useRef<?HTMLInputElement>(null);
+        const inputRef = useRef<any>(null);
 
         const onInputChange = useCallback(() => {
             console.log("INPUT = ", inputRef.current?.value);

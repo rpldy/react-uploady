@@ -5,6 +5,8 @@ import React, {
     useRef,
     useEffect,
     type Node,
+    type RefObject,
+    forwardRef,
 } from "react";
 import styled, { css } from "styled-components";
 import Uploady, {
@@ -322,7 +324,7 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
 	const { id, url, isFallback, type, updateRequest, requestData, previewMethods } = props;
 	const [finished, setFinished] = useState<boolean>(false);
 	const [crop, setCrop] = useState<CropData>({ unit: "px", height: 100, width: 100, x: 50, y: 50 });
-    const imgRef = useRef<?HTMLImageElement>(null);
+    const imgRef = useRef<any>(null);
 
 	useItemFinalizeListener(() =>{
 		setFinished(true);
@@ -536,7 +538,7 @@ type CropperMultiCropProps = {
 const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview, onPreviewSelected } : CropperMultiCropProps) => {
     const abortItem = useAbortItem();
     const [crop, setCrop] = useState<CropData>({ unit: "px", height: 100, width: 100, x: 50, y: 50 });
-    const imgRef = useRef<?HTMLImageElement>(null);
+    const imgRef = useRef<any>(null);
 
     const onSaveCrop = async () => {
         const { blob } = await cropImage(imgRef.current, item.file, crop);
@@ -807,7 +809,7 @@ const CropPreviewFieldComp = ({  item, name, url, setCropForItem }: CropPreviewF
     const [crop, setCrop] = useState<CropData>({ unit: "px", height: 100, width: 100, x: 50, y: 50 });
     const [croppedUrl, setCroppedUrl] = useState<?{ blobUrl: string, revokeUrl: () => void }>(null);
     const [isCropping, setCropping] = useState<boolean>(false);
-    const imgRef = useRef<?HTMLImageElement>(null);
+    const imgRef = useRef<any>();
 
     const startCropping = () => setCropping(true);
 

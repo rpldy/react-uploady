@@ -109,7 +109,7 @@ export default {
                         },
                     };
                 },
-                maxSize: 24000,
+                maxSize: 25000,
             },
 
             //TODO: find a way to make this work with global object assignment (wepackages/tus-sender/src/tusSender/initTusUpload/createUpload.js:88:94bpack externals root)

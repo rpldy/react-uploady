@@ -61,6 +61,7 @@ const handleResumeFail = (item: BatchItem, options: TusOptions, parallelIdentifi
 	removeResumable(item, options, parallelIdentifier);
 
 	return {
+        uploadUrl: "",
 		isNew: false,
 		canResume: false,
 	};
@@ -150,25 +151,25 @@ const makeResumeRequest = (
     const updateRequestPromise = getUpdatedRequest(item, url, tusState, trigger);
 
     const updatedRequest: Promise<?InitData> = updateRequestPromise.then((getXhr) => {
-            resumeFinished = !getXhr();
-            const callOnFail = () => handleResumeFail(item, options, parallelIdentifier);
+        resumeFinished = !getXhr();
+        const callOnFail = () => handleResumeFail(item, options, parallelIdentifier);
 
         return !resumeFinished && !resumeAborted ?
-                getXhr()
-                    .then((resumeResponse: XMLHttpRequest) => {
-                        return (resumeFinished || resumeAborted) ?
-                            callOnFail() :
-                            handleResumeResponse(resumeResponse, item, url, tusState, trigger, parallelIdentifier, attempt);
-                    })
-                    .catch((error) => {
-                        logger.debugLog(`tusSender.resume: resume upload failed unexpectedly`, error);
-                        return callOnFail();
-                    })
-                    .finally(() => {
-                        resumeFinished = true;
-                    }) :
-                Promise.resolve(callOnFail());
-        });
+            getXhr()
+                .then((resumeResponse: XMLHttpRequest) => {
+                    return (resumeFinished || resumeAborted) ?
+                        callOnFail() :
+                        handleResumeResponse(resumeResponse, item, url, tusState, trigger, parallelIdentifier, attempt);
+                })
+                .catch((error) => {
+                    logger.debugLog(`tusSender.resume: resume upload failed unexpectedly`, error);
+                    return callOnFail();
+                })
+                .finally(() => {
+                    resumeFinished = true;
+                }) :
+            Promise.resolve(callOnFail());
+    });
 
     const abortResume = () => {
         if (!resumeFinished) {
@@ -185,10 +186,10 @@ const makeResumeRequest = (
         return !resumeFinished;
     };
 
-	return {
-		request: updatedRequest,
-		abort: abortResume,
-	};
+    return {
+        request: updatedRequest,
+        abort: abortResume,
+    };
 };
 
 const resumeUpload = (

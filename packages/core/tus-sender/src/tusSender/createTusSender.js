@@ -1,9 +1,7 @@
 // @flow
 import { logger, hasWindow } from "@rpldy/shared";
 import createState from "@rpldy/simple-state";
-import { createChunkedSender } from "@rpldy/chunked-sender";
 import { getMandatoryOptions } from "../utils";
-import handleEvents from "./handleEvents";
 import getTusSend from "./tusSend";
 
 import type { UploaderType, UploaderCreateOptions } from "@rpldy/uploader";
@@ -53,12 +51,9 @@ const createTusSender = (
     trigger: TriggerMethod
 ): {|getOptions: () => TusOptions, send: any|} => {
     const resolvedOptions = getResolvedOptions(options);
-    const chunkedSender = createChunkedSender(resolvedOptions, trigger);
     const tusState = initializeState(uploader, resolvedOptions);
 
-    handleEvents(uploader, tusState, chunkedSender, trigger);
-
-    const send = getTusSend(chunkedSender, tusState, trigger);
+    const send = getTusSend(uploader, tusState, trigger);
 
     return {
         send,

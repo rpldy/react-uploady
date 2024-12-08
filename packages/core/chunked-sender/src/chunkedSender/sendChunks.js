@@ -8,7 +8,7 @@ import sendChunk from "./sendChunk";
 import type { BatchItem, FileState } from "@rpldy/shared";
 import type { OnProgress } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
-import type { Chunk, ChunkedState } from "./types";
+import type { Chunk, ChunkedState, State } from "./types";
 
 type PromiseResolve = (Object) => void;
 
@@ -87,7 +87,7 @@ const sendChunks = (
     resolve: (any) => void,
     trigger: TriggerMethod,
 ) => {
-    const state = chunkedState.getState();
+    const state: State = chunkedState.getState();
 
     if (!state.finished && !state.aborted) {
         const inProgress = Object.keys(state.requests).length;
@@ -104,6 +104,8 @@ const sendChunks = (
             }
 
             if (chunks) {
+                logger.debugLog(`chunkedSender: about to send ${chunks.length} chunks for item: ${item.id} with parallel: ${state.parallel}`);
+
                 chunks.forEach((chunk) => {
                     handleChunk(chunkedState, item, onProgress, resolve, chunk, trigger)
                         .catch((ex) => {

@@ -1,5 +1,13 @@
 // @flow
-import type { BatchItem } from "@rpldy/shared";
+import type { BatchItem, UploadData } from "@rpldy/shared";
+
+export type ParallelPartData = {
+    identifier: string,
+    item: BatchItem,
+    start: number,
+    end: number,
+    orgItemId: string,
+};
 
 export type ItemInfo = {
 	id: string,
@@ -7,11 +15,15 @@ export type ItemInfo = {
 	size: number,
 	offset: number,
 	abort?: () => boolean,
-	parallelChunks: string[],
+    //only available for parallel tus upload
+	parallelParts?: ParallelPartData[],
+    //these props will be populated only for items that represent a parallel part:
+    parallelIdentifier: ?string,
+    orgItemId: ?string,
 };
 
 export type InitData = {|
-	uploadUrl?: string,
+	uploadUrl: string,
 	offset?: number,
 	isNew?: boolean,
 	isDone?: boolean,
@@ -33,3 +45,5 @@ export type ResumeStartEventResponse = {
     url?: string,
     resumeHeaders?: Object,
 };
+
+export type InitRequestResult = {|abort: () => boolean, request: Promise<UploadData>|};

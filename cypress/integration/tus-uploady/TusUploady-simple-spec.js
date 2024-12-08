@@ -1,18 +1,20 @@
 import uploadFile from "../uploadFile";
-import { WAIT_LONG, WAIT_SHORT } from "../../constants";
-import { tusIntercept } from "./tusIntercept";
+import { createTusIntercepts, uploadUrl } from "./tusIntercept";
+import clearTusPersistStorage from "./clearTusPersistStorage";
+import { getParallelSizes } from "./runParallerlUpload";
 
 describe("TusUploady - Simple", () => {
 	const fileName = "flower.jpg",
-        uploadUrl = "http://test.tus.com/upload";
+        chunkSize = 200_000;
 
 	before(() => {
+        clearTusPersistStorage();
         cy.visitStory(
             "tusUploady",
             "simple",
             {
                 uploadUrl,
-                chunkSize: 200000,
+                chunkSize,
                 uploadParams: { foo: "bar" },
                 tusResumeStorage: true,
                 tusIgnoreModifiedDateInStorage: true,
@@ -22,7 +24,12 @@ describe("TusUploady - Simple", () => {
 	});
 
 	it("should upload chunks using tus protocol", () => {
-        tusIntercept(uploadUrl);
+       const {
+           addResumeForParts,
+           assertResumeForParts,
+           assertCreateRequest,
+           assertPatchRequest,
+       }  = createTusIntercepts();
 
 		cy.get("input")
 			.should("exist")
@@ -32,30 +39,20 @@ describe("TusUploady - Simple", () => {
 			cy.waitMedium();
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
-			cy.wait("@createReq")
-				.then((xhr) => {
-					expect(xhr.request.headers["upload-metadata"])
-						.to.eq("foo YmFy");
+            assertCreateRequest(0, ({ request }) => {
+                expect(request.headers["x-test"])
+                    .to.eq("abcd");
 
-					expect(xhr.request.headers["x-test"])
-						.to.eq("abcd");
+                expect(request.body).to.eq("");
+            });
 
-					expect(xhr.request.body).to.eq("");
-				});
-
-			cy.wait("@patchReq")
-                .then(({ request }) => {
-                    const { headers } = request;
-                    expect(headers["content-length"]).to.eq("200000");
-                    expect(headers["content-type"]).to.eq("application/offset+octet-stream");
+            getParallelSizes(fileName, 1)
+                .then(({ fileSize }) => {
+                    assertPatchRequest(chunkSize, 0);
+                    assertPatchRequest(fileSize - chunkSize, 0);
                 });
 
-            cy.wait("@patchReq")
-                .then(({ request }) => {
-                    const { headers } = request;
-                    expect(headers["upload-offset"]).to.eq("200000");
-                    expect(headers["content-type"]).to.eq("application/offset+octet-stream");
-                });
+            addResumeForParts();
 
 			//upload again, should be resumed!
 			uploadFile(fileName, () => {
@@ -64,14 +61,10 @@ describe("TusUploady - Simple", () => {
 				cy.storyLog().assertFileItemStartFinish(fileName, 3, true)
 					.then((events) => {
 						expect(events.finish.args[1].uploadResponse.message).to.eq("TUS server has file");
-						expect(events.finish.args[1].uploadResponse.location).to.eq(`${uploadUrl}/123`);
+						expect(events.finish.args[1].uploadResponse.location).to.eq(`${uploadUrl}/111`);
 					});
 
-                cy.wait("@resumeReq")
-                    .then(({ request }) => {
-                        const { headers } = request;
-                        expect(headers["tus-resumable"]).to.eq("1.0.0");
-                    });
+                assertResumeForParts();
 			}, "#upload-button");
 		}, "#upload-button");
 	});

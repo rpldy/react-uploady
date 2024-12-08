@@ -1,2 +1,2 @@
-import initTusUpload from "./initTusUpload";
-export default initTusUpload;
+export { default as initTusUpload } from "./initTusUpload";
+export { default as initParallelTusUpload } from "./initParallelTusUpload";

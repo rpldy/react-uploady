@@ -86,7 +86,7 @@ const parseFileSize = (sizeStr) => {
     const match = sizeStr.match(FILE_SIZE_PARSE_RGX);
     if (match) {
         const [_, val, unit] = match;
-        return parseInt(val) * FILESIZE_UNITS[unit.toLowerCase()];
+        return parseFloat(val) * FILESIZE_UNITS[unit.toLowerCase()];
     }
 
     return NaN;

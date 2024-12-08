@@ -1,4 +1,4 @@
-import { DESTINATION_TYPES } from "../consts";
+import { DEFAULT_CHUNK_SIZE, DESTINATION_TYPES } from "../consts";
 import { isProd } from "../helpers";
 
 export const getDestinationOptions = () => isProd ?
@@ -22,7 +22,42 @@ export const getTusDestinationOptions = () => isProd ?
     [
         DESTINATION_TYPES.url,
         DESTINATION_TYPES.local,
+        // "tus-demo",
     ];
+
+export const getTusStoryArgs = () => {
+    return {
+        parameters: {
+            controls: {
+                exclude: ["group", "longLocal"],
+            }
+        },
+        args: {
+            uploadType: "url",
+            uploadUrl: isProd ? "http" : "http://0.0.0.0:9009/upload",
+            chunkSize: DEFAULT_CHUNK_SIZE,
+            parallel: 0,
+            forgetOnSuccess: false,
+            resumeStorage: true,
+            ignoreModifiedDateInStorage: false,
+            sendDataOnCreate: false,
+            sendWithCustomHeader: false,
+        },
+        argTypes: {
+            uploadType: {
+                control: "radio",
+                options: getTusDestinationOptions(),
+            },
+            chunkSize: { control: "number" },
+            parallel: { control: "number" },
+            forgetOnSuccess: { control: "boolean" },
+            resumeStorage: { control: "boolean" },
+            ignoreModifiedDateInStorage: { control: "boolean" },
+            sendDataOnCreate: { control: "boolean" },
+            sendWithCustomHeader: { control: "boolean" },
+        }
+    };
+};
 
 export default {
     args: {

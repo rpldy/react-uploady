@@ -1,10 +1,11 @@
 // @flow
 import { logger } from "@rpldy/shared";
-import { CHUNKING_SUPPORT } from "@rpldy/chunked-sender";
+import { CHUNKING_SUPPORT, createChunkedSender } from "@rpldy/chunked-sender";
 import xhrSend, { MissingUrlError, type SendMethod, type SendOptions } from "@rpldy/sender";
-import initTusUpload from "./initTusUpload";
 import { TUS_SENDER_TYPE } from "../consts";
 import doFeatureDetection from "../featureDetection";
+import { initTusUpload, initParallelTusUpload } from "./initTusUpload";
+import handleEvents from "./handleEvents";
 
 import type { BatchItem } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
@@ -14,7 +15,11 @@ import type {
 	ChunkedSendOptions,
 	SendResult,
 } from "@rpldy/chunked-sender";
+import type { UploaderCreateOptions, UploaderType } from "@rpldy/uploader";
 import type { RequestResult, TusState } from "../types";
+
+const getChunkedSender = (tusState: TusState, trigger: TriggerMethod): ChunkedSender =>
+    createChunkedSender(tusState.getState().options, trigger);
 
 const doUpload = (
 	items: BatchItem[],
@@ -22,15 +27,22 @@ const doUpload = (
 	sendOptions: ChunkedSendOptions,
 	onProgress: OnProgress,
 	tusState: TusState,
-	chunkedSender: ChunkedSender,
 	fdRequest: ?RequestResult<void>,
     trigger: TriggerMethod,
 ) => {
 	let tusAbort;
 
 	const callInit = () => {
-		const tusResult = initTusUpload(items, url, sendOptions, onProgress, tusState, chunkedSender, trigger);
-		tusAbort = tusResult.abort;
+        const parallel = +tusState.getState().options.parallel;
+        const isParallel =  parallel > 1;
+
+        logger.debugLog(`tusSender: about to initialize ${isParallel ? `parallel (${parallel})` : "single"} part upload`);
+
+        const tusResult = isParallel ?
+            initParallelTusUpload(items, url, sendOptions, onProgress, tusState, trigger) :
+            initTusUpload(items, url, sendOptions, onProgress, tusState, getChunkedSender(tusState, trigger), trigger);
+
+        tusAbort = tusResult.abort;
 		return tusResult.request;
 	};
 
@@ -44,8 +56,8 @@ const doUpload = (
 	};
 };
 
-const tusSend = (
-    chunkedSender: ChunkedSender,
+const getTusSend = (
+    uploader: UploaderType<UploaderCreateOptions>,
     tusState: TusState,
     trigger: TriggerMethod
 ): SendMethod<ChunkedSendOptions> | SendMethod<SendOptions> => {
@@ -63,8 +75,10 @@ const tusSend = (
 
         if (items.length > 1 || items[0].url) {
             //ignore this upload - let the chunked sender handle it
-            result = chunkedSender.send(items, url, sendOptions, onProgress);
+            result = getChunkedSender(tusState, trigger).send(items, url, sendOptions, onProgress);
         } else {
+            handleEvents(uploader, tusState);
+
             //TUS only supports a single file upload (no grouping)
             logger.debugLog(`tusSender: sending file using TUS protocol`);
 
@@ -78,7 +92,6 @@ const tusSend = (
                 sendOptions,
                 onProgress,
                 tusState,
-                chunkedSender,
                 fdRequest,
                 trigger
             );
@@ -96,4 +109,4 @@ const tusSend = (
     return CHUNKING_SUPPORT ? tusSend : xhrSend;
 };
 
-export default tusSend;
+export default getTusSend;

@@ -1,8 +1,7 @@
 /*  vitest/no-conditional-expect: 0 */
 import { CHUNK_EVENTS } from "@rpldy/chunked-sender";
-import { UPLOADER_EVENTS, FILE_STATES } from "@rpldy/uploader";
+import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import getTusState from "../../tests/tusState.mock";
-import initTusUpload from "../initTusUpload";
 import { removeResumable } from "../../resumableStore";
 import handleEvents from "../handleEvents";
 
@@ -23,14 +22,9 @@ describe("handleEvents with chunking support tests", () => {
         on: vi.fn(),
     };
 
-    const chunkedSender = {
-        on: vi.fn(),
-    };
-
     beforeEach(() => {
         clearViMocks(
             uploader,
-            chunkedSender,
         );
     });
 
@@ -55,7 +49,7 @@ describe("handleEvents with chunking support tests", () => {
                 expect(removeResumable).not.toHaveBeenCalled();
             });
 
-            handleEvents(uploader, tusState, chunkedSender);
+            handleEvents(uploader, tusState);
             expect(uploader.on).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, expect.any(Function));
         });
 
@@ -63,24 +57,26 @@ describe("handleEvents with chunking support tests", () => {
             const tusState = getTusState({
                 items: {
                     "i1": {
-                        id: "i1",
-                        parallelChunks: ["i1-c1", "i1-c2"],
+                        parallelParts: [
+                            { item: { id: "pItem1" } },
+                            { item: { id: "pItem2" } },
+                        ]
                     },
-                    "i1-c1": { id: "i1-c1" },
-                    "i1-c2": { id: "i1-c2" },
-                    "i2-c1": { id: "i2-c1" },
+                    "pItem1": { uploadUrl: "ci1.url" },
+                    "pItem2": { uploadUrl: "ci2.url" },
+                    "pItem3": { uploadUrl: "ci3.url" },
                 }
             });
 
             uploader.on.mockImplementationOnce((name, cb) => {
                 cb({ id: "i1" });
                 expect(tusState.getState().items.i1).toBeUndefined();
-                expect(tusState.getState().items["i1-c1"]).toBeUndefined();
-                expect(tusState.getState().items["i1-c2"]).toBeUndefined();
-                expect(tusState.getState().items["i2-c1"]).toBeDefined();
+                expect(tusState.getState().items["pItem1"]).toBeUndefined();
+                expect(tusState.getState().items["pItem2"]).toBeUndefined();
+                expect(tusState.getState().items["pItem3"]).toBeDefined();
             });
 
-            handleEvents(uploader, tusState, chunkedSender);
+            handleEvents(uploader, tusState);
             expect(uploader.on).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, expect.any(Function));
         });
 
@@ -92,14 +88,19 @@ describe("handleEvents with chunking support tests", () => {
                 expect(tusState.updateState).not.toHaveBeenCalled();
             });
 
-            handleEvents(uploader, tusState, chunkedSender);
+            handleEvents(uploader, tusState);
             expect(uploader.on).toHaveBeenCalled();
         });
 
         it("should remove storage url for forgetOnSuccess", () => {
+            const parts = [
+                { item: { id: "pItem1", identifier: "i1" } },
+                { item: { id: "pItem2", identifier: "i2" } },
+            ];
+
             const item = {
                 offset: 0,
-                parallelChunks: []
+                parallelParts: parts,
             };
 
             const tusState = getTusState({
@@ -116,15 +117,17 @@ describe("handleEvents with chunking support tests", () => {
                     cb({ id: "i1" });
                     expect(tusState.getState().items.i1).toBeUndefined();
                     expect(removeResumable).toHaveBeenCalledWith({ id: "i1" }, tusState.getState().options);
+                    expect(removeResumable).toHaveBeenCalledWith(parts[0].item, tusState.getState().options, parts[0].identifier);
+                    expect(removeResumable).toHaveBeenCalledWith(parts[1].item, tusState.getState().options, parts[1].identifier);
                 }
             });
 
-            handleEvents(uploader, tusState, chunkedSender);
+            handleEvents(uploader, tusState);
             expect(uploader.on).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, expect.any(Function));
         });
     });
 
-    describe("uploader CHUNK_FINISH tests", () => {
+    describe("chunkedSender CHUNK_FINISH tests", () => {
         it.each([
             false,
             true
@@ -157,7 +160,7 @@ describe("handleEvents with chunking support tests", () => {
                 }
             });
 
-            handleEvents(uploader, tusState, chunkedSender);
+            handleEvents(uploader, tusState);
 
             expect(uploader.on).toHaveBeenCalledWith(CHUNK_EVENTS.CHUNK_FINISH, expect.any(Function));
         });
@@ -177,75 +180,9 @@ describe("handleEvents with chunking support tests", () => {
                 }
             });
 
-            handleEvents(uploader, tusState, chunkedSender);
+            handleEvents(uploader, tusState);
 
             expect(uploader.on).toHaveBeenCalledWith(CHUNK_EVENTS.CHUNK_FINISH, expect.any(Function));
-        });
-
-        it("should remove parallel chunk storage url for forgetOnSuccess", () => {
-            const tusState = getTusState({
-                items: {
-                    "i1": {
-                        offset: 0,
-                        parallelChunks: []
-                    }
-                },
-                options: {
-                    chunkSize: 124,
-                    parallel: 2,
-                    forgetOnSuccess: true,
-                }
-            });
-
-            uploader.on.mockImplementation((name, cb) => {
-                if (name === CHUNK_EVENTS.CHUNK_FINISH) {
-                    const data = {
-                        chunk: { index: 1 },
-                        item: { id: "i1" },
-                    };
-
-                    cb(data);
-
-                    expect(removeResumable)
-                        .toHaveBeenCalledWith(data.item, tusState.getState().options, `_prlChunk_124_1`);
-                }
-            });
-
-            handleEvents(uploader, tusState, chunkedSender);
-
-            expect(uploader.on).toHaveBeenCalled();
-        });
-
-        it("should do nothing for parallel", () => {
-            const tusState = getTusState({
-                items: {
-                    "i1": {
-                        offset: 0,
-                        parallelChunks: []
-                    }
-                },
-                options: {
-                    chunkSize: 124,
-                    parallel: 2,
-                }
-            });
-
-            uploader.on.mockImplementation((name, cb) => {
-                if (name === CHUNK_EVENTS.CHUNK_FINISH) {
-                    const data = {
-                        chunk: { index: 1 },
-                        item: { id: "i1" },
-                    };
-
-                    cb(data);
-                    expect(tusState.updateState).not.toHaveBeenCalled();
-                    expect(removeResumable).not.toHaveBeenCalled();
-                }
-            });
-
-            handleEvents(uploader, tusState, chunkedSender);
-
-            expect(uploader.on).toHaveBeenCalled();
         });
     });
 
@@ -282,7 +219,7 @@ describe("handleEvents with chunking support tests", () => {
                 }
             });
 
-            handleEvents(uploader, tusState, chunkedSender);
+            handleEvents(uploader, tusState);
 
             expect(uploader.on).toHaveBeenCalledWith(CHUNK_EVENTS.CHUNK_START, expect.any(Function));
         });
@@ -313,7 +250,7 @@ describe("handleEvents with chunking support tests", () => {
                 }
             });
 
-            handleEvents(uploader, tusState, chunkedSender);
+            handleEvents(uploader, tusState);
 
             expect(uploader.on).toHaveBeenCalledWith(CHUNK_EVENTS.CHUNK_START, expect.any(Function));
         });
@@ -347,7 +284,7 @@ describe("handleEvents with chunking support tests", () => {
                 }
             });
 
-            handleEvents(uploader, tusState, chunkedSender);
+            handleEvents(uploader, tusState);
             expect(uploader.on).toHaveBeenCalledWith(CHUNK_EVENTS.CHUNK_START, expect.any(Function));
         });
 
@@ -382,111 +319,7 @@ describe("handleEvents with chunking support tests", () => {
                 }
             });
 
-            handleEvents(uploader, tusState, chunkedSender);
-
-            expect(uploader.on).toHaveBeenCalledWith(CHUNK_EVENTS.CHUNK_START, expect.any(Function));
-        });
-
-        it("parallel - should update send options for parallelized chunk", () => {
-            const tusState = getTusState({
-                items: {
-                    "i1": {
-                        uploadUrl: "upload.url",
-                        parallelChunks: []
-                    },
-                    "ci1": {
-                        uploadUrl: "chunk.url",
-                    }
-                },
-                options: {
-                    parallel: 2,
-                }
-            });
-
-            uploader.on.mockImplementation(async (name, cb) => {
-                if (name === CHUNK_EVENTS.CHUNK_START) {
-
-                    initTusUpload.mockReturnValueOnce({
-                        request: Promise.resolve({
-                            state: FILE_STATES.UPLOADING
-                        })
-                    });
-
-                    const data = {
-                        sendOptions: {
-                            headers: {
-                                "Content-Range": 123,
-                            }
-                        },
-                        chunk: {
-                            id: "i1"
-                        },
-                        chunkItem: {
-                            id: "ci1"
-                        },
-                        item: { id: "i1", file: { size: 999 } },
-                    };
-
-                    const result = await cb(data);
-
-                    expect(result.url).toBe("chunk.url");
-                    expect(result.sendOptions.sendWithFormData).toBe(false);
-                    expect(result.sendOptions.method).toBe("PATCH");
-                    expect(result.sendOptions.headers["Upload-Offset"]).toBe(0);
-                    expect(result.sendOptions.headers["Upload-Length"]).toBeUndefined();
-                    expect(result.sendOptions.headers["Content-Range"]).toBeUndefined();
-                    expect(result.sendOptions.headers["Upload-Concat"]).toBe("partial");
-
-                    expect(tusState.getState().items["i1"].parallelChunks[0])
-                        .toBe(data.chunkItem.id);
-                }
-            });
-
-            handleEvents(uploader, tusState, chunkedSender);
-
-            expect(uploader.on).toHaveBeenCalledWith(CHUNK_EVENTS.CHUNK_START, expect.any(Function));
-        });
-
-        it("parallel - should return false when chunk already finished", () => {
-            const tusState = getTusState({
-                items: {
-                    "i1": {
-                        offset: 0,
-                        uploadUrl: "upload.url",
-                        parallelChunks: [],
-                    }
-                },
-                options: {
-                    parallel: 2,
-                }
-            });
-
-            uploader.on.mockImplementation(async (name, cb) => {
-                if (name === CHUNK_EVENTS.CHUNK_START) {
-                    const data = {
-                        sendOptions: {},
-                        chunk: {
-                            start: 1234,
-                        },
-                        chunkItem: {
-                            id: "ci1",
-                        },
-                        item: { id: "i1" },
-                    };
-
-                    initTusUpload.mockReturnValueOnce({
-                        request: Promise.resolve({ state: FILE_STATES.FINISHED }),
-                    });
-
-                    const result = await cb(data);
-
-                    expect(result).toBe(false);
-                    expect(tusState.getState().items["i1"].parallelChunks[0])
-                        .toBe(data.chunkItem.id);
-                }
-            });
-
-            handleEvents(uploader, tusState, chunkedSender);
+            handleEvents(uploader, tusState);
 
             expect(uploader.on).toHaveBeenCalledWith(CHUNK_EVENTS.CHUNK_START, expect.any(Function));
         });

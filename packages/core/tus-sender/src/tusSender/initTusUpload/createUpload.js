@@ -39,11 +39,9 @@ const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: 
     if (options.sendDataOnCreate) {
 		const resOffset = parseInt(createResponse.getResponseHeader("Upload-Offset"));
 		offset = !isNaN(resOffset) ? resOffset : offset;
-        const parallelVal = +options.parallel;
 
-		//consider as done when file smaller than chunkSize or when sending parallel chunk as part of the create
-		isDone = (parallelVal < 2  && item.file.size <= offset) ||
-            (parallelVal > 1 && offset === sentData?.size);
+		//consider as done when file smaller than chunkSize
+		isDone = item.file.size <= offset;
 	}
 
     tusState.updateState((state: State) => {

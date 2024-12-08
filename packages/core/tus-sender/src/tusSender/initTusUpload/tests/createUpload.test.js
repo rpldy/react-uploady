@@ -354,25 +354,5 @@ describe("createUpload tests", () => {
 				isNew: true,
 			});
 		});
-
-        it("should mark as NOT done for parallel with sendDataOnCreate if there's more data", async () => {
-            const {
-                requestResult
-            } = await doCreateTest({
-                parallel: 2,
-                chunkSize: 1234,
-                sendDataOnCreate: true,
-                fileSize: 1234,
-                metadata: { test: 123 },
-                resOffset: 2000,
-            }, "pId1");
-
-            expect(requestResult).toEqual({
-                isDone: false,
-                offset: 2000,
-                uploadUrl: "http://upload/test",
-                isNew: true,
-            });
-        });
 	});
 });

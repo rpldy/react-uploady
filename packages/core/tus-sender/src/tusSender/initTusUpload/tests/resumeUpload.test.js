@@ -226,6 +226,18 @@ describe("resumeUpload tests", () => {
             });
         });
 
+        it("should resume when handler response is boolean true", async () => {
+            const { request } = await testResume({}, null, true);
+
+            expect(request).toHaveBeenCalledWith("upload.url", null ,{
+                method: "HEAD",
+                headers: {
+                    "tus-resumable": "1",
+                    "x-test": "123",
+                }
+            });
+        });
+
         it("should cancel resume from start event handler", async () => {
             const { request, response } = await testResume({}, null, false);
 

@@ -91,6 +91,19 @@ describe("preSendPrepare tests", () => {
         expect(result.cancelled).toBe(true);
     });
 
+    it("should handle true as response", async () => {
+        const queueState = getQueueState(getMockStateData());
+        const preparer = getItemsPrepareUpdater(eventType, retrieveItems, retrieveSubject);
+
+        triggerUpdater.mockResolvedValueOnce(true);
+
+        const result = await preparer(queueState, items);
+
+        expect(result.items).toStrictEqual(items);
+        expect(result.options).toStrictEqual(batchOptions);
+        expect(result.cancelled).toBe(false);
+    });
+
     it("Preparer should update items before sending", async () => {
         const queueState = getQueueState(getMockStateData());
         const preparer = getItemsPrepareUpdater(eventType, retrieveItems, retrieveSubject);

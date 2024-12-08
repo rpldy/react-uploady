@@ -316,7 +316,7 @@ export const WithThirdPartyDropZone: UploadyStory = createUploadyStory(
         );
     });
 
-const MyClickableDropZone = forwardRef((props: UploadButtonProps, ref: Ref<"div">) => {
+const MyClickableDropZone = forwardRef((props: UploadButtonProps, ref: any) => {
     const { onClick, ...buttonProps } = props;
 
     const onZoneClick = useCallback((e: SyntheticMouseEvent<HTMLElement>) => {

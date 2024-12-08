@@ -111,16 +111,15 @@ const getUpdatedRequest = (
         resumeHeaders: unwrap(options.resumeHeaders),
     })
         // $FlowIssue - https://github.com/facebook/flow/issues/8215
-        .then((updatedData: ResumeStartEventResponse & boolean) => {
-            const cancelResume = updatedData === false;
+        .then((response: ResumeStartEventResponse | boolean) => {
+            let result;
 
-            if (cancelResume) {
+            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : response;
+
+            if (updatedData.stop) {
                 logger.debugLog(`tusSender.resume: received false from TUS RESUME_START event - cancelling resume attempt for item: ${item.id}`);
-            }
-
-            const updatedRequest = cancelResume ?
-                false :
-                request(
+            } else {
+                result = request(
                     updatedData?.url || url,
                     null,
                     {
@@ -130,8 +129,9 @@ const getUpdatedRequest = (
                             options.resumeHeaders,
                             updatedData?.resumeHeaders)
                     });
+            }
 
-            return () => updatedRequest;
+            return () => result;
         });
 };
 

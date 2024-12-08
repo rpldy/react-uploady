@@ -36,7 +36,7 @@ const ReactCropWithImage: React$AbstractComponent<CropProps, ?HTMLImageElement> 
                     onCrop,
                     src,
                     style,
-                }: CropProps, ref: Ref<"img">): Node => {
+                }: CropProps, ref: any): Node => {
         return (
             <StyledReactCrop
                 crop={crop}

@@ -75,7 +75,7 @@ const uploadChunkWithUpdatedData = (
         // $FlowFixMe - https://github.com/facebook/flow/issues/8215
         .then((response: ChunkStartEventData | boolean) => {
             let result;
-            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : response;
+            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : (response || {});
 
             if (updatedData.stop) {
                 logger.debugLog(`chunkedSender.sendChunk: received false from CHUNK_START handler - skipping chunk ${chunkIndex}, item ${item.id}`);

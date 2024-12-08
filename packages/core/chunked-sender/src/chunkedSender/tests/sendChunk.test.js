@@ -22,7 +22,7 @@ describe("sendChunk tests", () => {
     const onProgress = vi.fn();
 
     beforeAll(()=>{
-		unwrap.mockReturnValue({unwrapped: true});
+		unwrap.mockReturnValue({ unwrapped: true });
     });
 
     beforeEach(() => {
@@ -39,9 +39,9 @@ describe("sendChunk tests", () => {
         const url = "test.com",
             chunk = { id: "c1", start: 1, end: 10, data },
 			chunks = [{}, {}, chunk],
-            fileData = data || {size: 10},
+            fileData = data || { size: 10 },
             file = { size: 400 },
-            chunkItem = {id: "ci-1"},
+            chunkItem = { id: "ci-1" },
             sendOptions = { method: "POST", headers: { "x-test": 123 } };
 
         if (!data) {
@@ -92,7 +92,7 @@ describe("sendChunk tests", () => {
 		}
 
         expect(triggerUpdater).toHaveBeenCalledWith(trigger, CHUNK_EVENTS.CHUNK_START, {
-            item: {"unwrapped": true},
+            item: { "unwrapped": true },
             chunk: {
                 id: chunk.id,
                 start: chunk.start,
@@ -108,21 +108,21 @@ describe("sendChunk tests", () => {
         });
 
         return {
-        	result,
-			sendResult,
-		};
+            result,
+            sendResult,
+        };
     };
 
-	it.each([
-		null,
-		{size: 9},
+    it.each([
+        null,
+		{ size: 9 },
 	])("should send chunk with data = %s", async (data) => {
        const { result } = await testSendChunk(data);
 		expect(result).toEqual({ xhrSend: true });
 	});
 
     it("should use updated values from chunk start event updater", async () => {
-		const { result } = await testSendChunk({size: 9}, {
+		const { result } = await testSendChunk({ size: 9 }, {
             url: "updated.com",
             sendOptions: {
                 headers: {
@@ -138,7 +138,7 @@ describe("sendChunk tests", () => {
     });
 
 	it("should skip chunk when event updater returns false", async() => {
-		const { result, sendResult } = await testSendChunk({size: 9}, false);
+		const { result, sendResult } = await testSendChunk({ size: 9 }, false);
 
 		expect(xhrSend).not.toHaveBeenCalled();
 
@@ -148,7 +148,16 @@ describe("sendChunk tests", () => {
 		expect(sendResult.abort()).toBe(true);
 	});
 
-	it("should throw if failed to slice chunk", () => {
+    it("shouldn't skip chunk when even updated returns true", async () => {
+        const { result } = await testSendChunk({ size: 9 }, true);
+
+        expect(result).toEqual({ xhrSend: true });
+
+        expect(xhrSend.mock.calls[0][1]).toBe("test.com");
+        expect(xhrSend.mock.calls[0][2].headers["Content-Range"]).toBeDefined();
+    });
+
+    it("should throw if failed to slice chunk", () => {
         getChunkDataFromFile.mockReturnValueOnce(null);
         const chunk = { id: "c1", start: 1, end: 10, data: null };
 
@@ -159,7 +168,7 @@ describe("sendChunk tests", () => {
 
     describe("abort tests", () => {
         const url = "test.com",
-            data = {size: 9},
+            data = { size: 9 },
             chunk = { id: "c1", start: 1, end: 10, data },
             file = { size: 400 },
             sendOptions = { method: "POST", headers: { "x-test": 123 } };

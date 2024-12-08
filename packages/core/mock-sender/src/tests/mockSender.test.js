@@ -202,7 +202,7 @@ describe("mockSender tests", () => {
     });
 
     it("should add sendOptions to response data", async () => {
-        const sendOptions = {params: [1,2]};
+        const sendOptions = { params: [1,2] };
         const result = await doMockSend(null, null, false, false, sendOptions ).request;
 
         const response = result.response;

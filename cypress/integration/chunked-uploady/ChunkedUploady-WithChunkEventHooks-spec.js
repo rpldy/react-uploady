@@ -47,7 +47,7 @@ describe("ChunkedUploady - WithChunkEventHooks", () => {
                 expect(Object.getOwnPropertySymbols(logLine[0].uploadData)).to.have.lengthOf(0, "CHUNK_FINISH uploadData - shouldnt have proxy symbols");
             });
         });
-    }
+    };
 
     it("should use chunked uploady with unique id", () => {
         cy.visitStory(
@@ -57,7 +57,7 @@ describe("ChunkedUploady - WithChunkEventHooks", () => {
         );
 
         intercept();
-        doTest()
+        doTest();
     });
 
     it("should use chunked uploady with async chunk hooks", () => {

@@ -5,7 +5,7 @@ import createUploader, { composeEnhancers } from "@rpldy/uploader";
 import {
     createUploadyStory,
     getCsfExport,
-    getTusDestinationOptions,
+    getTusStoryArgs,
     type CsfExport,
     type UploadyStory,
 } from "../../../story-helpers";
@@ -22,17 +22,42 @@ type StoryProps = {
     enhancer?: ?UploaderEnhancer<any>,
     destination?: any,
     destinationType?: string,
+    chunkSize?: number,
+    parallel?: number,
+    forgetOnSuccess?: boolean,
+    ignoreModifiedDateInStorage?: boolean,
+    sendDataOnCreate?: boolean,
+    resumeStorage?: boolean,
+    featureDetection?: boolean,
+    onFeaturesDetected?: (string[]) => ?TusOptions,
 }
 
 const useUploaderWithTus = ({
                                 enhancer,
                                 destination,
-                                destinationType
-                            }: StoryProps, tusOptions: TusOptions = {}) => {
+                                destinationType,
+                                parallel,
+                                forgetOnSuccess,
+                                resumeStorage,
+                                ignoreModifiedDateInStorage,
+                                sendDataOnCreate,
+                                chunkSize,
+                                featureDetection,
+                                onFeaturesDetected,
+                            }: StoryProps) => {
     const uploaderRef = useRef<?UploadyUploaderType>(null);
 
     useEffect(() => {
-        const tusEnhancer = getTusEnhancer(tusOptions);
+        const tusEnhancer = getTusEnhancer({
+            parallel,
+            chunkSize,
+            forgetOnSuccess,
+            resume: resumeStorage,
+            ignoreModifiedDateInStorage: !ignoreModifiedDateInStorage,
+            sendDataOnCreate: sendDataOnCreate,
+            featureDetection,
+            onFeaturesDetected,
+        });
 
         uploaderRef.current = createUploader({
             enhancer: enhancer ?
@@ -83,7 +108,7 @@ export const WithTusSender: UploadyStory = createUploadyStory((props): Node => {
 
 export const WithTusDataOnCreate: UploadyStory = createUploadyStory((props): Node => {
     const inputRef = useRef<?HTMLInputElement>(null);
-    const uploaderRef = useUploaderWithTus(props, { sendDataOnCreate: true });
+    const uploaderRef = useUploaderWithTus(props);
 
     const onClick = useCallback(() => {
         const input = inputRef.current;
@@ -115,7 +140,7 @@ export const WithTusDataOnCreate: UploadyStory = createUploadyStory((props): Nod
 
 export const WithTusConcatenation: UploadyStory = createUploadyStory((props): Node => {
     const inputRef = useRef<?HTMLInputElement>(null);
-    const uploaderRef = useUploaderWithTus(props, { parallel: 2 });
+    const uploaderRef = useUploaderWithTus(props);
 
     const onClick = useCallback(() => {
         const input = inputRef.current;
@@ -185,20 +210,7 @@ export const WithFeatureDetection: UploadyStory = createUploadyStory((props): No
 const tusSenderStories: CsfExport = getCsfExport(undefined, "TUS Sender", Readme, {
     pkg: "tus-sender",
     section: "Core",
-    parameters: {
-        controls: {
-            exclude: ["group", "longLocal"],
-        }
-    },
-    args: {
-        uploadType: "url",
-    },
-    argTypes: {
-        uploadType: {
-            control: { type: "radio" },
-            options: getTusDestinationOptions(),
-        },
-    }
+    ...getTusStoryArgs(),
 });
 
 export default { ...tusSenderStories, title: "Core/TUS Sender" };

@@ -1,4 +1,4 @@
-import {isUndefined, validateFunction } from "../utils";
+import { isUndefined, validateFunction } from "../utils";
 
 describe("utils tests", () => {
 

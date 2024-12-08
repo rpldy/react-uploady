@@ -294,7 +294,7 @@ export const DifferentConfiguration: UploadyStory = createUploadyStory(
         );
     });
 
-const DivUploadButton = asUploadButton(forwardRef((props, ref) => {
+const DivUploadButton = asUploadButton(forwardRef((props: any, ref: React$RefSetter<any>) => {
     return <div {...props} ref={ref}
                 style={{ border: "1px solid red", width: "200px", cursor: "pointer" }}
                 id="div-upload">
@@ -436,7 +436,7 @@ const UploadField = styled.div`
 `;
 
 const MyUploadField = asUploadButton(
-    forwardRef(({ onChange, ...props }, ref) => {
+    forwardRef(({ onChange, ...props }: any, ref: React$RefSetter<?HTMLHtmlElement>) => {
         const [text, setText] = useState("Select file");
 
         useBatchAddListener((batch) => {

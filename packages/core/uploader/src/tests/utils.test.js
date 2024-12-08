@@ -132,7 +132,7 @@ describe("uploader utils tests", () => {
                 .mockReturnValueOnce(true)
                 .mockReturnValueOnce(true);
 
-            const unwrapImp = (o) => ({...o});
+            const unwrapImp = (o) => ({ ...o });
 
             unwrap.mockImplementationOnce(unwrapImp)
                 .mockImplementationOnce(unwrapImp)
@@ -245,7 +245,7 @@ describe("uploader utils tests", () => {
         it("should return same obj in production", () => {
             isProduction.mockReturnValueOnce(true);
 
-            const obj = {test: true};
+            const obj = { test: true };
 
             expect(deepProxyUnwrap(obj)).toBe(obj);
         });

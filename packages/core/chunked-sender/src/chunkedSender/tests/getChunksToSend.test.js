@@ -53,7 +53,17 @@ describe("getChunkToSend tests", () => {
 		expect(sendChunks).toEqual(chunks);
 	});
 
-	it("should return chunk while its below attempts limit", () => {
+    it("should not return more chunks than allowed by parallel value including already in progress", () => {
+        const chunks = getChunksToSend(getChunkedState({
+            requests: { 1: {} },
+            chunks: [{ id: "1" }, { id: "2" }, { id: "3" }],
+            parallel: 2,
+        }));
+
+        expect(chunks).toEqual([{ id: "2" }]);
+    });
+
+    it("should return chunk while its below attempts limit", () => {
 		const chunk = { id: "3", attempt: 1 };
 
 		const chunks = getChunksToSend(getChunkedState({

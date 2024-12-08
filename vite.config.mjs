@@ -75,7 +75,7 @@ export default defineConfig({
                 statements: 99.95,
                 perFile: false,
             },
-            include: ["packages/**/src/*.js?(x)"],
+            include: ["packages/**/src/**/*.js?(x)"],
             exclude: ["**/*.mock.*", "**/types.js", "packages/**/src/index.js", "**/*.test.js?(x)"],
         },
     },

@@ -34,6 +34,7 @@ const selectFiles = (fixtureName, triggerSelector, alias, cb, {
     const usedFileName = fileName || fixtureName;
 
     cy.fixture(fixtureName, { encoding: null })
+        .as(usedFileName)
         .then((contents) => {
             const files = new Array(times)
                 .fill(null)
@@ -43,7 +44,7 @@ const selectFiles = (fixtureName, triggerSelector, alias, cb, {
                     fileName: !i ? usedFileName : usedFileName.replace(".", `${i + 1}.`),
                 }));
 
-            const inputSelector = aliasAsInput ? `@${alias}` : `input[type="file"]`
+            const inputSelector = aliasAsInput ? `@${alias}` : `input[type="file"]`;
             get(inputSelector)
                 .selectFile(files, { force, action })
                 .then(cb);

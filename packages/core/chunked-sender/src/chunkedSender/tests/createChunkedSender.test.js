@@ -51,7 +51,7 @@ describe("chunkedSender index tests", () => {
 	});
 
     it("should use default send for 0 size file", () => {
-        const items = [{file: {size: 0}}];
+        const items = [{ file: { size: 0 } }];
         doChunkedSend(items, {});
         expect(send).toHaveBeenCalledWith(items, url, sendOptions, onProgress);
         expect(processChunks).not.toHaveBeenCalled();

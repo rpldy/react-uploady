@@ -22,7 +22,7 @@ describe("Uploady - Simple", () => {
         intercept();
 
         uploadFile(fileName, () => {
-            cy.wait("@uploadReq")
+            cy.wait("@uploadReq");
 
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 

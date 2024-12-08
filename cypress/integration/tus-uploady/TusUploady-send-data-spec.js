@@ -1,5 +1,5 @@
+import { createTusIntercepts, uploadUrl } from "./tusIntercept";
 import uploadFile from "../uploadFile";
-import intercept from "../intercept";
 
 describe("TusUploady - Send Data", () => {
     const fileName = "flower.jpg";
@@ -9,7 +9,7 @@ describe("TusUploady - Send Data", () => {
             "tusUploady",
             "simple",
             {
-                uploadUrl: "http://test.tus.com/upload",
+                uploadUrl,
                 chunkSize: chunkSize,
                 uploadParams: { foo: "bar" },
                 tusResumeStorage: true,
@@ -17,55 +17,38 @@ describe("TusUploady - Send Data", () => {
                 tusSendOnCreate: true,
             }
         );
-    }
+    };
 
     const runTest = (chunkSize, isFileSmallerThanChunk = false) => {
         loadStory(chunkSize);
 
-        intercept("http://test.tus.com/upload", "POST", {
-            headers: {
-                "Location": "http://test.tus.com/upload/123",
-                "Tus-Resumable": "1.0.0",
-                "Upload-Offset": `${chunkSize}`,
-            }
-        }, "createReq");
-
-        intercept("http://test.tus.com/upload/123", "PATCH", {
-            headers: {
-                "Tus-Resumable": "1.0.0",
-            },
-        }, "patchReq");
-
-        cy.get("input")
-            .should("exist")
-            .as("fInput");
+        const {
+            assertCreateRequest,
+            assertPatchRequestTimes,
+        } = createTusIntercepts();
 
         uploadFile(fileName, () => {
+            let fileSize;
+
             cy.waitMedium();
+
+            cy.get(`@${fileName}`)
+                .then((uploadFile) => {
+                    fileSize = uploadFile.length;
+                    cy.log(`GOT UPLOADED FILE Length ===> ${fileSize}`);
+                });
 
             cy.storyLog()
                 .assertFileItemStartFinish(fileName, 1)
                 .then((startFinishEvents) => {
+                    assertCreateRequest(fileSize, ({ request, response }) => {
+                        const loc = response.headers["Location"];
 
-                    cy.wait("@createReq")
-                        .then(({ request }) => {
-                            const expectedLength = request.body.byteLength < chunkSize ? request.body.byteLength : chunkSize;
-                            expect(request.headers["content-length"]).to.eq(`${expectedLength}`);
+                        expect(startFinishEvents.finish.args[1].uploadResponse.location).to.eq(loc);
+                        expect(request.headers["content-length"]).to.eq(`${isFileSmallerThanChunk ? fileSize : chunkSize}`);
+                    });
 
-                            expect(request.headers["upload-metadata"])
-                                .to.eq("foo YmFy");
-
-                            expect(startFinishEvents.finish.args[1].uploadResponse.location).to.eq("http://test.tus.com/upload/123");
-                        });
-
-                    if (!isFileSmallerThanChunk) {
-                        cy.wait("@patchReq")
-                            .then(({ request }) => {
-                                const { headers } = request;
-                                expect(headers["upload-offset"]).to.eq(`${chunkSize}`);
-                                expect(headers["content-type"]).to.eq("application/offset+octet-stream");
-                            });
-                    }
+                    assertPatchRequestTimes(0, isFileSmallerThanChunk ? 0 : 1, "should have patch request for first chunk only if file-size > chunk-size");
                 });
         }, "#upload-button");
     };
@@ -79,5 +62,4 @@ describe("TusUploady - Send Data", () => {
         const chunkSize = 2000000;
         runTest(chunkSize, true);
     });
-
 });

@@ -91,11 +91,11 @@ describe("usePasteUpload hook tests", () => {
 
             usePasteUpload(props, containerRef);
 
-            return <>
+            return (<>
                 <div id="paste-div" ref={containerRef}>
                     Click here & Paste a file
                 </div>
-            </>;
+            </>);
         };
 
         const { unmount } = render(<ElementPaste/>);

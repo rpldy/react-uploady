@@ -59,6 +59,8 @@ const saveUpdatedMasterData = (data, masterData, core) => {
         } else {
             core.info("not saving updated master bundle size report - no change found");
         }
+    } else {
+        core.info("skipping saving updated master bundle size report because we're not on MASTER");
     }
 };
 
@@ -71,7 +73,7 @@ const getBundleSizeReportMasterData = (core) => {
     return JSON.parse(str);
 };
 
-const getWithPreviousBundleSizeReport = async (data, masterData, core) => {
+const getWithPreviousBundleSizeReport = (data, masterData, core) => {
     let updatedData = data;
 
     if (!BRANCH.includes("master")) {
@@ -79,7 +81,13 @@ const getWithPreviousBundleSizeReport = async (data, masterData, core) => {
             const masterRow = masterData.find((mr) => mr.name === row.name);
 
             const diff = masterRow ?
-                (parseFileSize(row.size) - parseFileSize(masterRow.size)) : "N/A";
+                (Math.round(parseFileSize(row.size) - parseFileSize(masterRow.size))) : "N/A";
+
+            if (diff && diff !== "N/A") {
+                core.info(`bundle size diff for '${row.name}': ${diff}`);
+            } else {
+                core.info(`no previous bundle size data found for '${row.name}'`);
+            }
 
             const trend = masterRow ?
                 (diff > 0 ? "🔺" : (diff < 0 ? "⬇" : "=")) : "N/A";
@@ -128,6 +136,8 @@ const getReportValue = (key, val) => {
             return val === true ? "🟢" : "💥"
         case "max":
             return filesize(val, { standard: "jedec", spacer: "" });
+        case "diff":
+            return filesize(val, { standard: "jedec", spacer: "" });
         default:
             return `${val}`;
     }
@@ -154,12 +164,12 @@ export default async ({ core }) => {
     core.info("processing bundle size report...");
 
     const dataStr = process.env.BUNDLE_SIZE_REPORT;
-    core.debug("got bundle size data input: " + dataStr);
+    core.info("got bundle size data input: " + dataStr);
     const data = JSON.parse(dataStr);
 
-    const masterData = await getBundleSizeReportMasterData(core);
+    const masterData = getBundleSizeReportMasterData(core);
 
-    const dataWithMasterCompare = await getWithPreviousBundleSizeReport(data, masterData, core);
+    const dataWithMasterCompare = getWithPreviousBundleSizeReport(data, masterData, core);
     core.debug("bundle size data with compare: " + dataWithMasterCompare);
     core.setOutput("BUNDLE_SIZE_REPORT_WITH_COMPARE", JSON.stringify(dataWithMasterCompare));
 

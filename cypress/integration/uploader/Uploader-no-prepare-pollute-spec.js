@@ -54,7 +54,7 @@ describe("Uploader - PreSend Tests", () => {
                     cy.expect(request.headers).to.include({ "x-test": "aaa" });
                 })
                 .its("request.url")
-                .should("include", "?test=a")
+                .should("include", "?test=a");
 
 
             cy.wait("@uploadReq")

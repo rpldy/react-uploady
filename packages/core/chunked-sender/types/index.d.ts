@@ -43,6 +43,8 @@ export type ChunkFinishEventData = {
     uploadData: UploadData;
 };
 
+export const DEFAULT_CHUNK_SIZE: number;
+
 export const getChunkedEnhancer: (options: ChunkedOptions) => UploaderEnhancer;
 
 export const createChunkedSender: (options: ChunkedOptions) => ChunkedSender;

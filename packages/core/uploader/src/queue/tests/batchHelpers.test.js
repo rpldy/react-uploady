@@ -553,7 +553,7 @@ describe("batchHelpers tests", () => {
 
 			const queueState = getQueueState({
 				batches: {
-					b1: {batch, batchOptions: {}},
+					b1: { batch, batchOptions: {} },
 				},
 				items: {
 					u1: { test: 1 },
@@ -602,9 +602,9 @@ describe("batchHelpers tests", () => {
                 items: {
                     ...items,
                     //item from different batch
-                    i4: {id: "i4", batchId: "b3"},
+                    i4: { id: "i4", batchId: "b3" },
                     //intentionally using batchId: b1 but not in batch.items
-                    i5: {id: "i5", batchId: "b1"},
+                    i5: { id: "i5", batchId: "b1" },
                 },
                 batches: {
                     b1: {
@@ -632,7 +632,7 @@ describe("batchHelpers tests", () => {
 
             const updatedBatch = batchHelpers.getBatchFromState(qState.getState(), "b1");
             expect(updatedBatch.items).toHaveLength(2);
-            expect(updatedBatch.items.find(({id}) => id === item.id)).toBeUndefined();
+            expect(updatedBatch.items.find(({ id }) => id === item.id)).toBeUndefined();
             expect(qState.getState().batches["b1"].itemBatchOptions[item.id]).toBeUndefined();
             expect(qState.getState().batches["b1"].itemBatchOptions["i1"]).toBeDefined();
         });
@@ -826,7 +826,7 @@ describe("batchHelpers tests", () => {
         it("should prepare pending for upload with Options", () => {
             const queue = getPendingQueue();
 
-            batchHelpers.preparePendingForUpload(queue, { test: false});
+            batchHelpers.preparePendingForUpload(queue, { test: false });
 
             expect(queue.getState().batches.b2.batch.state).toBe(BATCH_STATES.ADDED);
             expect(queue.getState().batches.b2.batchOptions.test).toBe(false);

@@ -2,10 +2,9 @@
 import React, { useState } from "react";
 import UploadButton from "@rpldy/upload-button";
 import {
-    DEFAULT_CHUNK_SIZE,
     getCsfExport,
     createUploadyStory,
-    getTusDestinationOptions,
+    getTusStoryArgs,
     type CsfExport,
     type UploadyStory,
 } from "../../../story-helpers";
@@ -20,10 +19,16 @@ import TusUploady, {
     useRequestPreSend,
     composeEnhancers,
     useTusResumeStartListener,
+    useClearResumableStore,
 } from "./src";
 
 import Readme from "./TusUploady.storydoc.mdx";
 import type { Node } from "react";
+
+const ClearResumablesButton = () => {
+    const clear = useClearResumableStore();
+    return <button style={{ margin: "10px 0 10px"}} onClick={clear}>Clear Resumable Store</button>
+};
 
 const AbortButton = () => {
     const abortAll = useAbortAll();
@@ -58,8 +63,8 @@ const ItemProgress = () => {
 
     return (
         <>
-            {progress.map((p) => (
-                <p key={p.id} data-id={p.id}>
+            {progress.map((p, i) => (
+                <p key={p.id + i} data-id={p.id}>
                     {p.text}
                 </p>
             ))}
@@ -79,6 +84,8 @@ export const Simple: UploadyStory = createUploadyStory(
          ignoreModifiedDateInStorage,
          sendDataOnCreate,
          sendWithCustomHeader,
+         parallel,
+         extOptions,
      }): Node => {
         const activeDestination = sendWithCustomHeader ?
             { ...destination, headers: { "x-test": "abcd" } } :
@@ -89,7 +96,8 @@ export const Simple: UploadyStory = createUploadyStory(
                 debug
                 destination={activeDestination}
                 enhancer={enhancer}
-                chunkSize={chunkSize}
+                chunkSize={extOptions?.chunkSize || chunkSize}
+                parallel={extOptions?.parallel ?? parallel}
                 forgetOnSuccess={forgetOnSuccess}
                 resume={resumeStorage}
                 ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}
@@ -99,6 +107,7 @@ export const Simple: UploadyStory = createUploadyStory(
                 <br/>
                 <AbortButton/>
                 <ItemProgress/>
+                <ClearResumablesButton/>
             </TusUploady>
         );
     });
@@ -128,13 +137,14 @@ export const WithDynamicMetadata: UploadyStory = createUploadyStory(
          resumeStorage,
          ignoreModifiedDateInStorage,
          sendDataOnCreate,
+        extOptions,
      }): Node => {
         return (
             <TusUploady
                 debug
                 destination={destination}
                 enhancer={enhancer}
-                chunkSize={chunkSize}
+                chunkSize={extOptions?.chunkSize || chunkSize}
                 forgetOnSuccess={forgetOnSuccess}
                 resume={resumeStorage}
                 ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}
@@ -144,6 +154,7 @@ export const WithDynamicMetadata: UploadyStory = createUploadyStory(
                 <br/>
                 <ItemProgress/>
                 <DynamicUploadMeta/>
+                <ClearResumablesButton/>
             </TusUploady>
         );
     });
@@ -159,7 +170,7 @@ const TusConcatUploadLog = () => {
         setLog((log) => log.concat("ITEM FINISHED UPLOADING!"));
     });
 
-    return log.map((line) => <p key={line}>{line}</p>);
+    return log.map((line, i) => <p key={line + `${i}`}>{line}</p>);
 };
 
 export const WithTusConcatenation: UploadyStory = createUploadyStory(
@@ -171,21 +182,24 @@ export const WithTusConcatenation: UploadyStory = createUploadyStory(
          resumeStorage,
          ignoreModifiedDateInStorage,
          sendDataOnCreate,
+         parallel,
+         extOptions
      }): Node => {
         return (
             <TusUploady
                 debug
                 destination={destination}
                 enhancer={enhancer}
-                chunkSize={chunkSize}
+                chunkSize={extOptions?.chunkSize || chunkSize}
                 forgetOnSuccess={forgetOnSuccess}
                 resume={resumeStorage}
-                parallel={2}
+                parallel={extOptions?.parallel ?? (parallel || 2)}
                 ignoreModifiedDateInStorage={!ignoreModifiedDateInStorage}
                 sendDataOnCreate={sendDataOnCreate}
             >
-                <UploadButton>Upload with TUS Concatenation</UploadButton>
+                <UploadButton id="upload-button">Upload with TUS Concatenation</UploadButton>
                 <TusConcatUploadLog/>
+                <ClearResumablesButton/>
             </TusUploady>
         );
     });
@@ -220,11 +234,13 @@ export const WithRetry: UploadyStory = createUploadyStory(
          destination,
          enhancer,
          chunkSize,
+         parallel,
          forgetOnSuccess,
          resumeStorage,
          ignoreModifiedDateInStorage,
          sendDataOnCreate,
          sendWithCustomHeader,
+         extOptions,
      }): Node => {
         const activeDestination = sendWithCustomHeader ?
             { ...destination, headers: { "x-test": "abcd" } } :
@@ -235,7 +251,8 @@ export const WithRetry: UploadyStory = createUploadyStory(
                 debug
                 destination={activeDestination}
                 enhancer={composeEnhancers(enhancer, retryEnhancer)}
-                chunkSize={chunkSize}
+                chunkSize={extOptions?.chunkSize || chunkSize}
+                parallel={extOptions?.parallel ?? parallel}
                 forgetOnSuccess={forgetOnSuccess}
                 resume={resumeStorage}
                 ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}
@@ -246,6 +263,7 @@ export const WithRetry: UploadyStory = createUploadyStory(
                 <AbortButton/>
                 <RetryTus/>
                 <ItemProgress/>
+                <ClearResumablesButton/>
             </TusUploady>
         );
     });
@@ -268,6 +286,7 @@ export const WithResumeStartHandler: UploadyStory = createUploadyStory(
          destination,
          enhancer,
          chunkSize,
+         parallel,
          forgetOnSuccess,
          resumeStorage,
          ignoreModifiedDateInStorage,
@@ -283,7 +302,8 @@ export const WithResumeStartHandler: UploadyStory = createUploadyStory(
                 debug
                 destination={activeDestination}
                 enhancer={composeEnhancers(enhancer, retryEnhancer)}
-                chunkSize={chunkSize}
+                chunkSize={extOptions?.chunkSize || chunkSize}
+                parallel={extOptions?.parallel ?? parallel}
                 forgetOnSuccess={forgetOnSuccess}
                 resume={resumeStorage}
                 ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}
@@ -299,6 +319,7 @@ export const WithResumeStartHandler: UploadyStory = createUploadyStory(
                 <RetryTus/>
                 <ItemProgress/>
                 <ResumeHandler cancelResume={extOptions?.tusCancelResume}/>
+                <ClearResumablesButton/>
             </TusUploady>
         );
     });
@@ -306,32 +327,7 @@ export const WithResumeStartHandler: UploadyStory = createUploadyStory(
 const tusUploadyStories: CsfExport = getCsfExport(TusUploady, "Tus Uploady", Readme, {
     pkg: "tus-uploady",
     section: "UI",
-    parameters: {
-        controls: {
-            exclude: ["group", "longLocal"],
-        }
-    },
-    args: {
-        uploadType: "url",
-        chunkSize: DEFAULT_CHUNK_SIZE,
-        forgetOnSuccess: false,
-        resumeStorage: true,
-        ignoreModifiedDateInStorage: false,
-        sendDataOnCreate: false,
-        sendWithCustomHeader: false,
-    },
-    argTypes: {
-        uploadType: {
-            control: "radio",
-            options: getTusDestinationOptions(),
-        },
-        chunkSize: { control: "number" },
-        forgetOnSuccess: { control: "boolean" },
-        resumeStorage: { control: "boolean" },
-        ignoreModifiedDateInStorage: { control: "boolean" },
-        sendDataOnCreate: { control: "boolean" },
-        sendWithCustomHeader: { control: "boolean" },
-    }
+    ...getTusStoryArgs(),
 });
 
 export default { ...tusUploadyStories, title: "UI/Tus Uploady" };

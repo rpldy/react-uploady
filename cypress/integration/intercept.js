@@ -13,17 +13,20 @@ const createResponse = (options = {}) => ({
 export const interceptWithHandler = (handler, alias = "uploadReq", url = UPLOAD_URL, method = DEFAULT_METHOD) =>
     intercept(url, method, handler, alias);
 
-export const interceptWithDelay = (delay = 100, alias = "uploadReq", url = UPLOAD_URL, method = DEFAULT_METHOD, resOptions = {}) =>
-    interceptWithHandler((req) => {
+export const interceptWithDelay = (delay = 100, alias = "uploadReq", url = UPLOAD_URL, method = DEFAULT_METHOD, resOptions = {}) => {
+    const getResOptions = (typeof resOptions === "function") ? resOptions : () => resOptions;
+
+    return interceptWithHandler((req) => {
         req.reply({
             ...RESPONSE_DEFAULTS,
-            ...resOptions,
+            ...getResOptions(req),
             delay,
         });
     }, alias, url, method);
+};
 
 const intercept = (url = UPLOAD_URL, method = DEFAULT_METHOD, resOptions, alias = "uploadReq") => {
-    const handler = (typeof resOptions === "function")  ? resOptions : createResponse(resOptions)
+    const handler = (typeof resOptions === "function")  ? resOptions : createResponse(resOptions);
 
     cy.log(`intercepting url: ${url} with method: ${method}`);
 

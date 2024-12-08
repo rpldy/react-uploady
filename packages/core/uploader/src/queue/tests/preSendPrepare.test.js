@@ -43,24 +43,24 @@ describe("preSendPrepare tests", () => {
         aborts: {}
     });
 
-    it("should throw in case event handler update returns different array length", () => {
+    it("should throw in case event handler update returns different array length", async () => {
         const queueState = getQueueState(getMockStateData());
 
         triggerUpdater.mockResolvedValueOnce({ items: ["u1", "u2", "u3"] });
 
-        expect(getItemsPrepareUpdater(eventType, retrieveItems)(queueState, items))
+       await expect(getItemsPrepareUpdater(eventType, retrieveItems)(queueState, items))
             .rejects
             .toThrow(`REQUEST_PRE_SEND(${eventType}) event handlers must return same items with same ids`);
     });
 
-    it("should throw in case event handler returns different item ids", () => {
+    it("should throw in case event handler returns different item ids", async () => {
         const queueState = getQueueState(getMockStateData());
 
         mockUtils.isSamePropInArrays.mockReturnValueOnce(false);
 
         triggerUpdater.mockResolvedValueOnce({ items: [{ id: "u1" }, { id: "u2" }] });
 
-        expect(getItemsPrepareUpdater(eventType, retrieveItems)(queueState, items))
+        await expect(getItemsPrepareUpdater(eventType, retrieveItems)(queueState, items))
             .rejects
             .toThrow(`REQUEST_PRE_SEND(${eventType}) event handlers must return same items with same ids`);
     });
@@ -91,6 +91,19 @@ describe("preSendPrepare tests", () => {
         expect(result.cancelled).toBe(true);
     });
 
+    it("should handle true as response", async () => {
+        const queueState = getQueueState(getMockStateData());
+        const preparer = getItemsPrepareUpdater(eventType, retrieveItems, retrieveSubject);
+
+        triggerUpdater.mockResolvedValueOnce(true);
+
+        const result = await preparer(queueState, items);
+
+        expect(result.items).toStrictEqual(items);
+        expect(result.options).toStrictEqual(batchOptions);
+        expect(result.cancelled).toBe(false);
+    });
+
     it("Preparer should update items before sending", async () => {
         const queueState = getQueueState(getMockStateData());
         const preparer = getItemsPrepareUpdater(eventType, retrieveItems, retrieveSubject);
@@ -114,7 +127,7 @@ describe("preSendPrepare tests", () => {
         const result = await preparer(queueState, items);
 
         expect(result.items).toStrictEqual(newItems);
-        expect(result.options).toStrictEqual({...batchOptions, ...newOptions});
+        expect(result.options).toStrictEqual({ ...batchOptions, ...newOptions });
         expect(result.cancelled).toBe(false);
 
         expect(triggerUpdater).toHaveBeenCalledWith(
@@ -157,7 +170,7 @@ describe("preSendPrepare tests", () => {
 
         const result = await preparer(queueState, Object.values(testItems));
 
-        expect(result.options).toStrictEqual({...batchOptions, ...newOptions});
+        expect(result.options).toStrictEqual({ ...batchOptions, ...newOptions });
         expect(result.cancelled).toBe(false);
 
         expect(triggerUpdater).toHaveBeenCalledWith(
@@ -192,7 +205,7 @@ describe("preSendPrepare tests", () => {
         expect(queueState.getState().batches["b1"].itemBatchOptions[items[0].id].destination.url).toBe("b");
         expect(queueState.getState().batches["b1"].itemBatchOptions[items[1].id]).toBeUndefined();
 
-        expect(result.options).toStrictEqual({...batchOptions, ...{ destination: { url: "b"} }});
+        expect(result.options).toStrictEqual({ ...batchOptions, ...{ destination: { url: "b" } } });
     });
 
     it("Preparer should update options without items", async () => {
@@ -211,7 +224,7 @@ describe("preSendPrepare tests", () => {
         const result = await preparer(queueState, items);
 
         expect(result.items).toStrictEqual(items);
-        expect(result.options).toStrictEqual({...batchOptions, ...newOptions});
+        expect(result.options).toStrictEqual({ ...batchOptions, ...newOptions });
         expect(result.cancelled).toBe(false);
 
         expect(triggerUpdater).toHaveBeenCalledWith(

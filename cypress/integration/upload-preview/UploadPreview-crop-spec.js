@@ -15,7 +15,7 @@ describe("UploadPreview - Crop", () => {
 
         //have to use autoupload false since react18 - in cypress, upload doesnt cause preSend HOC's effect to run on time - need another click
         cy.setUploadOptions({ autoUpload: false });
-    }
+    };
 
     it("should show upload crop before upload", () => {
         loadPage();

@@ -31,7 +31,7 @@ import {
 } from "../../../story-helpers";
 import Readme from "./UploadDropZone.storydoc.mdx";
 
-import type { Node, Ref } from "react";
+import type { Node } from "react";
 import type { UploadButtonProps } from "@rpldy/upload-button";
 import type { GetFilesMethod } from "./src";
 
@@ -316,7 +316,7 @@ export const WithThirdPartyDropZone: UploadyStory = createUploadyStory(
         );
     });
 
-const MyClickableDropZone = forwardRef((props: UploadButtonProps, ref: Ref<"div">) => {
+const MyClickableDropZone = forwardRef((props: UploadButtonProps, ref: any) => {
     const { onClick, ...buttonProps } = props;
 
     const onZoneClick = useCallback((e: SyntheticMouseEvent<HTMLElement>) => {

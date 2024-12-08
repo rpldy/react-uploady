@@ -131,12 +131,12 @@ const WelcomeReactUploady = () => {
 
             <ul className="lib-links">
                 <li>
-                    <a href="https://github.com/rpldy/react-uploady" target="_blank" rel="noopener" title="rpldy/react-uploady">
+                    <a href="https://github.com/rpldy/react-uploady" target="_blank" rel="noopener noreferrer" title="rpldy/react-uploady">
                         <DiGithubBadge size={48}/>
                     </a>
                 </li>
                 <li>
-                    <a href="https://www.npmjs.com/search?q=%40rpldy" target="_blank" rel="noopener" title="@rpldy">
+                    <a href="https://www.npmjs.com/search?q=%40rpldy" target="_blank" rel="noopener noreferrer" title="@rpldy">
                         <DiNpm size={48}/>
                     </a>
                 </li>
@@ -144,20 +144,20 @@ const WelcomeReactUploady = () => {
         </Container>
 
         <InfoContainer>
-            <h3>Created By <a href="https://react-uploady.org/docs/yoav/" target="_blank" rel="noopener">Yoav Niran</a></h3>
+            <h3>Created By <a href="https://react-uploady.org/docs/yoav/" target="_blank" rel="noopener noreferrer">Yoav Niran</a></h3>
             <ul className="personal-links">
                 <li>
-                    <a href="https://twitter.com/poeticGeek" target="_blank" rel="noopener" title="@poeticGeek">
+                    <a href="https://twitter.com/poeticGeek" target="_blank" rel="noopener noreferrer" title="@poeticGeek">
                         <TiSocialTwitter size={48}/>
                     </a>
                 </li>
                 <li>
-                    <a href="https://www.instagram.com/literarycoder" target="_blank" rel="noopener" title="@literaryCoder">
+                    <a href="https://www.instagram.com/literarycoder" target="_blank" rel="noopener noreferrer" title="@literaryCoder">
                         <TiSocialInstagram size={48}/>
                     </a>
                 </li>
                 <li>
-                    <a href="https://github.com/yoavniran" target="_blank" rel="noopener" title="yoavniran">
+                    <a href="https://github.com/yoavniran" target="_blank" rel="noopener noreferrer" title="yoavniran">
                         <DiGithubBadge size={48}/>
                     </a>
                 </li>

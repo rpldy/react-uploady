@@ -58,11 +58,15 @@ describe("UploadPreview tests", () => {
 
     it("should render with PreviewComponent from props", () => {
         const PreviewComp = (props) => {
-            // eslint-disable-next-line no-unused-vars
             const { url, type, isFallback, removePreview, ...previewProps } = props;
-            return <article data-preview-type={type} {...previewProps}>
-                {url}
-            </article>;
+
+            return (
+                <article data-preview-type={type} {...previewProps}>
+                    {url}
+                    {isFallback}
+                    {removePreview}
+                </article>
+            );
         };
 
         mockUsePreviewsLoader.mockReturnValueOnce({

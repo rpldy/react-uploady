@@ -1,7 +1,7 @@
 // @flow
 import { DEFAULT_CHUNK_SIZE, DESTINATION_TYPES, UMD_NAMES } from "./consts";
 import StoryUploadProgress from "./StoryUploadProgress";
-import StoryAbortButton from "./StoryAbortButton"
+import StoryAbortButton from "./StoryAbortButton";
 import useEventsLogUpdater from "./useEventsLogUpdater";
 import { logToCypress, isCypress, addActionLogEnhancer } from "./uploadyStoryLogger";
 import UmdBundleScript from "./UmdBundleScript";
@@ -32,7 +32,7 @@ export {
 };
 
 export  { mockDestination, urlDestination, cldDestination, localDestination } from "./uploadDestinations";
-export { getTusDestinationOptions, getDestinationOptions } from "./storySetupControls/args";
+export { getTusDestinationOptions, getDestinationOptions, getTusStoryArgs } from "./storySetupControls/args";
 
 export { default as getCsfExport } from "./getCsfExport";
 

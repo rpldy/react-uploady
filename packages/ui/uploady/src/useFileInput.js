@@ -14,7 +14,6 @@ const getUrl = (form: Element) => {
     url = url.replace(/\s/g, "");
     let path;
 
-    // eslint-disable-next-line default-case
     switch (true) {
         //if empty, use same url as page
         case url === "":

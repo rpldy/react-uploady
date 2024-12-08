@@ -19,7 +19,7 @@ export type UploadyStoryParams = {
     enhancer?: UploaderEnhancer<any>
 };
 
-const createUploadyStory = (Component: React$AbstractComponent<any, any>, storyParams: {| args?: any, argTypes?: any |} = {}): UploadyStory => {
+const createUploadyStory = (Component: React$ComponentType<any>, storyParams: {| args?: any, argTypes?: any |} = {}): UploadyStory => {
     return {
         render: (args): Node => {
             const setupProps = useStoryUploadySetupFromArgs(args);

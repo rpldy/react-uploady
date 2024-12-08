@@ -16,14 +16,14 @@ type ItemsRetriever<T> = (subject: T) => BatchItem[];
 type SubjectRetriever<T> = (subject: T, UploaderCreateOptions) => Object;
 type ItemsPreparer<T> = (queue: QueueState, subject: T) => Promise<ItemsSendData>;
 type ResponseValidator = (updated: any) => void;
-type UpdatedResponse = { items: BatchItem[], options: UploaderCreateOptions };
+type UpdatedResponse = boolean | { items: BatchItem[], options: UploaderCreateOptions };
 
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
 const processPrepareResponse = (eventType: string, items: BatchItem[], options: UploaderCreateOptions, updated: ?UpdatedResponse) => {
     let usedOptions = options, usedItems = items;
 
-    if (updated) {
+    if (updated && typeof updated !== "boolean") {
         logger.debugLog(`uploader.queue: REQUEST_PRE_SEND(${eventType}) event returned updated items/options`, updated);
         if (updated.items) {
             //can't change items count at this point.

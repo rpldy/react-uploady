@@ -226,10 +226,22 @@ describe("resumeUpload tests", () => {
             });
         });
 
+        it("should resume when handler response is boolean true", async () => {
+            const { request } = await testResume({}, null, true);
+
+            expect(request).toHaveBeenCalledWith("upload.url", null ,{
+                method: "HEAD",
+                headers: {
+                    "tus-resumable": "1",
+                    "x-test": "123",
+                }
+            });
+        });
+
         it("should cancel resume from start event handler", async () => {
             const { request, response } = await testResume({}, null, false);
 
-            expect(response).toStrictEqual({ isNew: false, canResume: false });
+            expect(response).toStrictEqual({ isNew: false, canResume: false, uploadUrl: "" });
             expect(request).toHaveBeenCalledTimes(0);
         });
 
@@ -242,7 +254,7 @@ describe("resumeUpload tests", () => {
 
             const result = await resumeResult.request;
 
-            expect(result).toStrictEqual({ isNew: false, canResume: false });
+            expect(result).toStrictEqual({ isNew: false, canResume: false, uploadUrl: "" });
         });
     });
 

@@ -1,97 +1,157 @@
-import uploadFile from "../uploadFile";
-import intercept from "../intercept";
+import { createTusIntercepts, parallelFinalUrl, uploadUrl } from "./tusIntercept";
+import clearTusPersistStorage from "./clearTusPersistStorage";
+import runParallelUpload from "./runParallerlUpload";
 
 describe("TusUploady - Parallel", () => {
     const fileName = "flower.jpg";
 
-    before(() => {
+    beforeEach(() => {
         cy.visitStory(
             "tusUploady",
             "with-tus-concatenation",
             {
                 useMock: false,
-                uploadUrl: "http://test.tus.com/upload",
-                chunkSize: 200000,
+                uploadUrl,
+                chunkSize: 200_000,
                 tusResumeStorage: true,
                 uploadParams: { foo: "bar" },
             }
         );
+
+        clearTusPersistStorage();
     });
 
-    it("should upload chunks using tus protocol in parallel", () => {
-        let reqCount = 0;
-        const createUrls = ["123", "456", "final"];
+    it("should upload chunks using tus protocol in parallel, chunk size larger than part size", () => {
+        const parallel = 2;
+        const {
+            assertCreateRequest,
+            assertPatchRequest,
+            assertPatchRequestTimes,
+            assertParallelFinalRequest,
+        } = createTusIntercepts({ parallel });
 
-        cy.intercept("POST", "http://test.tus.com/upload", (req) => {
-            req.reply(200, { success: true }, {
-                "Location": `http://test.tus.com/upload/${createUrls[reqCount]}`,
-                "Tus-Resumable": "1.0.0",
+        runParallelUpload(fileName, parallel, (fileSize, createSize, startFinishEvents) => {
+            assertCreateRequest(createSize + 1);
+            assertCreateRequest(createSize);
+
+            assertPatchRequest(createSize + 1, 0);
+            assertPatchRequest(createSize, 1);
+
+            assertPatchRequestTimes(0, 1);
+            assertPatchRequestTimes(1, 1);
+
+            assertParallelFinalRequest(({ request }) => {
+                expect(request.headers["upload-metadata"])
+                    .to.eq("foo YmFy");
+                expect(startFinishEvents.finish.args[1].uploadResponse.location).to.eq(parallelFinalUrl);
+            });
+        });
+    });
+
+    it("should upload chunks using tus protocol in parallel, chunk size smaller than part size", () => {
+        const chunkSize = 50_000;
+        const parallel = 3;
+
+        const {
+            assertCreateRequest,
+            assertPatchRequest,
+            assertPatchRequestTimes,
+            assertParallelFinalRequest
+        } = createTusIntercepts({ parallel });
+
+        cy.setUploadOptions({ chunkSize, parallel });
+
+        runParallelUpload(fileName, parallel, (fileSize, createSize, startFinishEvents) => {
+            assertCreateRequest(createSize + 1);
+            assertCreateRequest(createSize + 1);
+            assertCreateRequest(createSize - 1);
+
+            assertPatchRequest(chunkSize, 0);
+            assertPatchRequest(chunkSize, 1);
+            assertPatchRequest(chunkSize, 2);
+
+            assertPatchRequestTimes(0, 3);
+            assertPatchRequestTimes(1, 3);
+            assertPatchRequestTimes(2, 3);
+
+            assertParallelFinalRequest(({ request }) => {
+                expect(request.headers["upload-metadata"])
+                    .to.eq("foo YmFy");
+                expect(startFinishEvents.finish.args[1].uploadResponse.location).to.eq(parallelFinalUrl);
+            });
+        });
+    });
+
+    it("should upload chunks using tus protocol in parallel, with resume on the whole file", () => {
+        const parallel = 2;
+
+        const {
+            getPartUrls,
+            addResumeForFinal,
+            assertPatchRequestTimes,
+            assertCreateRequestTimes,
+            assertLastCreateRequest,
+            assertResumeRequest,
+        } = createTusIntercepts({ parallel });
+
+        const runAgain = runParallelUpload(fileName, parallel, (fileSize, createSize, startFinishEvents) => {
+            assertLastCreateRequest(({ request }) => {
+                expect(request.headers["upload-concat"])
+                    .to.eq(`final;${getPartUrls().join(" ")}`);
+                expect(startFinishEvents.finish.args[1].uploadResponse.location).to.eq(parallelFinalUrl);
             });
 
-            reqCount += 1;
-        }).as("createReq");
+            addResumeForFinal(fileSize);
 
-        intercept("http://test.tus.com/upload/123", "PATCH", {
-            headers: {
-                "Tus-Resumable": "1.0.0",
-                "Upload-Offset": "200000"
-            },
-        }, "patchReq1");
+            runAgain((fileSize, createSize, startFinishEvents) => {
+                expect(startFinishEvents.finish.args[1].uploadResponse.location).to.eq(parallelFinalUrl);
 
-        intercept("http://test.tus.com/upload/456", "PATCH", {
-            headers: {
-                "Tus-Resumable": "1.0.0",
-                "Upload-Offset": "175000"
-            },
-        }, "patchReq2");
+                assertPatchRequestTimes(0, 1, "should only have patch req for the first upload, not for resume");
+                assertPatchRequestTimes(1, 1, "should only have patch req for the first upload, not for resume");
+                assertCreateRequestTimes(3, "should only have 3 requests (create, final, resume)");
 
-        cy.get("input")
-            .should("exist")
-            .as("fInput");
-
-        uploadFile(fileName, () => {
-            cy.waitMedium();
-
-            cy.storyLog()
-                .assertFileItemStartFinish(fileName, 1)
-                .then((startFinishEvents) => {
-                    cy.wait("@createReq")
-                        .then((xhr) => {
-                            expect(xhr.request.headers["upload-length"]).to.eq("200000");
-                            expect(xhr.request.headers["upload-concat"]).to.eq("partial");
-                        });
-
-                    cy.wait("@createReq")
-                        .then((xhr) => {
-                            expect(xhr.request.headers["upload-length"]).to.eq("172445");
-                            expect(xhr.request.headers["upload-concat"]).to.eq("partial");
-                        });
-
-                    cy.wait("@patchReq1")
-                        .then(({ request }) => {
-                            const { headers } = request;
-                            expect(headers["content-length"]).to.eq("200000");
-                            expect(headers["content-type"]).to.eq("application/offset+octet-stream");
-                        });
-
-                    cy.wait("@patchReq2")
-                        .then(({ request }) => {
-                            const { headers } = request;
-                            expect(headers["content-length"]).to.eq("172445");
-                            expect(headers["content-type"]).to.eq("application/offset+octet-stream");
-                        });
-
-                    cy.wait("@createReq")
-                        .then((xhr) => {
-                            expect(xhr.request.headers["upload-metadata"])
-                                .to.eq("foo YmFy");
-
-                            expect(xhr.request.headers["upload-concat"])
-                                .to.eq("final;http://test.tus.com/upload/123 http://test.tus.com/upload/456");
-
-                            expect(startFinishEvents.finish.args[1].uploadResponse.location).to.eq("http://test.tus.com/upload/final");
-                        });
+                assertResumeRequest(({ request }) => {
+                    console.log(" RESUME REQUEST ", request);
+                    expect(request.method).to.eq("HEAD");
                 });
+            });
+        });
+    });
+
+    it("should upload chunks using tus protocol in parallel, with resume on one of the parts", () => {
+        const parallel = 2;
+
+        const {
+            getPartUrls,
+            addResumeForFinal,
+            addResumeForParts,
+            assertPatchRequestTimes,
+            assertCreateRequestTimes,
+            assertLastCreateRequest,
+            assertResumeForParts,
+        } = createTusIntercepts({ parallel });
+
+        const runAgain = runParallelUpload(fileName, parallel, (fileSize, createSize, startFinishEvents) => {
+            assertLastCreateRequest(({ request }) => {
+                expect(request.headers["upload-concat"])
+                    .to.eq(`final;${getPartUrls().join(" ")}`);
+                expect(startFinishEvents.finish.args[1].uploadResponse.location).to.eq(parallelFinalUrl);
+            });
+
+            //resume on the file fails so can test resume on parts
+            addResumeForFinal(-1);
+            addResumeForParts();
+
+            runAgain((fileSize, createSize, startFinishEvents) => {
+                expect(startFinishEvents.finish.args[1].uploadResponse.location).to.eq(parallelFinalUrl);
+
+                assertCreateRequestTimes(4, "should have 4 requests (create, final, resume, final)");
+
+                assertPatchRequestTimes(0, 1, "should only have patch req for the first upload, not for resume");
+                assertPatchRequestTimes(1, 1, "should only have patch req for the first upload, not for resume");
+
+                assertResumeForParts();
+            });
         });
     });
 });

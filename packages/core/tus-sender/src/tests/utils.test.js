@@ -1,5 +1,5 @@
 import * as utils from "../utils";
-import {DEFAULT_OPTIONS} from "../defaults";
+import { DEFAULT_OPTIONS } from "../defaults";
 
 describe("utils tests", () => {
 	describe("getMandatoryOptions tests", () => {

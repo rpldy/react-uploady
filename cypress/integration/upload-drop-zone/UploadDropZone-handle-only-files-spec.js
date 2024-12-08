@@ -15,13 +15,13 @@ describe("UploadDropZone - shouldHandleDrag for files only", () => {
     it("should not show drag overlay if not all files", () => {
         cy.get("#upload-drop-zone")
             .should("be.visible")
-            .trigger("dragenter", { dataTransfer: { items: [ { kind: "dummy" } ]} });
+            .trigger("dragenter", { dataTransfer: { items: [ { kind: "dummy" } ] } });
 
         cy.get(".dropIndicator")
             .should("not.be.visible");
 
         cy.get("#upload-drop-zone")
-            .trigger("dragenter", { dataTransfer: { items: [ { kind: "file" } ]} });
+            .trigger("dragenter", { dataTransfer: { items: [ { kind: "file" } ] } });
 
         cy.get(".dropIndicator")
             .should("be.visible");

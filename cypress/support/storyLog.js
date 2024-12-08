@@ -87,12 +87,12 @@ const assertStartFinish = (storyLog, startIndex, prop, value, after = false) => 
 
 Cypress.Commands.add("assertFileItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex, after = false) => {
     console.log("assertFileItemStartFinish received log", storyLog, { startIndex, after });
-    assertStartFinish(storyLog, startIndex, "file.name", fileName, after);
+    return assertStartFinish(storyLog, startIndex, "file.name", fileName, after);
 });
 
 Cypress.Commands.add("assertUrlItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex = 0, after = false) => {
     console.log("assertUrlItemStartFinish received log", storyLog, { startIndex, after });
-    assertStartFinish(storyLog, startIndex, "url", fileName, after);
+    return assertStartFinish(storyLog, startIndex, "url", fileName, after);
 });
 
 Cypress.Commands.add("assertLogEntryCount", { prevSubject: true }, (storyLog, count) => {
@@ -123,11 +123,11 @@ Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, e
             logLine = logLine.args.slice(1);
         } else {
             const item = storyLog.find((item) => item.args[0] === eventName);
-            expect(item, `expect to find log line for event: ${eventName}`).to.not.be.undefined
+            expect(item, `expect to find log line for event: ${eventName}`).to.not.be.undefined;
             logLine = item.args.slice(1);
         }
     } catch (ex) {
-        throw new StoryLogError(`Failed to custom assert log entry: ${eventName}. log[${storyLog.length} items]: ${JSON.stringify(storyLog)}`, ex)
+        throw new StoryLogError(`Failed to custom assert log entry: ${eventName}. log[${storyLog.length} items]: ${JSON.stringify(storyLog)}`, ex);
     }
 
     asserter(logLine, storyLog._env);
@@ -153,14 +153,14 @@ const assertLogPattern = (storyLog, pattern, options = {}) => {
     }, []);
 
     if (~options.index) {
-        const inLine = matches.find(({index}) => index === options.index);
+        const inLine = matches.find(({ index }) => index === options.index);
         expect(inLine.index, `expect pattern match to be in index: ${options.index}`).to.eq(options.index);
     } else {
         if (between[0] === between[1]) {
             expect(matches.length).to.equal(options.times, `expect to find match: ${pattern} in log ${options.times} times`);
         } else {
             expect(matches.length).least(between[0], `expect to find match: ${pattern} in log at least: ${between[0]} times`);
-            expect(matches.length).most(between[1], `expect to find match: ${pattern} in log at most: ${between[1]} times`)
+            expect(matches.length).most(between[1], `expect to find match: ${pattern} in log at most: ${between[1]} times`);
         }
 
         if (options.different) {
@@ -171,18 +171,18 @@ const assertLogPattern = (storyLog, pattern, options = {}) => {
                 return same;
             });
 
-            expect(found, "expect pattern matches to all be different").to.be.undefined
+            expect(found, "expect pattern matches to all be different").to.be.undefined;
         }
     }
 
     return cy.wrap(matches);
-}
+};
 
 Cypress.Commands.add("assertLogPattern", { prevSubject: true }, assertLogPattern);
 
 Cypress.Commands.add("assertNoLogPattern", { prevSubject: true }, (storyLog, pattern, options = {}) =>
     assertLogPattern(storyLog, pattern, { ...options, times: 0 }));
 
-Cypress.Commands.add("resetStoryLog", {prevSubject: true}, (storyLog) => {
+Cypress.Commands.add("resetStoryLog", { prevSubject: true }, (storyLog) => {
 	storyLog.splice(0, storyLog.length);
 });

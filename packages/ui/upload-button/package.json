@@ -36,10 +36,10 @@
     "@rpldy/retry": "workspace:*",
     "@rpldy/shared": "workspace:*",
     "@rpldy/uploady": "workspace:*",
-    "flow-bin": "^0.245.1",
+    "flow-bin": "^0.256.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "styled-components": "^6.0.7"
+    "styled-components": "^6.1.13"
   },
   "peerDependencies": {
     "react": ">=16.8"

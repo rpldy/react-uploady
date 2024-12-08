@@ -1,8 +1,9 @@
 // @flow
 import { createBatchItem, FILE_STATES, logger } from "@rpldy/shared";
-import { createChunkedSender, getChunkDataFromFile } from "@rpldy/chunked-sender";
+import { createChunkedSender, getChunkDataFromFile, DEFAULT_CHUNK_SIZE } from "@rpldy/chunked-sender";
 import { createResumeSuccessResult, getHeadersWithoutContentRange } from "../utils";
 import { retrieveResumable } from "../../resumableStore";
+import handleParallelTusUpload from "../handleParallelTusUpload";
 import initTusUpload from "./initTusUpload";
 import createStateItemData from "./createStateItemData";
 import resumeUpload from "./resumeUpload";
@@ -11,9 +12,8 @@ import type { BatchItem } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { OnProgress } from "@rpldy/sender";
 import type { ChunkedSender, ChunkedSendOptions } from "@rpldy/chunked-sender";
-import type { State, TusState } from "../../types";
+import type { State, TusOptions, TusState } from "../../types";
 import type { ParallelPartData, InitRequestResult } from "../types";
-import handleParallelTusUpload from "../handleParallelTusUpload";
 
 const getPartStartEnd = (item: BatchItem, parallels: number, chunkSize: number, partIdx: number) => {
     const fileSize = item.file.size;
@@ -37,9 +37,9 @@ const getParallelPartData = (item: BatchItem, partIdx: number, parallels: number
     };
 };
 
-const initItemStateWithParallelData = (tusState: TusState, item: BatchItem, options, parallels): ParallelPartData[] =>
+const initItemStateWithParallelData = (tusState: TusState, item: BatchItem, options: TusOptions, parallels: number): ParallelPartData[] =>
     Array.from({ length: parallels }, (_, i) => {
-        const ppData = getParallelPartData(item, i, parallels, options.chunkSize);
+        const ppData = getParallelPartData(item, i, parallels, (options.chunkSize || DEFAULT_CHUNK_SIZE));
 
         tusState.updateState((state: State) => {
             state.items[item.id].parallelParts = state.items[item.id].parallelParts || [];
@@ -141,7 +141,7 @@ const resumeParallelUpload = (
     let afterResumeParallelAbort;
 
     const afterResumeRequest = resumeReq.request.then((data) => {
-        const { isDone, uploadUrl } = data;
+        const { isDone, uploadUrl } = (data || { uploadUrl: "", isDone: false });
         let resRequest;
 
         if (isDone) {
@@ -162,7 +162,7 @@ const resumeParallelUpload = (
     });
 
     const abort = () => {
-        resumeReq?.abort();
+        resumeReq.abort();
         afterResumeParallelAbort?.();
         return true;
     };

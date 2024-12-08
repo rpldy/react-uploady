@@ -1,8 +1,8 @@
 import { request, FILE_STATES } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { getUploadMetadata, addLocationToResponse } from "../utils";
 import createMockState from "../../tests/tusState.mock";
-import finalizeParallelUpload from "../finalizeParallelUpload";
 import { persistResumable } from "../../resumableStore";
+import handleParallelTusUpload from "../handleParallelTusUpload";
 
 vi.mock("../utils");
 vi.mock("../../resumableStore");
@@ -18,7 +18,7 @@ describe("finalizeParallelUpload tests", () => {
 	});
 
 	it("should do nothing if state != FINISHED", () => {
-		finalizeParallelUpload(null, null, null, null, Promise.resolve({
+		handleParallelTusUpload(null, null, null, null, Promise.resolve({
 			state: FILE_STATES.ERROR
 		}));
 
@@ -30,7 +30,7 @@ describe("finalizeParallelUpload tests", () => {
 			items: {}
 		});
 
-		finalizeParallelUpload({ id: "111" }, null, tusState, null, Promise.resolve({
+        handleParallelTusUpload({ id: "111" }, null, tusState, null, Promise.resolve({
 			state: FILE_STATES.FINISHED
 		}));
 
@@ -45,16 +45,20 @@ describe("finalizeParallelUpload tests", () => {
 			items: {
 				[item.id]: {
                     parallelParts: [
-                        { uploadUrl: "ci1.url" },
-                        { uploadUrl: "ci2.url" },
-                        { uploadUrl: "ci3.url" },
+                        { item: { id: "pItem1" } },
+                        { item: { id: "pItem2" } },
+                        { item: { id: "pItem3" } },
                     ]
 				},
+                "pItem1": { uploadUrl: "ci1.url" },
+                "pItem2": { uploadUrl: "ci2.url" },
+                "pItem3": { uploadUrl: "ci3.url" },
+
 				"ci1": { uploadUrl: "ci1.url" }
 			}
 		});
 
-		expect(finalizeParallelUpload(item, null, tusState, null, Promise.resolve({
+		expect(handleParallelTusUpload(item, null, tusState, null, Promise.resolve({
 			state: FILE_STATES.FINISHED
 		}))).rejects.toThrow(`tusSender: something went wrong. found 3 upload urls for 2 parts`);
 	});
@@ -65,13 +69,16 @@ describe("finalizeParallelUpload tests", () => {
 		const tusState = createMockState({
             options: { parallel: 3 },
 			items: {
-				[item.id]: {
+                [item.id]: {
                     parallelParts: [
-                        { identifier: "p1", uploadUrl: "ci1.url" },
-                        { identifier: "p2", uploadUrl: "ci2.url" },
-                        { identifier: "p3", uploadUrl: "ci3.url" },
+                        { item: { id: "pItem1" } },
+                        { item: { id: "pItem2" } },
+                        { item: { id: "pItem3" } },
                     ]
-				},
+                },
+                "pItem1": { uploadUrl: "ci1.url" },
+                "pItem2": { uploadUrl: "ci2.url" },
+                "pItem3": { uploadUrl: "ci3.url" },
 				"ci1": { uploadUrl: "ci1.url" },
 				"ci2": { uploadUrl: "ci2.url" }
 			}
@@ -94,7 +101,7 @@ describe("finalizeParallelUpload tests", () => {
 
 		request.mockReturnValueOnce(pXhr);
 
-		const result = await finalizeParallelUpload(item, url, tusState, null, Promise.resolve(chunkResult));
+		const result = await handleParallelTusUpload(item, url, tusState, null, Promise.resolve(chunkResult));
 
 		expect(request).toHaveBeenCalledWith(url, null, {
 			method: "POST",
@@ -107,25 +114,26 @@ describe("finalizeParallelUpload tests", () => {
 
 		expect(result).toEqual(chunkResult);
 
-        expect(persistResumable).toHaveBeenCalledTimes(3);
-        expect(persistResumable).toHaveBeenCalledWith(item, "ci1.url", tusState.getState().options, "p1");
-        expect(persistResumable).toHaveBeenCalledWith(item, "ci2.url", tusState.getState().options, "p2");
-        expect(persistResumable).toHaveBeenCalledWith(item, "ci3.url", tusState.getState().options, "p3");
+        expect(persistResumable).toHaveBeenCalledTimes(1);
+        expect(persistResumable).toHaveBeenCalledWith(item, "location", tusState.getState().options);
 	});
 
     it("should finalize successfully and not persist part's urls to store when forget is on", async () => {
         const item = { id: "i1" };
 
         const tusState = createMockState({
-            options: { parallel: 3, forgetOnSuccess: true},
+            options: { parallel: 3, forgetOnSuccess: true },
             items: {
                 [item.id]: {
                     parallelParts: [
-                        { identifier: "p1", uploadUrl: "ci1.url" },
-                        { identifier: "p2", uploadUrl: "ci2.url" },
-                        { identifier: "p3", uploadUrl: "ci3.url" },
+                        { item: { id: "pItem1" } },
+                        { item: { id: "pItem2" } },
+                        { item: { id: "pItem3" } },
                     ]
                 },
+                "pItem1": { uploadUrl: "ci1.url" },
+                "pItem2": { uploadUrl: "ci2.url" },
+                "pItem3": { uploadUrl: "ci3.url" },
                 "ci1": { uploadUrl: "ci1.url" },
                 "ci2": { uploadUrl: "ci2.url" }
             }
@@ -148,7 +156,7 @@ describe("finalizeParallelUpload tests", () => {
 
         request.mockReturnValueOnce(pXhr);
 
-        const result = await finalizeParallelUpload(item, url, tusState, null, Promise.resolve(chunkResult));
+        const result = await handleParallelTusUpload(item, url, tusState, null, Promise.resolve(chunkResult));
 
         expect(request).toHaveBeenCalledWith(url, null, {
             method: "POST",
@@ -167,18 +175,23 @@ describe("finalizeParallelUpload tests", () => {
 	it("should override item's abort method in state", async () => {
 		const item = { id: "i1" };
 
-		const tusState = createMockState({
-            options: { parallel: 1 },
-			items: {
-				[item.id]: {
+        const tusState = createMockState({
+            options: { parallel: 3, forgetOnSuccess: true },
+            items: {
+                [item.id]: {
                     parallelParts: [
-                        { uploadUrl: "ci1.url" },
+                        { item: { id: "pItem1" } },
+                        { item: { id: "pItem2" } },
+                        { item: { id: "pItem3" } },
                     ]
-				},
-				"ci1": { uploadUrl: "ci1.url" },
-				"ci2": { uploadUrl: "ci2.url" }
-			}
-		});
+                },
+                "pItem1": { uploadUrl: "ci1.url" },
+                "pItem2": { uploadUrl: "ci2.url" },
+                "pItem3": { uploadUrl: "ci3.url" },
+                "ci1": { uploadUrl: "ci1.url" },
+                "ci2": { uploadUrl: "ci2.url" }
+            }
+        });
 
 		const chunkResult = {
 			state: FILE_STATES.FINISHED
@@ -197,7 +210,7 @@ describe("finalizeParallelUpload tests", () => {
 
 		request.mockReturnValueOnce(pXhr);
 
-		await finalizeParallelUpload(item, url, tusState, null, Promise.resolve(chunkResult));
+		await handleParallelTusUpload(item, url, tusState, null, Promise.resolve(chunkResult));
 
 		expect(tusState.getState().items[item.id].abort()).toBe(true);
 
@@ -207,18 +220,23 @@ describe("finalizeParallelUpload tests", () => {
 	it("should fail if no location header", async () => {
 		const item = { id: "i1" };
 
-		const tusState = createMockState({
-            options: { parallel: 1 },
+        const tusState = createMockState({
+            options: { parallel: 3 },
             items: {
                 [item.id]: {
                     parallelParts: [
-                        { uploadUrl: "ci1.url" },
+                        { item: { id: "pItem1" } },
+                        { item: { id: "pItem2" } },
+                        { item: { id: "pItem3" } },
                     ]
                 },
-				"ci1": { uploadUrl: "ci1.url" },
-				"ci2": { uploadUrl: "ci2.url" }
-			}
-		});
+                "pItem1": { uploadUrl: "ci1.url" },
+                "pItem2": { uploadUrl: "ci2.url" },
+                "pItem3": { uploadUrl: "ci3.url" },
+                "ci1": { uploadUrl: "ci1.url" },
+                "ci2": { uploadUrl: "ci2.url" }
+            }
+        });
 
 		const chunkResult = {
 			state: FILE_STATES.FINISHED
@@ -235,7 +253,7 @@ describe("finalizeParallelUpload tests", () => {
 
 		request.mockReturnValueOnce(pXhr);
 
-		const result = await finalizeParallelUpload(item, url, tusState, null, Promise.resolve(chunkResult));
+		const result = await handleParallelTusUpload(item, url, tusState, null, Promise.resolve(chunkResult));
 
 		expect(result).toEqual({
 			status: 200,
@@ -247,18 +265,23 @@ describe("finalizeParallelUpload tests", () => {
 	it("should fail if request rejects", async () => {
 		const item = { id: "i1" };
 
-		const tusState = createMockState({
-            options: { parallel: 1 },
+        const tusState = createMockState({
+            options: { parallel: 3 },
             items: {
                 [item.id]: {
                     parallelParts: [
-                        { uploadUrl: "ci1.url" },
+                        { item: { id: "pItem1" } },
+                        { item: { id: "pItem2" } },
+                        { item: { id: "pItem3" } },
                     ]
                 },
-				"ci1": { uploadUrl: "ci1.url" },
-				"ci2": { uploadUrl: "ci2.url" }
-			}
-		});
+                "pItem1": { uploadUrl: "ci1.url" },
+                "pItem2": { uploadUrl: "ci2.url" },
+                "pItem3": { uploadUrl: "ci3.url" },
+                "ci1": { uploadUrl: "ci1.url" },
+                "ci2": { uploadUrl: "ci2.url" }
+            }
+        });
 
 		const chunkResult = {
 			state: FILE_STATES.FINISHED
@@ -272,7 +295,7 @@ describe("finalizeParallelUpload tests", () => {
 
 		request.mockReturnValueOnce(pXhr);
 
-		const result = await finalizeParallelUpload(item, url, tusState, null, Promise.resolve(chunkResult));
+		const result = await handleParallelTusUpload(item, url, tusState, null, Promise.resolve(chunkResult));
 
 		expect(result).toEqual({
 			status: 500,
@@ -291,13 +314,18 @@ describe("finalizeParallelUpload tests", () => {
         };
 
         const tusState = createMockState({
-            options: { parallel: 1 },
+            options: { parallel: 3 },
             items: {
                 [item.id]: {
                     parallelParts: [
-                        { uploadUrl: "ci1.url" },
+                        { item: { id: "pItem1" } },
+                        { item: { id: "pItem2" } },
+                        { item: { id: "pItem3" } },
                     ]
                 },
+                "pItem1": { uploadUrl: "ci1.url" },
+                "pItem2": { uploadUrl: "ci2.url" },
+                "pItem3": { uploadUrl: "ci3.url" },
                 "ci1": { uploadUrl: "ci1.url" },
                 "ci2": { uploadUrl: "ci2.url" }
             }
@@ -306,7 +334,7 @@ describe("finalizeParallelUpload tests", () => {
         const pXhr = Promise.reject(null);
         request.mockReturnValueOnce(pXhr);
 
-        const result = await finalizeParallelUpload(item, url, tusState, null, Promise.resolve(chunkResult));
+        const result = await handleParallelTusUpload(item, url, tusState, null, Promise.resolve(chunkResult));
 
         expect(result).toEqual({
             status: 0,

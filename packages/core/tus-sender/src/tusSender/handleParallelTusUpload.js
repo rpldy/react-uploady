@@ -60,10 +60,10 @@ const handleParallelTusUpload = (
 
             if (itemData) {
                 const { parallelParts } = itemData;
-                const parallelUploadUrls = parallelParts?.map((pp: ParallelPartData) => items[pp.item.id].uploadUrl);
+                const parallelUploadUrls = parallelParts?.map((pp: ParallelPartData) => items[pp.item.id].uploadUrl) || [];
 
                 if (parallelUploadUrls?.length !== options.parallel) {
-                    throw new Error(`tusSender: something went wrong. found ${parallelUploadUrls.length} upload urls for ${options.parallel} parts`);
+                    throw new Error(`tusSender: something went wrong. found ${parallelUploadUrls.length} upload urls for ${+options.parallel} parts`);
                 }
 
                 const headers = {

@@ -127,69 +127,6 @@ describe("initTusUpload tests", () => {
         );
     });
 
-    it("should skip init parallel upload", async () => {
-        const tusState = createTusState({
-            items: {},
-            options: { parallel: 2 }
-        });
-
-        const { abort } = initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender);
-
-        expect(abort()).toBe(true);
-
-        expect(tusState.getState().items[item.id].id).toBe(item.id);
-        expect(tusState.getState().items[item.id].size).toBe(item.file.size);
-
-        expect(handleTusUpload).toHaveBeenCalledWith(
-            [item],
-            url,
-            sendOptions,
-            onProgress,
-            tusState,
-            chunkedSender,
-            expect.any(Promise),
-            false,
-            null
-        );
-
-        const initRes = await handleTusUpload.mock.calls[0][6];
-        expect(initRes.isNew).toBe(true);
-
-        expect(resumeUpload).not.toHaveBeenCalled();
-        expect(createUpload).not.toHaveBeenCalled();
-        expect(retrieveResumable).not.toHaveBeenCalled();
-    });
-
-    it("should skip init for parallel part that's already created", async () => {
-        const parallelIdentifier = "pllId2";
-        const uploadUrl = "part.url";
-
-        const tusState = createTusState({
-            items: {
-                "orgItem1": {
-                    parallelParts: [
-                        {},
-                        {
-                            identifier: parallelIdentifier,
-                            uploadUrl,
-                            state: "idle"
-                        }
-                    ]
-                }
-            },
-            options: { parallel: 1 }
-        });
-
-        initTusUpload([item], url, sendOptions, onProgress, tusState, chunkedSender, "trigger", parallelIdentifier, "orgItem1");
-
-        const initRes = await handleTusUpload.mock.calls[0][6];
-        expect(initRes.isNew).toBe(true);
-
-        expect(resumeUpload).not.toHaveBeenCalled();
-        expect(createUpload).not.toHaveBeenCalled();
-        expect(retrieveResumable).not.toHaveBeenCalled();
-    });
-
     it("should abort init call and chunked call", async () => {
         const initAbort = vi.fn(),
             chunkedAbort = vi.fn();

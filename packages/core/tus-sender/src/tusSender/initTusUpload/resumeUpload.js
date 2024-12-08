@@ -61,6 +61,7 @@ const handleResumeFail = (item: BatchItem, options: TusOptions, parallelIdentifi
 	removeResumable(item, options, parallelIdentifier);
 
 	return {
+        uploadUrl: "",
 		isNew: false,
 		canResume: false,
 	};

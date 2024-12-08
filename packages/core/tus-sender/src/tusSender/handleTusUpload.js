@@ -55,7 +55,7 @@ const handleTusUpload = (
 	chunkedSender: ChunkedSender,
 	initRequest: Promise<?InitData>,
 	isResume?: boolean,
-    parallelIdentifier?: string,
+    parallelIdentifier: ?string,
 ): Promise<UploadData> =>
     initRequest
         .then((initData: ?InitData) => {

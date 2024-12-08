@@ -16,14 +16,14 @@ export type ItemInfo = {
 	offset: number,
 	abort?: () => boolean,
     //only available for parallel tus upload
-	parallelParts: ?ParallelPartData[],
+	parallelParts?: ParallelPartData[],
     //these props will be populated only for items that represent a parallel part:
     parallelIdentifier: ?string,
     orgItemId: ?string,
 };
 
 export type InitData = {|
-	uploadUrl?: string,
+	uploadUrl: string,
 	offset?: number,
 	isNew?: boolean,
 	isDone?: boolean,

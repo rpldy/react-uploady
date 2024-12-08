@@ -183,6 +183,7 @@ export default [
             "bundle/*.*",
             "cypress/examples/*.*",
             "cypress/component/*.*",
+            "coverage/**/*.*",
         ],
     },
 

@@ -56,7 +56,7 @@ const doUpload = (
 	};
 };
 
-const tusSend = (
+const getTusSend = (
     uploader: UploaderType<UploaderCreateOptions>,
     tusState: TusState,
     trigger: TriggerMethod
@@ -109,4 +109,4 @@ const tusSend = (
     return CHUNKING_SUPPORT ? tusSend : xhrSend;
 };
 
-export default tusSend;
+export default getTusSend;

@@ -1,8 +1,7 @@
 // @flow
-
+import { FILE_STATES } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
 import type { UploadData } from "@rpldy/shared";
-import { FILE_STATES } from "@rpldy/shared";
 
 const getUploadMetadata = (sendOptions: SendOptions): void | string => {
 	const keys = sendOptions.params && Object.keys(sendOptions.params);
@@ -22,14 +21,14 @@ const addLocationToResponse = (request: Promise<UploadData>, location: ?string):
         return data;
     });
 
-const createResumeSuccessResult = (url) =>
+const createResumeSuccessResult = (url: string): Promise<UploadData> =>
     addLocationToResponse(Promise.resolve({
         status: 200,
         state: FILE_STATES.FINISHED,
         response: { message: "TUS server has file" },
     }), url);
 
-const getHeadersWithoutContentRange = (headers: ?Object) => ({
+const getHeadersWithoutContentRange = (headers: ?Object): Object => ({
     ...headers,
     //TUS doesn't expect content-range header and may not whitelist for CORS
     "Content-Range": undefined,

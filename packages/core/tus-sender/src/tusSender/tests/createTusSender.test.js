@@ -1,27 +1,18 @@
-import { createChunkedSender } from "@rpldy/chunked-sender";
 import { logger } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import { hasWindow } from "@rpldy/shared";
 import getTusSend from "../tusSend";
-import handleEvents from "../handleEvents";
 import createTusSender from "../createTusSender";
-
-vi.mock("@rpldy/chunked-sender", () => ({
-	createChunkedSender: vi.fn(),
-}));
 
 vi.mock("../../utils", () => ({
 	getMandatoryOptions: vi.fn((opts) => ({ ...opts }))
 }));
 
 vi.mock("../tusSend", () => ({ default: vi.fn() }));
-vi.mock("../handleEvents", () => ({ default: vi.fn() }));
 
 describe("tusSender index tests", () => {
 
 	beforeEach(() => {
 		clearViMocks(
-			createChunkedSender,
-			handleEvents,
 			getTusSend
 		);
 	});
@@ -36,11 +27,9 @@ describe("tusSender index tests", () => {
 			...options
 		};
 
-		const tusSend = vi.fn(),
-			chunkedSender = {};
+		const tusSend = vi.fn();
 
 		getTusSend.mockReturnValueOnce(tusSend);
-		createChunkedSender.mockReturnValueOnce(chunkedSender);
 
 		const sender = createTusSender(uploader, options, "trigger");
 
@@ -49,7 +38,6 @@ describe("tusSender index tests", () => {
 		return {
 			tusSend,
 			uploader,
-			chunkedSender,
 			options,
 			sender,
 		};
@@ -58,25 +46,21 @@ describe("tusSender index tests", () => {
 	it("should return tus send", () => {
 		logger.isDebugOn.mockReturnValueOnce(true);
 
-		const { tusSend, uploader, chunkedSender, options } = doTest();
+		const { tusSend,  options } = doTest();
 
 		expect(tusSend).toHaveBeenCalled();
-		expect(handleEvents).toHaveBeenCalledWith(uploader, expect.any(Object), chunkedSender, "trigger");
-
-		const tusState = handleEvents.mock.calls[0][1];
-
+        const tusState = getTusSend.mock.calls[0][1];
 		const state = tusState.getState();
 		expect(state.items).toEqual({});
 
 		const usedOptions = { ...options, chunked: true };
 		expect(state.options).toEqual(usedOptions);
-		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions, "trigger");
 	});
 
 	it("should return getOptions", () => {
 		const { sender, options } = doTest();
 
-		const tusState = handleEvents.mock.calls[0][1];
+        const tusState = getTusSend.mock.calls[0][1];
 
 		const usedOptions = { ...options, chunked: true };
 		expect(sender.getOptions()).toEqual(usedOptions);
@@ -97,13 +81,11 @@ describe("tusSender index tests", () => {
 			deferLength: true,
 		});
 
-		const tusState = handleEvents.mock.calls[0][1];
-
+        const tusState = getTusSend.mock.calls[0][1];
 		const state = tusState.getState();
 
 		const usedOptions = { ...options, chunked: true };
 		expect(state.options).toEqual(usedOptions);
-		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions, "trigger");
 	});
 
 	it("should disable deferLength with sendDataOnCreate", () => {
@@ -112,8 +94,7 @@ describe("tusSender index tests", () => {
 			deferLength: true,
 		});
 
-		const tusState = handleEvents.mock.calls[0][1];
-
+        const tusState = getTusSend.mock.calls[0][1];
 		const state = tusState.getState();
 
 		const usedOptions = {
@@ -123,7 +104,6 @@ describe("tusSender index tests", () => {
 		};
 
 		expect(state.options).toEqual(usedOptions);
-		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions, "trigger");
 	});
 
 	it("should disable deferLength with parallel", () => {
@@ -132,8 +112,7 @@ describe("tusSender index tests", () => {
 			deferLength: true,
 		});
 
-		const tusState = handleEvents.mock.calls[0][1];
-
+        const tusState = getTusSend.mock.calls[0][1];
 		const state = tusState.getState();
 
 		const usedOptions = {
@@ -143,6 +122,5 @@ describe("tusSender index tests", () => {
 		};
 
 		expect(state.options).toEqual(usedOptions);
-		expect(createChunkedSender).toHaveBeenCalledWith(usedOptions, "trigger");
 	});
 });

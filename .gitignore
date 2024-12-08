@@ -52,3 +52,4 @@ cypress/test-bundle
 .nx/
 /cypress/downloads
 /test.mjs
+test/test-bundle-size.mjs

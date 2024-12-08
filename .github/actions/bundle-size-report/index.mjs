@@ -81,6 +81,12 @@ const getWithPreviousBundleSizeReport = async (data, masterData, core) => {
             const diff = masterRow ?
                 (parseFileSize(row.size) - parseFileSize(masterRow.size)) : "N/A";
 
+            if (diff && diff !== "N/A") {
+                core.info(`bundle size diff for ${row.name}: ${diff}`);
+            } else {
+                core.info(`no previous bundle size data found for ${row.name}`);
+            }
+
             const trend = masterRow ?
                 (diff > 0 ? "🔺" : (diff < 0 ? "⬇" : "=")) : "N/A";
 

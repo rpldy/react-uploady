@@ -114,7 +114,7 @@ const getUpdatedRequest = (
         .then((response: ResumeStartEventResponse | boolean) => {
             let result;
 
-            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : response;
+            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : (response || {});
 
             if (updatedData.stop) {
                 logger.debugLog(`tusSender.resume: received false from TUS RESUME_START event - cancelling resume attempt for item: ${item.id}`);

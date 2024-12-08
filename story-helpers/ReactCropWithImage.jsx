@@ -4,7 +4,7 @@ import styled from "styled-components";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
-import type { Ref, Node } from "react";
+import type { Node } from "react";
 
 export type CropData = {
     unit: "px" | "%",
@@ -30,13 +30,13 @@ const StyledReactCrop = styled(ReactCrop)`
     max-height: 400px;
 `;
 
-const ReactCropWithImage: React$AbstractComponent<CropProps, ?HTMLImageElement> =
+const ReactCropWithImage: React$ComponentType<CropProps> =
     forwardRef(({
                     crop,
                     onCrop,
                     src,
                     style,
-                }: CropProps, ref: Ref<"img">): Node => {
+                }: CropProps, ref: any): Node => {
         return (
             <StyledReactCrop
                 crop={crop}

@@ -73,20 +73,21 @@ const uploadChunkWithUpdatedData = (
         onProgress,
     })
         // $FlowFixMe - https://github.com/facebook/flow/issues/8215
-        .then((updatedData: ChunkStartEventData & boolean) => {
-            const skipChunk = (updatedData === false);
+        .then((response: ChunkStartEventData | boolean) => {
+            let result;
+            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : (response || {});
 
-            if (skipChunk) {
+            if (updatedData.stop) {
                 logger.debugLog(`chunkedSender.sendChunk: received false from CHUNK_START handler - skipping chunk ${chunkIndex}, item ${item.id}`);
-            }
-
-            return skipChunk ?
-                getSkippedResult() :
-                //upload the chunk to the server
-                xhrSend([chunkItem],
+                result = getSkippedResult();
+            } else {
+                result = xhrSend([chunkItem],
                     updatedData?.url || state.url,
                     mergeWithUndefined({}, sendOptions, updatedData?.sendOptions),
                     onChunkProgress);
+            }
+
+            return result;
         });
 };
 

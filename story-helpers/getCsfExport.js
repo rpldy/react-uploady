@@ -2,7 +2,7 @@
 import storyArgs from "./storySetupControls/args";
 
 export type CsfExport = {
-    component: ?React$AbstractComponent<any, any>,
+    component: ?React$ComponentType<any>,
     title?: string,
     parameters: Object,
     excludeStories: RegExp | Array<any>,
@@ -17,7 +17,7 @@ export type ExportOptions = {
     parameters?: any
 };
 
-const getCsfExport = (component: ?React$AbstractComponent<any, any>, title: string, Readme: any, options: ExportOptions): CsfExport => {
+const getCsfExport = (component: ?React$ComponentType<any>, title: string, Readme: any, options: ExportOptions): CsfExport => {
     if (options.pkg) {
         //we need this coz storybook doesnt pass all the CSF info to the renderLabel function
         window.top._storyToPackage = window.top._storyToPackage || {};

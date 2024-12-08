@@ -18,7 +18,7 @@ const isOnTarget = (e: SyntheticDragEvent<HTMLDivElement>, containerElm: ?Elemen
         (allowContains && containerElm?.contains(target));
 };
 
-const UploadDropZone: React$AbstractComponent<UploadDropZoneProps, ?HTMLDivElement> = forwardRef<UploadDropZoneProps, ?HTMLDivElement>(
+const UploadDropZone: React$ComponentType<UploadDropZoneProps> = forwardRef(
     ({
          className,
          id,

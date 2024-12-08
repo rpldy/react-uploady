@@ -37,7 +37,7 @@ describe("finalizeParallelUpload tests", () => {
 		expect(request).not.toHaveBeenCalled();
 	});
 
-	it("should throw if parallel chunks dont match state items", () => {
+	it("should throw if parallel chunks dont match state items", async () => {
 		const item = { id: "i1" };
 
 		const tusState = createMockState({
@@ -58,7 +58,7 @@ describe("finalizeParallelUpload tests", () => {
 			}
 		});
 
-		expect(handleParallelTusUpload(item, null, tusState, null, Promise.resolve({
+		await expect(handleParallelTusUpload(item, null, tusState, null, Promise.resolve({
 			state: FILE_STATES.FINISHED
 		}))).rejects.toThrow(`tusSender: something went wrong. found 3 upload urls for 2 parts`);
 	});

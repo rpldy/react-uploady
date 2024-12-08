@@ -148,7 +148,16 @@ describe("sendChunk tests", () => {
 		expect(sendResult.abort()).toBe(true);
 	});
 
-	it("should throw if failed to slice chunk", () => {
+    it("shouldn't skip chunk when even updated returns true", async () => {
+        const { result } = await testSendChunk({ size: 9 }, true);
+
+        expect(result).toEqual({ xhrSend: true });
+
+        expect(xhrSend.mock.calls[0][1]).toBe("test.com");
+        expect(xhrSend.mock.calls[0][2].headers["Content-Range"]).toBeDefined();
+    });
+
+    it("should throw if failed to slice chunk", () => {
         getChunkDataFromFile.mockReturnValueOnce(null);
         const chunk = { id: "c1", start: 1, end: 10, data: null };
 

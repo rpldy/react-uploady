@@ -38,13 +38,13 @@
     "@rpldy/shared": "workspace:*",
     "@rpldy/upload-button": "workspace:*",
     "@rpldy/uploady": "workspace:*",
-    "@testing-library/react": "^14",
+    "@testing-library/react": "^16",
     "flow-bin": "^0.245.1",
     "react": "^18.3.1",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.3.1",
-    "styled-components": "^6.0.7"
+    "styled-components": "^6.1.13"
   },
   "peerDependencies": {
     "react": ">=16.8"

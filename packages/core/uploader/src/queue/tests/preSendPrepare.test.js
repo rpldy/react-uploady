@@ -43,24 +43,24 @@ describe("preSendPrepare tests", () => {
         aborts: {}
     });
 
-    it("should throw in case event handler update returns different array length", () => {
+    it("should throw in case event handler update returns different array length", async () => {
         const queueState = getQueueState(getMockStateData());
 
         triggerUpdater.mockResolvedValueOnce({ items: ["u1", "u2", "u3"] });
 
-        expect(getItemsPrepareUpdater(eventType, retrieveItems)(queueState, items))
+       await expect(getItemsPrepareUpdater(eventType, retrieveItems)(queueState, items))
             .rejects
             .toThrow(`REQUEST_PRE_SEND(${eventType}) event handlers must return same items with same ids`);
     });
 
-    it("should throw in case event handler returns different item ids", () => {
+    it("should throw in case event handler returns different item ids", async () => {
         const queueState = getQueueState(getMockStateData());
 
         mockUtils.isSamePropInArrays.mockReturnValueOnce(false);
 
         triggerUpdater.mockResolvedValueOnce({ items: [{ id: "u1" }, { id: "u2" }] });
 
-        expect(getItemsPrepareUpdater(eventType, retrieveItems)(queueState, items))
+        await expect(getItemsPrepareUpdater(eventType, retrieveItems)(queueState, items))
             .rejects
             .toThrow(`REQUEST_PRE_SEND(${eventType}) event handlers must return same items with same ids`);
     });

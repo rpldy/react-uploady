@@ -46,6 +46,6 @@ describe("triggerCancellable tests", () => {
 	it("should throw when rejected", async () => {
 		trigger.mockImplementationOnce(() => [Promise.reject("baaa")]);
 
-		expect(triggerCancellable(trigger, "test")).rejects.toBe("baaa");
+		await expect(triggerCancellable(trigger, "test")).rejects.toBe("baaa");
 	});
 });

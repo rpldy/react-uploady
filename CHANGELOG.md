@@ -1,5 +1,33 @@
 # Changelog
 
+## 1.9.0 (2024-12-13)
+
+### Features
+
+- `[mock-sender]` - feat: include url in mock-sender response data
+
+### Bug fixes
+
+- `[tus-sender]` - big refactor to handling parallel tus requests. Avoid 431 Request Header Fields Too Large error. Fix for [#777](https://github.com/rpldy/react-uploady/issues/777)
+- `[tus-sender]` - fix: tus not handling correctly sendOnCreate with file smaller than chunk. Fix for [#759](https://github.com/rpldy/react-uploady/issues/759)
+- `[chunked-sender]` - respect parallel value while including in-progress
+- `[chunked-uploady]` - fix: prevent pollution batch options in requestPreSend. Fix for [#758](https://github.com/rpldy/react-uploady/issues/758)
+- `[upload-paste]` - fix: typings for usePasteUpload hook
+
+### Internal
+
+- `all` - upgrade most dev deps
+- `ci` - fix incorrect calculation of diff in bundle-size report
+
+### Docs
+
+- `[uploader]` - readme improvements
+- `all` - modify all internal README links to point to docs site resources
+- `storybook` - bring back package READMEs inside storybook
+- `storybook` - upgrade to SB 8.4
+- `docs` - readme: add new contributor
+
+
 ## 1.9.0-rc.2 (2024-12-08)
 
 ### Bug fixes

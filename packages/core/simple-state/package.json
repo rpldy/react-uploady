@@ -1,5 +1,5 @@
 {
-  "version": "1.9.0-rc.2",
+  "version": "1.9.0",
   "name": "@rpldy/simple-state",
   "description": "deep proxy object, so it's only updateable through an update method",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -22,7 +22,7 @@
     "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
-    "@rpldy/shared": "^1.9.0-rc.2"
+    "@rpldy/shared": "^1.9.0"
   },
   "devDependencies": {
     "flow-bin": "^0.256.0"

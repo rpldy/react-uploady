@@ -1,5 +1,5 @@
 {
-  "version": "1.9.0-rc.2",
+  "version": "1.9.0",
   "name": "@rpldy/retry-hooks",
   "description": "useful hooks for the retry functionality from @rpldy/retry",
   "author": "yoav niran (https://github.com/yoavniran)",

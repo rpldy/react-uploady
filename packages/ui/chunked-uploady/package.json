@@ -1,5 +1,5 @@
 {
-  "version": "1.9.0-rc.2",
+  "version": "1.9.0",
   "name": "@rpldy/chunked-uploady",
   "description": "wrapper&context component to expose and provide react-uploady functionality with chunked upload support",
   "author": "yoav niran (https://github.com/yoavniran)",

@@ -1,5 +1,5 @@
 {
-  "version": "1.9.0-rc.2",
+  "version": "1.9.0",
   "name": "@rpldy/upload-preview",
   "description": "preview component to show image or video being uploaded",
   "author": "yoav niran (https://github.com/yoavniran)",

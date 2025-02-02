@@ -31,7 +31,7 @@ jobs:
                   NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
                   NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
                 run: |
-                    netlify deploy --prod --debug --cwd .sb-static
+                    pnpm netlify deploy --prod --debug --cwd .sb-static
 
 
                 #netlify deploy --trigger

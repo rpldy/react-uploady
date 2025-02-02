@@ -2,7 +2,6 @@
 import path from "path";
 import fs from "fs";
 import { defineConfig } from "vite";
-import { esbuildFlowPlugin, flowPlugin } from "@bunchtogether/vite-plugin-flow";
 import babelPlugin from "vite-plugin-babel";
 import { getMatchingPackages } from "./scripts/lernaUtils.mjs";
 
@@ -31,7 +30,6 @@ const createPackageAliases = () => {
 
 export default defineConfig({
     plugins: [
-        flowPlugin(),
         babelPlugin({
             //passing specific config because setup file breaks when using config file
             babelConfig: {
@@ -43,8 +41,10 @@ export default defineConfig({
                         corejs: 3,
                         "version": "^7.24.9"
                     }],
-                    "@babel/plugin-proposal-export-default-from"
+                    "@babel/plugin-proposal-export-default-from",
+                    "babel-plugin-syntax-hermes-parser",
                 ],
+                parserOpts: { flow: "all" },
                 presets: [
                     [
                         "@babel/env",
@@ -54,7 +54,10 @@ export default defineConfig({
                         },
                     ],
                     "@babel/react",
-                    "@babel/flow"]
+                    "@babel/flow"],
+                exclude: [
+                    "node_modules/**"
+                ],
             },
         }),
     ],
@@ -78,11 +81,6 @@ export default defineConfig({
             include: ["packages/**/src/**/*.js?(x)"],
             exclude: ["**/*.mock.*", "**/types.js", "packages/**/src/index.js", "**/*.test.js?(x)"],
         },
-    },
-    optimizeDeps: {
-        esbuildOptions: {
-            plugins: [esbuildFlowPlugin()]
-        }
     },
     resolve: {
         alias: createPackageAliases()

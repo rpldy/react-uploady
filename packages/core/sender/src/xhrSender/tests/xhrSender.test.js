@@ -135,6 +135,16 @@ describe("xhrSender tests", () => {
             test.xhr.upload.onprogress({});
             expect(test.mockProgress).toHaveBeenCalledTimes(1);
         });
+
+        it("should avoid prototype pollution", async () => {
+            const test = doTest(JSON.parse(`{"__proto__":{"pollutedKey":123}}`));
+
+            test.xhrResolve();
+
+            await test.sendResult.request;
+
+            expect({}.pollutedKey).toBeUndefined();
+        });
     });
 
     describe("abort tests", () => {
@@ -164,7 +174,6 @@ describe("xhrSender tests", () => {
     });
 
     describe("json parse tests", () => {
-
         it("should try parse json with forceJsonResponse", async () => {
             const responseData = { success: true };
 
@@ -198,7 +207,6 @@ describe("xhrSender tests", () => {
     });
 
     describe("request error & failure tests", () => {
-
         it("should handle request failure", async () => {
             const responseData = { failure: true };
 
@@ -266,7 +274,6 @@ describe("xhrSender tests", () => {
     });
 
     describe("with custom config", () => {
-
         beforeEach(() => {
             vi.useFakeTimers();
         });

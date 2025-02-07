@@ -1,7 +1,6 @@
 import pick from "../pick";
 
 describe("pick tests", () => {
-
     it("should return null for null", () => {
         expect(pick(null)).toBeNull();
     });
@@ -11,7 +10,6 @@ describe("pick tests", () => {
     });
 
     it("should return requested props", () => {
-
         expect(pick({
             foo: "aaa",
             bar: "bbb",
@@ -21,5 +19,15 @@ describe("pick tests", () => {
             foo: "aaa",
             more: { level: 2 }
         });
+    });
+
+    it("should not allow prototype pollution", () => {
+        const b = JSON.parse(`{"__proto__":{"pollutedKey":123}, "foo": "bar"}`);
+
+        const res = pick(b, ["foo"]);
+
+        expect(res).toEqual({ foo: "bar" });
+        expect(res.pollutedKey).toBeUndefined();
+        expect({}.pollutedKey).toBeUndefined();
     });
 });

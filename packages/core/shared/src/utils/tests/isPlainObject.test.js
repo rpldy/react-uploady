@@ -2,6 +2,7 @@ import isPlainObject from "../isPlainObject";
 
 describe("isPlainObject tests", () => {
     it.each([
+        [false, JSON.parse(`{"__proto__":{"pollutedKey":123}}`)],
         [false, true],
         [false, false],
         [false, 0],

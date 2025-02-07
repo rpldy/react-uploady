@@ -64,4 +64,18 @@ describe("clone (deep) tests", () => {
 
         expect(merge).toHaveBeenCalledWith({}, obj);
     });
+
+    it("should not allow prototype pollution", () => {
+        const obj = JSON.parse(`{"__proto__":{"pollutedKey":123}}`);
+        const clonedObj = clone(obj);
+
+        expect(clonedObj.pollutedKey).toBeUndefined();
+        expect({}.pollutedKey).toBeUndefined();
+
+        const deepWithPollute = JSON.parse(`{"a":{"b":{"__proto__":{"pollutedKey":123}}}}`);
+
+        const deepClonedObj = clone(deepWithPollute);
+        expect(deepClonedObj.a.b.pollutedKey).toBeUndefined();
+        expect({}.pollutedKey).toBeUndefined();
+    });
 });

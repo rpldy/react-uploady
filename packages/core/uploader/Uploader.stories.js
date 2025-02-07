@@ -207,6 +207,19 @@ export const TEST_EventsData: UploadyStory = createUploadyStory(
     );
 });
 
+export const TEST_ProtoPollute: UploadyStory = createUploadyStory((): Node => {
+    useEffect(() => {
+        window._test_createUploader = createUploader;
+    }, []);
+
+   return (
+       <div>
+           <h2>Proto Pollution Test</h2>
+           <p id="test-info">createUploader is available on window._test_createUploader</p>
+       </div>
+   )
+});
+
 export const UMD_Core: UploadyStory = createUploadyStory(
     ({
          destination,

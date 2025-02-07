@@ -1,8 +1,12 @@
 // @flow
+const isPlainObject = (obj: Object): boolean => {
+    const proto = Object.getPrototypeOf(Object(obj));
 
-const isPlainObject = (obj: mixed): boolean => !!obj &&
-    typeof obj === "object" &&
-    (Object.getPrototypeOf(obj)?.constructor.name === "Object" ||
-        Object.getPrototypeOf(obj) === null);
+    return !!obj &&
+        typeof obj === "object" &&
+        (proto?.constructor.name === "Object" || proto === null) &&
+        //$FlowExpectedError[method-unbinding]
+        !Object.prototype.hasOwnProperty.call(obj, "__proto__");
+};
 
 export default isPlainObject;

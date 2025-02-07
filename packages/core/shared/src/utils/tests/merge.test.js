@@ -4,7 +4,6 @@ describe("merge (deep) tests", () => {
 
     describe("default merge tests", () => {
         it("should return target if not sources", () => {
-
             const a = { foo: "bar" };
             const result = merge(a);
 
@@ -12,7 +11,6 @@ describe("merge (deep) tests", () => {
         });
 
         it("should merge two simple-flat objects", () => {
-
             const a = {
                 foo: "bar",
                 a: 1,
@@ -102,7 +100,6 @@ describe("merge (deep) tests", () => {
         });
 
         it("should merge array from source", () => {
-
             const a = {};
             const b = { arr: [1, 2, 3] };
 
@@ -112,7 +109,6 @@ describe("merge (deep) tests", () => {
         });
 
 		it("should merge multiple levels from multiple objects", () => {
-
             const a = {
                 lll: "aaaa",
 
@@ -191,7 +187,6 @@ describe("merge (deep) tests", () => {
         });
 
         it("should ignore __proto__", () => {
-
             const a = {
                 a: "b"
             };
@@ -216,7 +211,6 @@ describe("merge (deep) tests", () => {
         });
 
         it("should ignore empty sources", () => {
-
             const a = {
                 foo: "bar",
             };
@@ -231,6 +225,27 @@ describe("merge (deep) tests", () => {
                 foo: "bar",
                 test: true,
             });
+        });
+
+        it("should not allow prototype pollution", () => {
+            const a = {};
+            const b = JSON.parse(`{"__proto__":{"pollutedKey":123}}`);
+
+            merge(a, b);
+
+            expect(a.pollutedKey).toBeUndefined();
+            expect({}.pollutedKey).toBeUndefined();
+
+            const c = {
+                test: true,
+                foo: JSON.parse(`{"__proto__":{"pollutedKey":123}}`)
+            };
+
+            const res = merge({}, c);
+
+            expect(res.pollutedKey).toBeUndefined();
+            expect(res.foo.pollutedKey).toBeUndefined();
+            expect({}.pollutedKey).toBeUndefined();
         });
     });
 
@@ -250,7 +265,6 @@ describe("merge (deep) tests", () => {
         });
 
         it("should overwrite with undefined deep", () => {
-
             const a = {
                 lll: "aaaa",
 
@@ -323,7 +337,6 @@ describe("merge (deep) tests", () => {
 
 	describe("withSymbols tests", () => {
 		it("should merge symbols when withSymbols = true", () => {
-
 			const sym1 = Symbol.for("test-sym1");
 			const sym2 = Symbol.for("test-sym2");
 
@@ -381,9 +394,7 @@ describe("merge (deep) tests", () => {
 	});
 
 	describe("predicate tests", () => {
-
         it("should use predicate", () => {
-
             const obj = {
                 test: {
                     2: { foo: "bar" },

@@ -12,7 +12,7 @@ type MergeMethod = (target: Object, ...sources: Array<Object>) => Object;
 export const isMergeObj = (obj: Object): boolean => isPlainObject(obj) || Array.isArray(obj);
 
 const getKeys = (obj: Object, options: MergeOptions) => {
-	const keys = Object.keys(obj);
+	const keys = Object.keys(obj).filter((k) => obj.hasOwnProperty(k) && k !== "__proto__");
 	return options.withSymbols ?
 		keys.concat(Object.getOwnPropertySymbols(obj)) :
 		keys;

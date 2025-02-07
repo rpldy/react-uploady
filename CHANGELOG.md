@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.9.1 (2025-01-07)
+
+### Bug fixes
+
+- `[shared]` - __SECURITY__ protect against prototype pollution when working with objects (merge/clone)
+
+### Docs
+
+- `[upload-drop-zone]` - fixing minor spelling mistake. (thanks @raybooysen)
+
+### Internal
+
+- `all` - upgrade dev deps
+
+
 ## 1.9.0 (2024-12-13)
 
 ### Features

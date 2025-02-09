@@ -33,8 +33,8 @@ It provides multiple hooks that enable more advanced features and data for clien
 **The best place to get started is at our: [React-Uploady Documentation Website](https://react-uploady.org)**
 
 <p align="center">
-    <a href="https://www.buymeacoffee.com/yoav"> 
-        <img width="700" alt="uploady-buy-me-coffee" src="https://github.com/user-attachments/assets/3a22cd82-94f8-4b79-8b1b-c783be5ecb88">
+    <a href="https://www.buymeacoffee.com/yoav">         
+        <img width="700" alt="uploady-buy-me-coffee" src="https://github.com/user-attachments/assets/3a22cd82-94f8-4b79-8b1b-c783be5ecb88"/>
     </a>
 </p>
 

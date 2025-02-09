@@ -19,7 +19,7 @@ It makes it easy to use retry from a React UI application.
 
 <p align="center">
     <a href="https://www.buymeacoffee.com/yoav"> 
-        <img width="700" alt="uploady-buy-me-coffee" src="https://github.com/rpldy/react-uploady/assets/1102278/c6de6710-1c93-47a5-85fa-1af7170907f8">
+        <img width="700" alt="uploady-buy-me-coffee" src="https://github.com/user-attachments/assets/3a22cd82-94f8-4b79-8b1b-c783be5ecb88">
     </a>
 </p>
 

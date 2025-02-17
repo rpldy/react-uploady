@@ -57,7 +57,33 @@ const getEnhancedUploader = (
     return enhanced || uploader;
 };
 
+// Validate input to prevent prototype pollution
+const validateInput = (input) => {
+    if (typeof input !== 'object' || input === null) return input;
+    const keys = Object.keys(input);
+    for (const key of keys) {
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+            throw new Error('Invalid input: prototype pollution attempt detected');
+        }
+        validateInput(input[key]);
+    }
+    return input;
+};
+
+// Sanitize input
+const sanitizeInput = (input) => {
+    if (typeof input !== 'object' || input === null) return input;
+    const sanitized = {};
+    for (const key in input) {
+        if (key !== '__proto__' && key !== 'constructor' && key !== 'prototype') {
+            sanitized[key] = sanitizeInput(input[key]);
+        }
+    }
+    return sanitized;
+};
+
 const createUploader = (options?: UploaderCreateOptions): UploadyUploaderType => {
+    options = sanitizeInput(validateInput(options));
     counter += 1;
     const uploaderId = `uploader-${counter}`;
     let enhancerTime = false;

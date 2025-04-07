@@ -76,6 +76,7 @@ jobs:
                 uses: ./.github/actions/bundle-size-report
                 with:
                     reportData: ${{ steps.bundle-prod.outputs.BUNDLE_SIZE_REPORT_DATA }}
+                    githubToken: ${{ secrets.GITHUB_TOKEN }}
 
     sb:
         name: Build Storybook
@@ -134,6 +135,8 @@ jobs:
                     name: Unit-test Report
                     path: reports/junit/js-*.xml
                     reporter: jest-junit
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: Upload Coverage (master only)
                 uses: codecov/codecov-action@v4
                 if: ${{ github.ref_name == 'master' }}

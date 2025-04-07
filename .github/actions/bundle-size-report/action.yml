@@ -5,6 +5,9 @@ inputs:
     reportData:
         description: 'The report data to process'
         required: true
+    githubToken:
+        description: 'GitHub Token'
+        required: true
 
 runs:
     using: composite
@@ -44,6 +47,8 @@ runs:
                 branch: updated-bundle-size-report-${{ github.run_id }}
                 base: "master"
                 commit-message: "chore: commit new master bundle size report"
+            env:
+                GITHUB_TOKEN: ${{ inputs.githubToken }}
 
         -   name: Add Bundle Size Report as PR Comment (for PR Builds)
             uses: mshick/add-pr-comment@v2
@@ -51,3 +56,5 @@ runs:
                 message: |
                     ## 📦 Bundle Size Report
                     ${{ steps.bundle-size-report.outputs.BUNDLE_SIZE_REPORT_TABLE }}
+            env:
+                GITHUB_TOKEN: ${{ inputs.githubToken }}

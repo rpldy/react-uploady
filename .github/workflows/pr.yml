@@ -76,6 +76,7 @@ jobs:
                 uses: ./.github/actions/bundle-size-report
                 with:
                     reportData: ${{ steps.bundle-prod.outputs.BUNDLE_SIZE_REPORT_DATA }}
+                    githubToken: ${{ secrets.GITHUB_TOKEN }}
 
     sb:
         name: Build Storybook

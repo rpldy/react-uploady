@@ -22,6 +22,7 @@ export interface UploadDropZoneProps extends UploadOptions {
     shouldRemoveDragOver?: ShouldRemoveDragOverMethod;
     shouldHandleDrag?: ShouldHandleDrag;
     enableOnContains?: boolean;
+    noContainCheckForDrag?: boolean;
     extraProps?: Record<string, unknown>;
     children?: JSX.Element | JSX.Element[];
 }

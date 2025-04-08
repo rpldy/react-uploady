@@ -24,7 +24,7 @@ export const Simple: UploadyStory = createUploadyStory(
                 grouped={grouped}
                 maxGroupSize={groupSize}
             >
-                <UploadUrlInput placeholder="URL to upload"/>
+                <UploadUrlInput id="url-input" placeholder="URL to upload"/>
             </Uploady>
         );
     });
@@ -58,7 +58,7 @@ export const WithRef: UploadyStory = createUploadyStory(
                 grouped={grouped}
                 maxGroupSize={groupSize}
             >
-                <UploadUrlInput placeholder="URL to upload" ref={inputRef}/>
+                <UploadUrlInput id="url-input" placeholder="URL to upload" ref={inputRef}/>
             </Uploady>
         );
     });

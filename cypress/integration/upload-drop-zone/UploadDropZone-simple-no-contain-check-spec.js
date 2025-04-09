@@ -1,4 +1,4 @@
-describe("UploadDropZone - Simple", () => {
+describe("UploadDropZone - No Contain Check", () => {
     before(() => {
         cy.visitStory("uploadDropZone", "with-aria-modal-overlay", );
     });

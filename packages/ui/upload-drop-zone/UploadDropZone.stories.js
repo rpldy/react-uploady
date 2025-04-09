@@ -8,7 +8,7 @@ import React, {
     useState,
 } from "react";
 import styled from "styled-components";
-// import { Dialog, Heading, Modal, ModalOverlay } from "react-aria-components";
+import { Dialog, Heading, Modal, ModalOverlay } from "react-aria-components";
 import { DndProvider, useDrop } from "react-dnd";
 import { NativeTypes, HTML5Backend } from "react-dnd-html5-backend";
 import Uploady, {
@@ -34,6 +34,7 @@ import Readme from "./UploadDropZone.storydoc.mdx";
 
 import type { Node } from "react";
 import type { UploadButtonProps } from "@rpldy/upload-button";
+import type { BatchItem } from "@rpldy/uploady";
 import type { GetFilesMethod } from "./src";
 
 const StyledDropZone = styled(UploadDropZone)`
@@ -518,145 +519,154 @@ export const WithChildElement: UploadyStory = createUploadyStory(
         );
     });
 
-// const StyledModalOverlay = styled(ModalOverlay)`
-//     position: fixed;
-//     top: 0;
-//     left: 0;
-//     width: 100vw;
-//     height: 100vh;
-//     background: rgba(0 0 0 / 0.5);
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     z-index: 100;
-//
-//     .modal {
-//         box-shadow: 0 8px 20px rgba(0 0 0 / 0.1);
-//         border-radius: 6px;
-//         background: black;
-//         color: white;
-//         border: 1px solid rgba(87, 79, 79, 0.2);
-//         outline: none;
-//         max-width: 60vw;
-//
-//         .react-aria-TextField {
-//             margin-bottom: 8px;
-//         }
-//     }
-//
-//     .dialog {
-//         max-height: inherit;
-//         box-sizing: border-box;
-//         outline: none;
-//         padding: 30px;
-//         overflow: auto;
-//     }
-//
-//     .heading {
-//         font-weight: 600;
-//     }
-// `;
-//
-// const StyledModalDropZone = styled(UploadDropZone)`
-//     &.modal-drop-zone-over {
-//         .dropIndicator {
-//             position: fixed;
-//             z-index: 101;
-//             border: 5px solid yellow;
-//             inset: 0;
-//             transition: border 250ms;
-//         }
-//     }
-//
-//     main {
-//         padding: 6rem;
-//         background: #3f3f42;
-//         justify-content: space-between;
-//         align-items: center;
-//         flex-direction: column;
-//         min-height: 100vh;
-//         display: flex;
-//
-//     }
-// `;
-//
-// const ModalUploader = (props) => {
-//     const [ isOpen, setOpen ] = useState(true);
-//     const [ items, setItems ] = useState([]);
-//
-//     useBatchAddListener((batch) => {
-//         if (!isOpen) {
-//             setOpen(true);
-//         }
-//
-//         setItems([...items, ...batch.items]);
-//     });
-//
-//     return (
-//         <StyledModalOverlay
-//             isDismissable={true}
-//             isOpen={isOpen}
-//             onOpenChange={(open) => {
-//                 setOpen(open);
-//
-//                 if (!open) {
-//                     setItems([]);
-//                 }
-//             }}
-//         >
-//             <Modal>
-//                 <Dialog>
-//                     <Heading slot="title">
-//                         Upload Files
-//                     </Heading>
-//                     <p className="my-3">
-//                         Click outside to close this dialog. List of files to upload:
-//                     </p>
-//                     <ul className="p-4 list-disc list-inside">
-//                         {items.map((item) => (
-//                             <li className="mb-1" key={item.id}>
-//                                 {item.file.name}
-//                             </li>
-//                         ))}
-//                     </ul>
-//                     <p className="my-3">Drop files on the page</p>
-//                 </Dialog>
-//             </Modal>
-//         </StyledModalOverlay>
-//     );
-// };
-//
-// export const WithAriaModalOverlay: UploadyStory = createUploadyStory(
-//     ({ enhancer, destination, extOptions }): Node => {
-//         const indicatorRef = useRef<HTMLDivElement>(null);
-//
-//         return (
-//             <Uploady
-//                 noPortal
-//                 debug
-//                 destination={destination}
-//                 enhancer={enhancer}
-//                 {...extOptions}
-//             >
-//                 <StyledModalDropZone
-//                     onDragOverClassName="modal-drop-zone-over"
-//                     shouldRemoveDragOver={(e) => e?.target === indicatorRef.current}
-//                 >
-//                     <>
-//                         <main className="flex min-h-screen flex-col items-center justify-between p-24">
-//                             <p>Drop files anywhere on the page to start uploading.</p>
-//                             <ModalUploader />
-//                         </main>
-//                         <div
-//                             className="dropIndicator"
-//                             aria-hidden
-//                             ref={indicatorRef}
-//                         />
-//                     </>
-//                 </StyledModalDropZone>
-//             </Uploady>
-//         );
-//     })
+const StyledModalOverlay = styled(ModalOverlay)`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0 0 0 / 0.5);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+
+    .modal {
+        box-shadow: 0 8px 20px rgba(0 0 0 / 0.1);
+        border-radius: 6px;
+        background: black;
+
+        border: 1px solid rgba(87, 79, 79, 0.2);
+        outline: none;
+        max-width: 60vw;
+
+        .react-aria-TextField {
+            margin-bottom: 8px;
+        }
+    }
+
+    .dialog {
+        max-height: inherit;
+        box-sizing: border-box;
+        outline: none;
+        padding: 30px;
+        overflow: auto;
+    }
+
+    .heading {
+        font-weight: 600;
+    }
+`;
+
+const StyledModalDropZone = styled(UploadDropZone)`
+    .dropIndicator {
+        display: none;
+    }
+
+    &.modal-drop-zone-over {
+        .dropIndicator {
+            display: block;
+            position: fixed;
+            z-index: 101;
+            border: 5px solid yellow;
+            inset: 0;
+            transition: border 250ms;
+        }
+    }
+
+    main {
+        padding: 6rem;
+        background: #3f3f42;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        min-height: 100vh;
+        display: flex;
+
+    }
+`;
+
+const ModalUploader = () => {
+    const [ isOpen, setOpen ] = useState(true);
+    const [ items, setItems ] = useState<BatchItem[]>([]);
+
+    useBatchAddListener((batch) => {
+        if (!isOpen) {
+            setOpen(true);
+        }
+
+        setItems([...items, ...batch.items]);
+    });
+
+    return (
+        <StyledModalOverlay
+            isDismissable={true}
+            isOpen={isOpen}
+            onOpenChange={(open) => {
+                setOpen(open);
+
+                if (!open) {
+                    setItems([]);
+                }
+            }}
+        >
+            <Modal id="aria-modal-modal">
+                <Dialog>
+                    <Heading slot="title">
+                        Upload Files
+                    </Heading>
+                    <p className="my-3">
+                        Click outside to close this dialog. List of files to upload:
+                    </p>
+                    <ul className="p-4 list-disc list-inside">
+                        {items.map((item) => (
+                            <li className="mb-1" key={item.id}>
+                                {item.file.name}
+                            </li>
+                        ))}
+                    </ul>
+                    <p className="my-3 drop-msg">Drop files on the page</p>
+                </Dialog>
+            </Modal>
+        </StyledModalOverlay>
+    );
+};
+
+export const WithAriaModalOverlay: UploadyStory = createUploadyStory(
+    ({ enhancer, destination, extOptions }): Node => {
+        const indicatorRef = useRef<?HTMLDivElement>(null);
+        const containerRef= useRef<?HTMLDivElement>(null);
+
+        return (
+            <Uploady
+                noPortal
+                debug
+                destination={destination}
+                enhancer={enhancer}
+                {...extOptions}
+            >
+                <StyledModalDropZone
+                    ref={containerRef}
+                    onDragOverClassName="modal-drop-zone-over"
+                    shouldHandleDrag={((e) => e?.target === indicatorRef.current || containerRef.current === e.target)}
+                    noContainCheckForDrag
+                >
+                    <>
+                        <main className="flex min-h-screen flex-col items-center justify-between p-24">
+                            <p>Drop files anywhere on the page to start uploading.</p>
+                            <ModalUploader />
+                        </main>
+                        <div
+                            className="dropIndicator"
+                            aria-hidden
+                            ref={indicatorRef}
+                        />
+                    </>
+                </StyledModalDropZone>
+            </Uploady>
+        );
+    })
 
 const dropzoneStories: CsfExport = getCsfExport(UploadDropZone, "Upload Drop Zone", Readme, {
     pkg: "upload-drop-zone",

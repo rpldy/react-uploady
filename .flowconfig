@@ -37,6 +37,7 @@ module.name_mapper='^react-dnd$' -> '<PROJECT_ROOT>/node_modules/react-dnd/dist/
 module.name_mapper='^react-dnd-html5-backend$' -> '<PROJECT_ROOT>/node_modules/react-dnd-html5-backend/dist/index.js'
 module.name_mapper='^rc-progress$' -> '<PROJECT_ROOT>/node_modules/rc-progress/es/index.js'
 module.name_mapper='^@storybook/addon-knobs' -> '<PROJECT_ROOT>/node_modules/@storybook/addon-knobs/dist/index.js'
+module.name_mapper='^react-aria-components$' -> '<PROJECT_ROOT>/packages/ui/upload-drop-zone/node_modules/react-aria-components/dist/main.js'
 
 #dealing with pnpm workspace deps protocol
 module.name_mapper='^@rpldy/uploady$' -> '<PROJECT_ROOT>/packages/ui/uploady/src/index.js'

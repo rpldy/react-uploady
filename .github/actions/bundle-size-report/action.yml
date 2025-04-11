@@ -42,7 +42,7 @@ runs:
             if: ${{ steps.commit-report.outputs.committed == 'true' }}
             uses: peter-evans/create-pull-request@v6
             with:
-                title: "chore: update master bundle size report"
+                title: "chore: update master bundle size report (From PR: #${{ github.event.pull_request.number }})"
                 body: "Automatic PR for new bundle size report"
                 branch: updated-bundle-size-report-${{ github.run_id }}
                 base: "master"

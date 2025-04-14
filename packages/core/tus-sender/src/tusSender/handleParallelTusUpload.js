@@ -67,6 +67,8 @@ const handleParallelTusUpload = (
                 }
 
                 const headers = {
+                    //add the headers from the original request
+                    ...sendOptions.headers,
                     "tus-resumable": options.version,
                     //we concat the parallel upload urls - there should be as many as the parallel option value
                     "Upload-Concat": `final;${parallelUploadUrls.join(" ")}`,

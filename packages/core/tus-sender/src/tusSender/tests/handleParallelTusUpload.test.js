@@ -101,11 +101,12 @@ describe("finalizeParallelUpload tests", () => {
 
 		request.mockReturnValueOnce(pXhr);
 
-		const result = await handleParallelTusUpload(item, url, tusState, null, Promise.resolve(chunkResult));
+		const result = await handleParallelTusUpload(item, url, tusState, { headers: { "x-test": "abcd" } }, Promise.resolve(chunkResult));
 
 		expect(request).toHaveBeenCalledWith(url, null, {
 			method: "POST",
 			headers: {
+                "x-test": "abcd",
 				"tus-resumable": tusState.getState().options.version,
 				"Upload-Concat": `final;ci1.url ci2.url ci3.url`,
 				"Upload-Metadata": "metadata",
@@ -156,7 +157,7 @@ describe("finalizeParallelUpload tests", () => {
 
         request.mockReturnValueOnce(pXhr);
 
-        const result = await handleParallelTusUpload(item, url, tusState, null, Promise.resolve(chunkResult));
+        const result = await handleParallelTusUpload(item, url, tusState, {  }, Promise.resolve(chunkResult));
 
         expect(request).toHaveBeenCalledWith(url, null, {
             method: "POST",
@@ -210,7 +211,7 @@ describe("finalizeParallelUpload tests", () => {
 
 		request.mockReturnValueOnce(pXhr);
 
-		await handleParallelTusUpload(item, url, tusState, null, Promise.resolve(chunkResult));
+		await handleParallelTusUpload(item, url, tusState, {}, Promise.resolve(chunkResult));
 
 		expect(tusState.getState().items[item.id].abort()).toBe(true);
 
@@ -253,7 +254,7 @@ describe("finalizeParallelUpload tests", () => {
 
 		request.mockReturnValueOnce(pXhr);
 
-		const result = await handleParallelTusUpload(item, url, tusState, null, Promise.resolve(chunkResult));
+		const result = await handleParallelTusUpload(item, url, tusState, {  }, Promise.resolve(chunkResult));
 
 		expect(result).toEqual({
 			status: 200,
@@ -295,7 +296,7 @@ describe("finalizeParallelUpload tests", () => {
 
 		request.mockReturnValueOnce(pXhr);
 
-		const result = await handleParallelTusUpload(item, url, tusState, null, Promise.resolve(chunkResult));
+		const result = await handleParallelTusUpload(item, url, tusState, {}, Promise.resolve(chunkResult));
 
 		expect(result).toEqual({
 			status: 500,
@@ -334,7 +335,7 @@ describe("finalizeParallelUpload tests", () => {
         const pXhr = Promise.reject(null);
         request.mockReturnValueOnce(pXhr);
 
-        const result = await handleParallelTusUpload(item, url, tusState, null, Promise.resolve(chunkResult));
+        const result = await handleParallelTusUpload(item, url, tusState, {  }, Promise.resolve(chunkResult));
 
         expect(result).toEqual({
             status: 0,

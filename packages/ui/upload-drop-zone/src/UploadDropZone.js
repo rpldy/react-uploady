@@ -29,6 +29,7 @@ const UploadDropZone: React$ComponentType<UploadDropZoneProps> = forwardRef(
          shouldRemoveDragOver,
          shouldHandleDrag,
          enableOnContains = true,
+         noContainCheckForDrag = false,
          extraProps,
          ...uploadOptions
      }: UploadDropZoneProps, ref: React$RefSetter<?HTMLDivElement>) => {
@@ -67,7 +68,7 @@ const UploadDropZone: React$ComponentType<UploadDropZoneProps> = forwardRef(
 
         const onDragEnter = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             const isHandling = getShouldHandleDrag(e, shouldHandleDrag) &&
-                isOnTarget(e, containerRef.current, enableOnContains);
+                isOnTarget(e, containerRef.current, enableOnContains) || noContainCheckForDrag;
 
             if (isHandling) {
                 dragLeaveTrackerRef.current = true;
@@ -76,7 +77,7 @@ const UploadDropZone: React$ComponentType<UploadDropZoneProps> = forwardRef(
                     containerRef.current.classList.add(onDragOverClassName);
                 }
             }
-        }, [onDragOverClassName, containerRef, shouldHandleDrag, enableOnContains]);
+        }, [onDragOverClassName, containerRef, shouldHandleDrag, enableOnContains, noContainCheckForDrag]);
 
         const onDragOver = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             if (dragLeaveTrackerRef.current) {

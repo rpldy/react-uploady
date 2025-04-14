@@ -8,6 +8,9 @@ inputs:
     githubToken:
         description: 'GitHub Token'
         required: true
+    orgPrNumber:
+        description: 'The pull request number (if available)'
+        required: true
 
 runs:
     using: composite
@@ -38,11 +41,39 @@ runs:
             run: |
                 echo "Did Commit? ${{ steps.commit-report.outputs.committed }}"
 
+        -   name: Save PR Number
+            if: ${{ inputs.orgPrNumber != null && inputs.orgPrNumber != '' }}
+            shell: bash
+            run: |
+                echo ${{ inputs.orgPrNumber }} > pr_number.txt
+                echo "PR_NUMBER=${{ inputs.orgPrNumber }}" >> $GITHUB_ENV
+
+        -   name: Upload PR Number Artifact
+            if: ${{ inputs.orgPrNumber != null && inputs.orgPrNumber != '' }}
+            uses: actions/upload-artifact@v4
+            with:
+                name: pr-number
+                path: pr_number.txt
+
+        -   name: Download PR Number Artifact (not passed as input)
+            if: ${{ inputs.orgPrNumber == null || inputs.orgPrNumber == '' }}
+            uses: actions/download-artifact@v4
+            with:
+                name: pr-number
+
+        -   name: Read PR Number from Artifact
+            if: ${{ inputs.orgPrNumber == null || inputs.orgPrNumber == '' }}
+            shell: bash
+            run: |
+                PR_NUMBER=$(cat pr_number.txt)
+                echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+
         -   name: Create PR for Master Bundle Size Report
             if: ${{ steps.commit-report.outputs.committed == 'true' }}
             uses: peter-evans/create-pull-request@v6
             with:
-                title: "chore: update master bundle size report (From PR: #${{ github.event.pull_request.number }})"
+                title: |
+                    chore: update master bundle size report${{ env.PR_NUMBER != null && env.PR_NUMBER != '' && ' (From PR: #' + env.PR_NUMBER + ')' || '' }}
                 body: "Automatic PR for new bundle size report"
                 branch: updated-bundle-size-report-${{ github.run_id }}
                 base: "master"

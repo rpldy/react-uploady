@@ -73,7 +73,7 @@ runs:
             uses: peter-evans/create-pull-request@v6
             with:
                 title: |
-                    chore: update master bundle size report${{ env.PR_NUMBER != null && env.PR_NUMBER != '' && ' (From PR: #' + env.PR_NUMBER + ')' || '' }}
+                    chore: update master bundle size report${{ env.PR_NUMBER != null && env.PR_NUMBER != '' && format(' (From PR: #{0})', env.PR_NUMBER) || '' }}
                 body: "Automatic PR for new bundle size report"
                 branch: updated-bundle-size-report-${{ github.run_id }}
                 base: "master"

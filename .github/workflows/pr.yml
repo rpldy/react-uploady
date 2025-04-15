@@ -130,12 +130,13 @@ jobs:
             -   name: Show Report Coverage
                 uses: davelosert/vitest-coverage-report-action@v2
             -   name: Test Report
-                uses: dorny/test-reporter@v1
+                uses: dorny/test-reporter@v2
                 if: success() || failure()
                 with:
                     name: Unit-test Report
                     path: reports/junit/js-*.xml
                     reporter: jest-junit
+                    badge-title: 'unit tests'
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: Upload Coverage (master only)
@@ -218,9 +219,10 @@ jobs:
                     path: cypress/screenshots
                     if-no-files-found: ignore
             -   name: E2E Report
-                uses: dorny/test-reporter@v1
+                uses: dorny/test-reporter@v2
                 if: success() || failure()
                 with:
                     name: E2E Report
                     path: cypress/results/results-*.xml
                     reporter: java-junit
+                    badge-title: 'E2E tests'

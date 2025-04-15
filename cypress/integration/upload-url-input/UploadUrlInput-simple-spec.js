@@ -1,7 +1,6 @@
-import uploadFile from "../uploadFile";
+import { BATCH_ADD } from "../../constants";
 
 describe("UploadButton - Simple", () => {
-	const fileName = "flower.jpg";
 
     before(() => {
         cy.visitStory(
@@ -11,12 +10,13 @@ describe("UploadButton - Simple", () => {
         );
     });
 
-	it("should use uploady", () => {
-		cy.get("input#url-input")
-                .should("exist")
+    it("should use uploady", () => {
+        cy.get("input#url-input")
+            .should("exist")
             .type("http://test.com{enter}");
 
-			cy.waitShort();
-			cy.storyLog().assertFileItemStartFinish(fileName, 1);
-	});
+        cy.waitExtraShort();
+        cy.storyLog().assertLogPattern(BATCH_ADD);
+        cy.storyLog().assertUrlItemStartFinish("http://test.com", 1);
+    });
 });

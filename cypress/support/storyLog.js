@@ -90,9 +90,9 @@ Cypress.Commands.add("assertFileItemStartFinish", { prevSubject: true }, (storyL
     return assertStartFinish(storyLog, startIndex, "file.name", fileName, after);
 });
 
-Cypress.Commands.add("assertUrlItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex = 0, after = false) => {
+Cypress.Commands.add("assertUrlItemStartFinish", { prevSubject: true }, (storyLog, url, startIndex = 0, after = false) => {
     console.log("assertUrlItemStartFinish received log", storyLog, { startIndex, after });
-    return assertStartFinish(storyLog, startIndex, "url", fileName, after);
+    return assertStartFinish(storyLog, startIndex, "url", url, after);
 });
 
 Cypress.Commands.add("assertLogEntryCount", { prevSubject: true }, (storyLog, count) => {

@@ -2,9 +2,9 @@ import { createTusIntercepts, parallelFinalUrl, uploadUrl } from "./tusIntercept
 import clearTusPersistStorage from "./clearTusPersistStorage";
 import runParallelUpload from "./runParallerlUpload";
 
-describe("TusUploady - Parallel", () => {
-    const fileName = "flower.jpg";
+const fileName = "flower.jpg";
 
+describe("TusUploady - Parallel", () => {
     beforeEach(() => {
         cy.visitStory(
             "tusUploady",
@@ -151,6 +151,55 @@ describe("TusUploady - Parallel", () => {
                 assertPatchRequestTimes(1, 1, "should only have patch req for the first upload, not for resume");
 
                 assertResumeForParts();
+            });
+        });
+    });
+});
+
+describe("TusUploady - Parallel - Custom Header", () => {
+    beforeEach(() => {
+        cy.visitStory(
+            "tusUploady",
+            "with-tus-concatenation",
+            {
+                useMock: false,
+                uploadUrl,
+                chunkSize: 200_000,
+                tusResumeStorage: true,
+                tusSendWithCustomHeader: true,
+                uploadParams: { foo: "bar" },
+            }
+        );
+
+        clearTusPersistStorage();
+    });
+
+    it("should upload chunks using tus protocol in parallel, and pass header on final request", () => {
+        const parallel = 2;
+
+        const {
+            assertCreateRequest,
+            assertPatchRequest,
+            assertPatchRequestTimes,
+            assertParallelFinalRequest
+        } = createTusIntercepts({ parallel });
+
+        runParallelUpload(fileName, parallel, (fileSize, createSize, startFinishEvents) => {
+            assertCreateRequest(createSize + 1);
+            assertCreateRequest(createSize);
+
+            assertPatchRequest(createSize + 1, 0);
+            assertPatchRequest(createSize, 1);
+
+            assertPatchRequestTimes(0, 1);
+            assertPatchRequestTimes(1, 1);
+
+            assertParallelFinalRequest(({ request }) => {
+                expect(request.headers["upload-metadata"])
+                    .to.eq("foo YmFy");
+                expect(request.headers["x-test"])
+                    .to.eq("abcd");
+                expect(startFinishEvents.finish.args[1].uploadResponse.location).to.eq(parallelFinalUrl);
             });
         });
     });

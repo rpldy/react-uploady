@@ -67,13 +67,13 @@ describe("onRequestFinished tests", () => {
 			...queueState.getState().items[itemId]
 		});
 
-        const stateBatchOptions =  queueState.getState().batches[batch.id].batchOptions;
+        const stateBatchOptions =  queueState.getState().batches[batch.id].itemBatchOptions[finishedItem.id];
 
         if (state === UPLOADER_EVENTS.ITEM_FINISH) {
             expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, finishedItem, stateBatchOptions);
         }
 
-		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, finishedItem,stateBatchOptions);
+		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, finishedItem, stateBatchOptions);
         expect(incrementBatchFinishedCounter).toHaveBeenCalledWith(expect.any(Object), batch.id);
 
         expect(queueState.updateState).toHaveBeenCalledTimes(2);
@@ -136,6 +136,7 @@ describe("onRequestFinished tests", () => {
 		});
 
 		const expectedItem = queueState.getState().items.u1;
+		const expectedBatchOptions = queueState.getState().batches[batch.id].itemBatchOptions[expectedItem.id];
 
         getBatchDataFromItemId.mockReturnValueOnce(queueState.getState().batches[batch.id]);
 
@@ -149,7 +150,7 @@ describe("onRequestFinished tests", () => {
 
 		expect(cleanUpFinishedBatches).toHaveBeenCalledTimes(1);
 		expect(mockNext).toHaveBeenCalledTimes(1);
-		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, expectedItem, queueState.getState().batches[batch.id].batchOptions);
+		expect(queueState.trigger).toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINISH, expectedItem, expectedBatchOptions);
 
 		expect(queueState.updateState).toHaveBeenCalledTimes(2);
 		expect(queueState.getState().itemQueue[batch.id]).toHaveLength(1);
@@ -189,7 +190,7 @@ describe("onRequestFinished tests", () => {
 			}], mockNext);
 
 			const item = queueState.getState().items.u1;
-            const batchOptions = queueState.getState().batches[batch.id].batchOptions;
+            const batchOptions = queueState.getState().batches[batch.id].itemBatchOptions[item.id];
 
             expect(queueState.trigger).toHaveBeenNthCalledWith(1, FILE_STATE_TO_EVENT_MAP[state], item, batchOptions);
 			expect(queueState.trigger).not.toHaveBeenCalledWith(UPLOADER_EVENTS.ITEM_FINALIZE, item, batchOptions);
@@ -278,17 +279,18 @@ describe("onRequestFinished tests", () => {
 
 			const item1 = queueState.getState().items.u1;
 			const item2 = queueState.getState().items.u2;
-            const batchOptions = queueState.getState().batches[batch.id].batchOptions;
+            const batchOptionsItem1 = queueState.getState().batches[batch.id].itemBatchOptions[item1.id];
+            const batchOptionsItem2 = queueState.getState().batches[batch.id].itemBatchOptions[item2.id];
 
             expect(queueState.getState().items.u2.uploadStatus).toBe(400);
 			expect(queueState.getState().items.u2).toEqual(item2);
 
 			expect(cleanUpFinishedBatches).toHaveBeenCalledTimes(1);
 			expect(mockNext).toHaveBeenCalledTimes(1);
-			expect(queueState.trigger).toHaveBeenNthCalledWith(1, UPLOADER_EVENTS.ITEM_FINISH, item1, batchOptions);
-			expect(queueState.trigger).toHaveBeenNthCalledWith(2, UPLOADER_EVENTS.ITEM_FINALIZE, item1, batchOptions);
-			expect(queueState.trigger).toHaveBeenNthCalledWith(3, FILE_STATE_TO_EVENT_MAP[failState], item2, batchOptions);
-			expect(queueState.trigger).toHaveBeenNthCalledWith(4, UPLOADER_EVENTS.ITEM_FINALIZE, item2, batchOptions);
+			expect(queueState.trigger).toHaveBeenNthCalledWith(1, UPLOADER_EVENTS.ITEM_FINISH, item1, batchOptionsItem1);
+			expect(queueState.trigger).toHaveBeenNthCalledWith(2, UPLOADER_EVENTS.ITEM_FINALIZE, item1, batchOptionsItem1);
+			expect(queueState.trigger).toHaveBeenNthCalledWith(3, FILE_STATE_TO_EVENT_MAP[failState], item2, batchOptionsItem2);
+			expect(queueState.trigger).toHaveBeenNthCalledWith(4, UPLOADER_EVENTS.ITEM_FINALIZE, item2, batchOptionsItem2);
 
 			expect(queueState.updateState).toHaveBeenCalledTimes(4);
 			expect(queueState.getCurrentActiveCount).not.toHaveBeenCalled();

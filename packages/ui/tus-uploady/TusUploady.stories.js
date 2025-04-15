@@ -183,12 +183,17 @@ export const WithTusConcatenation: UploadyStory = createUploadyStory(
          ignoreModifiedDateInStorage,
          sendDataOnCreate,
          parallel,
-         extOptions
+         extOptions,
+         sendWithCustomHeader
      }): Node => {
+        const activeDestination = sendWithCustomHeader ?
+            { ...destination, headers: { "x-test": "abcd" } } :
+            destination;
+
         return (
             <TusUploady
                 debug
-                destination={destination}
+                destination={activeDestination}
                 enhancer={enhancer}
                 chunkSize={extOptions?.chunkSize || chunkSize}
                 forgetOnSuccess={forgetOnSuccess}

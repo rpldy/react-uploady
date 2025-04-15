@@ -77,6 +77,7 @@ jobs:
                 with:
                     reportData: ${{ steps.bundle-prod.outputs.BUNDLE_SIZE_REPORT_DATA }}
                     githubToken: ${{ secrets.GITHUB_TOKEN }}
+                    prIdentifier: ${{ github.event.pull_request.number }}
 
     sb:
         name: Build Storybook

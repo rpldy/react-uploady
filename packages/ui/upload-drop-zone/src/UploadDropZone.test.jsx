@@ -172,111 +172,131 @@ describe("UploadDropZone tests", () => {
         });
     });
 
-    it("should add & remove drag className", () => {
-        const onDragOverClassName = "drag-over";
+    describe("handling drag tests", () => {
+        it("should add & remove drag className", () => {
+            const onDragOverClassName = "drag-over";
 
-        const { span, mockRef, fireDragEnter, fireDragEnd, fireDragOver, fireDragLeave } = testDropZone({
-            onDragOverClassName
-        }, false);
+            const { span, mockRef, fireDragEnter, fireDragEnd, fireDragOver, fireDragLeave } = testDropZone({
+                onDragOverClassName
+            }, false);
 
-        const refElm = mockRef.mock.calls[0][0];
+            const refElm = mockRef.mock.calls[0][0];
 
-        fireDragEnter();
-        fireDragOver();
-        expect(refElm.classList.contains(onDragOverClassName)).toBe(true);
-        fireDragEnd();
-        expect(refElm.classList.contains(onDragOverClassName)).toBe(false);
+            fireDragEnter();
+            fireDragOver();
+            expect(refElm.classList.contains(onDragOverClassName)).toBe(true);
+            fireDragEnd();
+            expect(refElm.classList.contains(onDragOverClassName)).toBe(false);
 
-        fireDragEnter();
+            fireDragEnter();
 
-        //simulate drag is over child element
-        const fireDragEnterOnSpan = getDragEnterEvent(span);
-        fireDragEnterOnSpan();
-        fireDragLeave();
+            //simulate drag is over child element
+            const fireDragEnterOnSpan = getDragEnterEvent(span);
+            fireDragEnterOnSpan();
+            fireDragLeave();
 
-        expect(refElm.classList.contains(onDragOverClassName)).toBe(false);
-        fireDragEnter();
-        fireDragLeave();
-        expect(refElm.classList.contains(onDragOverClassName)).toBe(false);
-    });
+            expect(refElm.classList.contains(onDragOverClassName)).toBe(false);
+            fireDragEnter();
+            fireDragLeave();
+            expect(refElm.classList.contains(onDragOverClassName)).toBe(false);
+        });
 
-    it("should not remove drag className if different element", () => {
-        const onDragOverClassName = "drag-over";
+        it("should not remove drag className if different element", () => {
+            const onDragOverClassName = "drag-over";
 
-        const { span, mockRef, fireDragEnter, fireDragEnd, fireDragOver } = testDropZone({
-            onDragOverClassName,
-        }, false);
+            const { span, mockRef, fireDragEnter, fireDragEnd, fireDragOver } = testDropZone({
+                onDragOverClassName,
+            }, false);
 
-        const refElm = mockRef.mock.calls[0][0];
+            const refElm = mockRef.mock.calls[0][0];
 
-        fireDragEnter();
-        fireDragOver();
-        expect(refElm.classList.contains("drag-over")).toBe(true);
-        fireDragEnd();
-        expect(refElm.classList.contains("drag-over")).toBe(false);
+            fireDragEnter();
+            fireDragOver();
+            expect(refElm.classList.contains("drag-over")).toBe(true);
+            fireDragEnd();
+            expect(refElm.classList.contains("drag-over")).toBe(false);
 
-        fireDragEnter();
+            fireDragEnter();
 
-        //simulate drag is over child element
-        const fireDragEnterOnSpan = getDragEnterEvent(span);
-        fireDragEnterOnSpan();
-        expect(refElm.classList.contains("drag-over")).toBe(true);
-        const fireDragLeaveOnSpan = getDragLeaveEvent(span, { relatedTarget: refElm });
-        fireDragLeaveOnSpan();
+            //simulate drag is over child element
+            const fireDragEnterOnSpan = getDragEnterEvent(span);
+            fireDragEnterOnSpan();
+            expect(refElm.classList.contains("drag-over")).toBe(true);
+            const fireDragLeaveOnSpan = getDragLeaveEvent(span, { relatedTarget: refElm });
+            fireDragLeaveOnSpan();
 
-        expect(refElm.classList.contains("drag-over")).toBe(true);
-    });
+            expect(refElm.classList.contains("drag-over")).toBe(true);
+        });
 
-    it("should not handle drag or add className if child and contains is disabled", () => {
-        const onDragOverClassName = "drag-over";
+        it("should not handle drag or add className if child and contains is disabled", () => {
+            const onDragOverClassName = "drag-over";
 
-        const { span, mockRef, fireDragEnter, fireDragEnd, fireDragOver } = testDropZone({
-            enableOnContains: false,
-            onDragOverClassName,
-        }, false);
+            const { span, mockRef, fireDragEnter, fireDragEnd, fireDragOver } = testDropZone({
+                enableOnContains: false,
+                onDragOverClassName,
+            }, false);
 
-        const refElm = mockRef.mock.calls[0][0];
+            const refElm = mockRef.mock.calls[0][0];
 
-        fireDragEnter();
-        fireDragOver();
-        expect(refElm.classList.contains("drag-over")).toBe(true);
-        fireDragEnd();
-        expect(refElm.classList.contains("drag-over")).toBe(false);
+            fireDragEnter();
+            fireDragOver();
+            expect(refElm.classList.contains("drag-over")).toBe(true);
+            fireDragEnd();
+            expect(refElm.classList.contains("drag-over")).toBe(false);
 
-        const fireDragEnterOnSpan = getDragEnterEvent(span);
-        fireDragEnterOnSpan();
-        const fireDragOverOnSpan = getDragOverEvent(span);
-        fireDragOverOnSpan();
-        expect(refElm.classList.contains("drag-over")).toBe(false);
+            const fireDragEnterOnSpan = getDragEnterEvent(span);
+            fireDragEnterOnSpan();
+            const fireDragOverOnSpan = getDragOverEvent(span);
+            fireDragOverOnSpan();
+            expect(refElm.classList.contains("drag-over")).toBe(false);
 
-        fireDragEnd();
-        expect(refElm.classList.contains("drag-over")).toBe(false);
-    });
+            fireDragEnd();
+            expect(refElm.classList.contains("drag-over")).toBe(false);
+        });
 
-    it("should add & remove drag className with shouldRemoveDragOver callback", () => {
-        const onDragOverClassName = "drag-over";
+        it("should add & remove drag className with shouldRemoveDragOver callback", () => {
+            const onDragOverClassName = "drag-over";
 
-        const { span, mockRef, fireDragEnter, fireDragEnd, fireDragOver } = testDropZone({
-            onDragOverClassName,
-            shouldRemoveDragOver: ({ target }) => target === span,
-        }, false);
+            const { span, mockRef, fireDragEnter, fireDragEnd, fireDragOver } = testDropZone({
+                onDragOverClassName,
+                shouldRemoveDragOver: ({ target }) => target === span,
+            }, false);
 
-        const refElm = mockRef.mock.calls[0][0];
+            const refElm = mockRef.mock.calls[0][0];
 
-        fireDragEnter();
-        fireDragOver();
-        expect(refElm.classList.contains("drag-over")).toBe(true);
-        fireDragEnd();
-        expect(refElm.classList.contains("drag-over")).toBe(false);
+            fireDragEnter();
+            fireDragOver();
+            expect(refElm.classList.contains("drag-over")).toBe(true);
+            fireDragEnd();
+            expect(refElm.classList.contains("drag-over")).toBe(false);
 
-        fireDragEnter();
+            fireDragEnter();
 
-        //simulate drag is over child element
-        const fireDragEnterOnSpan = getDragEnterEvent(span);
-        fireDragEnterOnSpan();
-        const fireDragLeaveOnSpan = getDragLeaveEvent(span);
-        fireDragLeaveOnSpan();
-        expect(refElm.classList.contains("drag-over")).toBe(false);
+            //simulate drag is over child element
+            const fireDragEnterOnSpan = getDragEnterEvent(span);
+            fireDragEnterOnSpan();
+            const fireDragLeaveOnSpan = getDragLeaveEvent(span);
+            fireDragLeaveOnSpan();
+            expect(refElm.classList.contains("drag-over")).toBe(false);
+        });
+
+        it("should handle drag when noContainCheckForDrag is true when contains is false", async () => {
+            const onDragOverClassName = "drag-over";
+
+            const { span, mockRef } = testDropZone({
+                noContainCheckForDrag: true,
+                enableOnContains: false,
+                shouldHandleDrag: () => true,
+                onDragOverClassName
+            }, false);
+
+            const refElm = mockRef.mock.calls[0][0];
+
+            const fireDragEnterOnSpan = getDragEnterEvent(span);
+            fireDragEnterOnSpan();
+
+            expect(refElm.classList.contains("drag-over")).toBe(true);
+        });
     });
 
     it("should not add className if non provided", () => {

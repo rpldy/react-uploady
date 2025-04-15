@@ -58,7 +58,8 @@ const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], n
                 queue.handleItemProgress(item, 100, size , size);
             }
 
-            const { batchOptions } = getBatchDataFromItemId(queue, id);
+            const { itemBatchOptions } = getBatchDataFromItemId(queue, id);
+            const batchOptions = itemBatchOptions[id];
 
             if (FILE_STATE_TO_EVENT_MAP[item.state]) {
                 //trigger UPLOADER EVENT for item based on its state

@@ -9,7 +9,7 @@ type LogEntry = {
 declare namespace Cypress {
     interface StoryLog {
         assertFileItemStartFinish: (fileName: string, startIndex?: number, after?: boolean) => Promise<{ start: LogEntry, finish: LogEntry }>;
-        assertUrlItemStartFinish: (fileName: string, startIndex?: number) => Promise<{ start: LogEntry, finish: LogEntry }>;
+        assertUrlItemStartFinish: (url: string, startIndex?: number) => Promise<{ start: LogEntry, finish: LogEntry }>;
         assertLogEntryCount: (count: number, obj: any) => void;
         assertLogEntryContains: (index: number, obj: any) => void;
         customAssertLogEntry: (event: string | RegExp, asserter: (logLine: any[], env: string) => void, options?: { index?: number, all?: boolean }) => void;

@@ -57,7 +57,7 @@ runs:
                        context.payload.ref.replace('refs/heads/', '') :
                        "";
 
-                    core.exportVariable('PR_ID', branchName);
+                    core.exportVariable('PR_ID', identifier);
                     return "";
 
         -   name: Create PR for Master Bundle Size Report

@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.10.0 (2025-04-16)
+
+### Features
+
+- `[upload-drop-zone]` - feat: allow full control over drag handling
+
+### Bug fixes
+
+- `[uploader]` - fix: get batchOptions from itemBatchOptions in processFinishedRequest. Fix for [#831](https://github.com/rpldy/react-uploady/issues/831) (thanks [alc0034](https://github.com/alc0034))
+- `[tus-sender]` - fix: pass destination headers in tus finalize request. Fix for [#836]((https://github.com/rpldy/react-uploady/836)
+
+### Internal
+
+- `all` - upgrade dev deps
+
+
 ## 1.9.1 (2025-01-07)
 
 ### Bug fixes

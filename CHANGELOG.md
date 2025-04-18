@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.10.0 (2025-04-17)
+## 1.10.0 (2025-04-18)
 
 ### Features
 
@@ -13,7 +13,7 @@
 
 ### Internal
 
-- `all` - upgrade dev deps
+- `all` - upgrade several dev deps
 
 
 ## 1.9.1 (2025-01-07)

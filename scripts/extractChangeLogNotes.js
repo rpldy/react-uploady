@@ -6,10 +6,16 @@ const extractChangelogNotesForVersion = (version) => {
 
     let versionLog;
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         fs.readFile("./CHANGELOG.md", { encoding: "UTF-8" }, (err, data) => {
+
+            if (err) {
+                console.log("error reading the file- ", err)
+                reject(err);
+            }
+
             const md = new MarkDownIt();
-            const tokens = md.parse(data);
+            const tokens = md.parse(data, {});
 
             let startIndex = -1,
                 endIndex = undefined;
@@ -57,3 +63,8 @@ module.exports = {
     extractChangelogNotesForVersion,
 };
 
+// const test = async () => {
+//     console.log(await extractChangelogNotesForCurrentVersion("1.10.0"));
+// }
+//
+// test();

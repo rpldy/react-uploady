@@ -132,6 +132,9 @@ importers:
       babel-plugin-syntax-hermes-parser:
         specifier: ^0.28.0
         version: 0.28.0
+      babel-plugin-transform-flow-enums:
+        specifier: ^0.0.2
+        version: 0.0.2(@babel/core@7.26.10)
       babel-plugin-transform-inline-environment-variables:
         specifier: ^0.4.4
         version: 0.4.4
@@ -202,8 +205,8 @@ importers:
         specifier: ^10.1.6
         version: 10.1.6
       flow-bin:
-        specifier: ^0.256
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
       fs-extra:
         specifier: ^11.3.0
         version: 11.3.0
@@ -329,8 +332,8 @@ importers:
         version: link:../simple-state
     devDependencies:
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
 
   packages/core/chunked-sender:
     dependencies:
@@ -351,8 +354,8 @@ importers:
         specifier: ^1.10.0
         version: link:../uploader
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
 
   packages/core/life-events:
     dependencies:
@@ -361,8 +364,8 @@ importers:
         version: link:../shared
     devDependencies:
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
 
   packages/core/mock-sender:
     dependencies:
@@ -377,8 +380,8 @@ importers:
         specifier: ^1.10.0
         version: link:../uploader
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
 
   packages/core/raw-uploader:
     dependencies:
@@ -390,8 +393,8 @@ importers:
         version: link:../shared
     devDependencies:
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
 
   packages/core/retry:
     dependencies:
@@ -406,8 +409,8 @@ importers:
         version: link:../uploader
     devDependencies:
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
 
   packages/core/safe-storage:
     dependencies:
@@ -416,8 +419,8 @@ importers:
         version: link:../shared
     devDependencies:
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
 
   packages/core/sender:
     dependencies:
@@ -426,11 +429,14 @@ importers:
         version: link:../shared
     devDependencies:
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
 
   packages/core/shared:
     dependencies:
+      flow-enums-runtime:
+        specifier: ^0.0.6
+        version: 0.0.6
       invariant:
         specifier: ^2.2.4
         version: 2.2.4
@@ -439,8 +445,8 @@ importers:
         version: 4.2.0
     devDependencies:
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
 
   packages/core/simple-state:
     dependencies:
@@ -449,8 +455,8 @@ importers:
         version: link:../shared
     devDependencies:
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
 
   packages/core/tus-sender:
     dependencies:
@@ -477,8 +483,8 @@ importers:
         specifier: ^1.10.0
         version: link:../uploader
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
 
   packages/core/uploader:
     dependencies:
@@ -502,8 +508,8 @@ importers:
         version: link:../simple-state
     devDependencies:
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
 
   packages/native/native-uploady:
     dependencies:
@@ -512,8 +518,8 @@ importers:
         version: link:../../ui/shared
     devDependencies:
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -543,8 +549,8 @@ importers:
         specifier: workspace:*
         version: link:../upload-button
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -574,8 +580,8 @@ importers:
         specifier: workspace:*
         version: link:../upload-preview
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
       rc-progress:
         specifier: ^4.0.0
         version: 4.0.0(react-dom@18.3.1)(react@18.3.1)
@@ -599,8 +605,8 @@ importers:
         specifier: workspace:*
         version: link:../../core/life-events
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -630,8 +636,8 @@ importers:
         specifier: workspace:*
         version: link:../uploady
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -655,8 +661,8 @@ importers:
         specifier: workspace:*
         version: link:../uploady
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -689,8 +695,8 @@ importers:
         specifier: ^16
         version: 16.1.0(@testing-library/dom@10.4.0)(@types/react@18.3.14)(react-dom@18.3.1)(react@18.3.1)
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -732,8 +738,8 @@ importers:
         specifier: ^16
         version: 16.1.0(@testing-library/dom@10.4.0)(@types/react@18.3.14)(react-dom@18.3.1)(react@18.3.1)
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -766,8 +772,8 @@ importers:
         specifier: ^16
         version: 16.1.0(@testing-library/dom@10.4.0)(@types/react@18.3.14)(react-dom@18.3.1)(react@18.3.1)
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -794,8 +800,8 @@ importers:
         specifier: ^1.10.0
         version: link:../uploady
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -822,8 +828,8 @@ importers:
         specifier: ^16
         version: 16.1.0(@testing-library/dom@10.4.0)(@types/react@18.3.14)(react-dom@18.3.1)(react@18.3.1)
       flow-bin:
-        specifier: ^0.256.0
-        version: 0.256.0
+        specifier: ^0.260.0
+        version: 0.260.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -7805,6 +7811,14 @@ packages:
       hermes-parser: 0.28.0
     dev: true
 
+  /babel-plugin-transform-flow-enums@0.0.2(@babel/core@7.26.10):
+    resolution: {integrity: sha512-g4aaCrDDOsWjbm0PUUeVnkcVd6AKJsVc/MbnPhEotEpkeJQP6b8nzewohQi7+QS8UyPehOhGWn0nOwjvWpmMvQ==}
+    dependencies:
+      '@babel/plugin-syntax-flow': 7.26.0(@babel/core@7.26.10)
+    transitivePeerDependencies:
+      - '@babel/core'
+    dev: true
+
   /babel-plugin-transform-inline-environment-variables@0.4.4:
     resolution: {integrity: sha512-bJILBtn5a11SmtR2j/3mBOjX4K3weC6cq+NNZ7hG22wCAqpc3qtj/iN7dSe9HDiS46lgp1nHsQgeYrea/RUe+g==}
     dev: true
@@ -10475,11 +10489,15 @@ packages:
     resolution: {integrity: sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==}
     dev: true
 
-  /flow-bin@0.256.0:
-    resolution: {integrity: sha512-ujKn6fRfx9SujbqBLhT/lxFsXRsRDgrot2UuNhw4Z5W3QlVn4teV+7rBhs87FVHSnRvZeFAMKHHYYahWYw5W4w==}
+  /flow-bin@0.260.0:
+    resolution: {integrity: sha512-ALphJu45guvUyMmIlY0hNQRNUqIgiQ+VrP0lHB/quLIlgupVQD8sY9Au2cqgkO4oSxQDND3oE16LE/4sQLLGmQ==}
     engines: {node: '>=0.10.0'}
     hasBin: true
     dev: true
+
+  /flow-enums-runtime@0.0.6:
+    resolution: {integrity: sha512-3PYnM29RFXwvAN6Pc/scUfkI7RwhQ/xqyLUyPNlXUp9S40zI8nup9tUSrTLSVnWGBN38FNiGWbwZOB6uR4OGdw==}
+    dev: false
 
   /follow-redirects@1.15.9:
     resolution: {integrity: sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==}

@@ -80,7 +80,7 @@ const finalizeBatch = (
     queue: QueueState,
     batchId: string,
     eventType: string,
-    finalState: string = BATCH_STATES.FINISHED,
+    finalState: BATCH_STATES = BATCH_STATES.FINISHED,
     additionalInfo?: string,
 ): void => {
     queue.updateState((state) => {

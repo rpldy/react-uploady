@@ -22,11 +22,12 @@
     "build": "node ../../../scripts/build.mjs"
   },
   "devDependencies": {
-    "flow-bin": "^0.256.0"
+    "flow-bin": "^0.260.0"
   },
   "dependencies": {
     "invariant": "^2.2.4",
-    "just-throttle": "^4.2.0"
+    "just-throttle": "^4.2.0",
+    "flow-enums-runtime": "^0.0.6"
   },
   "publishConfig": {
     "access": "public"

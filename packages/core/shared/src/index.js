@@ -1,7 +1,6 @@
 // @flow
 import invariant from "invariant";
 import throttle from "just-throttle";
-import { BATCH_STATES, FILE_STATES } from "./consts";
 import * as logger from "./logger";
 import triggerCancellable from "./triggerCancellable";
 import triggerUpdater from "./triggerUpdater";
@@ -9,9 +8,6 @@ import createBatchItem, { getIsBatchItem } from "./batchItem";
 import request, { parseResponseHeaders, XhrPromise } from "./request";
 
 export {
-    BATCH_STATES,
-    FILE_STATES,
-
     //one source for invariant to all other packages
     invariant,
 
@@ -47,6 +43,9 @@ export {
 } from "./utils";
 
 export type * from "./types";
+
+export { FILE_STATES, BATCH_STATES } from "./enums";
+
 export type {
     MergeOptions
 } from "./utils/merge";

@@ -6,7 +6,7 @@ import type { Batch, BatchItem, UploadOptions } from "@rpldy/shared";
 import type { AbortResult, AbortsMap, ItemsQueue, FinalizeRequestMethod } from "./types";
 
 const abortNonUploadingItem = (item: BatchItem, aborts: AbortsMap, finalizeItem: FinalizeRequestMethod) => {
-    logger.debugLog(`abort: aborting ${item.state} item  - `, item);
+    logger.debugLog(`abort: aborting ${item.state.valueOf()} item  - `, item);
 
     //manually finish request for item that hasnt reached the sender yet
     finalizeItem(item.id, { status: 0, state: FILE_STATES.ABORTED, response: "aborted" });
@@ -15,19 +15,19 @@ const abortNonUploadingItem = (item: BatchItem, aborts: AbortsMap, finalizeItem:
 };
 
 type StateAbortMethods = {
-    uploading: (item: BatchItem, aborts: AbortsMap) => boolean,
+    uploading: (item: BatchItem, aborts: AbortsMap, any) => boolean,
     added: (item: BatchItem, aborts: AbortsMap, finalizeItem: FinalizeRequestMethod) => boolean,
     pending: (item: BatchItem, aborts: AbortsMap, finalizeItem: FinalizeRequestMethod) => boolean,
 };
 
-const ITEM_STATE_ABORTS: StateAbortMethods = {
-    [FILE_STATES.UPLOADING]: (item: BatchItem, aborts: AbortsMap) => {
+const ITEM_STATE_ABORTS: StateAbortMethods = (({
+    [FILE_STATES.UPLOADING]: (item: BatchItem, aborts: AbortsMap, _) => {
         logger.debugLog(`abort: aborting uploading item  - `, item);
         return aborts[item.id]();
     },
     [FILE_STATES.ADDED]: abortNonUploadingItem,
     [FILE_STATES.PENDING]: abortNonUploadingItem,
-};
+}: any): StateAbortMethods);
 
 const callAbortOnItem = (
     item: BatchItem,
@@ -36,12 +36,10 @@ const callAbortOnItem = (
 ): boolean => {
     const itemState = item?.state;
 
-    const method =!!itemState &&
-        //$FlowIssue[prop-missing]
-        ITEM_STATE_ABORTS[itemState];
+    const method = !!itemState &&
+        (ITEM_STATE_ABORTS: any)[itemState.valueOf()];
 
     return method ?
-        //$FlowExpectedError[extra-arg]
         method(item, aborts, finalizeItem) : false;
 };
 

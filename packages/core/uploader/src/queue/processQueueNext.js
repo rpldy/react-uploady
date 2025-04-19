@@ -1,5 +1,5 @@
 // @flow
-import { FILE_STATES, logger } from "@rpldy/shared";
+import { logger, FILE_STATES } from "@rpldy/shared";
 import processBatchItems from "./processBatchItems";
 import {
     getIsBatchReady,
@@ -20,7 +20,7 @@ const getIsItemInActiveRequest = (queue: QueueState, itemId: string): boolean =>
 };
 
 const getIsItemReady = (item: BatchItem) =>
-    item.state === FILE_STATES.ADDED;
+    item.state.valueOf() === (FILE_STATES.ADDED.valueOf());
 
 export const findNextItemIndex = (queue: QueueState): ?[string, number] => {
     const state = queue.getState(),

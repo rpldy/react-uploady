@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import styled from "styled-components";
 import Uploady, {
+    FILE_STATES,
     UPLOADER_EVENTS,
     useFileInput,
     UploadyContext,
@@ -93,22 +94,22 @@ export const WithEventListeners: UploadyStory = createUploadyStory(
 
         const listeners = useMemo(
             () => ({
-                [UPLOADER_EVENTS.BATCH_START]: (batch: Batch) => {
+                [UPLOADER_EVENTS.BATCH_START]: ((batch: Batch) => {
                     logEvent(
                         `Batch Start - ${batch.id} - item count = ${batch.items.length}`,
                     );
-                },
-                [UPLOADER_EVENTS.BATCH_FINISH]: (batch: Batch) => {
+                }: any),
+                [UPLOADER_EVENTS.BATCH_FINISH]: ((batch: Batch) => {
                     logEvent(
                         `Batch Finish - ${batch.id} - item count = ${batch.items.length}`,
                     );
-                },
-                [UPLOADER_EVENTS.ITEM_START]: (item: BatchItem) => {
+                }: any),
+                [UPLOADER_EVENTS.ITEM_START]: ((item: BatchItem) => {
                     logEvent(`Item Start - ${item.id} : ${item.file.name}`);
-                },
-                [UPLOADER_EVENTS.ITEM_FINISH]: (item: BatchItem) => {
+                }: any),
+                [UPLOADER_EVENTS.ITEM_FINISH]: ((item: BatchItem) => {
                     logEvent(`Item Finish - ${item.id} : ${item.file.name}`);
-                },
+                }: any),
             }),
             [],
         );

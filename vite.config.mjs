@@ -36,6 +36,16 @@ export default defineConfig({
                 babelrc: false,
                 configFile: false,
                 plugins: [
+                    ["babel-plugin-transform-flow-enums", {
+                        //avoid using flow-enums-runtime, just return a frozen "enum" object
+                        getRuntime: (t) => t.arrowFunctionExpression(
+                            [t.identifier("enumObj")],
+                            t.callExpression(
+                                t.memberExpression(t.identifier("Object"), t.identifier("freeze")),
+                                [t.identifier("enumObj")]
+                            )
+                        )
+                    }],
                     [
                         "@babel/plugin-transform-runtime", {
                         corejs: 3,

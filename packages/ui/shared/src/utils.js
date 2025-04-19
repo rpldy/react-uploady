@@ -10,7 +10,7 @@ const logWarning = (condition: ?any, msg: string) => {
 	}
 };
 
-const markAsUploadOptionsComponent = (Component: React$ComponentType<any>): void => {
+const markAsUploadOptionsComponent = (Component: React.ComponentType<any>): void => {
     Component[UPLOAD_OPTIONS_COMP] = true;
 };
 

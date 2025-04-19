@@ -55,3 +55,5 @@ cypress/test-bundle
 test/test-bundle-size.mjs
 
 flow-bin-doc.txt
+
+flow-typed/

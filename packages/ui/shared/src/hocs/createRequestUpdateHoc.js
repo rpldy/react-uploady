@@ -7,7 +7,7 @@ import type { Node } from "react";
 export type RequestUpdater<T> = (?T) => void;
 type EventDataValidator = (...params: any[]) => boolean;
 type RequestDataRetriever<T> = (...params: any[]) => ?T;
-export type RequestUpdateHoc =  (Component: React$ComponentType<any>) => React$ComponentType<any>;
+export type RequestUpdateHoc =  (Component: React.ComponentType<any>) => React.ComponentType<any>;
 
 type Props = {|
     id: string,
@@ -25,7 +25,7 @@ const createRequestUpdateHoc = <T>({
         getRequestData,
     }: RequestUpdateHocOptions<T>
 ): RequestUpdateHoc =>
-    (Component: React$ComponentType<any>): ((props: Props) => Node) =>
+    (Component: React.ComponentType<any>): ((props: Props) => Node) =>
         (props: Props) => {
             const context = useUploadyContext();
             const [updater, setUpdater] = useState<{| updateRequest: ?RequestUpdater<T>, requestData: ?T |}>({

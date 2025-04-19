@@ -203,7 +203,7 @@ class ClassUsingCustomButton extends Component<any> {
         }
     }
 
-    static contextType: React$Context<?UploadyContextType> = UploadyContext;
+    static contextType: React.Context<?UploadyContextType> = UploadyContext;
 
     showFileChooser = () => {
         this.context.showFileUpload();
@@ -295,7 +295,7 @@ export const DifferentConfiguration: UploadyStory = createUploadyStory(
         );
     });
 
-const DivUploadButton = asUploadButton(forwardRef((props: any, ref: React$RefSetter<any>) => {
+const DivUploadButton = asUploadButton(forwardRef((props: any, ref: React.RefSetter<any>) => {
     return <div {...props} ref={ref}
                 style={{ border: "1px solid red", width: "200px", cursor: "pointer" }}
                 id="div-upload">
@@ -349,8 +349,9 @@ const ExampleFormWithCustomButton = ({ url }: { url: string }) => {
     const inputRef = useRef<?HTMLInputElement>();
     useFileInput(inputRef);
 
-    const onSelectChange = useCallback((e: SyntheticInputEvent<HTMLSelectElement>) => {
-        setSelectDir(e.target.value === "dir");
+    const onSelectChange = useCallback((e: SyntheticEvent<HTMLSelectElement>) => {
+        const select = e.currentTarget;
+        setSelectDir(select.value === "dir");
     }, []);
 
     const onClick = useCallback(() => {
@@ -364,7 +365,7 @@ const ExampleFormWithCustomButton = ({ url }: { url: string }) => {
                 name="testFile"
                 style={{ display: "none" }}
                 ref={inputRef}
-                webkitdirectory={selectDir ? "true" : undefined}
+                webkitdirectory={!!selectDir}
             />
         </form>
         <select id="select-input-type" onChange={onSelectChange}>
@@ -437,7 +438,7 @@ const UploadField = styled.div`
 `;
 
 const MyUploadField = asUploadButton(
-    forwardRef(({ onChange, ...props }: any, ref: React$RefSetter<?HTMLHtmlElement>) => {
+    forwardRef(({ onChange, ...props }: any, ref: React.RefSetter<?HTMLHtmlElement>) => {
         const [text, setText] = useState("Select file");
 
         useBatchAddListener((batch) => {

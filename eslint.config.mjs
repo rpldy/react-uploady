@@ -184,6 +184,7 @@ export default [
             "cypress/examples/*.*",
             "cypress/component/*.*",
             "coverage/**/*.*",
+            "flow-typed/**/**",
         ],
     },
 

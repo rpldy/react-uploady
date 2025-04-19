@@ -417,7 +417,7 @@ export const WithCustomResponseFormat: UploadyStory = createUploadyStory(
 const UploadFormWithInternalInput = () => {
     const inputRef = useFileInput();
 
-    const onSelectChange = useCallback((e: SyntheticKeyboardEvent<HTMLSelectElement>) => {
+    const onSelectChange = useCallback((e: SyntheticEvent<HTMLSelectElement>) => {
         if (e.currentTarget.value === "dir") {
             inputRef?.current?.setAttribute("webkitdirectory", "true");
         } else {

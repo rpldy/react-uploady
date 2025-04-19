@@ -120,7 +120,7 @@ const ProcessPending = () => {
     const { processPending } = useUploady();
 
     return <button id="process-pending"
-                   onClick={processPending}>PROCESS PENDING</button>;
+                   onClick={() => processPending}>PROCESS PENDING</button>;
 };
 
 export const WithElementPaste: UploadyStory = createUploadyStory(

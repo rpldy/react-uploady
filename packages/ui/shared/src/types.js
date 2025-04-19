@@ -74,7 +74,7 @@ export type UploadyProps = {|
     inputFieldContainer?: HTMLElement,
 
     //'capture' file input field attribute - see: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture
-    capture?: string,
+    capture?: ?(boolean | 'user' | 'environment'),
     //'multiple' file input field attribute - see: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#multiple
     multiple?: boolean,
     //'accept' file input field attribute - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept

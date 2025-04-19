@@ -43,7 +43,7 @@ const usePreviewMethods = (
 };
 
 const getUploadPreviewForBatchItemsMethod =
-    (method: PreviewBatchItemsMethod = useBatchStartListener): React$ComponentType<PreviewProps> => {
+    (method: PreviewBatchItemsMethod = useBatchStartListener): React.ComponentType<PreviewProps> => {
     const usePreviewsLoader = getPreviewsLoaderHook(method);
 
     return (props: PreviewProps): Node[] => {
@@ -90,7 +90,7 @@ const getUploadPreviewForBatchItemsMethod =
 /**
  * UploadPreview uses Batch start event to display uploading items
  */
-const UploadPreview: React$ComponentType<PreviewProps> = getUploadPreviewForBatchItemsMethod();
+const UploadPreview: React.ComponentType<PreviewProps> = getUploadPreviewForBatchItemsMethod();
 
 export {
     getUploadPreviewForBatchItemsMethod

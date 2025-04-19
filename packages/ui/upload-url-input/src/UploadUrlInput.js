@@ -4,7 +4,7 @@ import { markAsUploadOptionsComponent, useUploadyContext } from "@rpldy/shared-u
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadUrlInputProps, UploadMethod } from "./types";
 
-const UploadUrlInput: React$ComponentType<UploadUrlInputProps> = forwardRef<UploadUrlInputProps, ?HTMLInputElement>(
+const UploadUrlInput: React.ComponentType<UploadUrlInputProps> = forwardRef<UploadUrlInputProps, ?HTMLInputElement>(
     (props: UploadUrlInputProps, ref) => {
         const inputRef = useRef<?HTMLInputElement>(null);
         const context = useUploadyContext();
@@ -31,7 +31,7 @@ const UploadUrlInput: React$ComponentType<UploadUrlInputProps> = forwardRef<Uplo
             inputRef
         ]);
 
-        const onKeyPress = useCallback((e: KeyboardEvent) => {
+        const onKeyPress = useCallback((e: SyntheticKeyboardEvent<HTMLInputElement>) => {
             if (!ignoreKeyPress && e.key === "Enter") {
                 upload();
             }

@@ -1,5 +1,6 @@
 // @flow
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 import Uploady from "@rpldy/uploady";
 import {
     createUploadyStory,
@@ -28,6 +29,8 @@ export const Simple: UploadyStory = createUploadyStory(
             </Uploady>
         );
     });
+
+const StyledUrlInput = styled(UploadUrlInput)``;
 
 export const WithRef: UploadyStory = createUploadyStory(
     ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
@@ -58,7 +61,7 @@ export const WithRef: UploadyStory = createUploadyStory(
                 grouped={grouped}
                 maxGroupSize={groupSize}
             >
-                <UploadUrlInput id="url-input" placeholder="URL to upload" ref={inputRef}/>
+                <StyledUrlInput id="url-input" placeholder="URL to upload" ref={inputRef}/>
             </Uploady>
         );
     });

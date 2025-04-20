@@ -12,7 +12,7 @@ type FileInputProps = {|
     multiple: boolean,
     capture?: ?(boolean | "user" | "environment"),
     accept: ?string,
-    webkitdirectory?: boolean,
+    webkitdirectory?: string,
     id: ?string,
     style: Object,
 |};
@@ -85,7 +85,7 @@ const Uploady = (props: UploadyProps): Node => {
             multiple={multiple}
             capture={capture}
             accept={accept}
-            webkitdirectory={webkitdirectory ?? false}
+            webkitdirectory={webkitdirectory?.toString()}
             style={{ display: "none" }}
             ref={internalInputFieldRef}
             id={fileInputId}

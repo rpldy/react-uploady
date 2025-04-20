@@ -1247,7 +1247,7 @@ type ReactDOM$inputProps = {|
   alt?: ?ReactDOM$UserVisibleString,
   autoComplete?: ?string,
   capture?: ?(boolean | 'user' | 'environment'),
-  webkitdirectory?: boolean,
+  webkitdirectory?: string,
   checked?: ?boolean,
   disabled?: ?boolean,
   form?: ?string,

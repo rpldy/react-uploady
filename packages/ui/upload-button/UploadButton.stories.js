@@ -9,7 +9,6 @@ import React, {
 } from "react";
 import styled from "styled-components";
 import Uploady, {
-    FILE_STATES,
     UPLOADER_EVENTS,
     useFileInput,
     UploadyContext,
@@ -365,7 +364,7 @@ const ExampleFormWithCustomButton = ({ url }: { url: string }) => {
                 name="testFile"
                 style={{ display: "none" }}
                 ref={inputRef}
-                webkitdirectory={!!selectDir}
+                webkitdirectory={selectDir ? "true" : undefined}
             />
         </form>
         <select id="select-input-type" onChange={onSelectChange}>

@@ -2,7 +2,7 @@ import { uploadFileTimes } from "../uploadFile";
 import { ITEM_FINISH, ITEM_START, UPLOAD_URL } from "../../constants";
 import intercept from "../intercept";
 
-describe("Uploader - PreSend Tests", () => {
+describe("Uploader - No Options Pollute Tests", () => {
     const fileName = "flower.jpg";
 
     before(() => {
@@ -44,7 +44,7 @@ describe("Uploader - PreSend Tests", () => {
         });
 
         uploadFileTimes(fileName, () => {
-            cy.waitExtraShort();
+            cy.waitShort();
 
             cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });

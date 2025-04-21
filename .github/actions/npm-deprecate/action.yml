@@ -73,7 +73,5 @@ runs:
 
               for pkg in $PACKAGES; do
                 echo "- Deprecating $pkg@$VERSION" >> $GITHUB_STEP_SUMMARY
-
+                npm deprecate "$pkg@$VERSION" "$MESSAGE"
               done
-
-#npm deprecate "$pkg@$VERSION" "$MESSAGE"

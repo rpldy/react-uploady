@@ -62,6 +62,8 @@ runs:
 
         - name: Deprecate packages
           shell: bash
+          env:
+              NPM_TOKEN: ${{ inputs.token }}
           run: |
               PACKAGES="${{ steps.packages.outputs.PACKAGE_NAMES }}"
               VERSION="${{ inputs.version }}"
@@ -73,8 +75,5 @@ runs:
                 echo "- Deprecating $pkg@$VERSION" >> $GITHUB_STEP_SUMMARY
 
               done
-          env:
-              NPM_TOKEN: ${{ inputs.token }}
-
 
 #npm deprecate "$pkg@$VERSION" "$MESSAGE"

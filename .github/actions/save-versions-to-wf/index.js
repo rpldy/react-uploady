@@ -1,9 +1,9 @@
 const fs = require("fs");
 const core = require("@actions/core");
-const github = require("@actions/github");
+// const github = require("@actions/github");
 const yaml = require("js-yaml");
 
-// const MAX_VERSIONS_STORED = 20;
+const MAX_VERSIONS_STORED = 50;
 
 const loadFlowYaml = (wfPath) => {
     let doc;
@@ -47,7 +47,7 @@ const main = () => {
             // Ensure first item is always empty
             const versions = ["", ...nonDeprecatedVersions];
 
-            versionInput.options = versions; //.slice(0, MAX_VERSIONS_STORED);
+            versionInput.options = versions.slice(0, MAX_VERSIONS_STORED);
 
             saveFlowYaml(doc, wfFile);
             console.log(`UPDATED WF YAML! Storing ${versionInput.options.length} versions in the options list`);

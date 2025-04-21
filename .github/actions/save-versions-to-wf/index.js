@@ -57,6 +57,9 @@ const fetchNonDeprecatedVersions = () => {
 };
 
 const main = () => {
+    let success = false;
+    let hasChanges = false;
+
     try {
         const wfFile = core.getInput("workflow-file");
         const wfInputName = core.getInput("workflow-input") || "version";
@@ -71,23 +74,43 @@ const main = () => {
 
             const versionInput = doc.on.workflow_dispatch.inputs[wfInputName];
 
+            // Get current options to compare later
+            const currentOptions = versionInput.options || [];
+
             // Ensure first item is always empty
             const versions = ["", ...nonDeprecatedVersions];
+            const newOptions = versions.slice(0, MAX_VERSIONS_STORED);
 
-            versionInput.options = versions.slice(0, MAX_VERSIONS_STORED);
+            if (currentOptions.length !== newOptions.length) {
+                hasChanges = true;
+            } else {
+                for (let i = 0; i < currentOptions.length; i++) {
+                    if (currentOptions[i] !== newOptions[i]) {
+                        hasChanges = true;
+                        break;
+                    }
+                }
+            }
 
-            saveFlowYaml(doc, wfFile);
-            console.log(`UPDATED WF YAML! Storing ${versionInput.options.length} versions in the options list`);
-
-            core.exportVariable("UPDATE_SUCCESS", "true");
+            if (hasChanges) {
+                versionInput.options = newOptions;
+                saveFlowYaml(doc, wfFile);
+                console.log(`UPDATED WF YAML! Storing ${versionInput.options.length} versions in the options list`);
+                success = true;
+            } else {
+                console.log("No changes to workflow options detected");
+                success = true;
+            }
         } else {
             console.warn("No versions provided to update the workflow!");
         }
-
-        core.setOutput("success", true);
     } catch (ex) {
+        console.error(ex);
         core.setFailed(ex.message);
     }
+
+    core.setOutput("success", `${success}`);
+    core.setOutput("saved_versions_change", `${hasChanges}`);
 };
 
 main();

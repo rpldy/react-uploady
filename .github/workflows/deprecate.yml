@@ -42,10 +42,20 @@ jobs:
                   dir: ./.github
 
             - name: Fetch versions & Update workflow file
+              id: fetch-versions
               uses: ./.github/actions/save-versions-to-wf
               with:
                   workflow-file: ./.github/workflows/deprecate.yml
                   workflow-input: version
+
+            -   name: Commit updated workflow
+                if: ${{ steps.fetch-versions.outputs.saved_versions_change == 'true' }}
+                run: |
+                    git config user.email "ci@react-uploady.org"
+                    git config user.name "Uploady CI"
+                    git add ./.github/workflows/deprecate.yml
+                    git commit -m "chore: update available versions for deprecation workflow"
+                    git push
 
             - name: Summary
               run: |

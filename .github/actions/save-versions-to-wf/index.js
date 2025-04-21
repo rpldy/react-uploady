@@ -3,7 +3,7 @@ const fs = require("fs");
 const core = require("@actions/core");
 const yaml = require("js-yaml");
 
-const MAX_VERSIONS_STORED = 50;
+const MAX_VERSIONS_STORED = 99;
 
 const loadFlowYaml = (wfPath) => {
     let doc;
@@ -56,6 +56,26 @@ const fetchNonDeprecatedVersions = () => {
     }
 };
 
+const compareVersions = (a, b) => {
+    if (a === "") return -1;
+    if (b === "") return 1;
+
+    const aParts = a.split(/[-+]/, 1)[0].split('.').map(Number);
+    const bParts = b.split(/[-+]/, 1)[0].split('.').map(Number);
+
+    for (let i = 0; i < 3; i++) {
+        if (aParts[i] !== bParts[i]) {
+            return aParts[i] - bParts[i];
+        }
+    }
+
+    // Handle prerelease versions if needed
+    if (a.includes('-') && !b.includes('-')) return -1;
+    if (!a.includes('-') && b.includes('-')) return 1;
+
+    return 0;
+};
+
 const main = () => {
     let success = false;
     let hasChanges = false;
@@ -77,8 +97,10 @@ const main = () => {
             // Get current options to compare later
             const currentOptions = versionInput.options || [];
 
+            const sortedVersions = [...nonDeprecatedVersions].sort(compareVersions);
+
             // Ensure first item is always empty
-            const versions = ["", ...nonDeprecatedVersions];
+            const versions = ["", ...sortedVersions];
             const newOptions = versions.slice(0, MAX_VERSIONS_STORED);
 
             if (currentOptions.length !== newOptions.length) {

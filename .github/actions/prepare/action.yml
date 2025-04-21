@@ -24,7 +24,6 @@ runs:
 
         -   uses: actions/setup-node@v4
             with:
-                node-version: "20.15.1"
                 cache: "pnpm"
                 cache-dependency-path: "${{ inputs.dir }}/pnpm-lock.yaml"
                 node-version-file: "${{ inputs.dir }}/.nvmrc"

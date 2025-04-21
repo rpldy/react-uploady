@@ -232,7 +232,7 @@ export const WithRememberPrevious: UploadyStory = createUploadyStory(
  * separating into component so previews change dont cause
  * Uploady to re-render
  */
-const PreviewsWithClear = ({ PreviewComp = UploadPreview }: { PreviewComp?: React$ComponentType<PreviewProps> }) => {
+const PreviewsWithClear = ({ PreviewComp = UploadPreview }: { PreviewComp?: React.ComponentType<PreviewProps> }) => {
 	const previewMethodsRef = useRef<?PreviewMethods>(null);
 	const [previews, setPreviews] = useState<PreviewItem[]>([]);
 
@@ -730,7 +730,7 @@ const UploadFieldWrapper = styled.div`
 
 type UploadFieldProps = {
     type: string,
-    Preview: React$ComponentType<PreviewProps>,
+    Preview: React.ComponentType<PreviewProps>,
     params: Object,
     index: number,
 };
@@ -752,7 +752,7 @@ const UploadField = ({ type, Preview, params, index }: UploadFieldProps) => {
 
 type TypedUploadFieldProps = { params: Object, index: number };
 
-const createUploadFieldForType = (type: string): React$ComponentType<TypedUploadFieldProps> => {
+const createUploadFieldForType = (type: string): React.ComponentType<TypedUploadFieldProps> => {
     const useTypedBatchMethod = (cb: (Batch, UploaderCreateOptions) => void) => {
         useBatchStartListener((batch, options) =>{
             if (options.params?.uploadType === type) {
@@ -769,7 +769,7 @@ const createUploadFieldForType = (type: string): React$ComponentType<TypedUpload
     return TypedUploadField;
 };
 
-const UploadFields:  React$ComponentType<TypedUploadFieldProps>[] = TYPES.map(createUploadFieldForType);
+const UploadFields:  React.ComponentType<TypedUploadFieldProps>[] = TYPES.map(createUploadFieldForType);
 
 export const WithTwoFields: UploadyStory = createUploadyStory(
     ({ enhancer, destination, grouped, groupSize }): Node => {

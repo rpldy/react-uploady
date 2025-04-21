@@ -6,7 +6,7 @@ import usePasteHandler from "./usePasteHandler";
 import type { ComponentType } from "react";
 import type { PasteProps } from "./types";
 
-const withPasteUpload = (Component: ComponentType<any>): React$ComponentType<PasteProps> => {
+const withPasteUpload = (Component: ComponentType<any>): React.ComponentType<PasteProps> => {
     const PasteComponent = (props: PasteProps, ref: any) => {
         const { id, className, children, onPasteUpload, extraProps, ...uploadOptions } = props;
 
@@ -28,7 +28,7 @@ const withPasteUpload = (Component: ComponentType<any>): React$ComponentType<Pas
         </Component>;
     };
 
-    return forwardRef<PasteProps, mixed | React$ElementType>(PasteComponent);
+    return forwardRef<PasteProps, mixed | React.ElementType>(PasteComponent);
 };
 
 export default withPasteUpload;

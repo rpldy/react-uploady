@@ -6,7 +6,7 @@ import type { ComponentType } from "react";
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadButtonProps } from "./types";
 
-const asUploadButton = (Component: ComponentType<any>): React$ComponentType<UploadButtonProps> => {
+const asUploadButton = (Component: ComponentType<any>): React.ComponentType<UploadButtonProps> => {
     const AsUploadButton = (props: UploadButtonProps, ref: any) => {
         const { showFileUpload } = useUploadyContext();
         const { id, className, text, children, extraProps, onClick, ...uploadOptions } = props;
@@ -33,7 +33,7 @@ const asUploadButton = (Component: ComponentType<any>): React$ComponentType<Uplo
 
     markAsUploadOptionsComponent(AsUploadButton);
 
-    return forwardRef<UploadButtonProps, {current: null | React$ElementType} | ((null | React$ElementType) => mixed)>(AsUploadButton);
+    return forwardRef<UploadButtonProps, {current: null | React.ElementType} | ((null | React.ElementType) => mixed)>(AsUploadButton);
 };
 
 export default asUploadButton;

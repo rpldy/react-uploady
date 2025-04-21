@@ -135,7 +135,7 @@ const SHARED_SETTINGS = {
     ...ftFlowPlugin.configs.recommended.settings,
     react: {
         version: "detect",
-        flowVersion: "0.245",
+        flowVersion: "0.260.0",
     },
 };
 
@@ -184,6 +184,7 @@ export default [
             "cypress/examples/*.*",
             "cypress/component/*.*",
             "coverage/**/*.*",
+            "flow-typed/**/**",
         ],
     },
 

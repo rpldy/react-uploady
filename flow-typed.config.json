@@ -1,0 +1,9 @@
+{
+    "env": ["node", "dom", "bom", "intl", "cssom", "indexeddb", "serviceworkers", "webassembly", "jsx"],
+    "ignore": ["@rpldy", "@babel", "@actions", "@testing-library", "@vitest", "babel-plugin-*"],
+    "workspaces": [
+        "packages/core/*",
+        "packages/ui/*",
+        "packages/native/*"
+    ]
+}

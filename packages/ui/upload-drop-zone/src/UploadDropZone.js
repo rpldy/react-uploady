@@ -18,7 +18,7 @@ const isOnTarget = (e: SyntheticDragEvent<HTMLDivElement>, containerElm: ?Elemen
         (allowContains && containerElm?.contains(target));
 };
 
-const UploadDropZone: React$ComponentType<UploadDropZoneProps> = forwardRef(
+const UploadDropZone: React.ComponentType<UploadDropZoneProps> = forwardRef(
     ({
          className,
          id,
@@ -32,7 +32,7 @@ const UploadDropZone: React$ComponentType<UploadDropZoneProps> = forwardRef(
          noContainCheckForDrag = false,
          extraProps,
          ...uploadOptions
-     }: UploadDropZoneProps, ref: React$RefSetter<?HTMLDivElement>) => {
+     }: UploadDropZoneProps, ref: React.RefSetter<?HTMLDivElement>) => {
         const { upload } = useUploadyContext();
         const containerRef = useRef<?HTMLDivElement>(null);
         const dragLeaveTrackerRef = useRef(false);

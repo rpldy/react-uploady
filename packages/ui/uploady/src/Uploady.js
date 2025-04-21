@@ -10,9 +10,9 @@ import type { UploadyProps } from "@rpldy/shared-ui";
 
 type FileInputProps = {|
     multiple: boolean,
-    capture: ?string,
+    capture?: ?(boolean | "user" | "environment"),
     accept: ?string,
-    webkitdirectory: ?string,
+    webkitdirectory?: string,
     id: ?string,
     style: Object,
 |};
@@ -25,7 +25,7 @@ type FileInputPortalProps = {|
 
 const NO_CONTAINER_ERROR_MSG = "Uploady - Container for file input must be a valid dom element";
 
-const renderInput = (inputProps: FileInputProps, instanceOptions: UploaderCreateOptions, ref: React$RefSetter<HTMLInputElement>) => <input
+const renderInput = (inputProps: FileInputProps, instanceOptions: UploaderCreateOptions, ref: React.RefSetter<HTMLInputElement>) => <input
     {...inputProps}
     name={instanceOptions.inputFieldName}
     type="file"
@@ -37,13 +37,13 @@ const renderInPortal = (
     isValidContainer: ?boolean,
     inputProps: FileInputProps,
     instanceOptions: UploaderCreateOptions,
-    ref: React$RefSetter<HTMLInputElement>
+    ref: React.RefSetter<HTMLInputElement>
 ) =>
     container && isValidContainer ?
         ReactDOM.createPortal(renderInput(inputProps, instanceOptions, ref), container) :
         null;
 
-const FileInputField = memo(forwardRef(({ container, noPortal, ...inputProps }: FileInputPortalProps, ref: React$RefSetter<HTMLInputElement>) => {
+const FileInputField = memo(forwardRef(({ container, noPortal, ...inputProps }: FileInputPortalProps, ref: React.RefSetter<HTMLInputElement>) => {
     const instanceOptions: UploaderCreateOptions = useUploadOptions();
     const isValidContainer = container && container.nodeType === 1;
 

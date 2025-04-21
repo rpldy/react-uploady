@@ -30,7 +30,7 @@ const StyledReactCrop = styled(ReactCrop)`
     max-height: 400px;
 `;
 
-const ReactCropWithImage: React$ComponentType<CropProps> =
+const ReactCropWithImage: React.ComponentType<CropProps> =
     forwardRef(({
                     crop,
                     onCrop,

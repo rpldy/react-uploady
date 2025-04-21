@@ -1,5 +1,5 @@
 // @flow
-import { BATCH_STATES, FILE_STATES } from "./consts";
+import { BATCH_STATES, FILE_STATES } from "./enums";
 
 export type Destination = {
 	//upload URL
@@ -14,9 +14,6 @@ export type Destination = {
     method?: ?string,
 };
 
-export type BatchState = $Values<typeof BATCH_STATES>;
-export type FileState = $Values<typeof FILE_STATES>;
-
 export type ProgressInfo = {
 	done: boolean,
 	failed: boolean,
@@ -27,7 +24,7 @@ export type ProgressInfo = {
 
 export type UploadData = {
     status: number,
-	state: FileState,
+	state: FILE_STATES,
 	response: any,
 };
 
@@ -42,7 +39,7 @@ export type IsSuccessfulCall = (xhr: XMLHttpRequest) => boolean;
 type BatchItemBase = {|
 	id: string,
 	batchId: string,
-	state: FileState,
+	state: FILE_STATES,
 	uploadResponse?: any,
     uploadStatus: number,
 	//percentage of upload completed
@@ -80,7 +77,7 @@ export type Batch = {
 	id: string,
 	uploaderId: string,
 	items: BatchItem[],
-	state: BatchState,
+	state: BATCH_STATES,
     //percentage of upload completed for batch items
     completed: number,
     //sum of bytes uploaded for batch items

@@ -23,5 +23,5 @@ export type UploadDropZoneProps =  {|
     enableOnContains?: boolean,
     noContainCheckForDrag?: boolean,
     extraProps?: Object,
-    children?: React$Node,
+    children?: React.Node,
 |};

@@ -1,4 +1,4 @@
-import { FILE_STATES as ORG_FILES_STATES, BATCH_STATES as ORG_BATCH_STATES } from "../../consts";
+import { FILE_STATES as ORG_FILES_STATES, BATCH_STATES as ORG_BATCH_STATES } from "../../enums";
 import merge, { getMerge } from "../../utils/merge";
 import clone from "../../utils/clone";
 import pick from "../../utils/pick";

@@ -7,22 +7,18 @@ import { finalizeItem } from "./itemHelpers";
 import type { UploadData, BatchItem } from "@rpldy/shared";
 import type { ProcessNextMethod, QueueState } from "./types";
 
-export const FILE_STATE_TO_EVENT_MAP: {|
-  aborted: string,
-  added: string,
-  cancelled: string,
-  error: string,
-  finished: string,
-  pending: null,
-  uploading: string,
-|} = {
-    [FILE_STATES.PENDING]: null,
-    [FILE_STATES.ADDED]: UPLOADER_EVENTS.ITEM_START,
-    [FILE_STATES.FINISHED]: UPLOADER_EVENTS.ITEM_FINISH,
-    [FILE_STATES.ERROR]: UPLOADER_EVENTS.ITEM_ERROR,
-    [FILE_STATES.CANCELLED]: UPLOADER_EVENTS.ITEM_CANCEL,
-    [FILE_STATES.ABORTED]: UPLOADER_EVENTS.ITEM_ABORT,
-    [FILE_STATES.UPLOADING]: UPLOADER_EVENTS.ITEM_PROGRESS,
+type FileStateToEventMap = {
+    [string]: ?string,
+};
+
+export const FILE_STATE_TO_EVENT_MAP: FileStateToEventMap = {
+    [FILE_STATES.PENDING.valueOf()]: null,
+    [FILE_STATES.ADDED.valueOf()]: UPLOADER_EVENTS.ITEM_START,
+    [FILE_STATES.FINISHED.valueOf()]: UPLOADER_EVENTS.ITEM_FINISH,
+    [FILE_STATES.ERROR.valueOf()]: UPLOADER_EVENTS.ITEM_ERROR,
+    [FILE_STATES.CANCELLED.valueOf()]: UPLOADER_EVENTS.ITEM_CANCEL,
+    [FILE_STATES.ABORTED.valueOf()]: UPLOADER_EVENTS.ITEM_ABORT,
+    [FILE_STATES.UPLOADING.valueOf()]: UPLOADER_EVENTS.ITEM_PROGRESS,
 };
 
 type FinishData = { id: string, info: UploadData };
@@ -61,9 +57,10 @@ const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], n
             const { itemBatchOptions } = getBatchDataFromItemId(queue, id);
             const batchOptions = itemBatchOptions[id];
 
-            if (FILE_STATE_TO_EVENT_MAP[item.state]) {
+            const itemState = item.state.valueOf();
+            if (FILE_STATE_TO_EVENT_MAP[itemState]) {
                 //trigger UPLOADER EVENT for item based on its state
-                queue.trigger(FILE_STATE_TO_EVENT_MAP[item.state], item, batchOptions);
+                queue.trigger(FILE_STATE_TO_EVENT_MAP[itemState], item, batchOptions);
             }
 
             if (getIsFinalized(item)) {

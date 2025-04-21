@@ -5,6 +5,7 @@ const productionConfig = {
     plugins: [
         //cant add to base because breaks unit-tests that modify process.env
         "transform-inline-environment-variables",
+
     ]
 };
 
@@ -26,6 +27,16 @@ const config =  {
     plugins: [
         "@babel/plugin-proposal-function-bind",
         "@babel/plugin-proposal-export-default-from",
+        ["babel-plugin-transform-flow-enums", {
+            //avoid using flow-enums-runtime, just return a frozen "enum" object
+            getRuntime: (t) => t.arrowFunctionExpression(
+                [t.identifier("enumObj")],
+                t.callExpression(
+                    t.memberExpression(t.identifier("Object"), t.identifier("freeze")),
+                    [t.identifier("enumObj")]
+                )
+            )
+        }],
         "babel-plugin-syntax-hermes-parser",
         //adding these here to stop sb build from breaking on loose mode issue :(
         "minify-dead-code-elimination",

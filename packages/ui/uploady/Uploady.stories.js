@@ -256,7 +256,9 @@ const QueueItem = ({ item }: { item: BatchItem }) => {
         <span>NAME: {item.file.name}</span>
         <br/>
         <span>STATE:
-            <span data-test="queue-item-state" style={{ color: STATE_COLORS[state] }}>{state}</span>
+            <span data-test="queue-item-state" style={{ color: STATE_COLORS[state] }}>
+              {state.valueOf()}
+            </span>
         </span>
         <br/>
         <span>BATCH: {item.batchId}</span>
@@ -415,7 +417,7 @@ export const WithCustomResponseFormat: UploadyStory = createUploadyStory(
 const UploadFormWithInternalInput = () => {
     const inputRef = useFileInput();
 
-    const onSelectChange = useCallback((e: SyntheticKeyboardEvent<HTMLSelectElement>) => {
+    const onSelectChange = useCallback((e: SyntheticEvent<HTMLSelectElement>) => {
         if (e.currentTarget.value === "dir") {
             inputRef?.current?.setAttribute("webkitdirectory", "true");
         } else {

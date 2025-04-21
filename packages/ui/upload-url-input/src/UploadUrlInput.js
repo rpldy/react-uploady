@@ -4,9 +4,11 @@ import { markAsUploadOptionsComponent, useUploadyContext } from "@rpldy/shared-u
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadUrlInputProps, UploadMethod } from "./types";
 
-const UploadUrlInput: React$ComponentType<UploadUrlInputProps> = forwardRef<UploadUrlInputProps, ?HTMLInputElement>(
-    (props: UploadUrlInputProps, ref) => {
-        const inputRef = useRef<?HTMLInputElement>(null);
+const UploadUrlInput: React.ComponentType<UploadUrlInputProps> = forwardRef<
+    UploadUrlInputProps,
+    HTMLInputElement
+>((props, ref) => {
+        const inputRef = useRef<HTMLInputElement | null>(null);
         const context = useUploadyContext();
 
         const { className, id, placeholder, uploadRef, validate, ignoreKeyPress, ...uploadOptions } = props;
@@ -15,7 +17,7 @@ const UploadUrlInput: React$ComponentType<UploadUrlInputProps> = forwardRef<Uplo
         const uploadOptionsRef = useRef<?UploadOptions>();
         uploadOptionsRef.current = uploadOptions;
 
-        useImperativeHandle<?HTMLInputElement>(ref, () => inputRef.current, []);
+        useImperativeHandle(ref, () => inputRef.current, []);
 
         const upload = useCallback(() => {
             const input = inputRef.current,
@@ -31,7 +33,7 @@ const UploadUrlInput: React$ComponentType<UploadUrlInputProps> = forwardRef<Uplo
             inputRef
         ]);
 
-        const onKeyPress = useCallback((e: KeyboardEvent) => {
+        const onKeyPress = useCallback((e: SyntheticKeyboardEvent<HTMLInputElement>) => {
             if (!ignoreKeyPress && e.key === "Enter") {
                 upload();
             }

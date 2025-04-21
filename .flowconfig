@@ -14,6 +14,7 @@
 ./packages/**/*.js.flow
 
 [libs]
+flow-typed
 
 [strict]
 untyped-type-import
@@ -27,6 +28,7 @@ react.runtime=automatic
 module.ignore_non_literal_requires=true
 module.system.node.main_field=main:dev
 module.system.node.resolve_dirname=node_modules
+enums=true
 
 #dealing with deps without index.js entry
 module.name_mapper='^invariant$' -> '<PROJECT_ROOT>/node_modules/invariant/invariant'

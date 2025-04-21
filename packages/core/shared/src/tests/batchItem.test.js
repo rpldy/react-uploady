@@ -1,5 +1,5 @@
 import createItem from "../batchItem";
-import { FILE_STATES } from "../consts";
+import { FILE_STATES } from "../enums";
 
 describe("create batchItem tests", () => {
     it("should create batch item with file", () => {

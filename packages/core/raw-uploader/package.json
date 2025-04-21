@@ -33,7 +33,7 @@
     "@rpldy/shared": "^1.10.0"
   },
   "devDependencies": {
-    "flow-bin": "^0.256.0"
+    "flow-bin": "^0.268.0"
   },
   "publishConfig": {
     "access": "public"

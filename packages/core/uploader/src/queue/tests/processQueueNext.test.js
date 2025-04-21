@@ -539,10 +539,14 @@ describe("processQueueNext tests", () => {
         const queueState = getQueueState({
                 currentBatch: null,
                 items: {
-                    "u1": { batchId: "b1" },
+                    "u1": { batchId: "b1", state: FILE_STATES.FINISHED },
                     "u2": { batchId: "b2", state: FILE_STATES.ADDED },
                 },
                 batches: {
+                    b1: {
+                        batch: { id: "b1" },
+                        batchOptions: {}
+                    },
                     b2: {
                         batch: { id: "b2" },
                         batchOptions: {}

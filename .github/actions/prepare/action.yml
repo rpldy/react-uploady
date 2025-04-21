@@ -24,13 +24,13 @@ runs:
 
         -   uses: actions/setup-node@v4
             with:
-                node-version: "20.15.1"
                 cache: "pnpm"
-                node-version-file: '${{ inputs.dir }}/.nvmrc'
+                cache-dependency-path: "${{ inputs.dir }}/pnpm-lock.yaml"
+                node-version-file: "${{ inputs.dir }}/.nvmrc"
 
         -   name: Install deps
             shell: bash
-            run: pnpm install ${{ inputs.with-frozen == 'true' && '--frozen-lockfile' || '' }}
+            run: pnpm install ${{ inputs.with-frozen == 'true' && '--frozen-lockfile' || '' }} ${{ inputs.dir != '.' && '--ignore-workspace' || '' }}
             working-directory: ${{ inputs.dir }}
 
         -   name: Set up Cypress binary cache
@@ -39,4 +39,3 @@ runs:
             with:
                 path: ~/.cache/Cypress
                 key: ${{ runner.os }}-cypress-${{ hashFiles('pnpm-lock.yaml') }}
-            working-directory: ${{ inputs.dir }}

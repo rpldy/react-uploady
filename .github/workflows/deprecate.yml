@@ -1,114 +1,125 @@
-name: Deprecate Uploady Version
-
-on:
-    workflow_dispatch:
-        inputs:
-            version:
-                description: 'Version to deprecate (e.g. 1.9.0)'
-                required: false
-                type: choice
-                default: ""
-                options:
-                    - ""
-            message:
-                description: 'Deprecation message'
-                required: false
-                default: 'This version is deprecated, please upgrade to the latest version'
-                type: string
-
+name: Uploady Version Deprecate
+'on':
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to deprecate (e.g. 1.9.0)
+        required: false
+        type: choice
+        default: ''
+        options:
+          - ''
+          - 1.3.0-rc.0
+          - 1.3.0-rc.1
+          - 1.3.0-rc.2
+          - 1.3.0-rc.3
+          - 1.3.0
+          - 1.3.1
+          - 1.4.0-rc.0
+          - 1.4.0-rc.1
+          - 1.4.0
+          - 1.4.1-rc.0
+          - 1.4.1
+          - 1.4.2-alpha.0
+          - 1.5.0-rc.0
+          - 1.5.0-rc.1
+          - 1.5.0-rc.2
+          - 1.5.0-rc.3
+          - 1.5.0-rc.4
+          - 1.5.0-rc.5
+          - 1.5.0
+          - 1.6.0-rc.0
+          - 1.6.0
+          - 1.6.1-rc.0
+          - 1.6.1-rc.1
+          - 1.6.1-rc.2
+          - 1.6.1
+          - 1.7.0-rc.0
+          - 1.7.0-rc.1
+          - 1.7.0
+          - 1.7.1
+          - 1.8.0-rc.0
+          - 1.8.0
+          - 1.8.1
+          - 1.8.2
+          - 1.8.3
+          - 1.9.0-rc.0
+          - 1.9.0-rc.1
+          - 1.9.0-rc.2
+          - 1.9.0
+          - 1.9.1
+          - 1.10.0
+      deprecate-range:
+        description: Deprecate all versions up to and including the specified version
+        required: false
+        default: false
+        type: boolean
+      message:
+        description: Deprecation message
+        required: false
+        default: This version is deprecated, please upgrade to the latest version
+        type: string
 permissions:
-    id-token: write
-    contents: write
-
+  id-token: write
+  contents: write
 defaults:
-    run:
-        shell: bash
-
+  run:
+    shell: bash
 jobs:
-    fetch-versions:
-        name: Fetch Non-Deprecated Versions
-        runs-on: ubuntu-latest
-        if: ${{ inputs.version == '' }}
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-
-            - name: Prepare
-              uses: ./.github/actions/prepare
-              with:
-                  with-frozen: false
-                  dir: ./.github
-
-            - name: Fetch non-deprecated versions
-              id: fetch-versions
-              run: |
-                  # Fetch all versions from npm for @rpldy/uploady
-                  echo "Fetching versions from npm for @rpldy/uploady..."
-                  ALL_VERSIONS=$(npm view @rpldy/uploady versions --json)
-
-                  # Get non-deprecated versions
-                  NON_DEPRECATED=$(npm view @rpldy/uploady --json | jq -r '
-                    if has("versions") and has("deprecated") then
-                      .versions[] | select(. as $v | .deprecated | has($v) | not)
-                    else
-                      .versions[]
-                    end' | jq -s -c .)
-
-                  echo "NON_DEPRECATED_VERSIONS=$NON_DEPRECATED" >> $GITHUB_OUTPUT
-                  echo "Found non-deprecated versions: $NON_DEPRECATED"
-
-            - name: Update workflow file
-              uses: ./.github/actions/save-versions-to-wf
-              with:
-                  workflow-file: ./.github/workflows/deprecate.yml
-                  workflow-input: version
-
-            - name: Summary
-              run: |
-                  echo "### ✅ Successfully updated available versions" >> $GITHUB_STEP_SUMMARY
-                  echo "The workflow has been updated with all non-deprecated versions from npm." >> $GITHUB_STEP_SUMMARY
-
-    deprecate:
-        name: Deprecate Version
-        runs-on: ubuntu-latest
-        environment: "Release"
-        if: ${{ inputs.version != '' }}
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-
-            - name: Prepare
-              uses: ./.github/actions/prepare
-              with:
-                  with-frozen: true
-
-            - name: Deprecate version
-              uses: ./.github/actions/npm-deprecate
-              with:
-                  version: ${{ inputs.version }}
-                  message: ${{ inputs.message }}
-                  token: ${{ secrets.NPM_TOKEN }}
-
-#            - name: Fallback to manual deprecation
-#              if: failure()
-#              run: |
-#                  echo "Action deprecation failed, falling back to manual method"
-#                  PACKAGES=$(npx lerna ls --json | jq -r '.[].name' | tr '\n' ' ')
-#                  VERSION="${{ inputs.version }}"
-#                  MESSAGE="${{ inputs.message }}"
-#
-#                  echo "### Deprecating the following packages:" >> $GITHUB_STEP_SUMMARY
-#
-#                  for pkg in $PACKAGES; do
-#                    echo "- Deprecating $pkg@$VERSION" >> $GITHUB_STEP_SUMMARY
-#                    npm deprecate "$pkg@$VERSION" "$MESSAGE"
-#                  done
-
-            - name: Summary
-              run: |
-                  echo "### ✅ Deprecation completed successfully" >> $GITHUB_STEP_SUMMARY
-                  echo "Deprecated version ${{ inputs.version }} with message: ${{ inputs.message }}" >> $GITHUB_STEP_SUMMARY
+  fetch-versions:
+    name: Fetch Non-Deprecated Versions
+    runs-on: ubuntu-latest
+    if: ${{ inputs.version == '' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.RPLDY_PAT_TOKEN }}
+      - name: Prepare
+        uses: ./.github/actions/prepare
+        with:
+          with-frozen: false
+          dir: ./.github
+      - name: Fetch versions & Update workflow file
+        id: fetch-versions
+        uses: ./.github/actions/save-versions-to-wf
+        with:
+          workflow-file: ./.github/workflows/deprecate.yml
+          workflow-input: version
+      - name: Commit updated workflow
+        if: ${{ steps.fetch-versions.outputs.saved_versions_change == 'true' }}
+        run: |
+          git config user.email "ci@react-uploady.org"
+          git config user.name "Uploady CI"
+          git add ./.github/workflows/deprecate.yml
+          git commit -m "chore: update available versions for deprecation workflow"
+          git push
+      - name: Summary
+        run: |
+          echo "### ✅ Successfully updated available versions" >> $GITHUB_STEP_SUMMARY
+          echo "The workflow has been updated with all non-deprecated versions from npm." >> $GITHUB_STEP_SUMMARY
+  deprecate:
+    name: Deprecate Version
+    runs-on: ubuntu-latest
+    environment: Release
+    if: ${{ inputs.version != '' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Prepare
+        uses: ./.github/actions/prepare
+        with:
+          with-frozen: true
+      - name: Deprecate version
+        uses: ./.github/actions/npm-deprecate
+        with:
+          version: ${{ inputs.version }}
+          message: ${{ inputs.message }}
+          deprecate-range: ${{ inputs.deprecate-range }}
+          token: ${{ secrets.NPM_TOKEN }}
+      - name: Summary
+        run: |
+          echo "### ✅ Deprecation completed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "Deprecated version ${{ inputs.version }} with message: ${{ inputs.message }}" >> $GITHUB_STEP_SUMMARY

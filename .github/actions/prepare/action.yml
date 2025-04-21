@@ -39,4 +39,3 @@ runs:
             with:
                 path: ~/.cache/Cypress
                 key: ${{ runner.os }}-cypress-${{ hashFiles('pnpm-lock.yaml') }}
-            working-directory: ${{ inputs.dir }}

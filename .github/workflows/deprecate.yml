@@ -1,4 +1,4 @@
-name: Deprecate Uploady Version
+name: Uploady Version Deprecate
 
 on:
     workflow_dispatch:

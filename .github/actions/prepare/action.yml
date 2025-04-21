@@ -26,7 +26,8 @@ runs:
             with:
                 node-version: "20.15.1"
                 cache: "pnpm"
-                node-version-file: '${{ inputs.dir }}/.nvmrc'
+                cache-dependency-path: "${{ inputs.dir }}/pnpm-lock.yaml"
+                node-version-file: "${{ inputs.dir }}/.nvmrc"
 
         -   name: Install deps
             shell: bash

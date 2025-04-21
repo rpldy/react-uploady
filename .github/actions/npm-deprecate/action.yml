@@ -11,6 +11,10 @@ inputs:
     token:
         description: 'NPM token'
         required: true
+    deprecate-range:
+        description: 'Whether to deprecate all versions up to and including the specified version'
+        required: false
+        default: 'false'
 
 runs:
     using: "composite"
@@ -23,7 +27,11 @@ runs:
                   exit 1
                 fi
 
-                echo "### About to deprecate version: ${{ inputs.version }}" >> $GITHUB_STEP_SUMMARY
+                if [[ "${{ inputs.deprecate-range }}" == "true" ]]; then
+                  echo "### About to deprecate all versions up to and including: ${{ inputs.version }}" >> $GITHUB_STEP_SUMMARY
+                else
+                  echo "### About to deprecate version: ${{ inputs.version }}" >> $GITHUB_STEP_SUMMARY
+                fi
                 echo "### Deprecation message: ${{ inputs.message }}" >> $GITHUB_STEP_SUMMARY
 
         - name: Get package names
@@ -41,8 +49,11 @@ runs:
         - name: "Notify about wait time"
           shell: bash
           run: |
+              if [[ "${{ inputs.deprecate-range }}" == "true" ]]; then
+                echo "⚠️ Will deprecate all versions up to and including ${{ inputs.version }} in 10 seconds. Cancel now if this is a mistake..."
+              else
                 echo "⚠️ Will deprecate version ${{ inputs.version }} in 10 seconds. Cancel now if this is a mistake..."
-
+              fi
 
         -   name: Wait before deprecation
             uses: actions/github-script@v7
@@ -68,10 +79,17 @@ runs:
               PACKAGES="${{ steps.packages.outputs.PACKAGE_NAMES }}"
               VERSION="${{ inputs.version }}"
               MESSAGE="${{ inputs.message }}"
+              DEPRECATE_RANGE="${{ inputs.deprecate-range }}"
 
               echo "### Deprecating the following packages:" >> $GITHUB_STEP_SUMMARY
 
               for pkg in $PACKAGES; do
-                echo "- Deprecating $pkg@$VERSION" >> $GITHUB_STEP_SUMMARY
-                npm deprecate "$pkg@$VERSION" "$MESSAGE"
+                if [[ "$DEPRECATE_RANGE" == "true" ]]; then
+                  VERSION_SPEC="<=$VERSION"
+                  echo "- Deprecating $pkg@$VERSION_SPEC (all versions up to and including $VERSION)" >> $GITHUB_STEP_SUMMARY
+                else
+                  VERSION_SPEC="$VERSION"
+                  echo "- Deprecating $pkg@$VERSION_SPEC" >> $GITHUB_STEP_SUMMARY
+                fi
+                npm deprecate "$pkg@$VERSION_SPEC" "$MESSAGE"
               done

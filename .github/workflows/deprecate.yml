@@ -107,6 +107,11 @@ name: Uploady Version Deprecate
           - 1.6.1-rc.1
           - 1.6.1-rc.2
           - 1.6.1
+      deprecate-range:
+        description: 'Deprecate all versions up to and including the specified version'
+        required: false
+        default: false
+        type: boolean
       message:
         description: Deprecation message
         required: false
@@ -170,6 +175,7 @@ jobs:
         with:
           version: ${{ inputs.version }}
           message: ${{ inputs.message }}
+          deprecate-range: ${{ inputs.deprecate-range }}
           token: ${{ secrets.NPM_TOKEN }}
       - name: Summary
         run: |

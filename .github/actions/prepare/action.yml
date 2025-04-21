@@ -31,7 +31,7 @@ runs:
 
         -   name: Install deps
             shell: bash
-            run: pnpm install ${{ inputs.with-frozen == 'true' && '--frozen-lockfile' || '' }}
+            run: pnpm install ${{ inputs.with-frozen == 'true' && '--frozen-lockfile' || '' }} ${{ inputs.dir != '.' && '--ignore-workspace' || '' }}
             working-directory: ${{ inputs.dir }}
 
         -   name: Set up Cypress binary cache

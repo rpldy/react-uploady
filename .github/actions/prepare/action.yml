@@ -2,6 +2,10 @@ name: "Prepare Node Env"
 description: "start node env with pnpm"
 
 inputs:
+    dir:
+        description: working directory
+        default: "."
+        required: false
     with-cypress:
         description: whether to cache cypress bin folder
         required: false
@@ -22,10 +26,12 @@ runs:
             with:
                 node-version: "20.15.1"
                 cache: "pnpm"
+                node-version-file: '${{ inputs.dir }}/.nvmrc'
 
         -   name: Install deps
             shell: bash
             run: pnpm install ${{ inputs.with-frozen == 'true' && '--frozen-lockfile' || '' }}
+            working-directory: ${{ inputs.dir }}
 
         -   name: Set up Cypress binary cache
             if: ${{ inputs.with-cypress == 'true' }}
@@ -33,3 +39,4 @@ runs:
             with:
                 path: ~/.cache/Cypress
                 key: ${{ runner.os }}-cypress-${{ hashFiles('pnpm-lock.yaml') }}
+            working-directory: ${{ inputs.dir }}

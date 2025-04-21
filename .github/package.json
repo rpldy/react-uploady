@@ -1,0 +1,10 @@
+{
+  "name": "uploady github workflows",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^6.0.0",
+    "js-yaml": "^4.1.0"
+  }
+}

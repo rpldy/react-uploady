@@ -1,0 +1,15 @@
+name: Save Uploady Versions to Workflow
+description: Fetch and save Uploady versions to workflow version input
+
+inputs:
+    workflow-file:
+        description: Path to workflow file
+        required: true
+    workflow-input:
+        description: Name of the input to update with version
+        default: "version"
+        required: false
+
+runs:
+    using: "node20"
+    main: "index.js"

@@ -1,6 +1,6 @@
+const { execSync } = require("child_process");
 const fs = require("fs");
 const core = require("@actions/core");
-// const github = require("@actions/github");
 const yaml = require("js-yaml");
 
 const MAX_VERSIONS_STORED = 50;
@@ -31,11 +31,38 @@ const saveFlowYaml = (doc, wfPath) => {
     }
 };
 
+const fetchNonDeprecatedVersions = () => {
+    console.log("Fetching versions from npm for @rpldy/uploady...");
+
+    try {
+        // Get package info including versions and deprecated info
+        const packageInfoStr = execSync("npm view @rpldy/uploady --json", { encoding: "utf8" });
+        const packageInfo = JSON.parse(packageInfoStr);
+
+        // Extract all versions
+        const allVersions = packageInfo.versions;
+
+        // Extract deprecated versions object (if exists)
+        const deprecated = packageInfo.deprecated || {};
+
+        // Filter out deprecated versions
+        const nonDeprecated = allVersions.filter(version => !deprecated[version]);
+
+        console.log(`Found ${nonDeprecated.length} non-deprecated versions`);
+        return nonDeprecated;
+    } catch (error) {
+        console.error("Error fetching versions from npm:", error);
+        throw new Error("Failed to fetch versions from npm");
+    }
+};
+
 const main = () => {
     try {
         const wfFile = core.getInput("workflow-file");
         const wfInputName = core.getInput("workflow-input") || "version";
-        const nonDeprecatedVersions = JSON.parse(process.env.NON_DEPRECATED_VERSIONS || "[]");
+
+        // Fetch versions directly in the action
+        const nonDeprecatedVersions = fetchNonDeprecatedVersions();
 
         if (nonDeprecatedVersions.length) {
             const doc = loadFlowYaml(wfFile);

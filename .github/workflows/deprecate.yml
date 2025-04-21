@@ -41,28 +41,7 @@ jobs:
                   with-frozen: false
                   dir: ./.github
 
-            -   name: Fetch non-deprecated versions
-                id: fetch-versions
-                run: |
-                    # Fetch all versions from npm for @rpldy/uploady
-                    echo "Fetching versions from npm for @rpldy/uploady..."
-
-                    # Get package info including versions and deprecated info
-                    PACKAGE_INFO=$(npm view @rpldy/uploady --json)
-
-                    # Extract all versions (guaranteed to be valid JSON array)
-                    ALL_VERSIONS=$(echo "$PACKAGE_INFO" | jq -r '.versions')
-
-                    # Extract deprecated versions object (if exists)
-                    DEPRECATED=$(echo "$PACKAGE_INFO" | jq -r 'if has("deprecated") then .deprecated else {} end')
-
-                    # Filter out deprecated versions
-                    NON_DEPRECATED=$(echo "$ALL_VERSIONS" | jq -r --argjson deprecated "$DEPRECATED" '[.[] | select($deprecated[.] == null)]')
-
-                    echo "NON_DEPRECATED_VERSIONS=$NON_DEPRECATED" >> $GITHUB_OUTPUT
-                    echo "Found non-deprecated versions: $NON_DEPRECATED"
-
-            - name: Update workflow file
+            - name: Fetch versions & Update workflow file
               uses: ./.github/actions/save-versions-to-wf
               with:
                   workflow-file: ./.github/workflows/deprecate.yml

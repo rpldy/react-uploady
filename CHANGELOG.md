@@ -9,7 +9,7 @@
 ### Bug fixes
 
 - `[uploader]` - fix: get batchOptions from itemBatchOptions in processFinishedRequest. Fix for [#831](https://github.com/rpldy/react-uploady/issues/831) (thanks [alc0034](https://github.com/alc0034))
-- `[tus-sender]` - fix: pass destination headers in tus finalize request. Fix for [#836]((https://github.com/rpldy/react-uploady/836)
+- `[tus-sender]` - fix: pass destination headers in tus finalize request. Fix for [#836](https://github.com/rpldy/react-uploady/836)
 
 ### Internal
 

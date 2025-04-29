@@ -10,6 +10,9 @@ defaults:
     run:
         shell: bash
 
+permissions:
+    contents: read
+
 jobs:
     publish:
         name: Publish Uploady Storybook
@@ -32,11 +35,3 @@ jobs:
                   NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
                 run: |
                     pnpm netlify deploy --prod --debug --cwd .sb-static
-
-
-                #netlify deploy --trigger
-#                  NETLIFY_DEPLOY_MESSAGE: "Deployed from GitHub action"
-#                  NETLIFY_DEPLOY_TO_PROD: true
-#                  install_command: "echo Skipping installing the dependencies"
-#                  build_command: "echo Skipping building the web files"
-

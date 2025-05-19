@@ -1,3 +1,6 @@
+<a href="https://opencollective.com/react-uploady">
+    <img src="https://img.shields.io/opencollective/all/react-uploady?style=flat&logo=opencollective&label=Support%20us!&color=blue" alt="Support on Open Collective"/>
+</a>
 <a href="https://badge.fury.io/js/%40rpldy%2Fretry-hooks">
     <img src="https://badge.fury.io/js/%40rpldy%2Fretry-hooks.svg" alt="npm version" height="20"></a>
 <a href="https://github.com/rpldy/react-uploady/actions/workflows/pr.yml">
@@ -6,7 +9,7 @@
     <img src="https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg" alt="codecov status"/></a> 
 <a href="https://bundlephobia.com/result?p=@rpldy/retry-hooks">
     <img src="https://badgen.net/bundlephobia/minzip/@rpldy/retry-hooks" alt="bundlephobia badge"/></a>
-<a href="https://react-uploady-storybook.netlify.com/?path=/story/retry-hooks--with-retry">
+<a href="https://react-uploady-storybook.netlify.app/?path=/docs/ui-retry-hooks--docs">
    <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/></a> 
    
 # Retry-Hooks

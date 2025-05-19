@@ -4,6 +4,9 @@
 <p align="center">Modern file-upload components & hooks for React.</p>
 
 <p align="center">
+    <a href="https://opencollective.com/react-uploady">
+        <img src="https://img.shields.io/opencollective/all/react-uploady?style=flat&logo=opencollective&label=Support%20us!&color=blue" alt="Support on Open Collective"/>
+    </a>
     <a href="https://badge.fury.io/js/%40rpldy%2Fuploady">
         <img src="https://badge.fury.io/js/%40rpldy%2Fuploady.svg" alt="npm version" height="20">
     </a>
@@ -13,7 +16,7 @@
     <a href="https://codecov.io/gh/rpldy/react-uploady">
       <img src="https://codecov.io/gh/rpldy/react-uploady/branch/master/graph/badge.svg" alt="codecov status"/>
     </a>
-    <a href="https://react-uploady-storybook.netlify.com">
+    <a href="https://react-uploady-storybook.netlify.app/">
        <img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg" alt="rpldy storybook"/>
     </a>  
     <a href="https://lerna.js.org/">
@@ -253,7 +256,7 @@ const App = () => (<ChunkedUploady
 
 ```
 
-> Find more (advanced) examples in our [guides](https://react-uploady.org/docs/guides/) and [storybook](https://react-uploady-storybook.netlify.com/).
+> Find more (advanced) examples in our [guides](https://react-uploady.org/docs/guides/) and [storybook](https://react-uploady-storybook.netlify.app/).
 
 ## Important Concepts
 

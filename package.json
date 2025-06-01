@@ -156,7 +156,7 @@
     "webpack-merge": "^6.0.1",
     "webpack-virtual-modules": "^0.6.2",
     "xml2js": "^0.6.2",
-    "yargs": "^17.7.2"
+    "yargs": "^18.0.0"
   },
   "optionalDependencies": {
     "fsevents": "^2.3.3"

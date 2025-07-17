@@ -66,10 +66,10 @@ React-Uploady has a small footprint (by design) with very few (tiny) dependencie
 
 | Bundle                      | Minified size | GZipped size |
 |-----------------------------|---------------|--------------|
-| core                        | 29.1KB        | 10.5KB       |        
-| core + ui                   | 36.9KB        | 13.3KB       |      
-| core + ui + chunked support | 44.1KB        | 15.7KB       |    
-| everything                  | 71.0KB        | 22.9KB       |    
+| core                        | 19.1KB        | 6.91KB       |        
+| core + ui                   | 27.7KB        | 10.09KB      |      
+| core + ui + chunked support | 35.07KB       | 12.51KB      |    
+| everything                  | 75.4KB        | 24.08KB      |    
 
 ## Documentation
 

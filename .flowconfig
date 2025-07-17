@@ -42,10 +42,18 @@ module.name_mapper='^@storybook/addon-knobs' -> '<PROJECT_ROOT>/node_modules/@st
 module.name_mapper='^react-aria-components$' -> '<PROJECT_ROOT>/packages/ui/upload-drop-zone/node_modules/react-aria-components/dist/main.js'
 
 #dealing with pnpm workspace deps protocol
-module.name_mapper='^@rpldy/uploady$' -> '<PROJECT_ROOT>/packages/ui/uploady/src/index.js'
 module.name_mapper='^@rpldy/shared$' -> '<PROJECT_ROOT>/packages/core/shared/src/index.js'
-module.name_mapper='^@rpldy/uploader$' -> '<PROJECT_ROOT>/packages/core/uploader/src/index.js'
 module.name_mapper='^@rpldy/life-events$' -> '<PROJECT_ROOT>/packages/core/life-events/src/index.js'
+module.name_mapper='^@rpldy/simple-state$' -> '<PROJECT_ROOT>/packages/core/simple-state/src/index.js'
+module.name_mapper='^@rpldy/safe-storage$' -> '<PROJECT_ROOT>/packages/core/safe-storage/src/index.js'
+module.name_mapper='^@rpldy/raw-uploader$' -> '<PROJECT_ROOT>/packages/core/raw-uploader/src/index.js'
+module.name_mapper='^@rpldy/abort$' -> '<PROJECT_ROOT>/packages/core/abort/src/index.js'
+module.name_mapper='^@rpldy/sender$' -> '<PROJECT_ROOT>/packages/core/sender/src/index.js'
+module.name_mapper='^@rpldy/chunked-sender$' -> '<PROJECT_ROOT>/packages/core/chunked-sender/src/index.js'
+module.name_mapper='^@rpldy/uploader$' -> '<PROJECT_ROOT>/packages/core/uploader/src/index.js'
+
+module.name_mapper='^@rpldy/uploady$' -> '<PROJECT_ROOT>/packages/ui/uploady/src/index.js'
+module.name_mapper='^@rpldy/shared-ui$' -> '<PROJECT_ROOT>/packages/ui/shared/src/index.js'
 
 #tricking flow so it doesnt complain about not able to import README files in storybook
 module.name_mapper='README.md$' -> '<PROJECT_ROOT>/node_modules/react/index.js'

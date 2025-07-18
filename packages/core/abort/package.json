@@ -22,9 +22,9 @@
     "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
-    "@rpldy/raw-uploader": "^1.10.0",
-    "@rpldy/shared": "^1.10.0",
-    "@rpldy/simple-state": "^1.10.0"
+    "@rpldy/raw-uploader": "workspace:*",
+    "@rpldy/shared": "workspace:*",
+    "@rpldy/simple-state": "workspace:*"
   },
   "devDependencies": {
     "flow-bin": "^0.274.2"

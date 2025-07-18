@@ -32,15 +32,15 @@
     "access": "public"
   },
   "dependencies": {
-    "@rpldy/chunked-sender": "^1.10.0",
-    "@rpldy/safe-storage": "^1.10.0",
-    "@rpldy/sender": "^1.10.0",
-    "@rpldy/shared": "^1.10.0",
-    "@rpldy/simple-state": "^1.10.0"
+    "@rpldy/chunked-sender": "workspace:*",
+    "@rpldy/safe-storage": "workspace:*",
+    "@rpldy/sender": "workspace:*",
+    "@rpldy/shared": "workspace:*",
+    "@rpldy/simple-state": "workspace:*"
   },
   "devDependencies": {
-    "@rpldy/life-events": "^1.10.0",
-    "@rpldy/uploader": "^1.10.0",
+    "@rpldy/life-events": "workspace:*",
+    "@rpldy/uploader": "workspace:*",
     "flow-bin": "^0.274.2"
   }
 }

@@ -32,7 +32,7 @@
     "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
-    "@rpldy/shared-ui": "^1.10.0"
+    "@rpldy/shared-ui": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=16.8"

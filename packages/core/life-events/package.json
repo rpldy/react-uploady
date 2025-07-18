@@ -27,7 +27,7 @@
     "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
-    "@rpldy/shared": "^1.10.0"
+    "@rpldy/shared": "workspace:*"
   },
   "devDependencies": {
     "flow-bin": "^0.274.2"

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.11.0 (2025-07-18)
+
+### Docs
+
+- `all` - add support badges in readmes
+  
+### Internal
+
+- `all` - upgrade several dev deps
+
+
+
 ## 1.10.0 (2025-04-18)
 
 ### Features

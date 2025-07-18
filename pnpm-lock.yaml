@@ -322,14 +322,14 @@ importers:
   packages/core/abort:
     dependencies:
       '@rpldy/raw-uploader':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../raw-uploader
       '@rpldy/shared':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../shared
       '@rpldy/simple-state':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../simple-state
     devDependencies:
       flow-bin:
         specifier: ^0.274.2
@@ -338,21 +338,21 @@ importers:
   packages/core/chunked-sender:
     dependencies:
       '@rpldy/sender':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../sender
       '@rpldy/shared':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../shared
       '@rpldy/simple-state':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../simple-state
     devDependencies:
       '@rpldy/life-events':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../life-events
       '@rpldy/uploader':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../uploader
       flow-bin:
         specifier: ^0.274.2
         version: 0.274.2
@@ -360,8 +360,8 @@ importers:
   packages/core/life-events:
     dependencies:
       '@rpldy/shared':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../shared
     devDependencies:
       flow-bin:
         specifier: ^0.274.2
@@ -370,15 +370,15 @@ importers:
   packages/core/mock-sender:
     dependencies:
       '@rpldy/shared':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../shared
     devDependencies:
       '@rpldy/sender':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../sender
       '@rpldy/uploader':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../uploader
       flow-bin:
         specifier: ^0.274.2
         version: 0.274.2
@@ -386,11 +386,11 @@ importers:
   packages/core/raw-uploader:
     dependencies:
       '@rpldy/life-events':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../life-events
       '@rpldy/shared':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../shared
     devDependencies:
       flow-bin:
         specifier: ^0.274.2
@@ -399,14 +399,14 @@ importers:
   packages/core/retry:
     dependencies:
       '@rpldy/shared':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../shared
       '@rpldy/simple-state':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../simple-state
       '@rpldy/uploader':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../uploader
     devDependencies:
       flow-bin:
         specifier: ^0.274.2
@@ -415,8 +415,8 @@ importers:
   packages/core/safe-storage:
     dependencies:
       '@rpldy/shared':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../shared
     devDependencies:
       flow-bin:
         specifier: ^0.274.2
@@ -425,8 +425,8 @@ importers:
   packages/core/sender:
     dependencies:
       '@rpldy/shared':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../shared
     devDependencies:
       flow-bin:
         specifier: ^0.274.2
@@ -448,8 +448,8 @@ importers:
   packages/core/simple-state:
     dependencies:
       '@rpldy/shared':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../shared
     devDependencies:
       flow-bin:
         specifier: ^0.274.2
@@ -458,27 +458,27 @@ importers:
   packages/core/tus-sender:
     dependencies:
       '@rpldy/chunked-sender':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../chunked-sender
       '@rpldy/safe-storage':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../safe-storage
       '@rpldy/sender':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../sender
       '@rpldy/shared':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../shared
       '@rpldy/simple-state':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../simple-state
     devDependencies:
       '@rpldy/life-events':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../life-events
       '@rpldy/uploader':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../uploader
       flow-bin:
         specifier: ^0.274.2
         version: 0.274.2
@@ -486,23 +486,23 @@ importers:
   packages/core/uploader:
     dependencies:
       '@rpldy/abort':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../abort
       '@rpldy/life-events':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../life-events
       '@rpldy/raw-uploader':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../raw-uploader
       '@rpldy/sender':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../sender
       '@rpldy/shared':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../shared
       '@rpldy/simple-state':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../simple-state
     devDependencies:
       flow-bin:
         specifier: ^0.274.2
@@ -511,8 +511,8 @@ importers:
   packages/native/native-uploady:
     dependencies:
       '@rpldy/shared-ui':
-        specifier: ^1.10.0
-        version: 1.10.0(react@18.3.1)
+        specifier: workspace:*
+        version: link:../../ui/shared
     devDependencies:
       flow-bin:
         specifier: ^0.274.2
@@ -794,8 +794,8 @@ importers:
         version: link:../shared
     devDependencies:
       '@rpldy/uploady':
-        specifier: ^1.10.0
-        version: 1.10.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:../uploady
       flow-bin:
         specifier: ^0.274.2
         version: 0.274.2
@@ -3081,44 +3081,6 @@ packages:
     resolution: {integrity: sha512-bwspbWB04XJpeElvsp+DCylKfF4trJDa2Y9Go8O6A7YLX2LIKGcNK/CYImJN6ZP4DcuOHB4Utl3iCbnR62DudA==}
     cpu: [x64]
     os: [win32]
-
-  '@rpldy/abort@1.10.0':
-    resolution: {integrity: sha512-2eRI6ItgnlOopmecnqWxqf/bI0GSaWk1jiZ6nDPRamdqKiBZVDBqPoK1tf6ttPtKPtPfIB2qTQujeTZ4qeZPiA==}
-
-  '@rpldy/chunked-sender@1.10.0':
-    resolution: {integrity: sha512-oo4XAyM1QEuM4AJvGBFPIXxzh32AgixA7g29CGgq09vk5piCR8G2xSBBVc5Rq2/1uE81UaMPmeVGsMlHcucSUQ==}
-
-  '@rpldy/life-events@1.10.0':
-    resolution: {integrity: sha512-LIBK7zZoLtuu62tz/zek3Imv0bhCOOUm30WtILCXriFnHMKCFoe15qdCtJEA9N4T/pJ6uZ2cRGQMhQD+FE1RzQ==}
-
-  '@rpldy/raw-uploader@1.10.0':
-    resolution: {integrity: sha512-RxW1GLzLB7OLQjOtUQPcVitqlRcF9u06TDk9Cqs0YMfEQ6jyw1ztguIaVdJpg0aVb7/ZTz9FCBJWZm5pllYl0Q==}
-
-  '@rpldy/safe-storage@1.10.0':
-    resolution: {integrity: sha512-it6dM7m5Daak5TZh4tpJsAwnrJu0uqfvqOdPl37YU5D8YlCjKLaSbKaccQnmXP6tYU7K2mpn1wq8AVYPjh+stQ==}
-
-  '@rpldy/sender@1.10.0':
-    resolution: {integrity: sha512-aHmBlnMP9Nb5LKn2TUg8dc53nKBiChOjNgJE2KsxJoIuYLydN9B8Ign5ODnjWuYbvCdOjCmKJkRhdnpXSxvbMg==}
-
-  '@rpldy/shared-ui@1.10.0':
-    resolution: {integrity: sha512-qhqFs9ji7FKOKAnMOe4QFoquKxFM0rYctsD39QK2CsJN6hiauCBZaSOQlFncXkvwRSb8zgVKK25F3A93WJOnwQ==}
-    peerDependencies:
-      react: '>=16.8'
-
-  '@rpldy/shared@1.10.0':
-    resolution: {integrity: sha512-2Fqcq1AEILh2nS7m5ML4/HtfU1djjbdf/W7Or4raugtPpNTv7j2J9stTCU0t70udjEQ+01GE47PuQaHlkTGg3g==}
-
-  '@rpldy/simple-state@1.10.0':
-    resolution: {integrity: sha512-gPxpzIRfh6659VsWkm4Rw4V9DymN7xNX1VeJYww9rMjHtK3nAynJCx3qHYdOIh59opDzKgWVa+bAdDnecIhdOA==}
-
-  '@rpldy/uploader@1.10.0':
-    resolution: {integrity: sha512-V3tRLuKw4PpXDr/bGNO0HJhdlrk5Z7Xudi70q64Zb9i/tL4Uaxuqcc52w47J7daUzMGVU2pbFKRMtlsdLWbdsQ==}
-
-  '@rpldy/uploady@1.10.0':
-    resolution: {integrity: sha512-OTCGqZuPlK2MkGmi2KcQfW8neqrGtB9hxZSJOqDdcgGmdRd3+rInTYpOLRzWDma4MU8stuwxsnaJejKLWW6jPQ==}
-    peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
 
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
@@ -12255,68 +12217,6 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.40.2':
     optional: true
-
-  '@rpldy/abort@1.10.0':
-    dependencies:
-      '@rpldy/raw-uploader': 1.10.0
-      '@rpldy/shared': 1.10.0
-      '@rpldy/simple-state': 1.10.0
-
-  '@rpldy/chunked-sender@1.10.0':
-    dependencies:
-      '@rpldy/sender': 1.10.0
-      '@rpldy/shared': 1.10.0
-      '@rpldy/simple-state': 1.10.0
-
-  '@rpldy/life-events@1.10.0':
-    dependencies:
-      '@rpldy/shared': 1.10.0
-
-  '@rpldy/raw-uploader@1.10.0':
-    dependencies:
-      '@rpldy/life-events': 1.10.0
-      '@rpldy/shared': 1.10.0
-
-  '@rpldy/safe-storage@1.10.0':
-    dependencies:
-      '@rpldy/shared': 1.10.0
-
-  '@rpldy/sender@1.10.0':
-    dependencies:
-      '@rpldy/shared': 1.10.0
-
-  '@rpldy/shared-ui@1.10.0(react@18.3.1)':
-    dependencies:
-      '@rpldy/shared': 1.10.0
-      '@rpldy/uploader': 1.10.0
-      react: 18.3.1
-
-  '@rpldy/shared@1.10.0':
-    dependencies:
-      invariant: 2.2.4
-      just-throttle: 4.2.0
-
-  '@rpldy/simple-state@1.10.0':
-    dependencies:
-      '@rpldy/shared': 1.10.0
-
-  '@rpldy/uploader@1.10.0':
-    dependencies:
-      '@rpldy/abort': 1.10.0
-      '@rpldy/life-events': 1.10.0
-      '@rpldy/raw-uploader': 1.10.0
-      '@rpldy/sender': 1.10.0
-      '@rpldy/shared': 1.10.0
-      '@rpldy/simple-state': 1.10.0
-
-  '@rpldy/uploady@1.10.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@rpldy/life-events': 1.10.0
-      '@rpldy/shared': 1.10.0
-      '@rpldy/shared-ui': 1.10.0(react@18.3.1)
-      '@rpldy/uploader': 1.10.0
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
 
   '@rtsao/scc@1.1.0': {}
 

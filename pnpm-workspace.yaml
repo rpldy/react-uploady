@@ -2,3 +2,4 @@ packages:
     - "packages/core/*"
     - "packages/ui/*"
     - "packages/native/*"
+linkWorkspacePackages: true

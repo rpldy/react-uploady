@@ -1,5 +1,5 @@
 {
-  "version": "1.10.0",
+  "version": "1.11.0",
   "name": "@rpldy/raw-uploader",
   "description": "placeholder package for now",
   "author": "yoav niran (https://github.com/yoavniran)",
@@ -29,8 +29,8 @@
     "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
-    "@rpldy/life-events": "^1.10.0",
-    "@rpldy/shared": "^1.10.0"
+    "@rpldy/life-events": "workspace:*",
+    "@rpldy/shared": "workspace:*"
   },
   "devDependencies": {
     "flow-bin": "^0.274.2"

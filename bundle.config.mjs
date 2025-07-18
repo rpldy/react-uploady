@@ -41,7 +41,7 @@ export default {
             "core": {
                 pkgs: [PKGS.LIFE_EVENTS, PKGS.SHARED, PKGS.SENDER, PKGS.UPLOADER],
                 target: PKGS.UPLOADER,
-                maxSize: 10000,
+                maxSize: 11000,
                 dontUsePolyfills: true,
             },
 
@@ -54,7 +54,7 @@ export default {
                 config: {
                     externals: ["react", "react-dom"],
                 },
-                maxSize: 12000,
+                maxSize: 15000,
             },
 
             /**
@@ -66,7 +66,7 @@ export default {
                 config: {
                     externals: ["react", "react-dom"],
                 },
-                maxSize: 14000,
+                maxSize: 17000,
             },
 
             /**

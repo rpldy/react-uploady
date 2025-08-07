@@ -130,8 +130,8 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2
       babel-plugin-syntax-hermes-parser:
-        specifier: ^0.29.1
-        version: 0.29.1
+        specifier: ^0.31.0
+        version: 0.31.0
       babel-plugin-transform-flow-enums:
         specifier: ^0.0.2
         version: 0.0.2(@babel/core@7.28.0)
@@ -4109,8 +4109,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
 
-  babel-plugin-syntax-hermes-parser@0.29.1:
-    resolution: {integrity: sha512-2WFYnoWGdmih1I1J5eIqxATOeycOqRwYxAQBu3cUu/rhwInwHUg7k60AFNbuGjSDL8tje5GDrAnxzRLcu2pYcA==}
+  babel-plugin-syntax-hermes-parser@0.31.0:
+    resolution: {integrity: sha512-4wfPYqYmC3VJwu84CJ0X4PoNL/AMZiurdOcDUV78FNxuLPiBTjTMhwJtRcIS2s0S40zNB3hW5gcgZg9+fCGPZg==}
 
   babel-plugin-transform-flow-enums@0.0.2:
     resolution: {integrity: sha512-g4aaCrDDOsWjbm0PUUeVnkcVd6AKJsVc/MbnPhEotEpkeJQP6b8nzewohQi7+QS8UyPehOhGWn0nOwjvWpmMvQ==}
@@ -5779,8 +5779,14 @@ packages:
   hermes-estree@0.29.1:
     resolution: {integrity: sha512-jl+x31n4/w+wEqm0I2r4CMimukLbLQEYpisys5oCre611CI5fc9TxhqkBBCJ1edDG4Kza0f7CgNz8xVMLZQOmQ==}
 
+  hermes-estree@0.31.0:
+    resolution: {integrity: sha512-Y6/esCKvrWHgAGABeP0PzjHHFr7gXn/fA+5hpeRc51k0LDqPLxfxKgnxSIWUGiLBM3+OvV27nCW0kc99+V2+hQ==}
+
   hermes-parser@0.29.1:
     resolution: {integrity: sha512-xBHWmUtRC5e/UL0tI7Ivt2riA/YBq9+SiYFU7C1oBa/j2jYGlIF9043oak1F47ihuDIxQ5nbsKueYJDRY02UgA==}
+
+  hermes-parser@0.31.0:
+    resolution: {integrity: sha512-M3bdvNBKA/F4r0M6k2taRj7yemj3oExAWePAEpKLK+fNGHRXXSg5vB3eqB6j4Or++cmqisRyPr/lTSFiIhTkVw==}
 
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
@@ -13514,9 +13520,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  babel-plugin-syntax-hermes-parser@0.29.1:
+  babel-plugin-syntax-hermes-parser@0.31.0:
     dependencies:
-      hermes-parser: 0.29.1
+      hermes-parser: 0.31.0
 
   babel-plugin-transform-flow-enums@0.0.2(@babel/core@7.28.0):
     dependencies:
@@ -15514,9 +15520,15 @@ snapshots:
 
   hermes-estree@0.29.1: {}
 
+  hermes-estree@0.31.0: {}
+
   hermes-parser@0.29.1:
     dependencies:
       hermes-estree: 0.29.1
+
+  hermes-parser@0.31.0:
+    dependencies:
+      hermes-estree: 0.31.0
 
   hoist-non-react-statics@3.3.2:
     dependencies:

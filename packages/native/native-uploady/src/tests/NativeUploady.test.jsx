@@ -10,6 +10,6 @@ describe("NativeUploady tests", () => {
     it("should render NativeUploady", () => {
         render(<NativeUploady debug autoUpload/>);
 
-        expect(NoDomUploady).toHaveBeenCalledWith({ debug: true, autoUpload: true }, {});
+        expect(NoDomUploady).toHaveBeenCalledWith({ debug: true, autoUpload: true }, undefined);
     });
 });

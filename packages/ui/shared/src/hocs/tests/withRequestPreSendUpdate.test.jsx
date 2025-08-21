@@ -64,14 +64,14 @@ describe("withBatchStartUpdate tests", () => {
 			name: "bob",
 			requestData: null,
 			updateRequest: null,
-		}, {});
+		}, undefined);
 
 		expect(MockComp).toHaveBeenCalledWith({
 			id: "bi1",
 			name: "bob",
 			requestData,
 			updateRequest: expect.any(Function),
-		}, {});
+		}, undefined);
 
 		expect(UploadyContextMock.on)
 			.toHaveBeenCalledWith(UPLOADER_EVENTS.REQUEST_PRE_SEND, expect.any(Function));
@@ -114,7 +114,7 @@ describe("withBatchStartUpdate tests", () => {
 			name: "bob",
 			requestData: null,
 			updateRequest: null,
-		}, {});
+		}, undefined);
 	});
 
 	it("should unregister handler on id change", () => {

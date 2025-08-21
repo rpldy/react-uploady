@@ -55,6 +55,7 @@ export default defineConfig({
                     "babel-plugin-syntax-hermes-parser",
                 ],
                 parserOpts: { flow: "all" },
+                sourceMaps: "inline",
                 presets: [
                     [
                         "@babel/env",
@@ -71,6 +72,9 @@ export default defineConfig({
             },
         }),
     ],
+    build: {
+        sourcemap: true,
+    },
     test: {
         environment: "jsdom",
         globals: true,
@@ -91,6 +95,8 @@ export default defineConfig({
             include: ["packages/**/src/**/*.js?(x)"],
             exclude: ["**/*.mock.*", "**/types.js", "packages/**/src/index.js", "**/*.test.js?(x)"],
         },
+        css: false, // can help with source map accuracy
+        reporters: ["verbose"],
     },
     resolve: {
         alias: createPackageAliases()

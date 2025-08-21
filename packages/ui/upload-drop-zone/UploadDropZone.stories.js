@@ -562,16 +562,15 @@ const StyledModalOverlay = styled(ModalOverlay)`
 const StyledModalDropZone = styled(UploadDropZone)`
     .dropIndicator {
         display: none;
+        position: fixed;
+        z-index: 101;
+        border: 5px solid yellow;
+        inset: 0;
     }
 
     &.modal-drop-zone-over {
         .dropIndicator {
             display: block;
-            position: fixed;
-            z-index: 101;
-            border: 5px solid yellow;
-            inset: 0;
-            transition: border 250ms;
         }
     }
 

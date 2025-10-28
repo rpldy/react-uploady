@@ -1,6 +1,11 @@
 // @flow
 import type { UploadyProps } from "@rpldy/shared-ui";
-import type { TusOptions, ResumeStartEventData } from "@rpldy/tus-sender";
+import type {
+    TusOptions,
+    ResumeStartEventData,
+    PartStartEventData,
+    PartStartResponseData
+} from "@rpldy/tus-sender";
 
 export type TusUploadyProps = {|
 	...UploadyProps,
@@ -13,3 +18,5 @@ export type ResumeStartEventResponse = void | boolean | {
 };
 
 export type TusResumeStartListenerHook = (cb: (data: ResumeStartEventData ) => ResumeStartEventResponse) => void;
+
+export type TusPartStartListenerHook = (cb: (data: PartStartEventData ) => PartStartResponseData | Promise<PartStartResponseData>) => void;

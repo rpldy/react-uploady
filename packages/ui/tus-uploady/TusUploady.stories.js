@@ -1,5 +1,6 @@
 // @flow
 import React, { useState } from "react";
+import { isFunction } from "lodash"
 import UploadButton from "@rpldy/upload-button";
 import {
     getCsfExport,
@@ -20,6 +21,7 @@ import TusUploady, {
     composeEnhancers,
     useTusResumeStartListener,
     useClearResumableStore,
+    useTusPartStartListener,
 } from "./src";
 
 import Readme from "./TusUploady.storydoc.mdx";
@@ -74,6 +76,50 @@ const ItemProgress = () => {
     );
 };
 
+type ExtOptions = {
+    chunkSize?: number,
+    parallel?: number,
+    resumeStartData?: any,
+    partStartData?: any,
+    preSendData?: any,
+    tusCancelResume?: boolean,
+};
+
+// const StoryTusResumeStartHandler = ({ extOptions }) => {
+//     useTusResumeStartListener((data) => {
+//         if (isFunction(extOptions?.resumeStartData)) {
+//             return extOptions.resumeStartData(data);
+//         }
+//         return extOptions?.resumeStartData;
+//     });
+//
+//     return null;
+// };
+
+const StoryTusPartStartHandler = ({ extOptions }: { extOptions: ExtOptions }) => {
+    useTusPartStartListener((data) => {
+        let result;
+        if (typeof extOptions?.partStartData === "function") {
+            result = extOptions.partStartData(data);
+        }
+        return result || {};
+    });
+
+    return null;
+};
+
+const StoryPreSendFromExtOptions = ({ extOptions }: { extOptions: ExtOptions }) => {
+    useRequestPreSend((data) => {
+        let result;
+        if (typeof extOptions?.preSendData === "function") {
+            result = extOptions.preSendData(data);
+        }
+        return result || {};
+    });
+
+    return null;
+};
+
 export const Simple: UploadyStory = createUploadyStory(
     ({
          destination,
@@ -103,6 +149,8 @@ export const Simple: UploadyStory = createUploadyStory(
                 ignoreModifiedDateInStorage={ignoreModifiedDateInStorage}
                 sendDataOnCreate={sendDataOnCreate}
             >
+                {extOptions && <StoryPreSendFromExtOptions extOptions={extOptions} />}
+                {extOptions && <StoryTusPartStartHandler extOptions={extOptions} />}
                 <UploadButton id="upload-button">Upload with TUS</UploadButton>
                 <br/>
                 <AbortButton/>

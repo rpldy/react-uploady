@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import type { TusResumeStartEventData } from "@rpldy/tus-sender";
-import TusUploady, { useClearResumableStore, useTusResumeStartListener } from "./index";
+import TusUploady, { useClearResumableStore, useTusResumeStartListener, useTusPartStartListener } from "./index";
 
 const TusEventsHandler = () => {
     useTusResumeStartListener(({ url, item }: TusResumeStartEventData) => {
@@ -9,6 +9,18 @@ const TusEventsHandler = () => {
         return {
             resumeHeaders: {
                 "x-auth": "123",
+            }
+        };
+    });
+
+    useTusPartStartListener(({ url, item, chunk, headers }) => {
+        console.log(`about to start part ${item.id}-${chunk.index} at url: ${url}`);
+
+        return {
+            url: url + `?part=${chunk.index + 1}`,
+            headers: {
+                "authorization": headers["authorization"] + chunk.id,
+                "x-part": `${chunk.index + 1}`,
             }
         };
     });

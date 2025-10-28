@@ -53,4 +53,9 @@ export type TusState = {
 	updateState: ((State) => void) => State,
 };
 
-export type { ResumeStartEventData, ResumeStartEventResponse } from "./tusSender/types";
+export type {
+    ResumeStartEventData,
+    ResumeStartEventResponse,
+    PartStartEventData,
+    PartStartResponseData,
+} from "./tusSender/types";

@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    optionalDependencies:
+      fsevents:
+        specifier: ^2.3.3
+        version: 2.3.3
     devDependencies:
       '@actions/core':
         specifier: ^1.11.1
@@ -314,10 +318,6 @@ importers:
       yargs:
         specifier: ^18.0.0
         version: 18.0.0
-    optionalDependencies:
-      fsevents:
-        specifier: ^2.3.3
-        version: 2.3.3
 
   packages/core/abort:
     dependencies:

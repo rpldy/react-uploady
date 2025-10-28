@@ -1,5 +1,6 @@
 // @flow
 import type { BatchItem, UploadData } from "@rpldy/shared";
+import type { ChunkEventData } from "@rpldy/chunked-sender";
 
 export type ParallelPartData = {
     identifier: string,
@@ -45,5 +46,17 @@ export type ResumeStartEventResponse = {
     url?: string,
     resumeHeaders?: Object,
 };
+
+export type PartStartEventData = {
+    url: string,
+    item: BatchItem,
+    headers: Object,
+    chunk: ChunkEventData;
+};
+
+export type PartStartResponseData = {
+    url?: string,
+    headers?: Object,
+}
 
 export type InitRequestResult = {|abort: () => boolean, request: Promise<UploadData>|};

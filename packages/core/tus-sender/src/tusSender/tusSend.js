@@ -77,7 +77,7 @@ const getTusSend = (
             //ignore this upload - let the chunked sender handle it
             result = getChunkedSender(tusState, trigger).send(items, url, sendOptions, onProgress);
         } else {
-            handleEvents(uploader, tusState);
+            handleEvents(uploader, tusState, trigger);
 
             //TUS only supports a single file upload (no grouping)
             logger.debugLog(`tusSender: sending file using TUS protocol`);

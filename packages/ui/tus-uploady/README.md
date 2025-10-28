@@ -116,6 +116,42 @@ const MyComponent = () => {
 
 ```
 
+### useTusPartStartListener
+
+Called before a (PATCH) request is issued to upload a chunk (part) of a file.
+
+Receives an object with:
+
+- url: the URL the PATCH request will be sent to
+- item: the BatchItem being sent
+- headers: the headers that will be sent with the request
+- chunk: the chunk info (start, end, chunkSize)
+
+May return nothing or an [object](https://react-uploady.org/docs/api/types/#tuspartstarteventresponse) with:
+- `url` property to overwrite the URL the request will be sent to
+- `headers` object that will be merged with the headers that will be sent with the request.
+
+```javascript
+import React from "react";
+import { useTusPartStartListener } from "@rpldy/tus-uploady";
+
+const MyComponent = () => {
+    useTusPartStartListener(({ url, item, resumeHeaders }) => {
+        const { chunk } = data;
+        const authHeaderVal = data.headers["Authorization"];
+
+        return {
+            headers: {
+                "Authorization": authHeaderVal + "-part-" + (chunk.index + 1),
+            }
+        };
+    });
+
+	//...
+};
+```
+
+
 ### useClearResumableStore
 
 By default, the tus-sender will store the URLs for uploaded files so it can query

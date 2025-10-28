@@ -1,12 +1,13 @@
 // @flow
-import { logger } from "@rpldy/shared";
+import { logger, triggerUpdater, getMerge, merge, isPlainObject } from "@rpldy/shared";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { CHUNKING_SUPPORT, CHUNK_EVENTS, } from "@rpldy/chunked-sender";
 import { removeResumable } from "../resumableStore";
-import { SUCCESS_CODES } from "../consts";
+import { SUCCESS_CODES, TUS_EVENTS } from "../consts";
 import { getHeadersWithoutContentRange } from "./utils";
 
 import type { BatchItem } from "@rpldy/shared";
+import type { TriggerMethod } from "@rpldy/life-events";
 import type { UploaderCreateOptions, UploaderType } from "@rpldy/uploader";
 import type {
     ChunkStartEventData,
@@ -14,8 +15,9 @@ import type {
     ChunkEventData,
 } from "@rpldy/chunked-sender";
 import type { TusState, State, TusOptions } from "../types";
-import type { ItemInfo } from "./types";
+import type { ItemInfo, PartStartEventData, PartStartResponseData } from "./types";
 
+const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
 const PATCH = "PATCH";
 
@@ -28,7 +30,7 @@ const getChunkUploadData = (tusState: TusState, orgItemId: string, chunk: ChunkE
     };
 };
 
-const forgetPersistedUrls = (item: BatchItem ,itemInfo: ItemInfo, options: TusOptions) => {
+const forgetPersistedUrls = (item: BatchItem, itemInfo: ItemInfo, options: TusOptions) => {
     logger.debugLog(`tusSender.handleEvents: forgetOnSuccess enabled, removing item url from storage: ${item.id}`);
     removeResumable(item, options);
 
@@ -37,7 +39,32 @@ const forgetPersistedUrls = (item: BatchItem ,itemInfo: ItemInfo, options: TusOp
     });
 };
 
-const handleEvents = (uploader: UploaderType<UploaderCreateOptions>, tusState: TusState) => {
+const getPartUpdatedRequest = (data: ChunkStartEventData, trigger: TriggerMethod) =>
+    triggerUpdater<PartStartEventData>(trigger, TUS_EVENTS.PART_START, {
+        url: data.url,
+        item: data.item,
+        headers: data.sendOptions?.headers || {},
+        chunk: data.chunk,
+    })
+        // $FlowFixMe - https://github.com/facebook/flow/issues/8215
+        .then((response: PartStartResponseData) => {
+            let updated = data;
+
+            if (response && isPlainObject(response)) {
+                const { headers: respHeaders, url: respUrl } = response;
+
+                updated = merge({}, data, {
+                    sendOptions: {
+                        headers: respHeaders,
+                    },
+                    url: respUrl,
+                });
+            }
+
+            return updated;
+        });
+
+const handleEvents = (uploader: UploaderType<UploaderCreateOptions>, tusState: TusState, trigger: TriggerMethod) => {
     if (CHUNKING_SUPPORT) {
         uploader.on(UPLOADER_EVENTS.ITEM_FINALIZE, (item) => {
             const { items, options } = tusState.getState(),
@@ -62,6 +89,8 @@ const handleEvents = (uploader: UploaderType<UploaderCreateOptions>, tusState: T
             }
         });
 
+
+
         uploader.on(CHUNK_EVENTS.CHUNK_START, (data: ChunkStartEventData) => {
             const { item, chunk, remainingCount } = data;
             const { options, items } = tusState.getState();
@@ -84,14 +113,17 @@ const handleEvents = (uploader: UploaderType<UploaderCreateOptions>, tusState: T
                 url: uploadUrl
             });
 
-            return {
+            //merge the updated headers and url into the chunk upload data for this part so can be handed to user-land PART_START handlers
+            const chunkDataOverrides = mergeWithUndefined({}, data, {
                 sendOptions: {
                     sendWithFormData: false,
                     method: options.overrideMethod ? "POST" : PATCH,
                     headers,
                 },
                 url: uploadUrl,
-            };
+            });
+
+            return getPartUpdatedRequest(chunkDataOverrides,  trigger);
         });
 
         uploader.on(CHUNK_EVENTS.CHUNK_FINISH, ({ item, chunk, uploadData }: ChunkFinishEventData) => {

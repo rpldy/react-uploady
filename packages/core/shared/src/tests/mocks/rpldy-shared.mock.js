@@ -40,6 +40,8 @@ utils.isPromise = vi.fn((...args) => isPromise(...args));
 //keep scheduleIdleWork working
 utils.scheduleIdleWork = vi.fn((fn) => fn());
 
+utils.isPlainObject = vi.fn(() => false);
+
 const sharedMock = {
     FILE_STATES: ORG_FILES_STATES,
     BATCH_STATES: ORG_BATCH_STATES,

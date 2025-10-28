@@ -147,4 +147,11 @@ Triggered before the (HEAD) request is issued on behalf of a potentially resumea
 
 > This event is _[cancellable](https://react-uploady.org/docs/api/events/#cancellable-events)_
 
-The event handler receives a [ResumeStartEventData](https://react-uploady.org/docs/api/types/#resumestarteventdata) object 
+The event handler receives a [ResumeStartEventData](https://react-uploady.org/docs/api/types/#resumestarteventdata) object
+
+### TUS_EVENTS.PART_START
+
+Triggered before a (PATCH) request is issued to upload a chunk (part) of a file.
+
+The event handler receives a [PartStartEventData](https://react-uploady.org/docs/api/types/#tuspartstarteventresponse) object
+

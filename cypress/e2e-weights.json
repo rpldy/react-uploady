@@ -1,503 +1,509 @@
 {
   "threads": 3,
-  "files": 81,
-  "total": 121,
-  "passed": 121,
-  "failed": 0,
+  "files": 82,
+  "total": 122,
+  "passed": 122,
+  "failed": -1,
   "sortedFiles": [
     {
-      "file": "cypress/integration/uploady/Uploady-autoUpload-off-spec.js",
-      "duration": 15212,
-      "tests": 7
-    },
-    {
       "file": "cypress/integration/tus-uploady/TusUploady-parallel-spec.js",
-      "duration": 14764,
+      "duration": 16176,
       "tests": 5
     },
     {
+      "file": "cypress/integration/uploady/Uploady-autoUpload-off-spec.js",
+      "duration": 15725,
+      "tests": 7
+    },
+    {
       "file": "cypress/integration/uploady/Uploady-cancel-with-async-presend-spec.js",
-      "duration": 13242,
+      "duration": 13747,
       "tests": 6
     },
     {
       "file": "cypress/integration/tus-uploady/TusUploady-resume-event-spec.js",
-      "duration": 11860,
+      "duration": 12859,
       "tests": 3
     },
     {
       "file": "cypress/integration/retry-hooks/RetryHooks-queue-spec.js",
-      "duration": 9775,
+      "duration": 10827,
       "tests": 3
+    },
+    {
+      "file": "cypress/integration/upload-preview/UploadPreview-crop-spec.js",
+      "duration": 10317,
+      "tests": 4
     },
     {
       "file": "cypress/integration/uploady/Uploady-abort-spec.js",
-      "duration": 9753,
-      "tests": 3
-    },
-    {
-      "file": "cypress/integration/uploady/Uploady-fast-abort-spec.js",
-      "duration": 9098,
+      "duration": 10270,
       "tests": 3
     },
     {
       "file": "cypress/integration/upload-preview/UploadPreview-multi-crop-spec.js",
-      "duration": 8364,
+      "duration": 10110,
       "tests": 2
     },
     {
-      "file": "cypress/integration/upload-preview/UploadPreview-crop-spec.js",
-      "duration": 8244,
-      "tests": 4
+      "file": "cypress/integration/uploady/Uploady-fast-abort-spec.js",
+      "duration": 9768,
+      "tests": 3
     },
     {
       "file": "cypress/integration/tus-uploady/TusUploady-retry-spec.js",
-      "duration": 8094,
+      "duration": 7615,
       "tests": 2
     },
     {
       "file": "cypress/integration/chunked-uploady/ChunkedUploady-WithChunkEventHooks-spec.js",
-      "duration": 7825,
+      "duration": 7568,
       "tests": 2
     },
     {
       "file": "cypress/integration/chunked-uploady/ChunkedUploady-Abort-spec.js",
-      "duration": 6175,
+      "duration": 6461,
       "tests": 1
     },
     {
       "file": "cypress/integration/mock-sender/MockSender-progress-spec.js",
-      "duration": 6051,
+      "duration": 6172,
       "tests": 2
     },
     {
       "file": "cypress/integration/upload-paste/UploadPaste-simple-spec.js",
-      "duration": 5832,
+      "duration": 6081,
       "tests": 2
     },
     {
       "file": "cypress/integration/upload-preview/UploadPreview-removePreview-spec.js",
-      "duration": 5221,
-      "tests": 2
-    },
-    {
-      "file": "cypress/integration/tus-uploady/TusUploady-send-data-spec.js",
-      "duration": 5039,
+      "duration": 5955,
       "tests": 2
     },
     {
       "file": "cypress/integration/chunked-sender/ChunkedSender-Progress-spec.js",
-      "duration": 4663,
+      "duration": 5587,
       "tests": 1
     },
     {
-      "file": "cypress/integration/retry-hooks/RetryHooks-withRetry-all-spec.js",
-      "duration": 4532,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/uploady/Uploady-cancel-on-add-spec.js",
-      "duration": 4420,
-      "tests": 1
+      "file": "cypress/integration/tus-uploady/TusUploady-send-data-spec.js",
+      "duration": 5461,
+      "tests": 2
     },
     {
       "file": "cypress/integration/tus-uploady/TusUploady-simple-spec.js",
-      "duration": 4167,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/upload-drop-zone/UploadDropZone-get-files-filter-spec.js",
-      "duration": 4118,
-      "tests": 2
-    },
-    {
-      "file": "cypress/integration/upload-paste/UploadPaste-dropzone-spec.js",
-      "duration": 4071,
-      "tests": 2
-    },
-    {
-      "file": "cypress/integration/umd/core-ui-chunked-umd-spec.js",
-      "duration": 3910,
+      "duration": 4928,
       "tests": 1
     },
     {
       "file": "cypress/integration/uploady/Uploady-custom-success-spec.js",
-      "duration": 3907,
+      "duration": 4731,
       "tests": 2
     },
     {
-      "file": "cypress/integration/upload-preview/UploadPreview-custom-method-spec.js",
-      "duration": 3892,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/umd/core-umd-spec.js",
-      "duration": 3858,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/umd/core-ui-umd-spec.js",
-      "duration": 3807,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/retry-hooks/RetryHooks-withRetry-batch-spec.js",
-      "duration": 3797,
+      "file": "cypress/integration/umd/core-ui-chunked-umd-spec.js",
+      "duration": 4690,
       "tests": 1
     },
     {
       "file": "cypress/integration/upload-button/UploadButton-group-spec.js",
-      "duration": 3774,
+      "duration": 4448,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-drop-zone/UploadDropZone-get-files-filter-spec.js",
+      "duration": 4439,
+      "tests": 2
+    },
+    {
+      "file": "cypress/integration/retry-hooks/RetryHooks-withRetry-batch-spec.js",
+      "duration": 4370,
       "tests": 1
     },
     {
       "file": "cypress/integration/umd/all-umd-spec.js",
-      "duration": 3767,
+      "duration": 4353,
       "tests": 1
+    },
+    {
+      "file": "cypress/integration/umd/core-ui-umd-spec.js",
+      "duration": 4353,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-cancel-on-add-spec.js",
+      "duration": 4235,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/retry-hooks/RetryHooks-withRetry-all-spec.js",
+      "duration": 4206,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-paste/UploadPaste-dropzone-spec.js",
+      "duration": 4203,
+      "tests": 2
     },
     {
       "file": "cypress/integration/upload-paste/UploadPaste-element-spec.js",
-      "duration": 3693,
+      "duration": 4179,
       "tests": 1
     },
     {
-      "file": "cypress/integration/uploader/Uploader-data-test-spec.js",
-      "duration": 3631,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/upload-preview/UploadPreview-crop-form-spec.js",
-      "duration": 3520,
+      "file": "cypress/integration/umd/core-umd-spec.js",
+      "duration": 4108,
       "tests": 1
     },
     {
       "file": "cypress/integration/uploady/Uploady-invalid-batch-start-spec.js",
-      "duration": 3420,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/uploady/Uploady-failed-mock-spec.js",
-      "duration": 3354,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/upload-paste/UploadPaste-uploadButton-spec.js",
-      "duration": 3304,
+      "duration": 3888,
       "tests": 1
     },
     {
       "file": "cypress/integration/upload-button/UploadButton-disabled-spec.js",
-      "duration": 3269,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/retry-hooks/RetryHooks-withRetry-item-spec.js",
-      "duration": 3267,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/upload-button/UploadButton-asButton-spec.js",
-      "duration": 3218,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/upload-button/UploadButton-progress-spec.js",
-      "duration": 3209,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/uploader/Uploader-recover-from-error-spec.js",
-      "duration": 3199,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/tus-uploady/TusUploady-parallel-with-data-spec.js",
-      "duration": 3087,
+      "duration": 3848,
       "tests": 1
     },
     {
       "file": "cypress/integration/upload-button/UploadButton-simple-multiple-spec.js",
-      "duration": 3087,
+      "duration": 3630,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/tus-uploady/TusUploady-parallel-with-data-spec.js",
+      "duration": 3629,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-button/UploadButton-progress-spec.js",
+      "duration": 3607,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-preview/UploadPreview-custom-method-spec.js",
+      "duration": 3604,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-failed-mock-spec.js",
+      "duration": 3592,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploader/Uploader-data-test-spec.js",
+      "duration": 3591,
       "tests": 1
     },
     {
       "file": "cypress/integration/uploady/Uploady-undefined-param-spec.js",
-      "duration": 3018,
+      "duration": 3576,
       "tests": 3
     },
     {
-      "file": "cypress/integration/upload-preview/UploadPreview-simple-multiple-spec.js",
-      "duration": 2955,
+      "file": "cypress/integration/uploader/Uploader-recover-from-error-spec.js",
+      "duration": 3454,
       "tests": 1
     },
     {
-      "file": "cypress/integration/upload-button/UploadButton-custom-input-button-spec.js",
-      "duration": 2928,
+      "file": "cypress/integration/upload-paste/UploadPaste-uploadButton-spec.js",
+      "duration": 3332,
       "tests": 1
     },
     {
-      "file": "cypress/integration/upload-button/UploadButton-form-spec.js",
-      "duration": 2865,
+      "file": "cypress/integration/retry-hooks/RetryHooks-withRetry-item-spec.js",
+      "duration": 3310,
       "tests": 1
     },
     {
-      "file": "cypress/integration/upload-drop-zone/UploadDropZone-dropHandler-spec.js",
-      "duration": 2853,
+      "file": "cypress/integration/upload-preview/UploadPreview-crop-form-spec.js",
+      "duration": 3243,
       "tests": 1
-    },
-    {
-      "file": "cypress/integration/uploady/Uploady-invalid-request-pre-send-spec.js",
-      "duration": 2766,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/upload-drop-zone/UploadDropZone-3rd-party-spec.js",
-      "duration": 2730,
-      "tests": 2
     },
     {
       "file": "cypress/integration/upload-preview/UploadPreview-clear-spec.js",
-      "duration": 2712,
+      "duration": 3230,
       "tests": 1
     },
     {
-      "file": "cypress/integration/upload-button/UploadButton-styled-spec.js",
-      "duration": 2685,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/uploady/Uploady-filesParamName-spec.js",
-      "duration": 2585,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/upload-button/UploadButton-simple-spec.js",
-      "duration": 2529,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/chunked-sender/ChunkedSender-error-spec.js",
-      "duration": 2447,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/chunked-uploady/ChunkedUploady-custom-success-spec.js",
-      "duration": 2428,
+      "file": "cypress/integration/upload-button/UploadButton-asButton-spec.js",
+      "duration": 3075,
       "tests": 1
     },
     {
       "file": "cypress/integration/uploader/Uploader-no-prepare-pollute-spec.js",
-      "duration": 2391,
+      "duration": 3056,
       "tests": 1
     },
     {
-      "file": "cypress/integration/upload-drop-zone/UploadDropZone-differentConfig-spec.js",
-      "duration": 2377,
+      "file": "cypress/integration/upload-drop-zone/UploadDropZone-dropHandler-spec.js",
+      "duration": 3014,
       "tests": 1
     },
     {
-      "file": "cypress/integration/upload-drop-zone/UploadDropZone-handle-only-files-spec.js",
-      "duration": 2271,
+      "file": "cypress/integration/upload-button/UploadButton-custom-input-button-spec.js",
+      "duration": 2991,
       "tests": 1
     },
     {
-      "file": "cypress/integration/uploader/Uploader-proto-pollute-spec.js",
-      "duration": 2260,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/uploady/Uploady-simple-spec.js",
-      "duration": 2146,
+      "file": "cypress/integration/upload-drop-zone/UploadDropZone-3rd-party-spec.js",
+      "duration": 2985,
       "tests": 2
     },
     {
-      "file": "cypress/integration/upload-button/UploadButton-differentConfig-spec.js",
-      "duration": 2117,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/upload-preview/UploadPreview-two-fields-spec.js",
-      "duration": 2075,
+      "file": "cypress/integration/chunked-sender/ChunkedSender-error-spec.js",
+      "duration": 2967,
       "tests": 1
     },
     {
       "file": "cypress/integration/upload-preview/UploadPreview-simple-fallback-spec.js",
-      "duration": 2025,
+      "duration": 2924,
       "tests": 1
     },
     {
-      "file": "cypress/integration/upload-button/UploadButton-eventListeners-spec.js",
-      "duration": 2003,
+      "file": "cypress/integration/uploady/Uploady-invalid-request-pre-send-spec.js",
+      "duration": 2894,
       "tests": 1
     },
     {
-      "file": "cypress/integration/upload-drop-zone/UploadDropZone-simple-spec.js",
-      "duration": 1994,
+      "file": "cypress/integration/upload-button/UploadButton-form-spec.js",
+      "duration": 2884,
       "tests": 1
     },
     {
-      "file": "cypress/integration/upload-button/UploadButton-eventHooks-spec.js",
-      "duration": 1988,
+      "file": "cypress/integration/upload-drop-zone/UploadDropZone-differentConfig-spec.js",
+      "duration": 2873,
       "tests": 1
     },
     {
-      "file": "cypress/integration/uploady/Uploady-headerFromPreSend-spec.js",
-      "duration": 1975,
+      "file": "cypress/integration/upload-button/UploadButton-styled-spec.js",
+      "duration": 2859,
       "tests": 1
     },
     {
-      "file": "cypress/integration/upload-drop-zone/UploadDropZone-no-handle-spec.js",
-      "duration": 1916,
+      "file": "cypress/integration/chunked-uploady/ChunkedUploady-custom-success-spec.js",
+      "duration": 2857,
       "tests": 1
     },
     {
-      "file": "cypress/integration/upload-paste/UploadPaste-window-spec.js",
-      "duration": 1878,
+      "file": "cypress/integration/upload-button/UploadButton-simple-spec.js",
+      "duration": 2852,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-filesParamName-spec.js",
+      "duration": 2777,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-button/UploadButton-differentConfig-spec.js",
+      "duration": 2776,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-preview/UploadPreview-simple-multiple-spec.js",
+      "duration": 2747,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-preview/UploadPreview-two-fields-spec.js",
+      "duration": 2651,
       "tests": 1
     },
     {
       "file": "cypress/integration/upload-preview/UploadPreview-simple-spec.js",
-      "duration": 1650,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/native-uploady/NativeUploady-simple-spec.js",
-      "duration": 1607,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/upload-preview/UploadPreview-progress-spec.js",
-      "duration": 1540,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/uploady/Uploady-internal-input-spec.js",
-      "duration": 1537,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/upload-drop-zone/UploadDropZone-keep-on-child-spec.js",
-      "duration": 1477,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/uploady/Uploady-customResponseFormat-spec.js",
-      "duration": 1458,
-      "tests": 1
-    },
-    {
-      "file": "cypress/integration/upload-button/UploadButton-customInputAndForm-spec.js",
-      "duration": 1432,
+      "duration": 2644,
       "tests": 1
     },
     {
       "file": "cypress/integration/upload-url-input/UploadUrlInput-simple-spec.js",
-      "duration": 1356,
+      "duration": 2561,
       "tests": 1
     },
     {
-      "file": "cypress/integration/upload-drop-zone/UploadDropZone-custom-remove-spec.js",
-      "duration": 1239,
+      "file": "cypress/integration/uploady/Uploady-simple-spec.js",
+      "duration": 2530,
+      "tests": 2
+    },
+    {
+      "file": "cypress/integration/upload-button/UploadButton-eventListeners-spec.js",
+      "duration": 2508,
       "tests": 1
     },
     {
-      "file": "cypress/integration/uploady/Uploady-pending-with-options-spec.js",
-      "duration": 1192,
+      "file": "cypress/integration/upload-paste/UploadPaste-window-spec.js",
+      "duration": 2429,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-drop-zone/UploadDropZone-handle-only-files-spec.js",
+      "duration": 2425,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-button/UploadButton-eventHooks-spec.js",
+      "duration": 2385,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploader/Uploader-proto-pollute-spec.js",
+      "duration": 2365,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/native-uploady/NativeUploady-simple-spec.js",
+      "duration": 2363,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-drop-zone/UploadDropZone-simple-spec.js",
+      "duration": 2313,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-headerFromPreSend-spec.js",
+      "duration": 2287,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-drop-zone/UploadDropZone-no-handle-spec.js",
+      "duration": 2147,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-internal-input-spec.js",
+      "duration": 2091,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-drop-zone/UploadDropZone-keep-on-child-spec.js",
+      "duration": 2089,
       "tests": 1
     },
     {
       "file": "cypress/integration/upload-drop-zone/UploadDropZone-simple-no-contain-check-spec.js",
-      "duration": 912,
+      "duration": 2089,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/tus-uploady/TusUploady-multiple-files-headers-spec.js",
+      "duration": 1902,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-preview/UploadPreview-progress-spec.js",
+      "duration": 1724,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-pending-with-options-spec.js",
+      "duration": 1722,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-button/UploadButton-customInputAndForm-spec.js",
+      "duration": 1647,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/uploady/Uploady-customResponseFormat-spec.js",
+      "duration": 1494,
+      "tests": 1
+    },
+    {
+      "file": "cypress/integration/upload-drop-zone/UploadDropZone-custom-remove-spec.js",
+      "duration": 946,
       "tests": 1
     }
   ],
   "groups": [
     [
-      "cypress/integration/uploady/Uploady-autoUpload-off-spec.js",
+      "cypress/integration/tus-uploady/TusUploady-parallel-spec.js",
       "cypress/integration/tus-uploady/TusUploady-resume-event-spec.js",
-      "cypress/integration/uploady/Uploady-fast-abort-spec.js",
+      "cypress/integration/uploady/Uploady-abort-spec.js",
       "cypress/integration/tus-uploady/TusUploady-retry-spec.js",
       "cypress/integration/mock-sender/MockSender-progress-spec.js",
-      "cypress/integration/tus-uploady/TusUploady-send-data-spec.js",
-      "cypress/integration/uploady/Uploady-cancel-on-add-spec.js",
+      "cypress/integration/chunked-sender/ChunkedSender-Progress-spec.js",
+      "cypress/integration/uploady/Uploady-custom-success-spec.js",
+      "cypress/integration/upload-drop-zone/UploadDropZone-get-files-filter-spec.js",
+      "cypress/integration/umd/core-ui-umd-spec.js",
       "cypress/integration/upload-paste/UploadPaste-dropzone-spec.js",
-      "cypress/integration/upload-preview/UploadPreview-custom-method-spec.js",
-      "cypress/integration/retry-hooks/RetryHooks-withRetry-batch-spec.js",
-      "cypress/integration/upload-paste/UploadPaste-element-spec.js",
       "cypress/integration/uploady/Uploady-invalid-batch-start-spec.js",
-      "cypress/integration/upload-button/UploadButton-disabled-spec.js",
-      "cypress/integration/upload-button/UploadButton-progress-spec.js",
-      "cypress/integration/upload-button/UploadButton-simple-multiple-spec.js",
-      "cypress/integration/upload-button/UploadButton-custom-input-button-spec.js",
+      "cypress/integration/tus-uploady/TusUploady-parallel-with-data-spec.js",
+      "cypress/integration/uploady/Uploady-failed-mock-spec.js",
+      "cypress/integration/uploader/Uploader-recover-from-error-spec.js",
+      "cypress/integration/upload-preview/UploadPreview-crop-form-spec.js",
+      "cypress/integration/uploader/Uploader-no-prepare-pollute-spec.js",
+      "cypress/integration/upload-drop-zone/UploadDropZone-3rd-party-spec.js",
       "cypress/integration/uploady/Uploady-invalid-request-pre-send-spec.js",
       "cypress/integration/upload-button/UploadButton-styled-spec.js",
-      "cypress/integration/chunked-sender/ChunkedSender-error-spec.js",
-      "cypress/integration/upload-drop-zone/UploadDropZone-differentConfig-spec.js",
+      "cypress/integration/uploady/Uploady-filesParamName-spec.js",
+      "cypress/integration/upload-preview/UploadPreview-two-fields-spec.js",
       "cypress/integration/uploady/Uploady-simple-spec.js",
-      "cypress/integration/upload-preview/UploadPreview-simple-fallback-spec.js",
-      "cypress/integration/upload-button/UploadButton-eventHooks-spec.js",
-      "cypress/integration/upload-paste/UploadPaste-window-spec.js",
-      "cypress/integration/upload-preview/UploadPreview-progress-spec.js",
-      "cypress/integration/uploady/Uploady-customResponseFormat-spec.js",
+      "cypress/integration/upload-drop-zone/UploadDropZone-handle-only-files-spec.js",
+      "cypress/integration/native-uploady/NativeUploady-simple-spec.js",
+      "cypress/integration/upload-drop-zone/UploadDropZone-no-handle-spec.js",
+      "cypress/integration/upload-drop-zone/UploadDropZone-simple-no-contain-check-spec.js",
+      "cypress/integration/uploady/Uploady-pending-with-options-spec.js",
       "cypress/integration/upload-drop-zone/UploadDropZone-custom-remove-spec.js"
     ],
     [
-      "cypress/integration/tus-uploady/TusUploady-parallel-spec.js",
+      "cypress/integration/uploady/Uploady-autoUpload-off-spec.js",
       "cypress/integration/retry-hooks/RetryHooks-queue-spec.js",
       "cypress/integration/upload-preview/UploadPreview-multi-crop-spec.js",
       "cypress/integration/chunked-uploady/ChunkedUploady-WithChunkEventHooks-spec.js",
       "cypress/integration/upload-paste/UploadPaste-simple-spec.js",
-      "cypress/integration/chunked-sender/ChunkedSender-Progress-spec.js",
-      "cypress/integration/tus-uploady/TusUploady-simple-spec.js",
+      "cypress/integration/tus-uploady/TusUploady-send-data-spec.js",
       "cypress/integration/umd/core-ui-chunked-umd-spec.js",
-      "cypress/integration/umd/core-umd-spec.js",
-      "cypress/integration/upload-button/UploadButton-group-spec.js",
+      "cypress/integration/retry-hooks/RetryHooks-withRetry-batch-spec.js",
+      "cypress/integration/uploady/Uploady-cancel-on-add-spec.js",
+      "cypress/integration/upload-paste/UploadPaste-element-spec.js",
+      "cypress/integration/upload-button/UploadButton-disabled-spec.js",
+      "cypress/integration/upload-button/UploadButton-progress-spec.js",
       "cypress/integration/uploader/Uploader-data-test-spec.js",
-      "cypress/integration/uploady/Uploady-failed-mock-spec.js",
-      "cypress/integration/retry-hooks/RetryHooks-withRetry-item-spec.js",
-      "cypress/integration/uploader/Uploader-recover-from-error-spec.js",
-      "cypress/integration/uploady/Uploady-undefined-param-spec.js",
+      "cypress/integration/upload-paste/UploadPaste-uploadButton-spec.js",
+      "cypress/integration/upload-preview/UploadPreview-clear-spec.js",
+      "cypress/integration/upload-drop-zone/UploadDropZone-dropHandler-spec.js",
+      "cypress/integration/chunked-sender/ChunkedSender-error-spec.js",
       "cypress/integration/upload-button/UploadButton-form-spec.js",
-      "cypress/integration/upload-drop-zone/UploadDropZone-3rd-party-spec.js",
-      "cypress/integration/uploady/Uploady-filesParamName-spec.js",
       "cypress/integration/chunked-uploady/ChunkedUploady-custom-success-spec.js",
-      "cypress/integration/upload-drop-zone/UploadDropZone-handle-only-files-spec.js",
       "cypress/integration/upload-button/UploadButton-differentConfig-spec.js",
-      "cypress/integration/upload-button/UploadButton-eventListeners-spec.js",
-      "cypress/integration/uploady/Uploady-headerFromPreSend-spec.js",
       "cypress/integration/upload-preview/UploadPreview-simple-spec.js",
+      "cypress/integration/upload-button/UploadButton-eventListeners-spec.js",
+      "cypress/integration/upload-button/UploadButton-eventHooks-spec.js",
+      "cypress/integration/upload-drop-zone/UploadDropZone-simple-spec.js",
       "cypress/integration/uploady/Uploady-internal-input-spec.js",
-      "cypress/integration/upload-button/UploadButton-customInputAndForm-spec.js",
-      "cypress/integration/uploady/Uploady-pending-with-options-spec.js"
+      "cypress/integration/tus-uploady/TusUploady-multiple-files-headers-spec.js",
+      "cypress/integration/upload-button/UploadButton-customInputAndForm-spec.js"
     ],
     [
       "cypress/integration/uploady/Uploady-cancel-with-async-presend-spec.js",
-      "cypress/integration/uploady/Uploady-abort-spec.js",
       "cypress/integration/upload-preview/UploadPreview-crop-spec.js",
+      "cypress/integration/uploady/Uploady-fast-abort-spec.js",
       "cypress/integration/chunked-uploady/ChunkedUploady-Abort-spec.js",
       "cypress/integration/upload-preview/UploadPreview-removePreview-spec.js",
-      "cypress/integration/retry-hooks/RetryHooks-withRetry-all-spec.js",
-      "cypress/integration/upload-drop-zone/UploadDropZone-get-files-filter-spec.js",
-      "cypress/integration/uploady/Uploady-custom-success-spec.js",
-      "cypress/integration/umd/core-ui-umd-spec.js",
+      "cypress/integration/tus-uploady/TusUploady-simple-spec.js",
+      "cypress/integration/upload-button/UploadButton-group-spec.js",
       "cypress/integration/umd/all-umd-spec.js",
-      "cypress/integration/upload-preview/UploadPreview-crop-form-spec.js",
-      "cypress/integration/upload-paste/UploadPaste-uploadButton-spec.js",
+      "cypress/integration/retry-hooks/RetryHooks-withRetry-all-spec.js",
+      "cypress/integration/umd/core-umd-spec.js",
+      "cypress/integration/upload-button/UploadButton-simple-multiple-spec.js",
+      "cypress/integration/upload-preview/UploadPreview-custom-method-spec.js",
+      "cypress/integration/uploady/Uploady-undefined-param-spec.js",
+      "cypress/integration/retry-hooks/RetryHooks-withRetry-item-spec.js",
       "cypress/integration/upload-button/UploadButton-asButton-spec.js",
-      "cypress/integration/tus-uploady/TusUploady-parallel-with-data-spec.js",
-      "cypress/integration/upload-preview/UploadPreview-simple-multiple-spec.js",
-      "cypress/integration/upload-drop-zone/UploadDropZone-dropHandler-spec.js",
-      "cypress/integration/upload-preview/UploadPreview-clear-spec.js",
+      "cypress/integration/upload-button/UploadButton-custom-input-button-spec.js",
+      "cypress/integration/upload-preview/UploadPreview-simple-fallback-spec.js",
+      "cypress/integration/upload-drop-zone/UploadDropZone-differentConfig-spec.js",
       "cypress/integration/upload-button/UploadButton-simple-spec.js",
-      "cypress/integration/uploader/Uploader-no-prepare-pollute-spec.js",
-      "cypress/integration/uploader/Uploader-proto-pollute-spec.js",
-      "cypress/integration/upload-preview/UploadPreview-two-fields-spec.js",
-      "cypress/integration/upload-drop-zone/UploadDropZone-simple-spec.js",
-      "cypress/integration/upload-drop-zone/UploadDropZone-no-handle-spec.js",
-      "cypress/integration/native-uploady/NativeUploady-simple-spec.js",
-      "cypress/integration/upload-drop-zone/UploadDropZone-keep-on-child-spec.js",
+      "cypress/integration/upload-preview/UploadPreview-simple-multiple-spec.js",
       "cypress/integration/upload-url-input/UploadUrlInput-simple-spec.js",
-      "cypress/integration/upload-drop-zone/UploadDropZone-simple-no-contain-check-spec.js"
+      "cypress/integration/upload-paste/UploadPaste-window-spec.js",
+      "cypress/integration/uploader/Uploader-proto-pollute-spec.js",
+      "cypress/integration/uploady/Uploady-headerFromPreSend-spec.js",
+      "cypress/integration/upload-drop-zone/UploadDropZone-keep-on-child-spec.js",
+      "cypress/integration/upload-preview/UploadPreview-progress-spec.js",
+      "cypress/integration/uploady/Uploady-customResponseFormat-spec.js"
     ]
   ]
 }

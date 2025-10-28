@@ -25,4 +25,6 @@ export type {
 	TusOptions,
     ResumeStartEventData,
     ResumeStartEventResponse,
+    PartStartEventData,
+    PartStartResponseData
 } from "./types";

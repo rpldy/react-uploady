@@ -92,7 +92,7 @@ describe("tusSend with chunking tests", () => {
             items, url, "sendOptions", "onProgress", tusState, chunkedSender, "trigger"
         );
 
-        expect(handleEvents).toHaveBeenCalledWith(uploader, tusState);
+        expect(handleEvents).toHaveBeenCalledWith(uploader, tusState, "trigger");
         expect(result.senderType).toBe(TUS_SENDER_TYPE);
         expect(result.request).toBe("request");
         expect(result.abort()).toBe(true);

@@ -13,15 +13,33 @@ beforeEach(() => {
 export const createTusIntercepts = (tusOptions = {}) => {
     callCount += 1;
 
+    const addPatchIntercept = (delay, alias, url, tusData, index) => {
+        interceptWithDelay(delay, alias, url, "PATCH",
+            (req) => {
+                const offset = parseInt(req.headers["content-length"]);
+                tusData[index].offset += offset;
+
+                return  {
+                    statusCode: 204,
+                    body: "",
+                    headers: {
+                        "Tus-Resumable": "1.0.0",
+                        "Upload-Offset": `${tusData[index].offset}`,
+                    }
+                };
+            });
+    }
+
     const options = {
         parallel: 1,
+        batchSize: 1,
         deferLength: false,
         patchDelay: 0,
         id: String.fromCharCode(callCount),
         ...tusOptions
     };
 
-    const tusData = Array.from({ length: options.parallel },
+    const tusData = Array.from({ length: Math.max(options.parallel, options.batchSize) },
         (_, i) => i).map((i) => {
         const path = i + 1
         return {
@@ -73,21 +91,9 @@ export const createTusIntercepts = (tusOptions = {}) => {
         }
     }).as(getA("tusCreateReq"));
 
+    // Create PATCH intercepts for initial tusData entries
     tusData.forEach(({ path }, i) => {
-        interceptWithDelay(options.patchDelay, getA(`tusPatchReq${i + 1}`), `${uploadUrl}/${path}`, "PATCH",
-            (req) => {
-            const offset = parseInt(req.headers["content-length"]);
-            tusData[i].offset += offset;
-
-            return  {
-              statusCode: 204,
-              body: "",
-              headers: {
-                  "Tus-Resumable": "1.0.0",
-                  "Upload-Offset": `${tusData[i].offset}`,
-              }
-          };
-        });
+        addPatchIntercept(options.patchDelay, getA(`tusPatchReq${i + 1}`), `${uploadUrl}/${path}`, tusData, i);
     });
 
     const getPartUrls = () =>
@@ -121,8 +127,11 @@ export const createTusIntercepts = (tusOptions = {}) => {
             cy.wait(getA(`tusPatchReq${index + 1}`, true))
                 .then((xhr) => {
                     const { headers } = xhr.request;
-                    expect(headers["content-length"]).to.eq(`${contentLength}`);
                     expect(headers["content-type"]).to.eq("application/offset+octet-stream");
+
+                    if (contentLength) {
+                        expect(headers["content-length"]).to.eq(`${contentLength}`);
+                    }
 
                     cb?.(xhr);
                 });
@@ -148,6 +157,14 @@ export const createTusIntercepts = (tusOptions = {}) => {
                     expect(xhr.request.headers["upload-concat"])
                         .to.eq(`final;${getPartUrls().join(" ")}`);
 
+                    cb(xhr);
+                });
+        },
+
+        assertCreateRequestByIndex: (index, cb = null) => {
+            cy.get(getA("tusCreateReq", true, true))
+                .then((calls) => {
+                    const xhr = calls[index];
                     cb(xhr);
                 });
         },
@@ -215,4 +232,3 @@ export const createTusIntercepts = (tusOptions = {}) => {
         },
     };
 };
-

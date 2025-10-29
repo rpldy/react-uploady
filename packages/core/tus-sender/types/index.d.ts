@@ -8,7 +8,7 @@ export {
 
 export enum TUS_EVENTS {
     RESUME_START = "RESUME_START",
-    "PART_START" = "PART_START",
+    PART_START = "PART_START",
 }
 
 export interface TusOptions extends ChunkedOptions {
@@ -31,12 +31,6 @@ export interface TusResumeStartEventData {
     url: string;
     item: BatchItem;
     resumeHeaders?: Record<string, string>;
-}
-
-export interface TusPartStartEventData {
-    url: string;
-    item: BatchItem;
-    headers: Record<string, string>;
 }
 
 export type TusResumeStartEventResponse = void | boolean | {

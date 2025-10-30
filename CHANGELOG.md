@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.12.0 (2025-10-30)
+
+### Features
+
+- `[tus-sender]` - feat: add new Tus event - PART START - allow URL and headers overrides per part
+- `[tus-uploady]` - feat: add new Event hook for PART Start
+
+### Internal
+
+- `all` - upgrade several dev deps
+ 
+
 ## 1.12.0-rc.0 (2025-10-28)
 
 _PRE-RELEASE_

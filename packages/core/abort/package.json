@@ -1,5 +1,5 @@
 {
-  "version": "1.12.0-rc.0",
+  "version": "1.12.0",
   "name": "@rpldy/abort",
   "description": "adds the capability to abort/cancel running & pending uploads",
   "author": "yoav niran (https://github.com/yoavniran)",

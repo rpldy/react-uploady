@@ -136,9 +136,9 @@ import React from "react";
 import { useTusPartStartListener } from "@rpldy/tus-uploady";
 
 const MyComponent = () => {
-    useTusPartStartListener(({ url, item, resumeHeaders }) => {
-        const { chunk } = data;
-        const authHeaderVal = data.headers["Authorization"];
+    useTusPartStartListener((data) => {
+        const { item, chunk, headers, url } = data;
+        const authHeaderVal = headers["Authorization"];
 
         return {
             headers: {
@@ -150,7 +150,6 @@ const MyComponent = () => {
 	//...
 };
 ```
-
 
 ### useClearResumableStore
 

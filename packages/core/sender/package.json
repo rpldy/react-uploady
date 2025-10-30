@@ -1,5 +1,5 @@
 {
-  "version": "1.11.0",
+  "version": "1.12.0",
   "name": "@rpldy/sender",
   "description": "react-uploady's default XHR sender",
   "author": "yoav niran (https://github.com/yoavniran)",

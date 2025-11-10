@@ -34,7 +34,7 @@ In order to verify there are no issues, run:
 $ pnpm test 
 ```
 
-this will run flow, lint, vitest
+this will run flow, lint, vitest, (TS) type-check
 
 each one of these has a corresponding script to run separately.
 

@@ -19,22 +19,22 @@ git clone https://github.com/your-username/react-uploady.git
 ### Building
 
 ```bash
-$ yarn install
+$ pnpm install
 ```
 then:
 
 ```bash
-$ yarn build
+$ pnpm build
 ```
 
 ### Testing
 
 In order to verify there are no issues, run:
 ```
-$ yarn test 
+$ pnpm test 
 ```
 
-this will run flow, lint, jest 
+this will run flow, lint, vitest, (TS) type-check
 
 each one of these has a corresponding script to run separately.
 
@@ -43,7 +43,7 @@ each one of these has a corresponding script to run separately.
 to run SB locally, run 
 
 ```bash
-$ yarn start 
+$ pnpm start
 ```
 
 ### E2E

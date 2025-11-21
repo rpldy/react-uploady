@@ -127,7 +127,7 @@ importers:
         version: 5.0.2
       babel-plugin-syntax-hermes-parser:
         specifier: ^0.32.0
-        version: 0.32.0
+        version: 0.32.1
       babel-plugin-transform-flow-enums:
         specifier: ^0.0.2
         version: 0.0.2(@babel/core@7.28.3)
@@ -4129,8 +4129,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
 
-  babel-plugin-syntax-hermes-parser@0.32.0:
-    resolution: {integrity: sha512-m5HthL++AbyeEA2FcdwOLfVFvWYECOBObLHNqdR8ceY4TsEdn4LdX2oTvbB2QJSSElE2AWA/b2MXZ/PF/CqLZg==}
+  babel-plugin-syntax-hermes-parser@0.32.1:
+    resolution: {integrity: sha512-HgErPZTghW76Rkq9uqn5ESeiD97FbqpZ1V170T1RG2RDp+7pJVQV2pQJs7y5YzN0/gcT6GM5ci9apRnIwuyPdQ==}
 
   babel-plugin-transform-flow-enums@0.0.2:
     resolution: {integrity: sha512-g4aaCrDDOsWjbm0PUUeVnkcVd6AKJsVc/MbnPhEotEpkeJQP6b8nzewohQi7+QS8UyPehOhGWn0nOwjvWpmMvQ==}
@@ -5811,14 +5811,8 @@ packages:
   hermes-eslint@0.32.1:
     resolution: {integrity: sha512-3ljktN2ek+bRRsPAcMeqMEJou6s2MRe6VuLkLsXDXuVrJfRZ7V2VUw41T9uAt9lcA2xaJP4yykYAnMg15nsRPw==}
 
-  hermes-estree@0.32.0:
-    resolution: {integrity: sha512-KWn3BqnlDOl97Xe1Yviur6NbgIZ+IP+UVSpshlZWkq+EtoHg6/cwiDj/osP9PCEgFE15KBm1O55JRwbMEm5ejQ==}
-
   hermes-estree@0.32.1:
     resolution: {integrity: sha512-ne5hkuDxheNBAikDjqvCZCwihnz0vVu9YsBzAEO1puiyFR4F1+PAz/SiPHSsNTuOveCYGRMX8Xbx4LOubeC0Qg==}
-
-  hermes-parser@0.32.0:
-    resolution: {integrity: sha512-g4nBOWFpuiTqjR3LZdRxKUkij9iyveWeuks7INEsMX741f3r9xxrOe8TeQfUxtda0eXmiIFiMQzoeSQEno33Hw==}
 
   hermes-parser@0.32.1:
     resolution: {integrity: sha512-175dz634X/W5AiwrpLdoMl/MOb17poLHyIqgyExlE8D9zQ1OPnoORnGMB5ltRKnpvQzBjMYvT2rN/sHeIfZW5Q==}
@@ -13561,9 +13555,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  babel-plugin-syntax-hermes-parser@0.32.0:
+  babel-plugin-syntax-hermes-parser@0.32.1:
     dependencies:
-      hermes-parser: 0.32.0
+      hermes-parser: 0.32.1
 
   babel-plugin-transform-flow-enums@0.0.2(@babel/core@7.28.3):
     dependencies:
@@ -15572,13 +15566,7 @@ snapshots:
       hermes-estree: 0.32.1
       hermes-parser: 0.32.1
 
-  hermes-estree@0.32.0: {}
-
   hermes-estree@0.32.1: {}
-
-  hermes-parser@0.32.0:
-    dependencies:
-      hermes-estree: 0.32.0
 
   hermes-parser@0.32.1:
     dependencies:

@@ -19,7 +19,7 @@ To be used in case chunked upload is required.
 
 The server that is accepting the upload must also support chunked uploads. 
 The original file is broken down into smaller blobs, which are sent in different requests. 
-Each request is sent with the _Content-Range_ header to specify the bytes range.
+By default, each request is sent with the _Content-Range_ header to specify the bytes range (can be disabled via `sendWithRangeHeader` option).
 
 Internally, _ChunkedUploady_ uses [@rpldy/chunked-sender](https://react-uploady.org/docs/api/senders/chunkedSender/) instead of the default sender.
 
@@ -56,6 +56,7 @@ In case the browser doesn't support chunking (blob slicing), the default sender 
 | chunkSize            | number  | 5242880 | the chunk size. relevant when uploaded file is larger than the value    |
 | retries              | number  | 0       | how many times to retry sending a failed chunk                          |
 | parallel             | number  | 0       | how many (chunk) requests to send simultaneously                        |
+| sendWithRangeHeader  | boolean | true    | whether to include the Content-Range header per chunk request           |
 
 In addition, all [UploadOptions](https://react-uploady.org/docs/api/types/#uploadoptions) props can be passed to ChunkedUploady.
 In order to override configuration passed to the parent Uploady component. 

@@ -11,6 +11,8 @@ export type ChunkedOptions = {
     retries?: number,
     //the number of chunks to upload in parallel (default: 0)
     parallel?: number,
+    //whether to send Content-Range header with chunks (default: true)
+    sendWithRangeHeader?: boolean,
 };
 
 export type ChunkedSendOptions = {
@@ -24,6 +26,7 @@ export type MandatoryChunkedOptions = {|
     chunkSize: number,
     retries: number,
     parallel: number,
+    sendWithRangeHeader: boolean,
 |};
 
 export type ChunkedSender = {

@@ -1,8 +1,8 @@
 import {
-	createBatchItem,
-	FILE_STATES,
-	triggerUpdater,
-	utils
+    createBatchItem,
+    FILE_STATES,
+    triggerUpdater,
+    utils
 } from "@rpldy/shared/src/tests/mocks/rpldy-shared.mock";
 import xhrSend from "@rpldy/sender";
 import { unwrap } from "@rpldy/simple-state";
@@ -21,8 +21,8 @@ describe("sendChunk tests", () => {
 
     const onProgress = vi.fn();
 
-    beforeAll(()=>{
-		unwrap.mockReturnValue({ unwrapped: true });
+    beforeAll(() => {
+        unwrap.mockReturnValue({ unwrapped: true });
     });
 
     beforeEach(() => {
@@ -31,14 +31,14 @@ describe("sendChunk tests", () => {
             onProgress,
             triggerUpdater,
             xhrSendResult.abort,
-			unwrap,
+            unwrap,
         );
     });
 
-    const testSendChunk =  async (data, chunkStartData = {}) => {
+    const testSendChunk = async (data, chunkStartData = {}, sendWithRangeHeader = true) => {
         const url = "test.com",
             chunk = { id: "c1", start: 1, end: 10, data },
-			chunks = [{}, {}, chunk],
+            chunks = [{}, {}, chunk],
             fileData = data || { size: 10 },
             file = { size: 400 },
             chunkItem = { id: "ci-1" },
@@ -54,9 +54,9 @@ describe("sendChunk tests", () => {
         createBatchItem.mockReturnValueOnce(chunkItem);
         xhrSend.mockResolvedValueOnce(xhrSendResult);
 
-        const state = getChunkedState({ url, sendOptions, chunks, chunkCount: 4 });
+        const state = getChunkedState({ url, sendOptions, chunks, chunkCount: 4, sendWithRangeHeader });
 
-		const sendResult = sendChunk(chunk, state, { file }, onProgress, trigger);
+        const sendResult = sendChunk(chunk, state, { file }, onProgress, trigger);
 
         const result = await sendResult.request;
 
@@ -70,26 +70,28 @@ describe("sendChunk tests", () => {
 
         const updatedSendOptions = {
             unwrapped: true,
-            headers: {
-                "Content-Range": `bytes 1-${fileData.size}/400`,
-            }
+            headers: {},
         };
 
-        if (chunkStartData !== false ) {
-			expect(xhrSend).toHaveBeenCalledWith(
-				[chunkItem],
-				chunkStartData.url || url,
-				utils.merge({}, updatedSendOptions, chunkStartData.sendOptions),
-				expect.any(Function)
-			);
+        if (sendWithRangeHeader) {
+            updatedSendOptions.headers["Content-Range"] = `bytes 1-${fileData.size}/400`;
+        }
 
-			const progressEvent = { loaded: 123 };
-			xhrSend.mock.calls[0][3](progressEvent);
-			expect(onProgress).toHaveBeenCalledWith(progressEvent, [{
-				...chunk,
-				data: fileData,
-			}]);
-		}
+        if (chunkStartData !== false) {
+            expect(xhrSend).toHaveBeenCalledWith(
+                [chunkItem],
+                chunkStartData.url || url,
+                utils.merge({}, updatedSendOptions, chunkStartData.sendOptions),
+                expect.any(Function)
+            );
+
+            const progressEvent = { loaded: 123 };
+            xhrSend.mock.calls[0][3](progressEvent);
+            expect(onProgress).toHaveBeenCalledWith(progressEvent, [{
+                ...chunk,
+                data: fileData,
+            }]);
+        }
 
         expect(triggerUpdater).toHaveBeenCalledWith(trigger, CHUNK_EVENTS.CHUNK_START, {
             item: { "unwrapped": true },
@@ -100,11 +102,11 @@ describe("sendChunk tests", () => {
             },
             sendOptions: updatedSendOptions,
             url,
-			remainingCount: 3,
+            remainingCount: 3,
             totalCount: 4,
-			chunkIndex: 2,
-			chunkItem,
-			onProgress
+            chunkIndex: 2,
+            chunkItem,
+            onProgress
         });
 
         return {
@@ -115,14 +117,14 @@ describe("sendChunk tests", () => {
 
     it.each([
         null,
-		{ size: 9 },
-	])("should send chunk with data = %s", async (data) => {
-       const { result } = await testSendChunk(data);
-		expect(result).toEqual({ xhrSend: true });
-	});
+        { size: 9 },
+    ])("should send chunk with data = %s", async (data) => {
+        const { result } = await testSendChunk(data);
+        expect(result).toEqual({ xhrSend: true });
+    });
 
     it("should use updated values from chunk start event updater", async () => {
-		const { result } = await testSendChunk({ size: 9 }, {
+        const { result } = await testSendChunk({ size: 9 }, {
             url: "updated.com",
             sendOptions: {
                 headers: {
@@ -131,22 +133,22 @@ describe("sendChunk tests", () => {
             },
         });
 
-		expect(result).toEqual({ xhrSend: true });
+        expect(result).toEqual({ xhrSend: true });
 
         expect(xhrSend.mock.calls[0][1]).toBe("updated.com");
         expect(xhrSend.mock.calls[0][2].headers.another).toBe(true);
     });
 
-	it("should skip chunk when event updater returns false", async() => {
-		const { result, sendResult } = await testSendChunk({ size: 9 }, false);
+    it("should skip chunk when event updater returns false", async () => {
+        const { result, sendResult } = await testSendChunk({ size: 9 }, false);
 
-		expect(xhrSend).not.toHaveBeenCalled();
+        expect(xhrSend).not.toHaveBeenCalled();
 
-		expect(result.state).toBe(FILE_STATES.FINISHED);
-		expect(result.status).toBe(200);
+        expect(result.state).toBe(FILE_STATES.FINISHED);
+        expect(result.status).toBe(200);
 
-		expect(sendResult.abort()).toBe(true);
-	});
+        expect(sendResult.abort()).toBe(true);
+    });
 
     it("shouldn't skip chunk when even updated returns true", async () => {
         const { result } = await testSendChunk({ size: 9 }, true);
@@ -157,12 +159,26 @@ describe("sendChunk tests", () => {
         expect(xhrSend.mock.calls[0][2].headers["Content-Range"]).toBeDefined();
     });
 
+    it("should include Content-Range header when sendWithRangeHeader is true (default)", async () => {
+        const { result } = await testSendChunk({ size: 9 }, {}, true);
+
+        expect(result).toEqual({ xhrSend: true });
+        expect(xhrSend.mock.calls[0][2].headers["Content-Range"]).toBe("bytes 1-9/400");
+    });
+
+    it("should not include Content-Range header when sendWithRangeHeader is false", async () => {
+        const { result } = await testSendChunk({ size: 9 }, {}, false);
+
+        expect(result).toEqual({ xhrSend: true });
+        expect(xhrSend.mock.calls[0][2].headers["Content-Range"]).toBeUndefined();
+    });
+
     it("should throw if failed to slice chunk", () => {
         getChunkDataFromFile.mockReturnValueOnce(null);
         const chunk = { id: "c1", start: 1, end: 10, data: null };
 
         expect(() => {
-            sendChunk(chunk, getChunkedState({ url: "url" }), { file: {} },  {});
+            sendChunk(chunk, getChunkedState({ url: "url" }), { file: {} }, {});
         }).toThrow(ChunkedSendError);
     });
 
@@ -177,7 +193,7 @@ describe("sendChunk tests", () => {
             xhrSend.mockResolvedValueOnce(xhrSendResult);
 
             triggerUpdater
-                .mockResolvedValueOnce({ });
+                .mockResolvedValueOnce({});
 
             const state = getChunkedState({ url, sendOptions, chunks: [chunk] });
 
@@ -191,15 +207,15 @@ describe("sendChunk tests", () => {
             expect(xhrSendResult.abort).toHaveBeenCalledTimes(1);
         });
 
-        it("should call abort successfully - after request is used", async() => {
+        it("should call abort successfully - after request is used", async () => {
             xhrSend.mockResolvedValueOnce(xhrSendResult);
 
             triggerUpdater
-                .mockResolvedValueOnce({ });
+                .mockResolvedValueOnce({});
 
             const state = getChunkedState({ url, sendOptions, chunks: [chunk] });
 
-			const sendResult = sendChunk(chunk, state, { file }, onProgress);
+            const sendResult = sendChunk(chunk, state, { file }, onProgress);
 
             await sendResult.request;
             await sendResult.abort();

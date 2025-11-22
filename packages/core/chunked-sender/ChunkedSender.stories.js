@@ -15,13 +15,14 @@ import getChunkedEnhancer, { CHUNK_EVENTS } from "./src";
 import Readme from "./ChunkedSender.storydoc.mdx";
 
 export const WithChunkedSender: UploadyStory = createUploadyStory(
-    ({ destination, chunkSize }): Node => {
+    ({ destination, chunkSize, sendWithRangeHeader }): Node => {
         const { url } = destination;
         const [file, setFile] = useState<?File>(null);
 
         const uploader = useMemo(() => {
             const chunkedEnhancer = getChunkedEnhancer({
                 chunkSize: chunkSize || DEFAULT_CHUNK_SIZE,
+                sendWithRangeHeader: sendWithRangeHeader !== undefined ? sendWithRangeHeader : true,
             });
 
             const uploader = createUploader({
@@ -54,7 +55,7 @@ export const WithChunkedSender: UploadyStory = createUploadyStory(
             });
 
             return uploader;
-        }, [url, chunkSize]);
+        }, [url, chunkSize, sendWithRangeHeader]);
 
         const onSubmit = async () => {
             await uploader.add([file], { params: { name: "textures" } });
@@ -96,9 +97,11 @@ const chunkedSenderStories: CsfExport = getCsfExport(undefined, "Chunked Sender"
     },
     args: {
         chunkSize: DEFAULT_CHUNK_SIZE,
+        sendWithRangeHeader: true,
     },
     argTypes: {
-        chunkSize: { control: "number" }
+        chunkSize: { control: "number" },
+        sendWithRangeHeader: { control: "boolean" }
     }
 });
 

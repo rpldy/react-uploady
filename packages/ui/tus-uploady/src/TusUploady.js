@@ -33,6 +33,7 @@ const TusUploady = (props: TusUploadyProps): Node => {
 		forgetOnSuccess,
 		ignoreModifiedDateInStorage,
         resumeHeaders,
+		sendWithRangeHeader,
 		...uploadyProps
 	} = props;
 
@@ -55,7 +56,8 @@ const TusUploady = (props: TusUploadyProps): Node => {
 				lockedRetryDelay,
 				forgetOnSuccess,
 				ignoreModifiedDateInStorage,
-                resumeHeaders
+                resumeHeaders,
+				sendWithRangeHeader,
 			}, props.enhancer) :
 			undefined,
 		[
@@ -76,7 +78,8 @@ const TusUploady = (props: TusUploadyProps): Node => {
 			lockedRetryDelay,
 			forgetOnSuccess,
 			ignoreModifiedDateInStorage,
-            resumeHeaders
+            resumeHeaders,
+			sendWithRangeHeader,
 		]);
 
 	return <Uploady {...uploadyProps} enhancer={enhancer}/>;

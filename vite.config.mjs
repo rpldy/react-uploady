@@ -1,9 +1,12 @@
 /// <reference types="vitest" />
 import path from "path";
 import fs from "fs";
+import { createRequire } from "module";
 import { defineConfig } from "vite";
 import babelPlugin from "vite-plugin-babel";
 import { getMatchingPackages } from "./scripts/lernaUtils.mjs";
+
+const require = createRequire(import.meta.url);
 
 const isCI = !!process.env.CI;
 
@@ -99,6 +102,11 @@ export default defineConfig({
         reporters: ["verbose"],
     },
     resolve: {
-        alias: createPackageAliases()
+        alias: [
+            ...createPackageAliases(),
+            // Ensure React is properly resolved and deduplicated
+            { find: /^react$/, replacement: require.resolve("react") },
+            { find: /^react-dom$/, replacement: require.resolve("react-dom") },
+        ]
     }
 });

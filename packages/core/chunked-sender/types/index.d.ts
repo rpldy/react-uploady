@@ -12,6 +12,7 @@ export interface ChunkedOptions {
     chunkSize?: number;
     retries?: number;
     parallel?: number;
+    sendWithRangeHeader?: boolean;
 }
 
 export type ChunkedSender = {

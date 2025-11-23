@@ -70,7 +70,8 @@ describe("utils tests", () => {
                 chunked: false,
                 chunkSize: 1000,
                 retries: 2,
-                parallel: 3
+                parallel: 3,
+                sendWithRangeHeader: true,
             };
 
             const result = utils.getMandatoryOptions(options);

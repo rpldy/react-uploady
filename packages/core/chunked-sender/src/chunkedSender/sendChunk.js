@@ -1,11 +1,11 @@
 // @flow
 import {
-	triggerUpdater,
-	createBatchItem,
-	logger,
-	getMerge,
-	pick,
-	FILE_STATES
+    triggerUpdater,
+    createBatchItem,
+    logger,
+    getMerge,
+    pick,
+    FILE_STATES
 } from "@rpldy/shared";
 import { unwrap } from "@rpldy/simple-state";
 import xhrSend from "@rpldy/sender";
@@ -20,19 +20,19 @@ import type { ChunkStartEventData } from "../types";
 import type { Chunk, ChunkedState } from "./types";
 
 const getContentRangeValue = (chunk: Chunk, data: ?Blob, item: BatchItem) =>
-	data && `bytes ${chunk.start}-${chunk.start + data.size - 1}/${item.file.size}`;
+    data && `bytes ${chunk.start}-${chunk.start + data.size - 1}/${item.file.size}`;
 
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
 const getSkippedResult = (): SendResult => ({
-	request: Promise.resolve({
-		state: FILE_STATES.FINISHED,
-		response: "skipping chunk as instructed by CHUNK_START handler",
-		status: 200,
-	}),
-	abort: () => true,
-	//passthrough type
-	senderType: "chunk-skipped-sender",
+    request: Promise.resolve({
+        state: FILE_STATES.FINISHED,
+        response: "skipping chunk as instructed by CHUNK_START handler",
+        status: 200,
+    }),
+    abort: () => true,
+    //passthrough type
+    senderType: "chunk-skipped-sender",
 });
 
 const uploadChunkWithUpdatedData = (
@@ -44,12 +44,18 @@ const uploadChunkWithUpdatedData = (
 ): Promise<SendResult> => {
     const state = chunkedState.getState();
     const unwrappedOptions = unwrap(state.sendOptions);
+    const headers = { ...unwrappedOptions.headers };
+
+
+    if (state.sendWithRangeHeader !== false) {
+        headers["Content-Range"] = getContentRangeValue(chunk, chunk.data, item);
+    } else {
+        logger.debugLog(`chunkedSender.sendChunk: excluding content-range header as sendWithRangeHeader is false for chunk ${chunk.id}`);
+    }
+
     const sendOptions = {
         ...unwrappedOptions,
-        headers: {
-            ...unwrappedOptions.headers,
-            "Content-Range": getContentRangeValue(chunk, chunk.data, item),
-        }
+        headers,
     };
 
     const chunkItem = createBatchItem(chunk.data, chunk.id);
@@ -60,7 +66,7 @@ const uploadChunkWithUpdatedData = (
 
     const chunkIndex = state.chunks.indexOf(chunk);
 
-    return triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, {
+    return triggerUpdater < ChunkStartEventData > (trigger, CHUNK_EVENTS.CHUNK_START, {
         item: unwrap(item),
         chunk: pick(chunk, ["id", "start", "end", "index", "attempt"]),
         chunkItem: { ...chunkItem },

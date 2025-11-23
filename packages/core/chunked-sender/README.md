@@ -42,6 +42,7 @@ These will be handed over to the default [@rpldy/sender](https://react-uploady.o
 | chunkSize            | number  | 5242880 | the chunk size. relevant when uploaded file is larger than the value    |
 | retries              | number  | 0       | how many times to retry sending a failed chunk                          |
 | parallel             | number  | 0       | how many (chunk) requests to send simultaneously                        |
+| sendWithRangeHeader  | boolean | true    | whether to include the Content-Range header per chunk request           |
 
 ## Events
 

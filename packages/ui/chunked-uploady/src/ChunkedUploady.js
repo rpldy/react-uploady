@@ -16,13 +16,13 @@ const getEnhancer = (options: ChunkedOptions, enhancer: ?UploaderEnhancer<Upload
 };
 
 const ChunkedUploady = (props: ChunkedUploadyProps): Node => {
-    const { chunked, chunkSize, retries, parallel, ...uploadyProps } = props;
+    const { chunked, chunkSize, retries, parallel, sendWithRangeHeader, ...uploadyProps } = props;
 
     const enhancer = useMemo(
         () => CHUNKING_SUPPORT ?
-            getEnhancer({ chunked, chunkSize, retries, parallel }, props.enhancer) :
+            getEnhancer({ chunked, chunkSize, retries, parallel, sendWithRangeHeader }, props.enhancer) :
             undefined,
-        [props.enhancer, chunked, chunkSize, retries, parallel]);
+        [props.enhancer, chunked, chunkSize, retries, parallel, sendWithRangeHeader]);
 
     return <Uploady {...uploadyProps} enhancer={enhancer}/>;
 };

@@ -12,7 +12,7 @@ const TestWithPasteUpload: React.FC = () => {
 };
 
 const TestPasteUpload: React.FC = () => {
-    const containerRef = React.useRef(null);
+    const containerRef = React.useRef<HTMLDivElement>(null);
 
     const onPasteUpload = React.useCallback(({ count }: PasteUploadData) => {
         console.log("ELEMENT PASTE-TO-UPLOAD files: ", count);

@@ -24,7 +24,7 @@ export interface UploadDropZoneProps extends UploadOptions {
     enableOnContains?: boolean;
     noContainCheckForDrag?: boolean;
     extraProps?: Record<string, unknown>;
-    children?: JSX.Element | JSX.Element[];
+    children?: React.JSX.Element | React.JSX.Element[];
 }
 
 export const UploadDropZone: React.ComponentType<UploadDropZoneProps>;

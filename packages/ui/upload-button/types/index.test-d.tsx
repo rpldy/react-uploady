@@ -2,7 +2,7 @@ import * as React from "react";
 import UploadButton, { asUploadButton, UploadButtonProps } from "./index";
 
 const TestButton: React.FC = () => {
-    const btnRef = React.useRef<HTMLButtonElement>();
+    const btnRef = React.useRef<HTMLButtonElement>(null);
 
     return <UploadButton autoUpload
                          destination={{ url: "test.com" }}
@@ -11,14 +11,14 @@ const TestButton: React.FC = () => {
     </UploadButton>;
 };
 
-const testMyButton = (): JSX.Element => {
+const testMyButton = (): React.JSX.Element => {
     return <TestButton/>;
 };
 
 interface DivUploadButtonExtraProps {
     className?: string;
     id?: string;
-    children?: JSX.Element[] | JSX.Element | string;
+    children?: React.JSX.Element[] | React.JSX.Element | string;
     text?: string;
     foo: string;
 }
@@ -42,7 +42,7 @@ const DivUploadButton: React.ComponentType<React.PropsWithRef<UploadButtonProps>
     }));
 
 const TestDivButton: React.FC = () => {
-    const divRef = React.useRef<HTMLDivElement>();
+    const divRef = React.useRef<HTMLDivElement>(null);
 
     return <DivUploadButton ref={divRef} autoUpload={false} extraProps={{ foo: "bar" }}>
         This is a DIV Button
@@ -82,11 +82,11 @@ const TestLiButtonWithoutRef: React.FC = () => {
     </LiUploadButton>;
 };
 
-const testAsButton = (): JSX.Element => {
+const testAsButton = (): React.JSX.Element => {
     return <TestDivButton/>;
 };
 
-const testAsButtonWithoutRef = (): JSX.Element => {
+const testAsButtonWithoutRef = (): React.JSX.Element => {
     return <>
         <TestDivButtonWithoutRef/>
         <TestLiButtonWithoutRef/>

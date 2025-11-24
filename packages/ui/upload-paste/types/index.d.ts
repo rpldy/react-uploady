@@ -8,7 +8,7 @@ export type PasteUploadHandler = (data: PasteUploadData) => void;
 export interface PasteCompProps {
     className?: string;
     id?: string;
-    children?: JSX.Element[] | JSX.Element | string;
+    children?: React.JSX.Element[] | React.JSX.Element | string;
     extraProps?: Record<string, unknown>;
     onPasteUpload?: PasteUploadHandler,
 }
@@ -19,7 +19,7 @@ export type PasteUploadHookResult = { toggle: () => boolean, getIsEnabled: () =>
 
 export const usePasteUpload: (
     uploadOptions?: UploadOptions | null | undefined,
-    element?: React.RefObject<HTMLHtmlElement> | null | undefined,
+    element?: React.RefObject<HTMLElement | null> | null | undefined,
     onPasteUpload?: PasteUploadHandler
 ) => PasteUploadHookResult;
 

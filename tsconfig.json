@@ -3,7 +3,7 @@
         "target": "esnext",
         "module": "CommonJS",
         "lib": ["dom", "es2017", "esnext"],
-        "jsx": "react",
+        "jsx": "react-jsx",
         "strict": true,
         "moduleResolution": "node",
         "noImplicitAny": true,

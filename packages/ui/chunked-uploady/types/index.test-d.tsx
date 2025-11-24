@@ -50,7 +50,7 @@ const MyAsyncApp: React.FC = () => <ChunkedUploady
     <ComponentWithAsyncChunkHandlers/>
 </ChunkedUploady>;
 
-const testMyApp = (): JSX.Element => {
+const testMyApp = (): React.JSX.Element => {
     return <>
         <MyApp/>
         <MyAsyncApp/>

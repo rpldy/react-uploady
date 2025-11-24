@@ -40,7 +40,7 @@ const TestDropZoneWithGetFiles: React.FC = () => {
     </UploadDropZone>;
 };
 
-const testDropZone = (): JSX.Element => {
+const testDropZone = (): React.JSX.Element => {
     return <>
         <TestDropZone/>
         <TestDropZoneWithGetFiles/>

@@ -170,7 +170,7 @@ const EventHooksTest: React.FC = () => {
     </div>;
 };
 
-const testEventHooks = (): JSX.Element => {
+const testEventHooks = (): React.JSX.Element => {
     return <EventHooksTest/>;
 };
 
@@ -188,7 +188,7 @@ const WithUploadyContext: React.FC = () => {
     </div>;
 };
 
-const testUploadyContext = (): JSX.Element => {
+const testUploadyContext = (): React.JSX.Element => {
     return <WithUploadyContext/>;
 };
 
@@ -203,7 +203,7 @@ const TestUseOptions: React.FC = () => {
     </div>;
 };
 
-const testUseUploadOptions = (): JSX.Element => {
+const testUseUploadOptions = (): React.JSX.Element => {
     return <TestUseOptions/>;
 };
 
@@ -215,7 +215,7 @@ const ListOfUploadOptions = () => {
     </ul>;
 };
 
-const testNoDomUploady = (): JSX.Element => {
+const testNoDomUploady = (): React.JSX.Element => {
 
     return <NoDomUploady debug>
         <ListOfUploadOptions/>
@@ -226,7 +226,7 @@ interface WithPreReqTestProps extends WithRequestPreSendUpdateWrappedProps{
     name: string
 }
 
-const testWithRequestPreSendUpdate = (): JSX.Element => {
+const testWithRequestPreSendUpdate = (): React.JSX.Element => {
     const MyComp: React.FC<WithPreReqTestProps> = (props) => {
         const { updateRequest } = props;
 
@@ -254,7 +254,7 @@ interface WithBatchStartProps extends WithRequestPreSendUpdateWrappedProps {
  name: string
 }
 
-const testWithBatchStartUpdate = (): JSX.Element =>  {
+const testWithBatchStartUpdate = (): React.JSX.Element =>  {
     const MyComp: React.FC<WithBatchStartProps> = (props) => {
         const { updateRequest, requestData } = props;
 

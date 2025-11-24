@@ -4,7 +4,7 @@ import { UploadOptions } from "@rpldy/shared";
 export interface ButtonProps<E = Element> {
     className?: string;
     id?: string;
-    children?: JSX.Element[] | JSX.Element | string;
+    children?: React.JSX.Element[] | React.JSX.Element | string;
     text?: string;
     extraProps?: Record<string, unknown>;
     ref?: React.RefObject<any>;

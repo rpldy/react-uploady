@@ -59,13 +59,13 @@ describe("onRequestFinished tests", () => {
 		expect(cleanUpFinishedBatches).toHaveBeenCalledTimes(1);
 		expect(mockNext).toHaveBeenCalledTimes(1);
 
-		const finishedItem = expect.objectContaining({
+		const finishedItem = {
             batchId: batch.id,
 			state: FILE_STATES.FINISHED,
 			uploadResponse: response,
 			completed,
 			...queueState.getState().items[itemId]
-		});
+		};
 
         const stateBatchOptions =  queueState.getState().batches[batch.id].itemBatchOptions[finishedItem.id];
 

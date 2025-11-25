@@ -5,11 +5,12 @@ import { getMatchingPackages } from "../scripts/lernaUtils.mjs";
 import { getUploadyVersion } from "../scripts/uploadyVersion.mjs";
 import path from "path";
 import { createRequire } from "module";
+import { log } from "console";
 
 const require = createRequire(import.meta.url);
 
-const getCurrentNpmVersion = async (pkg) => {
-    let result = null;
+const getCurrentNpmVersion = async (pkg): Promise<{ name: string; version: string } | null> => {
+    let result: { name: string; version: string } | null = null;
 
     try {
         let version = pkg.get("version");
@@ -39,13 +40,13 @@ const getAllPackagesVersions = async () => {
         pkgs.map(((pkg) =>
             getCurrentNpmVersion(pkg))));
 
-    return JSON.stringify(pkgVersions);
+    return pkgVersions;
 };
 
-const stringify = (obj) =>
+const stringify = (obj: Record<string, any>) =>
     Object.entries(obj)
-        .reduce((res, [key, value]) => {
-            res[key] = value.indexOf("\"") !== 0 ?
+        .reduce((res: Record<string, string>, [key, value]: [string, any]) => {
+            res[key] = typeof value === 'string' && value.indexOf("\"") !== 0 ?
                 JSON.stringify(value) : value;
             return res;
         }, {});
@@ -84,16 +85,32 @@ const addEnvParams = async (config) =>
             ? existingProcessEnv 
             : {};
 
+        const pkgVersions = await getAllPackagesVersions();
+        const pkgVersionsJson = JSON.stringify(pkgVersions);
+        
+        console.log("...Setting PUBLISHED_VERSIONS in DefinePlugin");
+        console.log("...Number of packages:", pkgVersions.length);
+        console.log("...First package:", pkgVersions[0]);
+
+        const processEnvDefs = {
+            ...existingProcessEnvObj,
+            ...stringify(process.env),
+            PUBLISHED_VERSIONS: pkgVersionsJson, // Already a JSON string
+            BUILD_TIME_VERSION: JSON.stringify(buildVersion),
+            SB_INTERNAL: JSON.stringify(process.env.SB_INTERNAL || ""),
+            NODE_ENV: JSON.stringify(process.env.NODE_ENV || "development"),
+            LOCAL_PORT: JSON.stringify(process.env.LOCAL_PORT || ""),
+        };
+
         return {
             ...definitions,
-            "PUBLISHED_VERSIONS": await getAllPackagesVersions(),
-            "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
-            "process.env": {
-                ...existingProcessEnvObj,
-                ...stringify(process.env),
-                BUILD_TIME_VERSION: JSON.stringify(buildVersion),
-                SB_INTERNAL: JSON.stringify(process.env.SB_INTERNAL),
-            }
+            // For DefinePlugin, we need to provide the value as a string representation
+            // pkgVersionsJson is already a JSON string like "[{...}]"
+            // JSON.stringify wraps it in quotes so it becomes a string literal in the code
+            "PUBLISHED_VERSIONS": JSON.stringify(pkgVersionsJson),
+            "LOCAL_PORT": `"${process.env.LOCAL_PORT || ""}"`,
+            // Define process.env as an object so process.env.X accesses work
+            "process.env": processEnvDefs,
         };
     });
 

@@ -1,9 +1,12 @@
 import { createRequire } from "node:module";
 /* eslint storybook/story-exports:0 storybook/csf-component:0*/
 import path, { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import type { StorybookConfig } from "@storybook/react-webpack5";
 
 const require = createRequire(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const config: StorybookConfig = {
     stories: [
@@ -11,7 +14,7 @@ const config: StorybookConfig = {
         "../packages/**/*.stories.js"
     ],
 
-    addons: [path.resolve("./.storybook/uploadyPreset"), getAbsolutePath("@storybook/addon-links"), {
+    addons: [path.resolve(__dirname, "uploadyPreset.ts"), getAbsolutePath("@storybook/addon-links"), {
         name: getAbsolutePath("@storybook/addon-docs"), //path.dirname(require.resolve("@storybook/addon-docs/package.json")),
         options: {
             transcludeMarkdown: true

@@ -25,9 +25,29 @@ const StoryVersionBadge = styled(VersionBadge)`
     font-size: 12px;
 `;
 
-const VERSIONS = PUBLISHED_VERSIONS;
+// Get PUBLISHED_VERSIONS from either global or process.env (for Storybook 10 compatibility)
+const getPublishedVersions = () => {
+    // Try process.env first (Storybook 10 preferred method)
+    if (typeof process !== 'undefined' && process.env && process.env.PUBLISHED_VERSIONS) {
+        try {
+            return JSON.parse(process.env.PUBLISHED_VERSIONS);
+        } catch (e) {
+            console.warn('Failed to parse PUBLISHED_VERSIONS from process.env', e);
+        }
+    }
+    // Fallback to global variable (for DefinePlugin)
+    if (typeof PUBLISHED_VERSIONS !== 'undefined') {
+        return typeof PUBLISHED_VERSIONS === 'string' 
+            ? JSON.parse(PUBLISHED_VERSIONS) 
+            : PUBLISHED_VERSIONS;
+    }
+    return [];
+};
 
-window._getPackageVersions = () => VERSIONS;
+const VERSIONS = getPublishedVersions();
+
+// Use bracket notation to avoid TypeScript errors (Babel/Flow compatible)
+window['_getPackageVersions'] = () => VERSIONS;
 
 const UploadyStoryDecorator = (Story, context) => {
     const pkg = context.parameters.pkg;
@@ -50,6 +70,7 @@ const UploadyStoryDecorator = (Story, context) => {
             <InfoContainer>
                 {pkg &&
                     <StoryVersionBadge
+                        className=""
                         withUrl
                         pkg={fullPkgName}
                         preText={fullPkgName + " "}

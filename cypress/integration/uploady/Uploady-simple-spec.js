@@ -21,8 +21,6 @@ describe("Uploady - Simple", () => {
         loadPage();
         intercept();
 
-        cy.waitLong();
-
         uploadFile(fileName, () => {
             cy.wait("@uploadReq");
 

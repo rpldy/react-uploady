@@ -45,7 +45,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.2.0",
-    "styled-components": "^6.1.18"
+    "styled-components": "^6.1.19"
   },
   "peerDependencies": {
     "react": ">=16.8"

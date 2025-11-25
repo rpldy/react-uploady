@@ -6,7 +6,7 @@ import { getUploadMetadata } from "../utils";
 
 import type { BatchItem, FileLike } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
-import type { InitUploadResult  } from "../types";
+import type { InitData, InitUploadResult } from "../types";
 import type { State, TusState } from "../../types";
 
 export const resolveUploadUrl = (createUrl: string, location: string): string => {
@@ -28,35 +28,36 @@ export const resolveUploadUrl = (createUrl: string, location: string): string =>
     return uploadUrl;
 };
 
-const handleSuccessfulCreateResponse = (item: BatchItem, url: string, tusState: TusState, createResponse: XMLHttpRequest, sentData: ?FileLike | Blob) => {
-	const { options } = tusState.getState();
-    const uploadUrl = resolveUploadUrl(url, createResponse.getResponseHeader("Location"));
-	let offset = 0,
-		isDone = false;
+const handleSuccessfulCreateResponse =
+    (item: BatchItem, url: string, tusState: TusState, createResponse: XMLHttpRequest, sentData: ?FileLike | Blob): InitData => {
+        const { options } = tusState.getState();
+        const uploadUrl = resolveUploadUrl(url, createResponse.getResponseHeader("Location"));
+        let offset = 0,
+            isDone = false;
 
-    logger.debugLog(`tusSender.create: successfully created upload for item: ${item.id} - upload url = ${uploadUrl}`);
+        logger.debugLog(`tusSender.create: successfully created upload for item: ${item.id} - upload url = ${uploadUrl}`);
 
-    if (options.sendDataOnCreate) {
-		const resOffset = parseInt(createResponse.getResponseHeader("Upload-Offset"));
-		offset = !isNaN(resOffset) ? resOffset : offset;
+        if (options.sendDataOnCreate) {
+            const resOffset = parseInt(createResponse.getResponseHeader("Upload-Offset"));
+            offset = !isNaN(resOffset) ? resOffset : offset;
 
-		//consider as done when file smaller than chunkSize
-		isDone = item.file.size <= offset;
-	}
+            //consider as done when file smaller than chunkSize
+            isDone = item.file.size <= offset;
+        }
 
-    tusState.updateState((state: State) => {
-        //update state with create response for item
-		state.items[item.id].uploadUrl = uploadUrl;
-		state.items[item.id].offset = offset;
-    });
+        tusState.updateState((state: State) => {
+            //update state with create response for item
+            state.items[item.id].uploadUrl = uploadUrl;
+            state.items[item.id].offset = offset;
+        });
 
-    return {
-        offset,
-        uploadUrl,
-        isNew: true,
-		isDone
+        return {
+            offset,
+            uploadUrl,
+            isNew: true,
+            isDone
+        };
     };
-};
 
 const createUpload = (item: BatchItem, url: string, tusState: TusState, sendOptions: SendOptions, parallelIdentifier: ?string): InitUploadResult => {
     const { options } = tusState.getState();

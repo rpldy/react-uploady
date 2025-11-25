@@ -32,7 +32,7 @@ const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = fa
     const id = isAlreadyBatchItem && f.id && typeof f.id === "string" ? f.id : `${batchId}.item-${iCounter}`,
         state: FILE_STATES = isPending ? FILE_STATES.PENDING : FILE_STATES.ADDED;
 
-    let batchItem = {
+    let batchItem: any = {
         id,
         batchId,
         state,

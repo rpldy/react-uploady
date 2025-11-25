@@ -1,4 +1,4 @@
-import { actions } from "@storybook/addon-actions";
+import { actions } from "storybook/actions";
 import { composeEnhancers } from "@rpldy/uploady";
 import { UPLOADER_EVENTS } from "@rpldy/uploader";
 

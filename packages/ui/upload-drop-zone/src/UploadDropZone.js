@@ -1,5 +1,5 @@
 // @flow
-import React, { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
+import React, { forwardRef, useCallback, useImperativeHandle, useRef, useLayoutEffect } from "react";
 import { getFilesFromDragEvent } from "html-dir-content";
 import { isEmpty, isFunction } from "@rpldy/shared";
 import { useUploadyContext, markAsUploadOptionsComponent } from "@rpldy/shared-ui";
@@ -41,7 +41,9 @@ const UploadDropZone: React.ComponentType<UploadDropZoneProps> = forwardRef(
 
         //using ref so upload can stay memoized
         const uploadOptionsRef = useRef<?UploadOptions>();
-        uploadOptionsRef.current = uploadOptions;
+        useLayoutEffect(() => {
+            uploadOptionsRef.current = uploadOptions;
+        }, [uploadOptions]);
 
         const handleEnd = useCallback(() => {
             dragLeaveTrackerRef.current = false;

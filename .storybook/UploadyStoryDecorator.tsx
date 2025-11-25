@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import styled, { ThemeProvider } from "styled-components";
-import { useArgs } from "@storybook/preview-api";
+import { useArgs } from "storybook/preview-api";
 import VersionBadge from "./VersionBadge";
 
 const Container = styled.div`

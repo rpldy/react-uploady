@@ -25,24 +25,6 @@ type FileInputPortalProps = {|
 
 const NO_CONTAINER_ERROR_MSG = "Uploady - Container for file input must be a valid dom element";
 
-const renderInput = (inputProps: FileInputProps, instanceOptions: UploaderCreateOptions, ref: React.RefSetter<HTMLInputElement>) => <input
-    {...inputProps}
-    name={instanceOptions.inputFieldName}
-    type="file"
-    ref={ref}
-/>;
-
-const renderInPortal = (
-    container: ?HTMLElement,
-    isValidContainer: ?boolean,
-    inputProps: FileInputProps,
-    instanceOptions: UploaderCreateOptions,
-    ref: React.RefSetter<HTMLInputElement>
-) =>
-    container && isValidContainer ?
-        ReactDOM.createPortal(renderInput(inputProps, instanceOptions, ref), container) :
-        null;
-
 const FileInputField = memo(forwardRef(({ container, noPortal, ...inputProps }: FileInputPortalProps, ref: React.RefSetter<HTMLInputElement>) => {
     const instanceOptions: UploaderCreateOptions = useUploadOptions();
     const isValidContainer = container && container.nodeType === 1;
@@ -52,12 +34,21 @@ const FileInputField = memo(forwardRef(({ container, noPortal, ...inputProps }: 
         NO_CONTAINER_ERROR_MSG
     );
 
+    const inputElement = <input
+        {...inputProps}
+        name={instanceOptions.inputFieldName}
+        type="file"
+        ref={ref}
+    />;
+
     // In DEV - SSR React will warn on mismatch between client&server :( -
     // https://github.com/facebook/react/issues/12615
     // https://github.com/facebook/react/issues/13097
     return noPortal ?
-        renderInput(inputProps, instanceOptions, ref) :
-        renderInPortal(container, isValidContainer, inputProps, instanceOptions, ref);
+        inputElement :
+        (container && isValidContainer ?
+            ReactDOM.createPortal(inputElement, container) :
+            null);
 }));
 
 const Uploady = (props: UploadyProps): Node => {

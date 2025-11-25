@@ -1,5 +1,5 @@
 // @flow
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { logger } from "@rpldy/shared";
 import { useUploadyContext } from "@rpldy/shared-ui";
 import type { Destination } from "@rpldy/shared";
@@ -83,33 +83,35 @@ const useFileInput = (fileInputRef?: InputRef): ?InputRef => {
     const context = useUploadyContext();
     const inputGiven = !!fileInputRef;
 
-    if (fileInputRef) {
-        context.setExternalFileInput(fileInputRef);
-    }
+    useLayoutEffect(() => {
+        if (fileInputRef) {
+            context.setExternalFileInput(fileInputRef);
+        }
+    }, [fileInputRef, context]);
 
     useEffect(() => {
-            let stopObservingCallback;
+        let stopObservingCallback;
 
-            //uses Element.prototype.closest so no IE11 support - use polyfill
-            if (fileInputRef?.current && "closest" in fileInputRef.current) {
-                const input = fileInputRef.current;
-                const uploaderOptions = context.getOptions();
+        //uses Element.prototype.closest so no IE11 support - use polyfill
+        if (fileInputRef?.current && "closest" in fileInputRef.current) {
+            const input = fileInputRef.current;
+            const uploaderOptions = context.getOptions();
 
-                //if no destination was passed, try and get from input's parent form
-                if (!uploaderOptions.destination || !uploaderOptions.destination.url) {
-                    const { stopObserving } = retrieveDestinationFromInput(input,
-                        (newDestination) => {
-                            context.setOptions({ destination: newDestination });
-                        });
+            //if no destination was passed, try and get from input's parent form
+            if (!uploaderOptions.destination || !uploaderOptions.destination.url) {
+                const { stopObserving } = retrieveDestinationFromInput(input,
+                    (newDestination) => {
+                        context.setOptions({ destination: newDestination });
+                    });
 
-                    stopObservingCallback = stopObserving;
-                }
+                stopObservingCallback = stopObserving;
             }
+        }
 
-            return () => {
-                stopObservingCallback?.();
-            };
-        },
+        return () => {
+            stopObservingCallback?.();
+        };
+    },
         [fileInputRef, context]);
 
     return inputGiven ? fileInputRef : context.getInternalFileInput();

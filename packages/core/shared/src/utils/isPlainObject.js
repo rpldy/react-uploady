@@ -4,7 +4,7 @@ const isPlainObject = (obj: Object): boolean => {
 
     return !!obj &&
         typeof obj === "object" &&
-        (proto?.constructor.name === "Object" || proto === null) &&
+        (proto?.constructor.name === "Object" || !proto) &&
         //$FlowExpectedError[method-unbinding]
         !Object.prototype.hasOwnProperty.call(obj, "__proto__");
 };

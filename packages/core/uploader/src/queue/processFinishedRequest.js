@@ -4,8 +4,8 @@ import { UPLOADER_EVENTS, ITEM_FINALIZE_STATES } from "../consts";
 import { cleanUpFinishedBatches, incrementBatchFinishedCounter, getBatchDataFromItemId } from "./batchHelpers";
 import { finalizeItem } from "./itemHelpers";
 
-import type { UploadData, BatchItem } from "@rpldy/shared";
-import type { ProcessNextMethod, QueueState } from "./types";
+import type { BatchItem } from "@rpldy/shared";
+import type { ProcessNextMethod, QueueState, FinishedItemData } from "./types";
 
 type FileStateToEventMap = {
     [string]: ?string,
@@ -21,13 +21,11 @@ export const FILE_STATE_TO_EVENT_MAP: FileStateToEventMap = {
     [FILE_STATES.UPLOADING.valueOf()]: UPLOADER_EVENTS.ITEM_PROGRESS,
 };
 
-type FinishData = { id: string, info: UploadData };
-
 const getIsFinalized = (item: BatchItem) =>
 	!!~ITEM_FINALIZE_STATES.indexOf(item.state);
 
-const processFinishedRequest = (queue: QueueState, finishedData: FinishData[], next: ProcessNextMethod): void => {
-    finishedData.forEach((itemData: FinishData) => {
+const processFinishedRequest = (queue: QueueState, finishedData: FinishedItemData[], next: ProcessNextMethod): void => {
+    finishedData.forEach((itemData: FinishedItemData) => {
         const state = queue.getState();
         const { id, info } = itemData;
 

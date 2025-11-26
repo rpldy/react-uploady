@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@rpldy/uploady": "workspace:*",
-    "flow-bin": "^0.281.0",
+    "flow-bin": "^0.286.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

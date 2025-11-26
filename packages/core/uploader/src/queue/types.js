@@ -1,5 +1,5 @@
 // @flow
-import type { Batch, BatchItem, Cancellable, UploadOptions } from "@rpldy/shared";
+import type { Batch, BatchItem, Cancellable, UploadData, UploadOptions } from "@rpldy/shared";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { AbortsMap } from "@rpldy/abort";
 import type { ItemsSender, UploaderCreateOptions } from "../types";
@@ -55,3 +55,8 @@ export type UploaderQueue = {|
 |};
 
 export type ProcessNextMethod = (QueueState) => Promise<void> | void;
+
+export type FinishedItemData = {
+    id: string,
+    info: UploadData,
+};

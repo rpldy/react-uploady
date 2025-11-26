@@ -11,7 +11,7 @@ import { getBatchDataFromItemId } from "./batchHelpers";
 
 import type { BatchItem, UploadData } from "@rpldy/shared";
 import type { SendResult } from "@rpldy/sender";
-import type { QueueState, ProcessNextMethod } from "./types";
+import type { QueueState, ProcessNextMethod, FinishedItemData } from "./types";
 import type { ItemsSendData } from "./preSendPrepare";
 
 const preparePreRequestItems = getItemsPrepareUpdater<BatchItem[]>(
@@ -60,7 +60,7 @@ const sendAllowedItems = (queue: QueueState, itemsSendData: ItemsSendData, next:
         request
             //wait for server request to return
             .then((requestInfo: UploadData) => {
-                const finishedData = items.map((item) => ({
+                const finishedData: FinishedItemData[] = items.map((item) => ({
                     id: item.id,
                     info: requestInfo,
                 }));
@@ -76,7 +76,7 @@ const reportCancelledItems = (queue: QueueState, items: BatchItem[], cancelledRe
         .filter(Boolean);
 
     if (cancelledItemsIds.length) {
-        const finishedData = cancelledItemsIds.map((id: string) => ({
+        const finishedData: FinishedItemData[] = cancelledItemsIds.map((id: string) => ({
             id,
             info: { status: 0, state: FILE_STATES.CANCELLED, response: "cancel" },
         }));
@@ -88,7 +88,7 @@ const reportCancelledItems = (queue: QueueState, items: BatchItem[], cancelledRe
 };
 
 const reportPreparedError = (error: any, queue: QueueState, items: BatchItem[], next: ProcessNextMethod) => {
-    const finishedData = items.map(({ id }: BatchItem) => ({
+    const finishedData: FinishedItemData[] = items.map(({ id }: BatchItem) => ({
         id,
         info: { status: 0, state: FILE_STATES.ERROR, response: error },
     }));

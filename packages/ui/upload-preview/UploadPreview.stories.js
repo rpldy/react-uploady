@@ -875,7 +875,7 @@ const SubmitButton = styled.button`
 
 const MyForm = () => {
     const { processPending } = useUploady();
-    const [fields, setFields] = useState({});
+    const [fields, setFields] = useState<{[string]: string}>({});
     const [cropped, setCropped] = useState<?{id: string, data: Object}>(null);
 
     const setCropForItem = (id: string, data: Blob) => {

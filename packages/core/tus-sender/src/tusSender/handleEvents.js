@@ -40,18 +40,17 @@ const forgetPersistedUrls = (item: BatchItem, itemInfo: ItemInfo, options: TusOp
 };
 
 const getPartUpdatedRequest = (data: ChunkStartEventData, trigger: TriggerMethod) =>
-    triggerUpdater<PartStartEventData>(trigger, TUS_EVENTS.PART_START, {
+    ((triggerUpdater<PartStartEventData>(trigger, TUS_EVENTS.PART_START, {
         url: data.url,
         item: data.item,
         headers: data.sendOptions?.headers || {},
         chunk: data.chunk,
-    })
-        // $FlowFixMe - https://github.com/facebook/flow/issues/8215
+    }): any): Promise<PartStartResponseData>)
         .then((response: PartStartResponseData) => {
             let updated = data;
 
             if (response && isPlainObject(response)) {
-                const { headers: respHeaders, url: respUrl } = response;
+                const { headers: respHeaders, url: respUrl } = (response: any);
 
                 updated = merge({}, data, {
                     sendOptions: {

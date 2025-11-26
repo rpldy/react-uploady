@@ -1,5 +1,5 @@
 // @flow
-import React, { forwardRef, useCallback, useRef } from "react";
+import React, { forwardRef, useCallback, useRef, useLayoutEffect } from "react";
 import { markAsUploadOptionsComponent, useUploadyContext } from "@rpldy/shared-ui";
 
 import type { ComponentType } from "react";
@@ -13,7 +13,9 @@ const asUploadButton = (Component: ComponentType<any>): React.ComponentType<Uplo
 
         //using ref so onButtonClick can stay memoized
         const uploadOptionsRef = useRef<?UploadOptions>();
-        uploadOptionsRef.current = uploadOptions;
+        useLayoutEffect(() => {
+            uploadOptionsRef.current = uploadOptions;
+        }, [uploadOptions]);
 
         const onButtonClick = useCallback((e: SyntheticMouseEvent<HTMLElement>) => {
             showFileUpload(uploadOptionsRef.current);

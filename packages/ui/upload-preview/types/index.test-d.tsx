@@ -16,7 +16,7 @@ import UploadPreview, {
     getPreviewsLoaderHook, PreviewItem,
 } from "./index";
 
-const CustomImagePreview = (props: PreviewComponentProps): JSX.Element => {
+const CustomImagePreview = (props: PreviewComponentProps): React.JSX.Element => {
     return <img src={props.url}/>;
 };
 
@@ -28,7 +28,7 @@ const TestUploadPreview: React.FC = () => {
         maxPreviewVideoSize={9999}/>;
 };
 
-const testUploadPreview = (): JSX.Element => {
+const testUploadPreview = (): React.JSX.Element => {
     return <TestUploadPreview/>;
 };
 

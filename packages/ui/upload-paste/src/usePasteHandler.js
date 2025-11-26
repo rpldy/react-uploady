@@ -1,5 +1,5 @@
 // @flow
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useLayoutEffect } from "react";
 import { useUploady } from "@rpldy/shared-ui";
 
 import type { UploadOptions } from "@rpldy/shared";
@@ -10,7 +10,9 @@ const usePasteHandler = (uploadOptions: ?UploadOptions, onPasteUpload: ?PasteUpl
 
     //using ref so paste callback can stay memoized
     const uploadOptionsRef = useRef<?UploadOptions>();
-    uploadOptionsRef.current = uploadOptions;
+    useLayoutEffect(() => {
+        uploadOptionsRef.current = uploadOptions;
+    }, [uploadOptions]);
 
     return useCallback((e) => {
         const files = e.clipboardData?.files;

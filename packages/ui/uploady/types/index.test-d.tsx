@@ -13,15 +13,15 @@ const MyApp: React.FC = () => <Uploady debug>
     <div>test</div>
 </Uploady>;
 
-const testMyApp = (): JSX.Element => {
+const testMyApp = (): React.JSX.Element => {
     return <MyApp/>;
 };
 
-const testUseFileInput = (): JSX.Element => <Uploady debug>
+const testUseFileInput = (): React.JSX.Element => <Uploady debug>
     <MyComponent />
 </Uploady>;
 
-const testWithSendProps = (): JSX.Element => (
+const testWithSendProps = (): React.JSX.Element => (
     <Uploady
         formDataAllowUndefined
         forceJsonResponse

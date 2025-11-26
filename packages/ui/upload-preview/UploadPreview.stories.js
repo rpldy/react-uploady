@@ -875,7 +875,7 @@ const SubmitButton = styled.button`
 
 const MyForm = () => {
     const { processPending } = useUploady();
-    const [fields, setFields] = useState({});
+    const [fields, setFields] = useState<{[string]: string}>({});
     const [cropped, setCropped] = useState<?{id: string, data: Object}>(null);
 
     const setCropForItem = (id: string, data: Blob) => {
@@ -883,13 +883,13 @@ const MyForm = () => {
     };
 
     useRequestPreSend(({ items }) => {
-        // $FlowExpectedError[incompatible-call]
-        return {
+        // $FlowFixMe[incompatible-call] - intentionally modifying item for crop example
+        return ({
             items: [{
                 ...items[0],
                 file: cropped?.data || items[0].file,
             }]
-        };
+        }: any);
     });
 
     const onSubmit = () => processPending({ params: fields });

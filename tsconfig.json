@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
         "target": "esnext",
-        "module": "CommonJS",
+        "module": "NodeNext",
         "lib": ["dom", "es2017", "esnext"],
-        "jsx": "react",
+        "jsx": "react-jsx",
         "strict": true,
-        "moduleResolution": "node",
+        "moduleResolution": "nodenext",
         "noImplicitAny": true,
         "strictNullChecks": true,
         "types": [],

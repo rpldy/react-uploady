@@ -66,7 +66,7 @@ const uploadChunkWithUpdatedData = (
 
     const chunkIndex = state.chunks.indexOf(chunk);
 
-    return triggerUpdater < ChunkStartEventData > (trigger, CHUNK_EVENTS.CHUNK_START, {
+    return ((triggerUpdater<ChunkStartEventData>(trigger, CHUNK_EVENTS.CHUNK_START, {
         item: unwrap(item),
         chunk: pick(chunk, ["id", "start", "end", "index", "attempt"]),
         chunkItem: { ...chunkItem },
@@ -77,11 +77,10 @@ const uploadChunkWithUpdatedData = (
         totalCount: state.chunkCount,
         //TODO: should expose chunk_progress event instead of passing callback like this
         onProgress,
-    })
-        // $FlowFixMe - https://github.com/facebook/flow/issues/8215
-        .then((response: ChunkStartEventData | boolean) => {
+    }): any): Promise<?ChunkStartEventData>)
+        .then((response: ?ChunkStartEventData | boolean) => {
             let result;
-            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : (response || {});
+            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : ((response: any) || {});
 
             if (updatedData.stop) {
                 logger.debugLog(`chunkedSender.sendChunk: received false from CHUNK_START handler - skipping chunk ${chunkIndex}, item ${item.id}`);

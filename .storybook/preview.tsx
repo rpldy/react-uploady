@@ -1,7 +1,7 @@
 import React from "react";
-import type { Preview } from "@storybook/react";
+import type { Preview } from "@storybook/react-webpack5";
 import { Description } from "@storybook/addon-docs";
-//import { DocsContainer } from "@storybook/blocks";
+//import { DocsContainer } from "@storybook/addon-docs/blocks";
 import cypressDecorator from "./cypressAddon/cypressDecorator";
 import UploadyStoryDecorator from "./UploadyStoryDecorator";
 

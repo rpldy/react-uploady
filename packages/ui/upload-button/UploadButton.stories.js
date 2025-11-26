@@ -459,7 +459,7 @@ const MyUploadField = asUploadButton(
 );
 
 const MyForm = () => {
-    const [fields, setFields] = useState({});
+    const [fields, setFields] = useState<{[string]: string}>({});
     const [fileName, setFileName] = useState(null);
     const { processPending } = useUploady();
 

@@ -4,9 +4,13 @@ import pacote from "pacote";
 import { getMatchingPackages } from "../scripts/lernaUtils.mjs";
 import { getUploadyVersion } from "../scripts/uploadyVersion.mjs";
 import path from "path";
+import { createRequire } from "module";
+import { log } from "console";
 
-const getCurrentNpmVersion = async (pkg) => {
-    let result = null;
+const require = createRequire(import.meta.url);
+
+const getCurrentNpmVersion = async (pkg): Promise<{ name: string; version: string } | null> => {
+    let result: { name: string; version: string } | null = null;
 
     try {
         let version = pkg.get("version");
@@ -36,28 +40,36 @@ const getAllPackagesVersions = async () => {
         pkgs.map(((pkg) =>
             getCurrentNpmVersion(pkg))));
 
-    return JSON.stringify(pkgVersions);
+    return pkgVersions;
 };
 
-const stringify = (obj) =>
+const stringify = (obj: Record<string, any>) =>
     Object.entries(obj)
-        .reduce((res, [key, value]) => {
-            res[key] = value.indexOf("\"") !== 0 ?
+        .reduce((res: Record<string, string>, [key, value]: [string, any]) => {
+            res[key] = typeof value === 'string' && value.indexOf("\"") !== 0 ?
                 JSON.stringify(value) : value;
             return res;
         }, {});
 
 const updateDefinePlugin = async (config, withDefinitions) => {
-    const definePlugin = config.plugins.find((plugin) =>
-        plugin instanceof webpack.DefinePlugin) || { definitions: {} };
+    // Find all DefinePlugin instances
+    const definePlugins = config.plugins.filter((plugin) =>
+        plugin instanceof webpack.DefinePlugin);
+    
+    // Merge all existing definitions
+    const existingDefinitions = definePlugins.reduce((acc, plugin) => {
+        return { ...acc, ...plugin.definitions };
+    }, {});
 
-    const definitions = await withDefinitions(definePlugin.definitions);
+    const newDefinitions = await withDefinitions(existingDefinitions);
 
-    if (definePlugin) {
-        definePlugin.definitions = definitions
-    } else {
-        config.plugins.push(new webpack.DefinePlugin(definitions));
-    }
+    // Remove all existing DefinePlugins
+    config.plugins = config.plugins.filter(
+        (plugin) => !(plugin instanceof webpack.DefinePlugin)
+    );
+
+    // Add a single merged DefinePlugin
+    config.plugins.push(new webpack.DefinePlugin(newDefinitions));
 
     return config;
 };
@@ -67,15 +79,38 @@ const addEnvParams = async (config) =>
         const buildVersion = getUploadyVersion()
         console.info(`Uploady StoryBook Build - Uploady Version: ${buildVersion}`);
 
+        // Get existing process.env definitions, handling both object and string formats
+        const existingProcessEnv = definitions["process.env"] || {};
+        const existingProcessEnvObj = typeof existingProcessEnv === 'object' 
+            ? existingProcessEnv 
+            : {};
+
+        const pkgVersions = await getAllPackagesVersions();
+        const pkgVersionsJson = JSON.stringify(pkgVersions);
+        
+        console.log("...Setting PUBLISHED_VERSIONS in DefinePlugin");
+        console.log("...Number of packages:", pkgVersions.length);
+        console.log("...First package:", pkgVersions[0]);
+
+        const processEnvDefs = {
+            ...existingProcessEnvObj,
+            ...stringify(process.env),
+            PUBLISHED_VERSIONS: pkgVersionsJson, // Already a JSON string
+            BUILD_TIME_VERSION: JSON.stringify(buildVersion),
+            SB_INTERNAL: JSON.stringify(process.env.SB_INTERNAL || ""),
+            NODE_ENV: JSON.stringify(process.env.NODE_ENV || "development"),
+            LOCAL_PORT: JSON.stringify(process.env.LOCAL_PORT || ""),
+        };
+
         return {
             ...definitions,
-            "PUBLISHED_VERSIONS": await getAllPackagesVersions(),
-            "LOCAL_PORT": `"${process.env.LOCAL_PORT}"`,
-            "process.env": {
-                ...(definitions["process.env"] || stringify(process.env)),
-                BUILD_TIME_VERSION: JSON.stringify(buildVersion),
-                SB_INTERNAL: JSON.stringify(process.env.SB_INTERNAL),
-            }
+            // For DefinePlugin, we need to provide the value as a string representation
+            // pkgVersionsJson is already a JSON string like "[{...}]"
+            // JSON.stringify wraps it in quotes so it becomes a string literal in the code
+            "PUBLISHED_VERSIONS": JSON.stringify(pkgVersionsJson),
+            "LOCAL_PORT": `"${process.env.LOCAL_PORT || ""}"`,
+            // Define process.env as an object so process.env.X accesses work
+            "process.env": processEnvDefs,
         };
     });
 
@@ -99,11 +134,22 @@ const createPackageAliases = () =>
 
 export default {
     webpackFinal: async (config) => {
+        const packageAliases = createPackageAliases();
+        const existingAlias = config.resolve?.alias || {};
+        
         config.resolve = {
             ...config.resolve,
-            mainFields: ["main:dev"].concat(config.resolve.mainFields).filter(Boolean),
+            mainFields: ["main:dev"].concat(config.resolve?.mainFields || []).filter(Boolean),
 
-            alias: createPackageAliases(),
+            alias: {
+                ...(typeof existingAlias === 'object' && !Array.isArray(existingAlias) ? existingAlias : {}),
+                ...packageAliases,
+            },
+            // Add fallbacks for Node.js modules that webpack 5 no longer polyfills
+            fallback: {
+                ...config.resolve?.fallback,
+                "tty": require.resolve("tty-browserify"),
+            },
         };
 
         config.mode = config.mode || process.env.SB_OPTIMIZE ? "production" : "development";
@@ -116,6 +162,7 @@ export default {
 
         config = updateHtmlTitle(config);
 
-        return addEnvParams(config);
+        // addEnvParams now properly merges all DefinePlugin definitions
+        return await addEnvParams(config);
     },
 };

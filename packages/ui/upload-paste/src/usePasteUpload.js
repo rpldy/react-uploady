@@ -1,5 +1,5 @@
 // @flow
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useLayoutEffect } from "react";
 import usePasteHandler from "./usePasteHandler";
 
 import type { UploadOptions } from "@rpldy/shared";
@@ -19,35 +19,42 @@ const usePasteUpload = (uploadOptions: ?UploadOptions, element?: ?PasteElementRe
     const enabledRef = useRef(true);
 
     const onPaste = usePasteHandler(uploadOptions, onPasteUpload);
+    const onPasteRef = useRef(onPaste);
+    const elementRef = useRef(element);
+
+    useLayoutEffect(() => {
+        onPasteRef.current = onPaste;
+        elementRef.current = element;
+    }, [onPaste, element]);
 
     const toggle = useCallback(() => {
-        const refElm = element?.current;
+        const refElm = elementRef.current?.current;
         enabledRef.current = !enabledRef.current;
 
         if (enabledRef.current) {
-            registerHandler(refElm, onPaste);
+            registerHandler(refElm, onPasteRef.current);
         } else {
-            unregisterHandler(refElm, onPaste);
+            unregisterHandler(refElm, onPasteRef.current);
         }
 
         return enabledRef.current;
-    }, [element, onPaste]);
+    }, []);
 
     const getIsEnabled = useCallback(() => enabledRef.current, []);
 
     useEffect(() => {
-        const refElm = element?.current;
+        const refElm = elementRef.current?.current;
 
         if (enabledRef.current) {
-            registerHandler(refElm, onPaste);
+            registerHandler(refElm, onPasteRef.current);
         }
 
         return () => {
             if (enabledRef.current) {
-                unregisterHandler(refElm, onPaste);
+                unregisterHandler(refElm, onPasteRef.current);
             }
         };
-    }, [element, onPaste]);
+    }, []);
 
     return { toggle, getIsEnabled };
 };

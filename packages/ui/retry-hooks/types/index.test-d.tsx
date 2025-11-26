@@ -24,7 +24,7 @@ const TestRetryHooks: React.FC = () => {
     return <div/>;
 };
 
-const testRetryHooks = (): JSX.Element => {
+const testRetryHooks = (): React.JSX.Element => {
     return <TestRetryHooks/>;
 };
 

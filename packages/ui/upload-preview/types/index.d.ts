@@ -52,7 +52,7 @@ export type PreviewComponentProps = {
 
 export interface PreviewProps extends PreviewOptions {
     PreviewComponent?: React.ComponentType<PreviewComponentProps>;
-    previewMethodsRef?: React.RefObject<PreviewMethods>;
+    previewMethodsRef?: React.RefObject<PreviewMethods | null>;
     onPreviewsChanged?: (previews: PreviewItem[]) => void;
 }
 
@@ -64,7 +64,7 @@ export type PreviewData = {
 
 export type PreviewBatchItemsMethod = (cb: (batch: { items: BatchItem[] }) => void) => void;
 
-export type UploadPreviewType = (props: PreviewProps) => JSX.Element;
+export type UploadPreviewType = (props: PreviewProps) => React.JSX.Element;
 
 export type PreviewsLoaderHook = (props?: PreviewOptions) => PreviewData;
 

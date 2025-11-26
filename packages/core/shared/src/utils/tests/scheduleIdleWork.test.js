@@ -1,6 +1,7 @@
 describe("scheduleIdleWork tests", () => {
     let hasWindow, scheduleIdleWork;
     const orgRIC = window.requestIdleCallback;
+    const orgCancelRIC = window.cancelIdleCallback;
 
     const init = async (preReq = null) => {
         vi.mock("../hasWindow");
@@ -16,6 +17,7 @@ describe("scheduleIdleWork tests", () => {
     afterEach(() => {
         vi.resetModules();
         window.requestIdleCallback = orgRIC;
+        window.cancelIdleCallback = orgCancelRIC;
     });
 
     describe("test with requestIdleCallback", () => {
@@ -47,6 +49,23 @@ describe("scheduleIdleWork tests", () => {
             })).resolves.toBeUndefined();
 
             expect(mockRIC).toHaveBeenCalledWith(expect.any(Function), { timeout: 100 });
+        });
+
+        it("should allow to cancel scheduled idle callback work", async () => {
+            const mockCancelRIC = vi.fn();
+            const originalCancel = window.cancelIdleCallback;
+            window.cancelIdleCallback = mockCancelRIC;
+
+            await expect(new Promise((resolve) => {
+                const cancel = scheduleIdleWork(() => {
+                    // should not be called
+                }, 100);
+
+                cancel();
+                expect(mockCancelRIC).toHaveBeenCalledTimes(1);
+                window.cancelIdleCallback = originalCancel;
+                resolve();
+            })).resolves.toBeUndefined();
         });
     });
 

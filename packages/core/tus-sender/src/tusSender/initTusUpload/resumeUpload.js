@@ -11,7 +11,7 @@ import type { State, TusState, TusOptions } from "../../types";
 
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
-const handleSuccessfulResumeResponse = (item: BatchItem, url: string, tusState: TusState, resumeResponse: XMLHttpRequest) => {
+const handleSuccessfulResumeResponse = (item: BatchItem, url: string, tusState: TusState, resumeResponse: XMLHttpRequest): InitData => {
     logger.debugLog(`tusSender.resume - successfully initiated resume for item: ${item.id} - upload url = ${url}`);
 
     let canResume = false,
@@ -57,7 +57,7 @@ const resumeWithDelay = (
 		}, tusState.getState().options.lockedRetryDelay);
 	});
 
-const handleResumeFail = (item: BatchItem, options: TusOptions, parallelIdentifier: ?string) => {
+const handleResumeFail = (item: BatchItem, options: TusOptions, parallelIdentifier: ?string): InitData => {
 	removeResumable(item, options, parallelIdentifier);
 
 	return {
@@ -95,26 +95,25 @@ const handleResumeResponse = (
     return result;
 };
 
-type UpdatedRequestResult = () => XhrPromise;
+type UpdatedRequestResult = () => ?XhrPromise;
 
 const getUpdatedRequest = (
     item: BatchItem,
     url: string,
     tusState: TusState,
     trigger: TriggerMethod
-): Promise<UpdatedRequestResult & boolean> => {
+): Promise<UpdatedRequestResult> => {
     const { options } = tusState.getState();
 
-    return triggerUpdater<ResumeStartEventData>(trigger, TUS_EVENTS.RESUME_START, {
+    return ((triggerUpdater<ResumeStartEventData>(trigger, TUS_EVENTS.RESUME_START, {
         url,
         item: unwrap(item),
         resumeHeaders: unwrap(options.resumeHeaders),
-    })
-        // $FlowIssue - https://github.com/facebook/flow/issues/8215
+    }): any): Promise<ResumeStartEventResponse>)
         .then((response: ResumeStartEventResponse | boolean) => {
             let result;
 
-            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : (response || {});
+            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : ((response: any) || {});
 
             if (updatedData.stop) {
                 logger.debugLog(`tusSender.resume: received false from TUS RESUME_START event - cancelling resume attempt for item: ${item.id}`);
@@ -151,11 +150,12 @@ const makeResumeRequest = (
     const updateRequestPromise = getUpdatedRequest(item, url, tusState, trigger);
 
     const updatedRequest: Promise<?InitData> = updateRequestPromise.then((getXhr) => {
-        resumeFinished = !getXhr();
+        const xhrPromise = getXhr();
+        resumeFinished = (xhrPromise === null);
         const callOnFail = () => handleResumeFail(item, options, parallelIdentifier);
 
-        return !resumeFinished && !resumeAborted ?
-            getXhr()
+        return (!resumeFinished && !resumeAborted && xhrPromise) ?
+            xhrPromise
                 .then((resumeResponse: XMLHttpRequest) => {
                     return (resumeFinished || resumeAborted) ?
                         callOnFail() :
@@ -179,7 +179,9 @@ const makeResumeRequest = (
 
             updateRequestPromise.then((getXhr) => {
                 const pXhr = getXhr();
-                pXhr?.xhr?.abort();
+                if (pXhr) {
+                    pXhr.xhr?.abort();
+                }
             });
         }
 

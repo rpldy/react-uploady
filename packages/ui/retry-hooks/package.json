@@ -41,10 +41,10 @@
   "devDependencies": {
     "@rpldy/upload-button": "workspace:*",
     "@rpldy/upload-preview": "workspace:*",
-    "flow-bin": "^0.274.2",
+    "flow-bin": "^0.291.0",
     "rc-progress": "^4.0.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "publishConfig": {
     "access": "public"

@@ -1,5 +1,5 @@
 // @flow
-import React, { useRef, useCallback, forwardRef, useImperativeHandle } from "react";
+import React, { useRef, useCallback, forwardRef, useImperativeHandle, useLayoutEffect } from "react";
 import { markAsUploadOptionsComponent, useUploadyContext } from "@rpldy/shared-ui";
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadUrlInputProps, UploadMethod } from "./types";
@@ -15,7 +15,9 @@ const UploadUrlInput: React.ComponentType<UploadUrlInputProps> = forwardRef<
 
         //using ref so upload can stay memoized
         const uploadOptionsRef = useRef<?UploadOptions>();
-        uploadOptionsRef.current = uploadOptions;
+        useLayoutEffect(() => {
+            uploadOptionsRef.current = uploadOptions;
+        }, [uploadOptions]);
 
         useImperativeHandle(ref, () => inputRef.current, []);
 

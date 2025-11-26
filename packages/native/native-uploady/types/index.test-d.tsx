@@ -10,7 +10,7 @@ const ListOfUploadOptions = () => {
     </ul>;
 };
 
-const testNativeUploady = (): JSX.Element => {
+const testNativeUploady = (): React.JSX.Element => {
     return <NativeUploady debug>
         <ListOfUploadOptions/>
     </NativeUploady>;

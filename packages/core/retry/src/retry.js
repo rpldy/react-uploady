@@ -39,14 +39,14 @@ const uploadFailedIds = (
         .filter(Boolean);
 
     if (uploads.length) {
-		const retryOptions = {
+		const retryOptions: Partial<UploadOptions> = {
 			...(options || null),
 			autoUpload: typeof options?.autoUpload !== "undefined" ? options.autoUpload : true,
 		};
 
 		trigger(RETRY_EVENT, { items: uploads, options: retryOptions });
         failedIds?.forEach((id) => removeItemFromState(retryState, id));
-		uploader.add(uploads, retryOptions);
+		uploader.add(uploads, (retryOptions: ?UploadOptions));
 	}
 
     return !!uploads.length;

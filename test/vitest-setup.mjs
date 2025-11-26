@@ -1,4 +1,5 @@
 import { afterEach } from "vitest";
+import React from "react";
 import { render, renderIntoDocument, renderHook, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import { use as chaiUse } from "chai";

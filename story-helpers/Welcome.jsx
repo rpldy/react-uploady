@@ -118,11 +118,25 @@ const WelcomeReactUploady = () => {
             <h2 className="title-color">Welcome to React-Uploady's Storybook</h2>
 
             <h3 className="title-color">Current Version</h3>
-            {PUBLISHED_VERSIONS
-                .filter(({ name }) => ["@rpldy/uploady", "@rpldy/uploader"].includes(name))
-                .map(({ name, version }) =>
-                    <span className="version" key={name}>{name} - <strong>{version}</strong></span>)
-            }
+            {(() => {
+                let versions = [];
+                // Try process.env first (Storybook 10 preferred method)
+                if (typeof process !== 'undefined' && process.env && process.env.PUBLISHED_VERSIONS) {
+                    try {
+                        versions = JSON.parse(process.env.PUBLISHED_VERSIONS);
+                    } catch (e) {
+                        console.warn('Failed to parse PUBLISHED_VERSIONS from process.env', e);
+                    }
+                } else if (typeof PUBLISHED_VERSIONS !== 'undefined') {
+                    versions = typeof PUBLISHED_VERSIONS === 'string' 
+                        ? JSON.parse(PUBLISHED_VERSIONS) 
+                        : PUBLISHED_VERSIONS;
+                }
+                return versions
+                    .filter(({ name }) => ["@rpldy/uploady", "@rpldy/uploader"].includes(name))
+                    .map(({ name, version }) =>
+                        <span className="version" key={name}>{name} - <strong>{version}</strong></span>);
+            })()}
 
             <br/>
             <h3 className="title-color">React-Uploady Documentation</h3>

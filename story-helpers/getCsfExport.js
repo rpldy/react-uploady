@@ -45,7 +45,7 @@ const getCsfExport = (component: ?React.ComponentType<any>, title: string, Readm
             ...options?.parameters,
         },
 
-        excludeStories: !process.env.SB_INTERNAL ? /^TEST_|^UMD_/ : [],
+        excludeStories: (typeof process !== 'undefined' && process.env && !process.env.SB_INTERNAL) ? /^TEST_|^UMD_/ : [],
 
         //Replacing Knobs
         args: useControls ? { ...storyArgs.args, ...options?.args } : {},

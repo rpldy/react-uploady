@@ -22,7 +22,7 @@
     "build": "node ../../../scripts/build.mjs"
   },
   "devDependencies": {
-    "flow-bin": "^0.274.2"
+    "flow-bin": "^0.291.0"
   },
   "dependencies": {
     "invariant": "^2.2.4",

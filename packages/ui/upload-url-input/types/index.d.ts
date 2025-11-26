@@ -15,6 +15,6 @@ export interface UploadUrlInputProps extends UploadOptions {
     ref?: React.RefObject<any>;
 }
 
-export const UploadUrlInput: (props: React.PropsWithRef<UploadUrlInputProps>) => JSX.Element;
+export const UploadUrlInput: (props: React.PropsWithRef<UploadUrlInputProps>) => React.JSX.Element;
 
 export default UploadUrlInput;

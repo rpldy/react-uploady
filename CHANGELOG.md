@@ -1,5 +1,21 @@
 # Changelog
 
+
+## 1.13.0 (2025-11-26)
+
+### Features
+
+- `[chunked-sender]` - feat: add sendWithRangeHeader option for chunked uploads
+
+### Docs
+
+- update to contributing doc - thanks @AJLemos
+
+### Internal
+
+- `all` - upgrade many dev deps (including: SB, flow-bin, Vitest, Cypress, Lerna, etc.)
+  
+
 ## 1.12.0 (2025-10-30)
 
 ### Features

@@ -27,7 +27,7 @@
     "@rpldy/simple-state": "workspace:*"
   },
   "devDependencies": {
-    "flow-bin": "^0.280.0"
+    "flow-bin": "^0.281.0"
   },
   "publishConfig": {
     "access": "public"

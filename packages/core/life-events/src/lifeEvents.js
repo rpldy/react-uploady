@@ -222,8 +222,8 @@ function hasEventRegistrations(this: any, name: any) {
 
 const defineLifeData = (target: Object, options: Options, events: any[] = [], registry: Object = {}, stats: Object = {}) => {
 	Object.defineProperties(target, {
-        // $FlowIssue[invalid-computed-prop] - https://github.com/facebook/flow/issues/3258
-		[LESYM]: {
+        // $FlowFixMe[invalid-computed-prop] - https://github.com/facebook/flow/issues/3258
+		[(LESYM: any)]: {
 			value: Object.seal({
 				registry,
 				events,

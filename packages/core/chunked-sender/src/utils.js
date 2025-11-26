@@ -15,10 +15,10 @@ const isChunkingSupported = (): boolean => {
     if (hasWindow() && "Blob" in window) {
         //$FlowExpectedError[method-unbinding] flow 0.153 !!!
         sliceMethod = Blob.prototype.slice ||
-            // $FlowIssue[prop-missing] flow doesnt know webkitSlice
-            Blob.prototype.webkitSlice ||
-            // $FlowIssue[prop-missing] flow doesnt know mozSlice
-            Blob.prototype.mozSlice;
+            // $FlowFixMe[prop-missing] flow doesnt know webkitSlice
+            (Blob.prototype: any).webkitSlice ||
+            // $FlowFixMe[prop-missing] flow doesnt know mozSlice
+            (Blob.prototype: any).mozSlice;
     }
 
     return !!sliceMethod;

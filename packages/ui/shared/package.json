@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@rpldy/life-events": "workspace:*",
-    "flow-bin": "^0.280.0",
+    "flow-bin": "^0.281.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

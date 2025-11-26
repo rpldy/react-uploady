@@ -51,13 +51,13 @@ const triggerItemsPrepareEvent = (
     eventType: string,
     validateResponse: ?ResponseValidator
 ): Promise<ItemsSendData> =>
-    triggerUpdater<{ subject: Object, options: UploaderCreateOptions }>(
-        queue.trigger, eventType, eventSubject, options)
-        // $FlowIssue - https://github.com/facebook/flow/issues/8215
-        .then((updated: ?UpdatedResponse) => {
-            validateResponse?.(updated);
-            return processPrepareResponse(eventType, items, options, updated);
-        });
+((triggerUpdater < { subject: Object, options: UploaderCreateOptions } > (
+    queue.trigger, eventType, eventSubject, options): any): Promise<? { subject: Object, options: UploaderCreateOptions }>)
+        // $FlowFixMe[incompatible-type] - function return type mismatch
+        .then((updated: ?{ subject: Object, options: UploaderCreateOptions } | boolean) => {
+        validateResponse?.(updated);
+        return processPrepareResponse(eventType, items, options, (updated: any));
+    });
 
 const persistPrepareResponse = (queue: QueueState, prepared: ItemsSendData) => {
     const batchId = prepared.items[0].batchId;
@@ -91,41 +91,41 @@ const prepareItems = <T>(
     queue: QueueState,
     subject: T,
     retrieveItemsFromSubject: ItemsRetriever<T>,
-    createEventSubject: ?SubjectRetriever<T>,
-    validateResponse: ?ResponseValidator,
-    eventType: string
-): Promise<ItemsSendData> => {
+        createEventSubject: ?SubjectRetriever<T>,
+            validateResponse: ?ResponseValidator,
+            eventType: string
+            ): Promise<ItemsSendData> => {
     const items = retrieveItemsFromSubject(subject);
-    const batchOptions = queue.getState().batches[items[0].batchId].batchOptions;
-    const eventSubject: Object = createEventSubject?.(subject, batchOptions) || subject;
+                const batchOptions = queue.getState().batches[items[0].batchId].batchOptions;
+                const eventSubject: Object = createEventSubject?.(subject, batchOptions) || subject;
 
-    return triggerItemsPrepareEvent(queue, eventSubject, items, batchOptions, eventType, validateResponse)
+                return triggerItemsPrepareEvent(queue, eventSubject, items, batchOptions, eventType, validateResponse)
         .then((prepared: ItemsSendData) => {
             if (!prepared.cancelled) {
-                persistPrepareResponse(queue, prepared);
+                    persistPrepareResponse(queue, prepared);
             }
 
-            return prepared;
+                return prepared;
         });
 };
 
-const getItemsPrepareUpdater =
-    <T>(
-        eventType: string,
-        retrieveItemsFromSubject: ItemsRetriever<T>,
-        createEventSubject: ?SubjectRetriever<T> = null,
-        validateResponse: ?ResponseValidator = null
-    ): ItemsPreparer<T> =>
+                const getItemsPrepareUpdater =
+                <T>(
+                    eventType: string,
+                    retrieveItemsFromSubject: ItemsRetriever<T>,
+                        createEventSubject: ?SubjectRetriever<T> = null,
+                            validateResponse: ?ResponseValidator = null
+                            ): ItemsPreparer<T> =>
         (queue: QueueState, subject: T) =>
-            prepareItems<T>(
-                queue,
-                subject,
-                retrieveItemsFromSubject,
-                createEventSubject,
-                validateResponse,
-                eventType
-            );
+                                prepareItems<T>(
+                                    queue,
+                                    subject,
+                                    retrieveItemsFromSubject,
+                                    createEventSubject,
+                                    validateResponse,
+                                    eventType
+                                    );
 
-export {
-    getItemsPrepareUpdater,
+                                    export {
+                                        getItemsPrepareUpdater,
 };

@@ -105,16 +105,15 @@ const getUpdatedRequest = (
 ): Promise<UpdatedRequestResult> => {
     const { options } = tusState.getState();
 
-    return triggerUpdater<ResumeStartEventData>(trigger, TUS_EVENTS.RESUME_START, {
+    return ((triggerUpdater<ResumeStartEventData>(trigger, TUS_EVENTS.RESUME_START, {
         url,
         item: unwrap(item),
         resumeHeaders: unwrap(options.resumeHeaders),
-    })
-        // $FlowIssue - https://github.com/facebook/flow/issues/8215
+    }): any): Promise<ResumeStartEventResponse>)
         .then((response: ResumeStartEventResponse | boolean) => {
             let result;
 
-            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : (response || {});
+            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : ((response: any) || {});
 
             if (updatedData.stop) {
                 logger.debugLog(`tusSender.resume: received false from TUS RESUME_START event - cancelling resume attempt for item: ${item.id}`);

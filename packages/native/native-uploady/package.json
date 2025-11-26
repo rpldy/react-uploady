@@ -38,7 +38,7 @@
     "react": ">=16.8"
   },
   "devDependencies": {
-    "flow-bin": "^0.280.0",
+    "flow-bin": "^0.281.0",
     "react": "^19.2.0"
   },
   "publishConfig": {

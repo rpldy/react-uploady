@@ -1,17 +1,22 @@
 // @flow
 import hasWindow from "./hasWindow";
 
-const supportsIdle = (hasWindow() && window.requestIdleCallback);
-const scheduler = supportsIdle ? window.requestIdleCallback : setTimeout;
-const clear = supportsIdle ? window.cancelIdleCallback : clearTimeout;
+const supportsIdle = !!(hasWindow() && window.requestIdleCallback);
 
 type ClearSchedule = () => void;
 
 const scheduleIdleWork = (fn: Function, timeout: number = 0): ClearSchedule => {
-    //$FlowIssue[incompatible-call] flow doesnt understand we only pass object to requestIdle...
-    const handler = scheduler(fn, supportsIdle ? { timeout } : timeout);
+    const handler = supportsIdle ?
+        window.requestIdleCallback(fn, { timeout }) :
+        setTimeout(fn, timeout);
 
-    return () => clear(handler);
+    return () => {
+        if (supportsIdle) {
+            window.cancelIdleCallback(handler);
+        } else {
+            clearTimeout(handler);
+        }
+    };
 };
 
 export default scheduleIdleWork;

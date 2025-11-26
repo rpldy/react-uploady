@@ -883,13 +883,13 @@ const MyForm = () => {
     };
 
     useRequestPreSend(({ items }) => {
-        // $FlowExpectedError[incompatible-call]
-        return {
+        // $FlowFixMe[incompatible-call] - intentionally modifying item for crop example
+        return ({
             items: [{
                 ...items[0],
                 file: cropped?.data || items[0].file,
             }]
-        };
+        }: any);
     });
 
     const onSubmit = () => processPending({ params: fields });

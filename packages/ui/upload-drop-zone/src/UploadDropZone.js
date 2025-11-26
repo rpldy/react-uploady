@@ -15,7 +15,7 @@ const isOnTarget = (e: SyntheticDragEvent<HTMLDivElement>, containerElm: ?Elemen
     const target = e.type === "dragleave" ? e.relatedTarget : e.target;
     return target === containerElm ||
         // $FlowIssue[incompatible-call] flow needs to figure it out :(
-        (allowContains && containerElm?.contains(target));
+        (allowContains && containerElm && target && containerElm.contains((target: any)));
 };
 
 const UploadDropZone: React.ComponentType<UploadDropZoneProps> = forwardRef(

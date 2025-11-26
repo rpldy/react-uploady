@@ -50,7 +50,6 @@ const createBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, optio
     const isPending = !options.autoUpload;
 
     return processFiles(id, usedFiles, isPending, options.fileFilter)
-        // $FlowIgnore[incompatible-call]  flow went crazy here :(
         .then((items) => {
             return {
                 id,
@@ -59,6 +58,7 @@ const createBatch = (files: UploadInfo | UploadInfo[], uploaderId: string, optio
                 state: isPending ? BATCH_STATES.PENDING : BATCH_STATES.ADDED,
                 completed: 0,
                 loaded: 0,
+                total: 0,
                 orgItemCount: items.length,
                 additionalInfo: null,
             };

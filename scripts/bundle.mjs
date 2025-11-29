@@ -90,9 +90,8 @@ const runOverweightValidation = () => {
         logger.warn(`Skipping bundle size validation – missing config at ${configPath}`);
         return;
     }
-
-    const reporter = options.debugBundleSize ? "console" : "silent";
-    const command = `pnpm exec overweight --config ${configPath} --reporter ${reporter}`;
+    
+    const command = `pnpm exec overweight --config ${configPath} --reporter console`;
 
     logger.info(">> Running Overweight bundle size validation");
     const result = shell.exec(command);

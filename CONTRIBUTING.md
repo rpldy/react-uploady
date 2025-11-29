@@ -38,6 +38,11 @@ this will run flow, lint, vitest, (TS) type-check
 
 each one of these has a corresponding script to run separately.
 
+### Bundle size checks
+
+Running `pnpm bundle --validate` (or any command that passes `--validate` to `scripts/bundle.mjs`) enforces the [UMD bundle budgets](bundle.config.mjs) with [Overweight](https://github.com/yoavniran/overweight) using the project-wide `overweight.json` config.  
+The script shells out to the local `overweight` CLI, so make sure dev dependencies are installed (`pnpm install`) before running the bundle task. Max limits live in `bundle.config.mjs` (source of truth) and are mirrored in `overweight.json`.
+
 ### Storybook
 
 to run SB locally, run 

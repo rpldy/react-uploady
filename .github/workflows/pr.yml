@@ -100,7 +100,6 @@ jobs:
                     with-cypress: true
                     with-frozen: true
             -   name: Bundle for Production
-                id: bundle-prod
                 run: |
                     pnpm bundle:prod
             -   name: Cache Bundle Folder
@@ -109,13 +108,14 @@ jobs:
                 with:
                     path: bundle
                     key: bundle-${{ runner.os }}-${{ hashFiles('bundle/**') }}
-            -   name: Bundle Size Report
-                id: bundle-size-report
-                uses: ./.github/actions/bundle-size-report
-                with:
-                    reportData: ${{ steps.bundle-prod.outputs.BUNDLE_SIZE_REPORT_DATA }}
-                    githubToken: ${{ secrets.GITHUB_TOKEN }}
-                    prIdentifier: ${{ github.event.pull_request.number }}
+            -   name: Bundle Size Check (Overweight)
+                uses: yoavniran/overweight@v1
+                with:                    
+                    github-token: ${{ secrets.GITHUB_TOKEN }}                    
+                    update-baseline: true
+                    report-file: overweight-report.json
+                    baseline-protected-branches: "master"
+                    comment-on-pr-each-run: true
 
     sb:
         name: Build Storybook

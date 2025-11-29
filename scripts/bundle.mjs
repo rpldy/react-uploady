@@ -4,14 +4,12 @@ import fs from "fs-extra";
 import webpack from "webpack";
 import Yargs from "yargs";
 import shell from "shelljs";
-import bytes from "bytes";
 import _ from "lodash";
 import { mergeWithCustomize as wpMerge, customizeArray } from "webpack-merge";
 import { getMatchingPackages } from "./lernaUtils.mjs";
 import { logger } from "./utils.mjs"
 //TODO: should be passed by options or found in root (dynamically)
 import config from "../bundle.config.mjs";
-import outputBundleSize from "./reportBundleSizeToGithub.mjs";
 
 const yargs = Yargs(process.argv.slice(2));
 
@@ -85,24 +83,28 @@ const getEntriesFromDefinition = ({ pkgs, exclude }, type, repoPackages) => {
         .map((entry) => (!_.isString(entry) || entry.startsWith("./")) ? entry : `./${entry}`);
 };
 
-const validateSize = (type, name, wpResult, bundleSizes) => {
-    const maxSize = _.get(config.bundles, [type, name, "maxSize"]);
+const runOverweightValidation = () => {
+    const configPath = path.resolve(process.cwd(), "overweight.json");
 
-    if (isProduction && maxSize) {
-        const mainAssetNamePrefix = `${config.library}-${name}.${type}`;
-        const mainAsset = wpResult.assets.find((a) => a.name.startsWith(mainAssetNamePrefix));
-        const outputFile = path.join(wpResult.outputPath, mainAsset.name);
+    if (!fs.existsSync(configPath)) {
+        logger.warn(`Skipping bundle size validation – missing config at ${configPath}`);
+        return;
+    }
 
-        const result = shell.exec(`bundlesize -f ${outputFile} -s ${maxSize} ${options.debugBundleSize ? "--debug" : ""}`);
+    const reporter = options.debugBundleSize ? "console" : "silent";
+    const command = `pnpm exec overweight --config ${configPath} --reporter ${reporter}`;
 
-        if (result.code && !isCI) {
-            //on CI we dont fail so the report is printed in GH and then the action should fail the flow
-            throw new Error(`bundle: ${outputFile} exceeds allowed maxSize: ${bytes(maxSize)}`)
+    logger.info(">> Running Overweight bundle size validation");
+    const result = shell.exec(command);
+
+    if (result.code) {
+        const message = "Overweight bundle size validation failed";
+
+        if (isCI) {
+            logger.error(message);
+        } else {
+            throw new Error(message);
         }
-
-        const gzipSize = result.stdout.split(": ")[1]?.split(` ${result.code ? ">" : "<"}`)[0];
-
-        bundleSizes.push({ name, size: gzipSize, max: maxSize, success: !result.code });
     }
 };
 
@@ -222,7 +224,7 @@ const getWebpackConfig = (type, name, definition, repoPackages) => {
     );
 }
 
-const createBundleFromDefinition = async (type, name, definition, repoPackages, bundleSizes) => {
+const createBundleFromDefinition = async (type, name, definition, repoPackages) => {
     let wpResult;
 
     const bundleConfig = getWebpackConfig(type, name, definition, repoPackages);
@@ -235,10 +237,6 @@ const createBundleFromDefinition = async (type, name, definition, repoPackages, 
     } catch (e) {
         throw new Error("Webpack compile failed ! " + e.message);
     }
-
-    if (options.validate && wpResult) {
-        validateSize(type, name, wpResult, bundleSizes);
-    }
 };
 
 const doBundle = async () => {
@@ -246,14 +244,13 @@ const doBundle = async () => {
 
     const repoPackages = getMatchingPackages();
     const bundlers = [];
-    const bundleSizes = [];
 
     if (options.bundle) {
         //only bundle the definition requested by argument
         const parts = options.bundle.split("."),
             definition = _.get(config.bundles, parts);
 
-        bundlers.push(createBundleFromDefinition(parts[0], parts[1], definition, repoPackages, bundleSizes));
+        bundlers.push(createBundleFromDefinition(parts[0], parts[1], definition, repoPackages));
     } else {
         //bundle all definitions in config
         Object.entries(config.bundles)
@@ -261,7 +258,7 @@ const doBundle = async () => {
                 Object.entries(bundle)
                     .forEach(([name, definition]) => {
                         bundlers.push(
-                            createBundleFromDefinition(type, name, definition, repoPackages, bundleSizes)
+                            createBundleFromDefinition(type, name, definition, repoPackages)
                         );
                     });
             });
@@ -272,8 +269,8 @@ const doBundle = async () => {
         await Promise.all(bundlers);
         logger.info(`>>> Finished bundling successfully!`);
 
-        if (isCI) {
-            await outputBundleSize(bundleSizes);
+        if (options.validate && isProduction) {
+            runOverweightValidation();
         }
     } catch (e) {
         logger.error(`!!!! Failed to bundle`, e);

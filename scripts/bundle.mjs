@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs-extra";
 import webpack from "webpack";
 import Yargs from "yargs";
-import shell from "shelljs";
+import { execFileSync } from "child_process";
 import _ from "lodash";
 import { mergeWithCustomize as wpMerge, customizeArray } from "webpack-merge";
 import { getMatchingPackages } from "./lernaUtils.mjs";
@@ -90,19 +90,21 @@ const runOverweightValidation = () => {
         logger.warn(`Skipping bundle size validation – missing config at ${configPath}`);
         return;
     }
-    
-    const command = `pnpm exec overweight --config ${configPath} --reporter console`;
 
     logger.info(">> Running Overweight bundle size validation");
-    const result = shell.exec(command);
-
-    if (result.code) {
+    try {
+        execFileSync(
+            "pnpm",
+            ["exec", "overweight", "--config", configPath, "--reporter", "console"],
+            { stdio: "inherit" }
+        );
+    } catch (error) {
         const message = "Overweight bundle size validation failed";
 
         if (isCI) {
             logger.error(message);
         } else {
-            throw new Error(message);
+            throw error;
         }
     }
 };

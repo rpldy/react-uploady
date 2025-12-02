@@ -1,0 +1,29 @@
+{
+  "files": [
+    {
+      "label": "core UMD bundle",
+      "path": "./bundle/rpldy-core.umd.min.js",
+      "maxSize": "11 kB",
+      "compression": "gzip"
+    },
+    {
+      "label": "ui-core UMD bundle",
+      "path": "./bundle/rpldy-ui-core.umd.min.js",
+      "maxSize": "15 kB",
+      "compression": "gzip"
+    },
+    {
+      "label": "ui-core-chunked UMD bundle",
+      "path": "./bundle/rpldy-ui-core-chunked.umd.min.js",
+      "maxSize": "17 kB",
+      "compression": "gzip"
+    },
+    {
+      "label": "all-in-one UMD bundle",
+      "path": "./bundle/rpldy-all.umd.min.js",
+      "maxSize": "25 kB",
+      "compression": "gzip"
+    }
+  ]
+}
+

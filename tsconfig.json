@@ -1,23 +1,32 @@
 {
-    "compilerOptions": {
-        "target": "esnext",
-        "module": "NodeNext",
-        "lib": ["dom", "es2017", "esnext"],
-        "jsx": "react-jsx",
-        "strict": true,
-        "moduleResolution": "nodenext",
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "types": [],
-        "noEmit": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "strictFunctionTypes": true,
-        "baseUrl": ".",
-        "paths": {
-            "~/*": ["packages/*"]
-        }
-    },
-    "include": ["packages/**/types/*.ts", "packages/**/types/*.tsx"],
-    "exclude": []
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "NodeNext",
+    "lib": [
+      "dom",
+      "es2017",
+      "esnext"
+    ],
+    "jsx": "react-jsx",
+    "strict": true,
+    "moduleResolution": "nodenext",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "types": [],
+    "noEmit": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strictFunctionTypes": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "packages/*"
+      ]
+    }
+  },
+  "include": [
+    "packages/**/types/*.ts",
+    "packages/**/types/*.tsx"
+  ],
+  "exclude": []
 }

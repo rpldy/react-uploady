@@ -1,21 +1,12 @@
 {
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx/tasks-runners/default",
-      "options": {
-        "cacheableOperations": [
-          "build"
-        ]
-      }
-    }
-  },
   "targetDefaults": {
     "build": {
       "outputs": [
         "{projectRoot}/lib",
         "{projectRoot}/LICENSE.md",
         "{projectRoot}/.npmignore"
-      ]
+      ],
+      "cache": true
     }
   },
   "$schema": "./node_modules/nx/schemas/nx-schema.json",

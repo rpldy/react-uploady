@@ -31,11 +31,11 @@
     "build": "node ../../../scripts/build.mjs"
   },
   "dependencies": {
+    "@rpldy/shared": "workspace:*",
     "@rpldy/shared-ui": "workspace:*",
     "html-dir-content": "^0.3.2"
   },
   "devDependencies": {
-    "@rpldy/shared": "workspace:*",
     "@rpldy/upload-button": "workspace:*",
     "@rpldy/uploady": "workspace:*",
     "@testing-library/react": "^16",

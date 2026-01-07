@@ -654,6 +654,9 @@ importers:
 
   packages/ui/upload-drop-zone:
     dependencies:
+      '@rpldy/shared':
+        specifier: workspace:*
+        version: link:../../core/shared
       '@rpldy/shared-ui':
         specifier: workspace:*
         version: link:../shared
@@ -661,9 +664,6 @@ importers:
         specifier: ^0.3.2
         version: 0.3.2
     devDependencies:
-      '@rpldy/shared':
-        specifier: workspace:*
-        version: link:../../core/shared
       '@rpldy/upload-button':
         specifier: workspace:*
         version: link:../upload-button

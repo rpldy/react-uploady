@@ -376,12 +376,17 @@ const StyledFullScreenDropZone = styled(UploadDropZone)`
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            pointer-events: none;
         }
 
         .content-box {
             flex-grow: 1;
             height: 100%;
         }
+    }
+
+    .dropIndicator {
+        pointer-events: none;
     }
 
     &.drag-over .dropIndicator {
@@ -408,17 +413,27 @@ export const WithFullScreen: UploadyStory = createUploadyStory(
                 {...extOptions}
             >
                 <StyledFullScreenDropZone
-                    // enableOnContains={false}
                     id="upload-drop-zone"
                     onDragOverClassName="drag-over"
-                    shouldRemoveDragOver={({ target }) => target === indicatorRef.current}
+                    enableOnContains
+                    shouldRemoveDragOver={({ target }) => target === indicatorRef.current}                   
                     shouldHandleDrag={(e) => {
+                        // Safari doesn't populate dataTransfer.items during dragenter/dragover
+                        // Use dataTransfer.types instead which works across all browsers
+                        const hasOnlyFiles = e.dataTransfer?.types?.includes("Files") && e.dataTransfer?.types?.length === 1;
+                      
+                        if (hasOnlyFiles) {
+                            console.log("----- shouldHandleDrag -> hasOnlyFiles", hasOnlyFiles, e);
+                            return true;
+                        }
+
                         const allFiles =
                             e.dataTransfer?.items?.length &&
                             //$FlowExpectedError[method-unbinding]
                             Array.prototype.slice
                                 .call(e.dataTransfer.items)
                                 .every((item) => item.kind === "file");
+                        
                         console.log("----- shouldHandleDrag -> All Files", allFiles, e);
                         return allFiles;
                     }}

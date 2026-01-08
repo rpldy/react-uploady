@@ -9,10 +9,6 @@
 <link rel="icon" sizes="32x32" type="image/png" href="https://res.cloudinary.com/yoav-cloud/image/upload/w_32,r_max/v1585756811/rpldy/logo/logo-white-bg.png">
 
 <style id="rpldy-sb-manager-style">
-    a[id*='--umd'], a[id*='--test'] {
-        display: none !important
-    }
-
     a[id*='welcome'] svg {
         display: none;
     }
@@ -21,4 +17,46 @@
         display: none;
     }
 
+    .rpldy-hidden-story {
+        display: none !important;
+    }
+
 </style>
+
+<script id="rpldy-sb-manager-script">
+    (() => {
+        const HIDDEN_SUFFIXES = ["--umd", "--test"];
+
+        const markHidden = (node) => {
+            if (!(node instanceof Element)) {
+                return;
+            }
+
+            HIDDEN_SUFFIXES.forEach((suffix) => {
+                node.querySelectorAll(`[data-item-id*="${suffix}"], [id*="${suffix}"]`)
+                    .forEach((match) => {
+                        const target = match.closest('[role="treeitem"]') || match.closest("li") || match;
+                        target.classList.add("rpldy-hidden-story");
+                    });
+            });
+        };
+
+        const init = () => {
+            markHidden(document.body);
+
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach(markHidden);
+                });
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+        };
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", init);
+        } else {
+            init();
+        }
+    })();
+</script>

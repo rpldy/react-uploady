@@ -360,6 +360,7 @@ export const WithAsUploadButton: UploadyStory = createUploadyStory(
 const StyledFullScreenDropZone = styled(UploadDropZone)`
     width: 100%;
     height: 100vh;
+    position: relative;
 
     .content {
         width: 100%;
@@ -376,7 +377,6 @@ const StyledFullScreenDropZone = styled(UploadDropZone)`
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            pointer-events: none;
         }
 
         .content-box {
@@ -385,16 +385,36 @@ const StyledFullScreenDropZone = styled(UploadDropZone)`
         }
     }
 
-    .dropIndicator {
-        pointer-events: none;
-    }
-
-    &.drag-over .dropIndicator {
+     &.drag-over .dropIndicator {
         position: absolute;
         z-index: 2;
         background: rgba(0, 0, 0, 0.5);
         border: 8px solid green;
-        inset: 0;
+        inset: 0;        
+    }
+
+    /* 
+     * Safari-specific fix: Disable pointer events on child elements
+     * 
+     * Safari needs pointer-events disabled on child elements to properly detect
+     * drag events on the parent container. Without this, child elements intercept
+     * the drag events and prevent the drop zone from working.
+     * 
+     */
+    @supports (-webkit-hyphens:none) {
+        .content > * {
+            pointer-events: none;
+        }
+
+        .dropIndicator {
+            display: none;
+            position: fixed;            
+            pointer-events: none;
+        }
+
+        &.drag-over .dropIndicator {
+            display: block;
+        }
     }
 `;
 
@@ -416,26 +436,20 @@ export const WithFullScreen: UploadyStory = createUploadyStory(
                     id="upload-drop-zone"
                     onDragOverClassName="drag-over"
                     enableOnContains
-                    shouldRemoveDragOver={({ target }) => target === indicatorRef.current}                   
-                    shouldHandleDrag={(e) => {
+                    shouldRemoveDragOver={({ target }) => target === indicatorRef.current}
+                    shouldHandleDrag={(e) => {                        
                         // Safari doesn't populate dataTransfer.items during dragenter/dragover
                         // Use dataTransfer.types instead which works across all browsers
-                        const hasOnlyFiles = e.dataTransfer?.types?.includes("Files") && e.dataTransfer?.types?.length === 1;
+                        const hasFiles = e.dataTransfer?.types?.includes("Files");
                       
-                        if (hasOnlyFiles) {
-                            console.log("----- shouldHandleDrag -> hasOnlyFiles", hasOnlyFiles, e);
-                            return true;
-                        }
-
-                        const allFiles =
+                        return hasFiles || !!(
+                            // Fallback for browsers that populate items  
                             e.dataTransfer?.items?.length &&
                             //$FlowExpectedError[method-unbinding]
                             Array.prototype.slice
                                 .call(e.dataTransfer.items)
-                                .every((item) => item.kind === "file");
-                        
-                        console.log("----- shouldHandleDrag -> All Files", allFiles, e);
-                        return allFiles;
+                                .every((item) => item.kind === "file")
+                        );
                     }}
                 >
                     <div className="content">

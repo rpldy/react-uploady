@@ -385,12 +385,12 @@ const StyledFullScreenDropZone = styled(UploadDropZone)`
         }
     }
 
-     &.drag-over .dropIndicator {
+    &.drag-over .dropIndicator {
         position: absolute;
         z-index: 2;
         background: rgba(0, 0, 0, 0.5);
         border: 8px solid green;
-        inset: 0;        
+        inset: 0;
     }
 
     /* 
@@ -409,7 +409,7 @@ const StyledFullScreenDropZone = styled(UploadDropZone)`
         .dropIndicator {
             display: none;
             position: fixed;            
-            pointer-events: none;
+            pointer-events: none;            
         }
 
         &.drag-over .dropIndicator {

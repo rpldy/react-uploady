@@ -442,14 +442,17 @@ export const WithFullScreen: UploadyStory = createUploadyStory(
                         // Use dataTransfer.types instead which works across all browsers
                         const hasFiles = e.dataTransfer?.types?.includes("Files");
                       
-                        return hasFiles || !!(
+                        const result = hasFiles || !!(
                             // Fallback for browsers that populate items  
                             e.dataTransfer?.items?.length &&
                             //$FlowExpectedError[method-unbinding]
                             Array.prototype.slice
                                 .call(e.dataTransfer.items)
-                                .every((item) => item.kind === "file")
+                                .every((item) => item.kind === "file")                                
                         );
+
+                        console.log("----- shouldHandleDrag -> result = ", result, e);
+                        return result;
                     }}
                 >
                     <div className="content">

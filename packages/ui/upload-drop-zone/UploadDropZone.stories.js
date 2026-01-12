@@ -360,6 +360,7 @@ export const WithAsUploadButton: UploadyStory = createUploadyStory(
 const StyledFullScreenDropZone = styled(UploadDropZone)`
     width: 100%;
     height: 100vh;
+    position: relative;
 
     .content {
         width: 100%;
@@ -391,6 +392,30 @@ const StyledFullScreenDropZone = styled(UploadDropZone)`
         border: 8px solid green;
         inset: 0;
     }
+
+    /* 
+     * Safari-specific fix: Disable pointer events on child elements
+     * 
+     * Safari needs pointer-events disabled on child elements to properly detect
+     * drag events on the parent container. Without this, child elements intercept
+     * the drag events and prevent the drop zone from working.
+     * 
+     */
+    @supports (-webkit-hyphens:none) {
+        .content > * {
+            pointer-events: none;
+        }
+
+        .dropIndicator {
+            display: none;
+            position: fixed;            
+            pointer-events: none;            
+        }
+
+        &.drag-over .dropIndicator {
+            display: block;
+        }
+    }
 `;
 
 export const WithFullScreen: UploadyStory = createUploadyStory(
@@ -408,19 +433,26 @@ export const WithFullScreen: UploadyStory = createUploadyStory(
                 {...extOptions}
             >
                 <StyledFullScreenDropZone
-                    // enableOnContains={false}
                     id="upload-drop-zone"
                     onDragOverClassName="drag-over"
+                    enableOnContains
                     shouldRemoveDragOver={({ target }) => target === indicatorRef.current}
-                    shouldHandleDrag={(e) => {
-                        const allFiles =
+                    shouldHandleDrag={(e) => {                        
+                        // Safari doesn't populate dataTransfer.items during dragenter/dragover
+                        // Use dataTransfer.types instead which works across all browsers
+                        const hasFiles = e.dataTransfer?.types?.includes("Files");
+                      
+                        const result = hasFiles || !!(
+                            // Fallback for browsers that populate items  
                             e.dataTransfer?.items?.length &&
                             //$FlowExpectedError[method-unbinding]
                             Array.prototype.slice
                                 .call(e.dataTransfer.items)
-                                .every((item) => item.kind === "file");
-                        console.log("----- shouldHandleDrag -> All Files", allFiles, e);
-                        return allFiles;
+                                .every((item) => item.kind === "file")                                
+                        );
+
+                        console.log("----- shouldHandleDrag -> result = ", result, e);
+                        return result;
                     }}
                 >
                     <div className="content">

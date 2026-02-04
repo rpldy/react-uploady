@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    optionalDependencies:
+      fsevents:
+        specifier: ^2.3.3
+        version: 2.3.3
     devDependencies:
       '@actions/core':
         specifier: ^1.11.1
@@ -135,8 +139,8 @@ importers:
         specifier: ^15.7.0
         version: 15.7.0
       cypress-intercept-formdata:
-        specifier: ^0.6.0
-        version: 0.6.0(cypress@15.7.0)
+        specifier: ^1.0.0
+        version: 1.0.0(cypress@15.7.0)
       cypress-mochawesome-reporter:
         specifier: ^4.0.2
         version: 4.0.2(cypress@15.7.0)(mocha@11.7.5)
@@ -296,10 +300,6 @@ importers:
       yargs:
         specifier: ^18.0.0
         version: 18.0.0
-    optionalDependencies:
-      fsevents:
-        specifier: ^2.3.3
-        version: 2.3.3
 
   packages/core/abort:
     dependencies:
@@ -4327,9 +4327,9 @@ packages:
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
-  cypress-intercept-formdata@0.6.0:
-    resolution: {integrity: sha512-r3v+Gb7tGGNiHyzcoDPzqk6Z3lJe2t+8ZEo6VPNA/XvfrG6DF3nXjR4KeQq0/rt3h8ve4FL14CUDtacSGNMv5Q==}
-    engines: {node: '>=14'}
+  cypress-intercept-formdata@1.0.0:
+    resolution: {integrity: sha512-nl65IpuJQXGLE9Dx68tUerzqsgUvkgilO/W5ondQgbjy4WEIEdOyumosHv0CELfNtbBcPDIOwFPsfn9TS4mKHg==}
+    engines: {node: '>=20'}
     peerDependencies:
       cypress: '>=6.3.0'
 
@@ -12736,7 +12736,7 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  cypress-intercept-formdata@0.6.0(cypress@15.7.0):
+  cypress-intercept-formdata@1.0.0(cypress@15.7.0):
     dependencies:
       cypress: 15.7.0
 

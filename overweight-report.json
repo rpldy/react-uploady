@@ -4,7 +4,7 @@
     "file": "bundle/rpldy-all.umd.min.js",
     "tester": "gzip",
     "size": "24.3 kB",
-    "sizeBytes": 24319,
+    "sizeBytes": 24309,
     "limit": "25 kB",
     "limitBytes": 25000
   },
@@ -13,7 +13,7 @@
     "file": "bundle/rpldy-core.umd.min.js",
     "tester": "gzip",
     "size": "10.8 kB",
-    "sizeBytes": 10830,
+    "sizeBytes": 10825,
     "limit": "11 kB",
     "limitBytes": 11000
   },
@@ -22,7 +22,7 @@
     "file": "bundle/rpldy-ui-core-chunked.umd.min.js",
     "tester": "gzip",
     "size": "16.3 kB",
-    "sizeBytes": 16337,
+    "sizeBytes": 16345,
     "limit": "17 kB",
     "limitBytes": 17000
   },
@@ -31,7 +31,7 @@
     "file": "bundle/rpldy-ui-core.umd.min.js",
     "tester": "gzip",
     "size": "13.8 kB",
-    "sizeBytes": 13779,
+    "sizeBytes": 13784,
     "limit": "15 kB",
     "limitBytes": 15000
   }

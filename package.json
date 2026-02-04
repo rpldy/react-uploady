@@ -97,7 +97,7 @@
     "concurrently": "^9.2.1",
     "core-js": "^3.47.0",
     "cypress": "^15.7.0",
-    "cypress-intercept-formdata": "^0.6.0",
+    "cypress-intercept-formdata": "^1.0.0",
     "cypress-mochawesome-reporter": "^4.0.2",
     "cypress-multi-reporters": "^2.0.5",
     "eslint": "^9.39.1",

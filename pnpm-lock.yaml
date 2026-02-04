@@ -148,7 +148,7 @@ importers:
         version: 9.39.2(jiti@2.6.1)
       eslint-plugin-ft-flow:
         specifier: ^3.0.11
-        version: 3.0.11(eslint@9.39.2(jiti@2.6.1))(hermes-eslint@0.32.1)
+        version: 3.0.11(eslint@9.39.2(jiti@2.6.1))(hermes-eslint@0.33.3)
       eslint-plugin-import:
         specifier: ^2.32.0
         version: 2.32.0(@typescript-eslint/parser@8.48.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))
@@ -189,8 +189,8 @@ importers:
         specifier: ^16.5.0
         version: 16.5.0
       hermes-eslint:
-        specifier: ^0.32.0
-        version: 0.32.1
+        specifier: ^0.33.3
+        version: 0.33.3
       html-webpack-plugin:
         specifier: ^5.6.5
         version: 5.6.5(webpack@5.105.0)
@@ -5278,8 +5278,8 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
 
-  hermes-eslint@0.32.1:
-    resolution: {integrity: sha512-3ljktN2ek+bRRsPAcMeqMEJou6s2MRe6VuLkLsXDXuVrJfRZ7V2VUw41T9uAt9lcA2xaJP4yykYAnMg15nsRPw==}
+  hermes-eslint@0.33.3:
+    resolution: {integrity: sha512-eGY0l6T5U9LDdC+uN88NrSOrvPPtXGPxN7EaD38hytWuBEVXypq0eQ1SNVsnQPBZLWi+b1jkF4F5aVtTCQC6wg==}
 
   hermes-estree@0.25.1:
     resolution: {integrity: sha512-0wUoCcLp+5Ev5pDW2OriHC2MJCbwLwuRx+gAqMTOkGKJJiBCLjtrvy4PWUGn6MIVefecRpzoOZ/UV6iGdOr+Cw==}
@@ -5287,8 +5287,8 @@ packages:
   hermes-estree@0.32.0:
     resolution: {integrity: sha512-KWn3BqnlDOl97Xe1Yviur6NbgIZ+IP+UVSpshlZWkq+EtoHg6/cwiDj/osP9PCEgFE15KBm1O55JRwbMEm5ejQ==}
 
-  hermes-estree@0.32.1:
-    resolution: {integrity: sha512-ne5hkuDxheNBAikDjqvCZCwihnz0vVu9YsBzAEO1puiyFR4F1+PAz/SiPHSsNTuOveCYGRMX8Xbx4LOubeC0Qg==}
+  hermes-estree@0.33.3:
+    resolution: {integrity: sha512-6kzYZHCk8Fy1Uc+t3HGYyJn3OL4aeqKLTyina4UFtWl8I0kSL7OmKThaiX+Uh2f8nGw3mo4Ifxg0M5Zk3/Oeqg==}
 
   hermes-parser@0.25.1:
     resolution: {integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==}
@@ -5296,8 +5296,8 @@ packages:
   hermes-parser@0.32.0:
     resolution: {integrity: sha512-g4nBOWFpuiTqjR3LZdRxKUkij9iyveWeuks7INEsMX741f3r9xxrOe8TeQfUxtda0eXmiIFiMQzoeSQEno33Hw==}
 
-  hermes-parser@0.32.1:
-    resolution: {integrity: sha512-175dz634X/W5AiwrpLdoMl/MOb17poLHyIqgyExlE8D9zQ1OPnoORnGMB5ltRKnpvQzBjMYvT2rN/sHeIfZW5Q==}
+  hermes-parser@0.33.3:
+    resolution: {integrity: sha512-Yg3HgaG4CqgyowtYjX/FsnPAuZdHOqSMtnbpylbptsQ9nwwSKsy6uRWcGO5RK0EqiX12q8HvDWKgeAVajRO5DA==}
 
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
@@ -13207,10 +13207,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-ft-flow@3.0.11(eslint@9.39.2(jiti@2.6.1))(hermes-eslint@0.32.1):
+  eslint-plugin-ft-flow@3.0.11(eslint@9.39.2(jiti@2.6.1))(hermes-eslint@0.33.3):
     dependencies:
       eslint: 9.39.2(jiti@2.6.1)
-      hermes-eslint: 0.32.1
+      hermes-eslint: 0.33.3
       lodash: 4.17.23
       string-natural-compare: 3.0.1
 
@@ -13905,17 +13905,17 @@ snapshots:
 
   he@1.2.0: {}
 
-  hermes-eslint@0.32.1:
+  hermes-eslint@0.33.3:
     dependencies:
       esrecurse: 4.3.0
-      hermes-estree: 0.32.1
-      hermes-parser: 0.32.1
+      hermes-estree: 0.33.3
+      hermes-parser: 0.33.3
 
   hermes-estree@0.25.1: {}
 
   hermes-estree@0.32.0: {}
 
-  hermes-estree@0.32.1: {}
+  hermes-estree@0.33.3: {}
 
   hermes-parser@0.25.1:
     dependencies:
@@ -13925,9 +13925,9 @@ snapshots:
     dependencies:
       hermes-estree: 0.32.0
 
-  hermes-parser@0.32.1:
+  hermes-parser@0.33.3:
     dependencies:
-      hermes-estree: 0.32.1
+      hermes-estree: 0.33.3
 
   hoist-non-react-statics@3.3.2:
     dependencies:

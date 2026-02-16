@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    optionalDependencies:
-      fsevents:
-        specifier: ^2.3.3
-        version: 2.3.3
     devDependencies:
       '@actions/core':
         specifier: ^1.11.1
@@ -218,7 +214,7 @@ importers:
         version: 4.17.23
       markdown-it:
         specifier: ^14.1.0
-        version: 14.1.0
+        version: 14.1.1
       mocha-junit-reporter:
         specifier: ^2.2.1
         version: 2.2.1(mocha@11.7.5)
@@ -300,6 +296,10 @@ importers:
       yargs:
         specifier: ^18.0.0
         version: 18.0.0
+    optionalDependencies:
+      fsevents:
+        specifier: ^2.3.3
+        version: 2.3.3
 
   packages/core/abort:
     dependencies:
@@ -6109,8 +6109,8 @@ packages:
     resolution: {integrity: sha512-hdN1wVrZbb29eBGiGjJbeP8JbKjq1urkHJ/LIP/NY48MZ1QVXUsQBV1G1zvYFHn1XE06cwjBsOI2K3Ulnj1YXQ==}
     engines: {node: '>=8'}
 
-  markdown-it@14.1.0:
-    resolution: {integrity: sha512-a54IwgWPaeBCAAsv13YgmALOF1elABB08FxO9i+r4VFk5Vl4pKokRPeX8u5TCgSsPi6ec1otfLjdOpVcgbpshg==}
+  markdown-it@14.1.1:
+    resolution: {integrity: sha512-BuU2qnTti9YKgK5N+IeMubp14ZUKUUw7yeJbkjtosvHiP0AZ5c8IAgEMk79D0eC8F23r4Ac/q8cAIFdm2FtyoA==}
     hasBin: true
 
   math-intrinsics@1.1.0:
@@ -14868,7 +14868,7 @@ snapshots:
 
   map-obj@4.3.0: {}
 
-  markdown-it@14.1.0:
+  markdown-it@14.1.1:
     dependencies:
       argparse: 2.0.1
       entities: 4.5.0

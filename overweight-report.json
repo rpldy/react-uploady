@@ -4,7 +4,7 @@
     "file": "bundle/rpldy-all.umd.min.js",
     "tester": "gzip",
     "size": "24.3 kB",
-    "sizeBytes": 24309,
+    "sizeBytes": 24310,
     "limit": "25 kB",
     "limitBytes": 25000
   },
@@ -22,7 +22,7 @@
     "file": "bundle/rpldy-ui-core-chunked.umd.min.js",
     "tester": "gzip",
     "size": "16.3 kB",
-    "sizeBytes": 16345,
+    "sizeBytes": 16343,
     "limit": "17 kB",
     "limitBytes": 17000
   },

@@ -3,77 +3,98 @@ import path from "path";
 import fs from "fs";
 import { createRequire } from "module";
 import { defineConfig } from "vite";
-import babelPlugin from "vite-plugin-babel";
+import babel from "@babel/core";
 import { getMatchingPackages } from "./scripts/lernaUtils.mjs";
 
 const require = createRequire(import.meta.url);
 
 const isCI = !!process.env.CI;
 
-const createPackageAliases = () => {
-    const packages = getMatchingPackages();
-    return packages.reduce((res, p) => {
-        res.push({
-            find: new RegExp(`^${p.name}$`),
-            replacement: path.resolve(`./${p.location}/src/index.js`)
-        });
-
-        res.push({
-            find: new RegExp(`^${p.name}/(.*)`),
-            replacement: `./${p.location}/$1.js`,
-            customResolver: (importPath) => {
-                const jsDep = path.resolve(importPath);
-                return fs.existsSync(jsDep) ? jsDep : jsDep + "x";
+const BABEL_CONFIG = {
+    babelrc: false,
+    configFile: false,
+    plugins: [
+        ["babel-plugin-transform-flow-enums", {
+            //avoid using flow-enums-runtime, just return a frozen "enum" object
+            getRuntime: (t) => t.arrowFunctionExpression(
+                [t.identifier("enumObj")],
+                t.callExpression(
+                    t.memberExpression(t.identifier("Object"), t.identifier("freeze")),
+                    [t.identifier("enumObj")]
+                )
+            )
+        }],
+        [
+            "@babel/plugin-transform-runtime", {
+            corejs: 3,
+            "version": "^7.24.9"
+        }],
+        "@babel/plugin-proposal-export-default-from",
+        "babel-plugin-syntax-hermes-parser",
+    ],
+    parserOpts: { flow: "all" },
+    sourceMaps: "inline",
+    presets: [
+        [
+            "@babel/env",
+            {
+                useBuiltIns: false,
+                "modules": false,
             },
-        })
-
-        return res;
-    }, []);
+        ],
+        "@babel/react",
+        "@babel/flow",
+    ],
 };
+
+// Replaces vite-plugin-babel: transforms .js/.jsx via Babel (including coverage-instrumented
+// files whose IDs carry query strings like ?vitest-uncovered-coverage=true).
+const babelTransformPlugin = {
+    name: "babel-transform",
+    enforce: "pre",
+    transform(code, id) {
+        const cleanId = id.split("?")[0];
+
+        if (!/\.jsx?$/.test(cleanId) || cleanId.includes("node_modules")) {
+            return null;
+        }
+
+        return babel.transformAsync(code, { ...BABEL_CONFIG, filename: cleanId })
+            .then((result) => result ? { code: result.code, map: result.map } : null);
+    },
+};
+
+const packages = getMatchingPackages();
+
+// Resolves subpath imports like `@rpldy/pkg/foo` → packages/location/foo.js (or .jsx).
+// Replaces the deprecated `customResolver` option in resolve.alias.
+const packageSubpathPlugin = {
+    name: "package-subpath-resolver",
+    enforce: "pre",
+    resolveId(source) {
+        for (const p of packages) {
+            const match = source.match(new RegExp(`^${p.name}/(.*)`));
+
+            if (match) {
+                const base = path.resolve(`${p.location}/${match[1]}.js`);
+                return fs.existsSync(base) ? base : base + "x";
+            }
+        }
+
+        return null;
+    },
+};
+
+const createPackageAliases = () =>
+    packages.map((p) => ({
+        find: new RegExp(`^${p.name}$`),
+        replacement: path.resolve(`./${p.location}/src/index.js`),
+    }));
 
 export default defineConfig({
     plugins: [
-        babelPlugin({
-            //passing specific config because setup file breaks when using config file
-            babelConfig: {
-                babelrc: false,
-                configFile: false,
-                plugins: [
-                    ["babel-plugin-transform-flow-enums", {
-                        //avoid using flow-enums-runtime, just return a frozen "enum" object
-                        getRuntime: (t) => t.arrowFunctionExpression(
-                            [t.identifier("enumObj")],
-                            t.callExpression(
-                                t.memberExpression(t.identifier("Object"), t.identifier("freeze")),
-                                [t.identifier("enumObj")]
-                            )
-                        )
-                    }],
-                    [
-                        "@babel/plugin-transform-runtime", {
-                        corejs: 3,
-                        "version": "^7.24.9"
-                    }],
-                    "@babel/plugin-proposal-export-default-from",
-                    "babel-plugin-syntax-hermes-parser",
-                ],
-                parserOpts: { flow: "all" },
-                sourceMaps: "inline",
-                presets: [
-                    [
-                        "@babel/env",
-                        {
-                            useBuiltIns: false,
-                            "modules": false,
-                        },
-                    ],
-                    "@babel/react",
-                    "@babel/flow"],
-                exclude: [
-                    "node_modules/**"
-                ],
-            },
-        }),
+        babelTransformPlugin,
+        packageSubpathPlugin,
     ],
     build: {
         sourcemap: true,

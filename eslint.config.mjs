@@ -1,7 +1,8 @@
 import globals from "globals";
 import js from "@eslint/js";
 import ts from "typescript-eslint";
-import hermesParser from "hermes-eslint";
+import hermesParser from "./hermes-eslint-compat.mjs";
+import { fixupPluginRules } from "@eslint/compat";
 import importPlugin from "eslint-plugin-import";
 import reactPlugin from "eslint-plugin-react";
 import jsxA11YPlugin from "eslint-plugin-jsx-a11y";
@@ -10,6 +11,13 @@ import noAsyncPlugin from "eslint-plugin-no-async";
 import ftFlowPlugin from "eslint-plugin-ft-flow";
 import vitestPlugin from "eslint-plugin-vitest";
 import storybookPlugin from "eslint-plugin-storybook";
+
+const importPluginFixed = fixupPluginRules(importPlugin);
+const reactPluginFixed = fixupPluginRules(reactPlugin);
+const jsxA11YPluginFixed = fixupPluginRules(jsxA11YPlugin);
+const reactHooksPluginFixed = fixupPluginRules(reactHooksPlugin);
+const noAsyncPluginFixed = fixupPluginRules(noAsyncPlugin);
+const ftFlowPluginFixed = fixupPluginRules(ftFlowPlugin);
 
 const JS_RULES_OVERRIDES = {
     quotes: [2, "double", {
@@ -196,12 +204,12 @@ export default [
         ignores: ["**/*.test.js", "**/*.test.jsx", "**/*.mock.js", "**/*.mock.jsx", "story-helpers/*.*"],
 
         "plugins": {
-            "ft-flow": ftFlowPlugin,
-            react: reactPlugin,
-            "react-hooks": reactHooksPlugin,
-            "jsx-a11y": jsxA11YPlugin,
-            "no-async": noAsyncPlugin,
-            import: importPlugin,
+            "ft-flow": ftFlowPluginFixed,
+            react: reactPluginFixed,
+            "react-hooks": reactHooksPluginFixed,
+            "jsx-a11y": jsxA11YPluginFixed,
+            "no-async": noAsyncPluginFixed,
+            import: importPluginFixed,
         },
 
         languageOptions: {
@@ -235,7 +243,7 @@ export default [
 
         "plugins": {
             vitest: vitestPlugin,
-            import: importPlugin,
+            import: importPluginFixed,
         },
 
         languageOptions: {
@@ -278,8 +286,8 @@ export default [
         ],
 
         "plugins": {
-            "ft-flow": ftFlowPlugin,
-            react: reactPlugin,
+            "ft-flow": ftFlowPluginFixed,
+            react: reactPluginFixed,
             ...SB_CONFIG.plugins,
         },
 

@@ -17,10 +17,9 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strictFunctionTypes": true,
-    "baseUrl": ".",
     "paths": {
       "~/*": [
-        "packages/*"
+        "./packages/*"
       ]
     }
   },

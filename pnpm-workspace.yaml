@@ -3,3 +3,6 @@ packages:
     - "packages/ui/*"
     - "packages/native/*"
 linkWorkspacePackages: true
+
+# minimum release age: 10 days (14400 minutes)
+minimumReleaseAge: 14400

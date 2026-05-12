@@ -174,7 +174,7 @@ jobs:
             -   name: Show Report Coverage
                 uses: davelosert/vitest-coverage-report-action@02f3c2e641286b7fa308cd3e430783103ce6103b # v2
             -   name: Test Report
-                uses: dorny/test-reporter@df6247429542221bc30d46a036ee47af1102c451 # v2
+                uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
                 if: success() || failure()
                 with:
                     name: Unit-test Report
@@ -270,7 +270,7 @@ jobs:
                     path: cypress/screenshots
                     if-no-files-found: ignore
             -   name: E2E Report
-                uses: dorny/test-reporter@df6247429542221bc30d46a036ee47af1102c451 # v2
+                uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
                 if: success() || failure()
                 with:
                     name: E2E Report

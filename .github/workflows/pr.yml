@@ -24,7 +24,7 @@ jobs:
             IS_CODE_CHANGED: ${{ steps.check-changes.outputs.code_changed }}
         steps:
             -   name: Checkout
-                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
                 with:
                     fetch-depth: 2
             -   name: Check for code changes
@@ -60,7 +60,7 @@ jobs:
         if: ${{ needs.code-changes.outputs.IS_CODE_CHANGED == 'true' }}
         steps:
             -   name: Checkout
-                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -76,7 +76,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
-                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -94,7 +94,7 @@ jobs:
             actions: read
         steps:
             -   name: Checkout
-                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -123,7 +123,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
-                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -143,7 +143,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
-                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -163,7 +163,7 @@ jobs:
             actions: read
         steps:
             -   name: Checkout
-                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -207,13 +207,13 @@ jobs:
             pull-requests: read
         steps:
             -   name: Checkout PR
-                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
                 if: ${{ github.ref_name != 'master' }}
                 with:
                     ref: ${{ github.head_ref }}
                     fetch-depth: 0
             -   name: Checkout
-                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
                 if: ${{ github.ref_name == 'master' }}
 
             -   name: Prepare

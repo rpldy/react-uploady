@@ -60,8 +60,7 @@ name: Uploady Version Deprecate
         default: This version is deprecated, please upgrade to the latest version
         type: string
 permissions:
-  id-token: write
-  contents: write
+  contents: read
 defaults:
   run:
     shell: bash
@@ -70,9 +69,11 @@ jobs:
     name: Fetch Non-Deprecated Versions
     runs-on: ubuntu-latest
     if: ${{ inputs.version == '' }}
+    permissions:
+      contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           token: ${{ secrets.RPLDY_PAT_TOKEN }}
       - name: Prepare
@@ -105,7 +106,7 @@ jobs:
     if: ${{ inputs.version != '' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
       - name: Prepare

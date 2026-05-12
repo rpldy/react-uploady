@@ -12,10 +12,10 @@ defaults:
         shell: bash
 
 permissions:
-    pull-requests: write
-    contents: write
+    contents: read
+    pull-requests: read
     actions: read
-    checks: write
+    checks: read
 
 jobs:
     code-changes:
@@ -24,7 +24,7 @@ jobs:
             IS_CODE_CHANGED: ${{ steps.check-changes.outputs.code_changed }}
         steps:
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
                 with:
                     fetch-depth: 2
             -   name: Check for code changes
@@ -60,14 +60,14 @@ jobs:
         if: ${{ needs.code-changes.outputs.IS_CODE_CHANGED == 'true' }}
         steps:
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
                     with-cypress: true
                     with-frozen: true
             -   name: Install dependencies
-                uses: cypress-io/github-action@v6
+                uses: cypress-io/github-action@f790eee7a50d9505912f50c2095510be7de06aa7 # v6.10.9
                 with:
                     runTests: false
 
@@ -76,7 +76,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -91,9 +91,10 @@ jobs:
         permissions:
             pull-requests: write
             contents: write
+            actions: read
         steps:
             -   name: Checkout
-                uses: actions/checkout@v4                
+                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -104,14 +105,14 @@ jobs:
                     pnpm bundle:prod
             -   name: Cache Bundle Folder
                 id: cache-bundle
-                uses: actions/cache@v4
+                uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
                 with:
                     path: bundle
                     key: bundle-${{ runner.os }}-${{ hashFiles('bundle/**') }}
             -   name: Bundle Size Check (Overweight)
-                uses: yoavniran/overweight@v1
-                with:                    
-                    github-token: ${{ secrets.GITHUB_TOKEN }}                    
+                uses: yoavniran/overweight@ee294a046ad2637d648b7b9c67e34928c93c7806 # v1
+                with:
+                    github-token: ${{ secrets.GITHUB_TOKEN }}
                     update-baseline: true
                     report-file: overweight-report.json
                     baseline-protected-branches: "master"
@@ -122,7 +123,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -132,7 +133,7 @@ jobs:
                 run: pnpm sb:build:internal
             -   name: Cache SB Build
                 id: cache-sb
-                uses: actions/cache@v4
+                uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
                 with:
                     path: .sb-static
                     key: sb-static-${{ hashFiles('lerna.json') }}-${{ github.run_id }}
@@ -142,7 +143,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -155,9 +156,14 @@ jobs:
         name: Unit-Test (Vitest)
         runs-on: ubuntu-latest
         environment: "Rpldy-Build"
+        permissions:
+            contents: read
+            pull-requests: write
+            checks: write
+            actions: read
         steps:
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -166,9 +172,9 @@ jobs:
             -   name: unit-test
                 run: pnpm vitest:ci
             -   name: Show Report Coverage
-                uses: davelosert/vitest-coverage-report-action@v2
+                uses: davelosert/vitest-coverage-report-action@02f3c2e641286b7fa308cd3e430783103ce6103b # v2
             -   name: Test Report
-                uses: dorny/test-reporter@v2
+                uses: dorny/test-reporter@df6247429542221bc30d46a036ee47af1102c451 # v2
                 if: success() || failure()
                 with:
                     name: Unit-test Report
@@ -178,7 +184,7 @@ jobs:
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: Upload Coverage (master only)
-                uses: codecov/codecov-action@v4
+                uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4
                 if: ${{ github.ref_name == 'master' }}
                 with:
                     token: ${{ secrets.CODECOV_TOKEN }}
@@ -194,15 +200,20 @@ jobs:
             - sb
             - code-changes
         if: ${{ needs.code-changes.outputs.IS_CODE_CHANGED == 'true' }}
+        permissions:
+            contents: write
+            checks: write
+            actions: write
+            pull-requests: read
         steps:
             -   name: Checkout PR
-                uses: actions/checkout@v4
+                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
                 if: ${{ github.ref_name != 'master' }}
                 with:
                     ref: ${{ github.head_ref }}
                     fetch-depth: 0
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
                 if: ${{ github.ref_name == 'master' }}
 
             -   name: Prepare
@@ -211,20 +222,20 @@ jobs:
                     with-cypress: true
                     with-frozen: true
             -   name: Restore SB Build Cache
-                uses: actions/cache@v4
+                uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
                 with:
                     path: .sb-static
                     key: sb-static-${{ hashFiles('lerna.json') }}-${{ github.run_id }}
                     restore-keys: sb-static-${{ hashFiles('lerna.json') }}-
             -   name: Restore Bundle Cache
-                uses: actions/cache@v4
+                uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
                 with:
                     path: bundle
                     key: bundle-${{ runner.os }}-
                     restore-keys: bundle-${{ runner.os }}-
             -   name: Cypress run
                 id: cypress-e2e
-                uses: cypress-io/github-action@v6
+                uses: cypress-io/github-action@f790eee7a50d9505912f50c2095510be7de06aa7 # v6.10.9
                 with:
                     install: false
                     start: |
@@ -252,14 +263,14 @@ jobs:
                     git commit -m "chore: update e2e weights file"
                     git push
             -   name: Store screenshots
-                uses: actions/upload-artifact@v4
+                uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
                 if: failure()
                 with:
                     name: cypress-screenshots
                     path: cypress/screenshots
                     if-no-files-found: ignore
             -   name: E2E Report
-                uses: dorny/test-reporter@v2
+                uses: dorny/test-reporter@df6247429542221bc30d46a036ee47af1102c451 # v2
                 if: success() || failure()
                 with:
                     name: E2E Report

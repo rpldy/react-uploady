@@ -66,7 +66,7 @@ jobs:
                     echo "🔴 Failing Job - Cant use version: (premajor, preminor, prepatch, prerelease) without selecting 'preid' value too! >> $GITHUB_STEP_SUMMARY
                     exit 1
 
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
                 with:
                     fetch-depth: 0
 
@@ -152,7 +152,7 @@ jobs:
                     git push origin ${{ steps.version-name.outputs.NEW_VERSION }}
 
             -   name: Create GH Release
-                uses: ncipollo/release-action@v1
+                uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1
                 with:
                     name: ${{ steps.version-name.outputs.NEW_VERSION }}
                     body: ${{ steps.version-log.outputs.VERSION_LOG }}
@@ -161,7 +161,7 @@ jobs:
 
             -   name: Create PR for Release
                 id: pr
-                uses: peter-evans/create-pull-request@v6
+                uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6
                 with:
                     title: "chore: release ${{ steps.version-name.outputs.NEW_VERSION }}"
                     body: "Automatic PR for version release: ${{ steps.version-name.outputs.NEW_VERSION }}"

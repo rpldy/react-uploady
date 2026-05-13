@@ -264,7 +264,7 @@ jobs:
             -   name: Show Report Coverage
                 uses: davelosert/vitest-coverage-report-action@02f3c2e641286b7fa308cd3e430783103ce6103b # v2
             -   name: Test Report
-                uses: dorny/test-reporter@df6247429542221bc30d46a036ee47af1102c451 # v2
+                uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3
                 if: success() || failure()
                 with:
                     name: Unit-test Report
@@ -326,7 +326,7 @@ jobs:
                     restore-keys: bundle-${{ runner.os }}-
             -   name: Cypress run
                 id: cypress-e2e
-                uses: cypress-io/github-action@f790eee7a50d9505912f50c2095510be7de06aa7 # v6.10.9
+                uses: cypress-io/github-action@dace029018fcdf86e0df89a31bc3cfa5b32570d8 # v7.3
                 with:
                     install: false
                     start: |
@@ -361,7 +361,7 @@ jobs:
                     path: cypress/screenshots
                     if-no-files-found: ignore
             -   name: E2E Report
-                uses: dorny/test-reporter@df6247429542221bc30d46a036ee47af1102c451 # v2
+                uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3
                 if: success() || failure()
                 with:
                     name: E2E Report

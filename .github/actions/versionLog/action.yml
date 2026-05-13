@@ -6,5 +6,5 @@ outputs:
     VERSION_LOG:
         description: "The log info for the new release"
 runs:
-    using: "node20"
+    using: "node24"
     main: "index.js"

@@ -3,6 +3,18 @@ name: Uploady Build
 on:
     workflow_dispatch:
     pull_request:
+        # `labeled`/`unlabeled` let us trigger an e2e re-run by toggling the
+        # "rune2e" label on a PR. Using `pull_request` (NOT `pull_request_target`)
+        # keeps untrusted PR code out of the default branch's privileged context,
+        # avoiding the cache-poisoning / TOCTOU issues that CodeQL flags for
+        # `issue_comment` + `pull_request_target` workflows.
+        types:
+            - opened
+            - synchronize
+            - reopened
+            - ready_for_review
+            - labeled
+            - unlabeled
     push:
         branches:
             - master
@@ -17,9 +29,68 @@ permissions:
     actions: read
     checks: read
 
+env:
+    RUNE2E_LABEL: rune2e
+
 jobs:
+    workflow-gate:
+        runs-on: ubuntu-latest
+        outputs:
+            # Whether the build pipeline should run at all. We ignore `unlabeled`
+            # events entirely (nothing to do when a label is removed) and ignore
+            # `labeled` events for labels other than the e2e re-run label
+            # (to avoid wasteful re-runs on unrelated labels).
+            proceed: ${{ steps.gate.outputs.proceed }}
+            # Whether this run was triggered specifically by adding the e2e
+            # re-run label (used to skip redundant build jobs on label-only runs).
+            rune2e_label_added: ${{ steps.gate.outputs.rune2e_label_added }}
+            # Whether this is a label-only event (i.e. nothing actually changed
+            # on the PR code-wise). Used to skip non-e2e jobs that already ran
+            # for the same SHA on the original opened/synchronize event.
+            is_label_event: ${{ steps.gate.outputs.is_label_event }}
+            # Current PR carries the rune2e label (any pull_request event). When
+            # true, prep-e2e and e2e always run, even if watched paths did not change.
+            has_rune2e_label: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, env.RUNE2E_LABEL) }}
+        steps:
+            -   name: Evaluate gate
+                id: gate
+                env:
+                    EVENT_NAME: ${{ github.event_name }}
+                    PR_ACTION: ${{ github.event.action }}
+                    LABEL_NAME: ${{ github.event.label.name }}
+                run: |
+                    proceed=true
+                    rune2e_label_added=false
+                    is_label_event=false
+
+                    if [ "$EVENT_NAME" = "pull_request" ]; then
+                      case "$PR_ACTION" in
+                        unlabeled)
+                          proceed=false
+                          ;;
+                        labeled)
+                          is_label_event=true
+                          if [ "$LABEL_NAME" = "$RUNE2E_LABEL" ]; then
+                            rune2e_label_added=true
+                          else
+                            # Some other label was added - nothing to do.
+                            proceed=false
+                          fi
+                          ;;
+                      esac
+                    fi
+
+                    {
+                      echo "proceed=$proceed"
+                      echo "rune2e_label_added=$rune2e_label_added"
+                      echo "is_label_event=$is_label_event"
+                    } >> "$GITHUB_OUTPUT"
+
     code-changes:
         runs-on: ubuntu-latest
+        needs:
+            - workflow-gate
+        if: needs.workflow-gate.outputs.proceed == 'true'
         outputs:
             IS_CODE_CHANGED: ${{ steps.check-changes.outputs.code_changed }}
         steps:
@@ -56,8 +127,9 @@ jobs:
     prep-e2e:
         runs-on: ubuntu-latest
         needs:
+            - workflow-gate
             - code-changes
-        if: ${{ needs.code-changes.outputs.IS_CODE_CHANGED == 'true' }}
+        if: ${{ needs.workflow-gate.outputs.proceed == 'true' && (needs.code-changes.outputs.IS_CODE_CHANGED == 'true' || needs.workflow-gate.outputs.has_rune2e_label == 'true') }}
         steps:
             -   name: Checkout
                 uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -67,13 +139,19 @@ jobs:
                     with-cypress: true
                     with-frozen: true
             -   name: Install dependencies
-                uses: cypress-io/github-action@f790eee7a50d9505912f50c2095510be7de06aa7 # v6.10.9
+                uses: cypress-io/github-action@dace029018fcdf86e0df89a31bc3cfa5b32570d8 # v7.3
                 with:
                     runTests: false
 
     build:
         name: Build Library
         runs-on: ubuntu-latest
+        needs:
+            - workflow-gate
+        # Skip on label-only events: the same SHA already built on the
+        # opened/synchronize event, no need to rebuild just because a label
+        # was toggled.
+        if: ${{ needs.workflow-gate.outputs.proceed == 'true' && needs.workflow-gate.outputs.is_label_event != 'true' }}
         steps:
             -   name: Checkout
                 uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -88,6 +166,9 @@ jobs:
     bundle:
         name: Create code bundles
         runs-on: ubuntu-latest
+        needs:
+            - workflow-gate
+        if: ${{ needs.workflow-gate.outputs.proceed == 'true' && needs.workflow-gate.outputs.is_label_event != 'true' }}
         permissions:
             pull-requests: write
             contents: write
@@ -121,6 +202,9 @@ jobs:
     sb:
         name: Build Storybook
         runs-on: ubuntu-latest
+        needs:
+            - workflow-gate
+        if: ${{ needs.workflow-gate.outputs.proceed == 'true' && needs.workflow-gate.outputs.is_label_event != 'true' }}
         steps:
             -   name: Checkout
                 uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -141,6 +225,9 @@ jobs:
     lft:
         name: Lint, Flow, Types
         runs-on: ubuntu-latest
+        needs:
+            - workflow-gate
+        if: ${{ needs.workflow-gate.outputs.proceed == 'true' && needs.workflow-gate.outputs.is_label_event != 'true' }}
         steps:
             -   name: Checkout
                 uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -155,6 +242,9 @@ jobs:
     unit-test:
         name: Unit-Test (Vitest)
         runs-on: ubuntu-latest
+        needs:
+            - workflow-gate
+        if: ${{ needs.workflow-gate.outputs.proceed == 'true' && needs.workflow-gate.outputs.is_label_event != 'true' }}
         environment: "Rpldy-Build"
         permissions:
             contents: read
@@ -174,7 +264,7 @@ jobs:
             -   name: Show Report Coverage
                 uses: davelosert/vitest-coverage-report-action@02f3c2e641286b7fa308cd3e430783103ce6103b # v2
             -   name: Test Report
-                uses: dorny/test-reporter@df6247429542221bc30d46a036ee47af1102c451 # v2
+                uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3
                 if: success() || failure()
                 with:
                     name: Unit-test Report
@@ -194,27 +284,28 @@ jobs:
 
     e2e:
         runs-on: ubuntu-latest
+        # DAG: gate → path check → bundle/sb (artifacts) and prep-e2e (deps); e2e
+        # restores bundle/sb caches and reuses prep-e2e’s install.
         needs:
-            - prep-e2e
+            - workflow-gate
+            - code-changes
             - bundle
             - sb
-            - code-changes
-        if: ${{ needs.code-changes.outputs.IS_CODE_CHANGED == 'true' }}
+            - prep-e2e
+        # On a `labeled` event the bundle/sb jobs are skipped (already built on
+        # the original opened/synchronize event); skipped status satisfies
+        # `needs` since we don't require success() here.
+        if: ${{ always() && needs.workflow-gate.outputs.proceed == 'true' && (needs.code-changes.outputs.IS_CODE_CHANGED == 'true' || needs.workflow-gate.outputs.has_rune2e_label == 'true') && needs.prep-e2e.result == 'success' && (needs.bundle.result == 'success' || needs.bundle.result == 'skipped') && (needs.sb.result == 'success' || needs.sb.result == 'skipped') }}
         permissions:
             contents: write
             checks: write
             actions: write
             pull-requests: read
         steps:
-            -   name: Checkout PR
-                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-                if: ${{ github.ref_name != 'master' }}
-                with:
-                    ref: ${{ github.head_ref }}
-                    fetch-depth: 0
             -   name: Checkout
                 uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-                if: ${{ github.ref_name == 'master' }}
+                with:
+                    fetch-depth: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && 1 || 0 }}
 
             -   name: Prepare
                 uses: ./.github/actions/prepare
@@ -235,7 +326,7 @@ jobs:
                     restore-keys: bundle-${{ runner.os }}-
             -   name: Cypress run
                 id: cypress-e2e
-                uses: cypress-io/github-action@f790eee7a50d9505912f50c2095510be7de06aa7 # v6.10.9
+                uses: cypress-io/github-action@dace029018fcdf86e0df89a31bc3cfa5b32570d8 # v7.3
                 with:
                     install: false
                     start: |
@@ -245,7 +336,7 @@ jobs:
                     command: pnpm cy:parallel:gh
             -   name: Check for GIT Changes (Weights File)
                 id: check-weights-changes
-                if:  ${{ github.ref_name != 'master' && steps.cypress-e2e.outcome == 'success' }}
+                if: ${{ github.event_name == 'pull_request' && steps.cypress-e2e.outcome == 'success' }}
                 run: |
                     if [[ `git status --porcelain` ]]; then
                         echo "found changes to weights file!"
@@ -270,7 +361,7 @@ jobs:
                     path: cypress/screenshots
                     if-no-files-found: ignore
             -   name: E2E Report
-                uses: dorny/test-reporter@df6247429542221bc30d46a036ee47af1102c451 # v2
+                uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3
                 if: success() || failure()
                 with:
                     name: E2E Report

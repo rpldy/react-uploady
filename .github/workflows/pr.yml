@@ -139,7 +139,7 @@ jobs:
                     with-cypress: true
                     with-frozen: true
             -   name: Install dependencies
-                uses: cypress-io/github-action@f790eee7a50d9505912f50c2095510be7de06aa7 # v6.10.9
+                uses: cypress-io/github-action@dace029018fcdf86e0df89a31bc3cfa5b32570d8 # v7.3
                 with:
                     runTests: false
 

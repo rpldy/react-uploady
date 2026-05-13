@@ -259,7 +259,7 @@ importers:
         version: 10.3.3(@testing-library/dom@10.4.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       styled-components:
         specifier: ^6.3.12
-        version: 6.3.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       tty-browserify:
         specifier: ^0.0.1
         version: 0.0.1
@@ -653,7 +653,7 @@ importers:
         version: 19.2.0(react@19.2.0)
       styled-components:
         specifier: ^6.1.19
-        version: 6.3.8(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
 
   packages/ui/upload-drop-zone:
     dependencies:
@@ -696,7 +696,7 @@ importers:
         version: 19.2.0(react@19.2.0)
       styled-components:
         specifier: ^6.1.19
-        version: 6.3.8(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
 
   packages/ui/upload-paste:
     dependencies:
@@ -730,7 +730,7 @@ importers:
         version: 19.2.0(react@19.2.0)
       styled-components:
         specifier: ^6.1.19
-        version: 6.3.8(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
 
   packages/ui/upload-preview:
     dependencies:
@@ -767,7 +767,7 @@ importers:
         version: 11.0.10(react@19.2.0)
       styled-components:
         specifier: ^6.1.19
-        version: 6.3.8(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
 
   packages/ui/upload-url-input:
     dependencies:
@@ -1641,9 +1641,6 @@ packages:
 
   '@emotion/memoize@0.9.0':
     resolution: {integrity: sha512-30FAj7/EoJ5mwVPOWhAyCX+FPfMDrVecJAM+Iw9NRoSl4BBAQeqj4cApHHUXOVvIPgLVDsCFoz/hGD+5QQD1GQ==}
-
-  '@emotion/unitless@0.10.0':
-    resolution: {integrity: sha512-dFoMUuQA20zvtVTuxZww6OHoJYgrzfKM1t52mVySDJnMSEa08ruEvdYQbhvyu6soU+NeLVd3yKfTfT0NeV6qGg==}
 
   '@esbuild/aix-ppc64@0.27.3':
     resolution: {integrity: sha512-9fJMTNFTWZMh5qwrBItuziu834eOCUcEqymSH7pY+zoMVEZg3gcPuBNxH1EvfVYe9h0x/Ptw8KBzv7qxb7l8dg==}
@@ -3547,9 +3544,6 @@ packages:
 
   '@types/sizzle@2.3.10':
     resolution: {integrity: sha512-TC0dmN0K8YcWEAEfiPi5gJP14eJe30TTGjkvek3iM/1NdHHsdCA/Td6GvNndMOo/iSnIsZ4HuuhrYPDAmbxzww==}
-
-  '@types/stylis@4.2.7':
-    resolution: {integrity: sha512-VgDNokpBoKF+wrdvhAAfS55OMQpL6QRglwTwNC3kIgBrzZxA4WsFj+2eLfEA/uMUDzBcEhYmjSbwQakn/i3ajA==}
 
   '@types/tmp@0.2.6':
     resolution: {integrity: sha512-chhaNf2oKHlRkDGt+tiKE2Z5aJ6qalm7Z9rlLdBwmOiAAf09YQvvoLXjWK4HWPF1xU/fqvMgfNfpVoBscA/tKA==}
@@ -7010,10 +7004,6 @@ packages:
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
 
-  postcss@8.4.49:
-    resolution: {integrity: sha512-OCVPnIObs4N29kxTjzLfUryOkvZEq+pf8jTF0lg8E7uETuWHA+v7j3c/xJmiqpX450191LlmZfUKkXxkTry7nA==}
-    engines: {node: ^10 || ^12 || >=14}
-
   postcss@8.5.8:
     resolution: {integrity: sha512-OW/rX8O/jXnm82Ey1k44pObPtdblfiuWnrd8X7GJ7emImCOstunGbXUpp7HdBrFQX6rJzn3sPT397Wp5aCwCHg==}
     engines: {node: ^10 || ^12 || >=14}
@@ -7496,9 +7486,6 @@ packages:
     resolution: {integrity: sha512-/6KqX+GVUdqPuPPd2LxDDxzX6CAbjJehAAOKlNpqqUpAqPM6HeL8f+o3a+JsyGjn2lv0WY8UsTgUJjU9Ok55NA==}
     engines: {node: '>=8'}
 
-  shallowequal@1.1.0:
-    resolution: {integrity: sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==}
-
   shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
     engines: {node: '>=8'}
@@ -7734,24 +7721,20 @@ packages:
     peerDependencies:
       webpack: ^5.27.0
 
-  styled-components@6.3.12:
-    resolution: {integrity: sha512-hFR6xsVkVYbsdcUlzPYFvFfoc6o2KlV0VvgRIQwSYMtdThM7SCxnjX9efh/cWce2kTq16I/Kl3xM98xiLptsXA==}
+  styled-components@6.4.1:
+    resolution: {integrity: sha512-ADu2dF53esUzzM4I0ewxhxFtsDd6v4V6dNkg3vG0iFKhnt06sJneTZnRvujAosZwW0XD58IKgGMQoqri4wHRqg==}
     engines: {node: '>= 16'}
     peerDependencies:
+      css-to-react-native: '>= 3.2.0'
       react: '>= 16.8.0'
       react-dom: '>= 16.8.0'
+      react-native: '>= 0.68.0'
     peerDependenciesMeta:
+      css-to-react-native:
+        optional: true
       react-dom:
         optional: true
-
-  styled-components@6.3.8:
-    resolution: {integrity: sha512-Kq/W41AKQloOqKM39zfaMdJ4BcYDw/N5CIq4/GTI0YjU6pKcZ1KKhk6b4du0a+6RA9pIfOP/eu94Ge7cu+PDCA==}
-    engines: {node: '>= 16'}
-    peerDependencies:
-      react: '>= 16.8.0'
-      react-dom: '>= 16.8.0'
-    peerDependenciesMeta:
-      react-dom:
+      react-native:
         optional: true
 
   stylis@4.3.6:
@@ -9580,8 +9563,6 @@ snapshots:
       '@emotion/memoize': 0.9.0
 
   '@emotion/memoize@0.9.0': {}
-
-  '@emotion/unitless@0.10.0': {}
 
   '@esbuild/aix-ppc64@0.27.3':
     optional: true
@@ -11872,8 +11853,6 @@ snapshots:
 
   '@types/sizzle@2.3.10': {}
 
-  '@types/stylis@4.2.7': {}
-
   '@types/tmp@0.2.6': {}
 
   '@types/yauzl@2.10.3':
@@ -12634,7 +12613,8 @@ snapshots:
 
   camelcase@6.3.0: {}
 
-  camelize@1.0.1: {}
+  camelize@1.0.1:
+    optional: true
 
   caniuse-lite@1.0.30001767: {}
 
@@ -12954,7 +12934,8 @@ snapshots:
 
   crypt@0.0.2: {}
 
-  css-color-keywords@1.0.0: {}
+  css-color-keywords@1.0.0:
+    optional: true
 
   css-loader@7.1.2(webpack@5.105.4):
     dependencies:
@@ -12982,6 +12963,7 @@ snapshots:
       camelize: 1.0.1
       css-color-keywords: 1.0.0
       postcss-value-parser: 4.2.0
+    optional: true
 
   css-tree@3.2.1:
     dependencies:
@@ -15913,12 +15895,6 @@ snapshots:
 
   postcss-value-parser@4.2.0: {}
 
-  postcss@8.4.49:
-    dependencies:
-      nanoid: 3.3.11
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
-
   postcss@8.5.8:
     dependencies:
       nanoid: 3.3.11
@@ -16579,8 +16555,6 @@ snapshots:
     dependencies:
       kind-of: 6.0.3
 
-  shallowequal@1.1.0: {}
-
   shebang-command@2.0.0:
     dependencies:
       shebang-regex: 3.0.0
@@ -16874,35 +16848,25 @@ snapshots:
     dependencies:
       webpack: 5.105.4(esbuild@0.27.3)(webpack-cli@7.0.2)
 
-  styled-components@6.3.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  styled-components@6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:
       '@emotion/is-prop-valid': 1.4.0
-      '@emotion/unitless': 0.10.0
-      '@types/stylis': 4.2.7
-      css-to-react-native: 3.2.0
       csstype: 3.2.3
-      postcss: 8.4.49
-      react: 19.2.4
-      shallowequal: 1.1.0
-      stylis: 4.3.6
-      tslib: 2.8.1
-    optionalDependencies:
-      react-dom: 19.2.4(react@19.2.4)
-
-  styled-components@6.3.8(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
-    dependencies:
-      '@emotion/is-prop-valid': 1.4.0
-      '@emotion/unitless': 0.10.0
-      '@types/stylis': 4.2.7
-      css-to-react-native: 3.2.0
-      csstype: 3.2.3
-      postcss: 8.4.49
       react: 19.2.0
-      shallowequal: 1.1.0
       stylis: 4.3.6
-      tslib: 2.8.1
     optionalDependencies:
+      css-to-react-native: 3.2.0
       react-dom: 19.2.0(react@19.2.0)
+
+  styled-components@6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+    dependencies:
+      '@emotion/is-prop-valid': 1.4.0
+      csstype: 3.2.3
+      react: 19.2.4
+      stylis: 4.3.6
+    optionalDependencies:
+      css-to-react-native: 3.2.0
+      react-dom: 19.2.4(react@19.2.4)
 
   stylis@4.3.6: {}
 

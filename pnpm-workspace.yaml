@@ -4,5 +4,14 @@ packages:
     - "packages/native/*"
 linkWorkspacePackages: true
 
+# pnpm 10+ runs install scripts only for listed deps (Cypress binary, native addons, etc.).
+onlyBuiltDependencies:
+    - core-js
+    - core-js-pure
+    - cypress
+    - esbuild
+    - nx
+    - weak-napi
+
 # minimum release age: 10 days (14400 minutes)
 minimumReleaseAge: 14400

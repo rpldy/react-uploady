@@ -274,7 +274,7 @@ jobs:
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: Upload Coverage (master only)
-                uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4
+                uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
                 if: ${{ github.ref_name == 'master' }}
                 with:
                     token: ${{ secrets.CODECOV_TOKEN }}

@@ -6,7 +6,6 @@ import { initTusUpload, initParallelTusUpload } from "../initTusUpload";
 import getTusSend from "../tusSend";
 import handleEvents from "../handleEvents";
 
-vi.mock("@rpldy/sender");
 vi.mock("@rpldy/chunked-sender", async () => {
     const org = await vi.importActual("@rpldy/chunked-sender");
     return {

@@ -16,7 +16,7 @@ importers:
         version: 3.0.1
       '@actions/github':
         specifier: ^9.0.0
-        version: 9.0.0
+        version: 9.1.1
       '@babel/cli':
         specifier: ^7.28.6
         version: 7.28.6(@babel/core@7.29.0)
@@ -836,8 +836,8 @@ packages:
   '@actions/github@6.0.1':
     resolution: {integrity: sha512-xbZVcaqD4XnQAe35qSQqskb3SqIAfRyLBrHMd/8TuL7hJSz2QtbDwnNM8zWx4zO5l2fnGtseNE3MbEvD7BxVMw==}
 
-  '@actions/github@9.0.0':
-    resolution: {integrity: sha512-yJ0RoswsAaKcvkmpCE4XxBRiy/whH2SdTBHWzs0gi4wkqTDhXMChjSdqBz/F4AeiDlP28rQqL33iHb+kjAMX6w==}
+  '@actions/github@9.1.1':
+    resolution: {integrity: sha512-tL5JbYOBZHc0ngEnCsaDcryUizIUIlQyIMwy1Wkx93H5HzbBJ7TbiPx2PnFjBwZW0Vh05JmfFZhecE6gglYegA==}
 
   '@actions/http-client@2.2.3':
     resolution: {integrity: sha512-mx8hyJi/hjFvbPokCg4uRd4ZX78t+YyRPtnKWwIl+RzNaVuFpQHfmlGVfsKEJN8LwTCvL+DfVgAM04XaHkm6bA==}
@@ -8508,7 +8508,7 @@ snapshots:
       '@octokit/request-error': 5.1.1
       undici: 5.29.0
 
-  '@actions/github@9.0.0':
+  '@actions/github@9.1.1':
     dependencies:
       '@actions/http-client': 3.0.2
       '@octokit/core': 7.0.6

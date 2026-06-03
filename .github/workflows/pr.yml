@@ -139,7 +139,7 @@ jobs:
                     with-cypress: true
                     with-frozen: true
             -   name: Install dependencies
-                uses: cypress-io/github-action@dace029018fcdf86e0df89a31bc3cfa5b32570d8 # v7.3
+                uses: cypress-io/github-action@948d67d3074f1bbb6379c8bdbb04e95d2f8e593f # v7.3
                 with:
                     runTests: false
 
@@ -326,7 +326,7 @@ jobs:
                     restore-keys: bundle-${{ runner.os }}-
             -   name: Cypress run
                 id: cypress-e2e
-                uses: cypress-io/github-action@dace029018fcdf86e0df89a31bc3cfa5b32570d8 # v7.3
+                uses: cypress-io/github-action@948d67d3074f1bbb6379c8bdbb04e95d2f8e593f # v7.3
                 with:
                     install: false
                     start: |

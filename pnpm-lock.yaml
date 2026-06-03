@@ -675,7 +675,7 @@ importers:
         version: link:../uploady
       '@testing-library/react':
         specifier: ^16
-        version: 16.3.0(@testing-library/dom@10.4.1)(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       flow-bin:
         specifier: ^0.291.0
         version: 0.291.0
@@ -718,7 +718,7 @@ importers:
         version: link:../uploady
       '@testing-library/react':
         specifier: ^16
-        version: 16.3.0(@testing-library/dom@10.4.1)(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       flow-bin:
         specifier: ^0.291.0
         version: 0.291.0
@@ -752,7 +752,7 @@ importers:
         version: link:../uploady
       '@testing-library/react':
         specifier: ^16
-        version: 16.3.0(@testing-library/dom@10.4.1)(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       flow-bin:
         specifier: ^0.291.0
         version: 0.291.0
@@ -808,7 +808,7 @@ importers:
     devDependencies:
       '@testing-library/react':
         specifier: ^16
-        version: 16.3.0(@testing-library/dom@10.4.1)(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       flow-bin:
         specifier: ^0.291.0
         version: 0.291.0
@@ -1456,10 +1456,6 @@ packages:
 
   '@babel/runtime@7.28.4':
     resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/runtime@7.28.6':
-    resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.29.2':
@@ -3422,21 +3418,6 @@ packages:
   '@testing-library/jest-dom@6.9.1':
     resolution: {integrity: sha512-zIcONa+hVtVSSep9UT3jZ5rizo2BsxgyDYU7WFD5eICBE7no3881HGeb/QkGfsJs6JTkY1aQhT7rIPC7e+0nnA==}
     engines: {node: '>=14', npm: '>=6', yarn: '>=1'}
-
-  '@testing-library/react@16.3.0':
-    resolution: {integrity: sha512-kFSyxiEDwv1WLl2fgsq6pPBbw5aWKrsY2/noi1Id0TK0UParSF62oFQFGHXIyaG4pp2tEub/Zlel+fjjZILDsw==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@testing-library/dom': ^10.0.0
-      '@types/react': ^18.0.0 || ^19.0.0
-      '@types/react-dom': ^18.0.0 || ^19.0.0
-      react: ^18.0.0 || ^19.0.0
-      react-dom: ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
 
   '@testing-library/react@16.3.2':
     resolution: {integrity: sha512-XU5/SytQM+ykqMnAnvB2umaJNIOsLF3PVv//1Ew4CTcpz0/BRyy/af40qqrt7SjKpDdT1saBMc42CUok5gaw+g==}
@@ -9352,8 +9333,6 @@ snapshots:
 
   '@babel/runtime@7.28.4': {}
 
-  '@babel/runtime@7.28.6': {}
-
   '@babel/runtime@7.29.2': {}
 
   '@babel/template@7.28.6':
@@ -11768,9 +11747,9 @@ snapshots:
       picocolors: 1.1.1
       redent: 3.0.0
 
-  '@testing-library/react@16.3.0(@testing-library/dom@10.4.1)(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+  '@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.29.2
       '@testing-library/dom': 10.4.1
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
@@ -11779,7 +11758,7 @@ snapshots:
 
   '@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       '@testing-library/dom': 10.4.1
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
@@ -16328,7 +16307,7 @@ snapshots:
 
   redux@4.2.1:
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.29.2
 
   reflect.getprototypeof@1.0.10:
     dependencies:

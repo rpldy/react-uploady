@@ -85,7 +85,7 @@
     "@vitest/ui": "^4.1.2",
     "async": "^3.2.6",
     "babel-loader": "^10.1.1",
-    "babel-plugin-istanbul": "^7.0.1",
+    "babel-plugin-istanbul": "^8.0.0",
     "babel-plugin-minify-dead-code-elimination": "^0.5.2",
     "babel-plugin-module-resolver": "^5.0.3",
     "babel-plugin-syntax-hermes-parser": "0.36.1",

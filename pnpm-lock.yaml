@@ -51,8 +51,8 @@ importers:
         specifier: ^20.5.0
         version: 20.5.0
       '@commitlint/config-lerna-scopes':
-        specifier: ^20.4.3
-        version: 20.4.3(lerna@9.0.7(@types/node@25.9.1))
+        specifier: ^21.0.2
+        version: 21.0.2(lerna@9.0.7(@types/node@25.9.1))
       '@eslint/compat':
         specifier: ^2.0.3
         version: 2.0.3(eslint@10.1.0(jiti@2.6.1))
@@ -1512,9 +1512,9 @@ packages:
     resolution: {integrity: sha512-t3Ni88rFw1XMa4nZHgOKJ8fIAT9M2j5TnKyTqJzsxea7FUetlNdYFus9dz+MhIRZmc16P0PPyEfh6X2d/qw8SA==}
     engines: {node: '>=v18'}
 
-  '@commitlint/config-lerna-scopes@20.4.3':
-    resolution: {integrity: sha512-y4vZtlDNjvJLTatMN3aAynhqCNt4oyMIMNJB+HnEWbUYl5I2OMLbmuuxGP1AxNNsNHsIrX1PYNBgw6tJ8I43aw==}
-    engines: {node: '>=v18'}
+  '@commitlint/config-lerna-scopes@21.0.2':
+    resolution: {integrity: sha512-zI970vtCkfJWltck2JAGh/xRL3BVYNk3v6ApN9tG55NmX72kH1lzKwYRYISLft8IHSZ9p3aToTXG783h+LknkQ==}
+    engines: {node: '>=22.12.0'}
     peerDependencies:
       lerna: '*'
     peerDependenciesMeta:
@@ -1525,9 +1525,9 @@ packages:
     resolution: {integrity: sha512-T/Uh6iJUzyx7j35GmHWdIiGRQB+ouZDk0pwAaYq4SXgB54KZhFdJ0vYmxiW6AMYICTIWuyMxDBl1jK74oFp/Gw==}
     engines: {node: '>=v18'}
 
-  '@commitlint/config-workspace-scopes@20.4.3':
-    resolution: {integrity: sha512-KUxXm+ZQHaEya8yp4TXY1qMuWpdNY4dbGLu1F+ncs7DqKuuxVm8BFj53YFFiASOWxbssT728HQztYc1FTjTm9Q==}
-    engines: {node: '>=v18'}
+  '@commitlint/config-workspace-scopes@21.0.2':
+    resolution: {integrity: sha512-PJ/6KXaZh90qg4z/VxrAtHXV8yWUQIf5tRVDUPxKPRR1d1YnZmmZOd9UDAHG3WnXmq0DD9VjSpcsQMa+piNoCA==}
+    engines: {node: '>=22.12.0'}
 
   '@commitlint/ensure@20.5.0':
     resolution: {integrity: sha512-IpHqAUesBeW1EDDdjzJeaOxU9tnogLAyXLRBn03SHlj1SGENn2JGZqSWGkFvBJkJzfXAuCNtsoYzax+ZPS+puw==}
@@ -9511,10 +9511,9 @@ snapshots:
       '@commitlint/types': 20.5.0
       conventional-changelog-conventionalcommits: 9.3.0
 
-  '@commitlint/config-lerna-scopes@20.4.3(lerna@9.0.7(@types/node@25.9.1))':
+  '@commitlint/config-lerna-scopes@21.0.2(lerna@9.0.7(@types/node@25.9.1))':
     dependencies:
-      '@commitlint/config-workspace-scopes': 20.4.3
-      fast-glob: 3.3.3
+      '@commitlint/config-workspace-scopes': 21.0.2
     optionalDependencies:
       lerna: 9.0.7(@types/node@25.9.1)
 
@@ -9523,9 +9522,7 @@ snapshots:
       '@commitlint/types': 20.5.0
       ajv: 8.20.0
 
-  '@commitlint/config-workspace-scopes@20.4.3':
-    dependencies:
-      glob: 11.1.0
+  '@commitlint/config-workspace-scopes@21.0.2': {}
 
   '@commitlint/ensure@20.5.0':
     dependencies:

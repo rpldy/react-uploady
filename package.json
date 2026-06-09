@@ -68,7 +68,7 @@
     "@babel/runtime-corejs3": "^7.29.2",
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
-    "@commitlint/config-lerna-scopes": "^20.4.3",
+    "@commitlint/config-lerna-scopes": "^21.0.2",
     "@eslint/compat": "^2.0.3",
     "@eslint/js": "^10.0.1",
     "@monorepo-utils/package-utils": "^2.11.0",

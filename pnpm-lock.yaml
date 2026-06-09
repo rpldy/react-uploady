@@ -199,7 +199,7 @@ importers:
         version: 0.34.0
       html-webpack-plugin:
         specifier: ^5.6.6
-        version: 5.6.6(webpack@5.107.2)
+        version: 5.6.7(webpack@5.107.2)
       http-server:
         specifier: ^14.1.1
         version: 14.1.1
@@ -5578,8 +5578,8 @@ packages:
     engines: {node: '>=12'}
     hasBin: true
 
-  html-webpack-plugin@5.6.6:
-    resolution: {integrity: sha512-bLjW01UTrvoWTJQL5LsMRo1SypHW80FTm12OJRSnr3v6YHNhfe+1r0MYUZJMACxnCHURVnBWRwAsWs2yPU9Ezw==}
+  html-webpack-plugin@5.6.7:
+    resolution: {integrity: sha512-md+vXtdCAe60s1k6AU3dUyMJnDxUyQAwfwPKoLisvgUF1IXjtlLsk2se54+qfL9Mdm26bbwvjJybpNx48NKRLw==}
     engines: {node: '>=10.13.0'}
     peerDependencies:
       '@rspack/core': 0.x || 1.x
@@ -7833,10 +7833,6 @@ packages:
     os: [darwin, linux, win32, freebsd, openbsd, netbsd, sunos, android]
     hasBin: true
 
-  tapable@2.3.0:
-    resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
-    engines: {node: '>=6'}
-
   tapable@2.3.3:
     resolution: {integrity: sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==}
     engines: {node: '>=6'}
@@ -7901,11 +7897,6 @@ packages:
         optional: true
       uglify-js:
         optional: true
-
-  terser@5.46.0:
-    resolution: {integrity: sha512-jTwoImyr/QbOWFFso3YoU3ik0jBBDJ6JTOQiy/J2YxVJdZCc+5u7skhNwiOR3FQIygFqVUPHl7qbbxtjW2K3Qg==}
-    engines: {node: '>=10'}
-    hasBin: true
 
   terser@5.48.0:
     resolution: {integrity: sha512-J/9An6vs9Us6wKRriSFXBWdRZapREHqFzdNUKk0pmu804EMR6dr6winwo7e5JDxN4xahxQsuysyYFwlwj4XN/Q==}
@@ -11735,7 +11726,7 @@ snapshots:
       css-loader: 7.1.2(webpack@5.107.1(esbuild@0.27.7)(postcss@8.5.13)(webpack-cli@7.0.3))
       es-module-lexer: 1.7.0
       fork-ts-checker-webpack-plugin: 9.1.0(typescript@6.0.3)(webpack@5.107.1(esbuild@0.27.7)(postcss@8.5.13)(webpack-cli@7.0.3))
-      html-webpack-plugin: 5.6.6(webpack@5.107.1(esbuild@0.27.7)(postcss@8.5.13)(webpack-cli@7.0.3))
+      html-webpack-plugin: 5.6.7(webpack@5.107.1(esbuild@0.27.7)(postcss@8.5.13)(webpack-cli@7.0.3))
       magic-string: 0.30.21
       storybook: 10.3.6(@testing-library/dom@10.4.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       style-loader: 4.0.0(webpack@5.107.1(esbuild@0.27.7)(postcss@8.5.13)(webpack-cli@7.0.3))
@@ -14397,25 +14388,25 @@ snapshots:
       he: 1.2.0
       param-case: 3.0.4
       relateurl: 0.2.7
-      terser: 5.46.0
+      terser: 5.48.0
 
-  html-webpack-plugin@5.6.6(webpack@5.107.1(esbuild@0.27.7)(postcss@8.5.13)(webpack-cli@7.0.3)):
+  html-webpack-plugin@5.6.7(webpack@5.107.1(esbuild@0.27.7)(postcss@8.5.13)(webpack-cli@7.0.3)):
     dependencies:
       '@types/html-minifier-terser': 6.1.0
       html-minifier-terser: 6.1.0
       lodash: 4.18.1
       pretty-error: 4.0.0
-      tapable: 2.3.0
+      tapable: 2.3.3
     optionalDependencies:
       webpack: 5.107.1(esbuild@0.27.7)(postcss@8.5.13)(webpack-cli@7.0.3)
 
-  html-webpack-plugin@5.6.6(webpack@5.107.2):
+  html-webpack-plugin@5.6.7(webpack@5.107.2):
     dependencies:
       '@types/html-minifier-terser': 6.1.0
       html-minifier-terser: 6.1.0
       lodash: 4.18.1
       pretty-error: 4.0.0
-      tapable: 2.3.0
+      tapable: 2.3.3
     optionalDependencies:
       webpack: 5.107.2(esbuild@0.27.7)(postcss@8.5.13)(webpack-cli@7.0.3)
 
@@ -17117,8 +17108,6 @@ snapshots:
 
   systeminformation@5.31.6: {}
 
-  tapable@2.3.0: {}
-
   tapable@2.3.3: {}
 
   tar-stream@2.2.0:
@@ -17172,13 +17161,6 @@ snapshots:
     optionalDependencies:
       esbuild: 0.27.7
       postcss: 8.5.13
-
-  terser@5.46.0:
-    dependencies:
-      '@jridgewell/source-map': 0.3.11
-      acorn: 8.16.0
-      commander: 2.20.3
-      source-map-support: 0.5.21
 
   terser@5.48.0:
     dependencies:

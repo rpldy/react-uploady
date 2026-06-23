@@ -95,7 +95,7 @@ jobs:
             IS_CODE_CHANGED: ${{ steps.check-changes.outputs.code_changed }}
         steps:
             -   name: Checkout
-                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+                uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
                 with:
                     fetch-depth: 2
             -   name: Check for code changes
@@ -132,7 +132,7 @@ jobs:
         if: ${{ needs.workflow-gate.outputs.proceed == 'true' && (needs.code-changes.outputs.IS_CODE_CHANGED == 'true' || needs.workflow-gate.outputs.has_rune2e_label == 'true') }}
         steps:
             -   name: Checkout
-                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+                uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -154,7 +154,7 @@ jobs:
         if: ${{ needs.workflow-gate.outputs.proceed == 'true' && needs.workflow-gate.outputs.is_label_event != 'true' }}
         steps:
             -   name: Checkout
-                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+                uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -175,7 +175,7 @@ jobs:
             actions: read
         steps:
             -   name: Checkout
-                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+                uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -207,7 +207,7 @@ jobs:
         if: ${{ needs.workflow-gate.outputs.proceed == 'true' && needs.workflow-gate.outputs.is_label_event != 'true' }}
         steps:
             -   name: Checkout
-                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+                uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -230,7 +230,7 @@ jobs:
         if: ${{ needs.workflow-gate.outputs.proceed == 'true' && needs.workflow-gate.outputs.is_label_event != 'true' }}
         steps:
             -   name: Checkout
-                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+                uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -253,7 +253,7 @@ jobs:
             actions: read
         steps:
             -   name: Checkout
-                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+                uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
             -   name: Prepare
                 uses: ./.github/actions/prepare
                 with:
@@ -303,7 +303,7 @@ jobs:
             pull-requests: read
         steps:
             -   name: Checkout
-                uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+                uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
                 with:
                     fetch-depth: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && 1 || 0 }}
 

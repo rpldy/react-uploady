@@ -262,7 +262,7 @@ jobs:
             -   name: unit-test
                 run: pnpm vitest:ci
             -   name: Show Report Coverage
-                uses: davelosert/vitest-coverage-report-action@02f3c2e641286b7fa308cd3e430783103ce6103b # v2
+                uses: davelosert/vitest-coverage-report-action@3c054a2d2e2ca45446417ad5d6d5eb33092af8f1 # v2
             -   name: Test Report
                 uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3
                 if: success() || failure()

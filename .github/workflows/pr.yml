@@ -186,7 +186,7 @@ jobs:
                     pnpm bundle:prod
             -   name: Cache Bundle Folder
                 id: cache-bundle
-                uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+                uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
                 with:
                     path: bundle
                     key: bundle-${{ runner.os }}-${{ hashFiles('bundle/**') }}
@@ -217,7 +217,7 @@ jobs:
                 run: pnpm sb:build:internal
             -   name: Cache SB Build
                 id: cache-sb
-                uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+                uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
                 with:
                     path: .sb-static
                     key: sb-static-${{ hashFiles('lerna.json') }}-${{ github.run_id }}
@@ -313,13 +313,13 @@ jobs:
                     with-cypress: true
                     with-frozen: true
             -   name: Restore SB Build Cache
-                uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+                uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
                 with:
                     path: .sb-static
                     key: sb-static-${{ hashFiles('lerna.json') }}-${{ github.run_id }}
                     restore-keys: sb-static-${{ hashFiles('lerna.json') }}-
             -   name: Restore Bundle Cache
-                uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+                uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
                 with:
                     path: bundle
                     key: bundle-${{ runner.os }}-

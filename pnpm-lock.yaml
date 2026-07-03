@@ -259,7 +259,7 @@ importers:
         version: 10.4.2(@testing-library/dom@10.4.1)(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       styled-components:
         specifier: ^6.4.2
-        version: 6.4.2(css-to-react-native@3.2.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 6.4.3(css-to-react-native@3.2.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       tty-browserify:
         specifier: ^0.0.1
         version: 0.0.1
@@ -653,7 +653,7 @@ importers:
         version: 19.2.0(react@19.2.0)
       styled-components:
         specifier: ^6.1.19
-        version: 6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 6.4.3(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
 
   packages/ui/upload-drop-zone:
     dependencies:
@@ -696,7 +696,7 @@ importers:
         version: 19.2.0(react@19.2.0)
       styled-components:
         specifier: ^6.1.19
-        version: 6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 6.4.3(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
 
   packages/ui/upload-paste:
     dependencies:
@@ -730,7 +730,7 @@ importers:
         version: 19.2.0(react@19.2.0)
       styled-components:
         specifier: ^6.1.19
-        version: 6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 6.4.3(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
 
   packages/ui/upload-preview:
     dependencies:
@@ -767,7 +767,7 @@ importers:
         version: 11.0.10(react@19.2.0)
       styled-components:
         specifier: ^6.1.19
-        version: 6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 6.4.3(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
 
   packages/ui/upload-url-input:
     dependencies:
@@ -8128,24 +8128,8 @@ packages:
     peerDependencies:
       webpack: ^5.27.0
 
-  styled-components@6.4.1:
-    resolution: {integrity: sha512-ADu2dF53esUzzM4I0ewxhxFtsDd6v4V6dNkg3vG0iFKhnt06sJneTZnRvujAosZwW0XD58IKgGMQoqri4wHRqg==}
-    engines: {node: '>= 16'}
-    peerDependencies:
-      css-to-react-native: '>= 3.2.0'
-      react: '>= 16.8.0'
-      react-dom: '>= 16.8.0'
-      react-native: '>= 0.68.0'
-    peerDependenciesMeta:
-      css-to-react-native:
-        optional: true
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
-
-  styled-components@6.4.2:
-    resolution: {integrity: sha512-xZBhBJsMtGqb+aKcwKgaT+BtuFums9VynX2JRvXJGTx5UfZzN12rk5r4nVdhXYvRw+hE7yiYxVrOqJZaK2+Txg==}
+  styled-components@6.4.3:
+    resolution: {integrity: sha512-wYXrhu+JmDjZ1Tv7O0OopGTfztbzun43Pjjhh2H+xc0h5A09dwpZ5FJbrifJDcL8g5TA9btpWOX2+iSRuJTExw==}
     engines: {node: '>= 16'}
     peerDependencies:
       css-to-react-native: '>= 3.2.0'
@@ -17689,7 +17673,7 @@ snapshots:
     dependencies:
       webpack: 5.107.2(esbuild@0.27.7)(postcss@8.5.13)(webpack-cli@7.0.3)
 
-  styled-components@6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
+  styled-components@6.4.3(css-to-react-native@3.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:
       '@emotion/is-prop-valid': 1.4.0
       csstype: 3.2.3
@@ -17699,7 +17683,7 @@ snapshots:
       css-to-react-native: 3.2.0
       react-dom: 19.2.0(react@19.2.0)
 
-  styled-components@6.4.2(css-to-react-native@3.2.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+  styled-components@6.4.3(css-to-react-native@3.2.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
       '@emotion/is-prop-valid': 1.4.0
       csstype: 3.2.3

@@ -42,8 +42,8 @@ importers:
         specifier: ^7.28.5
         version: 7.28.5(@babel/core@7.29.7)
       '@babel/runtime-corejs3':
-        specifier: ^7.29.2
-        version: 7.29.2
+        specifier: ^8.0.0
+        version: 8.0.0
       '@commitlint/cli':
         specifier: ^20.5.0
         version: 20.5.0(@types/node@25.9.1)(conventional-commits-parser@6.3.0)(typescript@6.0.3)
@@ -1463,9 +1463,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/runtime-corejs3@7.29.2':
-    resolution: {integrity: sha512-Lc94FOD5+0aXhdb0Tdg3RUtqT6yWbI/BbFWvlaSJ3gAb9Ks+99nHRDKADVqC37er4eCB0fHyWT+y+K3QOvJKbw==}
-    engines: {node: '>=6.9.0'}
+  '@babel/runtime-corejs3@8.0.0':
+    resolution: {integrity: sha512-W4MtIy0UAB61P7MJZ8it4/oT05emtQWhyAQ+Z0kh9ofVNwmXCTrhea3OdqvViMgjw4a0d5NUq1IqoVkdyhborQ==}
 
   '@babel/runtime@7.28.4':
     resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
@@ -9770,7 +9769,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/runtime-corejs3@7.29.2':
+  '@babel/runtime-corejs3@8.0.0':
     dependencies:
       core-js-pure: 3.49.0
 

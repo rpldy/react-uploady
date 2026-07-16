@@ -226,7 +226,7 @@ importers:
         version: 2.2.1(mocha@11.7.5)
       overweight:
         specifier: ^2.0.0
-        version: 2.0.0
+        version: 2.1.0
       pacote:
         specifier: ^21.5.0
         version: 21.5.0
@@ -5452,8 +5452,8 @@ packages:
   fast-uri@3.1.2:
     resolution: {integrity: sha512-rVjf7ArG3LTk+FS6Yw81V1DLuZl1bRbNrev6Tmd/9RaroeeRRJhAt7jg/6YFxbvAQXUCavSoZhPPj6oOx+5KjQ==}
 
-  fastq@1.19.1:
-    resolution: {integrity: sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==}
+  fastq@1.20.1:
+    resolution: {integrity: sha512-GGToxJ/w1x32s/D2EKND7kTil4n8OVk/9mycTc4VDza13lOvpUZTGX3mFSCtV9ksdGBVzvsyAVLM6mHFThxXxw==}
 
   fdir@6.5.0:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
@@ -7133,8 +7133,8 @@ packages:
   ospath@1.2.2:
     resolution: {integrity: sha512-o6E5qJV5zkAbIDNhGSIlyOhScKXgQrSRMilfph0clDfM0nEnBOlKlH4sWDmG95BW/CvwNz0vmm7dJVtU2KlMiA==}
 
-  overweight@2.0.0:
-    resolution: {integrity: sha512-TmZ2XqtXZmyq/VQmLagXc8ZvYmd68hPpWipTXU7oj319CraREUqegCrC7KC9Ih21CVg73WamnGXRoofH17YEyQ==}
+  overweight@2.1.0:
+    resolution: {integrity: sha512-JTJfbpOrezmMummzVqt5X3MBRiocrBQHu725Mzxy1gaCYfVucZhNQTnBlXtm3r79Y+pz6g5zgB1Q/QdKUh2UWg==}
     engines: {node: '>=24.0.0'}
     hasBin: true
 
@@ -10501,7 +10501,7 @@ snapshots:
   '@nodelib/fs.walk@1.2.8':
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
-      fastq: 1.19.1
+      fastq: 1.20.1
 
   '@npmcli/agent@4.0.0':
     dependencies:
@@ -14502,7 +14502,7 @@ snapshots:
 
   fast-uri@3.1.2: {}
 
-  fastq@1.19.1:
+  fastq@1.20.1:
     dependencies:
       reusify: 1.1.0
 
@@ -16421,7 +16421,7 @@ snapshots:
 
   ospath@1.2.2: {}
 
-  overweight@2.0.0:
+  overweight@2.1.0:
     dependencies:
       '@actions/core': 3.0.1
       '@actions/exec': 3.0.0

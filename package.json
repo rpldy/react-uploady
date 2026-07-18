@@ -2,6 +2,7 @@
   "name": "@rpldy/root",
   "version": "1.0.0",
   "author": "yoav niran (https://github.com/yoavniran)",
+  "packageManager": "pnpm@11.15.0",
   "scripts": {
     "upgradep": "node scripts/upgradeDep.mjs",
     "bundle": "rimraf bundle; node scripts/bundle.mjs --validate",
@@ -127,7 +128,7 @@
     "markdown-it": "^14.2.0",
     "mocha-junit-reporter": "^2.2.1",
     "overweight": "^2.0.0",
-    "pacote": "^21.5.0",
+    "pacote": "^22.0.0",
     "rc-progress": "^4.0.0",
     "react": "^19.2.6",
     "react-dnd-html5-backend": "^16.0.1",
@@ -154,10 +155,5 @@
   },
   "optionalDependencies": {
     "fsevents": "^2.3.3"
-  },
-  "pnpm": {
-    "overrides": {
-      "@typescript-eslint/utils": "^8.57.2"
-    }
   }
 }

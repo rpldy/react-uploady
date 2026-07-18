@@ -18,3 +18,11 @@ minimumReleaseAge: 14400
 
 overrides:
   "@typescript-eslint/utils": "^8.57.2"
+
+allowBuilds:
+  core-js: true
+  core-js-pure: true
+  cypress: true
+  esbuild: true
+  nx: true
+  weak-napi: true

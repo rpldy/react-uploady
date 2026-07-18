@@ -4,6 +4,13 @@ packages:
   - "packages/native/*"
 linkWorkspacePackages: true
 
+# flow-bin requires hoisting of these deps to root node_modules
+publicHoistPattern:
+  - invariant
+  - html-dir-content
+  - react-dnd
+  - react-image-crop
+
 # pnpm 10+ runs install scripts only for listed deps (Cypress binary, native addons, etc.).
 onlyBuiltDependencies:
   - core-js

@@ -127,7 +127,7 @@
     "markdown-it": "^14.2.0",
     "mocha-junit-reporter": "^2.2.1",
     "overweight": "^2.0.0",
-    "pacote": "^21.5.0",
+    "pacote": "^22.0.0",
     "rc-progress": "^4.0.0",
     "react": "^19.2.6",
     "react-dnd-html5-backend": "^16.0.1",

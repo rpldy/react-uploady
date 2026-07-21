@@ -58,7 +58,7 @@
   "devDependencies": {
     "@actions/core": "^3.0.0",
     "@actions/github": "^9.0.0",
-    "@babel/cli": "^7.28.6",
+    "@babel/cli": "^8.0.4",
     "@babel/core": "^7.29.0",
     "@babel/plugin-proposal-export-default-from": "^7.27.1",
     "@babel/plugin-proposal-function-bind": "^7.27.1",

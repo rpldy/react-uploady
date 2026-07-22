@@ -46,7 +46,7 @@ const uploadFailedIds = (
 
 		trigger(RETRY_EVENT, { items: uploads, options: retryOptions });
         failedIds?.forEach((id) => removeItemFromState(retryState, id));
-		uploader.add(uploads, (retryOptions: ?UploadOptions));
+		uploader.add(uploads, retryOptions as ?UploadOptions);
 	}
 
     return !!uploads.length;

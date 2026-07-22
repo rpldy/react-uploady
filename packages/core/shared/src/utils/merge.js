@@ -63,7 +63,7 @@ const getMerge = (options: MergeOptions = {}): MergeMethod => {
  *
  * No recursion protection
  */
-export default (getMerge(): MergeMethod);
+export default getMerge() as MergeMethod;
 
 export {
     getMerge,

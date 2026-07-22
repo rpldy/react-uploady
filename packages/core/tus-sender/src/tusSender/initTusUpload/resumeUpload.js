@@ -105,15 +105,15 @@ const getUpdatedRequest = (
 ): Promise<UpdatedRequestResult> => {
     const { options } = tusState.getState();
 
-    return ((triggerUpdater<ResumeStartEventData>(trigger, TUS_EVENTS.RESUME_START, {
+    return (triggerUpdater<ResumeStartEventData>(trigger, TUS_EVENTS.RESUME_START, {
         url,
         item: unwrap(item),
         resumeHeaders: unwrap(options.resumeHeaders),
-    }): any): Promise<ResumeStartEventResponse>)
+    }) as any as Promise<ResumeStartEventResponse>)
         .then((response: ResumeStartEventResponse | boolean) => {
             let result;
 
-            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : ((response: any) || {});
+            const updatedData = typeof response === "boolean" ? (response === false ? { stop: true } : {}) : ((response as any) || {});
 
             if (updatedData.stop) {
                 logger.debugLog(`tusSender.resume: received false from TUS RESUME_START event - cancelling resume attempt for item: ${item.id}`);

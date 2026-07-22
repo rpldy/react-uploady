@@ -41,7 +41,7 @@ const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = fa
         completed: 0,
         loaded: 0,
         recycled: isAlreadyBatchItem,
-        previousBatch: isAlreadyBatchItem ? ((f: any).batchId) : null,
+        previousBatch: isAlreadyBatchItem ? (f as any).batchId : null,
     };
 
     Object.defineProperty(batchItem, BISYM, {
@@ -50,7 +50,7 @@ const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = fa
         writable: true,
     });
 
-    const fileData = isAlreadyBatchItem ? (((f: any).file || (f: any).url)) : f;
+    const fileData = isAlreadyBatchItem ? ((f as any).file || (f as any).url) : f;
 
     if (typeof fileData === "string") {
         batchItem = getBatchItemWithUrl(batchItem, fileData);

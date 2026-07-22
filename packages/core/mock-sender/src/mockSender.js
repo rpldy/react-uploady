@@ -119,13 +119,13 @@ const getIsSuccessfulMockRequest = (
 
     return getIsSuccessfulCall ?
         //$FlowExpectedError[incompatible-call]
-        getIsSuccessfulCall(({
+        getIsSuccessfulCall({
             //mimic xhr for mock sender
             readyState: 4,
             status: mockStatus,
             response: mockResponse,
             getAllResponseHeaders: () => mockHeaders,
-        }: any)) : true;
+        } as any) : true;
 };
 
 const processResponse = (request: MockRequest, options: MandatoryMockOptions, sendOptions: SendOptions, url: ?string): Promise<UploadData> => {

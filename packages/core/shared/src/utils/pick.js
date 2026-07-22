@@ -6,6 +6,6 @@ const pick = (obj: Object, props: string[]): ?Object =>
             res[key] = obj[key];
         }
         return res;
-    }, ({}: { [string]: any }));
+    }, {} as { [string]: any });
 
 export default pick;

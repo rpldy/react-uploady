@@ -669,7 +669,7 @@ const UploadButtonWithInvalidPreSend = () => {
                 { ...items[0], id: "invalid-id" },
                 ...items.slice(1),
             ] : undefined,
-        }: any);
+        }) as any;
     });
 
     return <ContextUploadButton/>;

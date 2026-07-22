@@ -97,18 +97,18 @@ export const WithEventListeners: UploadyStory = createUploadyStory(
                     logEvent(
                         `Batch Start - ${batch.id} - item count = ${batch.items.length}`,
                     );
-                }: any),
+                }) as any,
                 [UPLOADER_EVENTS.BATCH_FINISH]: ((batch: Batch) => {
                     logEvent(
                         `Batch Finish - ${batch.id} - item count = ${batch.items.length}`,
                     );
-                }: any),
+                }) as any,
                 [UPLOADER_EVENTS.ITEM_START]: ((item: BatchItem) => {
                     logEvent(`Item Start - ${item.id} : ${item.file.name}`);
-                }: any),
+                }) as any,
                 [UPLOADER_EVENTS.ITEM_FINISH]: ((item: BatchItem) => {
                     logEvent(`Item Finish - ${item.id} : ${item.file.name}`);
-                }: any),
+                }) as any,
             }),
             [],
         );

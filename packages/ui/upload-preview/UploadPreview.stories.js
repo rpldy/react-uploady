@@ -889,7 +889,7 @@ const MyForm = () => {
                 ...items[0],
                 file: cropped?.data || items[0].file,
             }]
-        }: any);
+        }) as any;
     });
 
     const onSubmit = () => processPending({ params: fields });

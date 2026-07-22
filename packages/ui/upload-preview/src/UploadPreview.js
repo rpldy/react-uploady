@@ -51,7 +51,7 @@ const getUploadPreviewForBatchItemsMethod =
         const { previews, clearPreviews, removeItemFromPreview }: PreviewData = usePreviewsLoader(previewOptions);
 
         const onImagePreviewLoadError = useCallback((e: SyntheticEvent<HTMLImageElement>) => {
-            const img = (e.currentTarget: HTMLImageElement);
+            const img = e.currentTarget as HTMLImageElement;
 
             const fallback = getFallbackUrlData(props.fallbackUrl, img.src);
 

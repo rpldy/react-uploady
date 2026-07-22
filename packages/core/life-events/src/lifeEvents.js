@@ -67,7 +67,7 @@ const getPublicMethods = () =>
         .reduce((res, [key, m]) => {
             res[key] = { value: m };
             return res;
-        }, ({}: { [string]: any }));
+        }, {} as { [string]: any });
 
 type ApiFn =  (...args: any[]) => any;
 
@@ -223,7 +223,7 @@ function hasEventRegistrations(this: any, name: any) {
 const defineLifeData = (target: Object, options: Options, events: any[] = [], registry: Object = {}, stats: Object = {}) => {
 	Object.defineProperties(target, {
         // $FlowFixMe[invalid-computed-prop] - https://github.com/facebook/flow/issues/3258
-		[(LESYM: any)]: {
+		[(LESYM as any)]: {
 			value: Object.seal({
 				registry,
 				events,

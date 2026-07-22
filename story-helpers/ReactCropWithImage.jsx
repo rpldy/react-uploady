@@ -21,6 +21,7 @@ export type CropProps = {
     onCrop: OnCropChangeMethod,
     src: ?string,
     style?: Object,
+    ...
 };
 
 const StyledReactCrop = styled(ReactCrop)`

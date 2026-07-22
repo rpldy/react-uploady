@@ -90,7 +90,7 @@ const createApi = (target: Object): LifeEventsAPI =>
         ((res, [name, fn]) => {
             res[name] = fn.bind(target);
             return res;
-        }, { ...apiMethods, target });
+        }, { ...apiMethods, target }) as any as LifeEventsAPI;
 
 const cleanRegistryForName = (obj: Object, name: any, force: boolean = false) => {
 	const registry = getValidLE(obj).registry;

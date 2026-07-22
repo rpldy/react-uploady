@@ -18,7 +18,8 @@ export type ChunkedOptions = {
 export type ChunkedSendOptions = {
     ...SendOptions,
     //the byte to start from (designed for resumable) (default: 0)
-    startByte?: number
+    startByte?: number,
+    ...
 };
 
 export type MandatoryChunkedOptions = {|

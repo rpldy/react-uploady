@@ -26,6 +26,7 @@ export type UploadData = {
     status: number,
 	state: FILE_STATES,
 	response: any,
+    ...
 };
 
 export type FormatParamGroupNameMethod = (number, string) => string;

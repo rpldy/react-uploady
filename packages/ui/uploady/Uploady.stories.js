@@ -695,8 +695,8 @@ export const TEST_InvalidPreSend: UploadyStory = createUploadyStory(
 
 const UploadButtonWithInvalidBatchStart = () => {
     useBatchStartListener((batch) => {
+        // $FlowExpectedError[incompatible-type] - intentionally cause error for the first batch since changing batch is forbidden
         return batch.id === "batch-1" ? {
-            //$FlowExpectedError[incompatible-type] - intentionally cause error for the first batch since changing batch is forbidden
             batch: {}
         } : {};
     });

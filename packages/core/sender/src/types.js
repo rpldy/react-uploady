@@ -19,6 +19,7 @@ export type SendOptions = {
     formDataAllowUndefined?: boolean,
     formatServerResponse?: FormatServerResponseMethod,
     isSuccessfulCall?: IsSuccessfulCall,
+    ...
 };
 
 export type SenderProgressEvent = { total: number, loaded: number };
@@ -39,4 +40,4 @@ export type SendResult = {
     senderType: string,
 };
 
-export type SendMethod<-T: SendOptions> = (item: BatchItem[], url: ?string, options: T, onProgress: OnProgress) => SendResult;
+export type SendMethod<in T extends SendOptions> = (item: BatchItem[], url: ?string, options: T, onProgress: OnProgress) => SendResult;

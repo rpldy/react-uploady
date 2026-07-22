@@ -42,7 +42,7 @@ const safeStorageCreator = (storageType: string): SafeStorage => {
         }
     });
 
-    return safeStorage;
+    return safeStorage as any as SafeStorage;
 };
 
 export default safeStorageCreator;

@@ -41,7 +41,7 @@
     "@testing-library/react": "^16",
     "flow-bin": "^0.291.0",
     "react": "^19.2.0",
-    "react-aria-components": "^1.8.0",
+    "react-aria-components": "^1.19.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.2.0",

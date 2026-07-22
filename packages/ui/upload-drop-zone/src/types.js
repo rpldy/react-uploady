@@ -3,7 +3,7 @@ import type { UploadOptions } from "@rpldy/shared";
 
 export type GetFilesMethod = () => Promise<File[]>;
 
-export type DropHandlerMethod = (e: SyntheticDragEvent<HTMLDivElement>, getFiles: GetFilesMethod) => FileList | mixed[]
+export type DropHandlerMethod = (e: SyntheticDragEvent<HTMLDivElement>, getFiles: GetFilesMethod) => FileList | unknown[]
 
 export type ShouldHandleDragMethod = (e: SyntheticDragEvent<HTMLDivElement>) => boolean;
 

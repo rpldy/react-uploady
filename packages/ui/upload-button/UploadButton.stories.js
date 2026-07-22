@@ -396,7 +396,7 @@ export const WithCustomFileInputAndCustomButton: UploadyStory = createUploadySto
 export const WithFileFilter: UploadyStory = createUploadyStory(
     ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
 
-        const filterBySize = useCallback((file: mixed) => {
+        const filterBySize = useCallback((file: unknown) => {
             //filter out files larger than 5MB
             return !(file instanceof File) || file.size < 5242880;
         }, []);

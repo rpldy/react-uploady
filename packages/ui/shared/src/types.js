@@ -26,7 +26,7 @@ export type BatchEventHook = EventHook<Batch>;
 export type BatchCancellableEventHook = (cb: (batch: Batch, options: UploaderCreateOptions) => boolean | void) => void;
 export type BatchEventHookWithState = EventHookWithState<Batch>;
 
-export type RefObject<T: mixed> = {current: null | void | T};
+export type RefObject<T: unknown> = {current: null | void | T};
 
 export type AddUploadFunction = (files: UploadInfo | UploadInfo[], addOptions: ?UploadOptions) => void;
 

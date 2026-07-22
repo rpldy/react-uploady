@@ -130,13 +130,13 @@ export type UploadOptions = {|
     userData?: any,
 |};
 
-export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];
+export type Trigger<T> = (string, ...args: unknown[]) => Promise<?T>[];
 
-export type Cancellable = (string, ...args: mixed[]) => Promise<boolean>;
+export type Cancellable = (string, ...args: unknown[]) => Promise<boolean>;
 
 export type TriggerCancellableOutcome = Promise<boolean> | Cancellable;
 
-export type Updater<T> = (string, ...args: mixed[]) => Promise<?T>;
+export type Updater<T> = (string, ...args: unknown[]) => Promise<?T>;
 
 export type GetExact<T> = T & Partial<T>;
 

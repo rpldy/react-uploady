@@ -17,4 +17,4 @@ export type MockOptions = {|
     isSuccessfulCall?: IsSuccessfulCall
 |};
 
-export type MandatoryMockOptions = {[key in keyof MockOptions]: $NonMaybeType<MockOptions[key]>}
+export type MandatoryMockOptions = {[key in keyof MockOptions]: NonNullable<MockOptions[key]>}

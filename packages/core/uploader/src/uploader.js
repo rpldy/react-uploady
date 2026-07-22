@@ -155,7 +155,7 @@ const createUploader = (options?: UploaderCreateOptions): UploadyUploaderType =>
     /**
      * ensures that data being exposed to client-land isnt a proxy, only pojos
      */
-    const triggerWithUnwrap = (name: string, ...data: mixed[]) => {
+    const triggerWithUnwrap = (name: string, ...data: unknown[]) => {
         //delays unwrap to the very last time on trigger. Will only unwrap if there are listeners
         const lp = createLifePack(() => data.map(deepProxyUnwrap));
         return trigger(name, lp);

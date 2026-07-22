@@ -12,7 +12,7 @@ const setHeaders = (req: XMLHttpRequest, headers: Object): ?Headers => {
     }
 };
 
-const request = (url: string, data?: mixed, options: ?RequestOptions = {}): XhrPromise => {
+const request = (url: string, data?: unknown, options: ?RequestOptions = {}): XhrPromise => {
     const req = new XMLHttpRequest();
 
     return new XhrPromise(

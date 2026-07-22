@@ -2,7 +2,7 @@
 import type { Trigger, UploadInfo, UploadOptions } from "@rpldy/shared";
 import type { OffMethod, OnAndOnceMethod } from "@rpldy/life-events";
 
-export type UploaderEnhancer<T> = (uploader: UploaderType<T>, trigger: Trigger<mixed>) => UploaderType<T>;
+export type UploaderEnhancer<T> = (uploader: UploaderType<T>, trigger: Trigger<unknown>) => UploaderType<T>;
 
 export type RawCreateOptions = {|
     ...UploadOptions,

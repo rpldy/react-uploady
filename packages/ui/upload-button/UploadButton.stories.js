@@ -92,23 +92,23 @@ export const WithEventListeners: UploadyStory = createUploadyStory(
         const { setUpdater, logEvent } = useEventsLogUpdater();
 
         const listeners = useMemo(
-            () => ({
-                [UPLOADER_EVENTS.BATCH_START]: ((batch: Batch) => {
+            (): any => ({
+                [UPLOADER_EVENTS.BATCH_START]: (batch: Batch) => {
                     logEvent(
                         `Batch Start - ${batch.id} - item count = ${batch.items.length}`,
                     );
-                }) as any,
-                [UPLOADER_EVENTS.BATCH_FINISH]: ((batch: Batch) => {
+                },
+                [UPLOADER_EVENTS.BATCH_FINISH]: (batch: Batch) => {
                     logEvent(
                         `Batch Finish - ${batch.id} - item count = ${batch.items.length}`,
                     );
-                }) as any,
-                [UPLOADER_EVENTS.ITEM_START]: ((item: BatchItem) => {
+                },
+                [UPLOADER_EVENTS.ITEM_START]: (item: BatchItem) => {
                     logEvent(`Item Start - ${item.id} : ${item.file.name}`);
-                }) as any,
-                [UPLOADER_EVENTS.ITEM_FINISH]: ((item: BatchItem) => {
+                },
+                [UPLOADER_EVENTS.ITEM_FINISH]: (item: BatchItem) => {
                     logEvent(`Item Finish - ${item.id} : ${item.file.name}`);
-                }) as any,
+                },
             }),
             [],
         );

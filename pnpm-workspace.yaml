@@ -25,6 +25,10 @@ minimumReleaseAge: 14400
 
 overrides:
   "@typescript-eslint/utils": "^8.57.2"
+  # keep a single webpack instance - storybook's webpack5 builder resolving
+  # a different minor than root's own devDependency breaks `instanceof`
+  # checks across the split (e.g. DefinePlugin.getCompilationHooks)
+  "webpack": "^5.108.4"
 
 allowBuilds:
   core-js: true

@@ -882,14 +882,14 @@ const MyForm = () => {
         setCropped(() => ({ id, data }));
     };
 
-    useRequestPreSend(({ items }) => {
+    useRequestPreSend(({ items }): any => {
         // $FlowFixMe[incompatible-call] - intentionally modifying item for crop example
-        return ({
+        return {
             items: [{
                 ...items[0],
                 file: cropped?.data || items[0].file,
             }]
-        }) as any;
+        };
     });
 
     const onSubmit = () => processPending({ params: fields });

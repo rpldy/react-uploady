@@ -22,28 +22,39 @@ const config =  {
             },
         ],
         "@babel/react",
-        "@babel/flow",
     ],
     plugins: [
         "@babel/plugin-proposal-function-bind",
         "@babel/plugin-proposal-export-default-from",
-        ["babel-plugin-transform-flow-enums", {
-            //avoid using flow-enums-runtime, just return a frozen "enum" object
-            getRuntime: (t) => t.arrowFunctionExpression(
-                [t.identifier("enumObj")],
-                t.callExpression(
-                    t.memberExpression(t.identifier("Object"), t.identifier("freeze")),
-                    [t.identifier("enumObj")]
-                )
-            )
-        }],
-        "babel-plugin-syntax-hermes-parser",
         //adding these here to stop sb build from breaking on loose mode issue :(
         "minify-dead-code-elimination",
         ["module-resolver", {
             "root": ["./"],
             // "alias": {}
         }]
+    ],
+    overrides: [
+        {
+            test: /\.jsx?$/,
+            presets: ["@babel/flow"],
+            plugins: [
+                ["babel-plugin-transform-flow-enums", {
+                    //avoid using flow-enums-runtime, just return a frozen "enum" object
+                    getRuntime: (t) => t.arrowFunctionExpression(
+                        [t.identifier("enumObj")],
+                        t.callExpression(
+                            t.memberExpression(t.identifier("Object"), t.identifier("freeze")),
+                            [t.identifier("enumObj")]
+                        )
+                    )
+                }],
+                "babel-plugin-syntax-hermes-parser",
+            ],
+        },
+        {
+            test: /\.tsx?$/,
+            presets: ["@babel/preset-typescript"],
+        },
     ],
     env: {
         //cant use plugin when building storybook :(

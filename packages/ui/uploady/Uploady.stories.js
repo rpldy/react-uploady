@@ -661,15 +661,15 @@ export const UMD_ALL: UploadyStory = createUploadyStory(
     });
 
 const UploadButtonWithInvalidPreSend = () => {
-    useRequestPreSend(({ items }) => {
+    useRequestPreSend(({ items }): any => {
         // $FlowFixMe[incompatible-call] - intentionally causing error by changing item id
-        return ({
+        return {
             items: items[0].id === "batch-1.item-1" ? [
                 //intentionally cause error for the first upload since changing item id is forbidden
                 { ...items[0], id: "invalid-id" },
                 ...items.slice(1),
             ] : undefined,
-        }) as any;
+        };
     });
 
     return <ContextUploadButton/>;

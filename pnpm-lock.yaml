@@ -111,21 +111,12 @@ importers:
       babel-plugin-istanbul:
         specifier: ^8.0.0
         version: 8.0.0(supports-color@8.1.1)
-      babel-plugin-minify-dead-code-elimination:
-        specifier: ^0.5.2
-        version: 0.5.2
       babel-plugin-module-resolver:
         specifier: ^5.0.3
         version: 5.0.3
       babel-plugin-syntax-hermes-parser:
         specifier: 0.36.1
         version: 0.36.1
-      babel-plugin-transform-flow-enums:
-        specifier: ^0.0.2
-        version: 0.0.2(@babel/core@8.0.1)
-      babel-plugin-transform-inline-environment-variables:
-        specifier: ^0.4.4
-        version: 0.4.4
       bytes:
         specifier: ^3.1.2
         version: 3.1.2
@@ -973,10 +964,6 @@ packages:
     resolution: {integrity: sha512-S9gzZ/bz83GRysI7gAD4wPT/AI3uCnY+9xn+Mx/KPs2JwHJIz1W8PZkg2cqyt3RNOBM8ejcXhV6y8Og7ly/Dug==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/helper-plugin-utils@7.29.7':
-    resolution: {integrity: sha512-G7sHYigPY17oO5SYWnfD/0MTBwVR781S/JI643e/JhUYgVgWE/61SoW3NH9KWUKyKq5LVh3npif99Wkt6j86Jw==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/helper-plugin-utils@8.0.1':
     resolution: {integrity: sha512-3PKFgjTyPlhFhorfP+SjKQxLViIL++zWjFOO4hGriYU+Bsm983DxEM1JmDRJVWXV0O9npu+xXRqz7Pbd3mh70g==}
     engines: {node: ^22.18.0 || >=24.11.0}
@@ -1097,12 +1084,6 @@ packages:
     engines: {node: ^22.18.0 || >=24.11.0}
     peerDependencies:
       '@babel/core': ^8.0.0
-
-  '@babel/plugin-syntax-flow@7.27.1':
-    resolution: {integrity: sha512-p9OkPbZ5G7UT1MofwYFigGebnrzGJacoBSQM0/6bi/PUMVE+qlWDD/OalvQKbwgQzU6dl0xAv6r4X7Jme0RYxA==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
 
   '@babel/plugin-syntax-flow@8.0.1':
     resolution: {integrity: sha512-0cXdg5GCKK+PoV+Anjbi0yAXq/mq1iIRBiMG1REOLc4iLN4jj86dWS08qMatUYAsNMzkcurn4okYHnoy0B1Txg==}
@@ -3948,15 +3929,6 @@ packages:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
     engines: {node: '>= 0.4'}
 
-  babel-helper-evaluate-path@0.5.0:
-    resolution: {integrity: sha512-mUh0UhS607bGh5wUMAQfOpt2JX2ThXMtppHRdRU1kL7ZLRWIXxoV2UIV1r2cAeeNeU1M5SB5/RSUgUxrK8yOkA==}
-
-  babel-helper-mark-eval-scopes@0.4.3:
-    resolution: {integrity: sha512-+d/mXPP33bhgHkdVOiPkmYoeXJ+rXRWi7OdhwpyseIqOS8CmzHQXHUp/+/Qr8baXsT0kjGpMHHofHs6C3cskdA==}
-
-  babel-helper-remove-or-void@0.4.3:
-    resolution: {integrity: sha512-eYNceYtcGKpifHDir62gHJadVXdg9fAhuZEXiRQnJJ4Yi4oUTpqpNY//1pM4nVyjjDMPYaC2xSf0I+9IqVzwdA==}
-
   babel-loader@10.1.1:
     resolution: {integrity: sha512-JwKSzk2kjIe7mgPK+/lyZ2QAaJcpahNAdM+hgR2HI8D0OJVkdj8Rl6J3kaLYki9pwF7P2iWnD8qVv80Lq1ABtg==}
     engines: {node: ^18.20.0 || ^20.10.0 || >=22.0.0}
@@ -3974,9 +3946,6 @@ packages:
     resolution: {integrity: sha512-18wCskrN3DgbuBmp1gr7LBGT8xdz5xhQQqFvFhVxbkl8VBCrMKQ2YtqBWtUal1Zrc1HTuX0011+Brjw78TCFkg==}
     engines: {node: '>=18'}
 
-  babel-plugin-minify-dead-code-elimination@0.5.2:
-    resolution: {integrity: sha512-krq9Lwi0QIzyAlcNBXTL4usqUvevB4BzktdEsb8srcXC1AaYqRJiAQw6vdKdJSaXbz6snBvziGr6ch/aoRCfpA==}
-
   babel-plugin-module-resolver@5.0.3:
     resolution: {integrity: sha512-h8h6H71ZvdLJZxZrYkaeR30BojTaV7O9GfqacY14SNj5CNB8ocL9tydNzTC0JrnNN7vY3eJhwCmkDj7tuEUaqQ==}
 
@@ -3988,12 +3957,6 @@ packages:
 
   babel-plugin-syntax-hermes-parser@0.36.1:
     resolution: {integrity: sha512-ycduwJbvdvIMmVvlAZqGggS+pm5Eu4Bk9pcV9Sm2Z4PJNRVsKkv0g7vHj+LeuC1gHTeF67sJXFOq61IlqCa2hA==}
-
-  babel-plugin-transform-flow-enums@0.0.2:
-    resolution: {integrity: sha512-g4aaCrDDOsWjbm0PUUeVnkcVd6AKJsVc/MbnPhEotEpkeJQP6b8nzewohQi7+QS8UyPehOhGWn0nOwjvWpmMvQ==}
-
-  babel-plugin-transform-inline-environment-variables@0.4.4:
-    resolution: {integrity: sha512-bJILBtn5a11SmtR2j/3mBOjX4K3weC6cq+NNZ7hG22wCAqpc3qtj/iN7dSe9HDiS46lgp1nHsQgeYrea/RUe+g==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -8882,8 +8845,6 @@ snapshots:
 
   '@babel/helper-plugin-utils@7.28.6': {}
 
-  '@babel/helper-plugin-utils@7.29.7': {}
-
   '@babel/helper-plugin-utils@8.0.1(@babel/core@8.0.1)':
     dependencies:
       '@babel/core': 8.0.1
@@ -8989,11 +8950,6 @@ snapshots:
     dependencies:
       '@babel/core': 8.0.1
       '@babel/helper-plugin-utils': 8.0.1(@babel/core@8.0.1)
-
-  '@babel/plugin-syntax-flow@7.27.1(@babel/core@8.0.1)':
-    dependencies:
-      '@babel/core': 8.0.1
-      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-flow@8.0.1(@babel/core@8.0.1)':
     dependencies:
@@ -11902,12 +11858,6 @@ snapshots:
 
   axobject-query@4.1.0: {}
 
-  babel-helper-evaluate-path@0.5.0: {}
-
-  babel-helper-mark-eval-scopes@0.4.3: {}
-
-  babel-helper-remove-or-void@0.4.3: {}
-
   babel-loader@10.1.1(@babel/core@7.29.7(supports-color@8.1.1))(webpack@5.108.4):
     dependencies:
       '@babel/core': 7.29.7(supports-color@8.1.1)
@@ -11932,13 +11882,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  babel-plugin-minify-dead-code-elimination@0.5.2:
-    dependencies:
-      babel-helper-evaluate-path: 0.5.0
-      babel-helper-mark-eval-scopes: 0.4.3
-      babel-helper-remove-or-void: 0.4.3
-      lodash: 4.18.1
-
   babel-plugin-module-resolver@5.0.3:
     dependencies:
       find-babel-config: 2.1.2
@@ -11956,14 +11899,6 @@ snapshots:
   babel-plugin-syntax-hermes-parser@0.36.1:
     dependencies:
       hermes-parser: 0.36.1
-
-  babel-plugin-transform-flow-enums@0.0.2(@babel/core@8.0.1):
-    dependencies:
-      '@babel/plugin-syntax-flow': 7.27.1(@babel/core@8.0.1)
-    transitivePeerDependencies:
-      - '@babel/core'
-
-  babel-plugin-transform-inline-environment-variables@0.4.4: {}
 
   balanced-match@1.0.2: {}
 

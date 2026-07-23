@@ -4,7 +4,7 @@ import { SUCCESS_CODES } from "../consts";
 import { persistResumable } from "../resumableStore";
 import { addLocationToResponse, getUploadMetadata } from "./utils";
 
-import type { BatchItem, UploadData } from "@rpldy/shared";
+import type { BatchItem, UploadData, FILE_STATES as FileStatesType } from "@rpldy/shared";
 import type { SendOptions } from "@rpldy/sender";
 import type { State, TusState } from "../types";
 import type { ParallelPartData } from "./types";
@@ -34,9 +34,11 @@ const handleFinalizeResponse = (pXhr: XhrPromise, uploadData: UploadData, tusSta
                 }
             } else {
                 logger.debugLog(`tusSender.finalizeParallel: parallel upload finalize failed!`, status);
+                const state: FileStatesType = FILE_STATES.ERROR;
+
                 result = {
                     status: status,
-                    state: FILE_STATES.ERROR,
+                    state,
                     response: { message: xhr?.response || (successCode && !resLocation ? "No valid location header for finalize request" : "") },
                 };
             }

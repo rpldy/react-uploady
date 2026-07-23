@@ -6,7 +6,7 @@ import { getItemsPrepareUpdater } from "./preSendPrepare";
 import { finalizeItem, getIsItemExists } from "./itemHelpers";
 
 import type { BatchData, QueueState, State } from "./types";
-import type { Batch, BatchItem, UploadOptions } from "@rpldy/shared";
+import type { Batch, BatchItem, UploadOptions, BATCH_STATES as BatchStatesType } from "@rpldy/shared";
 import type { ItemsSendData } from "./preSendPrepare";
 
 const prepareBatchStartItems = getItemsPrepareUpdater<Batch>(
@@ -20,13 +20,13 @@ const prepareBatchStartItems = getItemsPrepareUpdater<Batch>(
     },
 );
 
-const BATCH_READY_STATES = [
+const BATCH_READY_STATES: Array<BatchStatesType> = [
     BATCH_STATES.ADDED,
     BATCH_STATES.PROCESSING,
     BATCH_STATES.UPLOADING,
 ];
 
-const BATCH_FINISHED_STATES = [
+const BATCH_FINISHED_STATES: Array<BatchStatesType> = [
     BATCH_STATES.ABORTED,
     BATCH_STATES.CANCELLED,
     BATCH_STATES.FINISHED,
@@ -80,7 +80,7 @@ const finalizeBatch = (
     queue: QueueState,
     batchId: string,
     eventType: string,
-    finalState: BATCH_STATES = BATCH_STATES.FINISHED,
+    finalState: BatchStatesType = BATCH_STATES.FINISHED,
     additionalInfo?: string,
 ): void => {
     queue.updateState((state) => {

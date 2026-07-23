@@ -1,5 +1,6 @@
 // @flow
 import { devFreeze, FILE_STATES } from "@rpldy/shared";
+import type { FILE_STATES as FileStatesType } from "@rpldy/shared";
 
 export const UPLOADER_EVENTS: Object = devFreeze({
     BATCH_ADD: "BATCH-ADD",
@@ -31,7 +32,7 @@ export const SENDER_EVENTS: Object = devFreeze({
     BATCH_PROGRESS: "BATCH_PROGRESS",
 });
 
-export const ITEM_FINALIZE_STATES = [
+export const ITEM_FINALIZE_STATES: Array<FileStatesType> = [
     FILE_STATES.FINISHED,
     FILE_STATES.ERROR,
     FILE_STATES.CANCELLED,

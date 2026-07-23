@@ -1,10 +1,33 @@
 const env = process.env.BABEL_ENV,
     isUploadyBundle = process.env.UPLOADY_BUNDLE;
 
+//inlines process.env.X member expressions into literal values at build time.
+//replaces babel-plugin-transform-inline-environment-variables, which is unmaintained
+//and broken under @babel/traverse 8.x (relies on the removed path.toComputedKey API)
+function inlineEnvVariables({ types: t }) {
+    return {
+        visitor: {
+            MemberExpression(path) {
+                if (path.get("object").matchesPattern("process.env")) {
+                    const property = path.node.property;
+
+                    const key = path.node.computed
+                        ? (t.isStringLiteral(property) ? property.value : null)
+                        : property.name;
+
+                    if (key != null) {
+                        path.replaceWith(t.valueToNode(process.env[key]));
+                    }
+                }
+            },
+        },
+    };
+}
+
 const productionConfig = {
     plugins: [
         //cant add to base because breaks unit-tests that modify process.env
-        "transform-inline-environment-variables",
+        inlineEnvVariables,
 
     ]
 };
@@ -26,8 +49,6 @@ const config =  {
     plugins: [
         "@babel/plugin-proposal-function-bind",
         "@babel/plugin-proposal-export-default-from",
-        //adding these here to stop sb build from breaking on loose mode issue :(
-        "minify-dead-code-elimination",
         ["module-resolver", {
             "root": ["./"],
             // "alias": {}
@@ -38,16 +59,6 @@ const config =  {
             test: /\.jsx?$/,
             presets: ["@babel/flow"],
             plugins: [
-                ["babel-plugin-transform-flow-enums", {
-                    //avoid using flow-enums-runtime, just return a frozen "enum" object
-                    getRuntime: (t) => t.arrowFunctionExpression(
-                        [t.identifier("enumObj")],
-                        t.callExpression(
-                            t.memberExpression(t.identifier("Object"), t.identifier("freeze")),
-                            [t.identifier("enumObj")]
-                        )
-                    )
-                }],
                 "babel-plugin-syntax-hermes-parser",
             ],
         },

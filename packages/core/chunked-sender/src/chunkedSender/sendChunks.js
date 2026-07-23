@@ -5,7 +5,7 @@ import handleChunkRequest from "./handleChunkRequest";
 import getChunksToSend from "./getChunksToSend";
 import sendChunk from "./sendChunk";
 
-import type { BatchItem } from "@rpldy/shared";
+import type { BatchItem, FILE_STATES as FileStatesType } from "@rpldy/shared";
 import type { OnProgress } from "@rpldy/sender";
 import type { TriggerMethod } from "@rpldy/life-events";
 import type { Chunk, ChunkedState, State } from "./types";
@@ -28,7 +28,7 @@ const resolveOnError = (chunkedState: ChunkedState, resolve: PromiseResolve, ex:
     }
 };
 
-const finalizeOnFinish = (chunkedState: ChunkedState, item: BatchItem, resolve: PromiseResolve, status: FILE_STATES) => {
+const finalizeOnFinish = (chunkedState: ChunkedState, item: BatchItem, resolve: PromiseResolve, status: FileStatesType) => {
     chunkedState.updateState((state) => {
         state.finished = true;
     });

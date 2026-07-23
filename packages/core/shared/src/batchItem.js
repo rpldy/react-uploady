@@ -1,5 +1,6 @@
 // @flow
 import { FILE_STATES } from "./enums";
+import type { FileStatesEnum as FileStatesType } from "./enums";
 import type { BatchItem, UploadInfo } from "./types";
 
 const BISYM = Symbol.for("__rpldy-bi__");
@@ -30,7 +31,7 @@ const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = fa
 
     //keep existing id for recycled items
     const id = isAlreadyBatchItem && f.id && typeof f.id === "string" ? f.id : `${batchId}.item-${iCounter}`,
-        state: FILE_STATES = isPending ? FILE_STATES.PENDING : FILE_STATES.ADDED;
+        state: FileStatesType = isPending ? FILE_STATES.PENDING : FILE_STATES.ADDED;
 
     let batchItem: any = {
         id,

@@ -51,12 +51,12 @@ const triggerItemsPrepareEvent = (
     eventType: string,
     validateResponse: ?ResponseValidator
 ): Promise<ItemsSendData> =>
-((triggerUpdater < { subject: Object, options: UploaderCreateOptions } > (
-    queue.trigger, eventType, eventSubject, options): any): Promise<? { subject: Object, options: UploaderCreateOptions }>)
+(triggerUpdater<{ subject: Object, options: UploaderCreateOptions }>(
+    queue.trigger, eventType, eventSubject, options) as any as Promise<?{ subject: Object, options: UploaderCreateOptions }>)
         // $FlowFixMe[incompatible-type] - function return type mismatch
         .then((updated: ?{ subject: Object, options: UploaderCreateOptions } | boolean) => {
         validateResponse?.(updated);
-        return processPrepareResponse(eventType, items, options, (updated: any));
+        return processPrepareResponse(eventType, items, options, updated as any);
     });
 
 const persistPrepareResponse = (queue: QueueState, prepared: ItemsSendData) => {

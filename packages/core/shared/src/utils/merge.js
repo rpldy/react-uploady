@@ -4,7 +4,7 @@ import isPlainObject from "./isPlainObject";
 export type MergeOptions = {
     undefinedOverwrites?: boolean,
 	withSymbols?: boolean,
-    predicate?: (mixed, mixed) => boolean,
+    predicate?: (unknown, unknown) => boolean,
 };
 
 type MergeMethod = (target: Object, ...sources: Array<Object>) => Object;
@@ -63,7 +63,7 @@ const getMerge = (options: MergeOptions = {}): MergeMethod => {
  *
  * No recursion protection
  */
-export default (getMerge(): MergeMethod);
+export default getMerge() as MergeMethod;
 
 export {
     getMerge,

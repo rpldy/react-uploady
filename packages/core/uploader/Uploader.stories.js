@@ -23,7 +23,7 @@ import type { UploadyUploaderType } from "./src";
 import type { Node } from "react";
 
 export const WithCustomUI: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, grouped, groupSize }): Node {
         const uploaderRef = useRef<?UploadyUploaderType>(null);
         const inputRef = useRef<?HTMLInputElement>(null);
 
@@ -65,7 +65,7 @@ export const WithCustomUI: UploadyStory = createUploadyStory(
     });
 
 export const WithProgress: UploadyStory = createUploadyStory(
-    ({ enhancer, destination }): Node => {
+    function StoryRender({ enhancer, destination }): Node {
         const uploaderRef = useRef<?UploadyUploaderType>(null);
         const [uploaderId, setUploaderId] = useState<?string>(null);
         const { url } = destination;
@@ -195,7 +195,7 @@ const UploaderWithEvents = ({ enhancer, destination, grouped, groupSize, extOpti
 };
 
 export const TEST_EventsData: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, grouped, groupSize, extOptions }): Node => {
+    function StoryRender({ enhancer, destination, grouped, groupSize, extOptions }): Node {
   return (
       <UploaderWithEvents
           enhancer={enhancer}
@@ -207,7 +207,7 @@ export const TEST_EventsData: UploadyStory = createUploadyStory(
     );
 });
 
-export const TEST_ProtoPollute: UploadyStory = createUploadyStory((): Node => {
+export const TEST_ProtoPollute: UploadyStory = createUploadyStory(function StoryRender(): Node {
     useEffect(() => {
         window._test_createUploader = createUploader;
     }, []);
@@ -221,11 +221,11 @@ export const TEST_ProtoPollute: UploadyStory = createUploadyStory((): Node => {
 });
 
 export const UMD_Core: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          destination,
          enhancer,
          multiple,
-     }: UploadyStoryParams): Node => {
+     }: UploadyStoryParams): Node {
     const [uploaderReady, setUploaderReady] = useState(false);
     const inputRef = useRef<?HTMLInputElement>(null);
     const uploaderRef = useRef<?UploadyUploaderType>(null);

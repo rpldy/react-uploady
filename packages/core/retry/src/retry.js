@@ -5,10 +5,10 @@ import { UPLOADER_EVENTS } from "@rpldy/uploader";
 import { RETRY_EXT, RETRY_EVENT } from "./consts";
 
 import type { UploaderType, UploaderCreateOptions, TriggerMethod } from "@rpldy/uploader";
-import type { BatchItem, UploadOptions } from "@rpldy/shared";
+import type { BatchItem, UploadOptions, FILE_STATES as FileStatesType } from "@rpldy/shared";
 import type { State, RetryState } from "./types";
 
-const FAILED_STATES = [FILE_STATES.ABORTED, FILE_STATES.ERROR];
+const FAILED_STATES: Array<FileStatesType> = [FILE_STATES.ABORTED, FILE_STATES.ERROR];
 
 const removeItemFromState = (retryState: RetryState, id: string) => {
     retryState.updateState((state: State) => {
@@ -46,7 +46,7 @@ const uploadFailedIds = (
 
 		trigger(RETRY_EVENT, { items: uploads, options: retryOptions });
         failedIds?.forEach((id) => removeItemFromState(retryState, id));
-		uploader.add(uploads, (retryOptions: ?UploadOptions));
+		uploader.add(uploads, retryOptions as ?UploadOptions);
 	}
 
     return !!uploads.length;

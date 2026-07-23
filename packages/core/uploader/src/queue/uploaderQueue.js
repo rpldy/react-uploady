@@ -134,7 +134,7 @@ const createUploaderQueue = (
 
     sender.on(SENDER_EVENTS.BATCH_PROGRESS, handleBatchProgress);
 
-    const runCancellable = (name: string, ...args: mixed[]) => {
+    const runCancellable = (name: string, ...args: unknown[]) => {
         if (!isFunction(cancellable)) {
             //for flow :(
             throw new Error("Uploader queue - cancellable is of wrong type");

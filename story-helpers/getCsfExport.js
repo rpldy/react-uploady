@@ -6,6 +6,8 @@ export type CsfExport = {
     title?: string,
     parameters: Object,
     excludeStories: RegExp | Array<any>,
+    args?: any,
+    argTypes?: any,
 };
 
 export type ExportOptions = {

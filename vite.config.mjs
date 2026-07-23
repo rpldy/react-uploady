@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 import { createRequire } from "module";
 import { defineConfig } from "vite";
-import babel from "@babel/core";
+import { transformAsync } from "@babel/core";
 import { getMatchingPackages } from "./scripts/lernaUtils.mjs";
 
 const require = createRequire(import.meta.url);
@@ -14,16 +14,6 @@ const BABEL_CONFIG = {
     babelrc: false,
     configFile: false,
     plugins: [
-        ["babel-plugin-transform-flow-enums", {
-            //avoid using flow-enums-runtime, just return a frozen "enum" object
-            getRuntime: (t) => t.arrowFunctionExpression(
-                [t.identifier("enumObj")],
-                t.callExpression(
-                    t.memberExpression(t.identifier("Object"), t.identifier("freeze")),
-                    [t.identifier("enumObj")]
-                )
-            )
-        }],
         [
             "@babel/plugin-transform-runtime", {
             corejs: 3,
@@ -59,7 +49,7 @@ const babelTransformPlugin = {
             return null;
         }
 
-        return babel.transformAsync(code, { ...BABEL_CONFIG, filename: cleanId })
+        return transformAsync(code, { ...BABEL_CONFIG, filename: cleanId })
             .then((result) => result ? { code: result.code, map: result.map } : null);
     },
 };

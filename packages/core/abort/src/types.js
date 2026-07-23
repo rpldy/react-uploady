@@ -12,7 +12,7 @@ export type ItemsQueue = { [string]: string[] };
 
 export type AbortResult = { isFast: boolean };
 
-type InExactRawCreateOptions = { ...RawCreateOptions };
+type InExactRawCreateOptions = { ...RawCreateOptions, ... };
 
 export type AbortBatchMethod = (Batch, InExactRawCreateOptions, AbortsMap, ItemsQueue, FinalizeRequestMethod, InExactRawCreateOptions) => AbortResult;
 

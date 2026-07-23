@@ -74,7 +74,7 @@ const useUploaderWithTus = ({
     return uploaderRef;
 };
 
-export const WithTusSender: UploadyStory = createUploadyStory((props): Node => {
+export const WithTusSender: UploadyStory = createUploadyStory(function StoryRender(props): Node {
     const inputRef = useRef<?HTMLInputElement>(null);
     const uploaderRef = useUploaderWithTus(props);
 
@@ -106,7 +106,7 @@ export const WithTusSender: UploadyStory = createUploadyStory((props): Node => {
     );
 });
 
-export const WithTusDataOnCreate: UploadyStory = createUploadyStory((props): Node => {
+export const WithTusDataOnCreate: UploadyStory = createUploadyStory(function StoryRender(props): Node {
     const inputRef = useRef<?HTMLInputElement>(null);
     const uploaderRef = useUploaderWithTus(props);
 
@@ -138,7 +138,7 @@ export const WithTusDataOnCreate: UploadyStory = createUploadyStory((props): Nod
     );
 });
 
-export const WithTusConcatenation: UploadyStory = createUploadyStory((props): Node => {
+export const WithTusConcatenation: UploadyStory = createUploadyStory(function StoryRender(props): Node {
     const inputRef = useRef<?HTMLInputElement>(null);
     const uploaderRef = useUploaderWithTus(props);
 
@@ -170,7 +170,7 @@ export const WithTusConcatenation: UploadyStory = createUploadyStory((props): No
     );
 });
 
-export const WithFeatureDetection: UploadyStory = createUploadyStory((props): Node => {
+export const WithFeatureDetection: UploadyStory = createUploadyStory(function StoryRender(props): Node {
     const inputRef = useRef<?HTMLInputElement>(null);
     const uploaderRef = useUploaderWithTus({
         featureDetection: true,

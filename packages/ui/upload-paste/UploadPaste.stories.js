@@ -36,7 +36,7 @@ const SimpleContainer = styled.div`
 const PasteArea = withPasteUpload(SimpleContainer);
 
 export const Simple: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         const onPasteUpload = useCallback(({ count }: { count: number }) => {
             console.log("PASTE-TO-UPLOAD files: ", count);
         }, []);
@@ -82,7 +82,7 @@ const WindowPaste = () => {
 };
 
 export const WithWindowPaste: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug
@@ -126,7 +126,7 @@ const ProcessPending = () => {
 };
 
 export const WithElementPaste: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug
@@ -151,7 +151,7 @@ const StyledDropZone = styled(UploadDropZone)`
 const PasteUploadDropZone = withPasteUpload(StyledDropZone);
 
 export const WithPasteDropZone: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug
@@ -195,7 +195,7 @@ const DivUploadButton = asUploadButton(StyledDivButton);
 const PasteUploadButton = withPasteUpload(DivUploadButton);
 
 export const WithPasteUploadButton: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug

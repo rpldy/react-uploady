@@ -20,14 +20,14 @@ type StateAbortMethods = {
     pending: (item: BatchItem, aborts: AbortsMap, finalizeItem: FinalizeRequestMethod) => boolean,
 };
 
-const ITEM_STATE_ABORTS: StateAbortMethods = (({
+const ITEM_STATE_ABORTS: StateAbortMethods = ({
     [FILE_STATES.UPLOADING]: (item: BatchItem, aborts: AbortsMap, _) => {
         logger.debugLog(`abort: aborting uploading item  - `, item);
         return aborts[item.id]();
     },
     [FILE_STATES.ADDED]: abortNonUploadingItem,
     [FILE_STATES.PENDING]: abortNonUploadingItem,
-}: any): StateAbortMethods);
+} as any) as StateAbortMethods;
 
 const callAbortOnItem = (
     item: BatchItem,
@@ -37,7 +37,7 @@ const callAbortOnItem = (
     const itemState = item?.state;
 
     const method = !!itemState &&
-        (ITEM_STATE_ABORTS: any)[itemState.valueOf()];
+        (ITEM_STATE_ABORTS as any)[itemState.valueOf()];
 
     return method ?
         method(item, aborts, finalizeItem) : false;

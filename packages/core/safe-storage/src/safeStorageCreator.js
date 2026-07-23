@@ -28,9 +28,9 @@ const safeStorageCreator = (storageType: string): SafeStorage => {
         length: 0,
     };
 
-    const safeStorage = methods.reduce<{ length: number, isSupported: boolean, [string]: (...args: mixed[]) => void }>(
+    const safeStorage = methods.reduce<{ length: number, isSupported: boolean, [string]: (...args: unknown[]) => void }>(
         (res, method) => {
-            res[method] = (...args: mixed[]) =>
+            res[method] = (...args: unknown[]) =>
                 isSupported ? window[storageType][method](...args) : undefined;
 
             return res;
@@ -42,7 +42,7 @@ const safeStorageCreator = (storageType: string): SafeStorage => {
         }
     });
 
-    return safeStorage;
+    return safeStorage as any as SafeStorage;
 };
 
 export default safeStorageCreator;

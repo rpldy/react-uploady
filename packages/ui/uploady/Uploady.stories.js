@@ -78,14 +78,14 @@ const ContextUploadButtonWithPrepareHooks = (props: ?ContextButtonWithHooksProps
 };
 
 export const WithContextApiButton: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          multiple,
          destination,
          enhancer,
          grouped,
          groupSize,
          extOptions
-     }): Node => {
+     }): Node {
         const usePrepareEvents = !!extOptions?.withPrepareEvents;
 
         return (
@@ -120,13 +120,13 @@ const UrlUploadButton = () => {
 };
 
 export const UrlUploadWithContextApi: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          multiple,
          destination,
          enhancer,
          grouped,
          groupSize,
-     }): Node => {
+     }): Node {
         return (
             <Uploady
                 debug
@@ -151,12 +151,12 @@ const ListOfUploadOptions = () => {
 };
 
 export const WithNoDomUploady: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          destination,
          enhancer,
          grouped,
          groupSize,
-     }): Node => {
+     }): Node {
         return (
             <NoDomUploady
                 debug
@@ -171,12 +171,12 @@ export const WithNoDomUploady: UploadyStory = createUploadyStory(
     });
 
 export const WithCustomFieldName: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          destination,
          enhancer,
          grouped,
          groupSize,
-     }): Node => {
+     }): Node {
         return (
             <Uploady
                 inputFieldName="customFieldName"
@@ -193,12 +193,12 @@ export const WithCustomFieldName: UploadyStory = createUploadyStory(
     });
 
 export const WithDirectory: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          destination,
          enhancer,
          grouped,
          groupSize,
-     }): Node => {
+     }): Node {
         return (
             <Uploady
                 inputFieldName="customFieldName"
@@ -281,13 +281,13 @@ const QueueList = () => {
 };
 
 export const WithAutoUploadOff: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          destination,
          enhancer,
          grouped,
          groupSize,
          extOptions,
-     }): Node => {
+     }): Node {
         return (
             <Uploady
                 debug
@@ -324,12 +324,12 @@ export const WithAutoUploadOff: UploadyStory = createUploadyStory(
     });
 
 export const WithAbort: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          multiple,
          destination,
          enhancer,
          extOptions
-     }): Node => {
+     }): Node {
         return (
             <div>
                 <p>
@@ -351,13 +351,13 @@ export const WithAbort: UploadyStory = createUploadyStory(
     });
 
 export const WithConcurrent: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          autoUpload,
          destination,
          enhancer,
          grouped,
          groupSize,
-     }): Node => {
+     }): Node {
         return (
             <Uploady
                 debug
@@ -378,13 +378,13 @@ export const WithConcurrent: UploadyStory = createUploadyStory(
     });
 
 export const WithCustomResponseFormat: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          autoUpload,
          destination,
          enhancer,
          grouped,
          groupSize,
-     }): Node => {
+     }): Node {
 
         const resFormatter = useCallback(
             (res: Object, status: number, headers: Object) => {
@@ -435,13 +435,13 @@ const UploadFormWithInternalInput = () => {
 };
 
 export const WithExposedInternalInput: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          autoUpload,
          destination,
          enhancer,
          grouped,
          groupSize,
-     }): Node => {
+     }): Node {
         return (
             <Uploady
                 debug
@@ -484,14 +484,14 @@ const ExampleRequestPreSend = () => {
 };
 
 export const WithHeaderFromFileName: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          autoUpload,
          destination,
          enhancer,
          grouped,
          groupSize,
          extOptions,
-     }): Node => {
+     }): Node {
         return (
             <Uploady
                 debug
@@ -516,7 +516,7 @@ const isSuccessfulMockRequest = (xhr: XMLHttpRequest) => {
 };
 
 export const WithFailingMockSender: UploadyStory = createUploadyStory(
-    ({ extOptions }): Node => {
+    function StoryRender({ extOptions }): Node {
         const { destination, enhancer } = mockDestination();
 
         return (
@@ -582,11 +582,11 @@ const renderUploadyFromBundle = ({
 };
 
 export const UMD_CoreUI: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          destination,
          enhancer,
          multiple,
-     }: UploadyStoryParams): Node => {
+     }: UploadyStoryParams): Node {
         const [UploadyUI, setUploadyUI] = useState(null);
 
         const onBundleLoad = useCallback(() => {
@@ -637,11 +637,11 @@ const renderUploadyAll = ({
 };
 
 export const UMD_ALL: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          destination,
          enhancer,
          multiple,
-     }): Node => {
+     }): Node {
         const [UploadyUI, setUploadyUI] = useState(null);
 
         const onBundleLoad = useCallback(() => {
@@ -661,26 +661,26 @@ export const UMD_ALL: UploadyStory = createUploadyStory(
     });
 
 const UploadButtonWithInvalidPreSend = () => {
-    useRequestPreSend(({ items }) => {
+    useRequestPreSend(({ items }): any => {
         // $FlowFixMe[incompatible-call] - intentionally causing error by changing item id
-        return ({
+        return {
             items: items[0].id === "batch-1.item-1" ? [
                 //intentionally cause error for the first upload since changing item id is forbidden
                 { ...items[0], id: "invalid-id" },
                 ...items.slice(1),
             ] : undefined,
-        }: any);
+        };
     });
 
     return <ContextUploadButton/>;
 };
 
 export const TEST_InvalidPreSend: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          destination,
          enhancer,
          multiple,
-     }): Node => {
+     }): Node {
         return (
             <Uploady
                 debug
@@ -695,8 +695,8 @@ export const TEST_InvalidPreSend: UploadyStory = createUploadyStory(
 
 const UploadButtonWithInvalidBatchStart = () => {
     useBatchStartListener((batch) => {
+        // $FlowExpectedError[incompatible-type] - intentionally cause error for the first batch since changing batch is forbidden
         return batch.id === "batch-1" ? {
-            //$FlowExpectedError[incompatible-type] - intentionally cause error for the first batch since changing batch is forbidden
             batch: {}
         } : {};
     });
@@ -709,11 +709,11 @@ const UploadButtonWithInvalidBatchStart = () => {
 };
 
 export const TEST_InvalidBatchStart: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          destination,
          enhancer,
          multiple,
-     }): Node => {
+     }): Node {
         return (
             <Uploady
                 debug
@@ -733,13 +733,13 @@ const TEST_CancelOnBatchAdd_listeners = {
 };
 
 export const TEST_CancelOnBatchAdd: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          autoUpload,
          destination,
          enhancer,
          grouped,
          groupSize,
-     }): Node => {
+     }): Node {
         return (
             <Uploady
                 enhancer={enhancer}

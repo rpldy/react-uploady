@@ -11,12 +11,12 @@ const getGlobal = () =>
 
 const getRegisteredVersion = (): string => {
     const global = getGlobal();
-    return (global: Object)[GLOBAL_VERSION_SYM];
+    return (global as Object)[GLOBAL_VERSION_SYM];
 };
 
 const registerUploadyContextVersion = (): void => {
     const global =getGlobal();
-    (global: Object)[GLOBAL_VERSION_SYM] = getVersion();
+    (global as Object)[GLOBAL_VERSION_SYM] = getVersion();
 };
 
 const getIsVersionRegisteredAndDifferent = (): boolean => {

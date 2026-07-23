@@ -28,7 +28,7 @@ const withPasteUpload = (Component: ComponentType<any>): React.ComponentType<Pas
         </Component>;
     };
 
-    return forwardRef<PasteProps, mixed | React.ElementType>(PasteComponent);
+    return forwardRef<PasteProps, unknown | React.ElementType>(PasteComponent);
 };
 
 export default withPasteUpload;

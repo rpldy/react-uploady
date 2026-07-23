@@ -15,7 +15,7 @@ import Readme from "./UploadUrlInput.storydoc.mdx";
 import type { Node } from "react";
 
 export const Simple: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug
@@ -33,7 +33,7 @@ export const Simple: UploadyStory = createUploadyStory(
 const StyledUrlInput = styled(UploadUrlInput)``;
 
 export const WithRef: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         const inputRef = useRef<any>(null);
 
         const onInputChange = useCallback(() => {
@@ -67,7 +67,7 @@ export const WithRef: UploadyStory = createUploadyStory(
     });
 
 export const WithButtonAndValidate: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         const [error, setError] = useState<?string | void>(null);
         const uploadRef = useRef<(() => void) | void | null>(null);
 

@@ -58,7 +58,7 @@ const StyledUploadButton = styled(UploadButton)`
 `;
 
 export const Simple: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize, maxPreviewSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize, maxPreviewSize }): Node {
         return (
             <Uploady
                 debug
@@ -101,7 +101,7 @@ const CustomImagePreview = ({ id, url }: { id: string, url: string }) => {
 };
 
 export const WithProgress: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         const getPreviewProps = useCallback(
             (item: BatchItem) => ({ id: item.id }),
             [],
@@ -128,7 +128,7 @@ export const WithProgress: UploadyStory = createUploadyStory(
     });
 
 export const WithCustomProps: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
 
         const getPreviewProps = useCallback(
             (item: BatchItem, url: string, type: string) => {
@@ -168,7 +168,7 @@ const Button = styled.button`
 `;
 
 export const WithUrls: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         const uploadRef = useRef<?() => void>(null);
 
         const onButtonClick = () => {
@@ -206,7 +206,7 @@ const PreviewContainer = styled.div`
 `;
 
 export const WithRememberPrevious: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug
@@ -269,7 +269,7 @@ const PreviewsWithClear = ({ PreviewComp = UploadPreview }: { PreviewComp?: Reac
 };
 
 export const WithPreviewMethods: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug
@@ -320,7 +320,7 @@ const PreviewButtons = (props: PreviewButtonsProps) => {
 	</ButtonsWrapper>;
 };
 
-const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
+const ItemPreviewWithCrop = withRequestPreSendUpdate(function StoryRender(props) {
 	const { id, url, isFallback, type, updateRequest, requestData, previewMethods } = props;
 	const [finished, setFinished] = useState<boolean>(false);
 	const [crop, setCrop] = useState<CropData>({ unit: "px", height: 100, width: 100, x: 50, y: 50 });
@@ -375,7 +375,7 @@ const ResumeUpload = () => {
 }
 
 export const WithCrop: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, grouped, groupSize, extOptions }): Node => {
+    function StoryRender({ enhancer, destination, grouped, groupSize, extOptions }): Node {
         const previewMethodsRef = useRef<?PreviewMethods>(null);
 
         return (
@@ -568,7 +568,7 @@ const CropperForMultiCrop = ({ item, url, setCropForItem, removePreview, onPrevi
     </CropperContainer>);
 };
 
-const BatchCrop = withBatchStartUpdate((props) => {
+const BatchCrop = withBatchStartUpdate(function StoryRender(props) {
     const { id, updateRequest, requestData, uploadInProgress } = props;
     const previewMethodsRef = useRef<?PreviewMethods>(null);
     const [selected, setSelected] = useState<?{url: ?string, id: ?string }>({ url: null, id: null });
@@ -667,7 +667,7 @@ const MultiCropQueue = ({ extOptions }: { extOptions: ?{ autoUpload: boolean } }
 };
 
 export const WithMultiCrop: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, extOptions }): Node => {
+    function StoryRender({ enhancer, destination, extOptions }): Node {
         return (
             <Uploady
                 debug
@@ -689,7 +689,7 @@ const UploadPendingButton = () => {
 };
 
 export const WithDifferentBatchItemsMethod: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug
@@ -772,7 +772,7 @@ const createUploadFieldForType = (type: string): React.ComponentType<TypedUpload
 const UploadFields:  React.ComponentType<TypedUploadFieldProps>[] = TYPES.map(createUploadFieldForType);
 
 export const WithTwoFields: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug
@@ -882,14 +882,14 @@ const MyForm = () => {
         setCropped(() => ({ id, data }));
     };
 
-    useRequestPreSend(({ items }) => {
+    useRequestPreSend(({ items }): any => {
         // $FlowFixMe[incompatible-call] - intentionally modifying item for crop example
-        return ({
+        return {
             items: [{
                 ...items[0],
                 file: cropped?.data || items[0].file,
             }]
-        }: any);
+        };
     });
 
     const onSubmit = () => processPending({ params: fields });
@@ -930,7 +930,7 @@ const MyForm = () => {
 };
 
 export const WithCropInForm: UploadyStory = createUploadyStory(
-    ({ enhancer, destination }): Node => {
+    function StoryRender({ enhancer, destination }): Node {
         return (
             <Uploady
                 debug
@@ -965,7 +965,7 @@ const CustomPreviews = () => {
 };
 
 export const WithPreviewsLoaderHook: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug

@@ -35,7 +35,7 @@ const asUploadButton = (Component: ComponentType<any>): React.ComponentType<Uplo
 
     markAsUploadOptionsComponent(AsUploadButton);
 
-    return forwardRef<UploadButtonProps, {current: null | React.ElementType} | ((null | React.ElementType) => mixed)>(AsUploadButton);
+    return forwardRef<UploadButtonProps, {current: null | React.ElementType} | ((null | React.ElementType) => unknown)>(AsUploadButton);
 };
 
 export default asUploadButton;

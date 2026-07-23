@@ -2,8 +2,8 @@
 import createSafeStorage from "./safeStorageCreator";
 import type { SafeStorage } from "./types";
 
-const safeLocalStorage = (createSafeStorage("localStorage"): SafeStorage);
-const safeSessionStorage = (createSafeStorage("sessionStorage"): SafeStorage);
+const safeLocalStorage = createSafeStorage("localStorage") as SafeStorage;
+const safeSessionStorage = createSafeStorage("sessionStorage") as SafeStorage;
 
 export {
     safeLocalStorage,

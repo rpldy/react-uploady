@@ -21,6 +21,7 @@ export type CropProps = {
     onCrop: OnCropChangeMethod,
     src: ?string,
     style?: Object,
+    ...
 };
 
 const StyledReactCrop = styled(ReactCrop)`
@@ -30,7 +31,7 @@ const StyledReactCrop = styled(ReactCrop)`
     max-height: 400px;
 `;
 
-const ReactCropWithImage: React.ComponentType<CropProps> = (forwardRef<CropProps, any>(({
+const ReactCropWithImage: React.ComponentType<CropProps> = forwardRef<CropProps, any>(({
                     crop,
                     onCrop,
                     src,
@@ -45,6 +46,6 @@ const ReactCropWithImage: React.ComponentType<CropProps> = (forwardRef<CropProps
                 <img src={src} ref={ref} className="react-crop-img"/>
             </StyledReactCrop>
         );
-    }): any);
+    }) as any;
 
 export default ReactCropWithImage;

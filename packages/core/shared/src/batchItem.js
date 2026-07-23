@@ -1,5 +1,6 @@
 // @flow
 import { FILE_STATES } from "./enums";
+import type { FileStatesEnum as FileStatesType } from "./enums";
 import type { BatchItem, UploadInfo } from "./types";
 
 const BISYM = Symbol.for("__rpldy-bi__");
@@ -30,7 +31,7 @@ const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = fa
 
     //keep existing id for recycled items
     const id = isAlreadyBatchItem && f.id && typeof f.id === "string" ? f.id : `${batchId}.item-${iCounter}`,
-        state: FILE_STATES = isPending ? FILE_STATES.PENDING : FILE_STATES.ADDED;
+        state: FileStatesType = isPending ? FILE_STATES.PENDING : FILE_STATES.ADDED;
 
     let batchItem: any = {
         id,
@@ -41,7 +42,7 @@ const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = fa
         completed: 0,
         loaded: 0,
         recycled: isAlreadyBatchItem,
-        previousBatch: isAlreadyBatchItem ? ((f: any).batchId) : null,
+        previousBatch: isAlreadyBatchItem ? (f as any).batchId : null,
     };
 
     Object.defineProperty(batchItem, BISYM, {
@@ -50,7 +51,7 @@ const createBatchItem = (f: UploadInfo, batchId: string, isPending: boolean = fa
         writable: true,
     });
 
-    const fileData = isAlreadyBatchItem ? (((f: any).file || (f: any).url)) : f;
+    const fileData = isAlreadyBatchItem ? ((f as any).file || (f as any).url) : f;
 
     if (typeof fileData === "string") {
         batchItem = getBatchItemWithUrl(batchItem, fileData);

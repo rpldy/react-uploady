@@ -5,7 +5,7 @@ import { PREVIEW_TYPES } from "./consts";
 import type { BatchItem, Batch } from "@rpldy/shared";
 import type { RefObject } from "@rpldy/shared-ui";
 
-export type PreviewType = $Values<typeof PREVIEW_TYPES>;
+export type PreviewType = Values<typeof PREVIEW_TYPES>;
 
 export type RemovePreviewMethod = (id: string) => void;
 export type ClearPreviewsMethod = () => void;

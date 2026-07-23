@@ -18,7 +18,7 @@ export type State = {|
     finished: boolean,
     aborted: boolean,
     error: boolean,
-    requests: { [string]: { abort: () => boolean } },
+    requests: { [string]: { id: string, abort: () => boolean } },
     responses: any[],
     chunks: Chunk[],
     uploaded: { [string]: number },

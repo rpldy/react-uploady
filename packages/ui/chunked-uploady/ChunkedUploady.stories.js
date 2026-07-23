@@ -46,7 +46,7 @@ const UploadButtonWithUniqueIdHeader = () => {
 };
 
 export const Simple: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, chunkSize, extOptions }): Node => {
+    function StoryRender({ enhancer, destination, multiple, chunkSize, extOptions }): Node {
         const { isSuccessfulCall } = extOptions || {};
 
         return (
@@ -64,7 +64,7 @@ export const Simple: UploadyStory = createUploadyStory(
     });
 
 export const WithProgress: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, chunkSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, chunkSize }): Node {
         return (
             <ChunkedUploady
                 debug
@@ -80,7 +80,7 @@ export const WithProgress: UploadyStory = createUploadyStory(
     });
 
 export const WithAbortButton: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, chunkSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, chunkSize }): Node {
         return (
             <ChunkedUploady
                 debug
@@ -113,7 +113,7 @@ const ChunkEventLog = ({ isAsync = false }: { isAsync?: boolean }) => {
 };
 
 export const WithChunkEventHooks: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, chunkSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, chunkSize }): Node {
         return (
             <ChunkedUploady
                 debug
@@ -129,7 +129,7 @@ export const WithChunkEventHooks: UploadyStory = createUploadyStory(
     });
 
 export const WithAsyncChunkEventHooks: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, chunkSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, chunkSize }): Node {
         return (
             <ChunkedUploady
                 debug
@@ -193,10 +193,10 @@ const renderChunkedUploadyFromBundle = ({
 };
 
 export const UMD_CoreChunkedUI: UploadyStory = createUploadyStory(
-    ({
+    function StoryRender({
          destination,
          enhancer,
-     }): Node => {
+     }): Node {
         const [UploadyUI, setUploadyUI] = useState(null);
 
         const onBundleLoad = useCallback(() => {

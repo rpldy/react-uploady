@@ -8,6 +8,7 @@ import type {
 	BatchItem,
 	UploadData,
     Headers,
+    FILE_STATES as FileStatesType,
 } from "@rpldy/shared";
 
 import type { OnProgress, SendResult, SendOptions, XhrSendConfig } from "../types";
@@ -114,7 +115,7 @@ const processResponse = (sendRequest: SendRequest, options: SendOptions): Promis
 
             return checkIsResponseSuccessful(xhr, options)
                 .then((isSuccess) => {
-                    const state = isSuccess ? FILE_STATES.FINISHED : FILE_STATES.ERROR;
+                    const state: FileStatesType = isSuccess ? FILE_STATES.FINISHED : FILE_STATES.ERROR;
                     const status = xhr.status;
                     const resHeaders = parseResponseHeaders(xhr);
 

@@ -1,5 +1,5 @@
 // @flow
-import { BATCH_STATES, FILE_STATES } from "./enums";
+import type { BatchStatesEnum as BatchStatesType, FileStatesEnum as FileStatesType } from "./enums";
 
 export type Destination = {
 	//upload URL
@@ -24,8 +24,9 @@ export type ProgressInfo = {
 
 export type UploadData = {
     status: number,
-	state: FILE_STATES,
+	state: FileStatesType,
 	response: any,
+    ...
 };
 
 export type FormatParamGroupNameMethod = (number, string) => string;
@@ -39,7 +40,7 @@ export type IsSuccessfulCall = (xhr: XMLHttpRequest) => boolean;
 type BatchItemBase = {|
 	id: string,
 	batchId: string,
-	state: FILE_STATES,
+	state: FileStatesType,
 	uploadResponse?: any,
     uploadStatus: number,
 	//percentage of upload completed
@@ -77,7 +78,7 @@ export type Batch = {
 	id: string,
 	uploaderId: string,
 	items: BatchItem[],
-	state: BATCH_STATES,
+	state: BatchStatesType,
     //percentage of upload completed for batch items
     completed: number,
     //sum of bytes uploaded for batch items
@@ -130,13 +131,13 @@ export type UploadOptions = {|
     userData?: any,
 |};
 
-export type Trigger<T> = (string, ...args: mixed[]) => Promise<?T>[];
+export type Trigger<T> = (string, ...args: unknown[]) => Promise<?T>[];
 
-export type Cancellable = (string, ...args: mixed[]) => Promise<boolean>;
+export type Cancellable = (string, ...args: unknown[]) => Promise<boolean>;
 
 export type TriggerCancellableOutcome = Promise<boolean> | Cancellable;
 
-export type Updater<T> = (string, ...args: mixed[]) => Promise<?T>;
+export type Updater<T> = (string, ...args: unknown[]) => Promise<?T>;
 
 export type GetExact<T> = T & Partial<T>;
 

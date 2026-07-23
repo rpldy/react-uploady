@@ -1,8 +1,8 @@
 // @flow
 import type { Trigger, TriggerCancellableOutcome } from "./types";
 
-const triggerCancellable = (trigger: Trigger<mixed>, event?: string, ...args?: mixed[]): TriggerCancellableOutcome => {
-    const doTrigger = (event: string, ...args?: mixed[]): Promise<boolean> =>
+const triggerCancellable = (trigger: Trigger<unknown>, event?: string, ...args: unknown[]): TriggerCancellableOutcome => {
+    const doTrigger = (event: string, ...args: unknown[]): Promise<boolean> =>
         new Promise((resolve, reject) => {
             const results: Promise<any>[] = trigger(event, ...args);
 

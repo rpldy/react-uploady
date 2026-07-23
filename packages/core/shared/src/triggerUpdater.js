@@ -4,8 +4,8 @@ import type { Trigger, Updater } from "./types";
 
 type Outcome<T> = Promise<?T> | Updater<?T>;
 
-const triggerUpdater = <T>(trigger: Trigger<T>, event?: string, ...args?: mixed[]): Outcome<T> => {
-    const doTrigger = (event: string, ...args?: mixed[]): Promise<?T> => new Promise((resolve, reject) => {
+const triggerUpdater = <T>(trigger: Trigger<T>, event?: string, ...args: unknown[]): Outcome<T> => {
+    const doTrigger = (event: string, ...args: unknown[]): Promise<?T> => new Promise((resolve, reject) => {
         const results: Promise<?T>[] = trigger(event, ...args);
 
         if (results && results.length) {

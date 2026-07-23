@@ -37,7 +37,7 @@ import type { Node } from "react";
 import type { Batch, BatchItem, UploadyContextType } from "@rpldy/uploady";
 
 export const Simple: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug
@@ -58,7 +58,7 @@ const StyledUploadButton = styled(UploadButton)`
 `;
 
 export const WithStyledComponent: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug
@@ -88,7 +88,7 @@ const EventsLog = ({ setUpdater }: { setUpdater: (fn: any) => void }) => {
 };
 
 export const WithEventListeners: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         const { setUpdater, logEvent } = useEventsLogUpdater();
 
         const listeners = useMemo(
@@ -158,7 +158,7 @@ const HookedUploadButton = () => {
 };
 
 export const withEventHooks: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple }): Node => {
+    function StoryRender({ enhancer, destination, multiple }): Node {
         return (
             <Uploady
                 debug
@@ -172,7 +172,7 @@ export const withEventHooks: UploadyStory = createUploadyStory(
     });
 
 export const WithProgress: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple }): Node => {
+    function StoryRender({ enhancer, destination, multiple }): Node {
         return (
             <Uploady
                 debug
@@ -214,7 +214,7 @@ class ClassUsingCustomButton extends Component<any> {
 }
 
 export const WithClass: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple }): Node => {
+    function StoryRender({ enhancer, destination, multiple }): Node {
         return (
             <Uploady
                 debug
@@ -242,7 +242,7 @@ const DisabledDuringUploadButton = () => {
 };
 
 export const DisabledDuringUpload: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug
@@ -258,7 +258,7 @@ export const DisabledDuringUpload: UploadyStory = createUploadyStory(
     });
 
 export const DifferentConfiguration: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple }): Node => {
+    function StoryRender({ enhancer, destination, multiple }): Node {
         const destinationOverride = useMemo(
             () => ({
                 headers: { ...destination.headers, "x-test": "1234" },
@@ -303,7 +303,7 @@ const DivUploadButton = asUploadButton(forwardRef((props: any, ref: React.RefSet
 }));
 
 export const WithComponentAsButton: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug
@@ -376,7 +376,7 @@ const ExampleFormWithCustomButton = ({ url }: { url: string }) => {
 };
 
 export const WithCustomFileInputAndCustomButton: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <section>
                 <Uploady
@@ -394,7 +394,7 @@ export const WithCustomFileInputAndCustomButton: UploadyStory = createUploadySto
     });
 
 export const WithFileFilter: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
 
         const filterBySize = useCallback((file: unknown) => {
             //filter out files larger than 5MB
@@ -492,7 +492,7 @@ const MyForm = () => {
 };
 
 export const WithForm: UploadyStory = createUploadyStory(
-    ({ enhancer, destination,  grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination,  grouped, groupSize }): Node {
         return (
             <Uploady
                 debug

@@ -47,7 +47,7 @@ const SmallDropZone = styled(StyledDropZone)`
 `;
 
 export const Simple: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize, extOptions }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize, extOptions }): Node {
         return (
             <Uploady
                 debug
@@ -67,7 +67,7 @@ export const Simple: UploadyStory = createUploadyStory(
     });
 
 export const WithProgress: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         return (
             <Uploady
                 debug
@@ -88,7 +88,7 @@ export const WithProgress: UploadyStory = createUploadyStory(
     });
 
 export const WithDropHandler: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         const dropHandler = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             console.log(">>>> DROP EVENT ", e.dataTransfer);
             return "https://i.pinimg.com/originals/51/bf/9c/51bf9c7fdf0d4303140c4949afd1d7b8.jpg";
@@ -116,7 +116,7 @@ export const WithDropHandler: UploadyStory = createUploadyStory(
     });
 
 export const WithDropHandlerAndGetFiles: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize, maxDropCount }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize, maxDropCount }): Node {
         const dropHandler = useCallback(
             async (e: SyntheticMouseEvent<HTMLElement>, getFiles: GetFilesMethod) => {
                 const files = await getFiles();
@@ -159,7 +159,7 @@ const DifferentWrapper = styled.div`
 `;
 
 export const DifferentConfiguration: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
         const destinationOverride = useMemo(
             () => ({
                 ...destination,
@@ -298,7 +298,7 @@ const UserDataRenderer = () => {
 };
 
 export const WithThirdPartyDropZone: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize, extOptions }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize, extOptions }): Node {
         const overrideUserData = extOptions?.userData;
 
         return (
@@ -339,7 +339,7 @@ const MyClickableDropZone = forwardRef((props: UploadButtonProps, ref: any) => {
 const DropZoneButton = asUploadButton(MyClickableDropZone);
 
 export const WithAsUploadButton: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
 
         return (
             <Uploady
@@ -419,7 +419,7 @@ const StyledFullScreenDropZone = styled(UploadDropZone)`
 `;
 
 export const WithFullScreen: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, multiple, grouped, groupSize, extOptions }): Node => {
+    function StoryRender({ enhancer, destination, multiple, grouped, groupSize, extOptions }): Node {
         const indicatorRef = useRef<null | HTMLDivElement>(null);
 
         return (
@@ -482,7 +482,7 @@ export const WithFullScreen: UploadyStory = createUploadyStory(
     });
 
 export const WithDndTurnedOff: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, extOptions }): Node => {
+    function StoryRender({ enhancer, destination, extOptions }): Node {
         return (
             <Uploady
                 debug
@@ -511,7 +511,7 @@ const StyledDropZoneWithButton = styled(StyledDropZone)`
 `;
 
 export const WithUploadButtonInside: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, extOptions }): Node => {
+    function StoryRender({ enhancer, destination, extOptions }): Node {
         return (
             <Uploady
                 debug
@@ -536,7 +536,7 @@ const InsideContainer = styled.div`
 `;
 
 export const WithChildElement: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, extOptions }): Node => {
+    function StoryRender({ enhancer, destination, extOptions }): Node {
         return (
             <Uploady
                 debug
@@ -665,7 +665,7 @@ const ModalUploader = () => {
 };
 
 export const WithAriaModalOverlay: UploadyStory = createUploadyStory(
-    ({ enhancer, destination, extOptions }): Node => {
+    function StoryRender({ enhancer, destination, extOptions }): Node {
         const indicatorRef = useRef<?HTMLDivElement>(null);
         const containerRef= useRef<?HTMLDivElement>(null);
 

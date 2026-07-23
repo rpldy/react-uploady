@@ -15,7 +15,7 @@ import getChunkedEnhancer, { CHUNK_EVENTS } from "./src";
 import Readme from "./ChunkedSender.storydoc.mdx";
 
 export const WithChunkedSender: UploadyStory = createUploadyStory(
-    ({ destination, chunkSize, sendWithRangeHeader }): Node => {
+    function StoryRender({ destination, chunkSize, sendWithRangeHeader }): Node {
         const { url } = destination;
         const [file, setFile] = useState<?File>(null);
 

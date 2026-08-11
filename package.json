@@ -124,7 +124,7 @@
     "lerna": "^9.0.7",
     "license-webpack-plugin": "^4.0.2",
     "lodash": "^4.18.1",
-    "markdown-it": "^14.2.0",
+    "markdown-it": "^15.0.0",
     "mocha-junit-reporter": "^2.2.1",
     "overweight": "^2.0.0",
     "pacote": "^22.0.0",

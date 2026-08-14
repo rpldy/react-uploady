@@ -37,3 +37,8 @@ allowBuilds:
   esbuild: true
   nx: true
   weak-napi: true
+  # netlify-cli (storybook publish) - none of these are needed for a static deploy,
+  # and leaving them undecided fails install with ERR_PNPM_IGNORED_BUILDS
+  netlify-cli: false
+  sharp: false
+  unix-dgram: false

@@ -34,4 +34,8 @@ jobs:
                   NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
                   NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
                 run: |
-                    pnpm netlify deploy --prod --debug --cwd .sb-static
+                    if [[ -z "$NETLIFY_AUTH_TOKEN" || -z "$NETLIFY_SITE_ID" ]]; then
+                        echo "::error::NETLIFY_AUTH_TOKEN / NETLIFY_SITE_ID secrets are not set"
+                        exit 1
+                    fi
+                    pnpm netlify deploy --prod --no-build --dir .sb-static

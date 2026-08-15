@@ -38,4 +38,11 @@ jobs:
                         echo "::error::NETLIFY_AUTH_TOKEN / NETLIFY_SITE_ID secrets are not set"
                         exit 1
                     fi
-                    pnpm netlify deploy --prod --no-build --dir .sb-static
+                    # run outside the workspace root so netlify-cli doesn't try to
+                    # resolve one of the pnpm workspace packages as the deploy target
+                    cd "$(mktemp -d)"
+                    "$GITHUB_WORKSPACE/node_modules/.bin/netlify" deploy \
+                        --prod \
+                        --no-build \
+                        --site "$NETLIFY_SITE_ID" \
+                        --dir "$GITHUB_WORKSPACE/.sb-static"

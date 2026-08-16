@@ -152,7 +152,7 @@ importers:
         version: 10.7.0(jiti@2.6.1)(supports-color@8.1.1)
       eslint-plugin-ft-flow:
         specifier: ^3.0.11
-        version: 3.0.11(eslint@10.7.0(jiti@2.6.1)(supports-color@8.1.1))(hermes-eslint@0.36.1)
+        version: 3.0.11(eslint@10.7.0(jiti@2.6.1)(supports-color@8.1.1))(hermes-eslint@0.37.0(eslint@10.7.0(jiti@2.6.1)(supports-color@8.1.1)))
       eslint-plugin-import:
         specifier: ^2.32.0
         version: 2.32.0(@typescript-eslint/parser@8.61.0(@typescript/typescript6@6.0.2)(eslint@10.7.0(jiti@2.6.1)(supports-color@8.1.1))(supports-color@8.1.1))(eslint@10.7.0(jiti@2.6.1)(supports-color@8.1.1))(supports-color@8.1.1)
@@ -193,8 +193,8 @@ importers:
         specifier: ^17.6.0
         version: 17.6.0
       hermes-eslint:
-        specifier: ^0.36.1
-        version: 0.36.1
+        specifier: ^0.37.0
+        version: 0.37.0(eslint@10.7.0(jiti@2.6.1)(supports-color@8.1.1))
       html-webpack-plugin:
         specifier: ^5.6.7
         version: 5.6.7(webpack@5.108.4)
@@ -5404,8 +5404,13 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
 
-  hermes-eslint@0.36.1:
-    resolution: {integrity: sha512-aX8LUlLRHLAkELYWdz4IhRnZ/+Sbmmo5TzDEtsDiDuPIplaStzMnX84aTmPufQOyxZir5GjGxAiqdt+y4GcooA==}
+  hermes-eslint@0.37.0:
+    resolution: {integrity: sha512-GOZ2xpOe28u7hN5e4NMBCEVZ9KwmigPtFZDXoSRgUWL6sFlppxB5T7WBiLRO00c+sW5R0YM4cbOmnWtTK+DQcQ==}
+    peerDependencies:
+      eslint: ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      eslint:
+        optional: true
 
   hermes-estree@0.25.1:
     resolution: {integrity: sha512-0wUoCcLp+5Ev5pDW2OriHC2MJCbwLwuRx+gAqMTOkGKJJiBCLjtrvy4PWUGn6MIVefecRpzoOZ/UV6iGdOr+Cw==}
@@ -12891,10 +12896,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-ft-flow@3.0.11(eslint@10.7.0(jiti@2.6.1)(supports-color@8.1.1))(hermes-eslint@0.36.1):
+  eslint-plugin-ft-flow@3.0.11(eslint@10.7.0(jiti@2.6.1)(supports-color@8.1.1))(hermes-eslint@0.37.0(eslint@10.7.0(jiti@2.6.1)(supports-color@8.1.1))):
     dependencies:
       eslint: 10.7.0(jiti@2.6.1)(supports-color@8.1.1)
-      hermes-eslint: 0.36.1
+      hermes-eslint: 0.37.0(eslint@10.7.0(jiti@2.6.1)(supports-color@8.1.1))
       lodash: 4.18.1
       string-natural-compare: 3.0.1
 
@@ -13571,11 +13576,12 @@ snapshots:
 
   he@1.2.0: {}
 
-  hermes-eslint@0.36.1:
+  hermes-eslint@0.37.0(eslint@10.7.0(jiti@2.6.1)(supports-color@8.1.1)):
     dependencies:
-      esrecurse: 4.3.0
-      hermes-estree: 0.36.1
-      hermes-parser: 0.36.1
+      hermes-estree: 0.37.0
+      hermes-parser: 0.37.0
+    optionalDependencies:
+      eslint: 10.7.0(jiti@2.6.1)(supports-color@8.1.1)
 
   hermes-estree@0.25.1: {}
 

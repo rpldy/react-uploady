@@ -75,7 +75,7 @@
     "@eslint/js": "^10.0.1",
     "@monorepo-utils/package-utils": "^2.11.0",
     "@storybook/addon-docs": "10.4.6",
-    "@storybook/addon-links": "10.4.6",
+    "@storybook/addon-links": "10.5.0",
     "@storybook/addon-webpack5-compiler-babel": "^4.0.1",
     "@storybook/react-webpack5": "^10.4.6",
     "@testing-library/jest-dom": "^6.9.1",

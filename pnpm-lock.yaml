@@ -296,7 +296,7 @@ importers:
         version: 0.6.2
       yargs:
         specifier: ^18.0.0
-        version: 18.0.0
+        version: 18.1.0
     optionalDependencies:
       fsevents:
         specifier: ^2.3.3
@@ -5420,17 +5420,11 @@ packages:
   hermes-estree@0.25.1:
     resolution: {integrity: sha512-0wUoCcLp+5Ev5pDW2OriHC2MJCbwLwuRx+gAqMTOkGKJJiBCLjtrvy4PWUGn6MIVefecRpzoOZ/UV6iGdOr+Cw==}
 
-  hermes-estree@0.36.1:
-    resolution: {integrity: sha512-guv1nQ6IJ7S83NRFPWc3SA7IBZrdNC9kapwOq6uXvF4wP+sDCgjzQbKPCoyYmoyZRzztF/n/c36l/rccCZSiCw==}
-
   hermes-estree@0.37.0:
     resolution: {integrity: sha512-Frp4+A518C4zZgB2+Qo1srlM3y6nbrFbNNzBF3g7tEuQXHXTb2h39V25JQLNHotxclkD+AZTN/JCCpiTFlhIGg==}
 
   hermes-parser@0.25.1:
     resolution: {integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==}
-
-  hermes-parser@0.36.1:
-    resolution: {integrity: sha512-GApNk4zLHi2UWoWZZkx7LNCOSzLSc5lB55pZ/PhK7ycFeg7u5LcF88p/WbpIi1XUDtE0MpHE3uRR3u3KB7TjSQ==}
 
   hermes-parser@0.37.0:
     resolution: {integrity: sha512-8PuWcyaF6VHQHL2dbU+QEIkbtHYQrTX/6+ep4VcBLJ3f/ehevowr5Zj8LQfYXQQGFG2O+df7hIMtt4PkkhfK3Q==}
@@ -7743,6 +7737,10 @@ packages:
     resolution: {integrity: sha512-IIaP0g3iy9Cyy18w3M9YcaDudujEAVHKt3a3QJg1+sr/oX96TbaGUubG0hJyCjCBThFH+tFpcIyoUHUn1ogaLA==}
     engines: {node: '>=20'}
 
+  string-width@8.2.2:
+    resolution: {integrity: sha512-GaPUh5gfdrYzqeVNZvUfT23vYYxXzKYidUcnMtJg/3rxRV63EFZy3k6xfKlmfeJD0176lnUV/Usr3XcwSvFzpg==}
+    engines: {node: '>=20'}
+
   string.prototype.includes@2.0.1:
     resolution: {integrity: sha512-o7+c9bW6zpAdJHTtujeePODAhkuicdAryFsfVKwA+wGw89wJ4GTY484WTucM9hLtDEOpOvI+aHnzqnC5lHp4Rg==}
     engines: {node: '>= 0.4'}
@@ -8610,6 +8608,10 @@ packages:
 
   yargs@18.0.0:
     resolution: {integrity: sha512-4UEqdc2RYGHZc7Doyqkrqiln3p9X2DZVxaGbwhn2pi7MrRagKaOcIKe8L3OxYcbhXLgLFUS3zAYuQjKBQgmuNg==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=23}
+
+  yargs@18.1.0:
+    resolution: {integrity: sha512-2rAgRKu54VsHkqI0/tYkmluGXHD4KW7yZoycuqDQ15QOTnc2VVfy0nN/1eMhnQLO00A+dwtK20xuCnc1YGeUyg==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=23}
 
   yauzl@3.3.1:
@@ -9502,7 +9504,7 @@ snapshots:
       '@commitlint/read': 21.2.1(conventional-commits-parser@7.1.0)
       '@commitlint/types': 21.2.0
       tinyexec: 1.0.2
-      yargs: 18.0.0
+      yargs: 18.1.0
     transitivePeerDependencies:
       - '@types/node'
       - conventional-commits-filter
@@ -12199,7 +12201,7 @@ snapshots:
   cliui@9.0.1:
     dependencies:
       string-width: 7.2.0
-      strip-ansi: 7.1.2
+      strip-ansi: 7.2.0
       wrap-ansi: 9.0.2
 
   clone-deep@4.0.1:
@@ -13602,17 +13604,11 @@ snapshots:
 
   hermes-estree@0.25.1: {}
 
-  hermes-estree@0.36.1: {}
-
   hermes-estree@0.37.0: {}
 
   hermes-parser@0.25.1:
     dependencies:
       hermes-estree: 0.25.1
-
-  hermes-parser@0.36.1:
-    dependencies:
-      hermes-estree: 0.36.1
 
   hermes-parser@0.37.0:
     dependencies:
@@ -16375,6 +16371,11 @@ snapshots:
       get-east-asian-width: 1.6.0
       strip-ansi: 7.2.0
 
+  string-width@8.2.2:
+    dependencies:
+      get-east-asian-width: 1.6.0
+      strip-ansi: 7.2.0
+
   string.prototype.includes@2.0.1:
     dependencies:
       call-bind: 1.0.8
@@ -17231,6 +17232,15 @@ snapshots:
       escalade: 3.2.0
       get-caller-file: 2.0.5
       string-width: 7.2.0
+      y18n: 5.0.8
+      yargs-parser: 22.0.0
+
+  yargs@18.1.0:
+    dependencies:
+      cliui: 9.0.1
+      escalade: 3.2.0
+      get-caller-file: 2.0.5
+      string-width: 8.2.2
       y18n: 5.0.8
       yargs-parser: 22.0.0
 

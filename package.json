@@ -121,7 +121,7 @@
     "http-server": "^14.1.1",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
-    "lerna": "^9.0.7",
+    "lerna": "^10.0.0",
     "license-webpack-plugin": "^4.0.2",
     "lodash": "^4.18.1",
     "markdown-it": "^15.0.0",

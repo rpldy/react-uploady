@@ -197,7 +197,7 @@ importers:
         version: 0.37.0(eslint@10.7.0(jiti@2.6.1)(supports-color@8.1.1))
       html-webpack-plugin:
         specifier: ^5.6.7
-        version: 5.6.7(webpack@5.108.4)
+        version: 5.6.8(webpack@5.108.4)
       http-server:
         specifier: ^14.1.1
         version: 14.1.1(debug@4.4.3(supports-color@7.2.0))(supports-color@8.1.1)
@@ -5375,11 +5375,11 @@ packages:
     engines: {node: '>=12'}
     hasBin: true
 
-  html-webpack-plugin@5.6.7:
-    resolution: {integrity: sha512-md+vXtdCAe60s1k6AU3dUyMJnDxUyQAwfwPKoLisvgUF1IXjtlLsk2se54+qfL9Mdm26bbwvjJybpNx48NKRLw==}
+  html-webpack-plugin@5.6.8:
+    resolution: {integrity: sha512-MZmKQcTnhEh1SPSyMiEytIeDZDUoBZVorNHivQGXMASHf/BSGGOrKa2xQ5bGx3TCe1n109ecCt+cpww7wwWhKA==}
     engines: {node: '>=10.13.0'}
     peerDependencies:
-      '@rspack/core': 0.x || 1.x
+      '@rspack/core': 0.x || 1.x || 2.x
       webpack: ^5.108.4
     peerDependenciesMeta:
       '@rspack/core':
@@ -10634,7 +10634,7 @@ snapshots:
       css-loader: 7.1.2(webpack@5.108.4)
       es-module-lexer: 1.7.0
       fork-ts-checker-webpack-plugin: 9.1.0(@typescript/typescript6@6.0.2)(webpack@5.108.4)
-      html-webpack-plugin: 5.6.7(webpack@5.108.4)
+      html-webpack-plugin: 5.6.8(webpack@5.108.4)
       magic-string: 0.30.21
       semver: 7.8.5
       storybook: 10.5.0(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -13287,7 +13287,7 @@ snapshots:
       relateurl: 0.2.7
       terser: 5.48.0
 
-  html-webpack-plugin@5.6.7(webpack@5.108.4):
+  html-webpack-plugin@5.6.8(webpack@5.108.4):
     dependencies:
       '@types/html-minifier-terser': 6.1.0
       html-minifier-terser: 6.1.0

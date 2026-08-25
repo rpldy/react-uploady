@@ -191,7 +191,7 @@ jobs:
                     path: bundle
                     key: bundle-${{ runner.os }}-${{ hashFiles('bundle/**') }}
             -   name: Bundle Size Check (Overweight)
-                uses: yoavniran/overweight@7c42b1bde8f21d07a5322a0559315eacb13d5499 # v2.1.0
+                uses: yoavniran/overweight@f938c23b98f1f780507a6d28bb11172e84720871 # v2.2.0
                 with:
                     github-token: ${{ secrets.GITHUB_TOKEN }}
                     update-baseline: true

@@ -142,8 +142,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(cypress@15.16.0)
       cypress-mochawesome-reporter:
-        specifier: ^4.0.2
-        version: 4.0.2(cypress@15.16.0)(mocha@11.7.5)
+        specifier: ^5.0.0
+        version: 5.0.0(cypress@15.16.0)(mocha@11.7.5)
       cypress-multi-reporters:
         specifier: ^2.0.5
         version: 2.0.5(mocha@11.7.5)(supports-color@8.1.1)
@@ -4255,13 +4255,13 @@ packages:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
     engines: {node: '>= 0.8'}
 
-  commander@10.0.1:
-    resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
-    engines: {node: '>=14'}
-
   commander@14.0.3:
     resolution: {integrity: sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==}
     engines: {node: '>=20'}
+
+  commander@15.0.0:
+    resolution: {integrity: sha512-z67u4ZhzCL/Tydu1lJARtEZYWbWaN7oYLHbsuzocr6y4N6WZAagG3RQ4FW61V1/0+jImpj293XfrcYnd1qxtPg==}
+    engines: {node: '>=22.12.0'}
 
   commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
@@ -4441,8 +4441,8 @@ packages:
     peerDependencies:
       cypress: '>=6.3.0'
 
-  cypress-mochawesome-reporter@4.0.2:
-    resolution: {integrity: sha512-a51v+hjIcbPzKrzSW/PAbFzTcUKTuIUr2ntQn/VXQSYkPOmedZ731XInN6T9u2Yyb3/UyApfXiq4dQAj6GezJQ==}
+  cypress-mochawesome-reporter@5.0.0:
+    resolution: {integrity: sha512-1S2LML2oe8Rsargfcopk0Yt8/693zv6OVGhvJ/U/mLUGLmzSF8tV3ElkLdgzJTPwg/d+JgqTBh58zW63VXZRMg==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -6060,17 +6060,8 @@ packages:
   lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
 
-  lodash.isempty@4.4.0:
-    resolution: {integrity: sha512-oKMuF3xEeqDltrGMfDxAPGIVMSSRv8tbRSODbrs4KGsRRLEhrW8N8Rd4DRgB2+621hY8A8XwwrTVhXWpxFvMzg==}
-
   lodash.isfunction@3.0.9:
     resolution: {integrity: sha512-AirXNj15uRIMMPihnkInB4i3NHeb4iBtNg9WRWuK2o31S+ePwwNmDPaTL3o7dTJ+VXNZim7rFs4rxN4YU1oUJw==}
-
-  lodash.isobject@3.0.2:
-    resolution: {integrity: sha512-3/Qptq2vr7WeJbB4KHUSKlq8Pl7ASXi3UG6CMbBm8WRtXi8+GHm7mKaU3urfpSEzWe2wCIChs6/sdocUsTKJiA==}
-
-  lodash.isstring@4.0.1:
-    resolution: {integrity: sha512-0wJxfxH1wgO3GrbuP+dTTk7op+6L41QCXbGINEmD+ny/G/eCqGzxyCsh7159S+mgDDcoarnBw6PC1PS5+wUGgw==}
 
   lodash.once@4.1.1:
     resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
@@ -6339,19 +6330,15 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     hasBin: true
 
-  mochawesome-merge@5.1.0:
-    resolution: {integrity: sha512-vlyvs1e8BZ8dp1shZBiIIZrpHI2fRjIg2PPijIxRciMT7EiNdPR4KHVlZKw+OTVC2mCiFy5QfLtC8XyYUhsGMw==}
-    engines: {node: '>=22'}
-    hasBin: true
-
   mochawesome-report-generator@6.3.2:
     resolution: {integrity: sha512-iB6iyOUMyMr8XOUYTNfrqYuZQLZka3K/Gr2GPc6CHPe7t2ZhxxfcoVkpMLOtyDKnWbY1zgu1/7VNRsigrvKnOQ==}
     hasBin: true
 
-  mochawesome@7.1.4:
-    resolution: {integrity: sha512-fucGSh8643QkSvNRFOaJ3+kfjF0FhA/YtvDncnRAG0A4oCtAzHIFkt/+SgsWil1uwoeT+Nu5fsAnrKkFtnPcZQ==}
+  mochawesome@8.0.1:
+    resolution: {integrity: sha512-td4a9zw4KmPH6Z/IjA1JljEH4Ves860n8+xm35JfVmqqeHLvDpnU8WK9XSUCFZiY/lB+4wBdAMojiHexqvLtSQ==}
+    engines: {node: '>=22'}
     peerDependencies:
-      mocha: '>=7'
+      mocha: '>=8'
 
   mrmime@2.0.1:
     resolution: {integrity: sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ==}
@@ -7949,11 +7936,6 @@ packages:
 
   utila@0.4.0:
     resolution: {integrity: sha512-Z0DbgELS9/L/75wZbro8xAnT50pBVFQZ+hUEueGDU5FN51YSCYM+jdxsfCiHjwNP/4LCDD0i/graKpeBnOXKRA==}
-
-  uuid@8.3.2:
-    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
-    hasBin: true
 
   validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
@@ -11940,9 +11922,9 @@ snapshots:
     dependencies:
       delayed-stream: 1.0.0
 
-  commander@10.0.1: {}
-
   commander@14.0.3: {}
+
+  commander@15.0.0: {}
 
   commander@2.20.3: {}
 
@@ -12122,13 +12104,12 @@ snapshots:
     dependencies:
       cypress: 15.16.0
 
-  cypress-mochawesome-reporter@4.0.2(cypress@15.16.0)(mocha@11.7.5):
+  cypress-mochawesome-reporter@5.0.0(cypress@15.16.0)(mocha@11.7.5):
     dependencies:
-      commander: 10.0.1
+      commander: 15.0.0
       cypress: 15.16.0
-      fs-extra: 11.3.6
-      mochawesome: 7.1.4(mocha@11.7.5)
-      mochawesome-merge: 5.1.0
+      fs-extra: 11.4.0
+      mochawesome: 8.0.1(mocha@11.7.5)
       mochawesome-report-generator: 6.3.2
     transitivePeerDependencies:
       - mocha
@@ -14026,13 +14007,7 @@ snapshots:
 
   lodash.debounce@4.0.8: {}
 
-  lodash.isempty@4.4.0: {}
-
   lodash.isfunction@3.0.9: {}
-
-  lodash.isobject@3.0.2: {}
-
-  lodash.isstring@4.0.1: {}
 
   lodash.once@4.1.1: {}
 
@@ -14334,12 +14309,6 @@ snapshots:
       yargs-parser: 21.1.1
       yargs-unparser: 2.0.0
 
-  mochawesome-merge@5.1.0:
-    dependencies:
-      fs-extra: 11.3.6
-      glob: 13.0.6
-      yargs: 17.7.3
-
   mochawesome-report-generator@6.3.2:
     dependencies:
       chalk: 4.1.2
@@ -14354,19 +14323,12 @@ snapshots:
       tcomb-validation: 3.4.1
       yargs: 17.7.3
 
-  mochawesome@7.1.4(mocha@11.7.5):
+  mochawesome@8.0.1(mocha@11.7.5):
     dependencies:
-      chalk: 4.1.2
       diff: 5.2.2
       json-stringify-safe: 5.0.1
-      lodash.isempty: 4.4.0
-      lodash.isfunction: 3.0.9
-      lodash.isobject: 3.0.2
-      lodash.isstring: 4.0.1
       mocha: 11.7.5
       mochawesome-report-generator: 6.3.2
-      strip-ansi: 6.0.1
-      uuid: 8.3.2
 
   mrmime@2.0.1: {}
 
@@ -16340,8 +16302,6 @@ snapshots:
   util-deprecate@1.0.2: {}
 
   utila@0.4.0: {}
-
-  uuid@8.3.2: {}
 
   validate-npm-package-license@3.0.4:
     dependencies:

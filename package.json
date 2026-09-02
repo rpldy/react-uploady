@@ -99,7 +99,7 @@
     "core-js": "^3.49.0",
     "cypress": "^15.13.0",
     "cypress-intercept-formdata": "^1.0.0",
-    "cypress-mochawesome-reporter": "^4.0.2",
+    "cypress-mochawesome-reporter": "^5.0.0",
     "cypress-multi-reporters": "^2.0.5",
     "eslint": "^10.7.0",
     "eslint-plugin-ft-flow": "^3.0.11",

@@ -74,7 +74,7 @@
     "@eslint/compat": "^2.1.0",
     "@eslint/js": "^10.0.1",
     "@monorepo-utils/package-utils": "^2.11.0",
-    "@storybook/addon-docs": "10.4.6",
+    "@storybook/addon-docs": "10.5.0",
     "@storybook/addon-links": "10.4.6",
     "@storybook/addon-webpack5-compiler-babel": "^4.0.1",
     "@storybook/react-webpack5": "^10.4.6",

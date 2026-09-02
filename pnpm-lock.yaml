@@ -70,8 +70,8 @@ importers:
         specifier: 10.4.6
         version: 10.4.6(@types/react@19.2.14)(esbuild@0.27.7)(rollup@4.59.0)(storybook@10.5.0(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(vite@8.1.5(@types/node@25.9.1)(esbuild@0.27.7)(jiti@2.6.1)(terser@5.48.0)(yaml@2.8.2))(webpack@5.108.4)
       '@storybook/addon-links':
-        specifier: 10.4.6
-        version: 10.4.6(@types/react@19.2.14)(react@19.2.6)(storybook@10.5.0(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
+        specifier: 10.5.0
+        version: 10.5.0(@types/react@19.2.14)(react@19.2.6)(storybook@10.5.0(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
       '@storybook/addon-webpack5-compiler-babel':
         specifier: ^4.0.1
         version: 4.0.1(supports-color@7.2.0)(webpack@5.108.4)
@@ -3067,12 +3067,12 @@ packages:
       '@types/react':
         optional: true
 
-  '@storybook/addon-links@10.4.6':
-    resolution: {integrity: sha512-VGfERTsGRFmfvNP3SKprFWkC6Od5kXzSutT5PSZjQ/O9NnCdHhd/RILxFDN2TzZn9ywDc7t5b4AldKmSYCv3EQ==}
+  '@storybook/addon-links@10.5.0':
+    resolution: {integrity: sha512-pZlBqBjJc9Lo3LbcPx2ch0+BXD/efFQ0x9v7w+siCTs4IfqiePBuMK6ZSBQfxai+x/zHm0vKNTmOikEvP8j1wA==}
     peerDependencies:
       '@types/react': ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      storybook: ^10.4.6
+      storybook: ^10.5.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -10609,7 +10609,7 @@ snapshots:
       - vite
       - webpack
 
-  '@storybook/addon-links@10.4.6(@types/react@19.2.14)(react@19.2.6)(storybook@10.5.0(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))':
+  '@storybook/addon-links@10.5.0(@types/react@19.2.14)(react@19.2.6)(storybook@10.5.0(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))':
     dependencies:
       '@storybook/global': 5.0.0
       storybook: 10.5.0(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)

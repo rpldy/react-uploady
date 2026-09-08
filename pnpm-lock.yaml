@@ -218,7 +218,7 @@ importers:
         version: 4.18.1
       markdown-it:
         specifier: ^15.0.0
-        version: 15.0.0
+        version: 15.0.1
       mocha-junit-reporter:
         specifier: ^2.2.1
         version: 2.2.1(mocha@11.7.5)(supports-color@8.1.1)
@@ -3809,8 +3809,8 @@ packages:
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
-  argparse@3.0.0:
-    resolution: {integrity: sha512-BOp5NMrHqKxmq/OLr+clzzrRxgOKSLkcjmkWuChp7Irqwn4s74WjOBPIgWfA/HMcBnVkZ5XEuf9uUqzlpfCQ6A==}
+  argparse@3.0.1:
+    resolution: {integrity: sha512-nM4mHF/KM1v59ZNKX7zfusQz5wUAxR511YG8Vo6TyiV4aqhu++rbJW4v04xsWhpSsHFj66flT8P7znVpyO20xQ==}
 
   argue-cli@3.1.0:
     resolution: {integrity: sha512-DhBpBfXL4SS2uC0N922MMajKR3CdrTG0u2or1PNYgXMsrSzViJrbtvT0nCLlLGUI0plam/ZZCs7aAauHtW9thw==}
@@ -6142,8 +6142,8 @@ packages:
     resolution: {integrity: sha512-uUv1yxHzaKVVEPfcFeGSNov/Cehjv08ovlY8ImTljgL7Q+SiA0dAYLQ6SYVa2kkKqNj4Y3aZEI7xv2teadie0A==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
 
-  markdown-it@15.0.0:
-    resolution: {integrity: sha512-Lf8ajvVNdRpzSNB4VegxNy7gjs8gU35l4b4+ET49LrQC5PKYwLZ72u60LeJ9gv3qiaesuYjJWCyVeQmv/QWKQw==}
+  markdown-it@15.0.1:
+    resolution: {integrity: sha512-9/7gE95FNPkfUWrjJIoHZza2iLmuJlPD0UNMxPi7bxUrbCR525YZY0r+zyfes0dZI5ZZ/uNIXUJca0pJvtw41g==}
     hasBin: true
 
   math-intrinsics@1.1.0:
@@ -11449,7 +11449,7 @@ snapshots:
 
   argparse@2.0.1: {}
 
-  argparse@3.0.0: {}
+  argparse@3.0.1: {}
 
   argue-cli@3.1.0: {}
 
@@ -14131,9 +14131,9 @@ snapshots:
       - kerberos
       - supports-color
 
-  markdown-it@15.0.0:
+  markdown-it@15.0.1:
     dependencies:
-      argparse: 3.0.0
+      argparse: 3.0.1
       entities: 8.0.0
       linkify-it: 6.1.0
       mdurl: 2.1.0

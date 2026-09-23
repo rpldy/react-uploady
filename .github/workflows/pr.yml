@@ -262,7 +262,7 @@ jobs:
             -   name: unit-test
                 run: pnpm vitest:ci
             -   name: Show Report Coverage
-                uses: davelosert/vitest-coverage-report-action@8b157684c6a6b259b97d45e72b44242865c0f6a5 # v2
+                uses: davelosert/vitest-coverage-report-action@c4bbc33a89b7ace0e63d35f1f7d4bcee31155a73 # v2
             -   name: Test Report
                 uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3
                 if: success() || failure()
@@ -274,7 +274,7 @@ jobs:
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: Upload Coverage (master only)
-                uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+                uses: codecov/codecov-action@0b35c9ecc4f0529d0eb674914510c22f85b196b4 # v7.1.0
                 if: ${{ github.ref_name == 'master' }}
                 with:
                     token: ${{ secrets.CODECOV_TOKEN }}

@@ -224,7 +224,7 @@ importers:
         version: 2.2.1(mocha@11.7.5)(supports-color@8.1.1)
       overweight:
         specifier: ^2.0.0
-        version: 2.1.0
+        version: 2.2.0
       pacote:
         specifier: ^22.0.0
         version: 22.0.0(supports-color@7.2.0)
@@ -5055,8 +5055,8 @@ packages:
   fast-uri@3.1.7:
     resolution: {integrity: sha512-dOvZVzjdZdz7phd9v6jCbwxrBW3fK6n8Rc0CtdmM4bumzMnxywBYhuph6J819RRw/ku+rLbelwfMunktuzVVHg==}
 
-  fastq@1.20.1:
-    resolution: {integrity: sha512-GGToxJ/w1x32s/D2EKND7kTil4n8OVk/9mycTc4VDza13lOvpUZTGX3mFSCtV9ksdGBVzvsyAVLM6mHFThxXxw==}
+  fastq@1.20.3:
+    resolution: {integrity: sha512-XKv5nnLs6nLF71NgiKJLIZFLkPyIEuOselLG7ujZnGrRfQK8HpvY+WqKhAJUAdLomwVHErVS4LfxFlPq0/FTAw==}
 
   fd-package-json@2.0.0:
     resolution: {integrity: sha512-jKmm9YtsNXN789RS/0mSzOC1NUq9mkVd65vbSSVsKdjGvYXBuE4oWe2QOEoFeRmJg+lPuZxpmrfFclNhoRMneQ==}
@@ -6675,8 +6675,8 @@ packages:
   ospath@1.2.2:
     resolution: {integrity: sha512-o6E5qJV5zkAbIDNhGSIlyOhScKXgQrSRMilfph0clDfM0nEnBOlKlH4sWDmG95BW/CvwNz0vmm7dJVtU2KlMiA==}
 
-  overweight@2.1.0:
-    resolution: {integrity: sha512-JTJfbpOrezmMummzVqt5X3MBRiocrBQHu725Mzxy1gaCYfVucZhNQTnBlXtm3r79Y+pz6g5zgB1Q/QdKUh2UWg==}
+  overweight@2.2.0:
+    resolution: {integrity: sha512-V6S7an9AMz3PxEY6P9wn8qobWQ7R+jO/xcCCspnAtobUkS0O301T3XLBcEU1qmjI3sePXUehcW74h5jDTwvxSQ==}
     engines: {node: '>=24.0.0'}
     hasBin: true
 
@@ -6914,8 +6914,8 @@ packages:
     resolution: {integrity: sha512-FFw039TmrBqFK8ma/7OL3sDz/VytdtJr044/QUJtH0wK9lb9jLq9tJyIxUwtQJHwar2BqtiA4iCWSwo9JLkzFg==}
     engines: {node: '>=6'}
 
-  pretty-bytes@7.1.0:
-    resolution: {integrity: sha512-nODzvTiYVRGRqAOvE84Vk5JDPyyxsVk0/fbA/bq7RqlnhksGpset09XTxbpvLTIjoaF7K8Z8DG8yHtKGTPSYRw==}
+  pretty-bytes@7.1.3:
+    resolution: {integrity: sha512-U2KZ675nqba6XSBppSjU2pRgc9Ffx9+uUtd/RTWYmOawVkZuUbBYuwdtFZQmLv+yMgQ2TQxWWuOpyNje67J9tg==}
     engines: {node: '>=20'}
 
   pretty-error@4.0.0:
@@ -8446,8 +8446,8 @@ packages:
   zod@4.1.13:
     resolution: {integrity: sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==}
 
-  zod@4.4.3:
-    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+  zod@4.6.5:
+    resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
 
 snapshots:
 
@@ -9942,7 +9942,7 @@ snapshots:
   '@nodelib/fs.walk@1.2.8':
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
-      fastq: 1.20.1
+      fastq: 1.20.3
 
   '@npmcli/agent@4.0.2(supports-color@7.2.0)':
     dependencies:
@@ -13028,7 +13028,7 @@ snapshots:
 
   fast-uri@3.1.7: {}
 
-  fastq@1.20.1:
+  fastq@1.20.3:
     dependencies:
       reusify: 1.1.0
 
@@ -14959,7 +14959,7 @@ snapshots:
 
   ospath@1.2.2: {}
 
-  overweight@2.1.0:
+  overweight@2.2.0:
     dependencies:
       '@actions/core': 3.0.1
       '@actions/exec': 3.0.0
@@ -14967,8 +14967,8 @@ snapshots:
       cac: 7.0.0
       fast-glob: 3.3.3
       picocolors: 1.1.1
-      pretty-bytes: 7.1.0
-      zod: 4.4.3
+      pretty-bytes: 7.1.3
+      zod: 4.6.5
 
   own-keys@1.0.1:
     dependencies:
@@ -15275,7 +15275,7 @@ snapshots:
 
   pretty-bytes@5.6.0: {}
 
-  pretty-bytes@7.1.0: {}
+  pretty-bytes@7.1.3: {}
 
   pretty-error@4.0.0:
     dependencies:
@@ -16909,4 +16909,4 @@ snapshots:
 
   zod@4.1.13: {}
 
-  zod@4.4.3: {}
+  zod@4.6.5: {}

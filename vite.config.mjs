@@ -92,6 +92,8 @@ export default defineConfig({
     test: {
         environment: "jsdom",
         globals: true,
+        // vitest 5 default - mock calls/results are cleared before each test
+        clearMocks: true,
         setupFiles: "./test/vitest-setup.mjs",
         include: ["packages/**/*.test.js?(x)"],
         exclude: ["packages/**/lib/**", "packages/**/node_modules/**"],

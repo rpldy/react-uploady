@@ -11,7 +11,7 @@ vi.mock("../processFinishedRequest");
 vi.mock("../batchHelpers");
 
 describe("processBatchItems tests", () => {
-    let processBatchItems;
+    let processBatchItems, prepareUpdaterCalls;
     const mockNext = vi.fn();
     const mockPreparePreRequestItems = vi.fn();
     const waitForTest = () => Promise.resolve();
@@ -20,6 +20,8 @@ describe("processBatchItems tests", () => {
         getItemsPrepareUpdater.mockReturnValue(mockPreparePreRequestItems);
         const mod = await import("../processBatchItems");
         processBatchItems = mod.default;
+        // calls made on module import - captured before mocks are cleared for each test
+        prepareUpdaterCalls = [...getItemsPrepareUpdater.mock.calls];
     });
 
     beforeEach(() => {
@@ -63,13 +65,13 @@ describe("processBatchItems tests", () => {
     describe("preparePreRequestItems tests", () => {
         it("should return items from subject using preparePreRequestItems-retrieveItemsFromSubject", () => {
             const items = [1, 2];
-            expect(getItemsPrepareUpdater.mock.calls[1][1](items))
+            expect(prepareUpdaterCalls[1][1](items))
                 .toBe(items);
         });
 
         it("should return subject using preparePreRequestItems-createEventSubject", () => {
             const items = [1, 2], options = { test: true };
-            expect(getItemsPrepareUpdater.mock.calls[1][2](items, options))
+            expect(prepareUpdaterCalls[1][2](items, options))
                 .toStrictEqual({ items, options });
         });
     });

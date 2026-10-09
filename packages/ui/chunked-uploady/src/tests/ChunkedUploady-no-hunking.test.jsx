@@ -9,6 +9,9 @@ vi.mock("@rpldy/chunked-sender", () => ({
     CHUNKING_SUPPORT: false
 }));
 
+// calls made on module import - captured before mocks are cleared for each test
+const logWarningCalls = [...logWarning.mock.calls];
+
 
 describe("ChunkedUploady tests without chunking support", () => {
     const chunkedEnhancer = (uploader) => uploader;
@@ -20,7 +23,7 @@ describe("ChunkedUploady tests without chunking support", () => {
     it("should render Uploady when no chunk support", () => {
         render(<ChunkedUploady/>);
 
-        expect(logWarning).toHaveBeenCalledWith(false, expect.any(String));
+        expect(logWarningCalls).toContainEqual([false, expect.any(String)]);
         expect(getChunkedEnhancer).not.toHaveBeenCalled();
     });
 });

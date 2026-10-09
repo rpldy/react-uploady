@@ -6,8 +6,11 @@ vi.mock("@rpldy/shared-ui", () => ({
     generateUploaderEventHook: vi.fn(),
 }));
 
+// calls made on module import - captured before mocks are cleared for each test
+const hookCalls = [...generateUploaderEventHook.mock.calls];
+
 describe("useRetryListener hook test", () => {
     it("should generate retry even listener hook", () => {
-        expect(generateUploaderEventHook).toHaveBeenCalledWith(RETRY_EVENT, false);
+        expect(hookCalls).toContainEqual([RETRY_EVENT, false]);
     });
 });

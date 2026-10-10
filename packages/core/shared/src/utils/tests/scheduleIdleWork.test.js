@@ -1,10 +1,11 @@
+vi.mock("../hasWindow");
+
 describe("scheduleIdleWork tests", () => {
     let hasWindow, scheduleIdleWork;
     const orgRIC = window.requestIdleCallback;
     const orgCancelRIC = window.cancelIdleCallback;
 
     const init = async (preReq = null) => {
-        vi.mock("../hasWindow");
         const hasWindowMod = await import("../hasWindow");
         hasWindow = hasWindowMod.default;
 

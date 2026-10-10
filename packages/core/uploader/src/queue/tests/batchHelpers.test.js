@@ -8,12 +8,14 @@ vi.mock("../preSendPrepare");
 vi.mock("../itemHelpers");
 
 describe("batchHelpers tests", () => {
-    let batchHelpers;
+    let batchHelpers, prepareUpdaterCalls;
     const mockPrepareBatchStartItems = vi.fn();
 
     beforeAll(async() => {
         getItemsPrepareUpdater.mockReturnValue(mockPrepareBatchStartItems);
         batchHelpers = await import("../batchHelpers");
+        // calls made on module import - captured before mocks are cleared for each test
+        prepareUpdaterCalls = [...getItemsPrepareUpdater.mock.calls];
         // batchHelpers = require("../batchHelpers");
     });
 
@@ -318,18 +320,18 @@ describe("batchHelpers tests", () => {
 
     describe("prepareBatchStartItems tests", () => {
         it("should throw if prepareBatchStartItems validator gets batch", () => {
-            expect(() => getItemsPrepareUpdater.mock.calls[0][3]({ batch: {} }))
+            expect(() => prepareUpdaterCalls[0][3]({ batch: {} }))
                 .toThrow(`BATCH_START event handlers cannot update batch data. Only items & options`);
         });
 
         it("should not throw if prepareBatchStartItems validator doesnt get batch", () => {
-            expect(getItemsPrepareUpdater.mock.calls[0][3]())
+            expect(prepareUpdaterCalls[0][3]())
                 .toBeUndefined();
         });
 
         it("should return items from batch using prepareBatchStartItems-retrieveItemsFromSubject", () => {
             const items = [1,2,3];
-            expect(getItemsPrepareUpdater.mock.calls[0][1]({ items })).toBe(items);
+            expect(prepareUpdaterCalls[0][1]({ items })).toBe(items);
         });
     });
 

@@ -9,11 +9,14 @@ vi.mock("@rpldy/tus-sender", () => ({
     CHUNKING_SUPPORT: false
 }));
 
+// calls made on module import - captured before mocks are cleared for each test
+const logWarningCalls = [...logWarning.mock.calls];
+
 describe("test TusUploady without chucking support", () => {
     it("should render Uploady when no chunk support", () => {
         render(<TusUploady/>);
 
-        expect(logWarning).toHaveBeenCalledWith(false, expect.any(String));
+        expect(logWarningCalls).toContainEqual([false, expect.any(String)]);
         expect(getTusEnhancer).not.toHaveBeenCalled();
     });
 });

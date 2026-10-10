@@ -7,6 +7,10 @@ import "../eventListenerHooks";
 
 vi.mock("../hooksUtils");
 
+// calls made on module import - captured before mocks are cleared for each test
+const hookCalls = [...generateUploaderEventHook.mock.calls];
+const stateHookCalls = [...generateUploaderEventHookWithState.mock.calls];
+
 describe("eventListenerHooks tests", () => {
     describe("generateUploaderEventHook tests without scope", () => {
         it.each([
@@ -14,7 +18,7 @@ describe("eventListenerHooks tests", () => {
             [UPLOADER_EVENTS.REQUEST_PRE_SEND],
             [UPLOADER_EVENTS.ALL_ABORT],
         ])("should generate hook for: %s", (event) => {
-            expect(generateUploaderEventHook).toHaveBeenCalledWith(event, false);
+            expect(hookCalls).toContainEqual([event, false]);
         });
     });
 
@@ -32,7 +36,7 @@ describe("eventListenerHooks tests", () => {
             [UPLOADER_EVENTS.ITEM_ERROR],
             [UPLOADER_EVENTS.ITEM_FINALIZE],
         ])("should generate hook for: %s", (event) => {
-            expect(generateUploaderEventHook).toHaveBeenCalledWith(event);
+            expect(hookCalls).toContainEqual([event]);
         });
     });
 
@@ -41,11 +45,10 @@ describe("eventListenerHooks tests", () => {
             [UPLOADER_EVENTS.ITEM_PROGRESS, 0],
             [UPLOADER_EVENTS.BATCH_PROGRESS, 1]
         ])("should generate state hook for: %s", (event, index) => {
-            expect(generateUploaderEventHookWithState)
-                .toHaveBeenCalledWith(event, expect.any(Function));
+            expect(stateHookCalls)
+                .toContainEqual([event, expect.any(Function)]);
 
-            const calculator = generateUploaderEventHookWithState
-                .mock.calls[index][1];
+            const calculator = stateHookCalls[index][1];
 
             const item = { test: "foo" };
             expect(calculator(item)).toEqual(item);

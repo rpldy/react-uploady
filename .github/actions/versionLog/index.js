@@ -1,7 +1,9 @@
-const core = require("@actions/core"),
-    { extractChangelogNotesForCurrentVersion } = require("../../../scripts/extractChangeLogNotes");
+const { extractChangelogNotesForCurrentVersion } = require("../../../scripts/extractChangeLogNotes");
 
 const extractVersionLog = async () => {
+    //@actions/core v2+ is ESM only
+    const core = await import("@actions/core");
+
     try {
         console.log("about to retrieve version info from CHANGELOG");
         const { version, versionLog } = await extractChangelogNotesForCurrentVersion();
@@ -19,7 +21,7 @@ const extractVersionLog = async () => {
     }
 };
 
-extractVersionLog();
-
-// github = require("@actions/github"),
-//core.getInput('who-to-greet');
+extractVersionLog().catch((ex) => {
+    console.error("versionLog failed", ex);
+    process.exitCode = 1;
+});

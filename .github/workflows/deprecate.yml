@@ -79,7 +79,7 @@ jobs:
       - name: Prepare
         uses: ./.github/actions/prepare
         with:
-          with-frozen: false
+          with-frozen: true
           dir: ./.github
       - name: Fetch versions & Update workflow file
         id: fetch-versions

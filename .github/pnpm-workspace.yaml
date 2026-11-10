@@ -1,0 +1,6 @@
+# Makes .github its own pnpm workspace root, isolated from the repo root workspace.
+# Without this, pnpm (and Dependabot) run from .github resolve against the root
+# workspace and modify the root pnpm-lock.yaml instead of .github/pnpm-lock.yaml.
+
+# minimum release age: 10 days (14400 minutes)
+minimumReleaseAge: 14400

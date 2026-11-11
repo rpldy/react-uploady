@@ -1,6 +1,5 @@
 const { execSync } = require("child_process");
 const fs = require("fs");
-const core = require("@actions/core");
 const yaml = require("js-yaml");
 
 const MAX_VERSIONS_STORED = 99;
@@ -78,7 +77,9 @@ const compareVersions = (a, b) => {
 	return 0;
 };
 
-const main = () => {
+const main = async () => {
+	//@actions/core v2+ is ESM only
+	const core = await import("@actions/core");
 	let success = false;
 	let hasChanges = false;
 
@@ -133,4 +134,7 @@ const main = () => {
 	core.setOutput("saved_versions_change", `${hasChanges}`);
 };
 
-main();
+main().catch((ex) => {
+	console.error("save-versions-to-wf failed", ex);
+	process.exitCode = 1;
+});

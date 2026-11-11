@@ -1,8 +1,7 @@
-import { afterEach } from "vitest";
+import { afterEach, chai } from "vitest";
 import React from "react";
 import { render, renderIntoDocument, renderHook, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
-import { use as chaiUse } from "chai";
 import chaiDom from "chai-dom";
 import userEvent from "@testing-library/user-event";
 
@@ -11,7 +10,8 @@ global.renderIntoDocument = renderIntoDocument;
 global.renderHook = renderHook;
 global.userEvent = userEvent;
 
-chaiUse(chaiDom);
+//register on vitest's own chai instance so plugins apply regardless of the root chai version
+chai.use(chaiDom);
 
 // runs a cleanup after each test case (e.g. clearing jsdom)
 afterEach(() => {

@@ -1,0 +1,35 @@
+name: PR Title
+
+# PRs are squash-merged, so the PR title becomes the commit message on master.
+# Lint it with the same commitlint config used for local commits.
+on:
+    pull_request:
+        types:
+            - opened
+            - edited
+            - synchronize
+            - reopened
+
+permissions:
+    contents: read
+
+defaults:
+    run:
+        shell: bash
+
+jobs:
+    lint-title:
+        name: Lint PR Title
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+            -   name: Prepare
+                uses: ./.github/actions/prepare
+
+            -   name: Run commitlint on PR title
+                env:
+                    # pass via env, never interpolate untrusted title into the script
+                    PR_TITLE: ${{ github.event.pull_request.title }}
+                run: |
+                    printf '%s\n' "$PR_TITLE" | pnpm exec commitlint

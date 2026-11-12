@@ -40,10 +40,20 @@ const TestDropZoneWithGetFiles: React.FC = () => {
     </UploadDropZone>;
 };
 
+const TestDropZoneMultipleDragOverClasses: React.FC = () => {
+    return <UploadDropZone
+        destination={{ url: "test.com" }}
+        onDragOverClassName="border-2 bg-blue-50"
+    >
+        <span>upload</span>
+    </UploadDropZone>;
+};
+
 const testDropZone = (): React.JSX.Element => {
     return <>
         <TestDropZone/>
         <TestDropZoneWithGetFiles/>
+        <TestDropZoneMultipleDragOverClasses/>
     </>;
 };
 

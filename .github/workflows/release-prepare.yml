@@ -1,0 +1,113 @@
+name: Uploady Prepare Release
+
+# Step 1 of the release: creates a release branch with a suggested CHANGELOG entry and opens the release PR.
+# Edit the entry in the PR as needed, then run the "Uploady Release" workflow on the release branch.
+on:
+    workflow_dispatch:
+        inputs:
+            version:
+                type: choice
+                description: Which version to release? (auto = from conventional commits)
+                required: true
+                default: "auto"
+                options:
+                    - "auto"
+                    - "patch"
+                    - "minor"
+                    - "major"
+                    - "prepatch"
+                    - "preminor"
+                    - "premajor"
+                    - "prerelease"
+
+            preid:
+                type: choice
+                description: Which pre-release ID to use? (only for pre* versions)
+                required: false
+                default: ""
+                options:
+                    - ""
+                    - "rc"
+                    - "alpha"
+
+permissions:
+    contents: write
+    pull-requests: write
+
+defaults:
+    run:
+        shell: bash
+
+jobs:
+    prepare:
+        name: Prepare Release
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Validate inputs
+                env:
+                    VERSION: ${{ inputs.version }}
+                    PREID: ${{ inputs.preid }}
+                run: |
+                    if [ "$GITHUB_REF" != "refs/heads/master" ]; then
+                        echo "🔴 Prepare release must run on master" >> $GITHUB_STEP_SUMMARY
+                        exit 1
+                    fi
+
+                    if [[ ( "$VERSION" == pre* && -z "$PREID" ) || ( "$VERSION" != pre* && -n "$PREID" ) ]]; then
+                        echo "🔴 'preid' must be selected for pre-release versions (prepatch, preminor, premajor, prerelease) and only for them" >> $GITHUB_STEP_SUMMARY
+                        exit 1
+                    fi
+
+            -   uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+                with:
+                    fetch-depth: 0
+
+            -   name: Define GIT author
+                run: |
+                    git config user.email "ci@react-uploady.org"
+                    git config user.name "Uploady CI"
+
+            -   name: Prepare
+                uses: ./.github/actions/prepare
+
+            -   name: Generate changelog entry
+                id: entry
+                env:
+                    VERSION: ${{ inputs.version }}
+                    PREID: ${{ inputs.preid }}
+                run: |
+                    node scripts/release/prepareRelease.mjs --bump "$VERSION" ${PREID:+--preid "$PREID"} > "$RUNNER_TEMP/release.json"
+                    jq -r .entry "$RUNNER_TEMP/release.json" > "$RUNNER_TEMP/entry.md"
+                    echo "NEW_VERSION=$(jq -r .version "$RUNNER_TEMP/release.json")" >> $GITHUB_OUTPUT
+                    echo "PREV_VERSION=$(jq -r .previousVersion "$RUNNER_TEMP/release.json")" >> $GITHUB_OUTPUT
+                    echo "BUMP=$(jq -r .bump "$RUNNER_TEMP/release.json")" >> $GITHUB_OUTPUT
+
+            -   name: Create release branch and PR
+                env:
+                    GH_TOKEN: ${{ github.token }}
+                    NEW_VERSION: ${{ steps.entry.outputs.NEW_VERSION }}
+                    PREV_VERSION: ${{ steps.entry.outputs.PREV_VERSION }}
+                    BUMP: ${{ steps.entry.outputs.BUMP }}
+                run: |
+                    BRANCH="release-$NEW_VERSION"
+
+                    git switch -c "$BRANCH"
+                    git commit -a -m "docs: changelog for v$NEW_VERSION"
+                    git push origin "$BRANCH"
+
+                    {
+                        echo "Release **v$NEW_VERSION** ($BUMP, from v$PREV_VERSION)"
+                        echo
+                        echo "1. Review and edit the suggested entry in \`CHANGELOG.md\` on this branch (keep the \`## $NEW_VERSION\` heading - the release reads the version from it)."
+                        echo "2. Run the **Uploady Release** workflow on branch \`$BRANCH\`."
+                        echo "3. Squash-merge this PR once the release is published (keep the PR title)."
+                        echo
+                        echo "### Suggested entry"
+                        echo
+                        cat "$RUNNER_TEMP/entry.md"
+                    } > "$RUNNER_TEMP/pr-body.md"
+
+                    PR_URL=$(gh pr create --base master --head "$BRANCH" --title "chore: release v$NEW_VERSION" --body-file "$RUNNER_TEMP/pr-body.md")
+
+                    echo "## Prepared release v$NEW_VERSION :memo:" >> $GITHUB_STEP_SUMMARY
+                    echo "Release PR: $PR_URL" >> $GITHUB_STEP_SUMMARY

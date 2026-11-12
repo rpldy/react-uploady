@@ -29,6 +29,9 @@ overrides:
   # a different minor than root's own devDependency breaks `instanceof`
   # checks across the split (e.g. DefinePlugin.getCompilationHooks)
   "webpack": "^5.108.4"
+  # security: same-major patched versions for transitive deps (pnpm audit)
+  "brace-expansion@^2.0.0": "^2.1.7"
+  "undici@^7.0.0": "^7.30.1"
 
 allowBuilds:
   core-js: true

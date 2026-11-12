@@ -31,6 +31,7 @@ import {
     cropImage,
     getCsfExport,
     ReactCropWithImage,
+    PREVIEW_FALLBACK_URL,
     type CropData,
     type CsfExport,
     type UploadyStory,
@@ -74,7 +75,7 @@ export const Simple: UploadyStory = createUploadyStory(
                 <UploadPreview
                     maxPreviewImageSize={maxPreviewSize}
                     previewComponentProps={{ "data-test": "upload-preview" }}
-                    fallbackUrl="https://picsum.photos/50"
+                    fallbackUrl={PREVIEW_FALLBACK_URL}
                 />
             </Uploady>
         );
@@ -119,7 +120,7 @@ export const WithProgress: UploadyStory = createUploadyStory(
                 <StyledUploadButton>Upload with Progress</StyledUploadButton>
 
                 <UploadPreview
-                    fallbackUrl={"https://picsum.photos/50"}
+                    fallbackUrl={PREVIEW_FALLBACK_URL}
                     previewComponentProps={getPreviewProps}
                     PreviewComponent={CustomImagePreview}
                 />
@@ -152,7 +153,7 @@ export const WithCustomProps: UploadyStory = createUploadyStory(
                 <StyledUploadButton>Upload</StyledUploadButton>
 
                 <UploadPreview
-                    fallbackUrl={"https://picsum.photos/50"}
+                    fallbackUrl={PREVIEW_FALLBACK_URL}
                     previewComponentProps={getPreviewProps}
                 />
             </Uploady>
@@ -188,7 +189,7 @@ export const WithUrls: UploadyStory = createUploadyStory(
 
                 <Button onClick={onButtonClick}>Upload</Button>
 
-                <UploadPreview fallbackUrl={"https://picsum.photos/50"}/>
+                <UploadPreview fallbackUrl={PREVIEW_FALLBACK_URL}/>
             </Uploady>
         );
     });
@@ -221,7 +222,7 @@ export const WithRememberPrevious: UploadyStory = createUploadyStory(
                 <PreviewContainer>
                     <UploadPreview
                         rememberPreviousBatches
-                        fallbackUrl={"https://picsum.photos/50"}
+                        fallbackUrl={PREVIEW_FALLBACK_URL}
                     />
                 </PreviewContainer>
             </Uploady>
@@ -262,7 +263,7 @@ const PreviewsWithClear = ({ PreviewComp = UploadPreview }: { PreviewComp?: Reac
 				previewComponentProps={getPreviewProps}
 				previewMethodsRef={previewMethodsRef}
 				onPreviewsChanged={onPreviewsChanged}
-				fallbackUrl="https://picsum.photos/50"
+				fallbackUrl={PREVIEW_FALLBACK_URL}
             />
 		</PreviewContainer>
 	</>;
@@ -394,7 +395,7 @@ export const WithCrop: UploadyStory = createUploadyStory(
                     PreviewComponent={ItemPreviewWithCrop}
                     previewComponentProps={{ previewMethods: previewMethodsRef }}
                     previewMethodsRef={previewMethodsRef}
-                    fallbackUrl="https://picsum.photos/50"
+                    fallbackUrl={PREVIEW_FALLBACK_URL}
                 />
             </Uploady>
         );
@@ -613,7 +614,7 @@ const BatchCrop = withBatchStartUpdate(function StoryRender(props) {
             <UploadPreview
                 rememberPreviousBatches
                 PreviewComponent={ItemPreviewThumb}
-                fallbackUrl="https://picsum.photos/50"
+                fallbackUrl={PREVIEW_FALLBACK_URL}
                 previewComponentProps={getPreviewCompProps}
                 previewMethodsRef={previewMethodsRef}
             />

@@ -38,14 +38,14 @@
   "devDependencies": {
     "@rpldy/upload-button": "workspace:*",
     "@rpldy/uploady": "workspace:*",
-    "@testing-library/react": "^16",
+    "@testing-library/react": "^16.3.3",
     "flow-bin": "^0.328.0",
-    "react": "^19.2.0",
-    "react-aria-components": "^1.19.0",
+    "react": "^19.3.1",
+    "react-aria-components": "^1.22.1",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "react-dom": "^19.2.0",
-    "styled-components": "^6.1.19"
+    "react-dom": "^19.3.1",
+    "styled-components": "^6.6.0"
   },
   "peerDependencies": {
     "react": ">=16.8"

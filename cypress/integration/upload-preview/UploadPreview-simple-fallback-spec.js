@@ -1,4 +1,5 @@
 import uploadFile from "../uploadFile";
+import { PREVIEW_FALLBACK_URL } from "../../../story-helpers/consts";
 
 describe("UploadPreview - Simple", () => {
 	const fileName = "flower.jpg";
@@ -16,7 +17,7 @@ describe("UploadPreview - Simple", () => {
 			cy.get("img[data-test='upload-preview']")
 				.should("be.visible")
 				.invoke("attr", "src")
-				.should("match", /https:\/\/picsum.photos\/50/);
+				.should("eq", PREVIEW_FALLBACK_URL);
 		});
 	});
 });

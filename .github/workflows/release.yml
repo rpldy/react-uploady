@@ -1,34 +1,12 @@
 name: Uploady Release
 
+# Step 2 of the release: run on the release branch created by "Uploady Prepare Release".
+# The version is taken from the latest entry heading in CHANGELOG.md (## x.y.z).
 on:
     workflow_dispatch:
         branches:
             - "release-**"
         inputs:
-            version:
-                type: choice
-                description: Which version to release?
-                required: false
-                default: "patch"
-                options:
-                    - "patch"
-                    - "minor"
-                    - "major"
-                    - "prepatch"
-                    - "preminor"
-                    - "premajor"
-                    - "prerelease"
-
-            preid:
-                type: choice
-                description: Which pre-release ID to use?
-                required: false
-                default: ""
-                options:
-                    - ""
-                    - "rc"
-                    - "alpha"
-
             mergeMaster:
                 type: boolean
                 description: Merge latest master?
@@ -42,7 +20,6 @@ on:
                 default: false
 
 permissions:
-    pull-requests: write
     contents: write
 
 defaults:
@@ -55,17 +32,6 @@ jobs:
         environment: "Release"
         runs-on: ubuntu-latest
         steps:
-            -   name: Check is pre-release
-                id: is-pre
-                run: |
-                    echo "PRE_RELEASE=${{ inputs.version == 'premajor' || inputs.version == 'preminor' || inputs.version == 'prepatch' || inputs.version == 'prerelease' }}" >> $GITHUB_OUTPUT
-
-            -   name: Validate version with pre-id
-                if: ${{ steps.is-pre.outputs.PRE_RELEASE == 'true' && inputs.preid == '' }}
-                run: |
-                    echo "🔴 Failing Job - Cant use version: (premajor, preminor, prepatch, prerelease) without selecting 'preid' value too! >> $GITHUB_STEP_SUMMARY
-                    exit 1
-
             -   uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
                 with:
                     fetch-depth: 0
@@ -89,28 +55,33 @@ jobs:
             -   name: Define Lerna args
                 id: lerna-args
                 run: |
-                    if [ '${{ steps.is-pre.outputs.PRE_RELEASE }}' = 'true' ]
-                    then
-                        if [ '${{ inputs.preid }}' = 'rc' ]
-                        then
-                          echo "using args for RC release"
-                          echo "VERSION=${{ inputs.version }} --preid rc" >> $GITHUB_OUTPUT
-                          echo "PUBLISH=--dist-tag next" >> $GITHUB_OUTPUT
-                        elif [ '${{ inputs.preid }}' = 'alpha' ]
-                        then
-                          echo "using args for Alpha release"
-                          echo "VERSION=${{ inputs.version }}" >> $GITHUB_OUTPUT
-                          echo "PUBLISH=--dist-tag alpha" >> $GITHUB_OUTPUT
-                        fi
-                    else
-                      echo "using args for ${{ inputs.version }} release"
-                      echo "VERSION=${{ inputs.version }}" >> $GITHUB_OUTPUT
+                    VERSION=$(sed -n -E 's/^## ([0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?) .*/\1/p' CHANGELOG.md | head -n 1)
+
+                    if [ -z "$VERSION" ]; then
+                        echo "🔴 Failed to read version from the latest CHANGELOG.md entry" >> $GITHUB_STEP_SUMMARY
+                        exit 1
                     fi
+
+                    echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+                    case "$VERSION" in
+                        *-rc.*)
+                            echo "PRE_RELEASE=true" >> $GITHUB_OUTPUT
+                            echo "PUBLISH=--dist-tag next" >> $GITHUB_OUTPUT ;;
+                        *-alpha.*)
+                            echo "PRE_RELEASE=true" >> $GITHUB_OUTPUT
+                            echo "PUBLISH=--dist-tag alpha" >> $GITHUB_OUTPUT ;;
+                        *-*)
+                            echo "🔴 Unsupported pre-release id in version: $VERSION (use rc or alpha)" >> $GITHUB_STEP_SUMMARY
+                            exit 1 ;;
+                        *)
+                            echo "PRE_RELEASE=false" >> $GITHUB_OUTPUT ;;
+                    esac
 
             -   name: Create version
                 id: version
                 run: |
-                    echo "### Using version args: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
+                    echo "### Using version: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
                     lerna version ${{ steps.lerna-args.outputs.VERSION }} --sync-dist-version --force-publish=* --no-push --no-git-tag-version ${{ inputs.dry == false && '--yes' || ''  }}
 
             -   name: Build source
@@ -156,20 +127,5 @@ jobs:
                 with:
                     name: ${{ steps.version-name.outputs.NEW_VERSION }}
                     body: ${{ steps.version-log.outputs.VERSION_LOG }}
-                    prerelease: ${{ fromJSON(steps.is-pre.outputs.PRE_RELEASE) && true || false }}
+                    prerelease: ${{ fromJSON(steps.lerna-args.outputs.PRE_RELEASE) && true || false }}
                     tag: ${{ steps.version-name.outputs.NEW_VERSION }}
-
-            -   name: Create PR for Release
-                id: pr
-                uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
-                with:
-                    title: "chore: release ${{ steps.version-name.outputs.NEW_VERSION }}"
-                    body: "Automatic PR for version release: ${{ steps.version-name.outputs.NEW_VERSION }}"
-                    branch: ${{ github.ref }}
-                    base: "refs/heads/master"
-                    commit-message: "commit new version"
-
-            -   name: Report PR URL
-                if: ${{ steps.pr.outputs.pull-request-number != '' }}
-                run: |
-                   echo "Created PR: ${{ steps.pr.outputs.pull-request-url }}" >> $GITHUB_STEP_SUMMARY

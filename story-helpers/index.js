@@ -1,5 +1,5 @@
 // @flow
-import { DEFAULT_CHUNK_SIZE, DESTINATION_TYPES, UMD_NAMES } from "./consts";
+import { DEFAULT_CHUNK_SIZE, DESTINATION_TYPES, UMD_NAMES, PREVIEW_FALLBACK_URL } from "./consts";
 import StoryUploadProgress from "./StoryUploadProgress";
 import StoryAbortButton from "./StoryAbortButton";
 import useEventsLogUpdater from "./useEventsLogUpdater";
@@ -21,6 +21,7 @@ export {
     DEFAULT_CHUNK_SIZE,
     UMD_NAMES,
     DESTINATION_TYPES,
+    PREVIEW_FALLBACK_URL,
 
     StoryUploadProgress,
     StoryAbortButton,

@@ -10,6 +10,7 @@ import Uploady, {
 import UploadPreview, { PREVIEW_TYPES } from "@rpldy/upload-preview";
 import UploadButton from "@rpldy/upload-button";
 import ReactCropWithImage from "../../story-helpers/ReactCropWithImage";
+import { PREVIEW_FALLBACK_URL } from "../../story-helpers/consts";
 import intercept from "../integration/intercept";
 import uploadFile from "../integration/uploadFile";
 import { DEFAULT_URL } from "../constants";
@@ -127,7 +128,7 @@ const WithCrop = () => {
             PreviewComponent={ItemPreviewWithCrop}
             previewComponentProps={{ previewMethods: previewMethodsRef }}
             previewMethodsRef={previewMethodsRef}
-            fallbackUrl="https://picsum.photos/50"
+            fallbackUrl={PREVIEW_FALLBACK_URL}
         />
     </Uploady>;
 };

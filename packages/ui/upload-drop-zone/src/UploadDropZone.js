@@ -1,5 +1,5 @@
 // @flow
-import React, { forwardRef, useCallback, useImperativeHandle, useRef, useLayoutEffect } from "react";
+import React, { forwardRef, useCallback, useImperativeHandle, useRef, useLayoutEffect, useMemo } from "react";
 import { getFilesFromDragEvent } from "html-dir-content";
 import { isEmpty, isFunction } from "@rpldy/shared";
 import { useUploadyContext, markAsUploadOptionsComponent } from "@rpldy/shared-ui";
@@ -45,13 +45,16 @@ const UploadDropZone: React.ComponentType<UploadDropZoneProps> = forwardRef(
             uploadOptionsRef.current = uploadOptions;
         }, [uploadOptions]);
 
+        const dragOverClassNames = useMemo(() =>
+            String(onDragOverClassName || "").split(/\s+/).filter(Boolean), [onDragOverClassName]);
+
         const handleEnd = useCallback(() => {
             dragLeaveTrackerRef.current = false;
 
-            if (containerRef.current && onDragOverClassName) {
-                containerRef.current.classList.remove(onDragOverClassName);
+            if (containerRef.current && dragOverClassNames.length) {
+                containerRef.current.classList.remove(...dragOverClassNames);
             }
-        }, [onDragOverClassName, containerRef]);
+        }, [dragOverClassNames, containerRef]);
 
         const dropFileHandler = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             const getFiles = () => getFilesFromDragEvent(e, htmlDirContentParams || {});
@@ -75,11 +78,11 @@ const UploadDropZone: React.ComponentType<UploadDropZoneProps> = forwardRef(
             if (isHandling) {
                 dragLeaveTrackerRef.current = true;
 
-                if (containerRef.current && onDragOverClassName) {
-                    containerRef.current.classList.add(onDragOverClassName);
+                if (containerRef.current && dragOverClassNames.length) {
+                    containerRef.current.classList.add(...dragOverClassNames);
                 }
             }
-        }, [onDragOverClassName, containerRef, shouldHandleDrag, enableOnContains, noContainCheckForDrag]);
+        }, [dragOverClassNames, containerRef, shouldHandleDrag, enableOnContains, noContainCheckForDrag]);
 
         const onDragOver = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
             if (dragLeaveTrackerRef.current) {

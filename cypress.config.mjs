@@ -29,7 +29,8 @@ export default {
         specPattern: "cypress/integration/**/*-spec.js",
         chromeWebSecurity: false,
         video: false,
-        env: {
+        defaultBrowser: "chrome",
+        expose: {
             storybookPath: "/?path=/story/",
             components: {
                 mockSender: "core-mock-sender",

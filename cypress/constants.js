@@ -1,6 +1,6 @@
 export const DEFAULT_URL = "http://test.upload/url";
 
-export const UPLOAD_URL = Cypress.env("UPLOAD_URL") || DEFAULT_URL;
+export const UPLOAD_URL = Cypress.expose("UPLOAD_URL") || DEFAULT_URL;
 
 export const DEFAULT_METHOD = "POST";
 

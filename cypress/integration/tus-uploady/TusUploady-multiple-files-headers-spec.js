@@ -1,3 +1,4 @@
+import getRequestBodySize from "../getRequestBodySize";
 import uploadFile from "../uploadFile";
 import { createTusIntercepts, uploadUrl } from "./tusIntercept";
 import clearTusPersistStorage from "./clearTusPersistStorage";
@@ -86,10 +87,8 @@ describe("TusUploady - Multiple Files Same Headers", () => {
                 expect(request.headers["x-test"]).to.eq("abcd", "Should also have the predefined x-test header");
                 expect(request.headers["upload-metadata"]).to.contain("TestParam-batch-1.item-1", "Should have unique TestParam metadata for the first file");
                 expect(request.headers["tus-resumable"]).to.eq("1.0.0");
-                // With sendDataOnCreate, content-length should be > 0
-                if (request.headers["content-length"]) {
-                    expect(parseInt(request.headers["content-length"])).to.be.greaterThan(0);
-                }
+                // With sendDataOnCreate, request body should not be empty
+                expect(getRequestBodySize(request.body)).to.be.greaterThan(0);
             });
 
             // Assert last CREATE request also has the same Authorization header to verify consistency across multiple files
@@ -165,10 +164,8 @@ describe("TusUploady - Multiple Files Same Headers", () => {
                 expect(request.headers["x-test"]).to.eq("abcd", "Should also have the predefined x-test header");
                 expect(request.headers["upload-metadata"]).to.contain("TestParam-batch-1.item-1", "Should have unique TestParam metadata for the first file");
                 expect(request.headers["tus-resumable"]).to.eq("1.0.0");
-                // With sendDataOnCreate, content-length should be > 0
-                if (request.headers["content-length"]) {
-                    expect(parseInt(request.headers["content-length"])).to.be.greaterThan(0);
-                }
+                // With sendDataOnCreate, request body should not be empty
+                expect(getRequestBodySize(request.body)).to.be.greaterThan(0);
             });
 
             assertPatchRequest(chunkSize, 0, ({ request }) => {
@@ -191,10 +188,8 @@ describe("TusUploady - Multiple Files Same Headers", () => {
                 expect(request.headers["x-test"]).to.eq("abcd", "Should also have the predefined x-test header");
                 expect(request.headers["upload-metadata"]).to.contain("TestParam-batch-1.item-2", "Should have unique TestParam metadata for the first file");
                 expect(request.headers["tus-resumable"]).to.eq("1.0.0");
-                // With sendDataOnCreate, content-length should be > 0
-                if (request.headers["content-length"]) {
-                    expect(parseInt(request.headers["content-length"])).to.be.greaterThan(0);
-                }
+                // With sendDataOnCreate, request body should not be empty
+                expect(getRequestBodySize(request.body)).to.be.greaterThan(0);
             });
 
             assertPatchRequest(chunkSize, 1, ({ request }) => {

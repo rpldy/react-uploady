@@ -1,3 +1,4 @@
+import getRequestBodySize from "../getRequestBodySize";
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 import { BATCH_ADD } from "../../constants";
@@ -42,10 +43,9 @@ describe("UploadPreview - Crop in Form", () => {
                     expect(formData["field-age"]).to.eq("22");
                     expect(formData["file"]).to.eq(fileName);
                 })
-                .its("request.headers")
-                .its("content-length")
-                .then((length) => {
-                    expect(parseInt(length)).to.be.lessThan(CROPPED_MAX_SIZE);
+                .its("request.body")
+                .then((body) => {
+                    expect(getRequestBodySize(body)).to.be.lessThan(CROPPED_MAX_SIZE);
 
                     cy.storyLog().assertFileItemStartFinish(fileName, 1);
                 });

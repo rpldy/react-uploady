@@ -97,7 +97,7 @@
     "chalk": "^6.0.1",
     "concurrently": "^10.0.6",
     "core-js": "^3.51.0",
-    "cypress": "^15.21.1",
+    "cypress": "^16.2.1",
     "cypress-intercept-formdata": "^1.0.0",
     "cypress-mochawesome-reporter": "^5.0.0",
     "cypress-multi-reporters": "^2.0.5",

@@ -39,7 +39,7 @@
     "@rpldy/upload-button": "workspace:*",
     "@rpldy/uploady": "workspace:*",
     "@testing-library/react": "^16.3.3",
-    "flow-bin": "^0.328.0",
+    "flow-bin": "^0.339.0",
     "react": "^19.3.1",
     "react-aria-components": "^1.22.1",
     "react-dnd": "^16.0.1",

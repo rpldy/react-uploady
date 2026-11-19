@@ -1,3 +1,4 @@
+import getRequestBodySize from "../getRequestBodySize";
 import { createTusIntercepts, uploadUrl, parallelFinalUrl } from "./tusIntercept";
 import runParallelUpload from "./runParallerlUpload";
 
@@ -56,13 +57,13 @@ describe("TusUploady - Parallel with Data on Create", () => {
 
         runParallelUpload(fileName, parallel, (fileSize, createSize, startFinishEvents) => {
             assertCreateRequest(createSize + 1, ({ request }) => {
-                expect(request.headers["content-length"]).to.eq("50000");
+                expect(getRequestBodySize(request.body)).to.eq(50000);
             });
             assertCreateRequest(createSize + 1, ({ request }) => {
-                expect(request.headers["content-length"]).to.eq("50000");
+                expect(getRequestBodySize(request.body)).to.eq(50000);
             });
             assertCreateRequest(createSize - 1, ({ request }) => {
-                expect(request.headers["content-length"]).to.eq("50000");
+                expect(getRequestBodySize(request.body)).to.eq(50000);
             });
 
             assertPatchRequestTimes(0, 2, "only two patch requests for part 1, since create received first chunk");

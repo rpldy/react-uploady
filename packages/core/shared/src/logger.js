@@ -8,7 +8,7 @@ const isDebugOn = (): boolean | string => {
 	if (typeof isDebug !== "boolean") {
         isDebug = (hasWindow() &&
                 (("location" in window && !!~window.location.search.indexOf("rpldy_debug=true")) ||
-                    window[DEBUG_LOG_KEY] === true));
+                    (window as any)[DEBUG_LOG_KEY] === true));
     }
 
 	return !!isDebug;
@@ -16,7 +16,7 @@ const isDebugOn = (): boolean | string => {
 
 const setDebug = (debugOn: boolean) => {
 	if (hasWindow()) {
-	    window[DEBUG_LOG_KEY] = debugOn;
+	    (window as any)[DEBUG_LOG_KEY] = debugOn;
     }
 
 	isDebug = debugOn ? true : null;

@@ -7,12 +7,12 @@ const BISYM = Symbol.for("__rpldy-bi__");
 
 let iCounter = 0;
 
-const getBatchItemWithUrl = (batchItem: Object, url: string): BatchItem => {
+const getBatchItemWithUrl = (batchItem: any, url: string): BatchItem => {
     batchItem.url = url;
     return batchItem;
 };
 
-const getBatchItemWithFile = (batchItem: Object, file: Object): BatchItem => {
+const getBatchItemWithFile = (batchItem: any, file: any): BatchItem => {
     batchItem.file = file;
     return batchItem;
 };

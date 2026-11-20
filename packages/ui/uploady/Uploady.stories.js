@@ -54,7 +54,7 @@ const ContextUploadButton = ({ text = "Custom Upload Button" }: { text?: string,
 type ContextButtonWithHooksProps = {|
     delayPreSend?: number,
     delayBatchStart?: number,
-    preSendData?: Object,
+    preSendData?: any,
 |};
 
 const ContextUploadButtonWithPrepareHooks = (props: ?ContextButtonWithHooksProps) => {
@@ -218,7 +218,7 @@ export const WithDirectory: UploadyStory = createUploadyStory(
 type ProcessPendingProps = {|
     id?: string,
     title?: string,
-    options?: ?Object,
+    options?: ?any,
 |};
 
 const ProcessPending = ({ id = "process-pending", title = "PROCESS PENDING", options = undefined } : ProcessPendingProps) => {
@@ -387,7 +387,7 @@ export const WithCustomResponseFormat: UploadyStory = createUploadyStory(
      }): Node {
 
         const resFormatter = useCallback(
-            (res: Object, status: number, headers: Object) => {
+            (res: any, status: number, headers: any) => {
                 console.log(
                     "!!!!!! running custom server response formatter",
                     res,
@@ -417,7 +417,7 @@ export const WithCustomResponseFormat: UploadyStory = createUploadyStory(
 const UploadFormWithInternalInput = () => {
     const inputRef = useFileInput();
 
-    const onSelectChange = useCallback((e: SyntheticEvent<HTMLSelectElement>) => {
+    const onSelectChange = useCallback((e: React.SyntheticEvent<HTMLSelectElement>) => {
         if (e.currentTarget.value === "dir") {
             inputRef?.current?.setAttribute("webkitdirectory", "true");
         } else {
@@ -475,7 +475,7 @@ const ExampleRequestPreSend = () => {
                         "x-file-names-lengths": namesLengths,
                     }
                 },
-                ...(window.__extPreSendOptions || {})
+                ...((window as any).__extPreSendOptions || {})
             }
         };
     });
@@ -533,8 +533,8 @@ export const WithFailingMockSender: UploadyStory = createUploadyStory(
     });
 
 //expose react and react-dom for Uploady bundle
-window.react = React;
-window["react-dom"] = ReactDOM;
+(window as any).react = React;
+(window as any)["react-dom"] = ReactDOM;
 
 //mimic rendering with react and react-uploady loaded through <script> tags
 const renderUploadyFromBundle = ({
@@ -542,8 +542,8 @@ const renderUploadyFromBundle = ({
                                      enhancer,
                                      multiple,
                                  }: UploadyStoryParams) => {
-    const rpldy = window.rpldy,
-        react = window.react;
+    const rpldy = (window as any).rpldy,
+        react = (window as any).react;
     let result;
 
     try {
@@ -612,7 +612,7 @@ const renderUploadyAll = ({
                               enhancer,
                               multiple,
                           }: UploadyStoryParams) => {
-    const rpldy = window.rpldy, react = window.react;
+    const rpldy = (window as any).rpldy, react = (window as any).react;
 
     const uploadButton = react.createElement(rpldy.uploadButton.UploadButton, { id: "upload-button" });
 

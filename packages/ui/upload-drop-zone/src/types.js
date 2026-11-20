@@ -3,13 +3,13 @@ import type { UploadOptions } from "@rpldy/shared";
 
 export type GetFilesMethod = () => Promise<File[]>;
 
-export type DropHandlerMethod = (e: SyntheticDragEvent<HTMLDivElement>, getFiles: GetFilesMethod) => FileList | unknown[]
+export type DropHandlerMethod = (e: React.DragEvent<HTMLDivElement>, getFiles: GetFilesMethod) => FileList | unknown[]
 
-export type ShouldHandleDragMethod = (e: SyntheticDragEvent<HTMLDivElement>) => boolean;
+export type ShouldHandleDragMethod = (e: React.DragEvent<HTMLDivElement>) => boolean;
 
 export type ShouldHandleDrag = boolean | ShouldHandleDragMethod;
 
-export type ShouldRemoveDragOverMethod = (e: SyntheticDragEvent<HTMLElement>) => boolean;
+export type ShouldRemoveDragOverMethod = (e: React.DragEvent<HTMLElement>) => boolean;
 
 export type UploadDropZoneProps =  {|
 	...UploadOptions,
@@ -22,6 +22,6 @@ export type UploadDropZoneProps =  {|
     shouldHandleDrag?: ShouldHandleDrag,
     enableOnContains?: boolean,
     noContainCheckForDrag?: boolean,
-    extraProps?: Object,
+    extraProps?: any,
     children?: React.Node,
 |};

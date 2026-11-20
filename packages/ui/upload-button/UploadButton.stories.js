@@ -348,7 +348,7 @@ const ExampleFormWithCustomButton = ({ url }: { url: string }) => {
     const inputRef = useRef<?HTMLInputElement>();
     useFileInput(inputRef);
 
-    const onSelectChange = useCallback((e: SyntheticEvent<HTMLSelectElement>) => {
+    const onSelectChange = useCallback((e: React.SyntheticEvent<HTMLSelectElement>) => {
         const select = e.currentTarget;
         setSelectDir(select.value === "dir");
     }, []);
@@ -467,7 +467,7 @@ const MyForm = () => {
         processPending({ params: fields });
     }, [fields, processPending]);
 
-    const onFieldChange = useCallback((e: SyntheticInputEvent<HTMLInputElement>) => {
+    const onFieldChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setFields({
             ...fields,
             [e.currentTarget.id]: e.currentTarget.value,

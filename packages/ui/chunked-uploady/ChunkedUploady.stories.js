@@ -26,8 +26,8 @@ import Readme from "./ChunkedUploady.storydoc.mdx";
 import type { Node } from "react";
 
 //expose react and react-dom for Uploady bundle
-window.react = React;
-window["react-dom"] = ReactDOM;
+(window as any).react = React;
+(window as any)["react-dom"] = ReactDOM;
 
 const UploadButtonWithUniqueIdHeader = () => {
     useRequestPreSend((data) => {
@@ -149,8 +149,8 @@ const renderChunkedUploadyFromBundle = ({
                                             destination,
                                             enhancer,
                                         }: UploadyStoryParams) => {
-    const rpldy = window.rpldy,
-        react = window.react;
+    const rpldy = (window as any).rpldy,
+        react = (window as any).react;
 
     const MyUploadButton = () => {
         rpldy.uploady.useRequestPreSend(() => {

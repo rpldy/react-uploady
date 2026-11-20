@@ -5,12 +5,12 @@ import usePasteHandler from "./usePasteHandler";
 import type { UploadOptions } from "@rpldy/shared";
 import type { PasteUploadHandler, PasteUploadHookResult, PasteElementRef } from "./types";
 
-const registerHandler = (refElm: ?Element, handler: ClipboardEventListener) => {
+const registerHandler = (refElm: ?HTMLElement, handler: (e: ClipboardEvent) => void) => {
     const target = refElm || window;
     target.addEventListener("paste", handler);
 };
 
-const unregisterHandler = (refElm: ?Element, handler: ClipboardEventListener) => {
+const unregisterHandler = (refElm: ?HTMLElement, handler: (e: ClipboardEvent) => void) => {
     const target = refElm || window;
     target.removeEventListener("paste", handler);
 };

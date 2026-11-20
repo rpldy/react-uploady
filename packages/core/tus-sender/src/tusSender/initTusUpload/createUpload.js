@@ -31,6 +31,7 @@ export const resolveUploadUrl = (createUrl: string, location: string): string =>
 const handleSuccessfulCreateResponse =
     (item: BatchItem, url: string, tusState: TusState, createResponse: XMLHttpRequest, sentData: ?FileLike | Blob): InitData => {
         const { options } = tusState.getState();
+        // $FlowFixMe[incompatible-type] - Location header is expected on a successful create response
         const uploadUrl = resolveUploadUrl(url, createResponse.getResponseHeader("Location"));
         let offset = 0,
             isDone = false;
@@ -38,7 +39,7 @@ const handleSuccessfulCreateResponse =
         logger.debugLog(`tusSender.create: successfully created upload for item: ${item.id} - upload url = ${uploadUrl}`);
 
         if (options.sendDataOnCreate) {
-            const resOffset = parseInt(createResponse.getResponseHeader("Upload-Offset"));
+            const resOffset = parseInt(createResponse.getResponseHeader("Upload-Offset") ?? "");
             offset = !isNaN(resOffset) ? resOffset : offset;
 
             //consider as done when file smaller than chunkSize

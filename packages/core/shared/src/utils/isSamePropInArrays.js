@@ -3,7 +3,7 @@
 const getPropsExtractor = (prop: string | string[]) => {
     const props = [].concat(prop);
 
-    return (arr: Object[]) =>
+    return (arr: any[]) =>
         arr.map((i) => props.map((p) => i[p]).join());
 };
 
@@ -11,7 +11,7 @@ const getPropsExtractor = (prop: string | string[]) => {
 stringifies props together - will return true for same type of value (ex: function)
 even if refs are different
  */
-const isSamePropInArrays = (arr1: Object[], arr2: Object[], prop: string | string[]): boolean => {
+const isSamePropInArrays = (arr1: any[], arr2: any[], prop: string | string[]): boolean => {
     let diff = true;
     const propsExtractor = getPropsExtractor(prop);
 

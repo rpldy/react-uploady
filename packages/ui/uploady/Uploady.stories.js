@@ -37,6 +37,9 @@ import Readme from "./Uploady.storydoc.mdx";
 import type { Node } from "react";
 import type { Batch, BatchItem } from "@rpldy/shared";
 
+// storybook indexer cannot parse `as` casts; window custom globals need any (flow 0.339 TS DOM types)
+const anyWindow: any = window;
+
 const ContextUploadButton = ({ text = "Custom Upload Button" }: { text?: string, ... }) => {
     const uploadyContext = useUploady();
 
@@ -475,7 +478,7 @@ const ExampleRequestPreSend = () => {
                         "x-file-names-lengths": namesLengths,
                     }
                 },
-                ...((window as any).__extPreSendOptions || {})
+                ...(anyWindow.__extPreSendOptions || {})
             }
         };
     });
@@ -533,8 +536,8 @@ export const WithFailingMockSender: UploadyStory = createUploadyStory(
     });
 
 //expose react and react-dom for Uploady bundle
-(window as any).react = React;
-(window as any)["react-dom"] = ReactDOM;
+anyWindow.react = React;
+anyWindow["react-dom"] = ReactDOM;
 
 //mimic rendering with react and react-uploady loaded through <script> tags
 const renderUploadyFromBundle = ({
@@ -542,8 +545,8 @@ const renderUploadyFromBundle = ({
                                      enhancer,
                                      multiple,
                                  }: UploadyStoryParams) => {
-    const rpldy = (window as any).rpldy,
-        react = (window as any).react;
+    const rpldy = anyWindow.rpldy,
+        react = anyWindow.react;
     let result;
 
     try {
@@ -612,7 +615,7 @@ const renderUploadyAll = ({
                               enhancer,
                               multiple,
                           }: UploadyStoryParams) => {
-    const rpldy = (window as any).rpldy, react = (window as any).react;
+    const rpldy = anyWindow.rpldy, react = anyWindow.react;
 
     const uploadButton = react.createElement(rpldy.uploadButton.UploadButton, { id: "upload-button" });
 

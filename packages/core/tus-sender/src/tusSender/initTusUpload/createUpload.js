@@ -39,7 +39,7 @@ const handleSuccessfulCreateResponse =
         logger.debugLog(`tusSender.create: successfully created upload for item: ${item.id} - upload url = ${uploadUrl}`);
 
         if (options.sendDataOnCreate) {
-            const resOffset = parseInt(createResponse.getResponseHeader("Upload-Offset") ?? "");
+            const resOffset = parseInt(String(createResponse.getResponseHeader("Upload-Offset")));
             offset = !isNaN(resOffset) ? resOffset : offset;
 
             //consider as done when file smaller than chunkSize

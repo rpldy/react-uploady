@@ -21,7 +21,7 @@ export type PreviewItem = {|
     id: string,
     removePreview: () => void,
     isFallback?: boolean,
-    props?: Object,
+    props?: any,
 |};
 
 export type PreviewData = {
@@ -34,7 +34,7 @@ export type FallbackType = string | BasicPreviewItem;
 
 export type FallbackMethod = (file: Object) => ?FallbackType;
 
-export type PreviewComponentPropsOrMethod = Object | (item: ?BatchItem, url: string, type: PreviewType) => Object
+export type PreviewComponentPropsOrMethod = any | (item: ?BatchItem, url: string, type: PreviewType) => any
 
 export type PreviewMethods = {
 	clear: () => void,

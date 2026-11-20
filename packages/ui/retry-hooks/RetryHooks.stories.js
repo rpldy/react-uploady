@@ -66,7 +66,7 @@ const RetryUi = () => {
     }, [retry]);
 
     const onRetryItem = useCallback(
-        (e: SyntheticMouseEvent<HTMLLIElement>) => {
+        (e: React.MouseEvent<HTMLLIElement>) => {
             const itemId = e.currentTarget.dataset["id"];
             retry(itemId);
         },
@@ -74,9 +74,9 @@ const RetryUi = () => {
     );
 
     const onRetryBatch = useCallback(
-        (e: SyntheticMouseEvent<HTMLLIElement>) => {
+        (e: React.MouseEvent<HTMLLIElement>) => {
             const batchId = e.currentTarget.dataset["id"];
-            retryBatch(batchId);
+            retryBatch(batchId ?? "");
         },
         [retryBatch],
     );

@@ -30,7 +30,7 @@ export type TusOptions = {
 	//Whether to ignore File's modified date when creating key for storage (default: false)
 	ignoreModifiedDateInStorage?: boolean,
     //Headers to use for the resume check (HEAD) request
-    resumeHeaders?: Object
+    resumeHeaders?: any
 };
 
 export type RequestResult<T> = {

@@ -20,7 +20,7 @@ type UpdatedResponse = boolean | { items: BatchItem[], options: UploaderCreateOp
 
 const mergeWithUndefined = getMerge({ undefinedOverwrites: true });
 
-const processPrepareResponse = (eventType: string, items: BatchItem[], options: UploaderCreateOptions, updated: ?UpdatedResponse) => {
+const processPrepareResponse = (eventType: string, items: BatchItem[], options: UploaderCreateOptions, updated: ?UpdatedResponse): ItemsSendData => {
     let usedOptions = options, usedItems = items;
 
     if (updated && typeof updated !== "boolean") {
@@ -97,7 +97,7 @@ const prepareItems = <T>(
             ): Promise<ItemsSendData> => {
     const items = retrieveItemsFromSubject(subject);
                 const batchOptions = queue.getState().batches[items[0].batchId].batchOptions;
-                const eventSubject: Object = createEventSubject?.(subject, batchOptions) || subject;
+                const eventSubject: any = createEventSubject?.(subject, batchOptions) || subject;
 
                 return triggerItemsPrepareEvent(queue, eventSubject, items, batchOptions, eventType, validateResponse)
         .then((prepared: ItemsSendData) => {

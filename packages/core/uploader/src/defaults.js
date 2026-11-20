@@ -5,7 +5,7 @@ export const DEFAULT_PARAM_NAME = "file";
 
 export const DEFAULT_FILTER = (input: any, i: number, arr: any[]): Promise<boolean> | boolean => true;
 
-export const DEFAULT_OPTIONS: Object = devFreeze({
+export const DEFAULT_OPTIONS: any = devFreeze({
     autoUpload: true,
     clearPendingOnAdd: false,
     inputFieldName: "file",

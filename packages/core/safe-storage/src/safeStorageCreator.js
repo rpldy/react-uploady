@@ -9,8 +9,8 @@ const safeStorageCreator = (storageType: string): SafeStorage => {
         try {
             if (hasWindow() && storageType in window) {
                 const key = "__lsTest";
-                window[storageType].setItem(key, `__test-${Date.now()}`);
-                window[storageType].removeItem(key);
+                (window as any)[storageType].setItem(key, `__test-${Date.now()}`);
+                (window as any)[storageType].removeItem(key);
                 isSupported = true;
             }
         }
@@ -31,14 +31,14 @@ const safeStorageCreator = (storageType: string): SafeStorage => {
     const safeStorage = methods.reduce<{ length: number, isSupported: boolean, [string]: (...args: unknown[]) => void }>(
         (res, method) => {
             res[method] = (...args: unknown[]) =>
-                isSupported ? window[storageType][method](...args) : undefined;
+                isSupported ? (window as any)[storageType][method](...args) : undefined;
 
             return res;
         }, base);
 
     Object.defineProperty(safeStorage, "length", {
         get(){
-            return isSupported ? window[storageType].length : 0;
+            return isSupported ? (window as any)[storageType].length : 0;
         }
     });
 

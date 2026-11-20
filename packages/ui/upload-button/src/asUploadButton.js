@@ -17,7 +17,7 @@ const asUploadButton = (Component: ComponentType<any>): React.ComponentType<Uplo
             uploadOptionsRef.current = uploadOptions;
         }, [uploadOptions]);
 
-        const onButtonClick = useCallback((e: SyntheticMouseEvent<HTMLElement>) => {
+        const onButtonClick = useCallback((e: React.MouseEvent<HTMLElement>) => {
             showFileUpload(uploadOptionsRef.current);
             onClick?.(e);
         }, [showFileUpload, uploadOptionsRef, onClick]);

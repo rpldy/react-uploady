@@ -27,6 +27,7 @@ const isChunkingSupported = (): boolean => {
 const CHUNKING_SUPPORT: boolean = isChunkingSupported();
 
 const getChunkDataFromFile = (file: FileLike, start: number, end: number): ?Blob => {
+    // $FlowExpectedError[invalid-this-arg] sliceMethod is read from Blob.prototype
     const blob = sliceMethod?.call(file, start, end, file.type);
 
     if (blob) {

@@ -298,7 +298,7 @@ type PreviewButtonsProps = {
     finished: boolean,
     crop: ?Object,
     updateRequest: ?(boolean | Object) => void,
-    onUploadCancel: (e: SyntheticEvent<HTMLButtonElement>) => void,
+    onUploadCancel: (e: React.SyntheticEvent<HTMLButtonElement>) => void,
     onUploadCrop: () => Promise<any>,
 };
 
@@ -574,7 +574,7 @@ const BatchCrop = withBatchStartUpdate(function StoryRender(props) {
     const previewMethodsRef = useRef<?PreviewMethods>(null);
     const [selected, setSelected] = useState<?{url: ?string, id: ?string }>({ url: null, id: null });
     const [finishedItems, setFinishedItems] = useState<string[]>([]);
-    const [cropped, setCropped] = useState<Object>({});
+    const [cropped, setCropped] = useState<any>({});
     const hasData = !!(id && requestData);
     const selectedItem = !!selected && requestData?.items.find(({ id }) => id === selected.id);
 
@@ -895,7 +895,7 @@ const MyForm = () => {
 
     const onSubmit = () => processPending({ params: fields });
 
-    const onFieldChange = (e: SyntheticEvent<HTMLInputElement>) => {
+    const onFieldChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
         setFields({
             ...fields,
             [e.currentTarget.id]: e.currentTarget.value

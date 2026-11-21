@@ -17,7 +17,7 @@ export const KNOWN_EXTENSIONS = {
 
 export const FD_STORAGE_PREFIX = "rpldy_tus_fd_";
 
-export const TUS_EVENTS: any = devFreeze({
+export const TUS_EVENTS: Readonly<{ RESUME_START: string, PART_START: string }> = devFreeze({
     RESUME_START: "RESUME_START",
     PART_START: "PART_START"
 });

@@ -35,7 +35,7 @@ import Uploady, {
 import Readme from "./Uploady.storydoc.mdx";
 
 import type { Node } from "react";
-import type { Batch, BatchItem } from "@rpldy/shared";
+import type { Batch, BatchItem, Headers } from "@rpldy/shared";
 
 // storybook indexer cannot parse `as` casts; window custom globals need any (flow 0.339 TS DOM types)
 const anyWindow: any = window;
@@ -390,7 +390,7 @@ export const WithCustomResponseFormat: UploadyStory = createUploadyStory(
      }): Node {
 
         const resFormatter = useCallback(
-            (res: any, status: number, headers: any) => {
+            (res: string, status: number, headers: ?Headers) => {
                 console.log(
                     "!!!!!! running custom server response formatter",
                     res,

@@ -11,13 +11,20 @@ type FileStateToEventMap = {
     [string]: ?string,
 };
 
+// flow infers the computed-key value type from the first (null) entry, hence the suppressions below
 export const FILE_STATE_TO_EVENT_MAP: FileStateToEventMap = {
     [FILE_STATES.PENDING.valueOf()]: null,
+    // $FlowFixMe[incompatible-type]
     [FILE_STATES.ADDED.valueOf()]: UPLOADER_EVENTS.ITEM_START,
+    // $FlowFixMe[incompatible-type]
     [FILE_STATES.FINISHED.valueOf()]: UPLOADER_EVENTS.ITEM_FINISH,
+    // $FlowFixMe[incompatible-type]
     [FILE_STATES.ERROR.valueOf()]: UPLOADER_EVENTS.ITEM_ERROR,
+    // $FlowFixMe[incompatible-type]
     [FILE_STATES.CANCELLED.valueOf()]: UPLOADER_EVENTS.ITEM_CANCEL,
+    // $FlowFixMe[incompatible-type]
     [FILE_STATES.ABORTED.valueOf()]: UPLOADER_EVENTS.ITEM_ABORT,
+    // $FlowFixMe[incompatible-type]
     [FILE_STATES.UPLOADING.valueOf()]: UPLOADER_EVENTS.ITEM_PROGRESS,
 };
 

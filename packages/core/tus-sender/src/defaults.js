@@ -1,8 +1,9 @@
 // @flow
 import { devFreeze } from "@rpldy/shared";
 import { CHUNKED_DEFAULT_OPTIONS } from "@rpldy/chunked-sender";
+import type { TusOptions } from "./types";
 
-export const DEFAULT_OPTIONS: any = devFreeze({
+export const DEFAULT_OPTIONS: { ...TusOptions, storagePrefix: string } = devFreeze({
 	...CHUNKED_DEFAULT_OPTIONS,
     featureDetection: false,
 	featureDetectionUrl: null,

@@ -1,7 +1,7 @@
 // @flow
 import isProduction from "./isProduction";
 
-const devFreeze = (obj: any): any =>
+const devFreeze = <T>(obj: T): T =>
     isProduction() ? obj : Object.freeze(obj);
 
 export default devFreeze;

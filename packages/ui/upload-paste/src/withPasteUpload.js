@@ -13,7 +13,7 @@ const withPasteUpload = (Component: ComponentType<any>): React.ComponentType<Pas
         const onPaste = usePasteHandler(uploadOptions, onPasteUpload);
         const isUploadyComp = getIsUploadOptionsComponent(Component);
 
-        const compExtraProps = isUploadyComp ?
+        const compExtraProps: any = isUploadyComp ?
             //when wrapping an Uploady component (ex: UploadButton), need pass it all upload options
             { ...uploadOptions, extraProps: { ...extraProps, onPaste } } :
             { ...extraProps, onPaste };

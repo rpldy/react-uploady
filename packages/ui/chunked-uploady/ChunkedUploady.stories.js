@@ -25,9 +25,12 @@ import Readme from "./ChunkedUploady.storydoc.mdx";
 
 import type { Node } from "react";
 
+// storybook indexer cannot parse `as` casts; window custom globals need any (flow 0.339 TS DOM types)
+const anyWindow: any = window;
+
 //expose react and react-dom for Uploady bundle
-window.react = React;
-window["react-dom"] = ReactDOM;
+anyWindow.react = React;
+anyWindow["react-dom"] = ReactDOM;
 
 const UploadButtonWithUniqueIdHeader = () => {
     useRequestPreSend((data) => {
@@ -149,8 +152,8 @@ const renderChunkedUploadyFromBundle = ({
                                             destination,
                                             enhancer,
                                         }: UploadyStoryParams) => {
-    const rpldy = window.rpldy,
-        react = window.react;
+    const rpldy = anyWindow.rpldy,
+        react = anyWindow.react;
 
     const MyUploadButton = () => {
         rpldy.uploady.useRequestPreSend(() => {

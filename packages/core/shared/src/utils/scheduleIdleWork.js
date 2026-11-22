@@ -5,7 +5,7 @@ const supportsIdle = !!(hasWindow() && window.requestIdleCallback);
 
 type ClearSchedule = () => void;
 
-const scheduleIdleWork = (fn: Function, timeout: number = 0): ClearSchedule => {
+const scheduleIdleWork = (fn: () => unknown, timeout: number = 0): ClearSchedule => {
     const handler = supportsIdle ?
         window.requestIdleCallback(fn, { timeout }) :
         setTimeout(fn, timeout);

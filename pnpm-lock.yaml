@@ -183,8 +183,8 @@ importers:
         specifier: ^11.0.29
         version: 11.0.30
       flow-bin:
-        specifier: 0.328.0
-        version: 0.328.0
+        specifier: 0.339.0
+        version: 0.339.0
       fs-extra:
         specifier: ^11.4.1
         version: 11.4.1
@@ -317,8 +317,8 @@ importers:
         version: link:../simple-state
     devDependencies:
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
 
   packages/core/chunked-sender:
     dependencies:
@@ -339,8 +339,8 @@ importers:
         specifier: workspace:*
         version: link:../uploader
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
 
   packages/core/life-events:
     dependencies:
@@ -349,8 +349,8 @@ importers:
         version: link:../shared
     devDependencies:
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
 
   packages/core/mock-sender:
     dependencies:
@@ -365,8 +365,8 @@ importers:
         specifier: workspace:*
         version: link:../uploader
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
 
   packages/core/raw-uploader:
     dependencies:
@@ -378,8 +378,8 @@ importers:
         version: link:../shared
     devDependencies:
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
 
   packages/core/retry:
     dependencies:
@@ -394,8 +394,8 @@ importers:
         version: link:../uploader
     devDependencies:
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
 
   packages/core/safe-storage:
     dependencies:
@@ -404,8 +404,8 @@ importers:
         version: link:../shared
     devDependencies:
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
 
   packages/core/sender:
     dependencies:
@@ -414,8 +414,8 @@ importers:
         version: link:../shared
     devDependencies:
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
 
   packages/core/shared:
     dependencies:
@@ -427,8 +427,8 @@ importers:
         version: 4.2.0
     devDependencies:
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
 
   packages/core/simple-state:
     dependencies:
@@ -437,8 +437,8 @@ importers:
         version: link:../shared
     devDependencies:
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
 
   packages/core/tus-sender:
     dependencies:
@@ -465,8 +465,8 @@ importers:
         specifier: workspace:*
         version: link:../uploader
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
 
   packages/core/uploader:
     dependencies:
@@ -490,8 +490,8 @@ importers:
         version: link:../simple-state
     devDependencies:
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
 
   packages/native/native-uploady:
     dependencies:
@@ -500,8 +500,8 @@ importers:
         version: link:../../ui/shared
     devDependencies:
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -531,8 +531,8 @@ importers:
         specifier: workspace:*
         version: link:../upload-button
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -562,8 +562,8 @@ importers:
         specifier: workspace:*
         version: link:../upload-preview
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
       rc-progress:
         specifier: ^4.0.0
         version: 4.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -587,8 +587,8 @@ importers:
         specifier: workspace:*
         version: link:../../core/life-events
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -618,8 +618,8 @@ importers:
         specifier: workspace:*
         version: link:../uploady
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -643,8 +643,8 @@ importers:
         specifier: workspace:*
         version: link:../uploady
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -677,8 +677,8 @@ importers:
         specifier: ^16.3.3
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -720,8 +720,8 @@ importers:
         specifier: ^16.3.3
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -754,8 +754,8 @@ importers:
         specifier: ^16.3.3
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -782,8 +782,8 @@ importers:
         specifier: workspace:*
         version: link:../uploady
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -810,8 +810,8 @@ importers:
         specifier: ^16.3.3
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       flow-bin:
-        specifier: ^0.328.0
-        version: 0.328.0
+        specifier: ^0.339.0
+        version: 0.339.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -4604,8 +4604,8 @@ packages:
   flatted@3.4.4:
     resolution: {integrity: sha512-5+ybhBZANEJxaH3X5evAFatUxLfEHSr7n6kYJ+1Qd0mUqr4eu9gIf6GDbWHf8RJijHrjjO8G+la14SlL2SeS1Q==}
 
-  flow-bin@0.328.0:
-    resolution: {integrity: sha512-g8QmqJ91cOCsKlp/Wp7bYLNrLjRsU94YNm+ELlVdHpY8uH3ZdKaS4FAiA7ef7QrlwpUUyXW4Sea69q8iBwz2tg==}
+  flow-bin@0.339.0:
+    resolution: {integrity: sha512-n7rE8A/hZ0Go4cxWbrot0UZrILJj0oLZZrpT8FRwkY7hmteqrpnZsNT5E9ZexquHjAOkpZy/UMgIAwuUllUr9g==}
     engines: {node: '>=0.10.0'}
     hasBin: true
 
@@ -11725,7 +11725,7 @@ snapshots:
 
   flatted@3.4.4: {}
 
-  flow-bin@0.328.0: {}
+  flow-bin@0.339.0: {}
 
   flru@1.0.2: {}
 

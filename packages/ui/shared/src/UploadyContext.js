@@ -95,7 +95,7 @@ export const createContextApi =
             return uploader.getOptions();
         };
 
-        const getExtension = (name: string | Symbol): ?Object => {
+        const getExtension = (name: string | symbol): ?Object => {
             return uploader.getExtension(name);
         };
 

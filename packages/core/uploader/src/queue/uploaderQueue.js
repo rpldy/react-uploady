@@ -187,7 +187,7 @@ const createUploaderQueue = (
     };
 
     if (hasWindow() && logger.isDebugOn()) {
-        window[`__rpldy_${uploaderId}_queue_state`] = queueState;
+        (window as any)[`__rpldy_${uploaderId}_queue_state`] = queueState;
     }
 
     const clearPendingBatches = () => {

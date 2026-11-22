@@ -14,7 +14,7 @@ export type Options = {
 export type TriggerMethod = (name: any, ...args: any[]) => any;
 
 export type LifeEventsAPI = {
-	target: Object,
+	target: any,
 	trigger: TriggerMethod,
 	addEvent: (name: any) => void,
 	removeEvent: (name: any) => void,

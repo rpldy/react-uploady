@@ -10,8 +10,8 @@ import type {
 export type SendOptions = {
     method: string,
     paramName: string,
-    params: Object,
-    headers?: Object,
+    params: any,
+    headers?: any,
     forceJsonResponse: ?boolean,
     withCredentials: ?boolean,
     formatGroupParamName: ?FormatParamGroupNameMethod,
@@ -24,7 +24,7 @@ export type SendOptions = {
 
 export type SenderProgressEvent = { total: number, loaded: number };
 
-export type OnProgress = (e: SenderProgressEvent, Object[]) => void;
+export type OnProgress = (e: SenderProgressEvent, any[]) => void;
 
 export type XhrSendConfig = {
     preRequestHandler: (

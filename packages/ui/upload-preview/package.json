@@ -38,7 +38,7 @@
     "@rpldy/upload-url-input": "workspace:*",
     "@rpldy/uploady": "workspace:*",
     "@testing-library/react": "^16.3.3",
-    "flow-bin": "^0.328.0",
+    "flow-bin": "^0.339.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-image-crop": "^11.1.2",

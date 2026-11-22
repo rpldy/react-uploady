@@ -89,7 +89,7 @@ export const WithProgress: UploadyStory = createUploadyStory(
 
 export const WithDropHandler: UploadyStory = createUploadyStory(
     function StoryRender({ enhancer, destination, multiple, grouped, groupSize }): Node {
-        const dropHandler = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
+        const dropHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
             console.log(">>>> DROP EVENT ", e.dataTransfer);
             return "https://i.pinimg.com/originals/51/bf/9c/51bf9c7fdf0d4303140c4949afd1d7b8.jpg";
         }, []);
@@ -118,7 +118,7 @@ export const WithDropHandler: UploadyStory = createUploadyStory(
 export const WithDropHandlerAndGetFiles: UploadyStory = createUploadyStory(
     function StoryRender({ enhancer, destination, multiple, grouped, groupSize, maxDropCount }): Node {
         const dropHandler = useCallback(
-            async (e: SyntheticMouseEvent<HTMLElement>, getFiles: GetFilesMethod) => {
+            async (e: React.MouseEvent<HTMLElement>, getFiles: GetFilesMethod) => {
                 const files = await getFiles();
                 return files.slice(0, maxDropCount);
             },
@@ -321,7 +321,7 @@ export const WithThirdPartyDropZone: UploadyStory = createUploadyStory(
 const MyClickableDropZone = forwardRef((props: UploadButtonProps, ref: any) => {
     const { onClick, ...buttonProps } = props;
 
-    const onZoneClick = useCallback((e: SyntheticMouseEvent<HTMLElement>) => {
+    const onZoneClick = useCallback((e: React.MouseEvent<HTMLElement>) => {
         if (onClick) {
             onClick(e);
         }
@@ -445,8 +445,8 @@ export const WithFullScreen: UploadyStory = createUploadyStory(
                         const result = hasFiles || !!(
                             // Fallback for browsers that populate items  
                             e.dataTransfer?.items?.length &&
-                            //$FlowExpectedError[method-unbinding]
                             Array.prototype.slice
+                                //$FlowExpectedError[invalid-this-arg]
                                 .call(e.dataTransfer.items)
                                 .every((item) => item.kind === "file")                                
                         );

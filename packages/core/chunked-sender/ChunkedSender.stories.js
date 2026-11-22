@@ -62,8 +62,8 @@ export const WithChunkedSender: UploadyStory = createUploadyStory(
             uploader.upload();
         };
 
-        const onFileChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-            setFile(event.currentTarget.files[0]);
+        const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+            setFile(event.currentTarget.files?.[0]);
         };
 
         return (

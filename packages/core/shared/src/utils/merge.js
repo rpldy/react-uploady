@@ -7,11 +7,11 @@ export type MergeOptions = {
     predicate?: (unknown, unknown) => boolean,
 };
 
-type MergeMethod = (target: Object, ...sources: Array<Object>) => Object;
+type MergeMethod = (target: any, ...sources: Array<any>) => any;
 
 export const isMergeObj = (obj: Object): boolean => isPlainObject(obj) || Array.isArray(obj);
 
-const getKeys = (obj: Object, options: MergeOptions) => {
+const getKeys = (obj: any, options: MergeOptions) => {
 	const keys = Object.keys(obj).filter((k) => obj.hasOwnProperty(k) && k !== "__proto__");
 	return options.withSymbols ?
 		keys.concat(Object.getOwnPropertySymbols(obj)) :
@@ -19,7 +19,7 @@ const getKeys = (obj: Object, options: MergeOptions) => {
 };
 
 const getMerge = (options: MergeOptions = {}): MergeMethod => {
-   const merge: (...params: Object[]) => Object = (target: Object, ...sources: Object[]) => {
+   const merge: (...params: any[]) => any = (target: any, ...sources: any[]) => {
        if (target && sources.length) {
            sources.forEach((source) => {
                if (source) {

@@ -72,7 +72,7 @@ export type BatchFile = {|
 
 export type BatchItem = BatchUrl & BatchFile;
 
-export type UploadInfo = string | Object | BatchItem;
+export type UploadInfo = string | any | BatchItem;
 
 export type Batch = {
 	id: string,
@@ -112,7 +112,7 @@ export type UploadOptions = {|
 	//HTTP method to use when uploading (default: POST)
 	method?: string,
 	//collection of params to pass along with the upload (Destination params take precedence)
-	params?: Object,
+	params?: any,
 	//whether to parse server response as json even if no json content type header found (default: false)
 	forceJsonResponse?: boolean,
 	//whether to set XHR withCredentials to true (default: false)
@@ -143,7 +143,7 @@ export type GetExact<T> = T & Partial<T>;
 
 export type RequestOptions = {
     method?: string,
-    headers?: Object,
+    headers?: any,
     withCredentials?: boolean,
     preSend?: (XMLHttpRequest) => void,
 };

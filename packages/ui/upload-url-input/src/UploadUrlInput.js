@@ -35,7 +35,7 @@ const UploadUrlInput: React.ComponentType<UploadUrlInputProps> = forwardRef<
             inputRef
         ]);
 
-        const onKeyPress = useCallback((e: SyntheticKeyboardEvent<HTMLInputElement>) => {
+        const onKeyPress = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
             if (!ignoreKeyPress && e.key === "Enter") {
                 upload();
             }

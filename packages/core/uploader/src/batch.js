@@ -19,13 +19,13 @@ const processFiles = (batchId: string, files: UploadInfo, isPending: boolean, fi
 
     //we need a simple array of (file, url) to pass to filter fn if its provided (files can be recycled batch items)
     const all: any[] = fileFilter ? Array.prototype
-        //$FlowExpectedError[method-unbinding] flow 0.153 !!!
+        //$FlowExpectedError[invalid-this-arg] flow 0.153 !!!
         .map.call(files, (f) => getIsBatchItem(f) ? (f.file || f.url) : f) :
         //in case no filter fn, no need to map it
         [];
 
     return Promise.all(Array.prototype
-        //$FlowExpectedError[method-unbinding] flow 0.153 !!!
+        //$FlowExpectedError[invalid-this-arg] flow 0.153 !!!
         .map.call(files, (f, index) => {
             const filterResult = filterFn(all[index], index, all);
 

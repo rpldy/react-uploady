@@ -12,7 +12,7 @@ declare namespace Cypress {
         assertUrlItemStartFinish: (url: string, startIndex?: number) => Promise<{ start: LogEntry, finish: LogEntry }>;
         assertLogEntryCount: (count: number, obj: any) => void;
         assertLogEntryContains: (index: number, obj: any) => void;
-        customAssertLogEntry: (event: string | RegExp, asserter: (logLine: any[], env: string) => void, options?: { index?: number, all?: boolean }) => void;
+        customAssertLogEntry: (event: string | RegExp, asserter: (logLine: any[], env: string) => void, options?: { all?: boolean }) => void;
         assertLogPattern: (pattern: RegExp, options: { times?: number, index?: number, different?: boolean }) => Promise<PATTERN_MATCH[]>;
         assertNoLogPattern: (pattern: RegExp, options: { index?: number, different?: boolean }) => Promise<PATTERN_MATCH[]>;
         resetStoryLog: () => void;

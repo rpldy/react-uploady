@@ -9,7 +9,6 @@ describe("UploadButton - With Component asButton", () => {
 
     it("should make any custom component an upload button", () => {
         uploadFile(fileName, () => {
-            cy.waitMedium();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         }, "#div-upload");
     });

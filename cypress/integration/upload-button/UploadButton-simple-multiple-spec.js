@@ -17,8 +17,6 @@ describe("UploadButton - Simple - Multiple files", () => {
             .as("fInput");
 
         uploadFileTimes(fileName, () => {
-            cy.waitMedium();
-
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower2.jpg", 3);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg", 5);

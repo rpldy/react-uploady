@@ -7,7 +7,6 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { execFileSync } from "node:child_process";
 import { parseArgs } from "node:util";
 import semver from "semver";
 import { getMatchingPackages } from "../lernaUtils.mjs";
@@ -18,35 +17,16 @@ import {
     createChangelogEntry,
     addEntryToChangelog,
 } from "./changelogEntry.mjs";
+import {
+    createGit,
+    getReleaseVersions,
+    getPreviousVersion,
+    getReleaseBase,
+    getCommitsSince,
+} from "./gitHistory.mjs";
 
 const BUMPS = ["auto", "patch", "minor", "major", "prepatch", "preminor", "premajor", "prerelease"];
-const STABLE_RELEASE_RX = /^chore: release v\d+\.\d+\.\d+(\s|$)/;
 const CHANGELOG_PATH = "CHANGELOG.md";
-
-const git = (...args) => execFileSync("git", args, { encoding: "utf-8", maxBuffer: 64 * 1024 * 1024 });
-
-const getLastStableReleaseCommit = () => {
-    const found = git("log", "--first-parent", "--format=%H %s")
-        .split("\n")
-        .find((line) => STABLE_RELEASE_RX.test(line.slice(41)));
-
-    if (!found) {
-        throw new Error("could not find a previous stable release commit (chore: release vX.Y.Z)");
-    }
-
-    return found.slice(0, 40);
-};
-
-const getCommitsSince = (base) =>
-    git("log", "--first-parent", "--reverse", "--format=%H%x1f%B%x1e", `${base}..HEAD`)
-        .split("\x1e")
-        .map((raw) => raw.trim())
-        .filter(Boolean)
-        .map((raw) => {
-            const [sha, message] = raw.split("\x1f");
-            const files = git("diff", "--name-only", `${sha}^`, sha).split("\n").filter(Boolean);
-            return parseCommit({ message, files });
-        });
 
 const getPackages = () =>
     getMatchingPackages().map(({ name, location }) => ({
@@ -85,9 +65,14 @@ const run = () => {
 
     validateArgs(values);
 
-    const previousVersion = JSON.parse(fs.readFileSync("lerna.json", "utf-8")).version;
-    const base = getLastStableReleaseCommit();
-    const commits = getCommitsSince(base).filter((c) => !isIgnoredCommit(c));
+    const git = createGit();
+    const releaseVersions = getReleaseVersions(git);
+    const previousVersion = getPreviousVersion(JSON.parse(fs.readFileSync("lerna.json", "utf-8")).version, releaseVersions);
+    const base = getReleaseBase(git, releaseVersions);
+
+    const commits = getCommitsSince(git, base)
+        .map(parseCommit)
+        .filter((c) => !isIgnoredCommit(c));
 
     if (!commits.length) {
         throw new Error(`no changes found since last stable release (${base})`);
@@ -97,6 +82,7 @@ const run = () => {
 
     const entry = createChangelogEntry({
         version: next,
+        //placeholder - the release workflow sets the actual publish date
         date: new Date().toISOString().slice(0, 10),
         commits,
         packages: getPackages(),

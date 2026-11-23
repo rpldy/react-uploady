@@ -7,12 +7,6 @@ on:
         branches:
             - "release-**"
         inputs:
-            mergeMaster:
-                type: boolean
-                description: Merge latest master?
-                required: true
-                default: true
-
             dry:
                 type: boolean
                 description: dont publish, fail after version
@@ -40,11 +34,6 @@ jobs:
                 run: |
                     git config user.email "ci@react-uploady.org"
                     git config user.name "Uploady CI"
-
-            -   name: Merge latest master
-                if: ${{ inputs.mergeMaster == true }}
-                run: |
-                    git merge origin/master -m "chore: merge content from master"
 
             - name: Prepare
               uses: ./.github/actions/prepare
@@ -84,6 +73,11 @@ jobs:
                     echo "### Using version: ${{ steps.lerna-args.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
                     lerna version ${{ steps.lerna-args.outputs.VERSION }} --sync-dist-version --force-publish=* --no-push --no-git-tag-version ${{ inputs.dry == false && '--yes' || ''  }}
 
+            -   name: Set release date
+                run: |
+                    # the entry was generated when the release was prepared, use the actual publish date
+                    RELEASE_DATE=$(date -u +%Y-%m-%d) perl -0pi -e 's/^(## \d\S*) \(.*\)$/$1 ($ENV{RELEASE_DATE})/m' CHANGELOG.md
+
             -   name: Build source
                 run: pnpm build
 
@@ -113,7 +107,9 @@ jobs:
                 run: |
                     lerna publish from-package ${{ steps.lerna-args.outputs.PUBLISH }} --no-push --yes
                     echo "## Published: ${{ steps.version-name.outputs.NEW_VERSION }} :rocket:" >> $GITHUB_STEP_SUMMARY
-                    echo "${{ steps.version-log.outputs.VERSION_LOG }}" >> $GITHUB_STEP_SUMMARY
+                    echo "$VERSION_LOG" >> $GITHUB_STEP_SUMMARY
+                env:
+                    VERSION_LOG: ${{ steps.version-log.outputs.VERSION_LOG }}
 
             -   name: Push changes
                 if: ${{ always() && steps.version.outcome == 'success' && steps.publish.outcome == 'success' }}

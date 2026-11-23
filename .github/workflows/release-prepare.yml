@@ -45,9 +45,17 @@ jobs:
         steps:
             -   name: Validate inputs
                 env:
+                    GH_TOKEN: ${{ github.token }}
                     VERSION: ${{ inputs.version }}
                     PREID: ${{ inputs.preid }}
                 run: |
+                    OPEN_RELEASE_PR=$(gh pr list -R "$GITHUB_REPOSITORY" --state open --json headRefName,url --jq '.[] | select(.headRefName | test("^release-[0-9]")) | .url')
+
+                    if [ -n "$OPEN_RELEASE_PR" ]; then
+                        echo "🔴 A previous release PR is still open, merge or close it first: $OPEN_RELEASE_PR" >> $GITHUB_STEP_SUMMARY
+                        exit 1
+                    fi
+
                     if [ "$GITHUB_REF" != "refs/heads/master" ]; then
                         echo "🔴 Prepare release must run on master" >> $GITHUB_STEP_SUMMARY
                         exit 1
@@ -98,7 +106,7 @@ jobs:
                     {
                         echo "Release **v$NEW_VERSION** ($BUMP, from v$PREV_VERSION)"
                         echo
-                        echo "1. Review and edit the suggested entry in \`CHANGELOG.md\` on this branch (keep the \`## $NEW_VERSION\` heading - the release reads the version from it)."
+                        echo "1. Review and edit the suggested entry in \`CHANGELOG.md\` on this branch (keep the \`## $NEW_VERSION\` heading - the release reads the version from it). The date is set to the publish date by the release."
                         echo "2. Run the **Uploady Release** workflow on branch \`$BRANCH\`."
                         echo "3. Squash-merge this PR once the release is published (keep the PR title)."
                         echo

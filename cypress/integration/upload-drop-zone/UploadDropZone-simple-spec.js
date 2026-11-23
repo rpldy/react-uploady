@@ -9,7 +9,6 @@ describe("UploadDropZone - Simple", () => {
 
     it("should upload dropped file", () => {
         dropFile(fileName, () => {
-            cy.waitExtraShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });

@@ -22,8 +22,7 @@ describe("MockSender - Progress", () => {
         loadStory();
 
         uploadFile(fileName, () => {
-            cy.waitMedium();
-
+            cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_START, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });
 
@@ -50,12 +49,10 @@ describe("MockSender - Progress", () => {
         loadStory();
 
         uploadFileTimes(fileName, () => {
-            cy.waitLong();
-
+            cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 1 });
             cy.storyLog().assertLogPattern(BATCH_ADD, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
-            cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 1 });
 
             cy.storyLog().customAssertLogEntry(BATCH_PROGRESS, (logLines) => {
                 const batchProgress = logLines.map(({ args }) => args[0].completed);

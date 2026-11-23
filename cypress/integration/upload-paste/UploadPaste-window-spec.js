@@ -16,7 +16,6 @@ describe("UploadPaste - Window Listener", () => {
         cy.get("body")
             .pasteFile(fileName);
 
-        cy.waitExtraShort();
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
     });
 });

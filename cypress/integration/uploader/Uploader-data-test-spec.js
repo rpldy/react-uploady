@@ -14,7 +14,6 @@ describe("Uploader - Event data test", () => {
         loadStory();
 
         uploadFile(fileName, () =>{
-            cy.waitExtraShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 2);
 
             cy.storyLog().customAssertLogEntry("###BATCH-ADD", (logLine) => {
@@ -49,8 +48,6 @@ describe("Uploader - Event data test", () => {
                     expect(logLine[0]._test).to.be.undefined;
                 }
             });
-
-            cy.waitMedium();
 
             cy.storyLog().customAssertLogEntry("###BATCH-FINISH", (logLine, env) => {
                 expect(Object.getOwnPropertySymbols(logLine[0])).to.have.lengthOf(0, "BATCH-FINISH batch - shouldnt have proxy symbols");

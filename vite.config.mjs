@@ -95,7 +95,7 @@ export default defineConfig({
         // vitest 5 default - mock calls/results are cleared before each test
         clearMocks: true,
         setupFiles: "./test/vitest-setup.mjs",
-        include: ["packages/**/*.test.js?(x)"],
+        include: ["packages/**/*.test.js?(x)", "scripts/**/*.test.mjs"],
         exclude: ["packages/**/lib/**", "packages/**/node_modules/**"],
         coverage: {
             provider: "istanbul",

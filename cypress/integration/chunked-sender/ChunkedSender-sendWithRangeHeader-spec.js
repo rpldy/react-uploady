@@ -1,6 +1,6 @@
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
-import { CHUNK_START, CHUNK_FINISH } from "../../constants";
+import { BATCH_FINALIZE, CHUNK_START, CHUNK_FINISH } from "../../constants";
 
 describe("ChunkedSender - sendWithRangeHeader", () => {
     const fileName = "flower.jpg";
@@ -19,8 +19,7 @@ describe("ChunkedSender - sendWithRangeHeader", () => {
                 .should("be.visible")
                 .click();
 
-            cy.waitShort();
-
+            cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 1 });
             cy.storyLog().assertLogPattern(CHUNK_START, { times: 8 });
             cy.storyLog().assertLogPattern(CHUNK_FINISH, { times: 8 });
 
@@ -56,8 +55,7 @@ describe("ChunkedSender - sendWithRangeHeader", () => {
                 .should("be.visible")
                 .click();
 
-            cy.waitShort();
-
+            cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 1 });
             cy.storyLog().assertLogPattern(CHUNK_START, { times: 8 });
             cy.storyLog().assertLogPattern(CHUNK_FINISH, { times: 8 });
 

@@ -5,7 +5,7 @@ import { useUploady } from "@rpldy/shared-ui";
 import type { UploadOptions } from "@rpldy/shared";
 import type { PasteUploadHandler } from "./types";
 
-const usePasteHandler = (uploadOptions: ?UploadOptions, onPasteUpload: ?PasteUploadHandler): ClipboardEventListener => {
+const usePasteHandler = (uploadOptions: ?UploadOptions, onPasteUpload: ?PasteUploadHandler): (e: ClipboardEvent) => void => {
     const { upload } = useUploady();
 
     //using ref so paste callback can stay memoized

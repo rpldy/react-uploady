@@ -58,8 +58,6 @@ describe("TusUploady - With Retry", () => {
             //retry aborted
             cy.get("#retry-tus-btn").click();
 
-            cy.waitMedium();
-
             cy.get(`@${fileName}`)
                 .then((uploadFile) => {
                     fileSize = uploadFile.length;

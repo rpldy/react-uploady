@@ -36,7 +36,6 @@ describe("TusUploady - Simple", () => {
 			.as("fInput");
 
 		uploadFile(fileName, () => {
-			cy.waitMedium();
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             assertCreateRequest(0, ({ request }) => {
@@ -56,8 +55,6 @@ describe("TusUploady - Simple", () => {
 
 			//upload again, should be resumed!
 			uploadFile(fileName, () => {
-				cy.waitShort();
-
 				cy.storyLog().assertFileItemStartFinish(fileName, 3, true)
 					.then((events) => {
 						expect(events.finish.args[1].uploadResponse.message).to.eq("TUS server has file");

@@ -2,7 +2,27 @@
 import { devFreeze, FILE_STATES } from "@rpldy/shared";
 import type { FILE_STATES as FileStatesType } from "@rpldy/shared";
 
-export const UPLOADER_EVENTS: Object = devFreeze({
+type UploaderEventsMap = Readonly<{
+    BATCH_ADD: string,
+    BATCH_START: string,
+    BATCH_PROGRESS: string,
+    BATCH_FINISH: string,
+    BATCH_ABORT: string,
+    BATCH_CANCEL: string,
+    BATCH_ERROR: string,
+    BATCH_FINALIZE: string,
+    ITEM_START: string,
+    ITEM_CANCEL: string,
+    ITEM_PROGRESS: string,
+    ITEM_FINISH: string,
+    ITEM_ABORT: string,
+    ITEM_ERROR: string,
+    ITEM_FINALIZE: string,
+    REQUEST_PRE_SEND: string,
+    ALL_ABORT: string,
+}>;
+
+export const UPLOADER_EVENTS: UploaderEventsMap = devFreeze({
     BATCH_ADD: "BATCH-ADD",
     BATCH_START: "BATCH-START",
     BATCH_PROGRESS: "BATCH_PROGRESS",
@@ -27,7 +47,7 @@ export const UPLOADER_EVENTS: Object = devFreeze({
 
 export const PROGRESS_DELAY = 50;
 
-export const SENDER_EVENTS: Object = devFreeze({
+export const SENDER_EVENTS: Readonly<{ ITEM_PROGRESS: string, BATCH_PROGRESS: string }> = devFreeze({
     ITEM_PROGRESS: "ITEM_PROGRESS",
     BATCH_PROGRESS: "BATCH_PROGRESS",
 });

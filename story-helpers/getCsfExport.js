@@ -22,8 +22,8 @@ export type ExportOptions = {
 const getCsfExport = (component: ?React.ComponentType<any>, title: string, Readme: any, options: ExportOptions): CsfExport => {
     if (options.pkg) {
         //we need this coz storybook doesnt pass all the CSF info to the renderLabel function
-        window.top._storyToPackage = window.top._storyToPackage || {};
-        window.top._storyToPackage[title] = `@rpldy/${options.pkg}`;
+        (window as any).top._storyToPackage = (window as any).top._storyToPackage || {};
+        (window as any).top._storyToPackage[title] = `@rpldy/${options.pkg}`;
     }
 
     const useControls = options?.useControls !== false;

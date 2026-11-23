@@ -1,7 +1,7 @@
 // @flow
 import merge, { isMergeObj } from "./merge";
 
-type MergeFn = (target: Object, ...sources: Object[]) => Object;
+type MergeFn = (target: any, ...sources: any[]) => any;
 
 /**
  * does deep clone to the passed object, returning a new object
@@ -9,7 +9,7 @@ type MergeFn = (target: Object, ...sources: Object[]) => Object;
  * @param mergeFn the merge function to use (default: utils/merge)
  * @returns {Object}
  */
-const clone = (obj: Object, mergeFn: MergeFn = merge): Object =>
+const clone = (obj: any, mergeFn: MergeFn = merge): any =>
     isMergeObj(obj) ?
         mergeFn((Array.isArray(obj) ? [] : {}), obj) :
         obj;

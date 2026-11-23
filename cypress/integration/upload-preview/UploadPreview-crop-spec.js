@@ -1,3 +1,4 @@
+import getRequestBodySize from "../getRequestBodySize";
 import intercept from "../intercept";
 import uploadFile from "../uploadFile";
 import { BATCH_ADD, ITEM_START, ITEM_FINISH, ITEM_CANCEL } from "../../constants";
@@ -40,10 +41,9 @@ describe("UploadPreview - Crop", () => {
                 .interceptFormData((formData) => {
                     expect(formData["file"]).to.eq(fileName);
                 })
-                .its("request.headers")
-                .its("content-length")
-                .then((length) => {
-                    expect(parseInt(length)).to.be.lessThan(CROPPED_MAX_SIZE);
+                .its("request.body")
+                .then((body) => {
+                    expect(getRequestBodySize(body)).to.be.lessThan(CROPPED_MAX_SIZE);
 
                     cy.storyLog().assertFileItemStartFinish(fileName, 1);
                 });
@@ -92,10 +92,9 @@ describe("UploadPreview - Crop", () => {
                 .interceptFormData((formData) => {
                     expect(formData["file"]).to.eq("flower.jpg");
                 })
-                .its("request.headers")
-                .its("content-length")
-                .then((length) => {
-                    expect(parseInt(length)).to.be.least(300000);
+                .its("request.body")
+                .then((body) => {
+                    expect(getRequestBodySize(body)).to.be.least(300000);
                 });
 
             cy.storyLog().assertFileItemStartFinish(fileName, 1);

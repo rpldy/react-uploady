@@ -1,3 +1,4 @@
+import getRequestBodySize from "../getRequestBodySize";
 import { interceptWithDelay } from "../intercept";
 
 export const uploadUrl = "http://test.tus.com/upload";
@@ -16,7 +17,7 @@ export const createTusIntercepts = (tusOptions = {}) => {
     const addPatchIntercept = (delay, alias, url, tusData, index) => {
         interceptWithDelay(delay, alias, url, "PATCH",
             (req) => {
-                const offset = parseInt(req.headers["content-length"]);
+                const offset = getRequestBodySize(req.body);
                 tusData[index].offset += offset;
 
                 return  {
@@ -66,7 +67,7 @@ export const createTusIntercepts = (tusOptions = {}) => {
             });
         } else {
             const partSize = parseInt(req.headers["upload-length"]);
-            let contentLength = parseInt(req.headers["content-length"]);
+            let contentLength = getRequestBodySize(req.body);
 
             if (!options.deferLength) {
                 expect(partSize).to.be.a("number");
@@ -130,7 +131,7 @@ export const createTusIntercepts = (tusOptions = {}) => {
                     expect(headers["content-type"]).to.eq("application/offset+octet-stream");
 
                     if (contentLength) {
-                        expect(headers["content-length"]).to.eq(`${contentLength}`);
+                        expect(getRequestBodySize(xhr.request.body)).to.eq(contentLength);
                     }
 
                     cb?.(xhr);

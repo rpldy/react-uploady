@@ -1,5 +1,5 @@
 import uploadFile from "../uploadFile";
-import { ITEM_START, ITEM_ERROR } from "../../constants";
+import { BATCH_FINALIZE, ITEM_START, ITEM_ERROR } from "../../constants";
 
 describe("Uploader - recover from sender error test", () => {
     const fileName = "flower.jpg";
@@ -15,8 +15,7 @@ describe("Uploader - recover from sender error test", () => {
     it("should upload again after unexpected sender error", () => {
         uploadFile(fileName, () => {
             uploadFile(fileName, () => {
-                cy.waitMedium();
-
+                cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 2 });
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
                 cy.storyLog().assertLogPattern(ITEM_ERROR, { times: 2 });
             }, "#upload-button");

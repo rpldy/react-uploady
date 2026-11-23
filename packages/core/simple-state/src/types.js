@@ -3,5 +3,5 @@
 export type SimpleState<T> = {
 	state: T,
 	update: ((T) => void) => T,
-	unwrap: (?Object) => T | Object,
+	unwrap: (?any) => T | any,
 }

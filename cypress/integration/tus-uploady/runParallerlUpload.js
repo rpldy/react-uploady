@@ -20,8 +20,6 @@ const runParallelUpload = (fileName, parallel, testCb) => {
             .as("fInput");
 
         uploadFile(fileName, () => {
-            cy.waitMedium();
-
             getParallelSizes(fileName, parallel)
                 .then((sizes) => {
                     fileSize = sizes.fileSize;

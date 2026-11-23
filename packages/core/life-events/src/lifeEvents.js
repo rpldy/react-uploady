@@ -7,7 +7,7 @@ import type { Options, LifeEventsAPI, RegItem, EventCallback } from "./types";
 
 //TODO: implement STATS
 
-const getLE = (obj: Object) => obj ? obj[LESYM] : null;
+const getLE = (obj: any) => obj ? obj[LESYM] : null;
 
 const getValidLE = (obj: Object) => {
 	const le = getLE(obj);
@@ -21,7 +21,7 @@ const getValidLE = (obj: Object) => {
 
 const isLE = (obj: Object): boolean => !!getLE(obj);
 
-const addRegistration = (obj: Object, name: any, cb: Function, once: boolean = false) => {
+const addRegistration = (obj: any, name: any, cb: EventCallback, once: boolean = false) => {
 	validateFunction(cb, "cb");
 
 	const le = getValidLE(obj);
@@ -47,7 +47,7 @@ const addRegistration = (obj: Object, name: any, cb: Function, once: boolean = f
 	return () => unregister.call(obj, name, cb);
 };
 
-const findRegistrations = (obj: Object, name?: any): RegItem[] => {
+const findRegistrations = (obj: any, name?: any): RegItem[] => {
 	const registry = getValidLE(obj).registry;
 
 	return name ?

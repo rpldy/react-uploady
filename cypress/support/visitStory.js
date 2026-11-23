@@ -58,9 +58,9 @@ Cypress.Commands.add("visitStory", (component, storyName, options = {}) => {
 
     const urlBase = canvas ?
 		`iframe.html?&viewMode=story&id=` :
-		`${Cypress.env("storybookPath")}`;
+		`${Cypress.expose("storybookPath")}`;
 
-    const urlWithStory = `${urlBase}${Cypress.env("components")[component]}--${storyName}`;
+    const urlWithStory = `${urlBase}${Cypress.expose("components")[component]}--${storyName}`;
 
     cy.visit(urlWithStory + getStoryControlsArgs(options));
 });

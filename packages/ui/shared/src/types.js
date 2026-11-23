@@ -48,7 +48,7 @@ export type UploadyContextType = {
 	off: OffMethod,
 	abort: (id?: string) => void,
 	abortBatch: (id: string) => void,
-    getExtension: (any) => ?Object,
+    getExtension: (string | symbol) => ?any,
 };
 
 export type UploaderListeners = { [string]: EventCallback };

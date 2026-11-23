@@ -13,7 +13,6 @@ describe("UploadDropZone - Drop Handler", () => {
 
     it("should upload result from drop handler", () => {
         dropFile(fileName, () => {
-            cy.waitShort();
             cy.storyLog().assertUrlItemStartFinish("https://i.pinimg.com/originals/51/bf/9c/51bf9c7fdf0d4303140c4949afd1d7b8.jpg", 1);
         });
     });

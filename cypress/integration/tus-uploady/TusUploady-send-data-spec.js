@@ -1,3 +1,4 @@
+import getRequestBodySize from "../getRequestBodySize";
 import { createTusIntercepts, uploadUrl } from "./tusIntercept";
 import uploadFile from "../uploadFile";
 
@@ -30,8 +31,6 @@ describe("TusUploady - Send Data", () => {
         uploadFile(fileName, () => {
             let fileSize;
 
-            cy.waitMedium();
-
             cy.get(`@${fileName}`)
                 .then((uploadFile) => {
                     fileSize = uploadFile.length;
@@ -45,7 +44,7 @@ describe("TusUploady - Send Data", () => {
                         const loc = response.headers["Location"];
 
                         expect(startFinishEvents.finish.args[1].uploadResponse.location).to.eq(loc);
-                        expect(request.headers["content-length"]).to.eq(`${isFileSmallerThanChunk ? fileSize : chunkSize}`);
+                        expect(getRequestBodySize(request.body)).to.eq(isFileSmallerThanChunk ? fileSize : chunkSize);
                     });
 
                     assertPatchRequestTimes(0, isFileSmallerThanChunk ? 0 : 1, "should have patch request for first chunk only if file-size > chunk-size");

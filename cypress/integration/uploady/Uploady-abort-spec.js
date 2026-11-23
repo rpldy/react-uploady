@@ -51,11 +51,9 @@ describe("Uploady - With Abort", () => {
                         cy.storyLog().assertLogEntryContains(logIndex, { state: "aborted" });
                     });
 
-                cy.waitLong();
+                cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 2 });
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 3 });
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
-
-                cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 2 });
             }, 2, "#upload-button");
         }, 5, "#upload-button");
     });
@@ -70,11 +68,9 @@ describe("Uploady - With Abort", () => {
                     .should("be.visible")
                     .click();
 
-                cy.waitShort();
-
+                cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 2 });
                 cy.storyLog().assertLogPattern(ITEM_ABORT, { times: 4 });
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 0 });
-                cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 2 });
             }, 2, "#upload-button");
         }, 2, "#upload-button");
     });

@@ -16,8 +16,6 @@ describe("UploadButton - Different Configuration", () => {
 
         //test other button with custom destination header
         uploadFile(fileName, () => {
-            cy.waitExtraShort();
-
             cy.storyLog().assertLogEntryContains(1, {
                 destination: {
                     url: "http://react-uploady-dummy-server.comm",

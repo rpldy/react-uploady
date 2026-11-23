@@ -7,11 +7,11 @@ import { useUploadyContext, markAsUploadOptionsComponent } from "@rpldy/shared-u
 import type { UploadOptions } from "@rpldy/shared";
 import type { UploadDropZoneProps, ShouldHandleDrag } from "./types";
 
-const getShouldHandleDrag = (e: SyntheticDragEvent<HTMLDivElement>, shouldHandle: ?ShouldHandleDrag) => isEmpty(shouldHandle) ||
+const getShouldHandleDrag = (e: React.DragEvent<HTMLDivElement>, shouldHandle: ?ShouldHandleDrag) => isEmpty(shouldHandle) ||
     shouldHandle === true ||
     (isFunction(shouldHandle) && shouldHandle(e));
 
-const isOnTarget = (e: SyntheticDragEvent<HTMLDivElement>, containerElm: ?Element, allowContains: boolean) => {
+const isOnTarget = (e: React.DragEvent<HTMLDivElement>, containerElm: ?Element, allowContains: boolean) => {
     const target = e.type === "dragleave" ? e.relatedTarget : e.target;
     return target === containerElm ||
         // $FlowIssue[incompatible-call] flow needs to figure it out :(
@@ -53,7 +53,7 @@ const UploadDropZone: React.ComponentType<UploadDropZoneProps> = forwardRef(
             }
         }, [onDragOverClassName, containerRef]);
 
-        const dropFileHandler = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
+        const dropFileHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
             const getFiles = () => getFilesFromDragEvent(e, htmlDirContentParams || {});
 
             return dropHandler ?
@@ -61,14 +61,14 @@ const UploadDropZone: React.ComponentType<UploadDropZoneProps> = forwardRef(
                 getFiles();
         }, [dropHandler, htmlDirContentParams]);
 
-        const handleDropUpload = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
+        const handleDropUpload = useCallback((e: React.DragEvent<HTMLDivElement>) => {
             dropFileHandler(e)
                 .then((files) => {
                     upload(files, uploadOptionsRef.current);
                 });
         }, [upload, dropFileHandler, uploadOptionsRef]);
 
-        const onDragEnter = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
+        const onDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
             const isHandling = getShouldHandleDrag(e, shouldHandleDrag) &&
                 isOnTarget(e, containerRef.current, enableOnContains) || noContainCheckForDrag;
 
@@ -81,14 +81,14 @@ const UploadDropZone: React.ComponentType<UploadDropZoneProps> = forwardRef(
             }
         }, [onDragOverClassName, containerRef, shouldHandleDrag, enableOnContains, noContainCheckForDrag]);
 
-        const onDragOver = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
+        const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
             if (dragLeaveTrackerRef.current) {
                 //must have drag over event handler with preventDefault for drop to work
                 e.preventDefault();
             }
         }, []);
 
-        const onDrop = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
+        const onDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
             if (dragLeaveTrackerRef.current) {
                 e.preventDefault();
                 e.persist();
@@ -98,14 +98,14 @@ const UploadDropZone: React.ComponentType<UploadDropZoneProps> = forwardRef(
             }
         }, [handleEnd, handleDropUpload]);
 
-        const onDragLeave = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
+        const onDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
             if ((dragLeaveTrackerRef.current &&
                 !isOnTarget(e, containerRef.current, enableOnContains)) || shouldRemoveDragOver?.(e)) {
                 handleEnd();
             }
         }, [handleEnd, containerRef, shouldRemoveDragOver, enableOnContains]);
 
-        const onDragEnd = useCallback((e: SyntheticDragEvent<HTMLDivElement>) => {
+        const onDragEnd = useCallback((e: React.DragEvent<HTMLDivElement>) => {
             if (dragLeaveTrackerRef.current) {
                 e.preventDefault();
                 e.stopPropagation();

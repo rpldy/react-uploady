@@ -8,8 +8,8 @@ export type ButtonProps = {|
     id?: string,
     children?: Node,
     text?: string,
-    extraProps?: Object,
-    onClick?: (SyntheticMouseEvent<HTMLElement>) => void,
+    extraProps?: any,
+    onClick?: (React.MouseEvent<HTMLElement>) => void,
 |};
 
 export type UploadButtonProps = {|

@@ -21,7 +21,6 @@ describe("UploadPaste - Wrap Upload-DropZone", () => {
                     expect(formData["test"]).to.eq("paste");
                 });
 
-            cy.waitExtraShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });
@@ -39,7 +38,6 @@ describe("UploadPaste - Wrap Upload-DropZone", () => {
                 expect(formData["test"]).to.eq("paste");
             });
 
-        cy.waitExtraShort();
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
     });
 });

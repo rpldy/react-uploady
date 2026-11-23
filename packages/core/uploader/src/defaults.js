@@ -1,11 +1,12 @@
 // @flow
 import { devFreeze } from "@rpldy/shared";
+import type { UploaderCreateOptions } from "./types";
 
 export const DEFAULT_PARAM_NAME = "file";
 
 export const DEFAULT_FILTER = (input: any, i: number, arr: any[]): Promise<boolean> | boolean => true;
 
-export const DEFAULT_OPTIONS: Object = devFreeze({
+export const DEFAULT_OPTIONS: {| ...UploaderCreateOptions, method: string |} = devFreeze({
     autoUpload: true,
     clearPendingOnAdd: false,
     inputFieldName: "file",

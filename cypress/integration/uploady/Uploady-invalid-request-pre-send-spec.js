@@ -1,4 +1,4 @@
-import { ITEM_ERROR, ITEM_FINISH, ITEM_START } from "../../constants";
+import { BATCH_FINALIZE, ITEM_ERROR, ITEM_FINISH, ITEM_START } from "../../constants";
 import intercept from "../intercept";
 import { uploadFileTimes } from "../uploadFile";
 
@@ -17,8 +17,7 @@ describe("Uploady - invalid requestPreSend", () => {
         intercept();
 
         uploadFileTimes(fileName, () => {
-            cy.waitShort();
-
+            cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_ERROR, { times: 1 });

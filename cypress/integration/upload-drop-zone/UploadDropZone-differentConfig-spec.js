@@ -16,8 +16,6 @@ describe("UploadDropZone - Different Config", () => {
 
         //test other button with custom destination header
         dropFile(fileName, () => {
-            cy.waitExtraShort();
-
             cy.storyLog().assertLogEntryContains(1, {
                 destination: {
                     headers: {

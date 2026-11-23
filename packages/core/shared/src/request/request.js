@@ -2,7 +2,7 @@
 import XhrPromise from "./XhrPromise";
 import type { RequestOptions } from "../types";
 
-const setHeaders = (req: XMLHttpRequest, headers: Object): ?Headers => {
+const setHeaders = (req: XMLHttpRequest, headers: any): ?Headers => {
     if (headers) {
         Object.keys(headers).forEach((name) => {
             if (headers[name] !== undefined) {
@@ -28,7 +28,7 @@ const request = (url: string, data?: unknown, options: ?RequestOptions = {}): Xh
 
         options?.preSend?.(req);
 
-        req.send(data);
+        req.send(data as any);
     }, req);
 };
 

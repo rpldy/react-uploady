@@ -18,7 +18,7 @@ import type {
     PreviewsChangedHandler,
 } from "./types";
 
-const showBasicPreview = (type: string, url: string, previewProps: Object, onImgError: (e: SyntheticEvent<HTMLImageElement>) => void) =>
+const showBasicPreview = (type: string, url: string, previewProps: any, onImgError: (e: React.SyntheticEvent<HTMLImageElement>) => void) =>
 	type === PREVIEW_TYPES.VIDEO ?
 		<video key={url} src={url} controls {...previewProps} /> :
 		<img key={url} onError={onImgError} src={url} {...previewProps} />;
@@ -50,7 +50,7 @@ const getUploadPreviewForBatchItemsMethod =
         const { PreviewComponent, previewMethodsRef, onPreviewsChanged, ...previewOptions } = props;
         const { previews, clearPreviews, removeItemFromPreview }: PreviewData = usePreviewsLoader(previewOptions);
 
-        const onImagePreviewLoadError = useCallback((e: SyntheticEvent<HTMLImageElement>) => {
+        const onImagePreviewLoadError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
             const img = e.currentTarget as HTMLImageElement;
 
             const fallback = getFallbackUrlData(props.fallbackUrl, img.src);

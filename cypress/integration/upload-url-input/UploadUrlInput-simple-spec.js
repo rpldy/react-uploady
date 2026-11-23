@@ -15,8 +15,7 @@ describe("UploadButton - Simple", () => {
             .should("exist")
             .type("http://test.com{enter}");
 
-        cy.waitExtraShort();
-        cy.storyLog().assertLogPattern(BATCH_ADD);
         cy.storyLog().assertUrlItemStartFinish("http://test.com", 1);
+        cy.storyLog().assertLogPattern(BATCH_ADD);
     });
 });

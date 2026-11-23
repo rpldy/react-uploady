@@ -22,6 +22,9 @@ import Readme from "./Uploader.storydoc.mdx";
 import type { UploadyUploaderType } from "./src";
 import type { Node } from "react";
 
+// storybook indexer cannot parse `as` casts; window custom globals need any (flow 0.339 TS DOM types)
+const anyWindow: any = window;
+
 export const WithCustomUI: UploadyStory = createUploadyStory(
     function StoryRender({ enhancer, destination, grouped, groupSize }): Node {
         const uploaderRef = useRef<?UploadyUploaderType>(null);
@@ -116,8 +119,8 @@ type UploaderProps = {
     destination: { url: string },
     grouped: boolean,
     groupSize: number,
-    extOptions: ?Object,
-    options?: ?Object,
+    extOptions: ?any,
+    options?: ?any,
 };
 
 const UploaderWithEvents = ({ enhancer, destination, grouped, groupSize, extOptions, options = {}, } : UploaderProps): Node => {
@@ -209,7 +212,7 @@ export const TEST_EventsData: UploadyStory = createUploadyStory(
 
 export const TEST_ProtoPollute: UploadyStory = createUploadyStory(function StoryRender(): Node {
     useEffect(() => {
-        window._test_createUploader = createUploader;
+        anyWindow._test_createUploader = createUploader;
     }, []);
 
    return (
@@ -231,7 +234,7 @@ export const UMD_Core: UploadyStory = createUploadyStory(
     const uploaderRef = useRef<?UploadyUploaderType>(null);
 
     const onBundleLoad = useCallback(() => {
-        uploaderRef.current = window.rpldy.createUploader({
+        uploaderRef.current = anyWindow.rpldy.createUploader({
             destination,
             enhancer,
             multiple,

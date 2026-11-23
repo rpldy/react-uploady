@@ -2,6 +2,8 @@
 
 ## Release process
 
+How to release: [RELEASE.md](./RELEASE.md).
+
 All packages are released together with the same version (lerna fixed mode, `--force-publish=*`).
 Releases run in two GitHub workflows, with a manual review in between:
 

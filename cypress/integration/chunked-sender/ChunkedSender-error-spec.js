@@ -1,6 +1,6 @@
 import { interceptWithHandler } from "../intercept";
 import uploadFile from "../uploadFile";
-import { CHUNK_START, CHUNK_FINISH, ITEM_ERROR } from "../../constants";
+import { BATCH_FINALIZE, CHUNK_START, CHUNK_FINISH, ITEM_ERROR } from "../../constants";
 
 describe("ChunkedSender - Progress", () => {
     const fileName = "flower.jpg";
@@ -28,8 +28,7 @@ describe("ChunkedSender - Progress", () => {
                 .should("be.visible")
                 .click();
 
-            cy.waitShort();
-
+            cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 1 });
             cy.storyLog().assertLogPattern(CHUNK_START, { times: 2 });
             cy.storyLog().assertLogPattern(CHUNK_FINISH, { times: 1 });
 

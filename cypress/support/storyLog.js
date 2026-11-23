@@ -30,13 +30,25 @@ const isContains = (a, b) => {
     return result;
 };
 
-Cypress.Commands.add("storyLog", () =>
-	(window.parent.__cypressResults ?
-		cy.wrap(window.parent) : cy.window())
-		.then((w) => {
-            w.__cypressResults.storyLog._env = w.__cypressEnv;
-			return w.__cypressResults.storyLog;
-		}));
+//a query, so it re-reads the log on every retry (the decorator replaces the array on each story render)
+Cypress.Commands.addQuery("storyLog", () => () => {
+    const w = window.parent.__cypressResults ? window.parent : cy.state("window");
+    w.__cypressResults.storyLog._env = w.__cypressEnv;
+    return w.__cypressResults.storyLog;
+});
+
+//assert functions throw on failure and never call cy.*, so they can run inside .should() which re-reads the log and retries until they pass or time out
+//.should() and not a query: a query logs every expect() of every retry to the command log
+const addLogAssert = (name, assert) =>
+    Cypress.Commands.add(name, { prevSubject: true }, (storyLog, ...args) => {
+        let result;
+
+        return cy.storyLog()
+            .should((log) => {
+                result = assert(log, ...args);
+            })
+            .then(() => result);
+    });
 
 const serializeLog = (log) => {
     return log.map(({ args }, index) => `[${index}]=${args[0]}`).join(",");
@@ -50,8 +62,6 @@ const findItemStartIndex = (storyLog, prop, value, after = -1) => {
 };
 
 const assertStartFinish = (storyLog, startIndex, prop, value, after = false) => {
-    cy.log("------- ASSERTING sTART_FINISH -------  ", { logCount: storyLog.length, startIndex, prop, value, after });
-
     if (!isNaN(startIndex)) {
         if (after) {
             const afterIndex = startIndex;
@@ -60,9 +70,7 @@ const assertStartFinish = (storyLog, startIndex, prop, value, after = false) => 
                 .above(afterIndex, `expect to find ITEM_START for ${value} in log: ${serializeLog(storyLog)} after index: ${afterIndex}`);
         } else {
             expect(storyLog[startIndex]?.args[0]).to.equal("ITEM_START", `expect ITEM_START at: ${startIndex} in log: ${serializeLog(storyLog)}`);
-
-            cy.wrap(storyLog[startIndex].args[1])
-                .its(prop).should("eq", value, `expect ${prop} at index: ${startIndex} to equal: ${value}`);
+            expect(_get(storyLog[startIndex].args[1], prop)).to.equal(value, `expect ${prop} at index: ${startIndex} to equal: ${value}`);
         }
     } else {
         startIndex = findItemStartIndex(storyLog, prop, value);
@@ -79,35 +87,34 @@ const assertStartFinish = (storyLog, startIndex, prop, value, after = false) => 
 
     expect(matchingFinish, `expect matching ITEM_FINISH for ID: ${itemId} in log: ${serializeLog(storyLog)}`).to.exist;
 
-    return cy.wrap({
+    return {
         start: storyLog[startIndex],
         finish: matchingFinish
-    });
+    };
 };
 
-Cypress.Commands.add("assertFileItemStartFinish", { prevSubject: true }, (storyLog, fileName, startIndex, after = false) => {
-    console.log("assertFileItemStartFinish received log", storyLog, { startIndex, after });
-    return assertStartFinish(storyLog, startIndex, "file.name", fileName, after);
-});
+addLogAssert("assertFileItemStartFinish", (storyLog, fileName, startIndex, after = false) =>
+    assertStartFinish(storyLog, startIndex, "file.name", fileName, after));
 
-Cypress.Commands.add("assertUrlItemStartFinish", { prevSubject: true }, (storyLog, url, startIndex = 0, after = false) => {
-    console.log("assertUrlItemStartFinish received log", storyLog, { startIndex, after });
-    return assertStartFinish(storyLog, startIndex, "url", url, after);
-});
+addLogAssert("assertUrlItemStartFinish", (storyLog, url, startIndex = 0, after = false) =>
+    assertStartFinish(storyLog, startIndex, "url", url, after));
 
-Cypress.Commands.add("assertLogEntryCount", { prevSubject: true }, (storyLog, count) => {
+addLogAssert("assertLogEntryCount", (storyLog, count) => {
     expect(storyLog, `expect story log to have ${count} entries`).to.have.lengthOf(count);
+    return storyLog;
 });
 
-Cypress.Commands.add("assertLogEntryContains", { prevSubject: true }, (storyLog, index, obj) => {
+addLogAssert("assertLogEntryContains", (storyLog, index, obj) => {
     const logLine = storyLog[index];
+    expect(logLine, `expect log line ${index} to exist in log: ${serializeLog(storyLog)}`).to.exist;
 
     const match = logLine.args.find((a) => isContains(a, obj));
 
     expect(match, `expect log line ${index} to contain obj`).to.exist;
+    return storyLog;
 });
 
-Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, eventName, asserter, options = {}) => {
+const findLogEntry = (storyLog, eventName, options) => {
     let logLine;
 
     try {
@@ -126,7 +133,20 @@ Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, e
         throw new StoryLogError(`Failed to custom assert log entry: ${eventName}. log[${storyLog.length} items]: ${JSON.stringify(storyLog)}`, ex);
     }
 
-    asserter(logLine, storyLog._env);
+    return logLine;
+};
+
+//a command, not a query: the asserter may call cy.*, so only the lookup retries and the asserter then runs once with its result
+Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, eventName, asserter, options = {}) => {
+    let logLine;
+
+    return cy.storyLog()
+        .should((log) => {
+            logLine = findLogEntry(log, eventName, options);
+        })
+        .then((log) => {
+            asserter(logLine, log._env);
+        });
 });
 
 const assertLogPattern = (storyLog, pattern, options = {}) => {
@@ -137,8 +157,6 @@ const assertLogPattern = (storyLog, pattern, options = {}) => {
     }, options);
 
     let between = options.between || [options.times, options.times];
-
-    console.log("assertLogPattern received log", storyLog, options);
 
     const matches = storyLog.reduce((res, line, index) => {
         const arg = line.args.find((a) => typeof a === "string" && pattern.test(a));
@@ -171,12 +189,12 @@ const assertLogPattern = (storyLog, pattern, options = {}) => {
         }
     }
 
-    return cy.wrap(matches);
+    return matches;
 };
 
-Cypress.Commands.add("assertLogPattern", { prevSubject: true }, assertLogPattern);
+addLogAssert("assertLogPattern", assertLogPattern);
 
-Cypress.Commands.add("assertNoLogPattern", { prevSubject: true }, (storyLog, pattern, options = {}) =>
+addLogAssert("assertNoLogPattern", (storyLog, pattern, options = {}) =>
     assertLogPattern(storyLog, pattern, { ...options, times: 0 }));
 
 Cypress.Commands.add("resetStoryLog", { prevSubject: true }, (storyLog) => {

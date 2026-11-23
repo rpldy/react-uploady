@@ -58,11 +58,9 @@ describe("Uploady - With Fast Abort", () => {
                         cy.storyLog().assertLogEntryContains(logIndex, { state: "aborted" });
                     });
 
-                cy.waitLong();
-
+                cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 2 });
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 3 });
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
-                cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 2 });
             }, 2, "#upload-button");
         }, 5, "#upload-button");
     });

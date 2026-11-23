@@ -30,8 +30,6 @@ describe("UploadButton - Simple - Multiple files", () => {
                     expect(formData["file"]).to.eq("flower3.jpg");
                 });
 
-            cy.waitMedium();
-
             cy.storyLog().assertLogPattern(ITEM_START, { index: 1 });
             cy.storyLog().assertLogPattern(ITEM_START, { index: 2 });
             cy.storyLog().assertLogPattern(ITEM_START, { index: 5 });

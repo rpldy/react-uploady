@@ -13,7 +13,6 @@ describe("NativeUploady - Simple", () => {
 
     it("should use native uploady", () => {
         uploadFile(fileName, () => {
-            cy.waitExtraShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });

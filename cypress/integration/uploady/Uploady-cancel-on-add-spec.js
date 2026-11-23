@@ -26,10 +26,8 @@ describe("Uploady - cancel from BATCH_ADD", () => {
             cy.storyLog().assertLogPattern(ITEM_START, { times: 0 });
 
             uploadFileTimes(fileName, () => {
-                cy.waitMedium();
-
-                cy.storyLog().assertLogPattern(BATCH_ADD, { times: 2 });
                 cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 2 });
+                cy.storyLog().assertLogPattern(BATCH_ADD, { times: 2 });
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
             }, 2, "#upload-button");

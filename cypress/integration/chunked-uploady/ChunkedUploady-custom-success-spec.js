@@ -20,8 +20,6 @@ describe("ChunkedUploady - Custom Success Callback", () => {
         cy.setUploadOptions({ isSuccessfulCall: (xhr) => xhr.status === 308 });
 
         uploadFile(fileName, () => {
-            cy.waitShort();
-
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });

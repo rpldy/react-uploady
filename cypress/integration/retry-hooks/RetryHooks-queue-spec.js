@@ -91,7 +91,6 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.waitMedium();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg");
             cy.storyLog().assertFileItemStartFinish("flower2.jpg");
@@ -108,7 +107,6 @@ describe("RetryHooks - Queue", () => {
                 .click();
 
             //wait until the other two files finished uploading
-            cy.waitMedium();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
             cy.storyLog().assertFileItemStartFinish("flower3.jpg");
 
@@ -116,7 +114,6 @@ describe("RetryHooks - Queue", () => {
                 .eq(1)
                 .click();
 
-            cy.waitShort();
             cy.storyLog().assertFileItemStartFinish("flower2.jpg");
         }, 3, "#upload-button");
     });

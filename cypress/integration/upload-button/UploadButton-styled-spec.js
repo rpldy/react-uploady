@@ -17,7 +17,6 @@ describe("UploadButton - With Styled Component", () => {
                 .should("have.css", "background-color", "rgb(1, 9, 22)")
                 .should("have.css", "color", "rgb(176, 177, 179)");
 
-            cy.waitShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });

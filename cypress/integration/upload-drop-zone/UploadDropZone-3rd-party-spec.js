@@ -14,7 +14,6 @@ describe("UploadDropZone - Simple", () => {
         loadStory();
 
         dropFile(fileName, () => {
-            cy.waitExtraShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
         });
     });
@@ -26,7 +25,6 @@ describe("UploadDropZone - Simple", () => {
         cy.setUploadOptions({ userData: { test } });
 
         dropFile(fileName, () => {
-            cy.waitExtraShort();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             const assertEventData = (event) =>

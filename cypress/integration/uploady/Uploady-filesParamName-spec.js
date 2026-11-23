@@ -22,7 +22,6 @@ describe("Uploady - filesParamName", () => {
             cy.wait("@uploadReq")
                 .interceptFormData((formData) => {
                     expect(formData["customFieldName"]).to.equal(fileName);
-                    cy.waitShort();
                     cy.storyLog().assertFileItemStartFinish(fileName, 1);
                 });
         });

@@ -31,8 +31,6 @@ describe("TusUploady - Send Data", () => {
         uploadFile(fileName, () => {
             let fileSize;
 
-            cy.waitMedium();
-
             cy.get(`@${fileName}`)
                 .then((uploadFile) => {
                     fileSize = uploadFile.length;

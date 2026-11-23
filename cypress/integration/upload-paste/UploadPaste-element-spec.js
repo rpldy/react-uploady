@@ -36,7 +36,6 @@ describe("UploadPaste - Element Listener", () => {
                 expect(formData["test"]).to.eq("paste");
             });
 
-        cy.waitExtraShort();
         cy.storyLog().assertFileItemStartFinish(fileName, 1);
     });
 });

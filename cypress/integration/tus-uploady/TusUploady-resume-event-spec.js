@@ -33,7 +33,6 @@ describe("TusUploady - Resume Event", () => {
         } = createTusIntercepts();
 
         uploadFile(fileName, () => {
-            cy.waitMedium();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             assertCreateRequest(0, ({ request }) => {
@@ -47,8 +46,6 @@ describe("TusUploady - Resume Event", () => {
 
             //upload again, should be resumed!
             uploadFile(fileName, () => {
-                cy.waitShort();
-
                 cy.storyLog().assertFileItemStartFinish(fileName, 5)
                     .then((events) => {
                         expect(events.finish.args[1].uploadResponse.message).to.eq("TUS server has file");
@@ -75,7 +72,6 @@ describe("TusUploady - Resume Event", () => {
         } = createTusIntercepts();
 
         uploadFile(fileName, () => {
-            cy.waitMedium();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             assertCreateRequest(0, ({ request }) => {
@@ -90,7 +86,6 @@ describe("TusUploady - Resume Event", () => {
 
             //upload again, should be resumed and resume will be cancelled!
             uploadFile(fileName, () => {
-                cy.waitMedium();
                 cy.storyLog().assertFileItemStartFinish(fileName, 5);
 
                 secondTus.assertCreateRequest(0, ({ request }) => {

@@ -1,5 +1,5 @@
 import { uploadFileTimes } from "../uploadFile";
-import { ITEM_FINISH, ITEM_START, UPLOAD_URL } from "../../constants";
+import { BATCH_FINALIZE, ITEM_FINISH, ITEM_START, UPLOAD_URL } from "../../constants";
 import intercept from "../intercept";
 
 describe("Uploader - No Options Pollute Tests", () => {
@@ -44,8 +44,7 @@ describe("Uploader - No Options Pollute Tests", () => {
         });
 
         uploadFileTimes(fileName, () => {
-            cy.waitShort();
-
+            cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 1 });
             cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
             cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });
 

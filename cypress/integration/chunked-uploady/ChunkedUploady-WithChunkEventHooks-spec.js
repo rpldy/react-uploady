@@ -10,7 +10,6 @@ describe("ChunkedUploady - WithChunkEventHooks", () => {
             .as("fInput");
 
         uploadFile(fileName, () => {
-            cy.waitLong();
             cy.storyLog().assertFileItemStartFinish(fileName, 1);
 
             let uniqueHeader;

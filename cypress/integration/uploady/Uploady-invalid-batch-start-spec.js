@@ -17,11 +17,9 @@ describe("Uploady - invalid BATCH_START", () => {
             cy.waitShort();
 
             uploadFileTimes(fileName, () => {
-                cy.waitShort();
-
+                cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 2 });
                 cy.storyLog().assertLogPattern(BATCH_ADD, { times: 2 });
                 cy.storyLog().assertLogPattern(BATCH_ERROR, { times: 1 });
-                cy.storyLog().assertLogPattern(BATCH_FINALIZE, { times: 2 });
 
                 cy.storyLog().assertLogPattern(ITEM_START, { times: 2 });
                 cy.storyLog().assertLogPattern(ITEM_FINISH, { times: 2 });

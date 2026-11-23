@@ -107,20 +107,14 @@ Cypress.Commands.add("assertLogEntryContains", { prevSubject: true }, (storyLog,
     expect(match, `expect log line ${index} to contain obj`).to.exist;
 });
 
-Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, eventName, asserter, options = {}) => {
+Cypress.Commands.add("customAssertLogEntry", { prevSubject: true }, (storyLog, eventName, asserter) => {
     let logLine;
 
     try {
-        if (options.all) {
-            logLine = storyLog.filter((item) => item.args[0] === eventName).map((item) => item.args.slice(1));
-        } else if (eventName instanceof RegExp) {
+        if (eventName instanceof RegExp) {
             logLine = storyLog.filter((item) =>  eventName.test( item.args[0]));
-            expect(logLine).to.have.lengthOf.at.least(2, `expect to find at least one match for ${eventName}`);
+            expect(logLine).to.have.lengthOf.at.least(2, `expect to find at least 2 matches for ${eventName}`);
             logLine = logLine.map((ll) => ({ ...ll, args: ll.args.slice(1) }));
-        } else if (options.index) {
-            logLine = storyLog[options.index];
-            expect(logLine.args[0], `expect log line ${options.index} with ${logLine.args[0]} to equal = ${eventName}`).to.equal(eventName);
-            logLine = logLine.args.slice(1);
         } else {
             const item = storyLog.find((item) => item.args[0] === eventName);
             expect(item, `expect to find log line for event: ${eventName}`).to.not.be.undefined;
@@ -154,7 +148,7 @@ const assertLogPattern = (storyLog, pattern, options = {}) => {
 
     if (~options.index) {
         const inLine = matches.find(({ index }) => index === options.index);
-        expect(inLine.index, `expect pattern match to be in index: ${options.index}`).to.eq(options.index);
+        expect(inLine, `expect pattern match: ${pattern} to be in index: ${options.index} in log: ${serializeLog(storyLog)}`).to.exist;
     } else {
         if (between[0] === between[1]) {
             expect(matches.length).to.equal(options.times, `expect to find match: ${pattern} in log ${options.times} times`);

@@ -17,7 +17,6 @@ describe("UploadButton - Simple", () => {
 			.as("fInput");
 
 		uploadFile(fileName, () => {
-			cy.waitShort();
 			cy.storyLog().assertFileItemStartFinish(fileName, 1);
 		}, "button");
 	});

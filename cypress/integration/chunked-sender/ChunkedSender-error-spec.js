@@ -1,6 +1,6 @@
 import { interceptWithHandler } from "../intercept";
 import uploadFile from "../uploadFile";
-import { BATCH_FINALIZE, CHUNK_START, CHUNK_FINISH, ITEM_ERROR } from "../../constants";
+import { BATCH_FINALIZE, CHUNK_START, CHUNK_FINISH } from "../../constants";
 
 describe("ChunkedSender - Progress", () => {
     const fileName = "flower.jpg";

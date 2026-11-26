@@ -49,7 +49,7 @@ importers:
         version: 8.0.7(@babel/core@8.1.0)
       '@babel/runtime-corejs3':
         specifier: ^8.1.0
-        version: 8.1.0
+        version: 8.1.2
       '@commitlint/cli':
         specifier: ^21.2.4
         version: 21.2.4(@typescript/typescript6@6.0.2)(conventional-commits-filter@6.0.1)(conventional-commits-parser@7.1.4)
@@ -1465,8 +1465,8 @@ packages:
     peerDependencies:
       '@babel/core': ^8.0.0
 
-  '@babel/runtime-corejs3@8.1.0':
-    resolution: {integrity: sha512-5NcDLZihokDFPOhDz+0Sear0N6bH40+THY/tJLwNnMTGE0/mT88e6E9/tqJo/l82VdqcNr++ePafgJG470epyw==}
+  '@babel/runtime-corejs3@8.1.2':
+    resolution: {integrity: sha512-0DEF38LrigbBvqWHy8TZJ42+DQRnu0DjEbBr+oxBPxSFTPMR6MQ6lChx1A3K8TWba9k3KRl37y2sC93v+5ljgg==}
 
   '@babel/runtime@7.29.10':
     resolution: {integrity: sha512-NpugTzbKgGrNe45Ui32cN8vCFFMxVtP/9rtfwv0nP5FRDAjvYBxJcLVpYA9mr1jxP6cnIT7x9LUzuDTbWYYNRA==}
@@ -8387,7 +8387,7 @@ snapshots:
       '@babel/plugin-transform-modules-commonjs': 8.0.1(@babel/core@8.1.0)
       '@babel/plugin-transform-typescript': 8.0.6(@babel/core@8.1.0)
 
-  '@babel/runtime-corejs3@8.1.0':
+  '@babel/runtime-corejs3@8.1.2':
     dependencies:
       core-js-pure: 3.51.0
 

@@ -201,6 +201,28 @@ describe("UploadDropZone tests", () => {
             expect(refElm.classList.contains(onDragOverClassName)).toBe(false);
         });
 
+        it("should add & remove multiple drag classNames", () => {
+            const { mockRef, fireDragEnter, fireDragEnd, fireDragOver, fireDragLeave } = testDropZone({
+                onDragOverClassName: "drag-over  bg-blue  ",
+            }, false);
+
+            const refElm = mockRef.mock.calls[0][0];
+
+            fireDragEnter();
+            fireDragOver();
+            expect(refElm.classList.contains("drag-over")).toBe(true);
+            expect(refElm.classList.contains("bg-blue")).toBe(true);
+            expect(refElm.classList.length).toBe(2);
+
+            fireDragEnd();
+            expect(refElm.classList.length).toBe(0);
+
+            fireDragEnter();
+            expect(refElm.classList.length).toBe(2);
+            fireDragLeave();
+            expect(refElm.classList.length).toBe(0);
+        });
+
         it("should not remove drag className if different element", () => {
             const onDragOverClassName = "drag-over";
 

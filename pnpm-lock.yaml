@@ -148,7 +148,7 @@ importers:
         version: 5.0.0(cypress@16.2.1)(mocha@11.7.5)
       cypress-multi-reporters:
         specifier: ^2.0.5
-        version: 2.0.5(mocha@11.7.5)(supports-color@8.1.1)
+        version: 2.1.0(mocha@11.7.5)(supports-color@8.1.1)
       eslint:
         specifier: ^10.14.0
         version: 10.15.0(jiti@2.7.0)(supports-color@8.1.1)
@@ -4038,8 +4038,8 @@ packages:
     peerDependencies:
       cypress: '>=6.2.0'
 
-  cypress-multi-reporters@2.0.5:
-    resolution: {integrity: sha512-5ReXlNE7C/9/rpDI3z0tAJbPXsTHK7P3ogvUtBntQlmctRQ+sSMts7dIQY5MTb0XfBSge3CuwvNvaoqtw90KSQ==}
+  cypress-multi-reporters@2.1.0:
+    resolution: {integrity: sha512-QCxLVZPkIRjAykSY8EfWWlVhLVeGh0iAsZpXJhsHbP7mmHN6GGVUPUEhZfLy3FO5kd5bGhmjGsW/YY9h3qADbw==}
     engines: {node: '>=6.0.0'}
     peerDependencies:
       mocha: '>=3.1.2'
@@ -11078,12 +11078,12 @@ snapshots:
     transitivePeerDependencies:
       - mocha
 
-  cypress-multi-reporters@2.0.5(mocha@11.7.5)(supports-color@8.1.1):
+  cypress-multi-reporters@2.1.0(mocha@11.7.5)(supports-color@8.1.1):
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
       lodash: 4.18.1
       mocha: 11.7.5
-      semver: 7.8.5
+      semver: 7.8.6
     transitivePeerDependencies:
       - supports-color
 
